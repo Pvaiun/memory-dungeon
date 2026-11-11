@@ -60,7 +60,7 @@
 
 ### Bloodscent knife
 - **Is:** dagger · rare
-- **Card:** Its wearer's hits on a bleeding foe crit far more often: 50 more Crit chance, to four in five at most.
+- **Card:** Its wearer's hits on a bleeding foe crit far more often: +50% Crit chance, up to 80%.
 - **Stats:** Crit chance +1 · Attack speed medium · Crit damage medium (3 of 3)
 - **Numbers:** +50 Crit chance on a hit against a foe that holds Bleed when the hit lands, up to a chance of 80% on that hit. The 50 is my value; the ceiling is round 1's (no card makes a crit certain for longer than one swing).
 - **Code:** as today's Venom vial's crit rule on a foe that holds Bleed, at 50; the ceiling on what the rule lifts the chance to is new (see *Code support*)
@@ -69,7 +69,7 @@
 
 ### Ambush knife
 - **Is:** dagger · rare
-- **Card:** Its wearer's hits on a foe that hasn't acted yet this fight crit four times in five, whatever its Crit chance.
+- **Card:** Its wearer's hits on a foe that hasn't acted yet this fight crit 80% of the time, whatever its wearer's Crit chance. Nothing raises that chance.
 - **Stats:** Crit chance +2 · Crit damage medium (3 of 3)
 - **Numbers:** a set chance of 80% in place of the wearer's own, which nothing raises, on a foe none of whose actions has resolved this fight. Round 1's value for "nearly always".
 - **Code:** as today's Quietus's crit rule on a foe that hasn't acted; the chance is set, as Gambler's coin sets one, where today's rule adds (see *Code support*)
@@ -148,7 +148,7 @@
 - **Numbers:** 10% of the wearer's max HP an extra strike: 200 for a Stormcaller, 300 for a Monk, 400 for a Vampire, before the piece's own HP step. My value: a little over one pulse of Regen (`STATUS.regen`), the scale's own size for a heal that's seen.
 - **Code:** as today's Brass knuckles' trigger (an extra strike landing), with a heal from the holder's max HP as today's Prior's mace
 - **Serves:** Pact 1 ●●, Cuts 1 ●
-- **Notes:** An extra strike is Double strike's second strike, by round 1's ruling, so the heal comes as often as its wearer's Double strike: on about half a Monk's swings with the claws' own step, and a quarter of a Vampire's or a Stormcaller's. Arc's second hit isn't one. Resized for that: the first hand-in had a twentieth, counted on every extra hit of a swing; at a quarter of the swings a twentieth wouldn't be seen (*Least sure*). Much bigger than Tithing leathers' "a little" a hit, since it fires far less often; both can sit on a Monk. Both steps feed it: the chance of the strike, and the bar the heal is read from.
+- **Notes:** An extra strike is Double strike's second strike, by round 1's ruling, so the heal comes as often as its wearer's Double strike: on about half a Monk's swings with the claws' own step, and a quarter of a Vampire's or a Stormcaller's. Arc's second hit isn't one. Resized for that: the first hand-in had a twentieth, counted on every extra hit of a swing; at a quarter of the swings a twentieth wouldn't be seen (*Least sure*). Much bigger than Gleaner's leathers' "a little" a hit, since it fires far less often; both can sit on a Monk. Both steps feed it: the chance of the strike, and the bar the heal is read from.
 
 ### Gorged claws
 - **Is:** fist · rare
@@ -170,12 +170,12 @@
 
 ### Still hand
 - **Is:** fist · rare
-- **Card:** Each hit its wearer lands on a Stunned foe strikes twice. The second strike is the same damage again, and is never repeated: not by this, and not by anything else.
+- **Card:** Each hit its wearer lands on a Stunned foe lands twice. The second landing is the same damage again, and is never repeated: not by this, and not by anything else.
 - **Stats:** Double strike medium · Attack speed medium · Lifesteal medium (3 of 3)
 - **Numbers:** the second strike deals what the first dealt. A Stun lasts `STATUS.stun`: one or two swings of a fist, or a whole Burning fist.
 - **Code:** 16
 - **Serves:** Snap 2 ●●, Cuts ●●, Landslide ● ◆ held
-- **Notes:** Today's legendary, changed as the line says and made a rare. The second strike is a hit that lands a second time, as `fill/shared.md` defines one: no new dodge or crit roll; Bleed pays on it, Lifesteal drinks from it, a count of hits counts it; it carries none of the first's statuses and isn't an extra strike. Where another card would repeat the same hit, each repeats the first once. A Double strike on a Stunned foe is four hits. Attack speed gets more blows into the window, and every doubled blow drinks twice.
+- **Notes:** Today's legendary, changed as the line says and made a rare. The second strike is a hit that lands a second time, as `fill/shared.md` defines one: no new dodge or crit roll; Bleed pays on it, Lifesteal drinks from it, a count of hits counts it; it carries none of the first's statuses and isn't an extra strike. Where another card would repeat the same hit, each repeats the first once. A Double strike on a Stunned foe is four hits. Attack speed gets more blows into the window, and every doubled blow drinks twice. The card says "lands twice", as Hunting spear's does (round 3): a "strike" on a fist weapon reads as Double strike's, and this isn't one.
 
 ### Forked knuckles
 - **Is:** fist · rare
@@ -363,7 +363,7 @@
 
 ### Bloodletter
 - **Is:** sword · rare
-- **Card:** Each of its swings pays HP: a twentieth of its wearer's max HP. The swing deals extra damage equal to four times what it paid. The price never takes its wearer below 1 HP.
+- **Card:** Each of its basic attacks pays HP: a twentieth of its wearer's max HP. The basic attack deals extra damage equal to four times what it paid. The price never takes its wearer below 1 HP.
 - **Stats:** Attack +1 · HP +2 (3 of 3)
 - **Numbers:** the price: 5% of max HP a basic attack. The extra: four times the price paid (`FLAT_STACKS.several` for "several times"), a fifth of max HP when it's paid in full: 600 on a 770 swing for a Valkyrie or a Hexer, 1,000 on a 580 swing for a Knight, before the piece's HP steps.
 - **Code:** 20 (a price on a swing: today's pay, as Blood gift's); a weapon term from max HP as today's Mountainfall; the extra reads the price actually paid (see *Code support*)
@@ -438,15 +438,15 @@
 ### Parrying spear
 - **Is:** spear · rare
 - **Card:** Each time its wearer dodges a hit, the other ally with the highest Attack strikes the attacker with its weapon.
-- **Stats:** Aggro +2 · HP +1 (3 of 3)
+- **Stats:** Aggro +2 · Evasion medium (3 of 3)
 - **Numbers:** none of its own: one strike for each dodge, a hit of that ally's basic attack's size, with no limit.
 - **Code:** 17 (a strike by an ally when the wearer dodges)
 - **Serves:** Toll 2 ●●●, Cuts ●● ⚙ riposte (key)
-- **Notes:** The strike is the ally's: it carries what that ally's swing carries, its Lifesteal drinks, and it isn't a basic attack. It's aimed at the attacker, so a Taunt doesn't turn it. It takes the shape that ally's basic attacks have, as round 1 rules, so beside a Hoplite each dodge is a doubled blow. It does nothing for a wearer that can't dodge, which is the Hoplite without an Evasion piece. Aggro +2 so the dodger is the one aimed at; HP for the blow that lands.
+- **Notes:** The strike is the ally's: it carries what that ally's swing carries, its Lifesteal drinks, and it isn't a basic attack. It's aimed at the attacker, so a Taunt doesn't turn it. It takes the shape that ally's basic attacks have, as round 1 rules, so beside a Hoplite each dodge is a doubled blow. Aggro +2 so the dodger is the one aimed at, and Evasion in place of the HP step (round 3): only the Monk dodges by its class line, so without it the card was blank for a Hoplite or a Valkyrie that wore nothing else to dodge with. With it they dodge one blow in five.
 
 ### Squall lance
 - **Is:** spear · rare
-- **Card:** Every fifth hit its wearer lands, swing or ability, also hits every other foe: a light hit (from Attack), carrying what the swing carries. The flash's own hits aren't counted.
+- **Card:** Every fifth hit its wearer lands, swing or ability, also hits every other foe: a light hit (from Attack), carrying what the swing carries. Those hits aren't counted.
 - **Stats:** Attack speed medium · Attack +2 (3 of 3)
 - **Numbers:** the count: five hits landed by its wearer, of any kind. The flash: light (`HIT.light`), from the wearer's Attack, on every foe but the one just hit: about 1,160 a foe at Attack 4, 1,740 at Attack 6.
 - **Code:** today's Storm pike's count of every hit, to five in place of ten, and its flash, on every other foe; 12 for what it carries
@@ -489,7 +489,7 @@
 - **Numbers:** many: `STACKS.many` through `own()`, from the wearer's Attack: about 9 stacks at Attack 4, 11 or 12 at Attack 5, up to Might's cap. Might keeps its own numbers (`STATUS.might`): each action spends a stack.
 - **Code:** as today's Reaver's axe, with many in place of a few
 - **Serves:** Hunt 1 ●●, Landslide ● ◆ kill-pays
-- **Notes:** Today's card, one word bigger, as round 1 rules and the line now says (the doubled hit of the first hand-in was Night's edge's own sentence). A few Might was never seen; at many, the blow after a kill lands half again as hard or more, and the Might runs down over the next ten actions. A second kill tops it up to the cap. It's a status its wearer gives itself. Its one step is the Hunt's, Crit damage, so the kind's three uncommons carry three different stats.
+- **Notes:** Today's card, one word bigger, as round 1 rules and the line now says (the doubled hit of the first hand-in was Night's edge's own sentence). A few Might was never seen; at many, the blow after a kill lands half again as hard or more, and the Might runs down over the next ten actions. A second kill tops it up to the cap. It's a status its wearer gives itself. Its one step is the Hunt's, Crit damage, so the kind's three uncommons carry three different stats. No Lifesteal, the axe's signature: a piece on one step may take its road's lean (round 3), and the kind's commons carry the signature plain.
 
 ### Hungry axe
 - **Is:** axe · uncommon
@@ -507,7 +507,7 @@
 - **Numbers:** a few: `STACKS.few`, from Attack, on every hit (about 3 at Attack 4, 4 at Attack 5 with the axe's own step).
 - **Code:** as Jolt spear: a reaction to any hit landing, applying Bleed
 - **Serves:** Cuts 1 ●● ⚙ lead's colour (half) ◆ swing-status
-- **Notes:** Seen: the next hit on that foe, anyone's, pays 420 to 500 in red. A slow kind that opens for the fast ones to cash. What a copy of its swing carries is the part on the basic attack. Attack is the stat its Bleed reads.
+- **Notes:** Seen: the next hit on that foe, anyone's, pays 420 to 500 in red. A slow kind that opens for the fast ones to cash. What a copy of its swing carries is the part on the basic attack. Attack is the stat its Bleed reads. No Lifesteal, the axe's signature: a piece on one step may take the stat its effect reads (round 3).
 
 ### Executioner's axe
 - **Is:** axe · rare
@@ -538,7 +538,7 @@
 
 ### The Red Feast
 - **Is:** axe · legendary
-- **Card:** While its wearer is below half its max HP, its hits deal double and its Lifesteal is doubled. When a fight is won, its wearer, if it's standing, is healed up to half its max HP.
+- **Card:** While its wearer is below half its max HP, its hits deal double and its Lifesteal is doubled. When a fight is won, its wearer, if it's standing, is healed back to half its max HP, if it's below that.
 - **Stats:** Lifesteal high · HP +1 (3 of 3)
 - **Numbers:** double, and double, below 50% of max HP; healed to 50% of max HP at a won fight's end if it's below that. The line's own sizes.
 - **Code:** boosts and a Lifesteal change switched as today's Bloodlust is; 20 (a heal as a fight is won)
@@ -547,7 +547,7 @@
 
 ### Headsman's axe
 - **Is:** axe · legendary
-- **Card:** Its basic attacks come half as often and deal double. A killing blow its wearer lands readies its next basic attack at once.
+- **Card:** Its basic attacks come half as often and deal double. When its wearer lands a killing blow, its next basic attack comes at once.
 - **Stats:** Lifesteal medium · Crit damage high (3 of 3)
 - **Numbers:** half as often, double, as today (the halved swing is its shape and counts no step). A kill by any hit readies the next swing.
 - **Code:** as today's Headsman's axe
@@ -563,7 +563,7 @@ Round 2 ruled on the first five, and they're applied above: Overkill axe's left-
 3. *Ruled in round 2 (as written).* **Victor's spear keeps Aggro.** Round 1 names four spears that drop it. This one is the Hunt's first step too, and I left Aggro +1 on it: a Shield on every kill is cover for the draw, so the signature doesn't work against the piece. If it should follow the other four, it becomes Attack +2.
 4. *Ruled in round 2 (as written).* **Lamprey claws is resized, which no ruling asked for.** With an extra strike narrowed to Double strike's second strike, it fires on a quarter to a half of swings. A twentieth of the bar that seldom isn't seen, so I made it a tenth. If the first size should stand, it's one word.
 5. *Ruled in round 2 (a few, from max HP).* **Rimed blade at several, on a Hexer.** Applied as ruled. Beside Cold hex it lays about 11 Chill a swing against a cap of 12: a shatter every second swing, and every swing once the Hexer has one more step of Attack. A Stun lasts about as long as the sword's wait, so a lone foe that isn't a boss doesn't act again. That's a lock, not a size, which is why it's here. Reading the blade's stacks from max HP, at a few, would be seen on a Knight (three or four a swing) without it.
-6. **Names.** Tithe wand and Tithing leathers still tithe different things to different units; neither round ruled on the pair.
+6. *Ruled in round 3: Tithing leathers is renamed Gleaner's leathers.* **Names.** Tithe wand and Tithing leathers tithed different things to different units, and a Bard can hold both.
 
 ## Links
 

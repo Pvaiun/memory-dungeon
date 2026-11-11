@@ -49,12 +49,12 @@ How the stack words are read here, once:
 
 ### Curse-book
 - **Is:** tome · uncommon
-- **Card:** Its holder's abilities add a few Bleed to each foe they hit (from its holder's Attack).
+- **Card:** Its holder's abilities add several Bleed to each foe they hit (from its holder's Attack).
 - **Stats:** Cooldown medium · MP regen +1 (2 of 2)
-- **Numbers:** a few, as a kit's ability adds it: `own("few", "attack", ABILITY_STACKS)`. About four a foe on a Frostweaver, five or six on a Hexer.
+- **Numbers:** several: `STACKS.several` through `own()`, from its holder's Attack. About four a foe on a Frostweaver, five or six on a Hexer.
 - **Code:** none: a rider on an ability's hit, as the kits' are.
 - **Serves:** Cuts 1 ●● ⚙ red rain (half), every colour (half)
-- **Notes:** "Hit" is the vocabulary's: an ability that deals no damage (Enfeeble, Stillness, Unmake) adds nothing. The Bleed lands after the hit, so it pays on the next one. Sized as a cast's because it comes at a cast's pace: at the plain word a Blizzard's wounds paid half what the Blizzard dealt. Does nothing on a Bard (*Least sure*).
+- **Notes:** "Hit" is the vocabulary's: an ability that deals no damage (Enfeeble, Stillness, Unmake) adds nothing. The Bleed lands after the hit, so it pays on the next one. Sized to come at a cast's pace: at a few a Blizzard's wounds paid half what the Blizzard dealt. The card says "several" (round 3): a piece's stack word is the piece's count whatever hit carries it, and its first card said "a few" for twice Jolt spear's few. Does nothing on a Bard (*Least sure*).
 
 ### Primer of frost
 - **Is:** tome · rare
@@ -94,7 +94,7 @@ How the stack words are read here, once:
 
 ### Last page
 - **Is:** tome · legendary
-- **Card:** When a foe falls, every foe below a tenth of its HP falls too.
+- **Card:** When a foe falls, every foe below a tenth of its max HP falls too.
 - **Stats:** Cooldown high · Attack +1 · MP +1 (4 of 4)
 - **Numbers:** a tenth of max HP.
 - **Code:** as today's Last page.
@@ -112,7 +112,7 @@ How the stack words are read here, once:
 
 ### Frozen tome
 - **Is:** tome · legendary
-- **Card:** Each time a foe's Chill shatters, every ally's ability with the longest cooldown comes half its wait closer.
+- **Card:** Each time a foe's Chill shatters, every ally's ability with the longest cooldown comes half its wait closer: each one's slowest ability, by its whole cooldown.
 - **Stats:** Cooldown medium · Attack +2 · Cast speed medium (4 of 4)
 - **Numbers:** half of the wait left, each shatter, anyone's. "The longest cooldown" is each ally's slowest ability, by its whole cooldown, cooling or not.
 - **Code:** the trigger as today's Orb of the long winter. Two things are new: a cut by a share of the wait in place of a count of ticks, and a pick by an ability's whole cooldown (*Code support*).
@@ -170,7 +170,7 @@ How the stack words are read here, once:
 
 ### Smouldering orb
 - **Is:** orb · rare
-- **Card:** When a burning foe falls, every other foe gains a third of the Burn it held. A fallen foe's fire moves once: if another piece or seat in the party also moves it, the fire is split evenly between them first.
+- **Card:** When a burning foe falls, every other foe gains a third of the Burn it held. A fallen foe's fire moves once: if something else in the party moves it too, it's split evenly between them.
 - **Stats:** MP +1 · Attack +1 · Cast speed medium (3 of 3)
 - **Numbers:** a third of the Burn held at the fall, to each other foe.
 - **Code:** 9, as today's Ember heart.
@@ -193,7 +193,7 @@ How the stack words are read here, once:
 - **Numbers:** one Crescendo a cast, to the counter's own definition (`fill/shared.md`). It lands as the cast finishes, so the first cast of an ability is plain and each one after does a fifth more than the last.
 - **Code:** 11.
 - **Serves:** Barrage 3 ●●●, Bonfire ●● ⚙ crescendo (key)
-- **Notes:** Beside Crescendo charm one cast adds one stack, and the charm's price is switched off. Every kind of cast adds: a repeat, a free one.
+- **Notes:** Beside Crescendo charm one cast adds one stack, and the charm's price is switched off. Every kind of cast adds: a repeat, a free one. The card's last sentence stays (round 3): it's the orb's own rule, and the only price a Crescendo has is the one it switches off.
 
 ### The deep well
 - **Is:** orb · legendary
@@ -322,7 +322,7 @@ How the stack words are read here, once:
 
 ### Crimson dregs
 - **Is:** vial · uncommon
-- **Card:** Its holder's hits on a bleeding foe heal it for a fifth of their damage.
+- **Card:** Its holder's hits on a bleeding foe heal its holder for a fifth of their damage.
 - **Stats:** Lifesteal medium · HP +1 (2 of 2)
 - **Numbers:** a fifth of the damage dealt (the size of `SPECIAL.lifesteal.high`), on top of any Lifesteal. It's a heal of its own, so nothing that doubles Lifesteal doubles it.
 - **Code:** as today's Crimson dregs.
@@ -349,21 +349,21 @@ How the stack words are read here, once:
 
 ### Venom vial
 - **Is:** vial · rare
-- **Card:** Each hit its holder lands on a bleeding foe raises that foe's Bleed by half of what it holds, once the wound has paid for the hit and closed. Its own hits leave a wound as deep as they found it.
+- **Card:** A foe's Bleed doesn't close under its holder's hits: the wound pays for the hit and stays as deep as it was. It still closes under everyone else's.
 - **Stats:** Lifesteal medium · Crit chance +1 · Crit damage medium (3 of 3)
-- **Numbers:** half of the Bleed left after the hit's own closing (`STATUS.bleed.drop`), which is exactly what closed.
+- **Numbers:** after each of its holder's hits on a bleeding foe, the stacks that hit closed are put back: whatever `STATUS.bleed.drop` takes, so the card stays true if that number moves.
 - **Code:** as today's Bellows lantern, with Bleed, read after the wound's own reaction to the hit.
 - **Serves:** Cuts 2 ●●●, Hunt ●
-- **Notes:** Changed as its line says. A half stands: the wound never closes under its holder's hits and still closes under everyone else's. Any share above a half would grow it with no ceiling, since Bleed has none.
+- **Notes:** Changed from its line, which had each hit raise the Bleed by a share of what it holds (round 3). Any share that out-ran the closing grew the wound with no ceiling, since Bleed has none, and the share that didn't was exactly what closed: the card said a raise and then said it came to nothing. So it says the one thing that happens. The wound never closes under its holder's hits and still closes under everyone else's. Seen: a fast unit cashes one wound on every hit, and the counter doesn't fall.
 
-### Bloodlust draught
+### Ravening draught
 - **Is:** vial · rare
-- **Card:** Its holder starts every fight at half its HP, and its Lifesteal is doubled until it's healed to full. The HP it starts without isn't damage, and isn't a price paid.
+- **Card:** Its holder starts every fight at half its max HP, and its Lifesteal is doubled until it's healed to full. The HP it starts without isn't damage, and isn't a price paid.
 - **Stats:** Lifesteal medium · HP +1 · Attack +1 (3 of 3)
 - **Numbers:** half of max HP; Lifesteal doubled. A holder that starts below half keeps what it has.
-- **Code:** as today's Bloodlust draught.
+- **Code:** as today's Ravening draught.
 - **Serves:** Pact 2 ●●●, Cuts ● ⚙ brink (key)
-- **Notes:** Today's legendary at rare: the size stays, Lifesteal drops to medium. Nothing that reads a price paid reads its start. Fired again by the opening, the drop doesn't happen and the doubling does. On a Vampire it multiplies with Bloodlust. The doubling is a state held until it's full, not a status its holder gives itself.
+- **Notes:** Today's legendary at rare: the size stays, Lifesteal drops to medium. Nothing that reads a price paid reads its start. Fired again by the opening, the drop doesn't happen and the doubling does. On a Vampire it multiplies with Bloodlust. The doubling is a state held until it's full, not a status its holder gives itself. Renamed from Bloodlust draught in round 3: Bloodlust is the Vampire's passive, which doubles the same stat, and a Vampire holds this.
 
 ### Heartsblood
 - **Is:** vial · legendary
@@ -416,7 +416,7 @@ How the stack words are read here, once:
 
 ### Vulture's skull
 - **Is:** trophy · rare
-- **Card:** Its holder's hits on a Stunned foe crit four times in five, whatever its crit chance. Nothing raises that chance.
+- **Card:** Its holder's hits on a Stunned foe crit 80% of the time, whatever its holder's Crit chance. Nothing raises that chance.
 - **Stats:** Crit damage medium · Defense +1 · Attack +1 (3 of 3)
 - **Numbers:** "nearly always" is 80%, a set chance on those hits. A hit that always crits still does, and the set chance wins over Gambler's coin.
 - **Code:** a crit rule on a condition, as today's Venom vial's; set, and closed to doublings (*Code support*).
@@ -434,7 +434,7 @@ How the stack words are read here, once:
 
 ### Dragon's tooth
 - **Is:** trophy · rare
-- **Card:** Each crit its holder lands strikes again: a third of the damage it dealt lands a second time on the same foe, at once. The second hit takes no new roll to dodge or to crit, and nothing repeats it.
+- **Card:** A third of the damage of each crit its holder lands lands a second time on the same foe, at once. The second landing takes no new roll to dodge or to crit, and nothing repeats it.
 - **Stats:** Crit damage medium · Crit chance +1 · Attack +1 (3 of 3)
 - **Numbers:** a third of the damage the crit dealt. The second hit is a hit: a wound pays, Lifesteal drinks, counters count. It carries none of the crit's statuses.
 - **Code:** 16, 23, as today's Dragon's tooth, with a hit in place of untyped damage.
@@ -443,7 +443,7 @@ How the stack words are read here, once:
 
 ### The king's head
 - **Is:** trophy · legendary
-- **Card:** When its holder lands a killing blow, every ally's crit chance is doubled for a while, to four in five at most.
+- **Card:** When its holder lands a killing blow, every ally's Crit chance is doubled for 20 ticks, up to 80%.
 - **Stats:** Crit damage high · Crit chance +1 · Accuracy medium (4 of 4)
 - **Numbers:** doubled for 20 ticks, renewed by each killing blow. The doubling never lifts a chance past 80%; a chance already higher stays as it is.
 - **Code:** as today's The king's head, with a ceiling on the doubled chance (*Code support*).
@@ -492,7 +492,7 @@ How the stack words are read here, once:
 
 ### Bell of the hour
 - **Is:** bell · rare
-- **Card:** Every fifth basic attack its holder lands casts its first-slotted ability off its cooldown.
+- **Card:** Every fifth basic attack its holder lands casts its first-slotted ability at once, whatever its cooldown, with no wind-up. Its cooldown stays where it was, and its MP is paid.
 - **Stats:** Attack speed medium · MP regen +2 (3 of 3)
 - **Numbers:** every fifth basic attack landed, on a count shown and kept for the fight: about 30 ticks on a fist weapon, 21 under Haste, 15 on Hummingbird charm. The MP is paid; with too little the cast doesn't fire and the count starts again.
 - **Code:** 7.
@@ -550,7 +550,7 @@ How the stack words are read here, once:
 
 ### Feathered cloak
 - **Is:** cloak · uncommon
-- **Card:** The first time each fight its holder drops below half its HP, it's Hidden.
+- **Card:** The first time each fight its holder drops below half its max HP, it's Hidden.
 - **Stats:** Evasion medium · Crit chance +1 (2 of 2)
 - **Numbers:** Hidden at its own length (`STATUS.hidden`), once a fight.
 - **Code:** as today's Feathered cloak, fired on any crossing.
@@ -577,7 +577,7 @@ How the stack words are read here, once:
 
 ### Tempest cloak
 - **Is:** cloak · rare
-- **Card:** Each time its holder dodges a hit, its next basic attack comes at once and strikes twice. The second strike is the same damage again on the same foe, and nothing repeats it.
+- **Card:** Each time its holder dodges a hit, its next basic attack comes at once and lands twice. The second landing is the same damage again on the same foe, and nothing repeats it.
 - **Stats:** Evasion medium · Attack speed medium · Attack +1 (3 of 3)
 - **Numbers:** one swing at once, whose hit lands a second time. The second landing takes no new roll to dodge or to crit. It's a hit: a wound pays, Lifesteal drinks, a Shield from hits builds, counters count. It carries none of the swing's statuses. "At once" doesn't stack.
 - **Code:** as today's Tempest cloak, on 16's second landing. 23.
@@ -595,12 +595,12 @@ How the stack words are read here, once:
 
 ### Swan's grace
 - **Is:** cloak · legendary
-- **Card:** Once a fight, the blow that would knock its holder out leaves it at 1 HP and Hidden.
+- **Card:** Once a fight, damage that would knock its holder out leaves it at 1 HP and Hidden.
 - **Stats:** Evasion high · Attack +1 · Crit chance +1 (4 of 4)
 - **Numbers:** 1 HP; Hidden at its own length.
 - **Code:** as today's Swan's grace.
 - **Serves:** net ⚙ two in the dark (half)
-- **Notes:** Kept: card, size and stats are today's. "The blow" is any damage that would knock it out, a status's included. The Hidden doesn't land on a Taunting holder, or on the last ally the foes can pick: it stands at 1 HP in the light (*Least sure*).
+- **Notes:** Kept: card, size and stats are today's. Any damage that would knock it out, a status's included; the card says "damage" (round 3). The Hidden doesn't land on a Taunting holder, or on the last ally the foes can pick: it stands at 1 HP in the light (*Least sure*).
 
 ## Challenges
 
@@ -630,7 +630,7 @@ Round 1 ruled on the rest, and round 2 on the first, fourth and fifth of these, 
 - **Mana as armour** (Orb of the deep and Idol of the deep, keys; Leech idol, half). One MP for one damage. A giver has to give about a foe's swing at a time (500 or more) for a gift to read as a blow not taken. Clarity does. Leech idol's spill is a tenth of a hit and doesn't.
 - **Shatter bell** (Frozen tome, key). Half the wait on each ally's slowest ability. It needs shatters on a beat, and abilities worth ringing for on the other two.
 - **Firecracker** (Snowbound folio, half). Two or three Chill on every foe. That makes a field "already cold" only beside another wide source.
-- **Brink** (Blood vial and Bloodlust draught, keys). The draught puts its holder at half from the first tick. The vial keeps an Assassin low and a Vampire barely. The other side is the gifts to the ally with the lowest share of max HP.
+- **Brink** (Blood vial and Ravening draught, keys). The draught puts its holder at half from the first tick. The vial keeps an Assassin low and a Vampire barely. The other side is the gifts to the ally with the lowest share of max HP.
 - **Two in the dark** (Shadow cloak, key; Feathered cloak and Swan's grace, halves). Hidden for its own length at the start and at each fall: most of a pack fight, and the first moments of a boss fight. It needs a second hider and an anchor that wants every blow; the third always stays in the light.
 - **Red stone** (Crimson dregs and Heartsblood, halves). A fifth of each hit on a bleeding foe; Lifesteal's amount, full or not, to both other allies. The keystone on a healed ally (Red stone mail) turns Heartsblood into stone for the party.
 

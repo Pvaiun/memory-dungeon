@@ -75,7 +75,7 @@ How the cards here are worded, so the whole share reads one way:
 
 ### Executioner's longbow
 - **Is:** bow · legendary
-- **Card:** Its basic attacks ignore Taunt, and deal more the less HP their target has: a quarter more below three quarters of its HP, half again as much below half, three quarters more below a quarter, and double below a tenth.
+- **Card:** Its basic attacks ignore Taunt, and deal more the less HP their target has: a quarter more below three quarters of its max HP, half again as much below half, three quarters more below a quarter, and double below a tenth.
 - **Stats:** Crit damage high · Crit chance +1 · Attack +1 (4 of 4)
 - **Numbers:** +25%, +50%, +75% and +100% below 75%, 50%, 25% and 10% of the target's max HP, on basic attacks only.
 - **Code:** as today's Executioner's longbow.
@@ -315,7 +315,7 @@ How the cards here are worded, so the whole share reads one way:
 
 ### Martyr's mace
 - **Is:** mace · legendary
-- **Card:** Its basic attacks deal more the lower its wearer's HP: half again as much below 70% of its HP, double below half, two and a half times below a third, and triple below a tenth. Below a third of its HP, each one that lands also heals its wearer for the damage dealt.
+- **Card:** Its basic attacks deal more the lower its wearer's HP: half again as much below seven tenths of its max HP, double below half, two and a half times below a third, and triple below a tenth. Below a third of its max HP, each one that lands also heals its wearer for the damage dealt.
 - **Stats:** HP +2 · Defense +1 · MP regen +2 (5 of 5)
 - **Numbers:** +50% at each of four lines: below 70%, 50%, 33% and 10% of its wearer's max HP. The heal is the damage the basic attack dealt, after Defense, while its wearer is below a third.
 - **Code:** as today's Martyr's mace, with its 30% lines at a third.
@@ -389,7 +389,7 @@ How the cards here are worded, so the whole share reads one way:
 
 ### Evensong staff
 - **Is:** staff · rare
-- **Card:** Each ability its wearer casts makes the next one cast in a moment, with no wind-up. An ability cast that way doesn't do the same for the one after it.
+- **Card:** Each ability its wearer casts makes the next one cast at once, with no wind-up. An ability cast that way doesn't do the same for the one after it.
 - **Stats:** Cast speed medium · Cooldown medium · MP +1 · MP regen +1 (4 of 4)
 - **Numbers:** no amount: every other cast has no wind-up. Its cost, cooldown and recovery are as usual. It's kept until used, within the fight. A cast repeated by another effect neither uses it nor grants it.
 - **Code:** 21 (every other cast with no wind-up).
@@ -398,12 +398,12 @@ How the cards here are worded, so the whole share reads one way:
 
 ### Staff of echoes
 - **Is:** staff · legendary
-- **Card:** Every ability its wearer casts is cast twice: the second follows at once with no wind-up, and is paid for as a cast of its own. If it can't be paid for, there's no second. The second is never cast again, by this or by anything else.
+- **Card:** Every ability its wearer casts is cast twice: the second follows at once with no wind-up, and is paid for as a cast of its own. If it can't be paid for, there's no second. The second picks its target anew, by the ability's own words. It's never cast again, by this or by anything else.
 - **Stats:** Cast speed high · MP +2 · Cooldown medium (5 of 5)
 - **Numbers:** no amount: one more cast for each cast, at its own full cost, paid in MP, or in HP where its wearer's abilities cost HP. Whatever made the first one free is used up by the first. Beside another repeater (the Bard's Encore), each repeats the first cast once: three in all. The second is a cast in every other way: what answers a cast answers it (Stoke, a robe's Shield), and what counts casts counts it (Crescendo, Matins robe).
 - **Code:** 16 (a cast made twice). The second being paid for is new: today's repeats are free.
 - **Serves:** Barrage 3 ●●●, Bonfire ●●, Snap ●●
-- **Notes:** Today's Cataclysm staff repeated every third cast for free; the line makes it every cast, both paid. It empties a pool twice as fast, which is the build's cliff. Two MP steps are there for that.
+- **Notes:** Today's Cataclysm staff repeated every third cast for free; the line makes it every cast, both paid. It empties a pool twice as fast, which is the build's cliff. Two MP steps are there for that. The second cast picks anew (round 3): a Cure goes to whoever is lowest then, and a Firebolt whose first cast felled its foe finds another.
 
 ## Great weapon
 
@@ -436,7 +436,7 @@ How the cards here are worded, so the whole share reads one way:
 
 ### Giantsbane
 - **Is:** great weapon · uncommon
-- **Card:** Its basic attacks deal half again as much to a foe above half its HP.
+- **Card:** Its basic attacks deal half again as much to a foe above half its max HP.
 - **Stats:** Attack +1 · HP +2 (3 of 3)
 - **Numbers:** +50% on basic attacks against a foe above 50% of its max HP.
 - **Code:** a boost by its target's HP, as today's Executioner's axe, turned round.
@@ -463,12 +463,12 @@ How the cards here are worded, so the whole share reads one way:
 
 ### Overrun
 - **Is:** great weapon · rare
-- **Card:** A heavier swing. What its wearer's killing blows have left over carries into a random foe, and on again each time it kills.
+- **Card:** A heavier swing. What its wearer's killing blows have left over carries into another foe, picked by draw, and on again each time it kills.
 - **Stats:** a heavier swing · Attack +2 · Crit damage medium (3 of 3)
 - **Numbers:** all of what the blow had left over. It's a hit on the foe it reaches: it meets that foe's Evasion and Defense and counts as a hit taken (a wound pays, Thorns answer); it isn't boosted or crit again, and it carries no riders. Each kill it makes carries what's left on, until a foe lives, a foe dodges or none is left. Beside Downhill charm on one unit, the left-over is split evenly between the two. The foe is picked as a target after the first is: by draw among the other foes, outside the Taunt rule, and a Mark doesn't take it, as round 2 rules.
 - **Code:** 5 (damage carried past a kill).
 - **Serves:** Landslide 2 ●●●, Hunt ●● ⚙ avalanche (key) ◆ heavy-blow
-- **Notes:** New. Any of its wearer's hits can be the killing blow. The heavier swing is my choice: the piece wants a blow far bigger than what it lands on, and pays a step for it. The foe it carries into is picked at random, so how far a run goes is partly luck (*Links*).
+- **Notes:** New. Any of its wearer's hits can be the killing blow. The heavier swing is my choice: the piece wants a blow far bigger than what it lands on, and pays a step for it. The foe it carries into is picked at random, so how far a run goes is partly luck (*Links*). The card says "another foe, picked by draw" (round 3): "a random foe" is the vocabulary's phrase for a pick a Taunt decides and a Mark takes, and this is neither.
 
 ### Thunderhead maul
 - **Is:** great weapon · rare
@@ -490,9 +490,9 @@ How the cards here are worded, so the whole share reads one way:
 
 ### Twinfall
 - **Is:** great weapon · legendary
-- **Card:** Each hit its wearer lands, a basic attack's or an ability's, lands a second time a moment later: the same damage again, on the same foe. The second carries none of the first's statuses, and nothing repeats it.
+- **Card:** Each hit its wearer lands, a basic attack's or an ability's, lands a second time a tick later: the same damage again, on the same foe. The second carries none of the first's statuses, and nothing repeats it.
 - **Stats:** Attack +2 · HP +2 · Crit damage medium (5 of 5)
-- **Numbers:** a moment is one tick, the line's own, which round 2 lets stand. In all else it's the ruling's hit that lands a second time: the same damage again on the same foe, with no new dodge or crit roll. It's a hit: a wound pays, Lifesteal drinks, counters count. If the foe has fallen, it's lost. An extra strike is a hit too, and lands twice. Beside another repeater (the Peak seat of The mountain), each repeats the first hit once: three in all.
+- **Numbers:** one tick between the two, which round 2 lets stand; the card says "a tick" (round 3), since "a moment" has no size. In all else it's the ruling's hit that lands a second time: the same damage again on the same foe, with no new dodge or crit roll. It's a hit: a wound pays, Lifesteal drinks, counters count. If the foe has fallen, it's lost. An extra strike is a hit too, and lands twice. Beside another repeater (the Peak seat of The mountain), each repeats the first hit once: three in all.
 - **Code:** 16 (a blow landed a second time). The tick between the two is new.
 - **Serves:** Landslide 3 ●●●, Hunt ●●, Cuts ● ◆ heavy-blow
 - **Notes:** New. The tick matters: a hit's own statuses land after it, so the second landing pays the wound the first one opened.

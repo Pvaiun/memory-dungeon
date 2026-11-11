@@ -100,3 +100,21 @@ Round 2. What the shares raised while applying round 1.
 - **The crossing ruling is for HP.** A watcher of MP keeps its own card's words.
 - **Where left-over damage lands is a target after the first,** so a Taunt doesn't decide it, as it doesn't decide a chain's later foes. Round 1's ruling stands otherwise: it's a hit on the foe it reaches, and that foe can dodge it.
 - **A free cast costs nothing, in MP or in HP.** "Costs no MP" on a card means the cast is free, so under an HP price it costs no HP either. New cards say "is free"; a kept card may keep today's words.
+
+Round 3. What the fresh read found.
+
+- **A card gives a percent as the sheet shows it.** Crit chance is a percent on a card: "+50% Crit chance, up to 80%", "crit 80% of the time", "+20% Crit chance". A percent stat an effect gives is its percent (Bloodsworn mail's 20% Lifesteal). Thorns is an amount of damage, which the interface scales, so in the fill its card keeps the scale's word and the build prints the amount (Urchin plate, Spiked targe, Spinebark pole).
+- **A share of HP is a share of max HP,** and the card says "max HP" (thirteen cards changed).
+- **A hit that lands a second time is never called a strike.** Cards say "lands twice" or "a second landing" (Still hand, Tempest cloak, Dragon's tooth, as Hunting spear and Twinfall already do). "Extra strike" is Double strike's, and "strikes with its weapon" is a swing-sized hit out of turn.
+- **A kill is "lands a killing blow",** and a swing it calls "comes at once" (Hunter's buckler, Headsman's axe).
+- **"Damage that would knock it out" is any damage,** a status's included (Last bastion, Swan's grace). "A blow" is a hit.
+- **"Every so often" is 22 ticks,** the short cooldown word. A card on any other beat prints its ticks (Everflame lantern's 3, Kindled robes' and The forge's 4, Burning heart's 10). Where a first beat comes early it's in the numbers, and on the card only where the player has to know (Clear-headed charm's "the first at once").
+- **A piece's stack word is the piece's count,** through `own()`, whatever hit carries it. Curse-book's "a few" was twice Jolt spear's on the same kind of hit, so its card says "several".
+- **A Mark doesn't take what a piece or a seat sends.** Round 2's ruling for pieces holds for a formation's rule too (The forge), and Wick's numbers now follow it.
+- **A fallen foe's fire moves once, in one wording** on its four cards (Wick, Smouldering orb, Ember heart, Pyre line's Torch): "if something else in the party moves it too, it's split evenly between them."
+- **A status that's moved or copied keeps its stacks and the time it has left.** That isn't applying it, so "nothing applies a status for less than its own length" doesn't reach it (Idol of the hungry dark, Scapegoat charm, the copies). A line for the vocabulary.
+- **A piece on one step may take the stat its effect reads, or its road's lean,** in place of its kind's signature (Ragged axe's Attack, Reaver's axe's Crit damage). The kind's commons carry the signature plain.
+- **A card doesn't carry a ruling's sentence.** Where a card said what another card couldn't do to it ("whatever else calls for it", "it carries no riders"), the card now says what happens and the numbers keep the rest (Overture coat, Second dawn, Downhill charm, The standard, Toll gate). "A rider" is the design's word and is off every card.
+- **A formation's first sentence is its promise,** and stays: `builds.md` asks a formation for "a promise in plain words". The rule that a card doesn't say what a thing is for is for pieces.
+- **"Its ability with the longest cooldown" says which it means on the card** where it's the slowest (Reveille, Frozen tome, as Floe charm does).
+- **Names changed in round 3:** Tithing leathers is now Gleaner's leathers; Briar totem is now Nettle totem; Bloodlust draught is now Ravening draught. Thorn hedge's Thorn seat is now the Barb.

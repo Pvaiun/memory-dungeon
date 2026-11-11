@@ -200,11 +200,11 @@
 - **Numbers:** 4% a stack: two fifths more at 10 Shock, double at 25, about two and a half times at the cap (`STATUS.shock.cap`), which is close to what Skyfall gets from a full charge.
 - **Code:** none new: a boost sized by its target's stacks, as Skyfall and Pyre read them in the kits
 - **Serves:** Storm 2 ●●●, Landslide ●, Snap ● ⚙ held charge (key)
-- **Notes:** Sized to the link (a charge at its cap doubles the blow or more) and to be seen below it: a foe holding ten Shock takes two fifths more. The wearer's abilities don't aim at the most charged foe, so the other half is a field charged all over, or a foe held still while the charge climbs.
+- **Notes:** Sized to the link (a charge at its cap doubles the blow or more) and to be seen below it: a foe holding ten Shock takes two fifths more. The wearer's abilities don't aim at the most charged foe, so the other half is a field charged all over, or a foe held still while the charge climbs. One word from Thunderhead maul, which three classes wear beside it; both stay as they are and the pair goes to the director, first on the list of cards alike (round 3).
 
 ### Halved heart
 - **Is:** amulet · rare
-- **Card:** Its wearer starts every fight at half its max HP: anything above half is lost as the fight starts, and it isn't a price paid. It can't be healed above half; healing past that counts as healing past full. At half it counts as below half its HP. Its wearer's hits deal half again as much.
+- **Card:** Its wearer starts every fight at half its max HP: anything above half is lost as the fight starts, and it isn't a price paid. It can't be healed above half; healing past that counts as healing past full. At half it counts as below half its max HP. Its wearer's hits deal half again as much.
 - **Stats:** Lifesteal medium · HP +1 · Defense +1 (3 of 3)
 - **Numbers:** half of max HP, as the start and as the cap on healing. Hits +50%.
 - **Code:** 14
@@ -222,12 +222,12 @@
 
 ### Ember heart
 - **Is:** amulet · rare
-- **Card:** When a burning foe falls, all its Burn passes to the next foe its wearer hits. Until then the wearer holds it, shown as a number, and it doesn't burn down. A fallen foe's fire moves once: if something else moves it too, they share it evenly.
+- **Card:** When a burning foe falls, all its Burn passes to the next foe its wearer hits. Until then the charm keeps it, shown as a number on its wearer: it isn't Burn on the wearer, and it doesn't burn down. A fallen foe's fire moves once: if something else in the party moves it too, it's split evenly between them.
 - **Stats:** Attack +1 · Attack speed medium · HP +1 (3 of 3)
 - **Numbers:** all the stacks the foe held as it fell. Fires from several falls before the wearer's next hit add up, and land together on that hit's first target.
 - **Code:** 9 (a fallen foe's Burn moved), 23 (the split); the fire held on the wearer is under *Code support beyond the spine's list*
 - **Serves:** Bonfire 2 ●●●, Hunt ●● ⚙ fuse (key)
-- **Notes:** Changed as the line says: today's card (a third to every other foe) is Smouldering orb's now. Seen on the first kill of a burning foe: the next foe the wearer strikes starts already roaring. A dodged hit passes nothing, and the fire waits. Attack speed is there so the wait is short; the lantern and the orb are the casters' homes for this, so the amulet leans to the feeder that swings.
+- **Notes:** Changed as the line says: today's card (a third to every other foe) is Smouldering orb's now. Seen on the first kill of a burning foe: the next foe the wearer strikes starts already roaring. A dodged hit passes nothing, and the fire waits. Attack speed is there so the wait is short; the lantern and the orb are the casters' homes for this, so the amulet leans to the feeder that swings. The fire it keeps isn't a status on its wearer (round 3): it doesn't hurt the wearer, light Burning heart or pass by Carrier's coat.
 
 ### Hunter's mark
 - **Is:** amulet · rare
@@ -258,25 +258,25 @@
 
 ### Second dawn
 - **Is:** amulet · legendary
-- **Card:** Each time a foe falls, the start-of-fight effects of every ally's gear and seat happen again. Each happens once a fall, whatever else calls for it, and nothing repeats it.
+- **Card:** Each time a foe falls, the start-of-fight effects of every ally's gear and seat happen again, once for each fall.
 - **Stats:** Attack +1 · Crit chance +1 · HP +1 · Defense +1 (4 of 4)
 - **Numbers:** none of its own: each effect comes at the size it had as the fight started.
 - **Code:** 8, 23
 - **Serves:** Hunt 3 ●●● ⚙ opening again (key)
-- **Notes:** A party's piece: any unit can carry it, and it works while its wearer stands. Prices and drawbacks paid at the start don't happen again (Halved heart's, Horn of the charge's). By round 1's ruling a formation's rule for the whole party isn't an ally's gear or seat, so it doesn't happen again; and a kill is a kill, so a foe felled by an effect that happened again is a fall like any other.
+- **Notes:** A party's piece: any unit can carry it, and it works while its wearer stands. Prices and drawbacks paid at the start don't happen again (Halved heart's, Horn of the charge's). By round 1's ruling a formation's rule for the whole party isn't an ally's gear or seat, so it doesn't happen again; and a kill is a kill, so a foe felled by an effect that happened again is a fall like any other. "Once for each fall" is all the card says of the ruling (round 3): whatever else calls for the same fall's opening, it happens once, and nothing repeats it.
 
 ### Downhill charm
 - **Is:** amulet · legendary
-- **Card:** What its wearer's killing blows have left over is split evenly among the other foes, once: a share that fells a foe carries no further. Each share is a hit on the foe it reaches: it can be dodged and meets Defense, and it isn't boosted or crit again and carries no riders. If another of its wearer's pieces carries the same left-over, the two share it evenly.
+- **Card:** What its wearer's killing blows have left over is split evenly among the other foes, as a hit on each. It carries once: a share that fells a foe carries no further.
 - **Stats:** Attack +2 · Crit chance +1 · Crit damage medium (4 of 4)
-- **Numbers:** none of its own: the blow's damage past the HP its foe had left, divided by the foes still standing.
+- **Numbers:** none of its own: the blow's damage past the HP its foe had left, divided by the foes still standing. Each share is a hit on the foe it reaches, by the ruling on left-over damage: it can be dodged and meets Defense, it isn't boosted or crit again, and it carries none of the blow's statuses. If another of its wearer's pieces carries the same left-over, the two share it evenly.
 - **Code:** 5
 - **Serves:** Landslide ●●, Hunt ●● ⚙ avalanche (key)
 - **Notes:** The second and third sentences are round 1's ruling on left-over damage. Seen as the line says: a kill, and a small number on every other foe. Each share counts as a hit taken, so every wound on the field pays and every thorned foe answers. A foe a share fells is a kill, and calls whatever a kill calls. The other half is a blow far bigger than what it lands on; small shares lose more to Defense, so on an armoured pack it's weak.
 
 ### Twin-knot
 - **Is:** amulet · legendary
-- **Card:** Whenever its wearer gives itself a status, the other ally with the lowest share of max HP gains it too, with as many stacks. A state its wearer holds only while something is true of it (while it's below half its HP, while it holds a Shield) isn't given, and isn't shared. What's shared isn't shared again.
+- **Card:** Whenever its wearer gives itself a status, the other ally with the lowest share of max HP gains it too, with as many stacks. A state its wearer holds only while something is true of it (while it's below half its max HP, while it holds a Shield) isn't given, and isn't shared. What's shared isn't shared again.
 - **Stats:** Cooldown medium · Attack +1 · HP +1 · Defense +1 (4 of 4)
 - **Numbers:** the copy is the same size: as many stacks, as much Shield. It runs its own course on the ally, at the status's own length.
 - **Code:** 13
@@ -294,7 +294,7 @@
 
 ### Burning heart
 - **Is:** amulet · legendary
-- **Card:** Every so often (every 10 ticks, so the fire never goes out) its wearer sets itself alight: a few Burn on itself, a set number that reads no stat. While it holds any Burn, its wearer's hits deal half again as much.
+- **Card:** Every 10 ticks, its wearer sets itself alight: a few Burn on itself, a set number that reads no stat. While it holds any Burn, its wearer's hits deal half again as much.
 - **Stats:** Lifesteal high · HP +1 · Attack +1 (4 of 4)
 - **Numbers:** a few: `FLAT_STACKS.few`, every 10 ticks, the card's own beat: it's how long that many stacks take to burn out. Burn keeps its own numbers (`STATUS.burn`): about 40 HP a tick, some 1,600 over a regular fight. Hits +50%.
 - **Code:** 22 (a status the wearer lays on itself)
@@ -413,7 +413,7 @@ Each with the items in it and what stops it.
 
 - **Burning heart.** The size is ruled, and it still costs about 1,600 HP a fight. It may be worn by nobody without Lifesteal and a healer, or it may be what Blood Pact wants.
 - **Heart of winter.** One Chill rider on its wearer chills the whole field at a single target's pace, and on an anchor with Hoarfrost plate every blow a pack lands chills all of it. It may be Cold Snap's far end in one piece.
-- **Halved heart.** Three sentences of rules before its payoff, and two things nobody wrote: every watcher of a drop below half fires on it at each fight's start, and Bloodlust draught's doubled Lifesteal, which lasts "until it's full", lasts all fight.
+- **Halved heart.** Three sentences of rules before its payoff, and two things nobody wrote: every watcher of a drop below half fires on it at each fight's start, and Ravening draught's doubled Lifesteal, which lasts "until it's full", lasts all fight.
 - **Clear-headed charm beside The deep well.** As a state it's Barrage's first step at a size that's seen. With the well, a caster under half casts free three ticks in four.
 - **Downhill charm as a wide hit.** With each share a hit taken, one kill cashes every wound on the field and takes every Thorns back. That's more than its line's "a small number on every other foe" suggests, for Thousand Cuts and against thorned packs alike.
 - **Twin-knot.** Its boundary is ruled, and the second sentence of its card is still the hardest in my share to read. Vanguard's Shield, the Valkyrie's Shield from every hit and a counter a piece gives are all shared under it.

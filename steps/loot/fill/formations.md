@@ -41,7 +41,7 @@ Thirty-five formations, in the spine's order: 13 common, 12 rare, 10 legendary. 
 
 ### Spur
 - **Is:** formation · common
-- **Card:** One opens the wound; two pour into it. **Opener:** Crits far more often: 20 points more Crit chance. **Blade** (two seats): Basic attacks a fifth faster.
+- **Card:** One opens the wound; two pour into it. **Opener:** Crits far more often: +20% Crit chance. **Blade** (two seats): Basic attacks a fifth faster.
 - **Numbers:** Opener: Crit chance +20 points, the table's top word (`CRIT_TABLE[5]`). Blade: Attack speed +20 (`FIFTH_FASTER`).
 - **Code:** none: stats on seats.
 - **Serves:** Cuts 1 ●●●, Bonfire ●, Storm ●, Snap ●
@@ -81,11 +81,11 @@ Thirty-five formations, in the spine's order: 13 common, 12 rare, 10 legendary. 
 
 ### Thorn hedge
 - **Is:** formation · common
-- **Card:** A thorned wall that draws the blows, and two who make every blow on it cost. **Anchor:** Draws far more. Thorns. **Warden:** Each hit the Anchor takes heals the Anchor for 3% of the Warden's max HP. **Thorn:** A foe that hits the Anchor has damage sent back at it: a twentieth of the Thorn's Attack.
+- **Card:** A thorned wall that draws the blows, and two who make every blow on it cost. **Anchor:** Draws far more. Thorns. **Warden:** Each hit the Anchor takes heals the Anchor for 3% of the Warden's max HP. **Barb:** A foe that hits the Anchor has damage sent back at it: a twentieth of the Barb's Attack.
 - **Numbers:** Anchor: Aggro +25; Thorns medium (150 a hit taken). Warden: 3% of the Warden's own max HP a hit (60 from a Cleric's 2,000, 120 from a Paladin's 4,000). Thorn: 5% of the Thorn's Attack a hit (200 at Attack 4), sent back: a reaction as Thorns is, untyped, not a hit. The scale has no word this small (`HIT.touch` is 17%), so both values are mine.
 - **Code:** reactions to a hit on a named seat, as today's Thorn hedge's two seats, with a heal and a damage in place of their Weaken.
 - **Serves:** Toll 1 ●●●, Pact ●
-- **Notes:** Today's Thorn hedge (Thorns high on the Anchor, two seats that Weaken its attackers) goes; the name and the Anchor stay, the Anchor's Thorns at medium as the line has it. Seen: a wolf's bite on a Plate wall lands for 100 to 130 and a bandit's swing for about 300, so the mend is a number the size of the bite, and the attacker reads two numbers where it read one. The Thorn's size is near Thorns' own on purpose: at `HIT.touch` it would be four Thorns a bite, on the road that least needs it.
+- **Notes:** Today's Thorn hedge (Thorns high on the Anchor, two seats that Weaken its attackers) goes; the name and the Anchor stay, the Anchor's Thorns at medium as the line has it. Seen: a wolf's bite on a Plate wall lands for 100 to 130 and a bandit's swing for about 300, so the mend is a number the size of the bite, and the attacker reads two numbers where it read one. The Thorn's size is near Thorns' own on purpose: at `HIT.touch` it would be four Thorns a bite, on the road that least needs it. The third seat is the Barb, renamed from Thorn in round 3: what it sends back isn't Thorns, so nothing that reads Thorns reads it, and the name said otherwise.
 
 ### Wellspring
 - **Is:** formation · common
@@ -113,11 +113,11 @@ Thirty-five formations, in the spine's order: 13 common, 12 rare, 10 legendary. 
 
 ### The standard
 - **Is:** formation · common
-- **Card:** Two follow the lead's colour. **Lead:** Nothing of its own. **Follower** (two seats): Its basic attacks carry whatever the Lead's basic attacks carry: every status the Lead's swing adds to its target, from the Lead's passive, its gear or a buff it holds, the Follower's swing adds too, in the Follower's own stacks. A rider that waits for a crit, a first hit or a count waits for the Follower's own. A rider the Follower's swing already holds from the same source is added once, not twice. Nothing else of the Lead's swing passes, and what a Follower carries this way is never carried again.
-- **Numbers:** none of its own. Each rider keeps its word (a few, several, many) and reads the Follower's stat where the Lead's reads the Lead's.
+- **Card:** Two follow the lead's colour. **Lead:** Nothing of its own. **Follower** (two seats): Its basic attacks add whatever statuses the Lead's basic attacks add to their target. They're added as its own would be: on the same condition, with stacks from the Follower's own stats, and never twice from one source. What it borrows isn't borrowed on by anyone else.
+- **Numbers:** none of its own. What's borrowed is every status the Lead's swing adds to its target, from the Lead's passive, its gear or a buff it holds. One that waits for a crit, a first hit or a count waits for the Follower's own. One the Follower's swing already holds from the same source is added once, not twice. Nothing else of the Lead's swing passes. Each rider keeps its word (a few, several, many) and reads the Follower's stat where the Lead's reads the Lead's.
 - **Code:** 12.
 - **Serves:** Bonfire 1 ●●●, Snap 1 ●●●, Storm 1 ●●●, Cuts 1 ●● ⚙ lead's colour (key)
-- **Notes:** New. The card says more than the line, as round 1 settled "carry": the Follower takes each rider whole, reads its own stat and meets any condition itself. "Nothing else" is the spine's phrase for a carried swing: no second target, no damage boost, no heal, no MP. "The same source" is a storm on the whole party or Crown of embers: the Follower has that rider already and doesn't take the Lead's copy. A rider the Lead's own swing borrows from someone else isn't the Lead's to pass. Behind a Lead whose swing adds nothing the Followers do nothing, and with the Lead down they carry nothing.
+- **Notes:** New. The card says more than the line, as round 1 settled "carry": the Follower takes each rider whole, reads its own stat and meets any condition itself. "Nothing else" is the spine's phrase for a carried swing: no second target, no damage boost, no heal, no MP. "The same source" is a storm on the whole party or Crown of embers: the Follower has that rider already and doesn't take the Lead's copy. A rider the Lead's own swing borrows from someone else isn't the Lead's to pass. Behind a Lead whose swing adds nothing the Followers do nothing, and with the Lead down they carry nothing. The card is in Mimic wand's words (round 3): "a rider" is the design's word and no player has been given it, and this is a common. The ruling on carrying is whole in the numbers.
 
 ### First light
 - **Is:** formation · common
@@ -147,7 +147,7 @@ Thirty-five formations, in the spine's order: 13 common, 12 rare, 10 legendary. 
 
 ### Bloodied ground
 - **Is:** formation · rare
-- **Card:** One opens them up; two drink from the wound. **Opener:** Its crits add many Bleed. **Blade** (two seats): Each hit it lands on a bleeding foe heals it for 3% of its max HP.
+- **Card:** One opens them up; two drink from the wound. **Opener:** Its crits add many Bleed. **Blade** (two seats): Each hit it lands on a bleeding foe heals the Blade for 3% of its max HP.
 - **Numbers:** Opener: many Bleed, flat (7), on each crit, swing or ability. Blade: 3% of its own max HP a hit (90 at 3,000 HP); every hit counts, extra strikes and each hit of an ability.
 - **Code:** the Opener as Lacerate answers a crit; the Blade as today's Crimson dregs (a hit on a bleeding foe heals), read off max HP.
 - **Serves:** Cuts 2 ●●●, Pact ●●
@@ -155,7 +155,7 @@ Thirty-five formations, in the spine's order: 13 common, 12 rare, 10 legendary. 
 
 ### Pyre line
 - **Is:** formation · rare
-- **Card:** The fire outlives whatever it's burning. **Keeper:** Taunts and is Guarded when each fight starts. Foes that hit it gain a few Burn. **Stoker:** Basic attacks a third faster. **Torch:** When a burning foe falls, all its Burn passes to the foe with the highest current HP. A fallen foe's fire moves once: if something else in the party moves it too, it's split evenly between the places they send it.
+- **Card:** The fire outlives whatever it's burning. **Keeper:** Taunts and is Guarded when each fight starts. Foes that hit it gain a few Burn. **Stoker:** Basic attacks a third faster. **Torch:** When a burning foe falls, all its Burn passes to the foe with the highest current HP. A fallen foe's fire moves once: if something else in the party moves it too, it's split evenly between them.
 - **Numbers:** Keeper: Taunt and Guard, at their own lengths; a few Burn, flat (2), on a foe for each hit it lands on the Keeper. Stoker: Attack speed +33. Torch: every stack the foe held as it fell.
 - **Code:** 9, as today's Wick, which sends the fire to the foe with the most HP. The Keeper's Burn is a reaction to a hit taken, as Thorn hedge's seats react today.
 - **Serves:** Bonfire 2 ●●●, Hunt ●● ⚙ fuse (key)
@@ -187,7 +187,7 @@ Thirty-five formations, in the spine's order: 13 common, 12 rare, 10 legendary. 
 
 ### Toll gate
 - **Is:** formation · rare
-- **Card:** Whatever strikes the gate pays the other two's toll. **Gate:** Draws far more. Guarded when each fight starts. **Collector** (two seats): A foe that hits the Gate gains whatever this seat's basic attacks carry: every status its swing adds to its target with each swing, in the stacks one swing adds. A rider that waits for a crit, a first hit or a count doesn't pass, and neither does one its swing borrows from another unit. A rider both Collectors hold from one source is laid once. What's laid this way is never carried or spread again.
+- **Card:** Whatever strikes the gate pays the other two's toll. **Gate:** Draws far more. Guarded when each fight starts. **Collector** (two seats): A foe that hits the Gate gains whatever statuses this seat's basic attacks add to their target with every swing, in the stacks one swing adds. One that waits for a crit, a first hit or a count doesn't pass, and neither does one its swing borrows from another unit. Where both Collectors would add a status from one source, it's added once. What's added this way is never carried or spread again.
 - **Numbers:** Gate: Aggro +25; Guard, at its own length. Collector: each rider's own word, read off the Collector's stat, once from each Collector for each hit the Gate takes.
 - **Code:** 12.
 - **Serves:** Toll 2 ●●●, Snap ●●, Storm ●●, Cuts ●●, Bonfire ● ⚙ frozen gate (key), goad (half), red rain (half)
@@ -253,11 +253,11 @@ Thirty-five formations, in the spine's order: 13 common, 12 rare, 10 legendary. 
 
 ### The forge
 - **Is:** formation · legendary
-- **Card:** The longer the fire is kept, the faster the party feeds it. **Forgehand** (all three seats): Nothing of its own. **The party:** While any foe burns, every ally gains a Heat every few ticks (it acts 5% faster in everything for each Heat, up to 10, for the rest of the fight). Whenever an ally is Stunned or Silenced, the foe with the most Burn gains many Burn.
+- **Card:** The longer the fire is kept, the faster the party feeds it. **Forgehand** (all three seats): Nothing of its own. **The party:** While any foe burns, every ally gains a Heat every 4 ticks (each acts 5% faster in everything for each Heat, up to 10, for the rest of the fight). Whenever an ally is Stunned or Silenced, the foe with the most Burn gains many Burn.
 - **Numbers:** one Heat an ally every 4 ticks while any foe holds Burn ("every few ticks", by round 1), to Heat's own 10: the full count after 40 burning ticks. Many Burn, flat (7), each time an ally gains Stun or Silence.
 - **Code:** the Heat as today's Kindled robes' pulse, on every ally. The Burn is a reaction to an ally gaining Stun or Silence, as today's Gaol's Turnkey hears a foe's.
 - **Serves:** Bonfire 3 ●●●
-- **Notes:** Today's The forge (Heat as damage, a Slow at the start) goes; the name stays, and Heat is speed now. A regular fight ends near the full count and a short one at half. Heat is given, not counted, so a unit that also wears the robes gains two a beat. Against a Silence that falls on all three, the second rule fires three times at once. With nothing burning, "the foe with the most Burn" is a random foe, and that pick follows a Mark.
+- **Notes:** Today's The forge (Heat as damage, a Slow at the start) goes; the name stays, and Heat is speed now. A regular fight ends near the full count and a short one at half. Heat is given, not counted, so a unit that also wears the robes gains two a beat. Against a Silence that falls on all three, the second rule fires three times at once. With nothing burning, "the foe with the most Burn" is a foe picked by draw: it's fire a seat sends, not a blow, so a Mark doesn't take it (round 3, as round 2 rules for a piece). The card's bracket says "each acts", since every ally gains the Heat, and "every 4 ticks", as Kindled robes does.
 
 ### The long winter
 - **Is:** formation · legendary
@@ -277,7 +277,7 @@ Thirty-five formations, in the spine's order: 13 common, 12 rare, 10 legendary. 
 
 ### Open season
 - **Is:** formation · legendary
-- **Card:** Every kill calls the volley again. **Hunter** (all three seats): Nothing of its own. **The party:** While no foe is Marked, the foe with the lowest current HP is Marked. When each fight starts, and whenever a Marked foe falls, every ally's next basic attack comes at once. A swing already called gains nothing from a second call.
+- **Card:** Every kill calls the party's weapons down again. **Hunter** (all three seats): Nothing of its own. **The party:** While no foe is Marked, the foe with the lowest current HP is Marked. When each fight starts, and whenever a Marked foe falls, every ally's next basic attack comes at once. A swing already called gains nothing from a second call.
 - **Numbers:** Marked, at its own length, and laid again the moment no foe holds one. "At once": each ally's basic attack is made ready.
 - **Code:** 19, 1, 23. The volley as today's Pack leader's coat.
 - **Serves:** Hunt 3 ●●●, Landslide ●●, Bonfire ● ⚙ judge's drum (key)
@@ -301,7 +301,7 @@ Thirty-five formations, in the spine's order: 13 common, 12 rare, 10 legendary. 
 
 ### The covenant
 - **Is:** formation · legendary
-- **Card:** Life is the party's one currency. **Sworn** (all three seats): Nothing of its own. **The party:** Every ally's abilities cost HP in place of MP: the same share of its max HP as they'd cost of its max MP. No ally casts one that would leave it below a tenth of its HP. Every ally has Lifesteal, high.
+- **Card:** Life is the party's one currency. **Sworn** (all three seats): Nothing of its own. **The party:** Every ally's abilities cost HP in place of MP: the same share of its max HP as they'd cost of its max MP. No ally casts one that would leave it below a tenth of its max HP. Every ally has Lifesteal, high.
 - **Numbers:** the price is (the ability's MP cost ÷ the unit's max MP) × its max HP: a Pyromancer's Fireball is 26% of its bar, a Knight's Fortify 33%. The floor at a tenth is today's Blood covenant's. Lifesteal high (20%).
 - **Code:** 20, as today's Blood covenant, on every ally.
 - **Serves:** Pact 3 ●●●, Barrage ●● ⚙ blood mage (key), brink (half)
@@ -375,7 +375,7 @@ For each engine this share touches: the size on my side, and what the other side
 - **Every MP gain of one unit sent to a seat** (The cathedral's Voices). Today's Leech idol sends on only what's past full.
 - **Healing past full, told apart by its source** (Blood oath's Drinker: its Lifesteal's alone). The `overhealed` event names a kind only when an action healed.
 - **A pick that passes by an ally that can't be healed** (Shared cup): at full, or at a cap on its healing.
-- **Amounts read off another seat's unit:** the Warden's max HP for a heal on the Anchor, the Thorn's Attack for damage on the Anchor's attacker, the Soloist's max MP for a gift to it, the Wall's Spite for a Reaper's boost. The last is in 15; I haven't checked the others against `PRIMITIVES.md`.
+- **Amounts read off another seat's unit:** the Warden's max HP for a heal on the Anchor, the Barb's Attack for damage on the Anchor's attacker, the Soloist's max MP for a gift to it, the Wall's Spite for a Reaper's boost. The last is in 15; I haven't checked the others against `PRIMITIVES.md`.
 - **A test that every ally holds a Shield,** read each time the Peak lands a blow (The mountain).
 
 ## Least sure
