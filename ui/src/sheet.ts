@@ -15,10 +15,10 @@ import { combat, type Member } from "../../src/engine/combat/rules.js";
 import { drawOf, resolveWeapon, weaponOf } from "../../src/engine/combat/fight.js";
 import { armorName, c, cls, disp, DISPLAY_DIV, immuneTo, kindOf, offhandName, SHEET_STATS, shortName, SPECIAL_STATS, showStat, statCode, status, tagline } from "./content.js";
 import { abilityInfo, abilityTag, evalNum, scalesOf, sizeParts, statusText, TYPE_TONE, TYPE_WORD, type Scale, type SizePart, type Stats } from "./describe.js";
-import { gearIcon, SLOT_ICON, TAG_ICON, weaponLook } from "./art.js";
+import { TAG_ICON, weaponLook } from "./art.js";
 import { canEquip, handsOf } from "../../src/validate.js";
 import { h, type Child } from "./dom.js";
-import { actionIconOf, actorEl, faceEl, iconEl, pipEl, statusEl, weaponEl } from "./pixel.js";
+import { actionIconOf, actorEl, faceEl, gearIconEl, iconEl, pipEl, slotIconEl, statusEl, weaponEl } from "./pixel.js";
 import { gearFor, party, setup, soloParty } from "./state.js";
 
 /** The four gear slots, in the order the sheets list them. */
@@ -238,7 +238,7 @@ export function wearersLine(g: GearT, roster: readonly string[]): HTMLElement {
 
 /** A slot that can't be filled: the offhand under a two-handed weapon. */
 export function lockedRow(slot: string): HTMLElement {
-  return h("div", { class: "gear-row locked" }, h("span", { class: "art" }, iconEl(SLOT_ICON[slot] ?? TAG_ICON.physical)), h("div", { class: "grow trunc" }, h("div", { class: "line" }, h("span", { class: "dim" }, slot.toUpperCase())), h("div", { class: "line small dim" }, "LOCKED")));
+  return h("div", { class: "gear-row locked" }, h("span", { class: "art" }, slotIconEl(slot)), h("div", { class: "grow trunc" }, h("div", { class: "line" }, h("span", { class: "dim" }, slot.toUpperCase())), h("div", { class: "line small dim" }, "LOCKED")));
 }
 /** Is the weapon this gear holds two-handed? Then the offhand reads locked. */
 export const twoHanded = (gear: Record<string, string | undefined>) => !!gear.weapon && handsOf(c.pack, c.gear.get(gear.weapon)) === 2;
@@ -250,8 +250,8 @@ export const twoHanded = (gear: Record<string, string | undefined>) => !!gear.we
  */
 export function gearRow(g: GearT | null, slot: string, stats: Stats | null, onClick?: () => void, arrow = true, who?: readonly string[]): HTMLElement {
   const slotName = h("span", { class: "dim" }, slot.toUpperCase());
-  if (!g) return h("div", { class: "gear-row", onClick }, h("span", { class: "art" }, iconEl(SLOT_ICON[slot] ?? TAG_ICON.physical)), h("div", { class: "grow trunc" }, h("div", { class: "line" }, slotName), h("div", { class: "line small dim" }, "NOTHING")), onClick && arrow ? h("span", { class: "dim" }, "▶") : null);
-  const art = (g.slot === "weapon" ? weaponEl(g.id) : null) ?? iconEl(gearIcon(g));
+  if (!g) return h("div", { class: "gear-row", onClick }, h("span", { class: "art" }, slotIconEl(slot)), h("div", { class: "grow trunc" }, h("div", { class: "line" }, slotName), h("div", { class: "line small dim" }, "NOTHING")), onClick && arrow ? h("span", { class: "dim" }, "▶") : null);
+  const art = (g.slot === "weapon" ? weaponEl(g.id) : null) ?? gearIconEl(g);
   const tone = pieceTone(g);
   const rare = g.rarity && g.rarity !== "common" ? g.rarity : null;
   // Everything wraps: a long name, a weapon's hit and its codes, the card's sentence.

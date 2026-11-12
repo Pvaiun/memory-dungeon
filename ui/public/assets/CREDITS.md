@@ -8,6 +8,7 @@ Sprites in this folder are a processed subset of packs the director supplied for
 - `enemies/`: sideview enemy sprite pack (pixel art, RPG Maker MV sideview layout). One chosen recolor each.
 - `status/`: "Status effect and various icons", recolored per status by `ui/tools/assets.py`.
 - `iconset.png`: Iconset by Willibab / Monsteretrope, CC BY.
+- `gear.png`: the director's gear icon pack (16×16 equipment icons, licensed asset-pack art), some recoloured, with icons drawn in its style by `ui/tools/gear_icons.py`.
 - `backdrops/`: scenes composed from Willibab's Overworld, Dungeon and Castle tilesets, CC BY.
 - `vfx/`: frames from the "Pixel Animations and Effects Pack" by finalbossblues (timefantasy.net), as the director's "VFX Spells" set names them, packed into strips; some recoloured or turned by `ui/tools/assets.py`.
 

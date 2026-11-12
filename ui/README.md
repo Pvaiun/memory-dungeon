@@ -34,7 +34,8 @@ python3 -I ui/tools/assets.py <folder with the packs extracted> ui/public/assets
 - **Enemies:** the Retro 8-bit Monster Pack, downscaled at run time by `downscale` in `src/pixel.ts`, which keeps their few colours. A few show a different name on screen, to match the sprite that fits them.
 - **Backdrops:** composed by the tool from the overworld, dungeon and castle tilesets, one scene a dungeon theme.
 - **Icons:**
-  - gear and ability tags come from the iconset (`gearIcon` in `src/art.ts`);
+  - gear that isn't a weapon has an icon of its own, of its kind's shape (a breastplate for plate, a horn for a horn), from the director's gear icon pack (`game_icons`), built by `ui/tools/gear_icons.py` into `gear.png` (`python3 -I ui/tools/gear_icons.py <packs dir> ui/public/assets`). Its table gives each piece a pack icon, the same icon recoloured, or one the tool draws in the pack's style where the pack has none (orbs, vials, bells, tomes, lanterns, totems, skulls, the chalice). An icon belongs to one kind only; a piece missing from the table shows its kind's; empty slots show their slot's, dimmed;
+  - weapons and ability tags come from the iconset (`gearIcon` in `src/art.ts`);
   - statuses are the pack's 16px icons recoloured per status (`STATUSES` in the tool), with stand-ins for newer statuses (`STAND_INS`) until the director's art pass;
   - abilities use the "64x64 Elemental Skill Variants" pack (`ABILITY_ICON`).
 - **Effects:** the director's "VFX Spells" set, one strip per effect named as the set names it (`fireball`, `crescent_cut`), cropped to its frames, with recoloured and turned copies for looks the set draws in one colour (`VFX_DERIVED` in the tool: a blood claw, a dark fire, a flying arrow). Art only: nothing changes a fight.

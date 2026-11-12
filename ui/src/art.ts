@@ -31,6 +31,9 @@ export type Manifest = {
   campfire?: { file: string; frames: number; size: number };
   /** Chests: an object sheet of square cells, each colour's column opening down its rows. */
   chest?: { file: string; cell: number; frames: number; columns: Record<string, number> };
+  /** Gear icons, 16×16 at art size in a 16-column sheet: a cell per piece that isn't a weapon, by id, and per "kind:<kind>" and "slot:<slot>". */
+  gearSheet?: string;
+  gear?: Record<string, number>;
 };
 
 export let manifest: Manifest;
@@ -48,7 +51,7 @@ export async function loadArt(): Promise<void> {
   const files = [
     ...Object.values(manifest.classes), ...Object.values(manifest.enemies).map((e) => e.file), ...Object.values(manifest.vfx).map((v) => v.file), manifest.iconset,
     ...Object.values(manifest.statuses), ...Object.values(manifest.abilities), ...Object.values(manifest.weapons), ...Object.values(manifest.faces), ...Object.values(manifest.backdrops),
-    ...(manifest.campfire ? [manifest.campfire.file] : []), ...(manifest.chest ? [manifest.chest.file] : []),
+    ...(manifest.campfire ? [manifest.campfire.file] : []), ...(manifest.chest ? [manifest.chest.file] : []), ...(manifest.gearSheet ? [manifest.gearSheet] : []),
   ];
   await Promise.all(files.map(load));
 }
@@ -172,7 +175,19 @@ const OFFHAND_CELL: Record<string, [Cell, Shade]> = {
 const AMULET_CELL: Cell = [20, 4];
 const shade = (cell: Cell, s: Shade): Cell => [cell[0] + SHADE[s], cell[1]];
 
-/** The iconset cell for a piece of gear: its kind's or type's icon, the casters' weapons purple and the rest blue, gold for legendary and mythic pieces. */
+/**
+ * A piece's cell in the gear sheet (ui/tools/gear_icons.py): its own, or for a rogue run's item its base piece's, else
+ * its kind's; undefined for a weapon, which keeps the iconset and its strip.
+ */
+export function gearCell(g: GearT): number | undefined {
+  if (g.slot === "weapon" || !manifest.gear) return undefined;
+  const kind = g.armor ?? g.offhand ?? (g.slot === "amulet" ? "amulet" : undefined);
+  return manifest.gear[g.id] ?? manifest.gear[baseGearId(g.id)] ?? (kind ? manifest.gear[`kind:${kind}`] : undefined) ?? manifest.gear[`slot:${g.slot}`];
+}
+/** An empty slot's cell in the gear sheet, dimmed; undefined for the weapon's, which keeps the iconset's. */
+export const slotCell = (slot: string): number | undefined => manifest.gear?.[`slot:${slot}`];
+
+/** The iconset cell for a piece of gear, where the gear sheet has none (a weapon): its kind's or type's icon, the casters' weapons purple and the rest blue, gold for legendary and mythic pieces. */
 export function gearIcon(g: GearT): Cell {
   const gold = g.tier === "powerful";
   if (g.slot === "weapon") return kindIcon(g.weapon?.kind ?? "sword", gold);

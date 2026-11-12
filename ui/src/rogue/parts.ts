@@ -4,11 +4,11 @@
  */
 import { bar, button, type Child, h, toast, win } from "../dom.js";
 import type { RogueNodeKindT } from "../../../src/schema.js";
-import { type Cell, gearIcon, type Pose } from "../art.js";
+import { type Cell, type Pose } from "../art.js";
 import { bagRoom, bench, formationRarity, type Item, itemGear, member, type Offer, parseTraining, rogue, type RogueRun, seatsOf, wearer } from "../../../src/rogue.js";
 import { c, cls as classOf, shortName } from "../content.js";
 import { abilityBlock, formationNote, gearRow, RARITY_TONE, role, seatLines } from "../sheet.js";
-import { actionIcon16, faceEl, iconEl, iconOf, weaponIcon } from "../pixel.js";
+import { actionIcon16, faceEl, gearIconOf, iconEl, iconOf, weaponIcon } from "../pixel.js";
 import { foesOnStage, partyInLine, partyOnStage, type StageActor, stageEl, type StageOpts, themeOf } from "../battle/scene.js";
 import { abilityTag } from "../describe.js";
 import { saveRogue, vitals } from "./state.js";
@@ -136,7 +136,7 @@ export function lootActors(run: RogueRun, offers: Offer[], gold: boolean, h: num
     if (o.kind === "gear" && o.sealed) arts.push(cell(ICON.treasure));
     else if (o.kind === "gear" || o.kind === "bundle") {
       const g = c.gear.get(o.item.uid) ?? itemGear(c, o.item);
-      arts.push((g.slot === "weapon" ? weaponIcon(g.id) : null) ?? cell(gearIcon(g)));
+      arts.push((g.slot === "weapon" ? weaponIcon(g.id) : null) ?? gearIconOf(g));
     } else if (o.kind === "tome") arts.push(actionIcon16(abilityTag(c.abilities.get(o.ability)!), o.ability));
     else if (o.kind === "recruit") arts.push(o.cls);
     else if (o.kind === "formation") arts.push(cell(FORMATION_ICON));
