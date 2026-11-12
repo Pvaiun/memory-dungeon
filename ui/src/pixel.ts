@@ -16,7 +16,8 @@
  * crowded fights can shrink them further with the same filter and an outline.
  */
 import { c } from "./content.js";
-import { image, manifest, POSE, statusStyle, TAG_ICON, weaponArt, type Pose } from "./art.js";
+import type { GearT } from "../../src/schema.js";
+import { gearCell, gearIcon, image, manifest, POSE, SLOT_ICON, slotCell, statusStyle, TAG_ICON, weaponArt, type Pose } from "./art.js";
 
 export const FRAME_W = 270;
 export const OUTLINE = "#14141e";
@@ -395,6 +396,31 @@ export function iconOf(row: number, col: number, tint?: string): HTMLCanvasEleme
   return tint ? tinted(cv, tint, 0.55) : cv;
 }
 export const iconEl = (cell: readonly [number, number], scale = 1, tint?: string) => canvasEl(iconOf(cell[0], cell[1], tint), scale, "icon");
+
+// ─── Gear icons: 16×16 at art size, 16 columns (ui/tools/gear_icons.py); weapons keep the iconset ───
+const gearIcons = new Map<number, HTMLCanvasElement>();
+function gearSheetIcon(i: number | undefined): HTMLCanvasElement | undefined {
+  const img = manifest.gearSheet ? image(manifest.gearSheet) : undefined;
+  if (i === undefined || !img?.complete || !img.naturalWidth) return undefined;
+  let cv = gearIcons.get(i);
+  if (!cv) {
+    cv = cv2d(16, 16);
+    cv.getContext("2d")!.drawImage(img, (i % 16) * 16, Math.floor(i / 16) * 16, 16, 16, 0, 0, 16, 16);
+    gearIcons.set(i, cv);
+  }
+  return cv;
+}
+/** A piece's icon: its cell in the gear sheet, else (a weapon) its iconset cell. */
+export function gearIconOf(g: GearT): HTMLCanvasElement {
+  const cell = gearIcon(g);
+  return gearSheetIcon(gearCell(g)) ?? iconOf(cell[0], cell[1]);
+}
+export const gearIconEl = (g: GearT, scale = 1) => canvasEl(gearIconOf(g), scale, "icon");
+/** An empty slot's icon: the gear sheet's dimmed piece, else the iconset's. */
+export function slotIconEl(slot: string, scale = 1): HTMLCanvasElement {
+  const cell = SLOT_ICON[slot] ?? TAG_ICON.physical;
+  return canvasEl(gearSheetIcon(slotCell(slot)) ?? iconOf(cell[0], cell[1]), scale, "icon");
+}
 
 // ─── Ability icons: the skill pack, 32×32 art pixels each ───
 const abilityIcons = new Map<string, HTMLCanvasElement | null>();

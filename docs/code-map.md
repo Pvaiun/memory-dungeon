@@ -210,6 +210,7 @@ ui/
       audio.ts               sound effects and music
   tools/
     assets.py                builds ui/public/assets/ from the director's art packs
+    gear_icons.py            builds the gear icons (gear.png): every piece but the weapons, from the gear icon pack and icons drawn in its style
 tests/                       the pack's own tests
   content.test.ts            the committed pack matches its sources; the tools' party files are valid
   json-schema.test.ts        the exported JSON schema accepts and rejects what the zod schema does
