@@ -314,10 +314,10 @@ export const classes: ClassDefT[] = [
     source: "starter", stats: stat(2, 5, 4, 3, 2, 1, 1), weapons: ["mace", "staff"], armor: ["robes"], offhands: ["relic", "lantern"], passive: p("last_rites", "Last rites", "Below 30% of its max HP, its cooldowns are halved."),
   }),
   cls("ranger", "Ranger", "The marksman. Looses barbed, cold and rending arrows at whatever stands in front, while its plain arrows fly past any guard, crit for a living and open the wounds.", {
-    source: "starter", stats: { ...stat(3, 3, 3, 4, 2, 4, 2), ...special("accuracy", "medium") }, weapons: ["bow", "dagger"], armor: ["leather"], offhands: ["trophy", "cloak"], passive: p("hunters_eye", "Hunter's eye", "Its basic attacks ignore Taunt and crit more often."),
+    source: "starter", stats: { ...stat(3.5, 3, 3, 4, 2, 4, 2), ...special("accuracy", "medium") }, weapons: ["bow", "dagger"], armor: ["leather"], offhands: ["trophy", "cloak"], passive: p("hunters_eye", "Hunter's eye", "Its basic attacks ignore Taunt and crit more often."),
   }),
   cls("bramble_knight", "Bramble knight", "Thorns tank. Draws every foe onto its thorns, where each attacker is left bleeding for the party's blows, regrows whoever is lowest, and lashes out with the thorns themselves.", {
-    stats: { ...stat(5, 2, 2, 2, 3, 1, 5), ...special("thorns", "high") }, weapons: ["hammer", "mace"], armor: ["plate", "mail"], offhands: ["totem", "round_shield"], passive: p("briar", "Briar", "Each time its Thorns damage a foe, that foe gets a few Bleed; stacks scale from Defense."),
+    stats: { ...stat(5, 2, 2, 2, 2.5, 1, 5), ...special("thorns", "high") }, weapons: ["hammer", "mace"], armor: ["plate", "mail"], offhands: ["totem", "round_shield"], passive: p("briar", "Briar", "Each time its Thorns damage a foe, that foe gets a few Bleed; stacks scale from Defense."),
   }),
   cls("hoplite", "Hoplite", "The bruiser. Slow double swings, a thrust that opens one foe up, a shove with the whole shield that sunders every foe, and an Aegis on the ally about to take the killing blow. Very tanky and hits hard; nothing it does draws fire.", {
     stats: stat(4, 2, 2, 5, 5, 2, 3), weapons: ["spear", "great_weapon"], armor: ["plate"], offhands: ["round_shield", "horn"], passive: p("phalanx", "Phalanx", "Its basic attacks come half as often and deal double damage."),
@@ -326,7 +326,7 @@ export const classes: ClassDefT[] = [
     stats: { ...stat(4, 3, 3, 4, 4, 2, 3) }, weapons: ["mace", "great_weapon"], armor: ["mail", "plate"], offhands: ["kite_shield", "relic"], passive: p("judgement", "Judgement", "Its hits deal half again as much damage to foes with a buff or a debuff."),
   }),
   cls("valkyrie", "Valkyrie", "The shieldmaiden: a quick, survivable damage dealer, not a tank. Her spear builds her Shield as it strikes, three quick hits reach past any guard and shock what they hit, a heavy blow from above cashes the Shock in, and she chooses the slain: one ability mends the lowest ally or raises a fallen one.", {
-    stats: { ...stat(3, 3, 3, 4, 3, 3, 2), ...special("cooldown", "medium") }, weapons: ["spear", "sword"], armor: ["mail", "leather"], offhands: ["round_shield", "cloak"], passive: p("shieldmaiden", "Shieldmaiden", "Each hit it lands gives it a Shield of a share of the damage dealt."),
+    stats: { ...stat(3, 3, 3, 3.5, 2.5, 3, 2), ...special("cooldown", "medium") }, weapons: ["spear", "sword"], armor: ["mail", "leather"], offhands: ["round_shield", "cloak"], passive: p("shieldmaiden", "Shieldmaiden", "Each hit it lands gives it a Shield of a share of the damage dealt."),
   }),
   cls("bard", "Bard", "Party tempo. A caster at the back whose every note mends an ally a little and gives another mana, with a ballad that steadies the party, an allegro that quickens it, and an encore that makes an ally's next spell sound twice.", {
     stats: { ...stat(3, 4, 3, 3, 2, 2, 1), ...special("cooldown", "medium") }, weapons: ["bow", "wand"], armor: ["leather", "robes"], offhands: ["tome", "bell"], passive: p("refrain", "Refrain", "Each of its basic attacks that lands heals a random ally and gives a random ally MP, each a share of the damage dealt."),
@@ -339,11 +339,11 @@ export const classes: ClassDefT[] = [
     passive: p("iron_palm", "Iron palm", "Its basic attacks, and the second strike of its Double strike, add a few Sunder; stacks scale from Attack."),
   }),
   cls("assassin", "Assassin", "Burst killer. Slips out of sight, picks off the weakest foe past any guard, leaves every crit a bleeding wound, and silences the back line.", {
-    stats: { ...stat(2, 3, 3, 5, 1, 5, 1), ...special("crit_damage", "high"), ...special("evasion", "medium") }, weapons: ["dagger", "axe"], armor: ["leather"], offhands: ["vial", "trophy"],
+    stats: { ...stat(3, 3, 3, 5, 1, 5, 1), ...special("crit_damage", "high"), ...special("evasion", "medium") }, weapons: ["dagger", "axe"], armor: ["leather"], offhands: ["vial", "trophy"],
     passive: p("lacerate", "Lacerate", "Each of its crits adds several Bleed to the foe; stacks scale from Attack."),
   }),
   cls("vampire", "Vampire", "Drains to outlast. Feeds on everything it hits: the harder it hits, the more it heals, its prey is left weakened, and it bleeds its own life into an ally's wounds and mana.", {
-    stats: { ...stat(4, 2, 2, 4, 2, 2, 3), ...special("lifesteal", "high") }, weapons: ["fist", "axe"], armor: ["mail"], offhands: ["vial", "idol"],
+    stats: { ...stat(3, 2, 2, 4, 2, 2, 3), ...special("lifesteal", "high") }, weapons: ["fist", "axe"], armor: ["mail"], offhands: ["vial", "idol"],
     passive: p("bloodlust", "Bloodlust", "While it's below half of its max HP, its Lifesteal is doubled."),
   }),
   cls("pyromancer", "Pyromancer", "The glass cannon of long casts. Every spell it casts stokes the fire on the hottest foe, bolts pile more onto it, a fireball spreads it, and a pyre lands.", {

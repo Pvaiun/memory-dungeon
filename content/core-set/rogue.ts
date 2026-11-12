@@ -128,23 +128,30 @@ export const ROGUE_CONFIG: RogueConfigT = {
   // `early`: the climb below a pool's reference floor, act I's measured against a party a few rooms in.
   knobs: [
     // early: measured (npm run rogue:calibrate -- --climb): act I's regular fights against a party a few rooms in (four to pick
-    // from, one random ability each, a piece each and a legendary) need their knobs a median 85 lower on floor 4 than at the
-    // reference floor 7, against act I's middle (two abilities, two legendaries).
+    // from, one random ability each, a piece each and a legendary) need their knobs a median 143 below their own on floor 4,
+    // three floors under the reference floor 7, where the rosters at act I's middle (two abilities, two legendaries) set them.
     // Act I's mob, elite and boss offsets are a hand cut, not yet checked by simulation.
-    { mob: -25, step: 4.5, early: 28.3, elite: -25, boss: -15 },
+    // eliteEarly: the elites' own climb below their reference floor 8, gentler, so the elites of floors 5 and 6 are a real fight.
+    // step: act I climbs 10 a floor above the reference (mob 10 lower to meet it at floor 8, early 36 to keep floors 4 to 6
+    // where the climb measure put them), so its fights keep rising toward the boss as the party grows.
+    { mob: -35, step: 10, early: 36, eliteEarly: 20, elite: -25, boss: -15 },
     { mob: 0, step: 4.5, elite: 0, boss: 0 },
     { mob: 0, step: 4.5, elite: 0, boss: 0 },
   ],
   /**
    * Regular fights and elites are longer and softer than the knob alone makes them: their foes have this much more HP and deal
    * this much less damage (percent), and the calibration sets each fight's knob on top, so a fight keeps its cost and lasts
-   * longer. Bosses keep the knob alone.
+   * longer. Bosses go the other way, shorter and harder: at the knobs whole runs ask of them, the knob alone (HP k %, damage
+   * k ÷ 2.5 %) made act III's bosses slogs that the enrage decided.
    */
-  shape: { fight: { hp: 40, power: -10 }, elite: { hp: 15, power: -10 } },
+  shape: { fight: { hp: 40, power: -10 }, elite: { hp: 15, power: -10 }, boss: { hp: -40, power: 30 } },
   /** Heat: each level adds this to every knob (about 6 points of the simulated player's wins a level). Won runs open the next. */
   heat: { per: 4, max: 10 },
-  /** Later floors' fights grow: from this floor, each pack of two or more may gain one more (to the cap of 8). */
-  growFrom: 8,
+  /**
+   * Later floors' fights grow: from this floor, each pack of two or more may gain one more (to the cap of 8). From floor 9, the
+   * floor after the chest's: growing on floor 8 as well made it the act's hardest regular floor.
+   */
+  growFrom: 9,
 };
 
 // ─── Regions ─────────────────────────────────────────────────────────────────
@@ -159,13 +166,14 @@ export type RogueRegion = {
 
 /**
  * A region's fights with their calibrated knobs (rogue-knobs.json, by region/tier/id, from npm run rogue:calibrate), and
- * the region's own knob for its regular fights and elites (region/<id>/mob, from npm run rogue:tune).
+ * the region's own knobs for its regular fights (region/<id>/mob) and its elites (region/<id>/elite; the regular fights'
+ * where it has none), from npm run rogue:tune.
  */
 const KNOBS = fightKnobs as Record<string, number>;
 function withKnobs(r: RogueRegion): RogueRegion {
   const tag = (tier: string) => (x: RogueFight): RogueFight => (KNOBS[`${r.id}/${tier}/${x.id}`] !== undefined ? { ...x, knob: KNOBS[`${r.id}/${tier}/${x.id}`] } : x);
-  const mob = KNOBS[`region/${r.id}/mob`];
-  return { ...r, ...(mob !== undefined ? { knob: { ...r.knob, mob, elite: mob } } : {}), easy: r.easy.map(tag("easy")), normal: r.normal.map(tag("normal")), elite: r.elite.map(tag("elite")), bosses: r.bosses.map(tag("bosses")) };
+  const mob = KNOBS[`region/${r.id}/mob`] ?? r.knob.mob, elite = KNOBS[`region/${r.id}/elite`] ?? KNOBS[`region/${r.id}/mob`] ?? r.knob.elite;
+  return { ...r, knob: { ...r.knob, mob, elite }, easy: r.easy.map(tag("easy")), normal: r.normal.map(tag("normal")), elite: r.elite.map(tag("elite")), bosses: r.bosses.map(tag("bosses")) };
 }
 const f = enc;
 const REGIONS: RogueRegion[] = [

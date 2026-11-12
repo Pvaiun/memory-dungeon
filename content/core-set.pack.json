@@ -21028,7 +21028,7 @@
    "text": "The marksman. Looses barbed, cold and rending arrows at whatever stands in front, while its plain arrows fly past any guard, crit for a living and open the wounds.",
    "source": "starter",
    "stats": {
-    "max_hp": 3000,
+    "max_hp": 3500,
     "max_mp": 2100,
     "mp_regen": 0,
     "attack": 4000,
@@ -21071,7 +21071,7 @@
     "max_mp": 1700,
     "mp_regen": 0,
     "attack": 2000,
-    "defense": 3000,
+    "defense": 2500,
     "crit_chance": 3,
     "aggro": 120,
     "thorns": 300
@@ -21187,8 +21187,8 @@
     "max_hp": 3000,
     "max_mp": 2500,
     "mp_regen": 0,
-    "attack": 4000,
-    "defense": 3000,
+    "attack": 3500,
+    "defense": 2500,
     "crit_chance": 9,
     "aggro": 90,
     "cooldown_reduction": 15
@@ -21343,7 +21343,7 @@
    "text": "Burst killer. Slips out of sight, picks off the weakest foe past any guard, leaves every crit a bleeding wound, and silences the back line.",
    "source": "unlock",
    "stats": {
-    "max_hp": 2000,
+    "max_hp": 3000,
     "max_mp": 1450,
     "mp_regen": 0,
     "attack": 5000,
@@ -21383,7 +21383,7 @@
    "text": "Drains to outlast. Feeds on everything it hits: the harder it hits, the more it heals, its prey is left weakened, and it bleeds its own life into an ally's wounds and mana.",
    "source": "unlock",
    "stats": {
-    "max_hp": 4000,
+    "max_hp": 3000,
     "max_mp": 2500,
     "mp_regen": 0,
     "attack": 4000,
@@ -46829,9 +46829,10 @@
    },
    "knobs": [
     {
-     "mob": -25,
-     "step": 4.5,
-     "early": 28.3,
+     "mob": -35,
+     "step": 10,
+     "early": 36,
+     "eliteEarly": 20,
      "elite": -25,
      "boss": -15
     },
@@ -46856,13 +46857,17 @@
     "elite": {
      "hp": 15,
      "power": -10
+    },
+    "boss": {
+     "hp": -40,
+     "power": 30
     }
    },
    "heat": {
     "per": 4,
     "max": 10
    },
-   "growFrom": 8
+   "growFrom": 9
   },
   "regions": [
    {
@@ -46884,7 +46889,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": -66
+      "knob": -24
      },
      {
       "id": "wolves",
@@ -46895,7 +46900,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 0
+      "knob": 38
      },
      {
       "id": "snake_grass",
@@ -46905,7 +46910,7 @@
        "snake",
        "snake"
       ],
-      "knob": -39
+      "knob": 0
      },
      {
       "id": "road_thugs",
@@ -46916,7 +46921,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": -63
+      "knob": -28
      }
     ],
     "normal": [
@@ -46931,7 +46936,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 258
+      "knob": 214
      },
      {
       "id": "snake_pit",
@@ -46943,7 +46948,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 135
+      "knob": 105
      },
      {
       "id": "bandit_camp",
@@ -46954,7 +46959,7 @@
        "archer",
        "bandit"
       ],
-      "knob": 46
+      "knob": 27
      },
      {
       "id": "night_wolves",
@@ -46968,7 +46973,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 229
+      "knob": 180
      },
      {
       "id": "archers_nest",
@@ -46979,7 +46984,7 @@
        "archer",
        "archer"
       ],
-      "knob": 36
+      "knob": 22
      },
      {
       "id": "viper_den",
@@ -46992,7 +46997,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 99
+      "knob": 74
      },
      {
       "id": "bandit_horde",
@@ -47004,7 +47009,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 95
+      "knob": 84
      }
     ],
     "elite": [
@@ -47016,7 +47021,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 126
+      "knob": 92
      },
      {
       "id": "twin_ogres",
@@ -47025,7 +47030,7 @@
        "ogre",
        "ogre"
       ],
-      "knob": 77
+      "knob": 39
      },
      {
       "id": "war_camp",
@@ -47036,7 +47041,7 @@
        "archer",
        "ogre"
       ],
-      "knob": 43
+      "knob": 12
      }
     ],
     "bosses": [
@@ -47048,7 +47053,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 64
+      "knob": 71
      },
      {
       "id": "packmaster",
@@ -47060,7 +47065,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 71
+      "knob": 79
      },
      {
       "id": "chiefs_return",
@@ -47069,7 +47074,7 @@
        "ogre_chief",
        "ogre"
       ],
-      "knob": 35
+      "knob": 45
      }
     ]
    },
@@ -47078,8 +47083,8 @@
     "name": "The Crypt",
     "act": 2,
     "knob": {
-     "mob": 0,
-     "elite": 0,
+     "mob": -31,
+     "elite": -21,
      "boss": 0
     },
     "text": "Armored bones, bats you can't hit, ghosts that blows pass through, and Death with a bell.",
@@ -47092,7 +47097,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 193
+      "knob": 245
      },
      {
       "id": "bat_roost",
@@ -47103,7 +47108,7 @@
        "bat",
        "bat"
       ],
-      "knob": 192
+      "knob": 280
      },
      {
       "id": "wailing",
@@ -47112,7 +47117,7 @@
        "ghost",
        "ghost"
       ],
-      "knob": 163
+      "knob": 233
      }
     ],
     "normal": [
@@ -47224,7 +47229,7 @@
        "bat",
        "bat"
       ],
-      "knob": 108
+      "knob": 139
      },
      {
       "id": "reapers_court",
@@ -47234,7 +47239,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 92
+      "knob": 125
      }
     ]
    },
@@ -47243,8 +47248,8 @@
     "name": "The Fire Mine",
     "act": 2,
     "knob": {
-     "mob": 0,
-     "elite": 0,
+     "mob": 39,
+     "elite": 26,
      "boss": 0
     },
     "text": "Everything here burns, and the lord of the furnace casts a fire that ends parties.",
@@ -47258,7 +47263,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": -7
+      "knob": -6
      },
      {
       "id": "fuse_room",
@@ -47268,7 +47273,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": -13
+      "knob": 21
      },
      {
       "id": "imp_and_hound",
@@ -47278,7 +47283,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 68
+      "knob": 88
      }
     ],
     "normal": [
@@ -47401,7 +47406,7 @@
       "enemies": [
        "fire_giant"
       ],
-      "knob": 91
+      "knob": 122
      },
      {
       "id": "giants_forge",
@@ -47411,7 +47416,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 64
+      "knob": 104
      },
      {
       "id": "giants_wrath",
@@ -47421,7 +47426,7 @@
        "fire_imp",
        "fire_imp"
       ],
-      "knob": 49
+      "knob": 88
      }
     ]
    },
@@ -47430,8 +47435,8 @@
     "name": "The Ice Pass",
     "act": 2,
     "knob": {
-     "mob": 0,
-     "elite": 0,
+     "mob": -9,
+     "elite": -2,
      "boss": 0
     },
     "text": "Every fight asks what kind of hit you make, and a Titan of ice waits at the top.",
@@ -47445,7 +47450,7 @@
        "snow_wolf",
        "snow_wolf"
       ],
-      "knob": 318
+      "knob": 336
      },
      {
       "id": "spirits",
@@ -47454,7 +47459,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 121
+      "knob": 156
      },
      {
       "id": "cold_ghosts",
@@ -47463,7 +47468,7 @@
        "ice_ghost",
        "ice_ghost"
       ],
-      "knob": 151
+      "knob": 260
      }
     ],
     "normal": [
@@ -47575,7 +47580,7 @@
       "enemies": [
        "ice_titan"
       ],
-      "knob": 139
+      "knob": 194
      },
      {
       "id": "glacier_king",
@@ -47585,7 +47590,7 @@
        "snow_wolf",
        "snow_wolf"
       ],
-      "knob": 120
+      "knob": 168
      }
     ]
    },
@@ -47594,8 +47599,8 @@
     "name": "The Storm Tower",
     "act": 3,
     "knob": {
-     "mob": 0,
-     "elite": 0,
+     "mob": 23,
+     "elite": 11,
      "boss": 0
     },
     "text": "Clouds of sparks, leeches that drink mana, and a queen behind a wall of drones.",
@@ -47610,7 +47615,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 0
+      "knob": 85
      },
      {
       "id": "leeches",
@@ -47621,7 +47626,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 40
+      "knob": 158
      },
      {
       "id": "drones",
@@ -47631,7 +47636,7 @@
        "drone",
        "drone"
       ],
-      "knob": 90
+      "knob": 196
      }
     ],
     "normal": [
@@ -47745,7 +47750,7 @@
        "drone",
        "drone"
       ],
-      "knob": 221
+      "knob": 328
      },
      {
       "id": "hive_queen",
@@ -47757,7 +47762,7 @@
        "drone",
        "drone"
       ],
-      "knob": 163
+      "knob": 283
      }
     ]
    },
@@ -47766,8 +47771,8 @@
     "name": "The Deep Crypt",
     "act": 3,
     "knob": {
-     "mob": 0,
-     "elite": 0,
+     "mob": -24,
+     "elite": 2,
      "boss": 0
     },
     "text": "Beneath the Crypt, something takes every voice. Power that isn't an ability is the key.",
@@ -47780,7 +47785,7 @@
        "skeleton",
        "ghost"
       ],
-      "knob": 90
+      "knob": 323
      },
      {
       "id": "whispers",
@@ -47789,7 +47794,7 @@
        "wraith",
        "wraith"
       ],
-      "knob": 82
+      "knob": 256
      },
      {
       "id": "diggers",
@@ -47799,7 +47804,7 @@
        "ghoul",
        "ghoul"
       ],
-      "knob": 37
+      "knob": 245
      }
     ],
     "normal": [
@@ -47907,7 +47912,7 @@
       "enemies": [
        "silent_one"
       ],
-      "knob": 121
+      "knob": 259
      },
      {
       "id": "silent_court",
@@ -47917,7 +47922,7 @@
        "bone_priest",
        "bone_priest"
       ],
-      "knob": 88
+      "knob": 197
      }
     ]
    },
@@ -47926,8 +47931,8 @@
     "name": "The Tower Top",
     "act": 3,
     "knob": {
-     "mob": 0,
-     "elite": 0,
+     "mob": 6,
+     "elite": -12,
      "boss": 0
     },
     "text": "Above the storm: the queen's drones, the king's soldiers, and the king who rages when they fall.",
@@ -47942,7 +47947,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 4
+      "knob": 129
      },
      {
       "id": "guard_post",
@@ -47951,7 +47956,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 187
+      "knob": 537
      },
      {
       "id": "top_drones",
@@ -47961,7 +47966,7 @@
        "drone",
        "drone"
       ],
-      "knob": 88
+      "knob": 242
      }
     ],
     "normal": [
@@ -48070,7 +48075,7 @@
       "enemies": [
        "storm_king"
       ],
-      "knob": 140
+      "knob": 238
      },
      {
       "id": "kings_guard",
@@ -48080,7 +48085,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 95
+      "knob": 171
      }
     ]
    }

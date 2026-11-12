@@ -209,9 +209,10 @@ export function knobFor(c: Content, run: RogueRun, tier: FightTier, floor: numbe
   const own = fight.knob ?? 0;
   if (tier === "boss") return own + kn.boss + reg.boss + heat;
   const ref = refFloors(c);
-  // The act's climb from the pool's reference floor; below it, `early` a floor (act I's measured against a party a few rooms in).
-  const climb = (from: number) => (floor < from ? (kn.early ?? kn.step) : kn.step) * (floor - from);
-  if (tier === "elite") return own + kn.elite + reg.elite + climb(ref.elite) + heat;
+  // The act's climb from the pool's reference floor; below it, `early` a floor (act I's measured against a party a few rooms in),
+  // and the elites' own `eliteEarly` where the act has one.
+  const climb = (from: number, below = kn.early ?? kn.step) => (floor < from ? below : kn.step) * (floor - from);
+  if (tier === "elite") return own + kn.elite + reg.elite + climb(ref.elite, kn.eliteEarly ?? kn.early ?? kn.step) + heat;
   return own + kn.mob + reg.mob + climb(floor <= easyTo(c) ? ref.easy : ref.normal) + heat;
 }
 /** The fight a room holds: from the region's easy pool on the first floors (`easyTo`), then its normal or elite pool, packs growing late. */

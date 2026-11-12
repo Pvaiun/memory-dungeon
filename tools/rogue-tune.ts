@@ -3,7 +3,11 @@
  * snapshots of parties; this checks the result where it counts, in whole runs, and corrects it. Each round plays many
  * runs with the simulated player, then moves:
  *   - each boss's knob toward its act's target share of the parties that reach it (as they arrive),
- *   - each region's knob for its regular fights and elites toward its act's target share of the runs that enter it,
+ *   - each region's knob for its regular fights (region/<id>/mob) and for its elites (region/<id>/elite) toward its act's other
+ *     regions: the share of the runs entering it that end in its regular fights, or in its elites, toward the act's mean. The
+ *     act's level stays where the calibration put it (a regular fight costs about a fifth of a careful party's HP, an elite a
+ *     third): the simulated player's losses between bosses come mostly from weak parties, so a target for them would make
+ *     the fights free for every other party. The regions an act forks into should be about as hard as each other.
  * rebuilds the pack, and goes again.
  *
  *   npm run rogue:tune [-- --rounds 3 --runs 1500]
@@ -16,12 +20,8 @@ import { availableParallelism } from "node:os";
 import { isMainThread } from "node:worker_threads";
 import { Pool, many, digest, type RunRec } from "./rogue-sim.js";
 
-/**
- * Targets by act: a boss beats this share of the parties that reach it; a region's fights and elites end this share of the
- * runs that enter it. Together about 20% of runs won at heat 0 (0.94 × 0.78 × 0.91 × 0.65 × 0.88 × 0.55), most of the
- * difficulty on the bosses.
- */
-export const RUN_TARGETS = { boss: [22, 35, 45], road: [6, 9, 12] };
+/** Targets by act: a boss beats this share of the parties that reach it. */
+export const RUN_TARGETS = { boss: [22, 35, 45] };
 /** Knob points per point of loss rate: how far a miss moves a knob (damped). */
 const GAIN = { boss: 1.0, road: 1.5 };
 const KNOBS = "content/core-set/rogue-knobs.json";
@@ -57,20 +57,24 @@ async function main() {
       knobs[k] = (knobs[k] ?? 0) + Math.max(-15, Math.min(15, move));
       console.log(`${k.padEnd(34)} met ${String(b.n).padStart(4)}  lost ${rate.toFixed(0).padStart(3)}% (target ${RUN_TARGETS.boss[b.act - 1]})  knob ${knobs[k]}`);
     }
-    // Regions: share of the runs entering that end in its regular fights or elites.
-    const reg = new Map<string, { n: number; lost: number; act: number }>();
+    // Regions: share of the runs entering that end in its regular fights, and in its elites.
+    const reg = new Map<string, { n: number; fight: number; elite: number; act: number }>();
     for (const r of recs) r.regions.forEach((g, i) => {
-      const x = reg.get(g) ?? { n: 0, lost: 0, act: i + 1 };
+      const x = reg.get(g) ?? { n: 0, fight: 0, elite: 0, act: i + 1 };
       x.n++;
-      if (!r.won && i === r.regions.length - 1 && r.died !== "boss") x.lost++;
+      if (!r.won && i === r.regions.length - 1 && (r.died === "fight" || r.died === "elite")) x[r.died]++;
       reg.set(g, x);
     });
-    for (const [g, x] of reg) {
-      const rate = (100 * x.lost) / x.n;
-      const k = `region/${g}/mob`;
-      const move = Math.round(GAIN.road * (RUN_TARGETS.road[x.act - 1] - rate));
+    for (const [g, x] of reg) for (const tier of ["fight", "elite"] as const) {
+      const rate = (100 * x[tier]) / x.n;
+      // The act's mean over its regions, each weighted by the runs entering it; an act of one region holds still.
+      const act = [...reg.values()].filter((y) => y.act === x.act);
+      if (act.length < 2) continue;
+      const target = (100 * act.reduce((t, y) => t + y[tier], 0)) / act.reduce((t, y) => t + y.n, 0);
+      const k = `region/${g}/${tier === "elite" ? "elite" : "mob"}`;
+      const move = Math.round(GAIN.road * (target - rate));
       knobs[k] = (knobs[k] ?? 0) + Math.max(-10, Math.min(10, move));
-      console.log(`${k.padEnd(34)} entered ${String(x.n).padStart(4)}  lost on the road ${rate.toFixed(0).padStart(3)}% (target ${RUN_TARGETS.road[x.act - 1]})  knob ${knobs[k]}`);
+      console.log(`${k.padEnd(34)} entered ${String(x.n).padStart(4)}  lost to its ${tier === "elite" ? "elites" : "fights"} ${rate.toFixed(1).padStart(5)}% (act ${target.toFixed(1)})  knob ${knobs[k]}`);
     }
     writeFileSync(KNOBS, JSON.stringify(Object.fromEntries(Object.entries(knobs).sort()), null, 1) + "\n");
     execSync("npx tsx content/core-set/build.ts", { stdio: "ignore" });

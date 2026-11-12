@@ -12,3 +12,9 @@ The full balance pass of the new loot, so the game can be playtested. Two parts,
 - **The aim:** no party drastically under or over; rhythms that work; builds that play differently and are meaningful, interesting and observable.
 
 **Next part:** a fresh agent runs the whole-run simulations and the knob tuning to the version's final playable balance, from this part's report.
+
+**Part two, the director's rulings (Nov 12):**
+
+- **Fights by cost.** Regular fights and elites keep the knobs the per-fight calibration gives them (a careful party pays about a fifth of its HP for a regular fight, a third for an elite). The run tuner sets the bosses to their targets and evens out the regions within an act; the losses between bosses aren't aimed, and the win rate falls where that puts it (estimated 14%).
+- **Act I's regular fights stay** where the calibration puts them (−25 on floors 4 to 6), and **its elites on floors 5 and 6 become a real fight again.**
+- **Wall-less starts are for later:** "There's a problem in the game right now about requiring walls. I'm going to have to fix that in other ways than just pure balancing of knobs. So let's make the game compelling and have a good difficulty curve in general, and we'll deal with the wall-less starts thing later."

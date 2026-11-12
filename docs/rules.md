@@ -37,7 +37,7 @@ The philosophy behind these lines, and the director's intent in their words, are
 
 - **A build is a way to play you can watch:** someone watching a fight can tell which build is playing and what it's waiting for. It has a rhythm, it's woven from several threads (never one keyword turned up), and builds spread across rhythms. The nine builds in `docs/gear-design/builds.md` stand: roads, the doors between them, and the engines on them.
 - **An engine is a found synergy,** designed in advance for a player to find: a few parts on one road or more that work together into something specific, so a build pays before it's whole and builds cross. Nothing in the game names one. Anything but a mythic takes two parts or more, and no engine rests on a number the player can't see.
-- **A wall is not every build's start,** and neither is a front seat. Staying alive without one is the balance pass's: act I lets a party without a wall through its first gates.
+- **A wall is not every build's start,** and neither is a front seat. Today a party without a wall loses far more of act I's regular fights than one with, at any knob; the director will fix that by other means than the knobs.
 - **What survived in play isn't a rule for what a build must be.** If the game only lets some kinds of build live, the game changes, not the builds.
 - **What a build asks is a range,** from what most runs find, giving back a little, to specific pieces giving back far more. It pays something before it's complete. It can be reached by more than one route, and pieces form a web, not bundles. There's room for exotics and chaos: a run finds its build in what it's given.
 - **A good piece is worth a lot somewhere and little elsewhere.** A piece strong everywhere gives something up, designed for it. The best choices are between things good for different builds.
@@ -59,6 +59,7 @@ The philosophy behind these lines, and the director's intent in their words, are
 ## Balance and testing
 
 - **Balance from what happens in fights** (who does what share of what, the economy of a fight) before win rates. Win rates set difficulty, last. The rogue mode breaks ties.
+- **Fights by cost.** A regular fight's and an elite's knob is set by what it costs a careful party (about a fifth of its HP, an elite a third), not by how often the simulated player dies in it: its losses between bosses come mostly from weak parties, and aiming them would make the fights free for everyone else. Whole runs set the bosses and even out the regions within an act.
 - **Numbers, not behaviour.** Fix a problem by the amount applied, the cost, the cooldown or the duration, never by a new rule that changes what a thing does (a cap that binds on one hit, a target rule that leaves out the caster). A behaviour change that could read as esoteric goes to the director first.
 - **Read fights, not only averages.** A tick-by-tick read of real fights (`tools/rogue-feel.ts`, `docs/feel-reader.md`) finds what the balance sheet's averages hide.
 - **Balance is its own pass.** While making content, make no balancing rules: synergies may be overpowered.
