@@ -228,7 +228,7 @@ export const abilities: A[] = [
   a("bard", "war_ballad", "War ballad", "A few Might on every ally.", { ...timing("quick", "quick"), mp: 450, target: T.everyAlly, do: [apply("might", { stacks: stacks("few", "attack") })] }),
   a("bard", "allegro", "Allegro", "Haste on every ally.", { ...timing("long", "quick"), mp: 650, target: T.everyAlly, do: [apply("haste")] }),
   // The conductor's verb: an ally's next spell sounds twice.
-  a("bard", "encore", "Encore", "The other ally with the highest Attack casts its next ability twice; the second cast is free.", { ...timing("medium", "quick"), mp: 650, target: T.otherHighestAMAlly, do: [apply("encore")] }),
+  a("bard", "encore", "Encore", "The other ally with the highest Attack casts its next ability twice; the second cast is free.", { ...timing("medium", "quick"), mp: 450, target: T.otherHighestAMAlly, do: [apply("encore")] }),
   // Hexer
   // The curse every colour reads: a light hit on every foe, a fifth more for each different affliction it holds, then Bleed of its own.
   a("hexer", "malison", "Malison", "Curses every foe: light damage that scales from Attack, a fifth more for each different affliction the foe holds (Burn, Chill, Shock, Bleed, Sunder), then a few Bleed; stacks scale from Attack.", {

@@ -2189,6 +2189,20 @@
    ]
   },
   {
+   "id": "wellspring_soloist",
+   "name": "Soloist",
+   "text": "Its abilities deal half again as much.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "mods": [
+    {
+     "damage": 50
+    }
+   ]
+  },
+  {
    "id": "wellspring_conductor",
    "name": "Conductor",
    "text": "Each ability it casts gives the Soloist MP: a tenth of the Soloist's max MP.",
@@ -2865,11 +2879,16 @@
   {
    "id": "the_stage_soloist",
    "name": "Soloist",
-   "text": "Each ability another ally casts takes a fifth off the cooldowns it has left.",
+   "text": "Its abilities deal half again as much. Each ability another ally casts takes a third off the cooldowns it has left.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
+   "mods": [
+    {
+     "damage": 50
+    }
+   ],
    "reactions": [
     {
      "on": {
@@ -2882,7 +2901,7 @@
        "op": "cooldown",
        "which": "abilities",
        "set": {
-        "times": 80
+        "times": 67
        },
        "to": "holder"
       }
@@ -5195,7 +5214,7 @@
   {
    "id": "tithe_wand",
    "name": "Tithe wand",
-   "text": "Each basic attack it lands gives the ally with the least MP some MP: 3% of its wearer's Attack.",
+   "text": "Each basic attack it lands gives the ally with the least MP some MP: a tenth of its wearer's Attack.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -5212,7 +5231,7 @@
        "amount": {
         "scale": [
          {
-          "ratio": 0.03,
+          "ratio": 0.1,
           "stat": "attack",
           "of": "holder"
          }
@@ -9189,7 +9208,7 @@
   {
    "id": "matins_robe",
    "name": "Matins robe",
-   "text": "Every third ability its wearer casts in a fight is free.",
+   "text": "Every second ability its wearer casts in a fight is free.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -9200,7 +9219,7 @@
      "if": {
       "stacks": {
        "status": "matins_robe_count",
-       "atLeast": 2
+       "atLeast": 1
       }
      }
     }
@@ -9226,12 +9245,12 @@
   {
    "id": "matins_robe_count",
    "name": "MATINS",
-   "text": "Every third ability it casts is free.",
+   "text": "Every second ability it casts is free.",
    "label": "buff",
    "show": "icon",
    "stacking": "intensity",
    "unremovable": true,
-   "cap": 3,
+   "cap": 2,
    "trigger": {
     "on": {
      "event": "status_capped",
@@ -9424,7 +9443,7 @@
   {
    "id": "glimmer_robe",
    "name": "Glimmer robe",
-   "text": "Each time an ally gives its wearer MP, the next ability its wearer casts that deals damage deals a third more.",
+   "text": "Each time an ally gives its wearer MP, the next ability its wearer casts that deals damage deals half again as much.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -9448,7 +9467,7 @@
   {
    "id": "glimmer_robe_on",
    "name": "GLIMMER",
-   "text": "Its next ability that deals damage deals a third more.",
+   "text": "Its next ability that deals damage deals half again as much.",
    "label": "buff",
    "show": "icon",
    "stacking": "intensity",
@@ -9470,7 +9489,7 @@
        "damage"
       ]
      },
-     "damage": 33
+     "damage": 50
     }
    ]
   },
@@ -12265,7 +12284,7 @@
   {
    "id": "twice_told_tome",
    "name": "Twice-told tome",
-   "text": "Every third ability its holder casts in a fight is cast twice. The second cast comes at once and is free; it isn't counted, and it isn't cast again.",
+   "text": "Every second ability its holder casts in a fight is cast twice. The second cast comes at once and is free; it isn't counted, and it isn't cast again.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -12283,7 +12302,7 @@
       "where": {
        "stacks": {
         "status": "twice_told_tome_count",
-        "atLeast": 2
+        "atLeast": 1
        }
       }
      },
@@ -12314,12 +12333,12 @@
   {
    "id": "twice_told_tome_count",
    "name": "TWICE-TOLD",
-   "text": "Every third ability it casts is cast twice.",
+   "text": "Every second ability it casts is cast twice.",
    "label": "buff",
    "show": "icon",
    "stacking": "intensity",
    "unremovable": true,
-   "cap": 3,
+   "cap": 2,
    "trigger": {
     "on": {
      "event": "status_capped",
@@ -13803,7 +13822,7 @@
   {
    "id": "bell_of_the_hour",
    "name": "Bell of the hour",
-   "text": "Every fifth basic attack its holder lands casts its first-slotted ability at once, whatever its cooldown, with no wind-up. Its cooldown stays where it was, and its MP is paid.",
+   "text": "Every fourth basic attack its holder lands casts its first-slotted ability at once, whatever its cooldown, with no wind-up. Its cooldown stays where it was, and its MP is paid.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -13819,7 +13838,7 @@
       "where": {
        "stacks": {
         "status": "bell_of_the_hour_count",
-        "atLeast": 4
+        "atLeast": 3
        }
       }
      },
@@ -13850,12 +13869,12 @@
   {
    "id": "bell_of_the_hour_count",
    "name": "HOUR",
-   "text": "Every fifth basic attack it lands casts its first-slotted ability.",
+   "text": "Every fourth basic attack it lands casts its first-slotted ability.",
    "label": "buff",
    "show": "icon",
    "stacking": "intensity",
    "unremovable": true,
-   "cap": 5,
+   "cap": 4,
    "trigger": {
     "on": {
      "event": "status_capped",
@@ -22354,7 +22373,7 @@
    "text": "The other ally with the highest Attack casts its next ability twice; the second cast is free.",
    "cooldown": 32.7,
    "cast": 1,
-   "mp": 650,
+   "mp": 450,
    "target": {
     "side": "others",
     "pick": "highest",
@@ -28371,7 +28390,7 @@
    "text": "The other ally with the highest Attack casts its next ability twice; the second cast is free. Comes round sooner.",
    "cooldown": 24,
    "cast": 1,
-   "mp": 650,
+   "mp": 450,
    "target": {
     "side": "others",
     "pick": "highest",
@@ -28395,7 +28414,7 @@
    "text": "The other ally with the highest Attack has its ability with the longest cooldown left ready at once. No repeat.",
    "cooldown": 32.7,
    "cast": 1,
-   "mp": 650,
+   "mp": 450,
    "target": {
     "side": "others",
     "pick": "highest",
@@ -28420,7 +28439,7 @@
    "text": "No Encore for an ally: the Bard's own next three basic attacks come at once.",
    "cooldown": 32.7,
    "cast": 1,
-   "mp": 650,
+   "mp": 450,
    "target": "self",
    "do": [
     {
@@ -28437,7 +28456,7 @@
    "text": "The other ally with the highest Attack has its ability with the longest cooldown left ready at once. No repeat. Comes round sooner.",
    "cooldown": 24,
    "cast": 1,
-   "mp": 650,
+   "mp": 450,
    "target": {
     "side": "others",
     "pick": "highest",
@@ -28462,7 +28481,7 @@
    "text": "No Encore for an ally: the Bard's own next three basic attacks come at once. Comes round sooner.",
    "cooldown": 24,
    "cast": 1,
-   "mp": 650,
+   "mp": 450,
    "target": "self",
    "do": [
     {
@@ -35284,7 +35303,7 @@
   {
    "id": "tithe_wand",
    "name": "Tithe wand",
-   "text": "Each basic attack it lands gives the ally with the least MP some MP: 3% of its wearer's Attack.",
+   "text": "Each basic attack it lands gives the ally with the least MP some MP: a tenth of its wearer's Attack.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -36812,10 +36831,6 @@
     {
      "stat": "max_hp",
      "flat": 500
-    },
-    {
-     "stat": "attack",
-     "flat": 1000
     }
    ],
    "statuses": [
@@ -36964,10 +36979,6 @@
     {
      "stat": "max_hp",
      "flat": 500
-    },
-    {
-     "stat": "attack",
-     "flat": 1000
     }
    ],
    "statuses": [
@@ -37010,10 +37021,6 @@
     {
      "stat": "max_hp",
      "flat": 500
-    },
-    {
-     "stat": "attack",
-     "flat": 1000
     }
    ],
    "statuses": [
@@ -37837,7 +37844,7 @@
     },
     {
      "stat": "attack",
-     "flat": 3000
+     "flat": 2000
     },
     {
      "stat": "max_mp",
@@ -37892,10 +37899,6 @@
     {
      "stat": "max_hp",
      "flat": 500
-    },
-    {
-     "stat": "attack",
-     "flat": 1000
     }
    ],
    "statuses": [
@@ -37938,10 +37941,6 @@
     {
      "stat": "max_hp",
      "flat": 1000
-    },
-    {
-     "stat": "attack",
-     "flat": 2000
     }
    ],
    "statuses": [
@@ -39233,10 +39232,6 @@
     {
      "stat": "max_hp",
      "flat": 500
-    },
-    {
-     "stat": "attack",
-     "flat": 1000
     }
    ],
    "rarity": "common"
@@ -39276,7 +39271,7 @@
   {
    "id": "matins_robe",
    "name": "Matins robe",
-   "text": "Every third ability its wearer casts in a fight is free.",
+   "text": "Every second ability its wearer casts in a fight is free.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -39288,7 +39283,7 @@
     },
     {
      "stat": "attack",
-     "flat": 2000
+     "flat": 1000
     },
     {
      "stat": "max_hp",
@@ -39343,10 +39338,6 @@
     {
      "stat": "max_hp",
      "flat": 500
-    },
-    {
-     "stat": "attack",
-     "flat": 1000
     }
    ],
    "statuses": [
@@ -39374,10 +39365,6 @@
     {
      "stat": "max_hp",
      "flat": 500
-    },
-    {
-     "stat": "attack",
-     "flat": 1000
     }
    ],
    "statuses": [
@@ -39436,10 +39423,6 @@
     {
      "stat": "max_hp",
      "flat": 500
-    },
-    {
-     "stat": "attack",
-     "flat": 1000
     }
    ],
    "statuses": [
@@ -39471,10 +39454,6 @@
     {
      "stat": "max_hp",
      "flat": 500
-    },
-    {
-     "stat": "attack",
-     "flat": 1000
     }
    ],
    "statuses": [
@@ -39502,10 +39481,6 @@
     {
      "stat": "max_hp",
      "flat": 1000
-    },
-    {
-     "stat": "attack",
-     "flat": 2000
     }
    ],
    "statuses": [
@@ -39516,7 +39491,7 @@
   {
    "id": "glimmer_robe",
    "name": "Glimmer robe",
-   "text": "Each time an ally gives its wearer MP, the next ability its wearer casts that deals damage deals a third more.",
+   "text": "Each time an ally gives its wearer MP, the next ability its wearer casts that deals damage deals half again as much.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -39524,7 +39499,7 @@
    "stats": [
     {
      "stat": "attack",
-     "flat": 2000
+     "flat": 1000
     },
     {
      "stat": "max_mp",
@@ -39563,7 +39538,7 @@
     },
     {
      "stat": "attack",
-     "flat": 3000
+     "flat": 1000
     },
     {
      "stat": "max_hp",
@@ -39599,10 +39574,6 @@
     {
      "stat": "max_hp",
      "flat": 1000
-    },
-    {
-     "stat": "attack",
-     "flat": 2000
     }
    ],
    "statuses": [
@@ -41598,10 +41569,6 @@
     {
      "stat": "max_hp",
      "flat": 500
-    },
-    {
-     "stat": "attack",
-     "flat": 1000
     }
    ],
    "rarity": "common"
@@ -41667,7 +41634,7 @@
     },
     {
      "stat": "attack",
-     "flat": 2000
+     "flat": 1000
     },
     {
      "stat": "max_mp",
@@ -41702,10 +41669,6 @@
     },
     {
      "stat": "max_hp",
-     "flat": 1000
-    },
-    {
-     "stat": "attack",
      "flat": 1000
     }
    ],
@@ -41756,10 +41719,6 @@
     },
     {
      "stat": "max_mp",
-     "flat": 1000
-    },
-    {
-     "stat": "attack",
      "flat": 1000
     }
    ],
@@ -41895,7 +41854,7 @@
   {
    "id": "twice_told_tome",
    "name": "Twice-told tome",
-   "text": "Every third ability its holder casts in a fight is cast twice. The second cast comes at once and is free; it isn't counted, and it isn't cast again.",
+   "text": "Every second ability its holder casts in a fight is cast twice. The second cast comes at once and is free; it isn't counted, and it isn't cast again.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -41916,10 +41875,6 @@
     {
      "stat": "max_hp",
      "flat": 500
-    },
-    {
-     "stat": "attack",
-     "flat": 1000
     }
    ],
    "statuses": [
@@ -41969,7 +41924,7 @@
     },
     {
      "stat": "attack",
-     "flat": 2000
+     "flat": 1000
     },
     {
      "stat": "max_mp",
@@ -42000,7 +41955,7 @@
     },
     {
      "stat": "attack",
-     "flat": 2000
+     "flat": 1000
     },
     {
      "stat": "max_mp",
@@ -42040,10 +41995,6 @@
     {
      "stat": "max_hp",
      "flat": 500
-    },
-    {
-     "stat": "attack",
-     "flat": 1000
     }
    ],
    "statuses": [
@@ -42094,10 +42045,6 @@
     {
      "stat": "max_hp",
      "flat": 500
-    },
-    {
-     "stat": "attack",
-     "flat": 1000
     }
    ],
    "rarity": "common"
@@ -42133,7 +42080,7 @@
     },
     {
      "stat": "attack",
-     "flat": 2000
+     "flat": 1000
     },
     {
      "stat": "max_hp",
@@ -42165,10 +42112,6 @@
     {
      "stat": "max_hp",
      "flat": 500
-    },
-    {
-     "stat": "attack",
-     "flat": 1000
     }
    ],
    "statuses": [
@@ -42191,7 +42134,7 @@
     },
     {
      "stat": "attack",
-     "flat": 2000
+     "flat": 1000
     },
     {
      "stat": "cooldown_reduction",
@@ -42222,7 +42165,7 @@
     },
     {
      "stat": "attack",
-     "flat": 2000
+     "flat": 1000
     },
     {
      "stat": "cast_time_reduction",
@@ -42258,10 +42201,6 @@
     {
      "stat": "max_hp",
      "flat": 1000
-    },
-    {
-     "stat": "attack",
-     "flat": 2000
     }
    ],
    "statuses": [
@@ -42293,10 +42232,6 @@
     {
      "stat": "max_hp",
      "flat": 500
-    },
-    {
-     "stat": "attack",
-     "flat": 1000
     }
    ],
    "statuses": [
@@ -42319,7 +42254,7 @@
     },
     {
      "stat": "attack",
-     "flat": 3000
+     "flat": 1000
     },
     {
      "stat": "mp_regen",
@@ -42510,10 +42445,6 @@
     {
      "stat": "max_mp",
      "flat": 1000
-    },
-    {
-     "stat": "attack",
-     "flat": 1000
     }
    ],
    "statuses": [
@@ -42541,10 +42472,6 @@
     {
      "stat": "max_hp",
      "flat": 1000
-    },
-    {
-     "stat": "attack",
-     "flat": 2000
     }
    ],
    "statuses": [
@@ -43028,7 +42955,7 @@
   {
    "id": "bell_of_the_hour",
    "name": "Bell of the hour",
-   "text": "Every fifth basic attack its holder lands casts its first-slotted ability at once, whatever its cooldown, with no wind-up. Its cooldown stays where it was, and its MP is paid.",
+   "text": "Every fourth basic attack its holder lands casts its first-slotted ability at once, whatever its cooldown, with no wind-up. Its cooldown stays where it was, and its MP is paid.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -43990,7 +43917,7 @@
     {
      "id": "soloist",
      "name": "Soloist",
-     "text": "Its abilities come round a fifth faster. Draws far less.",
+     "text": "Its abilities come round a third faster and deal half again as much. Draws far less.",
      "layout": {
       "line": "front",
       "column": 0
@@ -43998,12 +43925,15 @@
      "stats": [
       {
        "stat": "cooldown_reduction",
-       "flat": 20
+       "flat": 33
       },
       {
        "stat": "aggro",
        "flat": -25
       }
+     ],
+     "statuses": [
+      "wellspring_soloist"
      ]
     },
     {
@@ -44643,7 +44573,7 @@
     {
      "id": "soloist",
      "name": "Soloist",
-     "text": "Each ability another ally casts takes a fifth off the cooldowns it has left.",
+     "text": "Its abilities deal half again as much. Each ability another ally casts takes a third off the cooldowns it has left.",
      "layout": {
       "line": "front",
       "column": 0
@@ -47001,7 +46931,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 252
+      "knob": 258
      },
      {
       "id": "snake_pit",
@@ -47013,7 +46943,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 141
+      "knob": 135
      },
      {
       "id": "bandit_camp",
@@ -47024,7 +46954,7 @@
        "archer",
        "bandit"
       ],
-      "knob": 42
+      "knob": 46
      },
      {
       "id": "night_wolves",
@@ -47038,7 +46968,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 233
+      "knob": 229
      },
      {
       "id": "archers_nest",
@@ -47074,7 +47004,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 99
+      "knob": 95
      }
     ],
     "elite": [
@@ -47118,7 +47048,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 68
+      "knob": 64
      },
      {
       "id": "packmaster",
@@ -47130,7 +47060,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 75
+      "knob": 71
      },
      {
       "id": "chiefs_return",
@@ -47195,7 +47125,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 264
+      "knob": 257
      },
      {
       "id": "dark_hall",
@@ -47206,7 +47136,7 @@
        "bat",
        "bat"
       ],
-      "knob": 248
+      "knob": 233
      },
      {
       "id": "curse_room",
@@ -47216,7 +47146,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 247
+      "knob": 240
      },
      {
       "id": "haunted_hall",
@@ -47227,7 +47157,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 195
+      "knob": 187
      },
      {
       "id": "bone_wall",
@@ -47239,7 +47169,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 231
+      "knob": 222
      },
      {
       "id": "dead_watch",
@@ -47250,7 +47180,7 @@
        "witch",
        "ghost"
       ],
-      "knob": 180
+      "knob": 172
      }
     ],
     "elite": [
@@ -47263,7 +47193,7 @@
        "ghoul",
        "ghoul"
       ],
-      "knob": 223
+      "knob": 219
      },
      {
       "id": "lich_lair",
@@ -47272,7 +47202,7 @@
        "lich",
        "mummy"
       ],
-      "knob": 330
+      "knob": 318
      },
      {
       "id": "grave_watch",
@@ -47282,7 +47212,7 @@
        "troll",
        "troll"
       ],
-      "knob": 104
+      "knob": 96
      }
     ],
     "bosses": [
@@ -47294,7 +47224,7 @@
        "bat",
        "bat"
       ],
-      "knob": 114
+      "knob": 108
      },
      {
       "id": "reapers_court",
@@ -47304,7 +47234,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 94
+      "knob": 92
      }
     ]
    },
@@ -47362,7 +47292,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 98
+      "knob": 93
      },
      {
       "id": "bomb_room",
@@ -47384,7 +47314,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 110
+      "knob": 102
      },
      {
       "id": "hound_run",
@@ -47397,7 +47327,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 41
+      "knob": 26
      },
      {
       "id": "slag_heap",
@@ -47407,7 +47337,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 176
+      "knob": 168
      },
      {
       "id": "miners",
@@ -47418,7 +47348,7 @@
        "bandit",
        "bomb_bug"
       ],
-      "knob": 164
+      "knob": 157
      }
     ],
     "elite": [
@@ -47429,7 +47359,7 @@
        "lava_slime",
        "lava_slime"
       ],
-      "knob": 285
+      "knob": 274
      },
      {
       "id": "imp_court",
@@ -47441,7 +47371,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 168
+      "knob": 165
      },
      {
       "id": "powder_room",
@@ -47451,7 +47381,7 @@
        "bomb_bug",
        "ogre"
       ],
-      "knob": 62
+      "knob": 54
      },
      {
       "id": "bomb_nest",
@@ -47471,7 +47401,7 @@
       "enemies": [
        "fire_giant"
       ],
-      "knob": 105
+      "knob": 91
      },
      {
       "id": "giants_forge",
@@ -47481,7 +47411,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 68
+      "knob": 64
      },
      {
       "id": "giants_wrath",
@@ -47491,7 +47421,7 @@
        "fire_imp",
        "fire_imp"
       ],
-      "knob": 61
+      "knob": 49
      }
     ]
    },
@@ -47548,7 +47478,7 @@
        "snow_wolf",
        "snow_wolf"
       ],
-      "knob": 368
+      "knob": 361
      },
      {
       "id": "ice_heart",
@@ -47558,7 +47488,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 133
+      "knob": 127
      },
      {
       "id": "whiteout",
@@ -47568,7 +47498,7 @@
        "ice_ghost",
        "ice_spirit"
       ],
-      "knob": 179
+      "knob": 167
      },
      {
       "id": "ghost_lights",
@@ -47578,7 +47508,7 @@
        "ice_ghost",
        "ice_ghost"
       ],
-      "knob": 195
+      "knob": 191
      },
      {
       "id": "long_pack",
@@ -47592,7 +47522,7 @@
        "snow_wolf",
        "snow_wolf"
       ],
-      "knob": 326
+      "knob": 311
      },
      {
       "id": "drift",
@@ -47603,7 +47533,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 175
+      "knob": 172
      }
     ],
     "elite": [
@@ -47614,7 +47544,7 @@
        "ice_golem",
        "ice_golem"
       ],
-      "knob": 262
+      "knob": 250
      },
      {
       "id": "golem_gate",
@@ -47624,7 +47554,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 189
+      "knob": 185
      },
      {
       "id": "frost_trolls",
@@ -47635,7 +47565,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 56
+      "knob": 52
      }
     ],
     "bosses": [
@@ -47645,7 +47575,7 @@
       "enemies": [
        "ice_titan"
       ],
-      "knob": 156
+      "knob": 139
      },
      {
       "id": "glacier_king",
@@ -47655,7 +47585,7 @@
        "snow_wolf",
        "snow_wolf"
       ],
-      "knob": 123
+      "knob": 120
      }
     ]
    },
@@ -47731,7 +47661,7 @@
        "leech",
        "leech"
       ],
-      "knob": 179
+      "knob": 175
      },
      {
       "id": "leech_den",
@@ -47742,7 +47672,7 @@
        "leech",
        "leech"
       ],
-      "knob": 339
+      "knob": 336
      },
      {
       "id": "drone_wall",
@@ -47755,7 +47685,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 158
+      "knob": 151
      },
      {
       "id": "storm_front",
@@ -47768,7 +47698,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 159
+      "knob": 156
      }
     ],
     "elite": [
@@ -47781,7 +47711,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 471
+      "knob": 459
      },
      {
       "id": "sniper_ridge",
@@ -47793,7 +47723,7 @@
        "archer",
        "archer"
       ],
-      "knob": 152
+      "knob": 149
      },
      {
       "id": "lich_pair",
@@ -47803,7 +47733,7 @@
        "lich",
        "lich"
       ],
-      "knob": 309
+      "knob": 303
      }
     ],
     "bosses": [
@@ -47815,7 +47745,7 @@
        "drone",
        "drone"
       ],
-      "knob": 230
+      "knob": 221
      },
      {
       "id": "hive_queen",
@@ -47827,7 +47757,7 @@
        "drone",
        "drone"
       ],
-      "knob": 166
+      "knob": 163
      }
     ]
    },
@@ -47881,7 +47811,7 @@
        "troll",
        "troll"
       ],
-      "knob": 119
+      "knob": 116
      },
      {
       "id": "lich_lair",
@@ -47890,7 +47820,7 @@
        "lich",
        "mummy"
       ],
-      "knob": 328
+      "knob": 316
      },
      {
       "id": "silent_hall",
@@ -47912,7 +47842,7 @@
        "ghost",
        "ghost"
       ],
-      "knob": 166
+      "knob": 159
      },
      {
       "id": "coven",
@@ -47923,7 +47853,7 @@
        "wraith",
        "wraith"
       ],
-      "knob": 132
+      "knob": 126
      },
      {
       "id": "ghoul_feast",
@@ -47946,7 +47876,7 @@
        "bone_priest",
        "troll"
       ],
-      "knob": 227
+      "knob": 221
      },
      {
       "id": "lich_court",
@@ -47957,7 +47887,7 @@
        "lich",
        "lich"
       ],
-      "knob": 217
+      "knob": 208
      },
      {
       "id": "tomb_lords",
@@ -47967,7 +47897,7 @@
        "mummy",
        "witch"
       ],
-      "knob": 261
+      "knob": 246
      }
     ],
     "bosses": [
@@ -47977,7 +47907,7 @@
       "enemies": [
        "silent_one"
       ],
-      "knob": 127
+      "knob": 121
      },
      {
       "id": "silent_court",
@@ -47987,7 +47917,7 @@
        "bone_priest",
        "bone_priest"
       ],
-      "knob": 90
+      "knob": 88
      }
     ]
    },
@@ -48048,7 +47978,7 @@
        "leech",
        "leech"
       ],
-      "knob": 107
+      "knob": 99
      },
      {
       "id": "wisp_nest",
@@ -48061,7 +47991,7 @@
        "leech",
        "leech"
       ],
-      "knob": 173
+      "knob": 170
      },
      {
       "id": "barracks",
@@ -48071,7 +48001,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 527
+      "knob": 523
      },
      {
       "id": "drone_wall",
@@ -48084,7 +48014,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 134
+      "knob": 128
      },
      {
       "id": "watch",
@@ -48095,7 +48025,7 @@
        "drone",
        "drone"
       ],
-      "knob": 349
+      "knob": 336
      }
     ],
     "elite": [
@@ -48107,7 +48037,7 @@
        "drone",
        "drone"
       ],
-      "knob": 185
+      "knob": 181
      },
      {
       "id": "honour_guard",
@@ -48118,7 +48048,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 498
+      "knob": 485
      },
      {
       "id": "leech_den",
@@ -48130,7 +48060,7 @@
        "leech",
        "leech"
       ],
-      "knob": 370
+      "knob": 360
      }
     ],
     "bosses": [
@@ -48140,7 +48070,7 @@
       "enemies": [
        "storm_king"
       ],
-      "knob": 143
+      "knob": 140
      },
      {
       "id": "kings_guard",
@@ -48150,7 +48080,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 103
+      "knob": 95
      }
     ]
    }

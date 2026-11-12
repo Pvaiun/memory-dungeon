@@ -116,11 +116,12 @@ add(
   const conductor = "Each ability it casts gives the Soloist MP: a tenth of the Soloist's max MP.";
   add(
     formation("Wellspring", "common", "Two keep one caster casting.", [
-      { name: "Soloist", text: "Its abilities come round a fifth faster. Draws far less.", stats: [FIFTH_SOONER, st("aggro", -2)] },
+      { name: "Soloist", text: "Its abilities come round a third faster and deal half again as much. Draws far less.", stats: [THIRD_SOONER, st("aggro", -2)], statuses: ["wellspring_soloist"] },
       { name: "Conductor", text: conductor, statuses: ["wellspring_conductor"] },
       { name: "Well", text: "Draws more. Each hit it takes gives the Soloist MP: a hundredth of the Soloist's max MP.", stats: [st("aggro", 1)], statuses: ["wellspring_well"] },
     ]),
     [
+      held("wellspring_soloist", "Soloist", "Its abilities deal half again as much.", { mods: [{ damage: 50 }] }),
       held("wellspring_conductor", "Conductor", conductor, { reactions: [react(EV.cast, { op: "mp", amount: share(0.1, "max_mp", "target"), to: TO.seat("soloist") })] }),
       held("wellspring_well", "Well", "Each hit it takes gives the Soloist MP.", { reactions: [react(EV.struck, { op: "mp", amount: share(0.01, "max_mp", "target"), to: TO.seat("soloist") })] }),
     ],

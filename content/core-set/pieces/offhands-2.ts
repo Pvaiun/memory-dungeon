@@ -68,12 +68,12 @@ offhand("tome", "common", "Hymnal", { stats: [sp("cooldown", "medium")], serves:
 {
   // The third of its own casts is cast again, free (a free repeat isn't counted, so it's never cast again).
   const name = "Twice-told tome", n = `${id(name)}_count`;
-  const effect = "Every third ability its holder casts in a fight is cast twice. The second cast comes at once and is free; it isn't counted, and it isn't cast again.";
+  const effect = "Every second ability its holder casts in a fight is cast twice. The second cast comes at once and is free; it isn't counted, and it isn't cast again.";
   offhand("tome", "rare", name, {
     effect, stats: [sp("cooldown", "medium"), sp("cast_speed", "medium"), st("max_mp", 1)],
     statuses: [
-      own_(name, effect, { reactions: [reactIf(OWN_CAST, { side: "self", where: countAt(n, 2) }, { op: "recast" }), react(OWN_CAST, give(n, "holder", 1))] }),
-      count(n, "TWICE-TOLD", "Every third ability it casts is cast twice.", 3),
+      own_(name, effect, { reactions: [reactIf(OWN_CAST, { side: "self", where: countAt(n, 1) }, { op: "recast" }), react(OWN_CAST, give(n, "holder", 1))] }),
+      count(n, "TWICE-TOLD", "Every second ability it casts is cast twice.", 2),
     ],
     serves: "Barrage 2 ●●●, Snap ●●, Landslide ● ⚙ crescendo (half) ◆ free-cast",
   });
@@ -453,12 +453,12 @@ offhand("bell", "common", "Cantor's bell", { stats: [st("mp_regen", 1)], serves:
 }
 {
   const name = "Bell of the hour", n = `${id(name)}_count`;
-  const effect = "Every fifth basic attack its holder lands casts its first-slotted ability at once, whatever its cooldown, with no wind-up. Its cooldown stays where it was, and its MP is paid.";
+  const effect = "Every fourth basic attack its holder lands casts its first-slotted ability at once, whatever its cooldown, with no wind-up. Its cooldown stays where it was, and its MP is paid.";
   offhand("bell", "rare", name, {
     effect, stats: [sp("attack_speed", "medium"), st("mp_regen", 2)],
     statuses: [
-      own_(name, effect, { reactions: [reactIf(EV.basic, { side: "self", where: countAt(n, 4) }, { op: "recast", which: "first", paid: true }), react(EV.basic, give(n, "holder", 1))] }),
-      count(n, "HOUR", "Every fifth basic attack it lands casts its first-slotted ability.", 5),
+      own_(name, effect, { reactions: [reactIf(EV.basic, { side: "self", where: countAt(n, 3) }, { op: "recast", which: "first", paid: true }), react(EV.basic, give(n, "holder", 1))] }),
+      count(n, "HOUR", "Every fourth basic attack it lands casts its first-slotted ability.", 4),
     ],
     serves: "Cuts 2 ●●●, Barrage 2 ●●● ⚙ spell on the swing (key)",
   });

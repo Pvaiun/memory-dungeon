@@ -353,16 +353,11 @@ export const AGGRO_STEP = 10;
  */
 export const MP_REGEN_STEP = 3 * P;
 /**
- * A piece's max MP step brings an HP step beside it, and on a caster's kind (anything but an amulet) an Attack step too, over its
- * budget. An amulet fits every class, so its MP comes free but no more: with Attack as well, the mana amulets were the best in
- * the slot for fighters too. MP is worth little in a fight beside
- * the other stats (a fight from a part-full bar seldom spends the pool), and the pieces that carry it, most of them Barrage's,
- * left their wearers the frailest and the slowest-killing in the set: Barrage's soloist, meant to be the biggest single dealer of
- * the nine builds, dealt less than most builds' top unit, and its Well fell first. Either step alone moved Barrage a few points;
- * both, since a party that lives longer lets its faster kills land, about twenty.
+ * A piece's max MP step brings an HP step beside it, over its budget: MP is worth little in a fight beside the other stats (a
+ * fight from a part-full bar seldom spends the pool), so a mana piece's MP comes free, and for a class that doesn't spend MP the
+ * piece is as good as its neighbours. Barrage, whose pieces carry most of the MP, had left its members the frailest in the set.
  */
 export const MP_STEP_HP = 1;
-export const MP_STEP_ATK = 1;
 /** The step for a stat, in the data's units. */
 export const stepFor = (stat: string) => (stat === "max_hp" ? HP_STEP : stat === "aggro" ? AGGRO_STEP : stat === "mp_regen" ? MP_REGEN_STEP : STEP);
 

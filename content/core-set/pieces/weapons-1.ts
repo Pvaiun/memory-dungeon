@@ -234,10 +234,10 @@ weapon("wand", "common", "Hazel wand", { stats: [sp("cooldown", "medium"), st("m
   });
 }
 {
-  const name = "Tithe wand", effect = "Each basic attack it lands gives the ally with the least MP some MP: 3% of its wearer's Attack.";
+  const name = "Tithe wand", effect = "Each basic attack it lands gives the ally with the least MP some MP: a tenth of its wearer's Attack.";
   weapon("wand", "uncommon", name, {
     effect, stats: [sp("cooldown", "medium"), sp("attack_speed", "medium"), st("mp_regen", 1)],
-    statuses: [own_(name, effect, { reactions: [react(EV.basic, { op: "mp", amount: share(0.03, "attack"), to: TO.leastMpAlly })] })],
+    statuses: [own_(name, effect, { reactions: [react(EV.basic, { op: "mp", amount: share(0.1, "attack"), to: TO.leastMpAlly })] })],
     serves: "Barrage 1 ●● ⚙ mana as armour (half) ◆ free-cast",
   });
 }

@@ -4,28 +4,25 @@ The director's intent is in `intent.md`. This part balanced the build parties ag
 
 ## Decisions for the director
 
-1. **Barrage, now in range, at a price you should weigh.** A max MP step brings an HP step beside it, and on a caster's kind (anything but an amulet) an Attack step too (`MP_STEP_HP`, `MP_STEP_ATK` in `scale.ts`, over the piece's budget).
-   - **Where it stands.** Barrage wins 63% at rung 1, 86% at rung 2 and 85% at rung 3; every other build wins 73–99% by rung.
-   - **The price.** Probes put every piece on every class that can wear it, against its slot's average. Before and after the bonus:
+1. **Barrage, by its own pieces.** These changes take Barrage from 48/70/81% by rung to 62/78/83%; every other build wins 74–100%.
+   - **A max MP step brings an HP step beside it** (`MP_STEP_HP`, over the piece's budget): a mana piece's MP comes free.
+     - Probed on every class that can wear them, against their slot's average, the casters' mana pieces sit 3.1 points over it, against 1.0 with no bonus.
+     - An Attack step as well had made them the casters' best gear in every build (5.6), so it's out.
+   - **Barrage's own links and seats, strengthened:**
+     - Encore 450 MP (was 650);
+     - Twice-told tome every second ability (was every third), Bell of the hour every fourth swing (was fifth), Matins robe every second ability free (was third);
+     - Glimmer robe half again (was a third), Tithe wand a tenth of Attack (was 3%);
+     - Wellspring's Soloist a third sooner (was a fifth); The stage's a third off per ally cast (was a fifth);
+     - both Soloists deal half again as much.
 
-     | Pieces | Before | Now |
-     | --- | --- | --- |
-     | Mana amulets (HP only; with Attack too they'd been the slot's best for fighters as well) | 2.5 | 4.3 |
-     | Casters' mana pieces | 1.0 | 5.6 |
-     | Their same-kind neighbours without MP | −0.8 | −2.8 |
+     The other builds didn't move, and the two formations probe 12–13 points over Neutral, like the rest (9–13).
+   - **What's left is the routes, not the payoff.**
+     - The Knight-Bard-Pyromancer route is in line: 82/83/92%.
+     - The three-caster route (Frostweaver, Bard, Stormcaller) stays at 43/63% at rungs 1–2: its soloist, a 2,000-HP Stormcaller, falls with nobody in front.
+     - The Cleric route is 62% at rung 1, where its Vampire knows only Blood gift.
 
-     So mana pieces became the casters' best in every build, and a few legendaries sit 10–13 over (Staff of echoes, Archmage's mantle).
-   - **Class wins narrowed:** the Pyromancer −3→0, Frostweaver −7→−3, Stormcaller −4→0, Bard −7→−4 and Cleric −5→−3; the Valkyrie 14→11 and the Paladin 10→7.
-   - **The alternative.** A fair bonus, where mana pieces equal their neighbours, doesn't fix Barrage. Its fix would then be in what only Barrage uses: its conductors' effects (Encore, Reprise, Twice-told tome, Bell of the hour, Crescendo charm, the Soloist seats), each worth a lot to Barrage and little elsewhere.
-   - **Why both.** Its soloist, meant to be the biggest single dealer of the nine, dealt less than most builds' top unit (428 a tick at rung 2, against 445–1,320), and its Well fell first. The two steps compound: a party that lives longer lets its faster kills land.
-
-     | What a max MP step brought beside it | Barrage won, by rung | Bosses |
-     | --- | --- | --- |
-     | HP alone | 52 / 72 / 84% | 35% |
-     | Attack alone | 54 / 67 / 81% | 34% |
-     | Both | 72 / 91 / 88% | 59% |
-
-     These are before the knobs were re-measured; the totals above are after.
+     With every soloist and every pair of servers, a Pyromancer or Stormcaller with two sturdy servers wins most, and a Bard or a Cleric among the servers costs a few points.
+   - **Your call:** whether route 2 keeps three casters, and whether route 3's Vampire learns its damage ability first (rung 1: 33% to 68%).
    - **The engine isn't the short part.** On top of the HP and Attack, making the soloist's spells come round faster (Wellspring a third sooner, The stage two fifths) added only 2–5 points, so the formations stay as they were.
    - **The build parties' Soloist** now slots the abilities that deal damage first, as a player would. The cathedral had freed the Geomancer's Earthen shell, cast 15 times a fight.
    - **Rung 1 is still Barrage's weakest:** 417 damage a tick for the party.

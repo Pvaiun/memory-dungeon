@@ -349,12 +349,12 @@ armor("robes", "common", "Hermit's cowl", { stats: [st("aggro", -1)], serves: "e
 
 {
   // A count of its wearer's own casts (a free repeat isn't one): at two, the next is free, and that cast empties the count.
-  const name = "Matins robe", n = `${id(name)}_count`, effect = "Every third ability its wearer casts in a fight is free.";
+  const name = "Matins robe", n = `${id(name)}_count`, effect = "Every second ability its wearer casts in a fight is free.";
   armor("robes", "uncommon", name, {
     effect, stats: [st("max_mp", 1), st("attack", 1)],
     statuses: [
-      own_(name, effect, { mods: [{ mp: -100, if: countAt(n, 2) }], reactions: [react(on("action_resolve", { kind: "ability", counted: true }), give(n, "holder", 1))] }),
-      count(n, "MATINS", "Every third ability it casts is free.", 3),
+      own_(name, effect, { mods: [{ mp: -100, if: countAt(n, 1) }], reactions: [react(on("action_resolve", { kind: "ability", counted: true }), give(n, "holder", 1))] }),
+      count(n, "MATINS", "Every second ability it casts is free.", 2),
     ],
     serves: "Barrage 1 ●● ⚙ crescendo (half) ◆ free-cast",
   });
@@ -419,13 +419,13 @@ armor("robes", "common", "Hermit's cowl", { stats: [st("aggro", -1)], serves: "e
 }
 {
   const name = "Glimmer robe", on_ = `${id(name)}_on`;
-  const effect = "Each time an ally gives its wearer MP, the next ability its wearer casts that deals damage deals a third more.";
+  const effect = "Each time an ally gives its wearer MP, the next ability its wearer casts that deals damage deals half again as much.";
   const next = on("action_resolve", { kind: "ability", does: ["damage"] });
   armor("robes", "rare", name, {
     effect, stats: [st("attack", 1), st("max_mp", 1), st("aggro", -1)],
     statuses: [
       own_(name, effect, { reactions: [react(on("mp_gained", { other: "ally" }), give(on_))] }),
-      oneUse(on_, "GLIMMER", "Its next ability that deals damage deals a third more.", next, { mods: [{ of: { does: ["damage"] }, damage: 33 }] }),
+      oneUse(on_, "GLIMMER", "Its next ability that deals damage deals half again as much.", next, { mods: [{ of: { does: ["damage"] }, damage: 50 }] }),
     ],
     serves: "Barrage 2 ●● ⚙ mana as armour (half)",
   });
