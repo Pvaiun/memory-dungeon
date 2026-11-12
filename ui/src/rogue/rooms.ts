@@ -36,8 +36,8 @@ export function rewardView(run: RogueRun): Child[] {
   const skip = p.kind === "treasure" ? "leave" : "skip";
   // After a fight the party cheers beside what it won, laid on the ground; a chest opens in front of it.
   const sceneEl = p.kind === "treasure"
-    ? scene(run, "chest", { h: 96, actors: [...partyActors(run, 96, "wait", { cx: 96 }), { kind: "chest", x: 196, y: 88, color: "gold" }], openAt: 500, sparkle: { x: 196, y: 74, strip: "diamond1" } })
-    : scene(run, `spoils:${p.kind}`, { h: 96, actors: [...partyActors(run, 96, "victory", { cx: 72 }), ...lootActors(run, [...(p.kind === "spoils" && p.trophy ? [{ kind: "gear" as const, item: p.trophy }] : []), ...offers], p.kind === "spoils" && p.gold > 0, 96, 160, 248)], sparkle: { x: 204, y: 70, strip: "diamond1" } });
+    ? scene(run, "chest", { h: 96, actors: [...partyActors(run, 96, "wait", { cx: 96 }), { kind: "chest", x: 196, y: 88, color: "gold" }], openAt: 500, sparkle: { x: 196, y: 74, strip: "gleam_gold" } })
+    : scene(run, `spoils:${p.kind}`, { h: 96, actors: [...partyActors(run, 96, "victory", { cx: 72 }), ...lootActors(run, [...(p.kind === "spoils" && p.trophy ? [{ kind: "gear" as const, item: p.trophy }] : []), ...offers], p.kind === "spoils" && p.gold > 0, 96, 160, 248)], sparkle: { x: 204, y: 70, strip: "gleam_gold" } });
   return [
     header(title, () => go("home")),
     sceneEl,
@@ -340,7 +340,7 @@ export function levelView(run: RogueRun): Child[] {
   const entries: TrainEntry[] = opts.filter((o) => o !== "gold").map((o) => ({ opt: o, label: trainWord(o), onClick: () => pickOrSave(run, o) }));
   return [
     header("LEVEL UP", () => go("home"), h("span", { class: "dim" }, `${p.queue.length} TO GO`)),
-    scene(run, `level:${cls}`, { h: 80, actors: [{ kind: "hero", ref: cls, x: 135, y: 74, pose: "victory", weapon: m.gear.weapon ?? undefined }], sparkle: { x: 135, y: 50, strip: "status1" } }),
+    scene(run, `level:${cls}`, { h: 80, actors: [{ kind: "hero", ref: cls, x: 135, y: 74, pose: "victory", weapon: m.gear.weapon ?? undefined }], sparkle: { x: 135, y: 50, strip: "restore" } }),
     win("", classHead(cls, undefined, m.gear.weapon)),
     win("scroll",
       ...trainMember(run, cls, entries),

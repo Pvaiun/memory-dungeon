@@ -24,6 +24,7 @@ import type { Member } from "../../../src/engine/combat/rules.js";
 import { Driver, type Ev } from "./driver.js";
 import { isCount, Narrator, type Beat, type Line, type Tone } from "./narrate.js";
 import { Scene, shieldOf, themeOf, W, H } from "./scene.js";
+import { FieldFx } from "./effects.js";
 import { setMusic, setSound, sfx } from "./audio.js";
 import { go } from "../screens.js";
 import { meet } from "../bestiary.js";
@@ -116,6 +117,8 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   setMusic(setup.settings.music);
 
   const scene = new Scene(canvas, driver, theme);
+  // What each event plays on the field, and when (effects.ts); its waits shrink with the speed, as the beats' holds do.
+  const fx = new FieldFx(scene, driver, () => vwall, () => Math.sqrt(speed), show);
   scene.hpBars = setup.settings.hpBars;
   scene.mpBars = setup.settings.mpBars;
   // For scripted checks: window.__scene is the field, window.__driver the engine's side.
@@ -177,7 +180,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   function startBeat(b: Beat) {
     clear(linesEl);
     playing = { beat: b, shown: 0, typed: 0, charAt: vwall, lineEls: [], typedAt: null, hold: holdFor(b) };
-    for (const ev of b.quiet ?? []) show(ev);
+    for (const ev of b.quiet ?? []) fx.field(ev);
     if (b.kind === "intro") introUntil = vwall + Math.max(1800, playing.hold + 800);
     cursorEl.style.visibility = "hidden";
   }
@@ -191,7 +194,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     p.charAt = Math.max(p.charAt, vwall);
     history.push({ tick: Math.floor(p.beat.at / SUBTICKS), text: line.text, tone: line.tone, tag: line.tag, act: line.act });
     if (history.length > 600) history.shift();
-    for (const ev of line.events) show(ev);
+    for (const ev of line.events) fx.field(ev);
   }
   function lineEl(line: Line, full: boolean): HTMLElement {
     return h("div", { class: `l ${line.tone}` }, line.tag ? actionIconEl(line.tag, line.act) : null, h("span", { class: "t" }, full ? line.text : ""));
@@ -274,6 +277,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
         const v = scene.units.get(String(ev.by));
         if (v) v.cast = { name: String(ev.name), start: at!, end: ev.ends as number };
         if (v?.side === "party") scene.pose(v.id, "chant", 0);
+        fx.cast(String(ev.by), String(ev.act ?? ""));
         sfx.cast();
         break;
       }
@@ -281,16 +285,13 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
         const by = String(ev.by);
         const v = scene.units.get(by);
         if (v) v.cast = null;
-        const targets = ev.targets as string[];
         const isBasic = ev.kind === "basic";
-        const tag = narrator.tagOf(by, String(ev.act));
         const unit = driver.unit(by);
         const kind = unit ? c.gear.get(unit.weapon)?.weapon?.kind : undefined;
         const ab = isBasic ? undefined : c.abilities.get(String(ev.act));
         if (v?.side === "party") scene.pose(by, poseFor(ab, kind), 520);
         scene.lunge(by);
-        const fxTag = isBasic && tag === "pierce" && kind === "bow" ? "arrow" : tag;
-        for (const t of targets) scene.effectFor(t, fxTag, targets.length <= 2);
+        fx.act(ev);
         if (ab && isSpell(ab)) sfx.magic();
         break;
       }
@@ -304,6 +305,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
       case "mp":
         // MP gained shows on the field, blue, like a heal.
         scene.number(String(ev.target), `+${disp(ev.amount as number)}`, { color: "#6fb4ff", sub: "MP" });
+        fx.mp(String(ev.target), ev.part);
         break;
       case "heal": {
         if (typeof ev.hp === "number") scene.told(String(ev.target), ev.hp);
@@ -313,10 +315,8 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
         if (isStatus && disp(amount) <= 0) break;
         const target = String(ev.target);
         scene.number(target, `+${disp(amount)}`, { color: "#7ee07e", big: !isStatus, icon: src === "regen" ? "regen" : undefined, sub: ev.crit ? "CRITICAL" : undefined });
-        if (!isStatus) {
-          scene.effectFor(target, "heal");
-          sfx.heal();
-        }
+        fx.heal(target, src);
+        if (!isStatus) sfx.heal();
         break;
       }
       case "resisted":
@@ -336,7 +336,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
         const key = `${unit}:${d.id}`;
         if (vwall - (lastStatusFx.get(key) ?? -9999) > 700) {
           lastStatusFx.set(key, vwall);
-          scene.effectFor(unit, d.id === "shield" ? "shield" : d.label === "buff" ? "buff" : "debuff");
+          fx.status(unit, d.id);
           sfx.status();
         }
         break;
@@ -364,11 +364,13 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
         const v = scene.units.get(String(ev.unit));
         if (v) v.cast = null;
         scene.number(String(ev.unit), "STOPPED", { color: "#ff7b6b" });
+        fx.interrupt(String(ev.unit));
         break;
       }
       case "down": {
         const u = driver.unit(String(ev.unit));
         if (u?.side === "party") scene.number(u.id, "DOWN", { color: "#ff7b6b", big: true });
+        fx.down(String(ev.unit));
         scene.down(String(ev.unit));
         sfx.down();
         break;
@@ -377,22 +379,22 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
         scene.revive(String(ev.unit));
         if (typeof ev.hp === "number") scene.told(String(ev.unit), ev.hp);
         scene.number(String(ev.unit), `+${disp(ev.hp as number)}`, { color: "#7ee07e", sub: "UP" });
-        scene.effectFor(String(ev.unit), "revive", true);
+        fx.revive(String(ev.unit));
         sfx.heal();
         break;
       case "join": {
         const u = ev.unit as { id: string; ref?: string };
         scene.sync();
         if (u.ref) meet([u.ref]);
-        scene.effectFor(u.id, "summon");
+        fx.join(u.id, u.ref ?? "");
         break;
       }
       case "leave":
-        scene.effectFor(String(ev.unit), "split");
+        fx.leave(String(ev.unit));
         scene.leave(String(ev.unit));
         break;
       case "strike":
-        scene.effectFor(String(ev.target), ev.status === "arc" ? "lightning" : "slash");
+        fx.strike(ev);
         break;
       case "fight_end":
         // The engine logs a fight's end only when the run moves on (after NEXT): the end was already played when the fight was decided.
@@ -427,6 +429,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     const part = ev.part as string;
     const src = String(ev.src);
     const isStatus = part === "pulse" || part === "reaction";
+    fx.damage(ev);
     if (word === "MISS") {
       scene.number(target, "MISS", { color: "#c8d0e8" });
       sfx.miss();
@@ -448,8 +451,21 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     if (!isStatus || amount >= 100) scene.hit(target);
     if (!isStatus) (crit ? sfx.crit : sfx.hit)();
     else sfx.status();
-    if (isStatus && (src === "burn" || src === "bleed" || src === "shock")) scene.effectFor(target, src);
   }
+
+  // For scripted checks: window.__look("fireball", by, [targets], hits, [more]) plays an action's look as a fight would, its
+  // hits of 0, and as many on `more` (a chain's others); "basic" is a basic attack, "status:burn" a status landing, "tick:burn" its tick.
+  Object.assign(window, {
+    __look: (act: string, by: string, targets: string[], hits = 1, more: string[] = []) => {
+      if (act.startsWith("status:")) return targets.forEach((t) => fx.field({ t: "status", vis: "player", unit: t, status: act.slice(7), name: act.slice(7) }));
+      if (act.startsWith("tick:")) return targets.forEach((t) => fx.field(act === "tick:regen" ? { t: "heal", vis: "player", by, target: t, src: "regen", amount: 1000 } : { t: "dmg", vis: "player", by, target: t, part: "pulse", amount: 1000, soaked: 0, word: null, src: act.slice(5) }));
+      const kind = act === "basic" ? "basic" : "ability";
+      fx.field({ t: "act", vis: "player", by, act, kind, targets, name: act });
+      const ab = c.abilities.get(act);
+      if (ab && !dealsDamage(ab)) return;
+      for (const t of [...targets, ...more]) for (let i = 0; i < hits; i++) fx.field({ t: "dmg", vis: "player", by, target: t, part: "hit", amount: 0, soaked: 0, word: null, src: act });
+    },
+  });
 
   // ─── Party rows: portrait | name, short HP and MP bars | the actions' cooldowns, big ───
   // Statuses show on the field under each unit, so the rows give their room to the cooldowns: the basic attack small
@@ -835,6 +851,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   }
   /** Shows queued beats without pacing or effects, keeping only what changes the field. */
   function drainQuiet() {
+    fx.drop();
     for (const b of queue.splice(0)) {
       clear(linesEl);
       for (const line of b.lines) {
@@ -878,8 +895,9 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
           if (queue.length) startBeat(queue.shift()!);
         }
       }
-      if ((driver.phase === "won" || driver.phase === "lost") && !playing && !queue.length && !driver.pending.length) endOfFight();
+      if ((driver.phase === "won" || driver.phase === "lost") && !playing && !queue.length && !fx.waiting && !driver.pending.length) endOfFight();
     } else if (playing && playing.typedAt !== null) cursorEl.style.visibility = Math.floor(now / 400) % 2 ? "hidden" : "visible";
+    if (running) fx.release();
     scene.frame(vwall);
     updateRows();
     (tick.lastChild as HTMLElement).textContent = String(Math.floor(driver.tick));

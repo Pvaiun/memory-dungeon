@@ -392,337 +392,1053 @@
   "crown_of_embers_aura": "status/crown_of_embers_aura.png"
  },
  "vfx": {
-  "fire1": {
-   "file": "vfx/fire1.png",
-   "frames": 4
+  "ember": {
+   "file": "vfx/ember.png",
+   "frames": 6,
+   "w": 8,
+   "h": 19,
+   "ox": 27,
+   "oy": 25
   },
-  "fire2": {
-   "file": "vfx/fire2.png",
-   "frames": 6
+  "fire_pillar": {
+   "file": "vfx/fire_pillar.png",
+   "frames": 11,
+   "w": 15,
+   "h": 37,
+   "ox": 25,
+   "oy": 13
   },
-  "fire3": {
-   "file": "vfx/fire3.png",
-   "frames": 6
+  "fireball": {
+   "file": "vfx/fireball.png",
+   "frames": 6,
+   "w": 28,
+   "h": 13,
+   "ox": 18,
+   "oy": 25
   },
-  "fire4": {
-   "file": "vfx/fire4.png",
-   "frames": 11
+  "flame": {
+   "file": "vfx/flame.png",
+   "frames": 4,
+   "w": 10,
+   "h": 23,
+   "ox": 27,
+   "oy": 20
   },
-  "ice1": {
-   "file": "vfx/ice1.png",
-   "frames": 11
+  "diamond_dust": {
+   "file": "vfx/diamond_dust.png",
+   "frames": 8,
+   "w": 34,
+   "h": 35,
+   "ox": 15,
+   "oy": 12
   },
-  "ice2": {
-   "file": "vfx/ice2.png",
-   "frames": 13
+  "frost_burst": {
+   "file": "vfx/frost_burst.png",
+   "frames": 13,
+   "w": 25,
+   "h": 26,
+   "ox": 20,
+   "oy": 19
   },
-  "ice3": {
-   "file": "vfx/ice3.png",
-   "frames": 5
+  "frost_twinkle": {
+   "file": "vfx/frost_twinkle.png",
+   "frames": 5,
+   "w": 15,
+   "h": 32,
+   "ox": 25,
+   "oy": 14
   },
-  "ice4": {
-   "file": "vfx/ice4.png",
-   "frames": 8
+  "ice_shard": {
+   "file": "vfx/ice_shard.png",
+   "frames": 11,
+   "w": 26,
+   "h": 36,
+   "ox": 19,
+   "oy": 12
   },
-  "lightning1": {
-   "file": "vfx/lightning1.png",
-   "frames": 6
+  "ball_lightning": {
+   "file": "vfx/ball_lightning.png",
+   "frames": 8,
+   "w": 20,
+   "h": 18,
+   "ox": 22,
+   "oy": 22
   },
-  "lightning2": {
-   "file": "vfx/lightning2.png",
-   "frames": 6
+  "lightning_bolt": {
+   "file": "vfx/lightning_bolt.png",
+   "frames": 6,
+   "w": 27,
+   "h": 41,
+   "ox": 20,
+   "oy": 11
   },
-  "lightning3": {
-   "file": "vfx/lightning3.png",
-   "frames": 8
+  "shock": {
+   "file": "vfx/shock.png",
+   "frames": 8,
+   "w": 35,
+   "h": 27,
+   "ox": 13,
+   "oy": 18
   },
-  "lightning4": {
-   "file": "vfx/lightning4.png",
-   "frames": 8
+  "static": {
+   "file": "vfx/static.png",
+   "frames": 6,
+   "w": 17,
+   "h": 15,
+   "ox": 24,
+   "oy": 21
   },
-  "wind1": {
-   "file": "vfx/wind1.png",
-   "frames": 4
+  "bubble": {
+   "file": "vfx/bubble.png",
+   "frames": 7,
+   "w": 26,
+   "h": 26,
+   "ox": 20,
+   "oy": 19
   },
-  "wind2": {
-   "file": "vfx/wind2.png",
-   "frames": 6
+  "droplet": {
+   "file": "vfx/droplet.png",
+   "frames": 11,
+   "w": 18,
+   "h": 18,
+   "ox": 24,
+   "oy": 22
   },
-  "wind3": {
-   "file": "vfx/wind3.png",
-   "frames": 9
+  "geyser": {
+   "file": "vfx/geyser.png",
+   "frames": 12,
+   "w": 29,
+   "h": 37,
+   "ox": 17,
+   "oy": 13
   },
-  "wind4": {
-   "file": "vfx/wind4.png",
-   "frames": 6
+  "splash": {
+   "file": "vfx/splash.png",
+   "frames": 11,
+   "w": 29,
+   "h": 29,
+   "ox": 18,
+   "oy": 17
   },
-  "earth1": {
-   "file": "vfx/earth1.png",
-   "frames": 12
+  "water_jet": {
+   "file": "vfx/water_jet.png",
+   "frames": 8,
+   "w": 32,
+   "h": 23,
+   "ox": 16,
+   "oy": 20
   },
-  "earth2": {
-   "file": "vfx/earth2.png",
-   "frames": 15
+  "rock_fall": {
+   "file": "vfx/rock_fall.png",
+   "frames": 12,
+   "w": 34,
+   "h": 40,
+   "ox": 14,
+   "oy": 10
   },
-  "earth3": {
-   "file": "vfx/earth3.png",
-   "frames": 8
+  "stone_spire": {
+   "file": "vfx/stone_spire.png",
+   "frames": 15,
+   "w": 39,
+   "h": 38,
+   "ox": 13,
+   "oy": 16
   },
-  "earth4": {
-   "file": "vfx/earth4.png",
-   "frames": 6
+  "sprout": {
+   "file": "vfx/sprout.png",
+   "frames": 8,
+   "w": 16,
+   "h": 27,
+   "ox": 24,
+   "oy": 21
   },
-  "earth5": {
-   "file": "vfx/earth5.png",
-   "frames": 6
+  "thorns": {
+   "file": "vfx/thorns.png",
+   "frames": 6,
+   "w": 34,
+   "h": 31,
+   "ox": 14,
+   "oy": 17
   },
-  "holy1": {
-   "file": "vfx/holy1.png",
-   "frames": 9
+  "wither": {
+   "file": "vfx/wither.png",
+   "frames": 6,
+   "w": 21,
+   "h": 26,
+   "ox": 22,
+   "oy": 22
   },
-  "holy2": {
-   "file": "vfx/holy2.png",
-   "frames": 6
+  "breeze": {
+   "file": "vfx/breeze.png",
+   "frames": 6,
+   "w": 36,
+   "h": 32,
+   "ox": 16,
+   "oy": 15
   },
-  "holy3": {
-   "file": "vfx/holy3.png",
-   "frames": 8
+  "gust": {
+   "file": "vfx/gust.png",
+   "frames": 4,
+   "w": 48,
+   "h": 10,
+   "ox": 7,
+   "oy": 26
   },
-  "darkness1": {
-   "file": "vfx/darkness1.png",
-   "frames": 3
+  "tornado": {
+   "file": "vfx/tornado.png",
+   "frames": 6,
+   "w": 38,
+   "h": 53,
+   "ox": 11,
+   "oy": 6
   },
-  "darkness2": {
-   "file": "vfx/darkness2.png",
-   "frames": 10
+  "whirlwind": {
+   "file": "vfx/whirlwind.png",
+   "frames": 9,
+   "w": 30,
+   "h": 26,
+   "ox": 16,
+   "oy": 24
   },
-  "darkness3": {
-   "file": "vfx/darkness3.png",
-   "frames": 10
+  "death": {
+   "file": "vfx/death.png",
+   "frames": 3,
+   "w": 15,
+   "h": 20,
+   "ox": 25,
+   "oy": 22
   },
-  "heal1": {
-   "file": "vfx/heal1.png",
-   "frames": 9
+  "shadow_cloud": {
+   "file": "vfx/shadow_cloud.png",
+   "frames": 10,
+   "w": 28,
+   "h": 26,
+   "ox": 19,
+   "oy": 17
   },
-  "heal2": {
-   "file": "vfx/heal2.png",
-   "frames": 13
+  "void": {
+   "file": "vfx/void.png",
+   "frames": 10,
+   "w": 17,
+   "h": 17,
+   "ox": 24,
+   "oy": 22
   },
-  "heal3": {
-   "file": "vfx/heal3.png",
-   "frames": 12
+  "angel_wings": {
+   "file": "vfx/angel_wings.png",
+   "frames": 8,
+   "w": 43,
+   "h": 24,
+   "ox": 11,
+   "oy": 18
   },
-  "heal4": {
-   "file": "vfx/heal4.png",
-   "frames": 5
+  "holy_beam": {
+   "file": "vfx/holy_beam.png",
+   "frames": 9,
+   "w": 13,
+   "h": 48,
+   "ox": 26,
+   "oy": 8
   },
-  "heal5": {
-   "file": "vfx/heal5.png",
-   "frames": 10
+  "holy_cross": {
+   "file": "vfx/holy_cross.png",
+   "frames": 6,
+   "w": 21,
+   "h": 27,
+   "ox": 22,
+   "oy": 20
   },
-  "sword1": {
-   "file": "vfx/sword1.png",
-   "frames": 6
+  "healing_circle": {
+   "file": "vfx/healing_circle.png",
+   "frames": 9,
+   "w": 36,
+   "h": 14,
+   "ox": 14,
+   "oy": 36
   },
-  "sword2": {
-   "file": "vfx/sword2.png",
-   "frames": 6
+  "minor_heal": {
+   "file": "vfx/minor_heal.png",
+   "frames": 10,
+   "w": 14,
+   "h": 13,
+   "ox": 26,
+   "oy": 24
   },
-  "sword3": {
-   "file": "vfx/sword3.png",
-   "frames": 6
+  "radiance": {
+   "file": "vfx/radiance.png",
+   "frames": 5,
+   "w": 42,
+   "h": 41,
+   "ox": 11,
+   "oy": 11
   },
-  "sword4": {
-   "file": "vfx/sword4.png",
-   "frames": 6
+  "regen_aura": {
+   "file": "vfx/regen_aura.png",
+   "frames": 12,
+   "w": 33,
+   "h": 17,
+   "ox": 15,
+   "oy": 33
   },
-  "sword5": {
-   "file": "vfx/sword5.png",
-   "frames": 8
+  "restore": {
+   "file": "vfx/restore.png",
+   "frames": 13,
+   "w": 20,
+   "h": 33,
+   "ox": 22,
+   "oy": 18
   },
-  "impact1": {
-   "file": "vfx/impact1.png",
-   "frames": 6
+  "blind": {
+   "file": "vfx/blind.png",
+   "frames": 6,
+   "w": 10,
+   "h": 10,
+   "ox": 27,
+   "oy": 27
   },
-  "impact2": {
-   "file": "vfx/impact2.png",
-   "frames": 5
+  "charm": {
+   "file": "vfx/charm.png",
+   "frames": 8,
+   "w": 16,
+   "h": 30,
+   "ox": 24,
+   "oy": 17
   },
-  "impact3": {
-   "file": "vfx/impact3.png",
-   "frames": 6
+  "confuse": {
+   "file": "vfx/confuse.png",
+   "frames": 6,
+   "w": 14,
+   "h": 11,
+   "ox": 25,
+   "oy": 24
   },
-  "impact4": {
-   "file": "vfx/impact4.png",
-   "frames": 5
+  "curse": {
+   "file": "vfx/curse.png",
+   "frames": 8,
+   "w": 22,
+   "h": 30,
+   "ox": 21,
+   "oy": 16
   },
-  "impact5": {
-   "file": "vfx/impact5.png",
-   "frames": 6
+  "paralyze": {
+   "file": "vfx/paralyze.png",
+   "frames": 5,
+   "w": 30,
+   "h": 25,
+   "ox": 17,
+   "oy": 21
   },
-  "impact6": {
-   "file": "vfx/impact6.png",
-   "frames": 4
+  "poison": {
+   "file": "vfx/poison.png",
+   "frames": 8,
+   "w": 13,
+   "h": 19,
+   "ox": 26,
+   "oy": 23
   },
-  "impact7": {
-   "file": "vfx/impact7.png",
-   "frames": 8
+  "rage": {
+   "file": "vfx/rage.png",
+   "frames": 4,
+   "w": 14,
+   "h": 15,
+   "ox": 24,
+   "oy": 24
   },
-  "arrow1": {
-   "file": "vfx/arrow1.png",
-   "frames": 11
+  "sadness": {
+   "file": "vfx/sadness.png",
+   "frames": 8,
+   "w": 14,
+   "h": 16,
+   "ox": 26,
+   "oy": 24
   },
-  "arrow2": {
-   "file": "vfx/arrow2.png",
-   "frames": 7
+  "silence": {
+   "file": "vfx/silence.png",
+   "frames": 6,
+   "w": 13,
+   "h": 11,
+   "ox": 25,
+   "oy": 26
   },
-  "bite1": {
-   "file": "vfx/bite1.png",
-   "frames": 8
+  "sleep": {
+   "file": "vfx/sleep.png",
+   "frames": 8,
+   "w": 13,
+   "h": 12,
+   "ox": 25,
+   "oy": 27
   },
-  "bite2": {
-   "file": "vfx/bite2.png",
-   "frames": 8
+  "doom_timer": {
+   "file": "vfx/doom_timer.png",
+   "frames": 10,
+   "w": 23,
+   "h": 23,
+   "ox": 21,
+   "oy": 19
+  },
+  "hourglass_flip": {
+   "file": "vfx/hourglass_flip.png",
+   "frames": 2,
+   "w": 28,
+   "h": 29,
+   "ox": 20,
+   "oy": 19
+  },
+  "slow": {
+   "file": "vfx/slow.png",
+   "frames": 7,
+   "w": 17,
+   "h": 29,
+   "ox": 24,
+   "oy": 19
+  },
+  "crystal": {
+   "file": "vfx/crystal.png",
+   "frames": 4,
+   "w": 10,
+   "h": 22,
+   "ox": 28,
+   "oy": 22
+  },
+  "gem": {
+   "file": "vfx/gem.png",
+   "frames": 4,
+   "w": 10,
+   "h": 10,
+   "ox": 28,
+   "oy": 29
+  },
+  "blast": {
+   "file": "vfx/blast.png",
+   "frames": 8,
+   "w": 43,
+   "h": 37,
+   "ox": 10,
+   "oy": 13
+  },
+  "explosion": {
+   "file": "vfx/explosion.png",
+   "frames": 10,
+   "w": 40,
+   "h": 33,
+   "ox": 11,
+   "oy": 12
+  },
+  "debris_hit": {
+   "file": "vfx/debris_hit.png",
+   "frames": 6,
+   "w": 24,
+   "h": 15,
+   "ox": 20,
+   "oy": 23
+  },
+  "ring_pop": {
+   "file": "vfx/ring_pop.png",
+   "frames": 5,
+   "w": 16,
+   "h": 16,
+   "ox": 24,
+   "oy": 24
+  },
+  "ripple_burst": {
+   "file": "vfx/ripple_burst.png",
+   "frames": 8,
+   "w": 24,
+   "h": 18,
+   "ox": 21,
+   "oy": 23
+  },
+  "shockwave": {
+   "file": "vfx/shockwave.png",
+   "frames": 6,
+   "w": 28,
+   "h": 28,
+   "ox": 18,
+   "oy": 18
+  },
+  "spark_hit": {
+   "file": "vfx/spark_hit.png",
+   "frames": 5,
+   "w": 12,
+   "h": 20,
+   "ox": 30,
+   "oy": 21
+  },
+  "spark_scatter": {
+   "file": "vfx/spark_scatter.png",
+   "frames": 6,
+   "w": 21,
+   "h": 12,
+   "ox": 22,
+   "oy": 23
+  },
+  "star_hit": {
+   "file": "vfx/star_hit.png",
+   "frames": 4,
+   "w": 11,
+   "h": 11,
+   "ox": 26,
+   "oy": 26
+  },
+  "cloud_puff": {
+   "file": "vfx/cloud_puff.png",
+   "frames": 6,
+   "w": 16,
+   "h": 23,
+   "ox": 24,
+   "oy": 17
+  },
+  "dust_kick": {
+   "file": "vfx/dust_kick.png",
+   "frames": 4,
+   "w": 10,
+   "h": 4,
+   "ox": 29,
+   "oy": 37
+  },
+  "dust_puff": {
+   "file": "vfx/dust_puff.png",
+   "frames": 4,
+   "w": 10,
+   "h": 7,
+   "ox": 27,
+   "oy": 28
+  },
+  "dust_trail": {
+   "file": "vfx/dust_trail.png",
+   "frames": 4,
+   "w": 8,
+   "h": 5,
+   "ox": 28,
+   "oy": 27
+  },
+  "smoke_puff": {
+   "file": "vfx/smoke_puff.png",
+   "frames": 6,
+   "w": 27,
+   "h": 21,
+   "ox": 19,
+   "oy": 19
+  },
+  "smoke_wisp": {
+   "file": "vfx/smoke_wisp.png",
+   "frames": 4,
+   "w": 10,
+   "h": 29,
+   "ox": 28,
+   "oy": 17
+  },
+  "bite": {
+   "file": "vfx/bite.png",
+   "frames": 8,
+   "w": 14,
+   "h": 37,
+   "ox": 23,
+   "oy": 13
+  },
+  "chomp": {
+   "file": "vfx/chomp.png",
+   "frames": 8,
+   "w": 23,
+   "h": 37,
+   "ox": 19,
+   "oy": 13
   },
   "claw": {
    "file": "vfx/claw.png",
-   "frames": 6
+   "frames": 6,
+   "w": 40,
+   "h": 36,
+   "ox": 8,
+   "oy": 14
   },
-  "status1": {
-   "file": "vfx/status1.png",
-   "frames": 8
+  "crescent_cut": {
+   "file": "vfx/crescent_cut.png",
+   "frames": 6,
+   "w": 22,
+   "h": 27,
+   "ox": 22,
+   "oy": 21
   },
-  "status2": {
-   "file": "vfx/status2.png",
-   "frames": 6
+  "quick_slash": {
+   "file": "vfx/quick_slash.png",
+   "frames": 6,
+   "w": 24,
+   "h": 24,
+   "ox": 20,
+   "oy": 19
   },
-  "status3": {
-   "file": "vfx/status3.png",
-   "frames": 6
+  "slash": {
+   "file": "vfx/slash.png",
+   "frames": 6,
+   "w": 27,
+   "h": 44,
+   "ox": 8,
+   "oy": 11
   },
-  "status4": {
-   "file": "vfx/status4.png",
-   "frames": 4
+  "spin_slash": {
+   "file": "vfx/spin_slash.png",
+   "frames": 8,
+   "w": 48,
+   "h": 48,
+   "ox": 8,
+   "oy": 8
   },
-  "status5": {
-   "file": "vfx/status5.png",
-   "frames": 6
+  "thrust": {
+   "file": "vfx/thrust.png",
+   "frames": 6,
+   "w": 11,
+   "h": 34,
+   "ox": 28,
+   "oy": 17
   },
-  "status6": {
-   "file": "vfx/status6.png",
-   "frames": 8
+  "club_swing": {
+   "file": "vfx/club_swing.png",
+   "frames": 6,
+   "w": 22,
+   "h": 39,
+   "ox": 21,
+   "oy": 11
   },
-  "status7": {
-   "file": "vfx/status7.png",
-   "frames": 8
+  "gleam": {
+   "file": "vfx/gleam.png",
+   "frames": 6,
+   "w": 13,
+   "h": 11,
+   "ox": 25,
+   "oy": 27
   },
-  "status8": {
-   "file": "vfx/status8.png",
-   "frames": 5
+  "gunshot": {
+   "file": "vfx/gunshot.png",
+   "frames": 6,
+   "w": 39,
+   "h": 3,
+   "ox": 16,
+   "oy": 31
   },
-  "status9": {
-   "file": "vfx/status9.png",
-   "frames": 8
+  "pierce_flash": {
+   "file": "vfx/pierce_flash.png",
+   "frames": 4,
+   "w": 13,
+   "h": 13,
+   "ox": 25,
+   "oy": 26
   },
-  "status10": {
-   "file": "vfx/status10.png",
-   "frames": 8
+  "pound": {
+   "file": "vfx/pound.png",
+   "frames": 6,
+   "w": 9,
+   "h": 39,
+   "ox": 30,
+   "oy": 9
   },
-  "smoke1": {
-   "file": "vfx/smoke1.png",
-   "frames": 6
+  "swipe": {
+   "file": "vfx/swipe.png",
+   "frames": 5,
+   "w": 25,
+   "h": 33,
+   "ox": 21,
+   "oy": 13
   },
-  "smoke2": {
-   "file": "vfx/smoke2.png",
-   "frames": 4
+  "target_lock": {
+   "file": "vfx/target_lock.png",
+   "frames": 2,
+   "w": 15,
+   "h": 15,
+   "ox": 23,
+   "oy": 25
   },
-  "smoke3": {
-   "file": "vfx/smoke3.png",
-   "frames": 6
+  "uppercut": {
+   "file": "vfx/uppercut.png",
+   "frames": 6,
+   "w": 17,
+   "h": 37,
+   "ox": 23,
+   "oy": 8
   },
-  "dust1": {
-   "file": "vfx/dust1.png",
-   "frames": 4
+  "arrow_rain": {
+   "file": "vfx/arrow_rain.png",
+   "frames": 11,
+   "w": 11,
+   "h": 36,
+   "ox": 27,
+   "oy": 8
   },
-  "dust2": {
-   "file": "vfx/dust2.png",
-   "frames": 4
+  "arrow_shot": {
+   "file": "vfx/arrow_shot.png",
+   "frames": 7,
+   "w": 46,
+   "h": 13,
+   "ox": 10,
+   "oy": 26
   },
-  "dust3": {
-   "file": "vfx/dust3.png",
-   "frames": 4
+  "arrow": {
+   "file": "vfx/arrow.png",
+   "frames": 2,
+   "w": 24,
+   "h": 29,
+   "ox": 21,
+   "oy": 19
   },
-  "explosion1": {
-   "file": "vfx/explosion1.png",
-   "frames": 10
+  "bomb": {
+   "file": "vfx/bomb.png",
+   "frames": 4,
+   "w": 17,
+   "h": 30,
+   "ox": 24,
+   "oy": 16
   },
-  "explosion2": {
-   "file": "vfx/explosion2.png",
-   "frames": 8
+  "bone": {
+   "file": "vfx/bone.png",
+   "frames": 2,
+   "w": 22,
+   "h": 24,
+   "ox": 21,
+   "oy": 22
   },
-  "diamond1": {
-   "file": "vfx/diamond1.png",
-   "frames": 4
+  "candle": {
+   "file": "vfx/candle.png",
+   "frames": 3,
+   "w": 17,
+   "h": 30,
+   "ox": 24,
+   "oy": 18
   },
-  "diamond2": {
-   "file": "vfx/diamond2.png",
-   "frames": 4
+  "drop": {
+   "file": "vfx/drop.png",
+   "frames": 2,
+   "w": 7,
+   "h": 13,
+   "ox": 29,
+   "oy": 30
   },
-  "water1": {
-   "file": "vfx/water1.png",
-   "frames": 11
+  "music_note": {
+   "file": "vfx/music_note.png",
+   "frames": 3,
+   "w": 22,
+   "h": 22,
+   "ox": 20,
+   "oy": 24
   },
-  "water2": {
-   "file": "vfx/water2.png",
-   "frames": 11
+  "skull": {
+   "file": "vfx/skull.png",
+   "frames": 2,
+   "w": 15,
+   "h": 17,
+   "ox": 25,
+   "oy": 27
   },
-  "water3": {
-   "file": "vfx/water3.png",
-   "frames": 12
+  "small_bomb": {
+   "file": "vfx/small_bomb.png",
+   "frames": 1,
+   "w": 12,
+   "h": 18,
+   "ox": 27,
+   "oy": 28
   },
-  "water4": {
-   "file": "vfx/water4.png",
-   "frames": 8
+  "bite_plain": {
+   "file": "vfx/bite_plain.png",
+   "frames": 8,
+   "w": 14,
+   "h": 37,
+   "ox": 23,
+   "oy": 13
   },
-  "water5": {
-   "file": "vfx/water5.png",
-   "frames": 7
+  "bite_venom": {
+   "file": "vfx/bite_venom.png",
+   "frames": 8,
+   "w": 14,
+   "h": 37,
+   "ox": 23,
+   "oy": 13
   },
-  "weapon1": {
-   "file": "vfx/weapon1.png",
-   "frames": 6
+  "bite_blood": {
+   "file": "vfx/bite_blood.png",
+   "frames": 8,
+   "w": 14,
+   "h": 37,
+   "ox": 23,
+   "oy": 13
   },
-  "weapon2": {
-   "file": "vfx/weapon2.png",
-   "frames": 6
+  "chomp_fire": {
+   "file": "vfx/chomp_fire.png",
+   "frames": 8,
+   "w": 23,
+   "h": 37,
+   "ox": 19,
+   "oy": 13
   },
-  "weapon3": {
-   "file": "vfx/weapon3.png",
-   "frames": 4
+  "chomp_blood": {
+   "file": "vfx/chomp_blood.png",
+   "frames": 8,
+   "w": 23,
+   "h": 37,
+   "ox": 19,
+   "oy": 13
   },
-  "weapon4": {
-   "file": "vfx/weapon4.png",
-   "frames": 6
+  "claw_blood": {
+   "file": "vfx/claw_blood.png",
+   "frames": 6,
+   "w": 40,
+   "h": 36,
+   "ox": 8,
+   "oy": 14
   },
-  "weapon5": {
-   "file": "vfx/weapon5.png",
-   "frames": 6
+  "claw_dark": {
+   "file": "vfx/claw_dark.png",
+   "frames": 6,
+   "w": 40,
+   "h": 36,
+   "ox": 8,
+   "oy": 14
   },
-  "weapon6": {
-   "file": "vfx/weapon6.png",
-   "frames": 6
+  "crescent_cut_dark": {
+   "file": "vfx/crescent_cut_dark.png",
+   "frames": 6,
+   "w": 22,
+   "h": 27,
+   "ox": 22,
+   "oy": 21
   },
-  "weapon7": {
-   "file": "vfx/weapon7.png",
-   "frames": 5
+  "slash_dark": {
+   "file": "vfx/slash_dark.png",
+   "frames": 6,
+   "w": 27,
+   "h": 44,
+   "ox": 8,
+   "oy": 11
   },
-  "weapon8": {
-   "file": "vfx/weapon8.png",
-   "frames": 2
+  "thrust_storm": {
+   "file": "vfx/thrust_storm.png",
+   "frames": 6,
+   "w": 11,
+   "h": 34,
+   "ox": 28,
+   "oy": 17
   },
-  "hourglass1": {
-   "file": "vfx/hourglass1.png",
-   "frames": 7
+  "uppercut_fire": {
+   "file": "vfx/uppercut_fire.png",
+   "frames": 6,
+   "w": 17,
+   "h": 37,
+   "ox": 23,
+   "oy": 8
+  },
+  "uppercut_might": {
+   "file": "vfx/uppercut_might.png",
+   "frames": 6,
+   "w": 17,
+   "h": 37,
+   "ox": 23,
+   "oy": 8
+  },
+  "swipe_venom": {
+   "file": "vfx/swipe_venom.png",
+   "frames": 5,
+   "w": 25,
+   "h": 33,
+   "ox": 21,
+   "oy": 13
+  },
+  "crystal_shield": {
+   "file": "vfx/crystal_shield.png",
+   "frames": 4,
+   "w": 10,
+   "h": 22,
+   "ox": 28,
+   "oy": 22
+  },
+  "crystal_earth": {
+   "file": "vfx/crystal_earth.png",
+   "frames": 4,
+   "w": 10,
+   "h": 22,
+   "ox": 28,
+   "oy": 22
+  },
+  "crystal_steel": {
+   "file": "vfx/crystal_steel.png",
+   "frames": 4,
+   "w": 10,
+   "h": 22,
+   "ox": 28,
+   "oy": 22
+  },
+  "shockwave_gold": {
+   "file": "vfx/shockwave_gold.png",
+   "frames": 6,
+   "w": 28,
+   "h": 28,
+   "ox": 18,
+   "oy": 18
+  },
+  "shockwave_dark": {
+   "file": "vfx/shockwave_dark.png",
+   "frames": 6,
+   "w": 28,
+   "h": 28,
+   "ox": 18,
+   "oy": 18
+  },
+  "regen_aura_green": {
+   "file": "vfx/regen_aura_green.png",
+   "frames": 12,
+   "w": 33,
+   "h": 17,
+   "ox": 15,
+   "oy": 33
+  },
+  "minor_heal_green": {
+   "file": "vfx/minor_heal_green.png",
+   "frames": 10,
+   "w": 14,
+   "h": 13,
+   "ox": 26,
+   "oy": 24
+  },
+  "restore_dark": {
+   "file": "vfx/restore_dark.png",
+   "frames": 13,
+   "w": 20,
+   "h": 33,
+   "ox": 22,
+   "oy": 18
+  },
+  "restore_blood": {
+   "file": "vfx/restore_blood.png",
+   "frames": 13,
+   "w": 20,
+   "h": 33,
+   "ox": 22,
+   "oy": 18
+  },
+  "restore_mp": {
+   "file": "vfx/restore_mp.png",
+   "frames": 13,
+   "w": 20,
+   "h": 33,
+   "ox": 22,
+   "oy": 18
+  },
+  "radiance_mp": {
+   "file": "vfx/radiance_mp.png",
+   "frames": 5,
+   "w": 42,
+   "h": 41,
+   "ox": 11,
+   "oy": 11
+  },
+  "healing_circle_cast": {
+   "file": "vfx/healing_circle_cast.png",
+   "frames": 9,
+   "w": 36,
+   "h": 14,
+   "ox": 14,
+   "oy": 36
+  },
+  "healing_circle_dark": {
+   "file": "vfx/healing_circle_dark.png",
+   "frames": 9,
+   "w": 36,
+   "h": 14,
+   "ox": 14,
+   "oy": 36
+  },
+  "poison_rot": {
+   "file": "vfx/poison_rot.png",
+   "frames": 8,
+   "w": 13,
+   "h": 19,
+   "ox": 26,
+   "oy": 23
+  },
+  "flame_dark": {
+   "file": "vfx/flame_dark.png",
+   "frames": 4,
+   "w": 10,
+   "h": 23,
+   "ox": 27,
+   "oy": 20
+  },
+  "fire_pillar_dark": {
+   "file": "vfx/fire_pillar_dark.png",
+   "frames": 11,
+   "w": 15,
+   "h": 37,
+   "ox": 25,
+   "oy": 13
+  },
+  "fireball_dark": {
+   "file": "vfx/fireball_dark.png",
+   "frames": 6,
+   "w": 28,
+   "h": 13,
+   "ox": 18,
+   "oy": 25
+  },
+  "splash_lava": {
+   "file": "vfx/splash_lava.png",
+   "frames": 11,
+   "w": 29,
+   "h": 29,
+   "ox": 18,
+   "oy": 17
+  },
+  "splash_slime": {
+   "file": "vfx/splash_slime.png",
+   "frames": 11,
+   "w": 29,
+   "h": 29,
+   "ox": 18,
+   "oy": 17
+  },
+  "gleam_gold": {
+   "file": "vfx/gleam_gold.png",
+   "frames": 6,
+   "w": 13,
+   "h": 11,
+   "ox": 25,
+   "oy": 27
+  },
+  "lightning_bolt_dark": {
+   "file": "vfx/lightning_bolt_dark.png",
+   "frames": 6,
+   "w": 27,
+   "h": 41,
+   "ox": 20,
+   "oy": 11
+  },
+  "arrow_fly": {
+   "file": "vfx/arrow_fly.png",
+   "frames": 1,
+   "w": 29,
+   "h": 7,
+   "ox": 16,
+   "oy": 30
+  },
+  "arrow_fly_ice": {
+   "file": "vfx/arrow_fly_ice.png",
+   "frames": 1,
+   "w": 29,
+   "h": 7,
+   "ox": 16,
+   "oy": 30
+  },
+  "arrow_fly_blood": {
+   "file": "vfx/arrow_fly_blood.png",
+   "frames": 1,
+   "w": 29,
+   "h": 7,
+   "ox": 16,
+   "oy": 30
+  },
+  "ice_lance": {
+   "file": "vfx/ice_lance.png",
+   "frames": 1,
+   "w": 14,
+   "h": 7,
+   "ox": 36,
+   "oy": 29
   }
  },
  "weapons": {

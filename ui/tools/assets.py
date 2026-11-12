@@ -9,7 +9,7 @@ unzipped as they come: the "Simple 8-bit Sideview Battlers" (its Style 2
 sv_actors are the class sheets, its Weapon_Pack the weapons), the sideview
 enemies, the 400 "Status effect and various icons", Willibab's Iconset,
 humanoid faces (Willi_HFP), the overworld / dungeon / castle / town tilesets
-(1x), and the VFX pack. A pack that isn't there is skipped and its output kept
+(1x), and the "VFX Spells" pack. A pack that isn't there is skipped and its output kept
 as committed, so the output can be rebuilt one pack at a time.
 
 The output is committed, so the interface runs without the packs: one actor
@@ -50,7 +50,6 @@ CAMPFIRE = find_file("Small_sheet.png")
 CHESTS = find_file("!D_CHEST.png")
 STATUS = find_file("Status_effect1_1_01.png")
 STATUS = STATUS.parent if STATUS else None
-VFX = find_dir("individual_frames")
 ICONSET = find_file("Iconset.png")
 HFACES = find_file("Humanoid_Faces_1x.png")
 OW = find_dir("Tileset 1x")
@@ -396,30 +395,99 @@ if ICONSET:
     shutil.copyfile(ICONSET, OUT / "iconset.png")
     manifest["iconset"] = "iconset.png"
 
-# ─── VFX sequences to pack: folder → prefixes ───
-VFX_SEQ = {
-    "fire": ["fire1", "fire2", "fire3", "fire4"], "ice": ["ice1", "ice2", "ice3", "ice4"], "lightning": ["lightning1", "lightning2", "lightning3", "lightning4"],
-    "wind": ["wind1", "wind2", "wind3", "wind4"], "earth1": ["earth1", "earth2"], "earth2": ["earth3", "earth4", "earth5"],
-    "holy": ["holy1", "holy2", "holy3"], "darkness": ["darkness1", "darkness2", "darkness3"], "heal": ["heal1", "heal2", "heal3", "heal4", "heal5"],
-    "sword": ["sword1", "sword2", "sword3", "sword4", "sword5"], "impact": ["impact1", "impact2", "impact3", "impact4", "impact5", "impact6", "impact7"],
-    "arrow": ["arrow1", "arrow2"], "claw_bite": ["bite1", "bite2", "claw"], "status": [f"status{i}" for i in range(1, 11)],
-    "smoke": ["smoke1", "smoke2", "smoke3"], "dust": ["dust1", "dust2", "dust3"], "explosion": ["explosion1", "explosion2"],
-    "diamond": ["diamond1", "diamond2"], "water": ["water1", "water2", "water3", "water4", "water5"], "weapons": [f"weapon{i}" for i in range(1, 9)],
-    "clock": ["hourglass1"],
+# ─── VFX: the "VFX Spells" pack, one folder per effect (<group>/<Effect>/<effect>_NN.png, 64×64 frames at art size) ───
+# Each effect becomes one strip, named by its folder in snake case ("Fire Pillar" → fire_pillar), its frames cropped to
+# the box all of them fit in (w×h; ox, oy is where that box sat in the pack's 64×64 frame). The Props folder's effects are
+# still pictures in a few variants (an arrow, a bone, three notes), which the battle moves itself. src/art.ts picks them.
+# Recoloured and turned copies, for the looks the pack draws in one colour only: name → (effect, ramp or turn).
+# A recolour keeps each pixel's brightness: its band of five picks the ramp's colour, so outlines stay dark and glints
+# light, and a ramp's top sets how a pale effect reads (a saturated top for the one-colour ones).
+VFX_RAMPS = {
+    "steel": [(30, 35, 45), (70, 80, 100), (130, 140, 160), (190, 200, 215), (245, 248, 255)],
+    "silver": [(35, 40, 50), (80, 90, 110), (140, 150, 170), (195, 205, 220), (245, 248, 255)],
+    "venom": [(25, 40, 10), (55, 85, 20), (100, 140, 35), (160, 200, 70), (215, 245, 150)],
+    "blood": [(45, 5, 10), (110, 15, 30), (190, 30, 50), (240, 90, 100), (255, 180, 185)],
+    "fire": [(90, 15, 5), (180, 40, 10), (240, 100, 20), (255, 180, 40), (255, 240, 170)],
+    "dark": [(30, 12, 45), (75, 30, 110), (130, 70, 190), (180, 120, 240), (220, 185, 255)],
+    "darkfire": [(60, 25, 90), (120, 60, 180), (170, 100, 235), (205, 150, 255), (235, 210, 255)],
+    "rot": [(55, 85, 20), (100, 140, 35), (160, 200, 70), (200, 230, 110), (235, 250, 180)],
+    "storm": [(60, 45, 5), (120, 95, 10), (200, 160, 20), (250, 215, 50), (255, 245, 160)],
+    "might": [(70, 10, 10), (150, 25, 25), (230, 60, 50), (255, 120, 90), (255, 190, 160)],
+    "ice": [(15, 40, 60), (30, 90, 140), (60, 150, 210), (130, 210, 245), (215, 245, 255)],
+    "earth": [(50, 30, 12), (110, 70, 30), (170, 115, 55), (215, 165, 95), (245, 220, 170)],
+    "aegis": [(70, 50, 5), (140, 100, 10), (215, 165, 25), (250, 210, 60), (255, 235, 140)],
+    "leaf": [(15, 50, 20), (30, 100, 35), (50, 160, 55), (110, 215, 80), (175, 250, 130)],
+    "mana": [(15, 30, 70), (30, 60, 140), (60, 120, 220), (120, 175, 255), (185, 220, 255)],
 }
+
+def recolor_vfx(im, ramp):
+    px = im.load()
+    for y in range(im.height):
+        for x in range(im.width):
+            r, g, b, a = px[x, y]
+            if a:
+                px[x, y] = (*ramp[min(4, int((0.299 * r + 0.587 * g + 0.114 * b) * 5 // 256))], a)
+    return im
+
+VFX_DERIVED = {
+    # bites and claws (the pack's are steel blue, kept for ice): plain beasts, venom, blood, fire, the dead
+    "bite_plain": ("bite", "steel"), "bite_venom": ("bite", "venom"), "bite_blood": ("bite", "blood"),
+    "chomp_fire": ("chomp", "fire"), "chomp_blood": ("chomp", "blood"), "claw_blood": ("claw", "blood"), "claw_dark": ("claw", "dark"),
+    # blades and blows in a theme's colour
+    "crescent_cut_dark": ("crescent_cut", "dark"), "slash_dark": ("slash", "dark"), "thrust_storm": ("thrust", "storm"),
+    "uppercut_fire": ("uppercut", "fire"), "uppercut_might": ("uppercut", "might"), "swipe_venom": ("swipe", "venom"),
+    # guards and shells
+    "crystal_shield": ("crystal", "ice"), "crystal_earth": ("crystal", "earth"), "crystal_steel": ("crystal", "silver"),
+    "shockwave_gold": ("shockwave", "aegis"), "shockwave_dark": ("shockwave", "dark"),
+    # healing, MP and their dark and blood kin
+    "regen_aura_green": ("regen_aura", "leaf"), "minor_heal_green": ("minor_heal", "leaf"), "restore_dark": ("restore", "dark"),
+    "restore_blood": ("restore", "blood"), "restore_mp": ("restore", "mana"), "radiance_mp": ("radiance", "mana"),
+    "healing_circle_cast": ("healing_circle", "ice"), "healing_circle_dark": ("healing_circle", "dark"),
+    # afflictions
+    "poison_rot": ("poison", "rot"), "flame_dark": ("flame", "darkfire"), "fire_pillar_dark": ("fire_pillar", "darkfire"),
+    "fireball_dark": ("fireball", "darkfire"), "splash_lava": ("splash", "fire"), "splash_slime": ("splash", "leaf"),
+    "gleam_gold": ("gleam", "aegis"), "lightning_bolt_dark": ("lightning_bolt", "dark"),
+    # projectiles: the props' arrow and the ice shard's first frame, turned to fly right
+    "arrow_fly": ("arrow", "turn"), "arrow_fly_ice": ("arrow_fly", "ice"), "arrow_fly_blood": ("arrow_fly", "blood"), "ice_lance": ("ice_shard", "turn"),
+}
+VFX = find_dir("VFX Spells")
+
+def crop_strip(frames):
+    """Frames cropped to the box all of them fit in, side by side: (strip, w, h, ox, oy)."""
+    box = None
+    for im in frames:
+        b = im.getbbox()
+        if b:
+            box = b if box is None else (min(box[0], b[0]), min(box[1], b[1]), max(box[2], b[2]), max(box[3], b[3]))
+    box = box or (0, 0, 1, 1)
+    w, h = box[2] - box[0], box[3] - box[1]
+    strip = Image.new("RGBA", (w * len(frames), h), (0, 0, 0, 0))
+    for i, im in enumerate(frames):
+        strip.paste(im.crop(box), (w * i, 0))
+    return strip, w, h, box[0], box[1]
+
 if VFX:
     ensure(OUT / "vfx")
-    for folder, prefixes in VFX_SEQ.items():
-        for pre in prefixes:
-            frames = sorted(glob.glob(f"{VFX}/{folder}/{pre}_*.png"), key=lambda p: int(p.rsplit("_", 1)[1][:-4]))
-            if not frames:
-                raise SystemExit(f"no frames for {folder}/{pre}")
-            strip = Image.new("RGBA", (64 * len(frames), 64), (0, 0, 0, 0))
-            for i, f in enumerate(frames):
-                strip.paste(Image.open(f).convert("RGBA"), (64 * i, 0))
-            strip.save(OUT / "vfx" / f"{pre}.png")
-            manifest["vfx"][pre] = {"file": f"vfx/{pre}.png", "frames": len(frames)}
-    print(f"vfx: {len(manifest['vfx'])} strips")
+    for old in (OUT / "vfx").glob("*.png"):
+        old.unlink()
+    manifest["vfx"] = {}
+    framesets = {}
+    for folder in sorted(p for p in VFX.glob("*/*") if p.is_dir()):
+        name = folder.name.lower().replace(" ", "_")
+        files = sorted((f for f in folder.glob("*.png") if f.stem.rsplit("_", 1)[-1].isdigit()), key=lambda f: int(f.stem.rsplit("_", 1)[1]))
+        if files:
+            framesets[name] = [Image.open(f).convert("RGBA") for f in files]
+    for name, (src, how) in VFX_DERIVED.items():
+        base = framesets[src]
+        if how == "turn":
+            framesets[name] = [base[0].rotate(-90)]
+        else:
+            framesets[name] = [recolor_vfx(im.copy(), VFX_RAMPS[how]) for im in base]
+    for name, frames in framesets.items():
+        strip, w, h, ox, oy = crop_strip(frames)
+        strip.save(OUT / "vfx" / f"{name}.png")
+        manifest["vfx"][name] = {"file": f"vfx/{name}.png", "frames": len(frames), "w": w, "h": h, "ox": ox, "oy": oy}
+    print(f"vfx: {len(manifest['vfx'])} strips ({len(VFX_DERIVED)} recoloured or turned)")
 else:
     print("vfx: pack not found, kept")
 

@@ -11,7 +11,8 @@
 import { SUBTICKS } from "../../../src/schema.js";
 import type { CUnit } from "../../../src/engine/combat/fight.js";
 import { c, disp } from "../content.js";
-import { manifest, VFX_FOR, type Pose } from "../art.js";
+import { manifest, type Pose } from "../art.js";
+import type { Fx, Missile } from "../effects.js";
 import { actorSpan, backdropImage, drawActor, drawCampfire, drawChest, drawEnemy, drawStatus, drawText, enemyK, enemySprite, FRAME_W, OUTLINE, STATUS_ICON, statusIconOf, vfxSprite } from "../pixel.js";
 import type { Driver } from "./driver.js";
 import type { BarShow } from "../state.js";
@@ -37,7 +38,15 @@ export type UV = {
 
 export type NumOpts = { color?: string; outline?: string | null; sub?: string; subColor?: string; big?: boolean; icon?: string; life?: number };
 type Num = Required<Pick<NumOpts, "color" | "life">> & NumOpts & { x: number; y: number; text: string; born: number };
-type Fx = { strip: string; x: number; y: number; size: number; born: number; fps: number; flip: boolean };
+/**
+ * An effect being drawn: a strip at a point (the centre of its frame), `scale` times the art's size, from `born` (it can
+ * start later than it's queued). It plays its frames once at `fps`, or holds one still frame `f` for `life` ms (a prop),
+ * or loops them while it flies; `to` moves it there over its life, on an `arc`; `under` draws it beneath the units.
+ */
+type Play = {
+  strip: string; x: number; y: number; scale: number; born: number; fps: number; flip: boolean; life: number;
+  f?: number; loop?: boolean; to?: { x: number; y: number }; arc?: number; under?: boolean;
+};
 
 // ─── Layout ───
 
@@ -151,7 +160,7 @@ export class Scene {
   ctx: CanvasRenderingContext2D;
   units = new Map<string, UV>();
   numbers: Num[] = [];
-  fx: Fx[] = [];
+  fx: Play[] = [];
   banner: { text: string; sub: string; until: number } | null = null;
   /** Whose HP and MP bars show under the units (Settings → HP BARS, MP BARS). */
   hpBars: BarShow = "both";
@@ -314,16 +323,68 @@ export class Scene {
     this.numbers.push({ ...o, color: o.color ?? "#ffffff", life: o.life ?? 1400, x, y: Math.max(2, y), text, born: this.wall });
   }
 
-  effect(id: string, strip: string, size = 32, flip = false) {
-    const v = this.units.get(id);
-    if (!v || !manifest.vfx[strip]) return;
-    this.fx.push({ strip, x: v.x, y: v.y - v.h / 2, size, born: this.wall, fps: 14, flip });
+  /** How tall a unit stands, for placing effects: a party member's figure, a foe's sprite. */
+  private bodyH = (v: UV) => (v.side === "party" ? 30 : v.h);
+  /** A unit's middle, where a missile leaves from or lands. */
+  private middle(v: UV, toward?: UV): { x: number; y: number } {
+    const lean = toward ? Math.sign(toward.x - v.x) * Math.min(10, v.w / 3) : 0;
+    return { x: v.x + lean, y: v.y - this.bodyH(v) / 2 };
   }
-  /** The VFX for an element, damage kind or effect on a unit; `big` plays the 64-pixel frame at full size. */
-  effectFor(id: string, tag: string, big = false) {
-    const strip = VFX_FOR[tag];
+  /**
+   * The whole-number scale an effect plays at on a unit: as many times the art as fit one and a half times the unit's
+   * height times `size` (at least 1; at most 2 on most units, 3 on the big ones), unless the effect fixes it. A `mark`
+   * (a status landing or ticking) fits the unit's height alone, at most twice the art: it tells, a blow shows.
+   */
+  private scaleFor(e: Fx, v: UV, mark = false): number {
+    if (e.x) return e.x;
+    const art = manifest.vfx[e.s];
+    if (!art) return 1;
+    const h = this.bodyH(v);
+    const fit = Math.floor((h * (mark ? 1 : 1.5) * (e.size ?? 1)) / Math.max(art.w, art.h));
+    return Math.max(1, Math.min(h >= 56 && !mark ? 3 : 2, fit));
+  }
+  /**
+   * Plays effects on a unit. `from` is who dealt the blow: an effect that follows a blow is mirrored when the blow comes
+   * from the right (unless it's `still`), so a slash or a fireball travels the way it was thrown. `delay` is added to each
+   * effect's own; `mark` sizes them as a status's.
+   */
+  play(id: string, effects: Fx[], o: { from?: string; delay?: number; mark?: boolean } = {}) {
     const v = this.units.get(id);
-    if (strip && v) this.effect(id, strip, big || v.h >= 50 ? 64 : 32, v.side === "party");
+    if (!v) return;
+    const by = o.from ? this.units.get(o.from) : undefined;
+    const leftward = !!by && by.x > v.x;
+    for (const e of effects) {
+      const art = manifest.vfx[e.s];
+      if (!art) continue;
+      const scale = this.scaleFor(e, v, o.mark);
+      const w = art.w * scale, h = art.h * scale, bh = this.bodyH(v);
+      const at = e.at ?? "mid";
+      const y = at === "feet" ? v.y + 1 - h / 2 : at === "head" ? v.y - bh - h / 2 + 4 : at === "ground" ? v.y - 1 : v.y - bh / 2;
+      const flip = !e.still && !!by && leftward !== !!e.rev;
+      const still = e.f !== undefined;
+      const life = still ? e.ms ?? 600 : (art.frames / (e.fps ?? 14)) * 1000;
+      const ox = (e.ox ?? 0) * scale * (flip ? -1 : 1);
+      const x = Math.max(w / 2 - 8, Math.min(W - w / 2 + 8, v.x + ox));
+      const y0 = y + (e.oy ?? 0) * scale;
+      this.fx.push({
+        strip: e.s, x, y: y0, scale, born: this.wall + (o.delay ?? 0) + (e.d ?? 0), fps: e.fps ?? 14, flip, life, f: e.f, under: at === "ground",
+        ...(e.dx || e.dy ? { to: { x: x + (e.dx ?? 0) * (flip ? -1 : 1), y: y0 + (e.dy ?? 0) } } : {}),
+      });
+    }
+  }
+  /** A missile from one unit to another, leaving after `delay`: how long until it lands (ms at this speed). */
+  missile(fromId: string, toId: string, m: Missile, delay = 0, pace = 1): number {
+    const a = this.units.get(fromId), b = this.units.get(toId);
+    const art = manifest.vfx[m.s];
+    if (!a || !b || !art) return 0;
+    const p = this.middle(a, b), q = this.middle(b, a);
+    const dist = Math.hypot(q.x - p.x, q.y - p.y);
+    const life = Math.max(90, dist / ((m.speed ?? 1) * 0.55)) / pace;
+    this.fx.push({
+      strip: m.s, x: p.x, y: p.y, scale: m.x ?? 1, born: this.wall + delay, fps: 14, flip: q.x < p.x, life, loop: true, f: m.f,
+      to: q, arc: m.arc ?? 0,
+    });
+    return delay + life;
   }
 
   // ─── Drawing ───
@@ -344,6 +405,7 @@ export class Scene {
     const ctx = this.ctx;
     const units = this.driver.units();
     ctx.drawImage(backdrop(this.theme), 0, 0);
+    this.drawFx(true);
     const order = [...this.units.values()].filter((v) => !v.gone).sort((a, b) => a.y - b.y);
     for (const v of order) {
       const u = units.find((x) => x.id === v.id);
@@ -355,7 +417,7 @@ export class Scene {
       const u = units.find((x) => x.id === v.id);
       if (u) this.drawOverlay(v, u);
     }
-    this.drawFx();
+    this.drawFx(false);
     this.drawNumbers();
     this.drawBanner();
   }
@@ -520,24 +582,35 @@ export class Scene {
     }
   }
 
-  private drawFx() {
+  /** The effects of one layer: `under` the units (circles on the ground) or over them. */
+  private drawFx(under: boolean) {
     const ctx = this.ctx;
-    const keep: Fx[] = [];
+    const keep: Play[] = [];
     for (const f of this.fx) {
       const def = manifest.vfx[f.strip];
-      const frame = Math.floor(((this.wall - f.born) / 1000) * f.fps);
-      if (!def || frame >= def.frames) continue;
+      const age = this.wall - f.born;
+      if (!def || age >= f.life) continue;
       keep.push(f);
-      const k = f.size >= 64 ? 1 : 2;
-      const p = vfxSprite(f.strip, k);
-      const fw = p.width / def.frames;
+      if (age < 0 || !!f.under !== under) continue;
+      const t = age / f.life;
+      // A still prop blinks out over its last quarter, as the numbers do.
+      if (f.f !== undefined && !f.to && t > 0.75 && Math.floor(this.wall / 70) % 2) continue;
+      const frame = f.f ?? (f.loop ? Math.floor((age / 1000) * f.fps) % def.frames : Math.min(def.frames - 1, Math.floor((age / 1000) * f.fps)));
+      let x = f.x, y = f.y;
+      if (f.to) {
+        x += (f.to.x - f.x) * t;
+        y += (f.to.y - f.y) * t - (f.arc ?? 0) * 4 * t * (1 - t);
+      }
+      // Enlarged by Scale2x and Scale3x (pixel.ts), drawn one to one.
+      const img = vfxSprite(f.strip, f.scale);
+      const w = def.w * f.scale, h = def.h * f.scale;
       ctx.save();
-      ctx.translate(Math.round(f.x), Math.round(f.y));
+      ctx.translate(Math.round(x), Math.round(y));
       if (f.flip) ctx.scale(-1, 1);
-      ctx.drawImage(p, frame * fw, 0, fw, p.height, -f.size / 2, -f.size / 2, f.size, f.size);
+      ctx.drawImage(img, frame * w, 0, w, h, -Math.floor(w / 2), -Math.floor(h / 2), w, h);
       ctx.restore();
     }
-    this.fx = keep;
+    if (!under) this.fx = keep;
   }
 
   private drawNumbers() {
@@ -729,9 +802,10 @@ export function drawStage(ctx: CanvasRenderingContext2D, o: StageOpts, wall: num
   }
   const sp = o.sparkle && manifest.vfx[o.sparkle.strip];
   if (o.sparkle && sp && (o.openAt === undefined || wall > o.openAt + 300)) {
-    const img = vfxSprite(o.sparkle.strip, 2);
-    const fw = img.width / sp.frames;
-    ctx.drawImage(img, (Math.floor(wall / 70) % sp.frames) * fw, 0, fw, img.height, Math.round(o.sparkle.x - 16), Math.round(o.sparkle.y - 16), 32, 32);
+    const k = Math.max(sp.w, sp.h) <= 16 ? 2 : 1;
+    const img = vfxSprite(o.sparkle.strip, k);
+    const w = sp.w * k, h = sp.h * k;
+    ctx.drawImage(img, (Math.floor(wall / 70) % sp.frames) * w, 0, w, h, Math.round(o.sparkle.x - w / 2), Math.round(o.sparkle.y - h / 2), w, h);
   }
 }
 
