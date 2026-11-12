@@ -25,6 +25,7 @@ import { Driver, type Ev } from "./driver.js";
 import { isCount, Narrator, type Beat, type Line, type Tone } from "./narrate.js";
 import { Scene, shieldOf, themeOf, W, H } from "./scene.js";
 import { FieldFx } from "./effects.js";
+import { tuner } from "./tuner.js";
 import { setMusic, setSound, sfx } from "./audio.js";
 import { go } from "../screens.js";
 import { meet } from "../bestiary.js";
@@ -34,7 +35,8 @@ import { FIGHT_DUNGEON, partyOf } from "../../../src/rogue.js";
 import { endFight as endRogueFight, startFight as startRogueFight } from "../../../src/rogue/record.js";
 import { current as rogueRun, saveRogue } from "../rogue/state.js";
 
-export type BattleArgs = { dungeon: string; seed?: number; rogue?: boolean };
+/** `tuner`: the FX SIZES screen (tuner.ts), a sample fight that never starts. */
+export type BattleArgs = { dungeon: string; seed?: number; rogue?: boolean; tuner?: boolean };
 
 /** Engine milliseconds per tick at 1×; the typing speed and the time a beat stays once typed. */
 const TICK_MS = 500;
@@ -117,8 +119,11 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   setMusic(setup.settings.music);
 
   const scene = new Scene(canvas, driver, theme);
-  // What each event plays on the field, and when (effects.ts); its waits shrink with the speed, as the beats' holds do.
-  const fx = new FieldFx(scene, driver, () => vwall, () => Math.sqrt(speed), show);
+  // What each event plays on the field, and when (effects.ts); its waits shrink with the speed, as the beats' holds do,
+  // and with Settings → FX SPEED.
+  scene.fxSpeed = setup.settings.fxSpeed;
+  const fx = new FieldFx(scene, driver, () => vwall, () => Math.sqrt(speed) * setup.settings.fxSpeed, show);
+  const tuning = args.tuner ? tuner({ scene, driver, fx, now: () => vwall, frame }) : null;
   scene.hpBars = setup.settings.hpBars;
   scene.mpBars = setup.settings.mpBars;
   // For scripted checks: window.__scene is the field, window.__driver the engine's side.
@@ -691,6 +696,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   // ─── Field input ───
   canvas.addEventListener("click", onTap);
   function onTap(e: MouseEvent) {
+    if (tuning) return tuning.replay();
     const r = canvas.getBoundingClientRect();
     const x = ((e.clientX - r.left) / r.width) * W, y = ((e.clientY - r.top) / r.height) * H;
     const hit = scene.hitTest(x, y);
@@ -864,6 +870,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   }
   function stop() {
     stopped = true;
+    if (tuning) setSound(setup.settings.sound);
     cancelAnimationFrame(raf);
     window.removeEventListener("keydown", onKey);
     canvas.removeEventListener("click", onTap);
@@ -875,6 +882,14 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     if (stopped) return;
     const dt = Math.min(100, now - lastFrame);
     lastFrame = now;
+    if (tuning) {
+      vwall += dt;
+      fx.release();
+      tuning.tick();
+      scene.frame(vwall);
+      raf = requestAnimationFrame(frameStep);
+      return;
+    }
     const running = !paused || stepping;
     if (running) {
       vwall += dt;
@@ -923,7 +938,14 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   nav.back = () => confirmLeave();
   // The first beats: the run's name, then the fight's opening.
   if (!single) history.push({ tick: 0, text: runName(dungeon), tone: "sys" });
-  pull();
+  // The FX SIZES screen: the field and its panel only, the fight never told (nor its foes met), sound effects off.
+  if (tuning) {
+    for (const el of [msgEl, partyEl, ctl]) el.style.display = "none";
+    screen.append(tuning.panel);
+    scene.sync();
+    setSound(false);
+    nav.back = () => go("settings");
+  } else pull();
   raf = requestAnimationFrame((t) => { lastFrame = t; frameStep(t); });
   return stop;
 }

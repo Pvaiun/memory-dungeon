@@ -23,6 +23,8 @@ export type Settings = {
   numbers: number; hitPause: number; seedLock: boolean; portraits: Portraits;
   /** The ticks each ability slot starts charged by (first, second, third); zero by default. */
   headStart: [number, number, number];
+  /** How fast the field's effects play, against their own pace (FX SPEED). */
+  fxSpeed: number;
 };
 /** The HEAD START choices, in ticks. */
 export const HEAD_STARTS = [0, 2, 4, 6, 9, 12, 16, 20] as const;
@@ -36,6 +38,8 @@ export const SPEEDS = [1, 1.5, 2, 2.5, 3, 4, 5] as const;
 
 /** The HIT PAUSE choices, as shares of the base hold (half a second plus a third per line, at 1×). */
 export const HIT_PAUSES = [0.25, 0.5, 0.75, 1] as const;
+/** The FX SPEED choices: how fast the field's effects play, whatever the fight's speed. */
+export const FX_SPEEDS = [0.5, 0.75, 1, 1.25, 1.5, 2] as const;
 
 /** Who goes, where they stand and what they carry. */
 export type Loadout = { party: string[]; formation: string; gear: Record<string, Record<string, string>> };
@@ -57,7 +61,7 @@ function fresh(): Setup {
     ...freshLoadout(),
     abilities: {},
     seed: 1,
-    settings: { speed: 1, step: false, hpBars: "both", mpBars: "party", sound: true, music: true, designer: false, autoContinue: false, theme: "night", numbers: DEFAULT_NUMBERS, hitPause: 0.75, seedLock: false, portraits: "mixed", headStart: [0, 0, 0] },
+    settings: { speed: 1, step: false, hpBars: "both", mpBars: "party", sound: true, music: true, designer: false, autoContinue: false, theme: "night", numbers: DEFAULT_NUMBERS, hitPause: 0.75, seedLock: false, portraits: "mixed", headStart: [0, 0, 0], fxSpeed: 1 },
   };
 }
 
@@ -81,6 +85,7 @@ function load(): Setup {
     delete (s.settings as { bigNumbers?: boolean }).bigNumbers;
     if (!(NUMBER_SCALES as readonly number[]).includes(s.settings.numbers)) s.settings.numbers = DEFAULT_NUMBERS;
     if (!(HIT_PAUSES as readonly number[]).includes(s.settings.hitPause)) s.settings.hitPause = fresh().settings.hitPause;
+    if (!(FX_SPEEDS as readonly number[]).includes(s.settings.fxSpeed)) s.settings.fxSpeed = 1;
     if (!(SPEEDS as readonly number[]).includes(s.settings.speed)) s.settings.speed = 1;
     if (s.settings.theme !== "night" && s.settings.theme !== "day") s.settings.theme = "night";
     if (!["faces", "sprites", "mixed"].includes(s.settings.portraits)) s.settings.portraits = "mixed";
