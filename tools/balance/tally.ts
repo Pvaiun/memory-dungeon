@@ -1,7 +1,8 @@
 /** Playing one run a moment at a time and reading its log into the tally: damage, casts, MP starvation, kills, statuses and the rest. */
 import type { AbilityT, Party } from "../../src/schema.js";
 import { advanceOnce, answer, type Content, newRun, type Picker, type Run } from "../../src/engine/run.js";
-import { combat } from "../../src/engine/combat/rules.js";
+import { combat, type Member as EngineMember } from "../../src/engine/combat/rules.js";
+import { next, rngFor } from "../../src/engine/rng.js";
 import type { CFight } from "../../src/engine/combat/fight.js";
 import type { Entry } from "../../src/engine/log.js";
 import { add, type Job, T, type Tally } from "./plays.js";
@@ -59,6 +60,17 @@ const simPick: Picker = (d, run) => {
 /** Plays one run a moment at a time (so MP starvation can be read between moments), then reads its log into the tally. */
 function playAndTally(c: Content, job: Job, seed: number, t: Tally) {
   const run = newRun(c, combat, { dungeon: job.dungeon, party: job.party, seed, firstClear: true }, { log: true, checked: true });
+  // A rogue fight starts as a run arrives at it: cooldowns carry from fight to fight, so each ability is anywhere from ready
+  // to just used (a revive ready), rolled from the fight's own seed, as the build test's rolled start. Free play's runs carry
+  // their own cooldowns from stage to stage.
+  if (job.set === "rogue") {
+    const rng = rngFor(seed, "sheet:start");
+    for (const em of run.party as EngineMember[])
+      em.cooldowns = Object.fromEntries(em.abilities.map((a) => {
+        const d = c.abilities.get(a)!;
+        return [a, d.do.some((op) => op.op === "revive") ? 0 : Math.round(d.cooldown * next(rng) * 100) / 100];
+      }));
+  }
   const costOf = (id: string) => c.abilities.get(id)?.mp ?? 0;
   let last: CFight | null = null, prev = 0;
   let short = new Set<string>();

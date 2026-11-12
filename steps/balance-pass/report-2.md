@@ -53,7 +53,8 @@ The director's intent and this part's rulings are in `intent.md`; part one's rep
 - **The Assassin:** the bigger Backstab put its damage in the dealers' band (1.28× an average unit, was 1.03×); high Evasion keeps it alive without HP. It takes the fewest hits in the game and still falls most, to the few that land. Vanish a cooldown word sooner did nothing.
 - **The Ranger:** Evasion did more than a half step of Defense (−8.8) or of HP (−7.5).
 - **The builds barely moved:** Thousand Cuts, with the Ranger and the Assassin in it, rose 1–3 points.
-- **The sheet:** every class sits from −8.4 to +8.3. Its flags are 143, against 151 at the start. Since the last full sheet, 9 new flags are long-cooldown abilities cast under once a boss fight, from the shorter bosses; 4 are formations just over their band (7.0–9.1).
+- **The sheet now starts each rogue fight as a run arrives** (each ability anywhere from ready to just used). It used to start every ability on a full cooldown, which undervalued the classes that lean on their abilities, and flagged 22 abilities as cast too rarely (in whole runs they fire about once a regular fight and 1.3–1.9 times an elite or boss). From rolled starts, flags are 120 (151 at the start): 96 are coverage (statuses and pieces the sheet's parties never use), 4 abilities cast under once a boss fight (Pyre, Tremor, Allegro, Fireball: dear spells), 10 formations just over their band.
+- **The classes from rolled starts:** today's lines run −6.1 (Assassin) to +4.1 (Vampire). The session's original lines, measured the same way, run −8.7 (Assassin) to +6.2 (Vampire): the Valkyrie (+5.5), the Bramble knight (+3.6) and the Ranger (−3.9) were inside the band before their changes; the Vampire's case rests on whole runs (27% of the runs it led).
 
 **Tool fixes:**
 - `rogue:calibrate` wrote the measured knob as a fight's own knob, so act I's −25 was counted twice. It now subtracts the act's and region's offsets, as `build-calibrate` does.
