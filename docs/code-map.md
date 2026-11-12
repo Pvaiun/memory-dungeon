@@ -117,7 +117,7 @@ tools/                       the Node command lines; each header says how to run
   rogue-calibrate.ts         npm run rogue:calibrate: each fight's knob against the hand-built rosters
   build-calibrate.ts         the knobs' baseline: each fight's knob against its act's build parties, from rolled starts
   rogue-tune.ts              npm run rogue:tune: run-level tuning on top of the calibration
-  rogue-parties.ts           the hand-built rosters the calibration measures against
+  rogue-parties.ts           the hand-built rosters the calibration measures against, each playing one of the nine builds
   rogue-legendaries.ts       npm run rogue:legendaries: what each legendary piece's rule is worth
   swing-rate.ts              a stat step against a swing step, class by class: the weapon kinds' exchange rate
   rogue-bosses.ts            how bosses fight in runs: casts, interrupts, held wind-ups
@@ -128,7 +128,7 @@ tools/                       the Node command lines; each header says how to run
   rogue-play.ts              the rogue mode as a command line, for an AI playtester
   play-summary.ts            a fight as a player remembers it, for rogue-play
   build-test.ts              the nine builds side by side, from rolled starts (START); its fights and starts serve rogue-feel's build mode
-  build-parties.ts           the nine builds' 27 routes (builds.md's classes, a formation a rung), gathered (ROUTES, BUILD_PARTIES, ALL_PARTIES)
+  build-parties.ts           the nine builds' 27 routes (builds.md's classes, a formation a rung), gathered (ROUTES, BUILD_PARTIES, ALL_PARTIES); each build's formations (FORMS)
   build-parties/
     kit.ts                   their types, the builds' names, formation seats, mythics, and route(): each rung's gear, versions, mythics and seats from the loot's tags
   rhythm-read.ts             does a party play the fight its build says it does?
