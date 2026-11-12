@@ -82,7 +82,7 @@ The starters cover every Fundamental challenge between them: a wall, a healer an
 
 **Role:** the marksman. **Trunk:** arrows that bleed, chill and sunder whatever stands in front; plain arrows past any guard that crit for a living.
 
-**Weapons:** bow, dagger. **Armor:** Leather. **Offhands:** trophy, cloak. **Special stats:** Accuracy medium. **The line:** Attack and Crit high, a light body.
+**Weapons:** bow, dagger. **Armor:** Leather. **Offhands:** trophy, cloak. **Special stats:** Accuracy medium, Evasion medium. **The line:** Attack and Crit high, a light body that slips aside rather than takes the blow.
 
 - **Passive – Hunter's eye.** Its basic attacks ignore Taunt (they go to a random foe, Taunting or not) and crit more often (`KIT.hunterCrit` steps).
 - **Barbed arrow.** Deals light damage that scales from Attack to a random foe, and adds several Bleed; stacks scale from Attack.
@@ -146,7 +146,7 @@ Six classes that win through the party: a tank that punishes, a bruiser that hel
 
 **Role:** the shieldmaiden: a quick, survivable damage dealer, not a tank. **Trunk:** her spear builds her Shield as it strikes; three quick hits reach past any guard and shock what they hit; a heavy blow from above cashes the Shock in; and she chooses the slain: one ability mends the lowest ally or raises a fallen one.
 
-**Weapons:** spear, sword. **Armor:** Mail, Leather. **Offhands:** round shield, cloak. **Special stats:** Cooldown medium. **The line:** Attack high, Crit above average, Aggro low: she draws little, and her Cooldown is her "relatively fast".
+**Weapons:** spear, sword. **Armor:** Mail, Leather. **Offhands:** round shield, cloak. **Special stats:** Cooldown medium. **The line:** Attack above average, Defense a little below, Aggro low: she draws little, and her Cooldown is her "relatively fast".
 
 - **Passive – Shieldmaiden.** Each hit she lands gives her a Shield of a share of the damage dealt (`KIT.shieldmaiden`). Survivable by attacking: her Shield bar grows as she fights and is spent as she's hit, and it soaks a status's damage too. It reads Attack (bigger hits, bigger Shield) and max HP (the Shield's cap).
 - **Gale spear.** Has Seek. Three quick hits on a random foe that isn't Taunting; each deals damage that scales from Attack and adds a few Shock, with stacks that scale from Attack.
@@ -210,11 +210,11 @@ Three damage dealers, each beating Defense its own way: the Monk with Sunder, th
 
 **Role:** burst killer. **Trunk:** slips out of sight, picks off the weakest foe past any guard, leaves every crit a bleeding wound, and silences the back line.
 
-**Weapons:** dagger, axe. **Armor:** Leather. **Offhands:** vial, trophy. **Special stats:** Crit damage high, Evasion medium. **The line:** the glass dagger: Attack and Crit at the top, HP and Defense at the bottom.
+**Weapons:** dagger, axe. **Armor:** Leather. **Offhands:** vial, trophy. **Special stats:** Crit damage high, Evasion high. **The line:** the glass dagger: Attack and Crit at the top, HP and Defense at the bottom; it lives by not being hit.
 
 - **Passive – Lacerate.** Each of its crits adds several Bleed to the foe; stacks scale from Attack.
 - **Vanish.** Applies Hidden to itself. Waits until it isn't Hidden.
-- **Backstab.** Has Seek. Deals damage that scales from Crit chance to the foe with the lowest current HP.
+- **Backstab.** Has Seek. Deals heavy damage that scales from Crit chance to the foe with the lowest current HP.
 - **Garrote.** Has Seek. Deals damage that scales from Attack to a random foe that isn't Taunting, and applies Silence.
 
 **Identities.** The ambusher (dagger, trophy): Opening wound, Shadow step, From the shadows. The hunter (dagger or axe): Rupture (its crits deal extra damage for each Bleed the foe holds, and the Bleed stays), Coup de grâce, Smoke screen. The drinker (axe, vial): **Bleed them dry** (Seek, Rot and many Bleed on a random foe that isn't Taunting, and the Assassin's Lifesteal is doubled for a while; no Silence: Lifesteal), Choke.
@@ -225,7 +225,7 @@ Three damage dealers, each beating Defense its own way: the Monk with Sunder, th
 
 **Role:** drains to outlast. **Trunk:** feeds on everything it hits: the harder it hits, the more it heals, its prey is left weakened, and it bleeds its own life into an ally's wounds and mana. An exotic class, at the director's word. Its identity is healing back from the brink, not sustain all fight.
 
-**Weapons:** fist weapons, axe. **Armor:** Mail. **Offhands:** vial, idol. **Special stats:** Lifesteal high. **The line:** body as fuel: HP and Attack high.
+**Weapons:** fist weapons, axe. **Armor:** Mail. **Offhands:** vial, idol. **Special stats:** Lifesteal medium. **The line:** body as fuel: HP above average, Attack high.
 
 - **Passive – Bloodlust.** While it's below half of its max HP, its Lifesteal is doubled.
 - **Blood drain.** Deals damage that scales from max HP to a random foe, and applies Weaken. The one MP cost off the ladder: very cheap.

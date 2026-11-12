@@ -2,7 +2,7 @@
 import { from, HIT, stacks, STATUS } from "../scale.js";
 import type { EffectT, ReactionT, TargetRuleT } from "../../../src/schema.js";
 import { own } from "../pieces/kit.js";
-import { T } from "../classes.js";
+import { BACKSTAB_HIT, T } from "../classes.js";
 import { abilityUp, apply, baseAbility, both, helper, hitOf, kit, marker, passiveUp, phys, removeMine } from "./kit.js";
 
 // ─── Assassin ────────────────────────────────────────────────────────────────
@@ -56,11 +56,11 @@ helper(kit("shadow_step_strike", "SHADOW STEP", "Its next hit deals triple damag
 abilityUp({
   id: "backstab", cls: "assassin",
   power: "40% more damage.",
-  a: { name: "Coup de grâce", text: "Has Seek. Deals damage that scales from Crit chance to the foe with the lowest current HP. When it knocks that foe out, Backstab is ready again.", serves: "Hunt 2 ●●● ⚙ reaping (key)" },
+  a: { name: "Coup de grâce", text: "Has Seek. Deals heavy damage that scales from Crit chance to the foe with the lowest current HP. When it knocks that foe out, Backstab is ready again.", serves: "Hunt 2 ●●● ⚙ reaping (key)" },
   b: { name: "From the shadows", text: "Has Seek. Waits until the Assassin is Hidden. Deals double physical damage that scales from Crit chance to the foe with the lowest current HP.", builds: ["hunt"] },
   form: (v, k) => ({
     ...(v === "a" ? { statuses: ["coup_de_grace"], note: "A kill the Assassin lands with any ability readies Backstab (Garrote's too): the ko event names the killer and the hit's kind, not which ability." } : {}),
-    ...(v === "b" ? { if: { side: "self", where: { has: "hidden" } }, do: [phys(from("crit_chance", HIT.normal * 2 * k))] } : { do: [phys(hitOf("crit_chance", "normal", k))] }),
+    ...(v === "b" ? { if: { side: "self", where: { has: "hidden" } }, do: [phys(from("crit_chance", HIT[BACKSTAB_HIT] * 2 * k))] } : { do: [phys(hitOf("crit_chance", BACKSTAB_HIT, k))] }),
   }),
 });
 // Brought by the ability: a kill the Assassin lands with an ability makes Backstab ready. No limit but MP.

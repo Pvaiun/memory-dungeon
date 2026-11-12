@@ -59,6 +59,7 @@ The philosophy behind these lines, and the director's intent in their words, are
 ## Balance and testing
 
 - **Balance from what happens in fights** (who does what share of what, the economy of a fight) before win rates. Win rates set difficulty, last. The rogue mode breaks ties.
+- **A class's stat line is a signpost** for what it does: a class keeps its extremes and its signature stats, and a stat never makes it read wrong (a Ranger with more HP than a Monk). Balance goes into the source of a strength or a weakness (its kit's amounts, its special stats) before its stat line.
 - **Fights by cost.** A regular fight's and an elite's knob is set by what it costs a careful party (about a fifth of its HP, an elite a third), not by how often the simulated player dies in it: its losses between bosses come mostly from weak parties, and aiming them would make the fights free for everyone else. Whole runs set the bosses and even out the regions within an act.
 - **Numbers, not behaviour.** Fix a problem by the amount applied, the cost, the cooldown or the duration, never by a new rule that changes what a thing does (a cap that binds on one hit, a target rule that leaves out the caster). A behaviour change that could read as esoteric goes to the director first.
 - **Read fights, not only averages.** A tick-by-tick read of real fights (`tools/rogue-feel.ts`, `docs/feel-reader.md`) finds what the balance sheet's averages hide.

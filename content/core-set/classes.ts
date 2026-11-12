@@ -16,6 +16,13 @@ const timing = (cd: CD, wu: WU) => ({ cooldown: COOLDOWN[cd], cast: WINDUP[wu] }
 /** One kind of hit, no elements or subtypes. An element is a theme in a name, never a mechanic. */
 const phys = (amount: NumT, extra: object = {}) => ({ op: "damage", type: "physical", amount, ...extra }) as const;
 const hit = (stat: string, word: HitWord) => from(stat, HIT[word]);
+/**
+ * The Vampire's Lifesteal, halfway between the medium and high words: its sustain, carried from fight to fight, was what made it
+ * the strongest class over whole runs, so the trim goes there and its HP keeps the drainer's sturdiness.
+ */
+const VAMPIRE_LIFESTEAL = SPECIAL.lifesteal.medium;
+/** Backstab's hit word, a word above normal: the burst killer kills sooner, and stays glass. Its trained forms read it too. */
+export const BACKSTAB_HIT: HitWord = "heavy";
 const apply = (status: string, extra: object = {}) => ({ op: "apply", status, ...extra }) as const;
 
 /** The target phrases of the rules document, word for word. */
@@ -249,7 +256,7 @@ export const abilities: A[] = [
   }),
   // Assassin
   a("assassin", "vanish", "Vanish", "Goes Hidden.", { ...timing("short", "quick"), mp: 200, ...waitsFor("self", { lacks: "hidden" }), target: "self", do: [apply("hidden")] }),
-  a("assassin", "backstab", "Backstab", "Damage scaling from Crit chance to the foe with the lowest HP, past any guard.", { ...timing("medium", "normal"), mp: 325, seek: true, target: T.lowestHpFoe, do: [phys(hit("crit_chance", "normal"))] }),
+  a("assassin", "backstab", "Backstab", "Heavy damage scaling from Crit chance to the foe with the lowest HP, past any guard.", { ...timing("medium", "normal"), mp: 325, seek: true, target: T.lowestHpFoe, do: [phys(hit("crit_chance", BACKSTAB_HIT))] }),
   a("assassin", "garrote", "Garrote", "Silences a random foe that isn't Taunting, past any guard.", {
     ...timing("medium", "quick"), mp: 325, seek: true, target: lacking(T.notTauntingFoe, ["taunt", "silence"], true), do: [phys(hit("attack", "normal"), { apply: [{ status: "silence" }] })],
   }),
@@ -314,7 +321,7 @@ export const classes: ClassDefT[] = [
     source: "starter", stats: stat(2, 5, 4, 3, 2, 1, 1), weapons: ["mace", "staff"], armor: ["robes"], offhands: ["relic", "lantern"], passive: p("last_rites", "Last rites", "Below 30% of its max HP, its cooldowns are halved."),
   }),
   cls("ranger", "Ranger", "The marksman. Looses barbed, cold and rending arrows at whatever stands in front, while its plain arrows fly past any guard, crit for a living and open the wounds.", {
-    source: "starter", stats: { ...stat(3.5, 3, 3, 4, 2, 4, 2), ...special("accuracy", "medium") }, weapons: ["bow", "dagger"], armor: ["leather"], offhands: ["trophy", "cloak"], passive: p("hunters_eye", "Hunter's eye", "Its basic attacks ignore Taunt and crit more often."),
+    source: "starter", stats: { ...stat(3, 3, 3, 4, 2, 4, 2), ...special("accuracy", "medium"), ...special("evasion", "medium") }, weapons: ["bow", "dagger"], armor: ["leather"], offhands: ["trophy", "cloak"], passive: p("hunters_eye", "Hunter's eye", "Its basic attacks ignore Taunt and crit more often."),
   }),
   cls("bramble_knight", "Bramble knight", "Thorns tank. Draws every foe onto its thorns, where each attacker is left bleeding for the party's blows, regrows whoever is lowest, and lashes out with the thorns themselves.", {
     stats: { ...stat(5, 2, 2, 2, 2.5, 1, 5), ...special("thorns", "high") }, weapons: ["hammer", "mace"], armor: ["plate", "mail"], offhands: ["totem", "round_shield"], passive: p("briar", "Briar", "Each time its Thorns damage a foe, that foe gets a few Bleed; stacks scale from Defense."),
@@ -339,11 +346,11 @@ export const classes: ClassDefT[] = [
     passive: p("iron_palm", "Iron palm", "Its basic attacks, and the second strike of its Double strike, add a few Sunder; stacks scale from Attack."),
   }),
   cls("assassin", "Assassin", "Burst killer. Slips out of sight, picks off the weakest foe past any guard, leaves every crit a bleeding wound, and silences the back line.", {
-    stats: { ...stat(3, 3, 3, 5, 1, 5, 1), ...special("crit_damage", "high"), ...special("evasion", "medium") }, weapons: ["dagger", "axe"], armor: ["leather"], offhands: ["vial", "trophy"],
+    stats: { ...stat(2, 3, 3, 5, 1, 5, 1), ...special("crit_damage", "high"), ...special("evasion", "high") }, weapons: ["dagger", "axe"], armor: ["leather"], offhands: ["vial", "trophy"],
     passive: p("lacerate", "Lacerate", "Each of its crits adds several Bleed to the foe; stacks scale from Attack."),
   }),
   cls("vampire", "Vampire", "Drains to outlast. Feeds on everything it hits: the harder it hits, the more it heals, its prey is left weakened, and it bleeds its own life into an ally's wounds and mana.", {
-    stats: { ...stat(3, 2, 2, 4, 2, 2, 3), ...special("lifesteal", "high") }, weapons: ["fist", "axe"], armor: ["mail"], offhands: ["vial", "idol"],
+    stats: { ...stat(3.5, 2, 2, 4, 2, 2, 3), lifesteal: VAMPIRE_LIFESTEAL }, weapons: ["fist", "axe"], armor: ["mail"], offhands: ["vial", "idol"],
     passive: p("bloodlust", "Bloodlust", "While it's below half of its max HP, its Lifesteal is doubled."),
   }),
   cls("pyromancer", "Pyromancer", "The glass cannon of long casts. Every spell it casts stokes the fire on the hottest foe, bolts pile more onto it, a fireball spreads it, and a pyre lands.", {

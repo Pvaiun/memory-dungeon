@@ -10,7 +10,7 @@ The director's intent and this part's rulings are in `intent.md`; part one's rep
    - **The alternative, measured:** act III's bosses 50 knob points softer. The builds win 44–65%, the simulated player loses 27% there, and the runs won go from 12% to 16%. This was measured before the last two changes (the class steps and the boss shape), so it's indicative.
 
    **Recommended:** as tuned. The bosses then rise to the last (22 → 35 → 48% lost).
-2. **The win rate is 11% at heat 0,** against the 14% estimated when you chose fights by cost. The class steps (below) trimmed the simulated player's favourite picks, so it now loses more between bosses. To get back to about 14%, lower the bosses' targets (not measured). Otherwise it stays at 9%.
+2. **The win rate is 10% at heat 0,** against the 14% estimated when you chose fights by cost. The class changes (below) trimmed the simulated player's favourite picks, so it now loses more between bosses. To get back to about 14%, lower the bosses' targets (not measured). Otherwise it stays at 9%.
 3. **The Tower Top's bosses (settled, on your word).** The Storm King's Rally summons Soldiers at half a Soldier's HP (an `hp` share on the summon effect, new in the schema); the Soldiers that start beside him, and the Soldier everywhere else, are unchanged. With the bosses re-tuned, the Storm King runs 145 ticks (was 180) and the King's Guard 143 (was 155), against 75–107 for act III's other bosses. What's left is the King's own HP at the knob whole runs ask: at equal difficulty, Soldiers at a quarter HP measured no shorter than at half.
 4. **Wall-less starts:** set aside, as you said. For the record, at today's knobs a party without a wall loses about 15% of act I's regular fights on floors 4–6, against about 2% with one.
 
@@ -39,19 +39,21 @@ The director's intent and this part's rulings are in `intent.md`; part one's rep
 - A boss shape of −40% HP and +30% damage on top of the knob. At the knobs whole runs need, the knob alone (HP +k%, damage +k/2.5%) gave act III's bosses 2.7–4.5 times their HP. Fights ran to 130–180 ticks, and the enrage decided them.
 - Boss fights now run about 65 ticks in act I, 66–99 in act II and 85–115 in act III (except the Tower Top's).
 
-**Class steps,** on the five classes outside the sheet's ±8 band, where whole runs agreed on the direction. Each got a half step; the three still outside the band after it (the Vampire, the Valkyrie, the Assassin) got a second, so the Vampire and the Assassin moved a full step in HP, and the Valkyrie half a step in each of two stats.
+**Classes,** on the five outside the sheet's ±8 band, where whole runs agreed on the direction. On the director's ruling, a stat line is a signpost (`docs/rules.md`): a class keeps its extremes, and balance goes into the source of a strength first. The Vampire, the Assassin and the Ranger first took HP steps toward the middle; those are replaced by levers that keep the line. The Bramble knight and the Valkyrie keep their stat steps: their alternatives (Briar's Bleed, Shieldmaiden's share) feed other builds' engines.
 
-| Class | Change | Steps | Sheet before → after | Whole runs as leader (300 runs, same seeds) |
-| --- | --- | --- | --- | --- |
-| Vampire | HP 4 → 3 | two halves | +11.4 → +9.1 → +6.9 | 27% → 19% → 14% |
-| Valkyrie | Attack 4 → 3.5, then Defense 3 → 2.5 | two halves | +12.5 → +10.5 → +9.4 | 12% → 10% → 9% |
-| Bramble knight | Defense 3 → 2.5 | one half | +9.9 → +7.2 | 13% → 11% |
-| Ranger | HP 3 → 3.5 | one half | −10.2 → −7.5 | 5% → 6% |
-| Assassin | HP 2 → 3 | two halves | −14.2 → −10.8 → −8.8 | 5% → 7% → 5% |
+| Class | Change | Sheet: start → now | Whole runs as leader (300 runs, same seeds), start → now |
+| --- | --- | --- | --- |
+| Vampire | HP 4 → 3.5, Lifesteal high → medium (its own line) | +11.4 → +6.9 | 27% → 16% |
+| Assassin | Backstab a hit word bigger (its trained forms too), Evasion medium → high; HP stays 2 | −14.2 → −8.4 | 5% → 5% |
+| Ranger | Evasion medium; HP stays 3, Aggro stays 2 | −10.2 → −5.9 | 5% → 9% |
+| Valkyrie | Attack 4 → 3.5, Defense 3 → 2.5 | +12.5 → +8.3 | 12% → 9% |
+| Bramble knight | Defense 3 → 2.5 | +9.9 → +6.8 | 13% → 11% |
 
-- The Vampire was the clearest. Its Lifesteal keeps it whole from fight to fight, which a single fight doesn't show, and it led whole runs at three times the mean.
-- The Valkyrie (+9.4) and the Assassin (−8.8) are still just outside the band.
-- The sheet's flags fell from 151 to 132.
+- **The Vampire:** at HP 4 with medium Lifesteal it still won 20% of the runs it led. Its Blood drain scales from max HP, so HP brings back its damage and its healing together. At HP 3.5 it's the strongest leader by a little (the Valkyrie 13%, the Monk 11%), still above the middle 3s.
+- **The Assassin:** the bigger Backstab put its damage in the dealers' band (1.28× an average unit, was 1.03×); high Evasion keeps it alive without HP. It takes the fewest hits in the game and still falls most, to the few that land. Vanish a cooldown word sooner did nothing.
+- **The Ranger:** Evasion did more than a half step of Defense (−8.8) or of HP (−7.5).
+- **The builds barely moved:** Thousand Cuts, with the Ranger and the Assassin in it, rose 1–3 points.
+- **The sheet:** every class sits from −8.4 to +8.3. Its flags are 143, against 151 at the start. Since the last full sheet, 9 new flags are long-cooldown abilities cast under once a boss fight, from the shorter bosses; 4 are formations just over their band (7.0–9.1).
 
 **Tool fixes:**
 - `rogue:calibrate` wrote the measured knob as a fight's own knob, so act I's −25 was counted twice. It now subtracts the act's and region's offsets, as `build-calibrate` does.
@@ -63,9 +65,9 @@ The director's intent and this part's rulings are in `intent.md`; part one's rep
 
 | | Before | Now |
 | --- | --- | --- |
-| Runs won | 19% | 11% |
+| Runs won | 19% | 10% |
 | Lost on act I's road (fights, elites) | 47% of runs | 31% |
-| Bosses beaten, acts I / II / III | 91 / 75 / 90% | 77 / 65 / 57% |
+| Bosses beaten, acts I / II / III | 91 / 75 / 90% | 76 / 63 / 55% |
 | Regions within an act | 18–58% lost | act II 54–56%, act III 57–63% |
 
 Lost by floor, every fight on it, now (before in brackets, act I only, 200 runs):
@@ -108,7 +110,7 @@ Each act climbs to its boss; floors 1–3 lose under 2%.
 - **Bosses:** the build parties win bosses 42% from rolled starts and 53% from full ones, against 70% at part one's knobs (decision 1).
 - **Regular fights and elites:** the build parties still win 99% of regular fights and 91% of elites.
 
-**Heat** still steps evenly: 11% won at heat 0; before the Soldiers' change, 9% at heat 0, 8% at 1, 4% at 5, 2% at 10.
+**Heat** still steps evenly: 10% won at heat 0; measured before the last two changes, 9% at heat 0, 8% at 1, 4% at 5, 2% at 10.
 
 **How sure:**
 - The whole-run rates are good to a point or two.

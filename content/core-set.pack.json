@@ -21028,14 +21028,15 @@
    "text": "The marksman. Looses barbed, cold and rending arrows at whatever stands in front, while its plain arrows fly past any guard, crit for a living and open the wounds.",
    "source": "starter",
    "stats": {
-    "max_hp": 3500,
+    "max_hp": 3000,
     "max_mp": 2100,
     "mp_regen": 0,
     "attack": 4000,
     "defense": 2000,
     "crit_chance": 16,
     "aggro": 90,
-    "accuracy": 20
+    "accuracy": 20,
+    "evasion": 20
    },
    "weapons": [
     "bow",
@@ -21343,7 +21344,7 @@
    "text": "Burst killer. Slips out of sight, picks off the weakest foe past any guard, leaves every crit a bleeding wound, and silences the back line.",
    "source": "unlock",
    "stats": {
-    "max_hp": 3000,
+    "max_hp": 2000,
     "max_mp": 1450,
     "mp_regen": 0,
     "attack": 5000,
@@ -21351,7 +21352,7 @@
     "crit_chance": 20,
     "aggro": 80,
     "crit_multiplier": 200,
-    "evasion": 20
+    "evasion": 35
    },
    "weapons": [
     "dagger",
@@ -21383,14 +21384,14 @@
    "text": "Drains to outlast. Feeds on everything it hits: the harder it hits, the more it heals, its prey is left weakened, and it bleeds its own life into an ally's wounds and mana.",
    "source": "unlock",
    "stats": {
-    "max_hp": 3000,
+    "max_hp": 3500,
     "max_mp": 2500,
     "mp_regen": 0,
     "attack": 4000,
     "defense": 2000,
     "crit_chance": 5,
     "aggro": 100,
-    "lifesteal": 20
+    "lifesteal": 10
    },
    "weapons": [
     "fist",
@@ -22685,7 +22686,7 @@
    "id": "backstab",
    "class": "assassin",
    "name": "Backstab",
-   "text": "Damage scaling from Crit chance to the foe with the lowest HP, past any guard.",
+   "text": "Heavy damage scaling from Crit chance to the foe with the lowest HP, past any guard.",
    "cooldown": 26.8,
    "cast": 3,
    "mp": 325,
@@ -22702,7 +22703,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 100,
+        "ratio": 170,
         "stat": "crit_chance"
        }
       ]
@@ -30007,7 +30008,7 @@
    "id": "backstab__p",
    "class": "assassin",
    "name": "Backstab+",
-   "text": "Damage scaling from Crit chance to the foe with the lowest HP, past any guard. 40% more damage.",
+   "text": "Heavy damage scaling from Crit chance to the foe with the lowest HP, past any guard. 40% more damage.",
    "cooldown": 26.8,
    "cast": 3,
    "mp": 325,
@@ -30024,7 +30025,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 140,
+        "ratio": 238,
         "stat": "crit_chance"
        }
       ]
@@ -30036,7 +30037,7 @@
    "id": "backstab__a",
    "class": "assassin",
    "name": "Coup de grâce",
-   "text": "Has Seek. Deals damage that scales from Crit chance to the foe with the lowest current HP. When it knocks that foe out, Backstab is ready again.",
+   "text": "Has Seek. Deals heavy damage that scales from Crit chance to the foe with the lowest current HP. When it knocks that foe out, Backstab is ready again.",
    "cooldown": 26.8,
    "cast": 3,
    "mp": 325,
@@ -30053,7 +30054,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 100,
+        "ratio": 170,
         "stat": "crit_chance"
        }
       ]
@@ -30086,7 +30087,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 200,
+        "ratio": 340,
         "stat": "crit_chance"
        }
       ]
@@ -30104,7 +30105,7 @@
    "id": "backstab__ap",
    "class": "assassin",
    "name": "Coup de grâce+",
-   "text": "Has Seek. Deals damage that scales from Crit chance to the foe with the lowest current HP. When it knocks that foe out, Backstab is ready again. 40% more damage.",
+   "text": "Has Seek. Deals heavy damage that scales from Crit chance to the foe with the lowest current HP. When it knocks that foe out, Backstab is ready again. 40% more damage.",
    "cooldown": 26.8,
    "cast": 3,
    "mp": 325,
@@ -30121,7 +30122,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 140,
+        "ratio": 238,
         "stat": "crit_chance"
        }
       ]
@@ -30154,7 +30155,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 280,
+        "ratio": 476,
         "stat": "crit_chance"
        }
       ]
@@ -33868,7 +33869,7 @@
    "power": "40% more damage.",
    "a": {
     "name": "Coup de grâce",
-    "text": "Has Seek. Deals damage that scales from Crit chance to the foe with the lowest current HP. When it knocks that foe out, Backstab is ready again."
+    "text": "Has Seek. Deals heavy damage that scales from Crit chance to the foe with the lowest current HP. When it knocks that foe out, Backstab is ready again."
    },
    "b": {
     "name": "From the shadows",
@@ -47054,7 +47055,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 71
+      "knob": 74
      },
      {
       "id": "packmaster",
@@ -47075,7 +47076,7 @@
        "ogre_chief",
        "ogre"
       ],
-      "knob": 44
+      "knob": 43
      }
     ]
    },
@@ -47084,8 +47085,8 @@
     "name": "The Crypt",
     "act": 2,
     "knob": {
-     "mob": -29,
-     "elite": -21,
+     "mob": -28,
+     "elite": -20,
      "boss": 0
     },
     "text": "Armored bones, bats you can't hit, ghosts that blows pass through, and Death with a bell.",
@@ -47230,7 +47231,7 @@
        "bat",
        "bat"
       ],
-      "knob": 147
+      "knob": 146
      },
      {
       "id": "reapers_court",
@@ -47240,7 +47241,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 117
+      "knob": 121
      }
     ]
    },
@@ -47249,8 +47250,8 @@
     "name": "The Fire Mine",
     "act": 2,
     "knob": {
-     "mob": 40,
-     "elite": 26,
+     "mob": 42,
+     "elite": 25,
      "boss": 0
     },
     "text": "Everything here burns, and the lord of the furnace casts a fire that ends parties.",
@@ -47407,7 +47408,7 @@
       "enemies": [
        "fire_giant"
       ],
-      "knob": 123
+      "knob": 138
      },
      {
       "id": "giants_forge",
@@ -47417,7 +47418,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 104
+      "knob": 103
      },
      {
       "id": "giants_wrath",
@@ -47427,7 +47428,7 @@
        "fire_imp",
        "fire_imp"
       ],
-      "knob": 86
+      "knob": 95
      }
     ]
    },
@@ -47436,7 +47437,7 @@
     "name": "The Ice Pass",
     "act": 2,
     "knob": {
-     "mob": -10,
+     "mob": -12,
      "elite": -2,
      "boss": 0
     },
@@ -47581,7 +47582,7 @@
       "enemies": [
        "ice_titan"
       ],
-      "knob": 192
+      "knob": 205
      },
      {
       "id": "glacier_king",
@@ -47591,7 +47592,7 @@
        "snow_wolf",
        "snow_wolf"
       ],
-      "knob": 171
+      "knob": 177
      }
     ]
    },
@@ -47600,8 +47601,8 @@
     "name": "The Storm Tower",
     "act": 3,
     "knob": {
-     "mob": 23,
-     "elite": 5,
+     "mob": 24,
+     "elite": 14,
      "boss": 0
     },
     "text": "Clouds of sparks, leeches that drink mana, and a queen behind a wall of drones.",
@@ -47751,7 +47752,7 @@
        "drone",
        "drone"
       ],
-      "knob": 330
+      "knob": 332
      },
      {
       "id": "hive_queen",
@@ -47763,7 +47764,7 @@
        "drone",
        "drone"
       ],
-      "knob": 288
+      "knob": 275
      }
     ]
    },
@@ -47773,7 +47774,7 @@
     "act": 3,
     "knob": {
      "mob": -30,
-     "elite": 5,
+     "elite": 0,
      "boss": 0
     },
     "text": "Beneath the Crypt, something takes every voice. Power that isn't an ability is the key.",
@@ -47913,7 +47914,7 @@
       "enemies": [
        "silent_one"
       ],
-      "knob": 252
+      "knob": 245
      },
      {
       "id": "silent_court",
@@ -47923,7 +47924,7 @@
        "bone_priest",
        "bone_priest"
       ],
-      "knob": 183
+      "knob": 193
      }
     ]
    },
@@ -47932,8 +47933,8 @@
     "name": "The Tower Top",
     "act": 3,
     "knob": {
-     "mob": 12,
-     "elite": -9,
+     "mob": 11,
+     "elite": -13,
      "boss": 0
     },
     "text": "Above the storm: the queen's drones, the king's soldiers, and the king who rages when they fall.",
@@ -48076,7 +48077,7 @@
       "enemies": [
        "storm_king"
       ],
-      "knob": 270
+      "knob": 282
      },
      {
       "id": "kings_guard",
@@ -48086,7 +48087,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 200
+      "knob": 210
      }
     ]
    }
