@@ -23,6 +23,13 @@ const hit = (stat: string, word: HitWord) => from(stat, HIT[word]);
 const VAMPIRE_LIFESTEAL = SPECIAL.lifesteal.medium;
 /** Backstab's hit word, a word above normal: the burst killer kills sooner, and stays glass. Its trained forms read it too. */
 export const BACKSTAB_HIT: HitWord = "heavy";
+/**
+ * Rockfall's hit word and cooldown: a word heavier and a word slower than the plain spell, for the same MP, so the Geomancer
+ * hits hardest behind its stone in big, rarer rocks (Boulder, its double hit, takes the next cooldown word again).
+ */
+export const ROCKFALL = { hit: "heavy" as HitWord, cooldown: "medium" as const, boulder: "long" as const };
+/** Vanguard's Shield, a share of the Knight's max HP at each fight's start (Grudge and Stonewall read it too). */
+export const VANGUARD_SHIELD = 0.33;
 const apply = (status: string, extra: object = {}) => ({ op: "apply", status, ...extra }) as const;
 
 /** The target phrases of the rules document, word for word. */
@@ -85,7 +92,7 @@ const bothKinds = (pct: StatusT["boosts"] extends (infer B)[] | undefined ? (B e
 // ─── Passives ────────────────────────────────────────────────────────────────
 
 export const passives: StatusT[] = [
-  passive("vanguard", "Vanguard", { text: "Starts every fight behind a Shield from its max HP.", reactions: [{ on: { event: "fight_start" }, do: [apply("shield", { stacks: { scale: [{ ratio: 0.2, stat: "max_hp", of: "holder" }] }, to: "holder" })] }] }),
+  passive("vanguard", "Vanguard", { text: "Starts every fight behind a Shield from its max HP.", reactions: [{ on: { event: "fight_start" }, do: [apply("shield", { stacks: { scale: [{ ratio: VANGUARD_SHIELD, stat: "max_hp", of: "holder" }] }, to: "holder" })] }] }),
   // Two crit steps on basic attacks alone: the marksman's crits, which the dagger's and bow's signatures feed.
   passive("hunters_eye", "Hunter's eye", { text: "Basic attacks ignore Taunt and crit more often.", seek: "basic", crits: [{ tag: "basic", chance: crit(KIT.hunterCrit) }] }),
   // Survivable by attacking: the Shield grows as she fights and is spent as she's hit. It reads Attack (bigger hits) and max HP (the cap).
@@ -301,7 +308,7 @@ export const abilities: A[] = [
     ...timing("medium", "normal"), mp: 650, ...waitsFor("allies", { belowCap: "shield" }), target: "self",
     do: [apply("shield", { stacks: from("defense", 1.0), to: { side: "self", where: { belowCap: "shield" } } }), apply("shield", { stacks: from("defense", 1.0), to: { ...T.otherLowestShareAlly, where: { belowCap: "shield" } } })],
   }),
-  a("geomancer", "rockfall", "Rockfall", "Damage scaling from Defense on a random foe.", { ...timing("short", "long"), mp: 450, do: [phys(hit("defense", "normal"))] }),
+  a("geomancer", "rockfall", "Rockfall", "Heavy damage scaling from Defense on a random foe.", { ...timing(ROCKFALL.cooldown, "long"), mp: 450, do: [phys(hit("defense", ROCKFALL.hit))] }),
   a("geomancer", "tremor", "Tremor", "Damage scaling from Defense on a random foe, which is Stunned.", { ...timing("long", "long"), mp: 650, target: lacking({ side: "foes" }, "stun", true), do: [phys(hit("defense", "normal"), { apply: [{ status: "stun" }] })] }),
 ];
 

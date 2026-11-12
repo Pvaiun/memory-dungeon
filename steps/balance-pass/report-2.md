@@ -5,12 +5,12 @@ The director's intent and this part's rulings are in `intent.md`; part one's rep
 ## Decisions for the director
 
 1. **Act III's bosses against the build parties.**
-   - **As tuned:** the simulated player's parties that reach act III's boss lose 48% (target 45%). The rung-3 build parties win 17–56% of act III's bosses from a full start: six builds win 17–28%, Bonfire 44%, Cold Snap 52% and Blood Pact 56%.
+   - **As tuned:** the simulated player's parties that reach act III's boss lose 45% (target 45%). The rung-3 build parties win 13–56% of act III's bosses from a full start: six builds win 13–26% (the Storm 13%, Thousand Cuts and the Toll 19%), Bonfire 46%, Blood Pact 54%, Cold Snap 56%.
    - **Why the gap:** the simulated player's survivors pick their best three of six or seven for a boss they've seen all act. Each build party is one fixed trio, often against its build's worst kind of fight.
    - **The alternative, measured:** act III's bosses 50 knob points softer. The builds win 44–65%, the simulated player loses 27% there, and the runs won go from 12% to 16%. This was measured before the last two changes (the class steps and the boss shape), so it's indicative.
 
-   **Recommended:** as tuned. The bosses then rise to the last (22 → 35 → 48% lost).
-2. **The win rate is 10% at heat 0,** against the 14% estimated when you chose fights by cost. The class changes (below) trimmed the simulated player's favourite picks, so it now loses more between bosses. To get back to about 14%, lower the bosses' targets (not measured). Otherwise it stays at 9%.
+   **Recommended:** as tuned. The bosses then rise to the last (22 → 34 → 45% lost).
+2. **The win rate is 13% at heat 0,** against the 14% estimated when you chose fights by cost (it went down to 10% with the first class changes, and back up with the Knight's). Settled unless you want it harder.
 3. **The Tower Top's bosses (settled, on your word).** The Storm King's Rally summons Soldiers at half a Soldier's HP (an `hp` share on the summon effect, new in the schema); the Soldiers that start beside him, and the Soldier everywhere else, are unchanged. With the bosses re-tuned, the Storm King runs 145 ticks (was 180) and the King's Guard 143 (was 155), against 75–107 for act III's other bosses. What's left is the King's own HP at the knob whole runs ask: at equal difficulty, Soldiers at a quarter HP measured no shorter than at half.
 4. **Wall-less starts:** set aside, as you said. For the record, at today's knobs a party without a wall loses about 15% of act I's regular fights on floors 4–6, against about 2% with one.
 
@@ -43,20 +43,21 @@ The director's intent and this part's rulings are in `intent.md`; part one's rep
 
 | Class | Change | Sheet from rolled starts: original → now | Whole runs as leader (300 runs, same seeds) |
 | --- | --- | --- | --- |
-| Vampire | HP 4 → 3.5, Lifesteal high → medium (its own line) | +6.2 → +4.1 | 27% → 16% |
-| Assassin | Backstab a hit word bigger (its trained forms too); HP 2, Evasion medium as they were | −8.7 → −7.7 | 5% → 5% |
-| Ranger | Evasion medium; HP 3, Aggro 2 as they were | −3.9 → −1.6 | 5% → 9% |
+| Vampire | HP 4 → 3.5, Lifesteal high → medium (its own line) | +6.2 → +3.6 | 27% → 16% |
+| Assassin | Backstab a hit word bigger (its trained forms too); HP 2, Evasion medium as they were | −8.7 → −7.2 | 5% → 5% |
+| Ranger | Evasion medium; HP 3, Aggro 2 as they were | −3.9 → −1.7 | 5% → 9% |
 
 - **The Vampire:** at HP 4 with medium Lifesteal it still won 20% of the runs it led: its Blood drain scales from max HP, so HP brings back its damage and its healing together.
 - **The Assassin:** the bigger Backstab put its damage in the dealers' band (1.38× an average unit, was 1.03×). High Evasion was tried and dropped: it made the Assassin's line match the Monk's (they dodged 43% and 50%).
 - **The Valkyrie and the Bramble knight** keep their original lines: half steps were tried, then dropped once the sheet's rolled starts showed them inside the band (+5.5, +3.6).
-- **The builds** moved 1–3 points.
+- **The Geomancer and the Knight,** after the shape check: Rockfall a hit word heavier and a cooldown word slower for the same MP (Boulder, its double hit, a word slower again), so its rocks land big and rarer; Vanguard's Shield a third of the Knight's max HP (was a fifth; Grudge and Stonewall read it, so Stonewall's ally Shield grows with it). The Geomancer leads whole runs at 8% (was 7%), the Knight at about 13% over 900 runs (was 10%; the strong classes run 13–20% on the same seeds); a quarter measured 9%.
+- **The builds** moved 1–5 points (Landslide's rung 2 the most, 84% → 89%).
 
-**The class shape check** (each class's one line from `classes.md` against what it does in the sheet's fights, from rolled starts; ×avg is against the average unit):
+**The class shape check** (each class's one line from `classes.md` against what it does in the sheet's fights, from rolled starts; ×avg is against the average unit; debuffs laid are counted over the build parties' fights):
 
 | Class | Should | Does | Fits |
 | --- | --- | --- | --- |
-| Knight | draw the fight and soak it, little damage | draws the most (2.3× hits), 57% mitigated, deals 0.50× | yes, but it falls 1.31× as often as average while the Bramble knight falls 0.85× and the Hoplite 0.70× |
+| Knight | draw the fight and soak it, little damage | draws the most (2.3× hits), 57% mitigated, deals 0.50× | yes, after a bigger Vanguard (below): it falls 1.19× as often as average (was 1.31×; the Bramble knight 0.88×, the Hoplite 0.72×) |
 | Cleric | heal the lowest with quick heals, raise | Cure 2.4 a fight, the most healing given to others, deals 0.15× | yes |
 | Ranger | a top dealer: crits, arrows that bleed, chill and sunder | 1.43× damage (2nd), 27% crit, each arrow's status lands | yes |
 | Bramble knight | draw foes onto thorns; they bleed; regrow the lowest | 2.2× hits, 62% of its damage from thorns and Bleed, heals 1,368 a fight | yes |
@@ -64,18 +65,19 @@ The director's intent and this part's rulings are in `intent.md`; part one's rep
 | Paladin | the judge: hits harder on afflicted foes, Marks one, heals, heavy burning Smite | the second healer (2,571 a fight), Condemn 1.2 a fight, deals 0.70× | partly: it reads as a healer with a Smite more than as a killer |
 | Valkyrie | a quick, survivable dealer; her strikes build her Shield; Skyfall cashes Shock | 1.34× damage, the most Shield in the game, falls least (0.58×), Skyfall 45% of her damage | yes |
 | Bard | party tempo: mends, gives mana, Might, Haste, Encore; no damage | War ballad 2.3 a fight, among the busiest (3.0 actions a 10 ticks), deals 0.23× | yes; Allegro comes 0.7 a regular fight |
-| Hexer | the spellblade: curses that deepen afflictions, weakens, silences mid-cast | Malison 57% of its damage, Enfeeble 2.1 a fight, the most interrupts | partly: the blade is 12% of its damage; it reads as a curse caster |
+| Hexer | the spellblade: curses that deepen afflictions, weakens, silences mid-cast | Malison 57% of its damage, Enfeeble 2.1 a fight, the most interrupts; lays 26.5 debuffs a fight, second only to the Monk, and the widest spread of any class (Burn, Chill, Bleed, Shock, Weaken, Sunder) | yes: its blade lays Chill, its curses deal the damage |
 | Monk | sunders with a blur of blows | the busiest (3.0 actions a 10 ticks), dodges the most (50%), stuns with Pressure point | yes |
 | Assassin | burst killer: picks off the weakest past any guard | the top crit (29%, 43% of its damage from crits), kills 1.75 a fight (2nd), Backstab 6.3 swings a cast | yes |
 | Vampire | drains to outlast: heals back by hitting | heals itself the most of anyone, takes 1.23× damage, falls 0.73×, deals 0.98× | yes |
 | Pyromancer | the glass cannon of long casts | the top damage (1.49×), 46% from Burn, falls 1.11× | yes, but Pyre lands about once every two fights (0.53) and Fireball 0.84 |
 | Frostweaver | the ice wall: a chunky supporting mage, the Chill applier | spends the most MP, its spells lay Chill, Stillness gives Clarity; middle on survival (0.98×) | yes |
 | Stormcaller | the quick, spreading striker among the mages | 1.17× damage, 45% from Shock, busy (2.6 actions a 10 ticks), falls most (1.32×) | yes |
-| Geomancer | hits hardest behind stone | the second-most Shield, 39% of its damage from crits, the second-biggest swing, but 0.94× damage, the slowest (1.2 actions a 10 ticks), rocks 2.4 swings a cast | no: the stone and the crits show, the hardest hits don't |
+| Geomancer | hits hardest behind stone | the second-most Shield, 39% of its damage from crits, the second-biggest swing; after a heavier, slower Rockfall (below), 1.08× damage (was 0.94×), rocks 4.1 swings a cast (was 2.4), short of MP 15% of its time (was 18%) | yes, after the change |
 
 **Tool fixes:**
 - `rogue:calibrate` wrote the measured knob as a fight's own knob, so act I's −25 was counted twice. It now subtracts the act's and region's offsets, as `build-calibrate` does.
 - Its `--climb` figure now counts the act's offset.
+- **The balance sheet starts each rogue fight as a run arrives** (each ability anywhere from ready to just used). It started every ability on a full cooldown, which undervalued the classes that lean on their abilities and flagged 22 abilities as cast too rarely (in whole runs they fire about once a regular fight and 1.3–1.9 times an elite or boss). Flags are now 121 (151 at the start): 96 are coverage (statuses and pieces the sheet's parties never use), 10 formations just over their band, 5 abilities' hit sizes (Pyre and Malison big by design), 4 abilities cast under once a boss fight (Pyre, Fireball, Tremor, Allegro: dear spells), 2 supports dealing very little (the Cleric, the Bard), and 4 single findings. Every class sits from −7.2 (Assassin) to +4.9 (Valkyrie).
 
 ## What the numbers say
 
@@ -83,9 +85,9 @@ The director's intent and this part's rulings are in `intent.md`; part one's rep
 
 | | Before | Now |
 | --- | --- | --- |
-| Runs won | 19% | 10% |
+| Runs won | 19% | 13% |
 | Lost on act I's road (fights, elites) | 47% of runs | 31% |
-| Bosses beaten, acts I / II / III | 91 / 75 / 90% | 76 / 63 / 55% |
+| Bosses beaten, acts I / II / III | 91 / 75 / 90% | 78 / 66 / 55% |
 | Regions within an act | 18–58% lost | act II 54–56%, act III 57–63% |
 
 Lost by floor, every fight on it, now (before in brackets, act I only, 200 runs):
@@ -125,10 +127,10 @@ Each act climbs to its boss; floors 1–3 lose under 2%.
 | Blood Pact | 93 → 86 | 90 → 88 | 95 → 83 |
 
 - **Overall:** the builds sit closer than before: rung 3 spans 65–83%, against 74–95%.
-- **Bosses:** the build parties win bosses 42% from rolled starts and 53% from full ones, against 70% at part one's knobs (decision 1).
+- **Bosses:** the build parties win bosses 40% from rolled starts and 52% from full ones, against 70% at part one's knobs (decision 1).
 - **Regular fights and elites:** the build parties still win 99% of regular fights and 91% of elites.
 
-**Heat** still steps evenly: 10% won at heat 0; measured before the last two changes, 9% at heat 0, 8% at 1, 4% at 5, 2% at 10.
+**Heat** still steps evenly: 13% won at heat 0; measured before the last class changes, 9% at heat 0, 8% at 1, 4% at 5, 2% at 10.
 
 **How sure:**
 - The whole-run rates are good to a point or two.

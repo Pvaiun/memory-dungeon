@@ -293,7 +293,7 @@ Four mages, and they share no template: fire is the long cast, ice the wall that
 
 - **Passive – Bedrock.** While its Shield pool is above zero, its crit chance is doubled.
 - **Earthen shell.** Applies Shield to itself and to the other ally with the lowest share of max HP; the amount scales from Defense.
-- **Rockfall.** Deals damage that scales from Defense to a random foe.
+- **Rockfall.** Deals heavy damage that scales from Defense to a random foe, on a medium cooldown: big, rarer rocks.
 - **Tremor.** Deals damage that scales from Defense to a random foe, and applies Stun.
 
 **Identities.** The landslide (great weapon): Faultline, Boulder, Fissure, Rampart. The quake (hammer, trophy): Stunning crits, Aftershock. The stone warden (hammer, kite shield): Stone skin, Rock shelter (the ally with the lowest share of HP gains a Shield as large as the damage Rockfall dealt).

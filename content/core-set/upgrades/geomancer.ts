@@ -1,7 +1,7 @@
 /** The Geomancer's upgrades: a power step and two versions (A and B) for each ability and the passive. Written with kit.ts. */
 import { from, HIT, SPECIAL, STATUS, WINDUP } from "../scale.js";
 import type { ReactionT, TargetRuleT } from "../../../src/schema.js";
-import { T } from "../classes.js";
+import { ROCKFALL, T } from "../classes.js";
 import { abilityUp, apply, cd, helper, hitOf, kit, marker, passiveUp, phys, removeMine } from "./kit.js";
 
 // ─── Geomancer ───────────────────────────────────────────────────────────────
@@ -55,11 +55,11 @@ abilityUp({
   a: { name: "Boulder", text: "Deals double damage that scales from Defense to the foe with the most HP, with a longer wind-up.", builds: ["landslide"] },
   b: { name: "Rock shelter", text: "Deals damage that scales from Defense to a random foe, and the ally with the lowest share of HP gains a Shield as large as the damage dealt.", builds: ["landslide"] },
   form: (v, k) =>
-    // Boulder takes the medium cooldown and 650 MP, so a double hit doesn't double the spell's output.
-    v === "a" ? { cast: WINDUP.very_long, cooldown: cd("medium", "rockfall"), mp: 650, target: { side: "foes", pick: "highest", by: "hp" }, do: [phys(from("defense", HIT.normal * 2 * k))] }
+    // Boulder takes the next cooldown word and 650 MP, so a double hit doesn't double the spell's output.
+    v === "a" ? { cast: WINDUP.very_long, cooldown: cd(ROCKFALL.boulder, "rockfall"), mp: 650, target: { side: "foes", pick: "highest", by: "hp" }, do: [phys(from("defense", HIT[ROCKFALL.hit] * 2 * k))] }
       // A one-tick marker on the Geomancer hears the cast's own hit and shelters the lowest ally for as much.
-      : v === "b" ? { do: [apply("rock_shelter", { to: "self" }), phys(hitOf("defense", "normal", k))] }
-        : { do: [phys(hitOf("defense", "normal", k))] },
+      : v === "b" ? { do: [apply("rock_shelter", { to: "self" }), phys(hitOf("defense", ROCKFALL.hit, k))] }
+        : { do: [phys(hitOf("defense", ROCKFALL.hit, k))] },
 });
 helper(marker("rock_shelter", "ROCK SHELTER", "Its ability's hit shelters the lowest ally for as much.", {
   duration: 1,
