@@ -74,11 +74,11 @@ Plus the 12 plain weapons (the starters, and the cheapest drops) and the 16 myth
 ## Sizes, for new pieces
 
 The first values a new piece is written in. They aren't limits: no balancing rules are made while making content (`docs/rules.md`), and synergies may be overpowered. A build's first step is sized so it's seen the first time it fires, whatever its first value; in play, the small end of these was never seen to happen.
-- **Stat steps** as gear has them (`STEP`, `HP_STEP`, `AGGRO_STEP`, `MP_REGEN_STEP`). Special stats are medium, high only on a legendary.
-- **Stacks** in the classes' words, a few, several or many, read off the applier's stat the way a kit's are. A rider on every hit is "a few" or less.
+- **Stat steps** as gear has them (`STEP`, `HP_STEP`, `AGGRO_STEP`, `MP_REGEN_STEP`). Special stats are medium, high only on a legendary. A piece's Evasion is its own, smaller step than a class line's (`PIECE_SPECIAL`): its worth climbs steeply as it stacks.
+- **Stacks** in the classes' words, a few, several or many, read off the applier's stat the way a kit's are. A rider on every hit is "a few" or less. A rider of a damage status adds its status's share of the word (`APPLIED`: Chill, Burn and Bleed riders are smaller than their words, since a stack of each is worth so much more than a swing); abilities keep their own sizes.
 - **Damage boosts:** a small one 10% to 20%, a narrow one 30% to 50%, and "double" only on a condition a fight meets a few times.
 - **Statuses keep their own numbers.** A piece decides who gets a status and when, never what it does.
-- **Cooldown changes:** a few ticks, or "ready" only on a trigger a fight meets a few times.
+- **Cooldown changes:** a few ticks, or "ready" only on a trigger a fight meets a few times (on a trigger it meets every few ticks, a shatter, half the wait).
 - **Counters that grow over a fight** are capped, or grow slowly enough that a short fight and one twice as long differ by about half.
 
 ## Commons and uncommons by kind
@@ -222,8 +222,8 @@ One per class, shown in crimson and offered in the boss boons that open acts II 
 
 At the director's word, the loot was made with no balancing rules: synergies may be overpowered. These rules were proposed while it was written and withdrawn, and they're kept as levers for a balance pass, to reach for only if the numbers call for them. Statuses stay universal: no lever shortens or lengthens a status.
 - **One swing shape per unit.** Phalanx, Millstone, Hummingbird charm, Headsman's axe, Worldbreaker and the Heavy line's Hammer each reshape a unit's basic attacks, and two shapes on one unit add up. The lever: a unit takes one shape, and each other shape on it gives a stat step instead.
-- **No "many" in a single application:** one cast or hit lands at most "several", and "many" is for build-up over a fight.
-- **Half again in place of double** where a party can hold the condition all fight.
+- **No "many" in a single application:** one cast or hit lands at most "several", and "many" is for build-up over a fight. In use on Bloodied ground's Opener.
+- **Half again in place of double** where a party can hold the condition all fight. In use on The Red Feast's hits, Twinfall's second landing and Hummingbird charm's swing.
 - **A counter gains at most a stack every couple of ticks,** however many triggers fire, so against a pack it grows at a fight's pace, not a swarm's.
 - **No triples** outside Worldbreaker.
 - **Locks that hold a lone boss all fight** (the Withering hex version): the design's own answer is bosses that resist repeated control, which is in, not shorter locks.
