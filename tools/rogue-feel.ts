@@ -80,7 +80,7 @@ if (args.includes("--rosters")) for (const act of [1, 2, 3]) for (const reg of r
   const base = buildRoster(c, ro, act, pt);
   // Each trio on two throws of the dice (one throw picks worse trios), and the one PICK of the
   // way down the ranking fielded, as the calibration does: a good pick from the preview, not the perfect one.
-  const ranked = trios(ro, LEVELS[act][pt].roster ?? 5).map((trio) => {
+  const ranked = trios(ro, LEVELS[act][pt].roster ?? 5, base.formation).map((trio) => {
     let cost = 0;
     for (const seed of [77 + ri, 177 + ri]) {
       const t = structuredClone(base);

@@ -114,7 +114,7 @@ type Result = { key: string; knob: number; cost: number; lost: number };
 function pickTrios(c: Content, snaps: Snap[], fight: RogueFightT, k: number, tier: Tier, pick: number) {
   snaps.forEach((s, i) => {
     if (!s.roster) return;
-    const ranked = trios(s.roster, (s.roster4 ? 4 : s.ptier && LEVELS[s.act][s.ptier].roster) || 5).map((trio) => {
+    const ranked = trios(s.roster, (s.roster4 ? 4 : s.ptier && LEVELS[s.act][s.ptier].roster) || 5, s.run.formation).map((trio) => {
       s.run.party = trio;
       return { trio, cost: [0, 1].reduce((t, j) => t + trial(c, s, fight, k, tier, 1000 + i * 7 + j).cost, 0) };
     }).sort((a, b) => a.cost - b.cost);

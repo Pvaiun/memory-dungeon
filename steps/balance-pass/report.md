@@ -1,8 +1,8 @@
 # The balance pass, part one: build parties against chosen fights
 
-The director's intent is in `intent.md`. This part balanced the build parties against the build test's fights and set the knobs' baseline; the whole-run tuning is the next part's. Engine 0.22. Everything is committed on `claude/loot-system-balance-8224ot`.
+The director's intent is in `intent.md`. This part balanced the build parties against the build test's fights and set the knobs' baseline; the whole-run tuning is the next part's. The director approved everything below. Engine 0.22. Everything is committed on `claude/loot-system-balance-8224ot`.
 
-## Decisions for the director
+## What part one changed
 
 1. **Barrage, by its own pieces.** These changes take Barrage from 48/70/81% by rung to 62/78/83%; every other build wins 74–100%.
    - **A max MP step brings an HP step beside it** (`MP_STEP_HP`, over the piece's budget): a mana piece's MP comes free.
@@ -39,7 +39,7 @@ The director's intent is in `intent.md`. This part balanced the build parties ag
 
      Their weakness is damage, not frailty: they have HP 3, the Bard deals 0.29× an average unit, and the Frostweaver 0.85×, the bottom of the dealers' band. Other builds' tankless routes win on their own damage or control.
    - **The build parties' Soloist** slots the abilities that deal damage first, as a player would. The cathedral had freed the Geomancer's Earthen shell, cast 15 times a fight.
-   - **Your call:** whether route 2 keeps three casters. Route 3's Vampire now knows Blood drain at rung 1, on your word: Drain the well, its Barrage version, is tagged for Barrage's first rung, as the mana link it is. It measured 33% to 68% there, before this round's other changes; the build test hasn't been run with it.
+   - **The routes stand as builds.md writes them.** Route 3's Vampire knows Blood drain at rung 1: Drain the well, its Barrage version, is tagged for Barrage's first rung, as the mana link it is. That measured 33% to 68% there, before this round's other changes, and the build test hasn't been run with it.
 2. **Riders of a damage status are sized to the status.** `APPLIED` in `scale.ts` makes every rider stat-scaled at a share of its words, on the party's side only (applied when the pack is built, `pack.ts`):
    - Chill at 0.2;
    - Burn at 0.25;
@@ -47,7 +47,7 @@ The director's intent is in `intent.md`. This part balanced the build parties ag
 
    A stack of Burn or Bleed deals about three swings over its life, and Chill caps at 12, so "a few X" on every swing was worth about three swings, and Chill shattered every couple of hits. Abilities keep their hand-set sizes.
 
-   I read this as what the appliers add, which the rules allow, not as how the statuses work: their caps, values and lengths are untouched. But it moves every rider of three statuses at once, so it's yours to approve or redirect.
+   It changes what the appliers add, not how the statuses work: their caps, values and lengths are untouched.
 3. **An engine fix.** A status at its cap capped again on an application that added nothing, before its own shatter had spent it. Two Chilled foes passing cold to each other shattered hundreds of times in one tick, refilling the Frostweaver's MP and readying Icicles each time. Now a status caps only when an application brings it to its cap, as Chill's card says.
 4. **Stat lines (contentious):**
    - MP pools raised for longer fights, on half steps: Knight 2, Hoplite 2, Valkyrie 2.5, Monk 1.5, Vampire 2.5. They were sized for "two or three fights" when fights ran about 20 ticks. At the new knobs fights run 40–70, and these classes were short of MP 14–23% of their time (band: 8%). The other pools are as they were.
@@ -109,6 +109,13 @@ The build test at the final knobs (own act, 6 seeds), and at every fight's knob 
 - **How sure.** Each number is about 160 fights a rung (27 parties × the act's fights × 6 seeds), so a few points either way.
 
 ## For the next part (whole runs and knobs)
+
+- **The calibration's rosters are refreshed** (`tools/rogue-parties.ts`): each of the twelve plays one of the nine builds, and every build has at least one roster.
+  - They stand in that build's formation by act: Neutral at a run's start, then its common, rare and legendary one.
+  - Each trio is seated by the formation's seats.
+  - Their legendaries and trainings follow the build's tags.
+
+  They had all stood in Neutral with random legendaries and only power steps. Nothing has been measured against them yet: `npm run rogue:calibrate -- --climb` is part two's first step, and a first climb may move the knobs a long way from this part's baseline.
 
 - **Bonfire rung 2** runs about 15 points over the field at the harder knobs. No single item carries it, and the Pyre line formation's two trims moved nothing.
 - **Blood Pact rung 1, the Vampire route,** stalls to the enrage. At rung 1 its kit is all healing (Choosing, Cure, Raise), so it ends fights fuller than it starts. The cause is how the filler picks known abilities by the build, not a piece.

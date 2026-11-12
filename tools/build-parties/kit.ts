@@ -83,7 +83,7 @@ export const MYTHICS: Record<string, { cls: string; slot: Slot }> = Object.fromE
 
 const RANK: Record<string, number> = { common: 0, uncommon: 1, rare: 2, legendary: 3, mythic: 4 };
 const rarityOf = (g: GearT) => (g as GearT & { rarity?: string }).rarity ?? "common";
-const worth = (id: string, build: BuildId) => Math.max(0, ...(SERVED[id]?.builds ?? []).filter((t) => t.build === build).map((t) => t.worth));
+export const worth = (id: string, build: BuildId) => Math.max(0, ...(SERVED[id]?.builds ?? []).filter((t) => t.build === build).map((t) => t.worth));
 const classOf = (cls: string): ClassDefT => {
   const c = classes.find((x) => x.id === cls);
   if (!c) throw new Error(`build parties: no class '${cls}'`);
@@ -134,7 +134,7 @@ const ORDER: Role[] = ["wall", "heal", "cast", "hit", "any"];
 const CAST_FIRST = new Set(["wellspring", "the_stage", "the_cathedral"]);
 
 /** The route's classes in the formation's seat order. */
-function seated(formation: string, classIds: string[]): string[] {
+export function seated(formation: string, classIds: string[]): string[] {
   const roles = SEAT_ROLES[formation];
   if (!roles) throw new Error(`build parties: no seat roles for '${formation}'`);
   const out: string[] = new Array(3), left = [...classIds];

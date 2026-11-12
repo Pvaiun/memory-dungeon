@@ -17,9 +17,9 @@
  * From rung 2 every member knows its class's three abilities. Each rung
  * also has a Neutral version (`neutralOf`): the same members and gear in the Neutral formation.
  */
-import { type Party, type Route, neutralOf, route } from "./build-parties/kit.js";
+import { type BuildId, type Party, type Route, neutralOf, route } from "./build-parties/kit.js";
 
-export { type BuildId, type Rung, type Act, type Slot, type Training, type Gear, type Member, type Party, type Route, BUILDS, FORMATION_SEATS, MYTHICS, neutralOf } from "./build-parties/kit.js";
+export { type BuildId, type Rung, type Act, type Slot, type Training, type Gear, type Member, type Party, type Route, BUILDS, FORMATION_SEATS, MYTHICS, neutralOf, seated, worth } from "./build-parties/kit.js";
 
 const LANDSLIDE: [string, string, string] = ["heavy_line", "hammer_and_anvil", "the_mountain"];
 const CUTS: [string, string, string] = ["spur", "bloodied_ground", "the_whetstone"];
@@ -30,6 +30,11 @@ const HUNT: [string, string, string] = ["hunting_party", "the_pack", "open_seaso
 const TOLL: [string, string, string] = ["thorn_hedge", "toll_gate", "the_palisade"];
 const BARRAGE: [string, string, string] = ["wellspring", "the_stage", "the_cathedral"];
 const PACT: [string, string, string] = ["shared_cup", "blood_oath", "the_covenant"];
+
+/** Each build's formation at each rung: its common, rare and legendary formation (the rogue's calibration rosters use them by act too). */
+export const FORMS: Record<BuildId, [string, string, string]> = {
+  landslide: LANDSLIDE, cuts: CUTS, bonfire: BONFIRE, snap: SNAP, storm: STORM, hunt: HUNT, toll: TOLL, barrage: BARRAGE, pact: PACT,
+};
 
 /** Every route, build by build in the document's order. */
 export const ROUTES: Route[] = [
