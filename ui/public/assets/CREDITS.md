@@ -9,7 +9,7 @@ Sprites in this folder are a processed subset of packs the director supplied for
 - `status/`: "Status effect and various icons", recolored per status by `ui/tools/assets.py`.
 - `iconset.png`: Iconset by Willibab / Monsteretrope, CC BY.
 - `backdrops/`: scenes composed from Willibab's Overworld, Dungeon and Castle tilesets, CC BY.
-- `vfx/`: frames from the "Pixel Animations and Effects Pack" by finalbossblues (timefantasy.net), packed into strips.
+- `vfx/`: frames from the "Pixel Animations and Effects Pack" by finalbossblues (timefantasy.net), as the director's "VFX Spells" set names them, packed into strips; some recoloured or turned by `ui/tools/assets.py`.
 
 Sound (`../audio/`): a retro sound effects pack and two music tracks ("Menu", "Battle Theme") the director supplied, converted to mono mp3. The director sourced them under a free licence.
 

@@ -2,9 +2,9 @@
  * Art tables: which sprite, icon or glyph shows what. The manifest
  * (ui/public/assets/manifest.json, written by ui/tools/assets.py) maps classes,
  * enemies and VFX strips to files; this file loads them and adds the actor
- * sheets' layout, the VFX choices, the iconset cells for gear and ability tags,
- * the weapon strips, the faces, the backdrops and the status colours. pixel.ts
- * draws them.
+ * sheets' layout, the looks (an action's theme or motion), the iconset cells
+ * for gear and ability tags, the weapon strips, the faces, the backdrops and
+ * the status colours. pixel.ts draws them; effects.ts picks the VFX strips.
  */
 import { BUILD } from "./update.js";
 import type { GearT, WeaponT } from "../../src/schema.js";
@@ -16,7 +16,8 @@ export type Manifest = {
   statuses: Record<string, string>;
   /** An ability's own icon by base id: 32×32, one pixel per art pixel. */
   abilities?: Record<string, string>;
-  vfx: Record<string, { file: string; frames: number }>;
+  /** VFX strips by name: `frames` frames of w×h side by side, cropped from the pack's 64×64 at (ox, oy). */
+  vfx: Record<string, { file: string; frames: number; w: number; h: number; ox: number; oy: number }>;
   /** Weapon strips by gear id: three frames of 48×32, drawn in the hand of a party member. */
   weapons: Record<string, string>;
   /** A 36×36 face per class. */
@@ -97,13 +98,6 @@ export function weaponArt(gearId: string | undefined): string | undefined {
 export const POSE = { walk: 0, wait: 1, chant: 2, guard: 3, damage: 4, evade: 5, thrust: 6, swing: 7, missile: 8, skill: 9, spell: 10, item: 11, escape: 12, victory: 13, dying: 14, abnormal: 15, sleep: 16, dead: 17 } as const;
 export type Pose = keyof typeof POSE;
 
-/** Which VFX strip a look or effect plays on its target. A look is art only (see LOOKS below): a theme or a weapon's motion. */
-export const VFX_FOR: Record<string, string> = {
-  fire: "fire2", ice: "ice2", lightning: "lightning3", wind: "wind2", earth: "earth4", light: "holy1", dark: "darkness2", arcane: "impact4",
-  slash: "sword1", pierce: "weapon4", blunt: "impact1", bite: "bite1", arrow: "arrow1",
-  heal: "heal2", revive: "holy3", buff: "status1", debuff: "status7", cleanse: "heal4", dispel: "status6", shield: "diamond1",
-  summon: "smoke2", split: "smoke3", explosion: "explosion1", miss: "dust2", burn: "fire1", bleed: "claw", shock: "lightning1", chill: "ice3", regen: "heal5",
-};
 
 // ─── Looks: themes, art only ───
 /*
@@ -135,6 +129,8 @@ const PIECE_LOOK: Record<string, string> = {
   sunstaff: "light", dawn_staff: "light", chapel_staff: "light", templar_staff: "light", nightstaff: "dark", leech_staff: "dark", sanguine_staff: "dark",
   gravecaller: "dark", cinder_rod: "lightning", earthshaker: "earth",
 };
+/** A piece's own theme, if it has one (a rogue run's item takes its base piece's). */
+export const pieceLook = (ref: string): string | undefined => PIECE_LOOK[ref] ?? PIECE_LOOK[baseGearId(ref)];
 /** A weapon kind's look: how its swing lands. */
 const KIND_LOOK: Record<string, string> = {
   dagger: "pierce", fist: "slash", sword: "slash", spear: "pierce", axe: "slash", bow: "pierce", great_weapon: "blunt",
@@ -225,3 +221,4 @@ export function statusStyle(id: string): { color: string; light?: string } {
   const label = c.statuses.get(id)?.label;
   return label === "buff" ? { color: "#86cfff" } : label === "debuff" ? { color: "#ffa062" } : STATUS_STYLE.generic;
 }
+

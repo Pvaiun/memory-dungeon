@@ -37,7 +37,10 @@ python3 -I ui/tools/assets.py <folder with the packs extracted> ui/public/assets
   - gear and ability tags come from the iconset (`gearIcon` in `src/art.ts`);
   - statuses are the pack's 16px icons recoloured per status (`STATUSES` in the tool), with stand-ins for newer statuses (`STAND_INS`) until the director's art pass;
   - abilities use the "64x64 Elemental Skill Variants" pack (`ABILITY_ICON`).
-- **Effects:** an action's look picks its icon and effect, art only (`ABILITY_LOOK`, `ENEMY_LOOK`, `PIECE_LOOK`, `KIND_LOOK` in `src/art.ts`).
+- **Effects:** the director's "VFX Spells" set, one strip per effect named as the set names it (`fireball`, `crescent_cut`), cropped to its frames, with recoloured and turned copies for looks the set draws in one colour (`VFX_DERIVED` in the tool: a blood claw, a dark fire, a flying arrow). Art only: nothing changes a fight.
+  - `src/effects.ts` picks them: each ability its own (`ABILITY_FX`), each basic attack its foe's or weapon's (`ENEMY_BASIC`, a caster's theme, `KIND_FX`; a plain caster's weapon its class's), each status as it lands and as it ticks, and knockouts, revives, summons, misses and wind-ups.
+  - `src/battle/effects.ts` plays them in step with the story. A blow's effect plays as each hit lands; a missile flies first (an arrow, a fireball); a second hit or a chain's next foe follows a beat later; the hit's number, statuses and a knockout wait for it.
+  - Sizes are whole multiples of the art, so pixels stay square: a hit fits about one and a half times its unit's height (up to 2×, 3× on the biggest foes), a status about its height (up to 2×). An effect can ask for more (`size`, a heavy blow) or fix its scale (`x`).
 - **Sound and music:** the director's packs, converted by hand to small mono mp3s in `public/audio/`, played by `src/battle/audio.ts`. Browsers start audio only after a tap, and music pauses while the app is in the background.
 
 ## For scripted checks
@@ -46,5 +49,6 @@ python3 -I ui/tools/assets.py <folder with the packs extracted> ui/public/assets
   - `window.__battle("old_road~ogre_bridge", seed)` starts a fight;
   - `window.__go("party")` opens a screen;
   - `window.__scene` and `window.__driver` are a running fight's field and engine side;
-  - `window.__gallery()` shows every sprite, face and status icon as drawn.
+  - `window.__gallery()` shows every sprite, face and status icon as drawn;
+  - `window.__look("fireball", by, [targets])` plays an action's effects on a running fight, its hits of 0 (`"basic"` a basic attack; `"status:burn"` and `"tick:burn"` a status's), for checking the art.
 - **SAVE RUN**, on a rogue run's end screen, downloads the run's record as JSON: every choice with what was offered beside it, and every free action. It's for balancing from real play.
