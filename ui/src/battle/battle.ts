@@ -116,7 +116,8 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   setMusic(setup.settings.music);
 
   const scene = new Scene(canvas, driver, theme);
-  scene.partyBars = setup.settings.partyBars;
+  scene.hpBars = setup.settings.hpBars;
+  scene.mpBars = setup.settings.mpBars;
   // For scripted checks: window.__scene is the field, window.__driver the engine's side.
   Object.assign(window, { __scene: scene, __driver: driver });
   const nameOf = (id: string): string => {
