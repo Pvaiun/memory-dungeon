@@ -146,7 +146,7 @@ Six classes that win through the party: a tank that punishes, a bruiser that hel
 
 **Role:** the shieldmaiden: a quick, survivable damage dealer, not a tank. **Trunk:** her spear builds her Shield as it strikes; three quick hits reach past any guard and shock what they hit; a heavy blow from above cashes the Shock in; and she chooses the slain: one ability mends the lowest ally or raises a fallen one.
 
-**Weapons:** spear, sword. **Armor:** Mail, Leather. **Offhands:** round shield, cloak. **Special stats:** Cooldown medium. **The line:** Attack above average, Defense a little below, Aggro low: she draws little, and her Cooldown is her "relatively fast".
+**Weapons:** spear, sword. **Armor:** Mail, Leather. **Offhands:** round shield, cloak. **Special stats:** Cooldown medium. **The line:** Attack high, Crit above average, Aggro low: she draws little, and her Cooldown is her "relatively fast".
 
 - **Passive – Shieldmaiden.** Each hit she lands gives her a Shield of a share of the damage dealt (`KIT.shieldmaiden`). Survivable by attacking: her Shield bar grows as she fights and is spent as she's hit, and it soaks a status's damage too. It reads Attack (bigger hits, bigger Shield) and max HP (the Shield's cap).
 - **Gale spear.** Has Seek. Three quick hits on a random foe that isn't Taunting; each deals damage that scales from Attack and adds a few Shock, with stacks that scale from Attack.
@@ -210,7 +210,7 @@ Three damage dealers, each beating Defense its own way: the Monk with Sunder, th
 
 **Role:** burst killer. **Trunk:** slips out of sight, picks off the weakest foe past any guard, leaves every crit a bleeding wound, and silences the back line.
 
-**Weapons:** dagger, axe. **Armor:** Leather. **Offhands:** vial, trophy. **Special stats:** Crit damage high, Evasion high. **The line:** the glass dagger: Attack and Crit at the top, HP and Defense at the bottom; it lives by not being hit.
+**Weapons:** dagger, axe. **Armor:** Leather. **Offhands:** vial, trophy. **Special stats:** Crit damage high, Evasion medium. **The line:** the glass dagger: Attack and Crit at the top, HP and Defense at the bottom.
 
 - **Passive – Lacerate.** Each of its crits adds several Bleed to the foe; stacks scale from Attack.
 - **Vanish.** Applies Hidden to itself. Waits until it isn't Hidden.

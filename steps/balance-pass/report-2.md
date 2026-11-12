@@ -39,22 +39,39 @@ The director's intent and this part's rulings are in `intent.md`; part one's rep
 - A boss shape of −40% HP and +30% damage on top of the knob. At the knobs whole runs need, the knob alone (HP +k%, damage +k/2.5%) gave act III's bosses 2.7–4.5 times their HP. Fights ran to 130–180 ticks, and the enrage decided them.
 - Boss fights now run about 65 ticks in act I, 66–99 in act II and 85–115 in act III (except the Tower Top's).
 
-**Classes,** on the five outside the sheet's ±8 band, where whole runs agreed on the direction. On the director's ruling, a stat line is a signpost (`docs/rules.md`): a class keeps its extremes, and balance goes into the source of a strength first. The Vampire, the Assassin and the Ranger first took HP steps toward the middle; those are replaced by levers that keep the line. The Bramble knight and the Valkyrie keep their stat steps: their alternatives (Briar's Bleed, Shieldmaiden's share) feed other builds' engines.
+**Classes.** On the director's ruling, a stat line is a signpost (`docs/rules.md`): a class keeps its extremes, and balance goes into the source of a strength first. From rolled starts (the sheet's measure since this part), the session's original lines ran −8.7 (Assassin) to +6.2 (Vampire): only the Assassin was outside the band, and the Vampire led whole runs at three times the mean. So two classes changed, and the Ranger on the director's idea:
 
-| Class | Change | Sheet: start → now | Whole runs as leader (300 runs, same seeds), start → now |
+| Class | Change | Sheet from rolled starts: original → now | Whole runs as leader (300 runs, same seeds) |
 | --- | --- | --- | --- |
-| Vampire | HP 4 → 3.5, Lifesteal high → medium (its own line) | +11.4 → +6.9 | 27% → 16% |
-| Assassin | Backstab a hit word bigger (its trained forms too), Evasion medium → high; HP stays 2 | −14.2 → −8.4 | 5% → 5% |
-| Ranger | Evasion medium; HP stays 3, Aggro stays 2 | −10.2 → −5.9 | 5% → 9% |
-| Valkyrie | Attack 4 → 3.5, Defense 3 → 2.5 | +12.5 → +8.3 | 12% → 9% |
-| Bramble knight | Defense 3 → 2.5 | +9.9 → +6.8 | 13% → 11% |
+| Vampire | HP 4 → 3.5, Lifesteal high → medium (its own line) | +6.2 → +4.1 | 27% → 16% |
+| Assassin | Backstab a hit word bigger (its trained forms too); HP 2, Evasion medium as they were | −8.7 → −7.7 | 5% → 5% |
+| Ranger | Evasion medium; HP 3, Aggro 2 as they were | −3.9 → −1.6 | 5% → 9% |
 
-- **The Vampire:** at HP 4 with medium Lifesteal it still won 20% of the runs it led. Its Blood drain scales from max HP, so HP brings back its damage and its healing together. At HP 3.5 it's the strongest leader by a little (the Valkyrie 13%, the Monk 11%), still above the middle 3s.
-- **The Assassin:** the bigger Backstab put its damage in the dealers' band (1.28× an average unit, was 1.03×); high Evasion keeps it alive without HP. It takes the fewest hits in the game and still falls most, to the few that land. Vanish a cooldown word sooner did nothing.
-- **The Ranger:** Evasion did more than a half step of Defense (−8.8) or of HP (−7.5).
-- **The builds barely moved:** Thousand Cuts, with the Ranger and the Assassin in it, rose 1–3 points.
-- **The sheet now starts each rogue fight as a run arrives** (each ability anywhere from ready to just used). It used to start every ability on a full cooldown, which undervalued the classes that lean on their abilities, and flagged 22 abilities as cast too rarely (in whole runs they fire about once a regular fight and 1.3–1.9 times an elite or boss). From rolled starts, flags are 120 (151 at the start): 96 are coverage (statuses and pieces the sheet's parties never use), 4 abilities cast under once a boss fight (Pyre, Tremor, Allegro, Fireball: dear spells), 10 formations just over their band.
-- **The classes from rolled starts:** today's lines run −6.1 (Assassin) to +4.1 (Vampire). The session's original lines, measured the same way, run −8.7 (Assassin) to +6.2 (Vampire): the Valkyrie (+5.5), the Bramble knight (+3.6) and the Ranger (−3.9) were inside the band before their changes; the Vampire's case rests on whole runs (27% of the runs it led).
+- **The Vampire:** at HP 4 with medium Lifesteal it still won 20% of the runs it led: its Blood drain scales from max HP, so HP brings back its damage and its healing together.
+- **The Assassin:** the bigger Backstab put its damage in the dealers' band (1.38× an average unit, was 1.03×). High Evasion was tried and dropped: it made the Assassin's line match the Monk's (they dodged 43% and 50%).
+- **The Valkyrie and the Bramble knight** keep their original lines: half steps were tried, then dropped once the sheet's rolled starts showed them inside the band (+5.5, +3.6).
+- **The builds** moved 1–3 points.
+
+**The class shape check** (each class's one line from `classes.md` against what it does in the sheet's fights, from rolled starts; ×avg is against the average unit):
+
+| Class | Should | Does | Fits |
+| --- | --- | --- | --- |
+| Knight | draw the fight and soak it, little damage | draws the most (2.3× hits), 57% mitigated, deals 0.50× | yes, but it falls 1.31× as often as average while the Bramble knight falls 0.85× and the Hoplite 0.70× |
+| Cleric | heal the lowest with quick heals, raise | Cure 2.4 a fight, the most healing given to others, deals 0.15× | yes |
+| Ranger | a top dealer: crits, arrows that bleed, chill and sunder | 1.43× damage (2nd), 27% crit, each arrow's status lands | yes |
+| Bramble knight | draw foes onto thorns; they bleed; regrow the lowest | 2.2× hits, 62% of its damage from thorns and Bleed, heals 1,368 a fight | yes |
+| Hoplite | very tanky, big hits, an Aegis for the ally about to fall | biggest swing in the cast, 1.38× damage, falls least but one (0.70×); Aspis 0.7 a fight | yes; the Aegis is rare |
+| Paladin | the judge: hits harder on afflicted foes, Marks one, heals, heavy burning Smite | the second healer (2,571 a fight), Condemn 1.2 a fight, deals 0.70× | partly: it reads as a healer with a Smite more than as a killer |
+| Valkyrie | a quick, survivable dealer; her strikes build her Shield; Skyfall cashes Shock | 1.34× damage, the most Shield in the game, falls least (0.58×), Skyfall 45% of her damage | yes |
+| Bard | party tempo: mends, gives mana, Might, Haste, Encore; no damage | War ballad 2.3 a fight, among the busiest (3.0 actions a 10 ticks), deals 0.23× | yes; Allegro comes 0.7 a regular fight |
+| Hexer | the spellblade: curses that deepen afflictions, weakens, silences mid-cast | Malison 57% of its damage, Enfeeble 2.1 a fight, the most interrupts | partly: the blade is 12% of its damage; it reads as a curse caster |
+| Monk | sunders with a blur of blows | the busiest (3.0 actions a 10 ticks), dodges the most (50%), stuns with Pressure point | yes |
+| Assassin | burst killer: picks off the weakest past any guard | the top crit (29%, 43% of its damage from crits), kills 1.75 a fight (2nd), Backstab 6.3 swings a cast | yes |
+| Vampire | drains to outlast: heals back by hitting | heals itself the most of anyone, takes 1.23× damage, falls 0.73×, deals 0.98× | yes |
+| Pyromancer | the glass cannon of long casts | the top damage (1.49×), 46% from Burn, falls 1.11× | yes, but Pyre lands about once every two fights (0.53) and Fireball 0.84 |
+| Frostweaver | the ice wall: a chunky supporting mage, the Chill applier | spends the most MP, its spells lay Chill, Stillness gives Clarity; middle on survival (0.98×) | yes |
+| Stormcaller | the quick, spreading striker among the mages | 1.17× damage, 45% from Shock, busy (2.6 actions a 10 ticks), falls most (1.32×) | yes |
+| Geomancer | hits hardest behind stone | the second-most Shield, 39% of its damage from crits, the second-biggest swing, but 0.94× damage, the slowest (1.2 actions a 10 ticks), rocks 2.4 swings a cast | no: the stone and the crits show, the hardest hits don't |
 
 **Tool fixes:**
 - `rogue:calibrate` wrote the measured knob as a fight's own knob, so act I's −25 was counted twice. It now subtracts the act's and region's offsets, as `build-calibrate` does.

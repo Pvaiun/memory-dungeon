@@ -21072,7 +21072,7 @@
     "max_mp": 1700,
     "mp_regen": 0,
     "attack": 2000,
-    "defense": 2500,
+    "defense": 3000,
     "crit_chance": 3,
     "aggro": 120,
     "thorns": 300
@@ -21188,8 +21188,8 @@
     "max_hp": 3000,
     "max_mp": 2500,
     "mp_regen": 0,
-    "attack": 3500,
-    "defense": 2500,
+    "attack": 4000,
+    "defense": 3000,
     "crit_chance": 9,
     "aggro": 90,
     "cooldown_reduction": 15
@@ -21352,7 +21352,7 @@
     "crit_chance": 20,
     "aggro": 80,
     "crit_multiplier": 200,
-    "evasion": 35
+    "evasion": 20
    },
    "weapons": [
     "dagger",
