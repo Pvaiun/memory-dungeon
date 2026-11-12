@@ -353,7 +353,9 @@ export const AGGRO_STEP = 10;
  */
 export const MP_REGEN_STEP = 3 * P;
 /**
- * A piece's max MP step brings an HP step and an Attack step beside it, over its budget. MP is worth little in a fight beside
+ * A piece's max MP step brings an HP step beside it, and on a caster's kind (anything but an amulet) an Attack step too, over its
+ * budget. An amulet fits every class, so its MP comes free but no more: with Attack as well, the mana amulets were the best in
+ * the slot for fighters too. MP is worth little in a fight beside
  * the other stats (a fight from a part-full bar seldom spends the pool), and the pieces that carry it, most of them Barrage's,
  * left their wearers the frailest and the slowest-killing in the set: Barrage's soloist, meant to be the biggest single dealer of
  * the nine builds, dealt less than most builds' top unit, and its Well fell first. Either step alone moved Barrage a few points;

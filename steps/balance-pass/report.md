@@ -4,8 +4,19 @@ The director's intent is in `intent.md`. This part balanced the build parties ag
 
 ## Decisions for the director
 
-1. **Barrage, now in range: a max MP step brings an HP step and an Attack step beside it** (`MP_STEP_HP`, `MP_STEP_ATK` in `scale.ts`, over the piece's budget; 41 pieces, 33 of them Barrage's).
-   - **Where it stands.** Barrage wins 69% at rung 1, 89% at rung 2 and 85% at rung 3, and 58% of bosses. The other builds win 71–100% by rung and 53–94% of bosses, and moved 0–4 points.
+1. **Barrage, now in range, at a price you should weigh.** A max MP step brings an HP step beside it, and on a caster's kind (anything but an amulet) an Attack step too (`MP_STEP_HP`, `MP_STEP_ATK` in `scale.ts`, over the piece's budget).
+   - **Where it stands.** Barrage wins 63% at rung 1, 86% at rung 2 and 85% at rung 3; every other build wins 73–99% by rung.
+   - **The price.** Probes put every piece on every class that can wear it, against its slot's average. Before and after the bonus:
+
+     | Pieces | Before | Now |
+     | --- | --- | --- |
+     | Mana amulets (HP only; with Attack too they'd been the slot's best for fighters as well) | 2.5 | 4.3 |
+     | Casters' mana pieces | 1.0 | 5.6 |
+     | Their same-kind neighbours without MP | −0.8 | −2.8 |
+
+     So mana pieces became the casters' best in every build, and a few legendaries sit 10–13 over (Staff of echoes, Archmage's mantle).
+   - **Class wins narrowed:** the Pyromancer −3→0, Frostweaver −7→−3, Stormcaller −4→0, Bard −7→−4 and Cleric −5→−3; the Valkyrie 14→11 and the Paladin 10→7.
+   - **The alternative.** A fair bonus, where mana pieces equal their neighbours, doesn't fix Barrage. Its fix would then be in what only Barrage uses: its conductors' effects (Encore, Reprise, Twice-told tome, Bell of the hour, Crescendo charm, the Soloist seats), each worth a lot to Barrage and little elsewhere.
    - **Why both.** Its soloist, meant to be the biggest single dealer of the nine, dealt less than most builds' top unit (428 a tick at rung 2, against 445–1,320), and its Well fell first. The two steps compound: a party that lives longer lets its faster kills land.
 
      | What a max MP step brought beside it | Barrage won, by rung | Bosses |
