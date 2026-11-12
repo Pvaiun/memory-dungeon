@@ -4,12 +4,12 @@ The director's intent and this part's rulings are in `intent.md`; part one's rep
 
 ## Decisions for the director
 
-1. **Act III's bosses against the build parties.**
+1. **Act III's bosses against the build parties (settled: as tuned, on your word).**
    - **As tuned:** the simulated player's parties that reach act III's boss lose 45% (target 45%). The rung-3 build parties win 13–56% of act III's bosses from a full start: six builds win 13–26% (the Storm 13%, Thousand Cuts and the Toll 19%), Bonfire 46%, Blood Pact 54%, Cold Snap 56%.
    - **Why the gap:** the simulated player's survivors pick their best three of six or seven for a boss they've seen all act. Each build party is one fixed trio, often against its build's worst kind of fight.
    - **The alternative, measured:** act III's bosses 50 knob points softer. The builds win 44–65%, the simulated player loses 27% there, and the runs won go from 12% to 16%. This was measured before the last two changes (the class steps and the boss shape), so it's indicative.
 
-   **Recommended:** as tuned. The bosses then rise to the last (22 → 34 → 45% lost).
+   **Settled:** as tuned. The bosses rise to the last (22 → 34 → 45% lost).
 2. **The win rate is 13% at heat 0,** against the 14% estimated when you chose fights by cost (it went down to 10% with the first class changes, and back up with the Knight's). Settled unless you want it harder.
 3. **The Tower Top's bosses (settled, on your word).** The Storm King's Rally summons Soldiers at half a Soldier's HP (an `hp` share on the summon effect, new in the schema); the Soldiers that start beside him, and the Soldier everywhere else, are unchanged. With the bosses re-tuned, the Storm King runs 145 ticks (was 180) and the King's Guard 143 (was 155), against 75–107 for act III's other bosses. What's left is the King's own HP at the knob whole runs ask: at equal difficulty, Soldiers at a quarter HP measured no shorter than at half.
 4. **Wall-less starts:** set aside, as you said. For the record, at today's knobs a party without a wall loses about 15% of act I's regular fights on floors 4–6, against about 2% with one.
@@ -50,7 +50,7 @@ The director's intent and this part's rulings are in `intent.md`; part one's rep
 - **The Vampire:** at HP 4 with medium Lifesteal it still won 20% of the runs it led: its Blood drain scales from max HP, so HP brings back its damage and its healing together.
 - **The Assassin:** the bigger Backstab put its damage in the dealers' band (1.38× an average unit, was 1.03×). High Evasion was tried and dropped: it made the Assassin's line match the Monk's (they dodged 43% and 50%).
 - **The Valkyrie and the Bramble knight** keep their original lines: half steps were tried, then dropped once the sheet's rolled starts showed them inside the band (+5.5, +3.6).
-- **The Geomancer and the Knight,** after the shape check: Rockfall a hit word heavier and a cooldown word slower for the same MP (Boulder, its double hit, a word slower again), so its rocks land big and rarer; Vanguard's Shield a third of the Knight's max HP (was a fifth; Grudge and Stonewall read it, so Stonewall's ally Shield grows with it). The Geomancer leads whole runs at 8% (was 7%), the Knight at about 13% over 900 runs (was 10%; the strong classes run 13–20% on the same seeds); a quarter measured 9%.
+- **The Geomancer and the Knight,** after the shape check: Rockfall a hit word heavier and a cooldown word slower for the same MP (Boulder, its double hit, a word slower again), so its rocks land big and rarer; Vanguard's Shield a third of the Knight's max HP (was a fifth; Grudge and Stonewall read it, so Stonewall's ally Shield grows with it). The Geomancer leads whole runs at 8% (was 7%), the Knight at about 13% over 900 runs (was 10%; the strong classes run 13–20% on the same seeds); a quarter measured 9% but barely moved how often it falls (1.27×), so it stays at a third.
 - **The builds** moved 1–5 points (Landslide's rung 2 the most, 84% → 89%).
 
 **The class shape check** (each class's one line from `classes.md` against what it does in the sheet's fights, from rolled starts; ×avg is against the average unit; debuffs laid are counted over the build parties' fights):
@@ -62,7 +62,7 @@ The director's intent and this part's rulings are in `intent.md`; part one's rep
 | Ranger | a top dealer: crits, arrows that bleed, chill and sunder | 1.43× damage (2nd), 27% crit, each arrow's status lands | yes |
 | Bramble knight | draw foes onto thorns; they bleed; regrow the lowest | 2.2× hits, 62% of its damage from thorns and Bleed, heals 1,368 a fight | yes |
 | Hoplite | very tanky, big hits, an Aegis for the ally about to fall | biggest swing in the cast, 1.38× damage, falls least but one (0.70×); Aspis 0.7 a fight | yes; the Aegis is rare |
-| Paladin | the judge: hits harder on afflicted foes, Marks one, heals, heavy burning Smite | the second healer (2,571 a fight), Condemn 1.2 a fight, deals 0.70× | partly: it reads as a healer with a Smite more than as a killer |
+| Paladin | the judge: hits harder on afflicted foes, Marks one, heals, heavy burning Smite | the second healer (2,571 a fight), Condemn 1.2 a fight, deals 0.70× | partly: it reads as a healer with a Smite more than as a killer; left as a hybrid, on your word (one of its three identities is the healer) |
 | Valkyrie | a quick, survivable dealer; her strikes build her Shield; Skyfall cashes Shock | 1.34× damage, the most Shield in the game, falls least (0.58×), Skyfall 45% of her damage | yes |
 | Bard | party tempo: mends, gives mana, Might, Haste, Encore; no damage | War ballad 2.3 a fight, among the busiest (3.0 actions a 10 ticks), deals 0.23× | yes; Allegro comes 0.7 a regular fight |
 | Hexer | the spellblade: curses that deepen afflictions, weakens, silences mid-cast | Malison 57% of its damage, Enfeeble 2.1 a fight, the most interrupts; lays 26.5 debuffs a fight, second only to the Monk, and the widest spread of any class (Burn, Chill, Bleed, Shock, Weaken, Sunder) | yes: its blade lays Chill, its curses deal the damage |
