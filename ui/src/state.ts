@@ -11,12 +11,15 @@ import { setMode } from "./mode.js";
 
 /** `portraits`: what stands for a class in the menus. "faces" everywhere, "sprites" everywhere, or "mixed": sprites in the party's slots, faces elsewhere. */
 export type Portraits = "faces" | "sprites" | "mixed";
+/** Whose HP or MP bars the field draws under the units: nobody's, the party's, the foes', or everyone's. */
+export type BarShow = "off" | "party" | "foes" | "both";
+export const BAR_SHOWS: readonly BarShow[] = ["off", "party", "foes", "both"];
 /**
  * `numbers`: the display scale, a multiplier of the documents' (content.ts). `hitPause`: how long the fight holds on each message once it's typed, as a
- * share of the base hold. `seedLock`: designer view only, every fight plays `setup.seed`; otherwise each one draws a new seed.
+ * share of the base hold. `hpBars`, `mpBars`: whose HP and MP bars show on the field. `seedLock`: designer view only, every fight plays `setup.seed`; otherwise each one draws a new seed.
  */
 export type Settings = {
-  speed: number; step: boolean; partyBars: boolean; sound: boolean; music: boolean; designer: boolean; autoContinue: boolean; theme: string;
+  speed: number; step: boolean; hpBars: BarShow; mpBars: BarShow; sound: boolean; music: boolean; designer: boolean; autoContinue: boolean; theme: string;
   numbers: number; hitPause: number; seedLock: boolean; portraits: Portraits;
   /** The ticks each ability slot starts charged by (first, second, third); zero by default. */
   headStart: [number, number, number];
@@ -54,7 +57,7 @@ function fresh(): Setup {
     ...freshLoadout(),
     abilities: {},
     seed: 1,
-    settings: { speed: 1, step: false, partyBars: false, sound: true, music: true, designer: false, autoContinue: false, theme: "night", numbers: DEFAULT_NUMBERS, hitPause: 0.75, seedLock: false, portraits: "mixed", headStart: [0, 0, 0] },
+    settings: { speed: 1, step: false, hpBars: "both", mpBars: "party", sound: true, music: true, designer: false, autoContinue: false, theme: "night", numbers: DEFAULT_NUMBERS, hitPause: 0.75, seedLock: false, portraits: "mixed", headStart: [0, 0, 0] },
   };
 }
 
@@ -81,6 +84,10 @@ function load(): Setup {
     if (!(SPEEDS as readonly number[]).includes(s.settings.speed)) s.settings.speed = 1;
     if (s.settings.theme !== "night" && s.settings.theme !== "day") s.settings.theme = "night";
     if (!["faces", "sprites", "mixed"].includes(s.settings.portraits)) s.settings.portraits = "mixed";
+    // An older save had a PARTY HP switch, with the foes' HP always shown: both now take the defaults.
+    if (!BAR_SHOWS.includes(s.settings.hpBars)) s.settings.hpBars = fresh().settings.hpBars;
+    if (!BAR_SHOWS.includes(s.settings.mpBars)) s.settings.mpBars = fresh().settings.mpBars;
+    delete (s.settings as { partyBars?: boolean }).partyBars;
     if (!Array.isArray(s.settings.headStart) || s.settings.headStart.length !== 3 || !s.settings.headStart.every((n) => (HEAD_STARTS as readonly number[]).includes(n))) s.settings.headStart = [0, 0, 0];
     delete (s.settings as { tickMs?: number }).tickMs;
     delete (s.settings as { palette?: string }).palette;

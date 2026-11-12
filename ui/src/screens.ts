@@ -7,7 +7,7 @@ import { gearFor as gearThatFits } from "../../src/sim/parties.js";
 import { c, className, classes, cls as classOf, dungeons, enemies, fightName, formations, gearOf, NUMBER_SCALES, runName, setNumberScale, shortName } from "./content.js";
 import { enemyDisplayName } from "./art.js";
 import { button, h, header, nav, row, settleBack, win, type Child } from "./dom.js";
-import { abilitiesFor, applyHeadStart, gearFor, HEAD_STARTS, HIT_PAUSES, SPEEDS, reset, save, setup } from "./state.js";
+import { abilitiesFor, applyHeadStart, BAR_SHOWS, gearFor, HEAD_STARTS, HIT_PAUSES, SPEEDS, reset, save, setup } from "./state.js";
 import { onRogue, setMode } from "./mode.js";
 import { anyNewEnemy, known, look, metCount, newEnemy } from "./bestiary.js";
 import { aggShares, abilityBlock, basicLine, canUse, classHead, classPassive, enemySheet, formationNote, gearRow, lockedRow, memberFor, portraitEl, RARITY_TONE, role, seatCodes, seatNotes, section, SLOTS, specialLines, statGrid, twoHanded, type GearSlot } from "./sheet.js";
@@ -396,7 +396,7 @@ function enemy(arg?: unknown): Child[] {
 // ─── Settings ───
 function settings(): Child[] {
   const s = setup.settings;
-  const toggle = (label: string, key: "sound" | "music" | "designer" | "autoContinue" | "partyBars" | "seedLock") => row([h("span", { class: "grow" }, label), h("span", { class: s[key] ? "good" : "dim" }, s[key] ? "ON" : "OFF")], () => { s[key] = !s[key]; if (key === "sound") setSound(s.sound); if (key === "music") setMusic(s.music); save(); refresh(); }, { cursor: false });
+  const toggle = (label: string, key: "sound" | "music" | "designer" | "autoContinue" | "seedLock") => row([h("span", { class: "grow" }, label), h("span", { class: s[key] ? "good" : "dim" }, s[key] ? "ON" : "OFF")], () => { s[key] = !s[key]; if (key === "sound") setSound(s.sound); if (key === "music") setMusic(s.music); save(); refresh(); }, { cursor: false });
   const cycle = <T,>(label: string, list: readonly T[], at: T, show: (v: T) => string, set: (v: T) => void) =>
     row([h("span", { class: "grow" }, label), h("span", null, show(at))], () => { set(list[(list.indexOf(at) + 1) % list.length]); save(); refresh(); }, { cursor: false });
   return [
@@ -409,7 +409,8 @@ function settings(): Child[] {
       toggle("SOUND", "sound"),
       toggle("MUSIC", "music"),
       toggle("AUTO NEXT", "autoContinue"),
-      toggle("PARTY HP ON FIELD", "partyBars"),
+      cycle("HP BARS", BAR_SHOWS, s.hpBars, (v) => v.toUpperCase(), (v) => (s.hpBars = v)),
+      cycle("MP BARS", BAR_SHOWS, s.mpBars, (v) => v.toUpperCase(), (v) => (s.mpBars = v)),
       cycle("NUMBERS", NUMBER_SCALES, s.numbers as (typeof NUMBER_SCALES)[number], (v) => `${v}×`, (v) => { s.numbers = v; setNumberScale(v); }),
       cycle("PORTRAITS", ["faces", "sprites", "mixed"] as const, s.portraits, (v) => v.toUpperCase(), (v) => (s.portraits = v)),
       ...([0, 1, 2] as const).map((i) => cycle(`HEAD START ${["1ST", "2ND", "3RD"][i]} SLOT`, HEAD_STARTS, s.headStart[i] as (typeof HEAD_STARTS)[number], (v) => `${v} TICKS`, (v) => { s.headStart[i] = v; applyHeadStart(s.headStart); })),

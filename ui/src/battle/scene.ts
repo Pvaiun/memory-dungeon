@@ -3,9 +3,10 @@
  * battle screens have it: the party on the left facing right, at the packs'
  * own pixel size with their weapons in hand; the foes on the right facing
  * left, at theirs, which is bigger; a backdrop per dungeon composed from the
- * tilesets. Over the sprites: a foe's HP bar under its feet, the pack's 16px
- * status icons with their stacks under everyone, a wind-up bar over a head,
- * damage numbers that rise and fade, and the VFX strips.
+ * tilesets. Over the sprites: HP and MP bars under the feet, as Settings
+ * pick (HP BARS, MP BARS), the pack's status icons with their stacks under
+ * them, a wind-up bar beside the figure, damage numbers that rise and fade,
+ * and the VFX strips.
  */
 import { SUBTICKS } from "../../../src/schema.js";
 import type { CUnit } from "../../../src/engine/combat/fight.js";
@@ -13,6 +14,7 @@ import { c, disp } from "../content.js";
 import { manifest, VFX_FOR, type Pose } from "../art.js";
 import { actorSpan, backdropImage, drawActor, drawCampfire, drawChest, drawEnemy, drawStatus, drawText, enemyK, enemySprite, FRAME_W, OUTLINE, STATUS_ICON, statusIconOf, vfxSprite } from "../pixel.js";
 import type { Driver } from "./driver.js";
+import type { BarShow } from "../state.js";
 
 export const W = FRAME_W, H = 228;
 
@@ -151,8 +153,9 @@ export class Scene {
   numbers: Num[] = [];
   fx: Fx[] = [];
   banner: { text: string; sub: string; until: number } | null = null;
-  /** Draw thin HP bars under the party too (Settings → PARTY HP). */
-  partyBars = false;
+  /** Whose HP and MP bars show under the units (Settings → HP BARS, MP BARS). */
+  hpBars: BarShow = "both";
+  mpBars: BarShow = "party";
   wall = 0;
   /** The campfire between fights: who sits by the fire, and who lies fallen. */
   camp: { ref: string; ko: boolean }[] | null = null;
@@ -423,26 +426,42 @@ export class Scene {
     const top = v.y - v.h;
     const x = Math.round(v.x);
     let iconY = v.y + 3;
-    if (v.side === "enemy") {
-      // HP under the feet, in the bar's colour; a light segment for a Shield
-      const max = u.stats.max_hp;
-      const hp = Math.max(0, Math.min(1, v.hpShown / max));
-      const bw = Math.max(20, Math.min(40, Math.round(v.w * 0.6)));
-      const bx = x - Math.round(bw / 2), by = v.y + 3;
-      ctx.fillStyle = OUTLINE;
-      ctx.fillRect(bx - 1, by - 1, bw + 2, 4);
-      ctx.fillStyle = "#3a3a4a";
-      ctx.fillRect(bx, by, bw, 2);
-      ctx.fillStyle = hpColor(hp);
-      ctx.fillRect(bx, by, Math.round(bw * hp), 2);
-      const sh = Math.min(1 - hp, v.shieldShown / max);
-      if (sh > 0.005) {
-        ctx.fillStyle = "#a8e8ff";
-        ctx.fillRect(bx + Math.round(bw * hp), by, Math.max(1, Math.round(bw * sh)), 2);
+    if (!v.downTold) {
+      // The bars under the feet in one frame: HP 2px in its colour, with a light segment for a Shield; MP 1px in blue
+      // beneath, for a unit with an MP pool. The status icons start just below the frame.
+      const shows = (b: BarShow) => b === "both" || (v.side === "party" ? b === "party" : b === "foes");
+      const hpOn = shows(this.hpBars), mpOn = shows(this.mpBars) && u.stats.max_mp > 0;
+      if (hpOn || mpOn) {
+        const bw = v.side === "party" ? 20 : Math.max(20, Math.min(40, Math.round(v.w * 0.6)));
+        const bx = x - Math.round(bw / 2), by = v.y + 3;
+        const tall = (hpOn ? 2 : 0) + (hpOn && mpOn ? 1 : 0) + (mpOn ? 1 : 0);
+        ctx.fillStyle = OUTLINE;
+        ctx.fillRect(bx - 1, by - 1, bw + 2, tall + 2);
+        if (hpOn) {
+          const max = u.stats.max_hp;
+          const hp = Math.max(0, Math.min(1, v.hpShown / max));
+          ctx.fillStyle = "#3a3a4a";
+          ctx.fillRect(bx, by, bw, 2);
+          ctx.fillStyle = hpColor(hp);
+          ctx.fillRect(bx, by, Math.round(bw * hp), 2);
+          const sh = Math.min(1 - hp, v.shieldShown / max);
+          if (sh > 0.005) {
+            ctx.fillStyle = "#a8e8ff";
+            ctx.fillRect(bx + Math.round(bw * hp), by, Math.max(1, Math.round(bw * sh)), 2);
+          }
+        }
+        if (mpOn) {
+          const my = by + tall - 1;
+          const mp = Math.max(0, Math.min(1, u.mp / u.stats.max_mp));
+          ctx.fillStyle = "#2a3050";
+          ctx.fillRect(bx, my, bw, 1);
+          ctx.fillStyle = "#6fb4ff";
+          ctx.fillRect(bx, my, Math.round(bw * mp), 1);
+        }
+        // HP alone keeps two rows of room above the icons; with MP the gap is one, so the bottom row's icons stay whole.
+        iconY = by + tall + (mpOn ? 2 : 3);
       }
-      iconY = by + 5;
     }
-    if (v.side === "party" && this.partyBars) iconY = v.y + 8;
     if (!v.downTold) {
       // Only what the messages have told, with the engine's live counts while the status lasts.
       const live = new Map(shownStatuses(u).map((x) => [x.id, x.count]));
@@ -498,18 +517,6 @@ export class Scene {
       ctx.fillStyle = colour;
       const fill = Math.round(bh * p);
       ctx.fillRect(bx, by + bh - fill, 2, fill);
-    }
-    if (v.side === "party" && !v.downTold && this.partyBars) {
-      // Settings → PARTY HP: a thin HP bar under each party member too.
-      const max = u.stats.max_hp;
-      const hp = Math.max(0, Math.min(1, v.hpShown / max));
-      const bw = 20, bx = x - 10, by = v.y + 3;
-      ctx.fillStyle = OUTLINE;
-      ctx.fillRect(bx - 1, by - 1, bw + 2, 4);
-      ctx.fillStyle = "#3a3a4a";
-      ctx.fillRect(bx, by, bw, 2);
-      ctx.fillStyle = hpColor(hp);
-      ctx.fillRect(bx, by, Math.round(bw * hp), 2);
     }
   }
 
