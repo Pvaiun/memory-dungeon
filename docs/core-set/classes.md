@@ -37,7 +37,7 @@ A class arrives with the plain weapon of its first kind. Every kind's swing, sca
 
 ### Conventions
 
-- **Stats** run from 1 to 5: 1 is very low, 3 average, 5 very high. Special stats, the three speed stats included (Attack speed, Cooldown, Cast speed), are zero unless a class lists them. No class regains MP in a fight by itself, and a class's MP pool is set by how many regular fights it lasts from full: two or three for every class, erring scarce.
+- **Stats** run from 1 to 5: 1 is very low, 3 average, 5 very high. Special stats, the three speed stats included (Attack speed, Cooldown, Cast speed), are zero unless a class lists them. No class regains MP in a fight by itself, and a class's MP pool is set by how many regular fights it lasts from full: two or three for every class, rounded up to a half step of the scale.
 - **Gear.** Each class below lists its weapon kinds (it arrives with the plain weapon of the first), its armor types and its offhand kinds; any amulet fits. The rules are under Gear in *Core set: rules and vocabulary*.
 - **Timing and MP.** Every ability has a cooldown word, a wind-up word and an MP cost, all in `classes.ts`. The word follows the job: abilities that repeat (stack applicators, top-up heals) are quick, a self-buff's cooldown is longer than the buff lasts, the big nukes are long and the revives very long. Casters' spells cost several times the walls' and fighters' skills, so casters run short of MP and wear MP gear, and walls rarely do.
 - **Damage and stacks.** Every ability that deals damage says what it scales from. Every ability that adds a stacking status says how many stacks (a few, several or many) and which stat sets the number. Statuses that don't stack have one fixed size.
