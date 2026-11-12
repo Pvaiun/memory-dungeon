@@ -171,6 +171,8 @@ export const tk = (t: number) => String(Math.max(t > 0 ? 1 : 0, Math.round(t)));
 const timing = (label: string, n: string) => h("span", { class: "nowrap" }, `${label} ${n}`);
 /** The sheets' ability icons: between the font's size and double it. */
 const ICON_SCALE = 1.5;
+/** Gear icons in rows and cards: 16 art pixels at 1.5×, about a weapon's size beside them (each art pixel still whole device pixels). */
+const GEAR_ICON_SCALE = 1.5;
 
 /**
  * What a weapon's basic attack is, worked out for a unit: its look (`ref`, the weapon's gear id or "enemy:<id>", picks
@@ -238,7 +240,7 @@ export function wearersLine(g: GearT, roster: readonly string[]): HTMLElement {
 
 /** A slot that can't be filled: the offhand under a two-handed weapon. */
 export function lockedRow(slot: string): HTMLElement {
-  return h("div", { class: "gear-row locked" }, h("span", { class: "art" }, slotIconEl(slot)), h("div", { class: "grow trunc" }, h("div", { class: "line" }, h("span", { class: "dim" }, slot.toUpperCase())), h("div", { class: "line small dim" }, "LOCKED")));
+  return h("div", { class: "gear-row locked" }, h("span", { class: "art" }, slotIconEl(slot, GEAR_ICON_SCALE)), h("div", { class: "grow trunc" }, h("div", { class: "line" }, h("span", { class: "dim" }, slot.toUpperCase())), h("div", { class: "line small dim" }, "LOCKED")));
 }
 /** Is the weapon this gear holds two-handed? Then the offhand reads locked. */
 export const twoHanded = (gear: Record<string, string | undefined>) => !!gear.weapon && handsOf(c.pack, c.gear.get(gear.weapon)) === 2;
@@ -250,8 +252,8 @@ export const twoHanded = (gear: Record<string, string | undefined>) => !!gear.we
  */
 export function gearRow(g: GearT | null, slot: string, stats: Stats | null, onClick?: () => void, arrow = true, who?: readonly string[]): HTMLElement {
   const slotName = h("span", { class: "dim" }, slot.toUpperCase());
-  if (!g) return h("div", { class: "gear-row", onClick }, h("span", { class: "art" }, slotIconEl(slot)), h("div", { class: "grow trunc" }, h("div", { class: "line" }, slotName), h("div", { class: "line small dim" }, "NOTHING")), onClick && arrow ? h("span", { class: "dim" }, "▶") : null);
-  const art = (g.slot === "weapon" ? weaponEl(g.id) : null) ?? gearIconEl(g);
+  if (!g) return h("div", { class: "gear-row", onClick }, h("span", { class: "art" }, slotIconEl(slot, GEAR_ICON_SCALE)), h("div", { class: "grow trunc" }, h("div", { class: "line" }, slotName), h("div", { class: "line small dim" }, "NOTHING")), onClick && arrow ? h("span", { class: "dim" }, "▶") : null);
+  const art = (g.slot === "weapon" ? weaponEl(g.id) : null) ?? gearIconEl(g, GEAR_ICON_SCALE);
   const tone = pieceTone(g);
   const rare = g.rarity && g.rarity !== "common" ? g.rarity : null;
   // Everything wraps: a long name, a weapon's hit and its codes, the card's sentence.
