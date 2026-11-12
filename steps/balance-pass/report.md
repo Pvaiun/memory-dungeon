@@ -21,17 +21,12 @@ The director's intent is in `intent.md`. This part balanced the build parties ag
      - The three-caster route (Frostweaver, Bard, Stormcaller) stays at 43/63% at rungs 1–2: its soloist, a 2,000-HP Stormcaller, falls with nobody in front.
      - The Cleric route is 62% at rung 1, where its Vampire knows only Blood gift.
 
-     With every soloist and every pair of servers, a Pyromancer or Stormcaller with two sturdy servers wins most, and a Bard or a Cleric among the servers costs a few points.
-   - **Your call:** whether route 2 keeps three casters, and whether route 3's Vampire learns its damage ability first (rung 1: 33% to 68%).
-   - **The engine isn't the short part.** On top of the HP and Attack, making the soloist's spells come round faster (Wellspring a third sooner, The stage two fifths) added only 2–5 points, so the formations stay as they were.
-   - **The build parties' Soloist** now slots the abilities that deal damage first, as a player would. The cathedral had freed the Geomancer's Earthen shell, cast 15 times a fight.
-   - **Rung 1 is still Barrage's weakest:** 417 damage a tick for the party.
-   - **The routes, a question for builds.md.** With every soloist and every pair of servers:
+     With every soloist and every pair of servers:
      - a Pyromancer or Stormcaller soloist with two sturdy servers wins most;
-     - one support (the Bard or the Cleric) among them costs a few points;
+     - one support (the Bard or the Cleric) among the servers costs a few points;
      - both supports cost far more.
 
-     The written route 2 (Frostweaver, Bard, Stormcaller) is the weakest at rungs 1–2. Each swap below is from the earlier test, before the Attack step:
+     The swaps below were measured before this round's changes:
 
      | Route 2 with | Rung 1 / 2 / 3 won |
      | --- | --- |
@@ -43,6 +38,7 @@ The director's intent is in `intent.md`. This part balanced the build parties ag
      - Cold Snap's tankless route falls from 90/100/92% to 75/88/63% without the Frostweaver.
 
      Their weakness is damage, not frailty: they have HP 3, the Bard deals 0.29× an average unit, and the Frostweaver 0.85×, the bottom of the dealers' band. Other builds' tankless routes win on their own damage or control.
+   - **The build parties' Soloist** slots the abilities that deal damage first, as a player would. The cathedral had freed the Geomancer's Earthen shell, cast 15 times a fight.
    - **Your call:** whether route 2 keeps three casters, and whether route 3's Vampire learns its damage ability first (rung 1: 33% to 68%).
 2. **Riders of a damage status are sized to the status.** `APPLIED` in `scale.ts` makes every rider stat-scaled at a share of its words, on the party's side only (applied when the pack is built, `pack.ts`):
    - Chill at 0.2;
