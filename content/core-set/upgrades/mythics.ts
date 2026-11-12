@@ -196,14 +196,15 @@ helper(kit("crown_of_embers_aura", "CROWN OF EMBERS", "Its hits add a Burn while
   reactions: [{ on: { event: "hit_lands" }, do: [apply("burn", { stacks: 1, to: "other" })] }],
 }));
 
-// Frostweaver: after a shatter spends a foe's Chill, half the cap goes back on (it listens for the end, cause removed, not the cap).
+// Frostweaver: after a shatter spends a foe's Chill, a quarter of the cap goes back on (it listens for the end, cause removed, not
+// the cap). At half, with a cascade, every shatter left a foe halfway to the next.
 mythic({
   name: "Glacier's heart", slot: "armor", rarity: "mythic", mythic: "frostweaver",
-  text: "Whenever a foe's Chill shatters, the Frostweaver puts half of it back: 6 Chill on that foe.",
+  text: "Whenever a foe's Chill shatters, the Frostweaver puts a quarter of it back: 3 Chill on that foe.",
   statuses: ["glaciers_heart"],
 }, "Snap 3 ●●● ⚙ firecracker (key)");
-helper(pieceStatus("glaciers_heart", "Glacier's heart", "Whenever a foe's Chill shatters, 6 Chill go back on that foe.", {
-  reactions: [{ on: { event: "status_ended", status: "chill", cause: ["removed"], whose: "foe" }, do: [apply("chill", { stacks: STATUS.chill.cap / 2, to: "owner" })] }],
+helper(pieceStatus("glaciers_heart", "Glacier's heart", "Whenever a foe's Chill shatters, 3 Chill go back on that foe.", {
+  reactions: [{ on: { event: "status_ended", status: "chill", cause: ["removed"], whose: "foe" }, do: [apply("chill", { stacks: STATUS.chill.cap / 4, to: "owner" })] }],
 }));
 
 // Stormcaller: every hit it lands strikes one more random foe for half its raw damage; the jump is tagged, so it doesn't jump

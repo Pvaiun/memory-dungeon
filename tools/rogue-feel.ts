@@ -348,8 +348,10 @@ function pack(r: Rec, n: number): string {
     const m = r.members[i];
     const k = c.classes.get(u.class)!;
     const st = m.stats;
-    out.push(`- **${k.name}** (slot ${i + 1}): HP ${n0(m.hp)}/${n0(m.maxHp)}, MP ${n0(m.mp)}/${n0(m.maxMp)}. Attack ${pts(st.attack)}, Defense ${pts(st.defense)}, Crit ${st.crit_chance}%, Aggro ${Math.round(st.aggro)}, MP regen ${pts(st.mp_regen)}. Passive: ${k.passive?.name ?? "Einherjar"}: ${k.passive?.text ?? "allies it revives come back ready."}`);
-    out.push(`  - Gear: ${(["weapon", "armor", "amulet"] as const).map((s) => `${s}: ${gearWords(u.gear[s] ? c.gear.get(u.gear[s]!) : undefined)}`).join("; ")}.`);
+    // A trained passive plays as its form: its own name and text.
+    const pasv = (u as { passive?: string }).passive ? c.statuses.get((u as { passive?: string }).passive!) : undefined;
+    out.push(`- **${k.name}** (slot ${i + 1}): HP ${n0(m.hp)}/${n0(m.maxHp)}, MP ${n0(m.mp)}/${n0(m.maxMp)}. Attack ${pts(st.attack)}, Defense ${pts(st.defense)}, Crit ${st.crit_chance}%, Aggro ${Math.round(st.aggro)}, MP regen ${pts(st.mp_regen)}. Passive: ${pasv ? `${pasv.name}: ${pasv.text}` : `${k.passive?.name ?? "Einherjar"}: ${k.passive?.text ?? "allies it revives come back ready."}`}`);
+    out.push(`  - Gear: ${(["weapon", "armor", "offhand", "amulet"] as const).filter((s) => s !== "offhand" || u.gear[s]).map((s) => `${s}: ${gearWords(u.gear[s] ? c.gear.get(u.gear[s]!) : undefined)}`).join("; ")}.`);
     const abs = u.abilities.map((a, j) => { const ab = c.abilities.get(a)!; return `${ab.name} (MP ${ab.mp ?? 0}, every ${Math.round(ab.cooldown)}t, wind-up ${ab.cast ?? c.pack.ruleset.abilityCast}t, ready at ~t${Math.max(0, Math.round(firstReady(m.cooldowns, a, ab.cooldown, j)))}${m.cooldowns?.[a] !== undefined ? " (carried)" : ""}: ${sizeOf(ab, st) || ab.text})`; });
     out.push(`  - Abilities in slot order: ${abs.join("; ") || "none"}.`);
   });

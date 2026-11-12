@@ -77,10 +77,11 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
 }
 {
   // Twice as often is its shape (Attack speed +100 counts no step).
-  const name = "Hummingbird charm", effect = "Its wearer's basic attacks come twice as often and deal half as much.";
+  const name = "Hummingbird charm", effect = "Its wearer's basic attacks come half again as often and deal two thirds as much.";
   amulet("uncommon", name, {
-    effect, stats: [sp("double_strike", "medium"), sp("evasion", "medium"), { stat: "attack_speed", flat: 100 }],
-    statuses: [own_(name, effect, { boosts: [{ tag: "basic", pct: -50 }] })],
+    // Even for the swing, but every rider and every Bleed a hit pays comes half again as often (at twice, they doubled).
+    effect, stats: [sp("double_strike", "medium"), sp("evasion", "medium"), { stat: "attack_speed", flat: 50 }],
+    statuses: [own_(name, effect, { boosts: [{ tag: "basic", pct: -33 }] })],
     serves: "Cuts 1 ●●●, Bonfire ●, Snap ●, Storm ● ⚙ spell on the swing (half)",
   });
 }
@@ -128,10 +129,11 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
   });
 }
 {
-  const name = "Floe charm", effect = "When a foe's Chill shatters, its wearer's first-slotted ability is ready at once. If it's ready already, nothing happens.";
+  // Half the wait, not ready at once: with a shatter every few ticks, at once it fired its first ability on every shatter.
+  const name = "Floe charm", effect = "When a foe's Chill shatters, its wearer's first-slotted ability comes half its wait closer.";
   amulet("rare", name, {
     effect, stats: [sp("cast_speed", "medium"), st("max_mp", 1), st("max_hp", 1)],
-    statuses: [own_(name, effect, { reactions: [react(EV.shatter, { op: "cooldown", which: "first", set: "ready", to: "holder" })] })],
+    statuses: [own_(name, effect, { reactions: [react(EV.shatter, { op: "cooldown", which: "first", set: { times: 50 }, to: "holder" })] })],
     serves: "Snap 2 ●●●, Landslide ●●, Barrage ●●, Bonfire ●● ⚙ shatter bell (key)",
   });
 }

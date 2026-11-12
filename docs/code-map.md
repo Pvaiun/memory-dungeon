@@ -115,6 +115,7 @@ tools/                       the Node command lines; each header says how to run
     write.ts                 the sheet as markdown
   rogue-sim.ts               npm run rogue: whole runs by the simulated player; its pool serves the other rogue tools
   rogue-calibrate.ts         npm run rogue:calibrate: each fight's knob against the hand-built rosters
+  build-calibrate.ts         the knobs' baseline: each fight's knob against its act's build parties, from rolled starts
   rogue-tune.ts              npm run rogue:tune: run-level tuning on top of the calibration
   rogue-parties.ts           the hand-built rosters the calibration measures against
   rogue-legendaries.ts       npm run rogue:legendaries: what each legendary piece's rule is worth

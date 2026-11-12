@@ -53,7 +53,8 @@ import { abilityUp, apply, both, cd, helper, kit, passiveUp, phys, r6 } from "./
   const penance = (ratio: number): Partial<AbilityT> => ({
     if: [{ side: "others", where: { hpBelow: 100 } }, { side: "self", where: { hpAtLeast: 35 } }],
     target: { side: "others", pick: "all" },
-    do: [{ op: "remove", label: "debuff" }, heal(ratio), { op: "pay", hp: { scale: [{ ratio: r6(ratio / 5), count: "targets", times: { stat: "attack", of: "self" } }] }, to: "self" }],
+    // A tenth, not a fifth: the price is on the heal as cast, and under a cap on healing it cost three times what landed.
+    do: [{ op: "remove", label: "debuff" }, heal(ratio), { op: "pay", hp: { scale: [{ ratio: r6(ratio / 10), count: "targets", times: { stat: "attack", of: "self" } }] }, to: "self" }],
   });
   const absolution = (ratio: number): Partial<AbilityT> => ({
     cooldown: cd("very_long", "absolve"), if: { side: "allies", where: { ko: true } }, target: T.koAlly,
@@ -62,7 +63,7 @@ import { abilityUp, apply, both, cd, helper, kit, passiveUp, phys, r6 } from "./
   abilityUp({
     id: "absolve", cls: "paladin",
     power: "Heals two fifths more; if it raises, the raised ally comes back with two fifths more HP.",
-    a: { name: "Penance", text: "Cleanses and heals both other allies for twice as much, and pays a fifth of each heal in its own HP. Not itself.", builds: ["pact"], plus: "Heals two fifths more." },
+    a: { name: "Penance", text: "Cleanses and heals both other allies for twice as much, and pays a tenth of each heal in its own HP. Not itself.", builds: ["pact"], plus: "Heals two fifths more." },
     b: { name: "Absolution", text: "Waits until an ally falls, then revives a random knocked-out ally with a fifth of its HP.", builds: [], plus: "Raises with two fifths more HP." },
     form: (v, k) => (v === "a" ? penance(0.8 * k) : v === "b" ? absolution(0.2 * k) : absolve(0.4 * k)),
   });

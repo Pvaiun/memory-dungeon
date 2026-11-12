@@ -261,6 +261,16 @@ export const stacks = (word: StackWord, stat: string, mult = 1): NumT => ({ scal
 /** The Pyromancer's Burn and the Stormcaller's Shock, on their abilities and passives, are this many times the word's. */
 export const BURN_STACKS = 1;
 export const SHOCK_STACKS = 1.5;
+/**
+ * The party's riders of a damage status, against the stack words: every application a status makes whose stacks are drawn
+ * from a stat (a passive's, a piece's, a seat's or a mythic's "a few Chill (from Attack)" on a swing or a blow taken) adds
+ * this share of what its word gives, on the party's side only (never a foe's). Abilities keep their own sizes, set by hand
+ * against each status (Frost lance's Chill, a shatter in more than one cast). Applied when the pack is built (pack.ts); flat
+ * counts and shares of a status passed on are left as written. The words are one scale for every status, and a stack is
+ * worth very different amounts: a Burn or Bleed stack deals about three swings' worth over its life, and Chill caps at 12, so
+ * a few Chill on every swing from three pieces shatters a foe each couple of hits. Statuses not named here add their words'.
+ */
+export const APPLIED: Record<string, number> = { chill: 0.2, burn: 0.25, bleed: 0.6 };
 /** A flat stack count, for enemies that apply "a stack" or statuses that start with "many". */
 export const FLAT_STACKS = { one: 1, few: 2, several: 4, many: 7 } as const;
 
@@ -292,6 +302,12 @@ export const SPECIAL_KEY: Record<SpecialStat, string> = {
   evasion: "evasion", accuracy: "accuracy", crit_damage: "crit_multiplier", double_strike: "double_strike", thorns: "thorns", lifesteal: "lifesteal", siphon: "siphon",
   attack_speed: "attack_speed", cooldown: "cooldown_reduction", cast_speed: "cast_time_reduction",
 };
+/**
+ * A piece's own step of a special stat where it differs from the class lines' (SPECIAL). Evasion: its worth grows as
+ * 1 / (1 − Evasion), so pieces stacked on a class that has it climbed to the cap (a Monk at 75, an Assassin at 60, every hit
+ * on them one in three or four), and two pieces' 20 each were worth far more than their budget counted.
+ */
+export const PIECE_SPECIAL: Partial<Record<keyof typeof SPECIAL, { medium: number; high: number }>> = { evasion: { medium: 12, high: 20 } };
 
 // ─── The kits' own words ─────────────────────────────────────────────────────
 
@@ -336,6 +352,12 @@ export const AGGRO_STEP = 10;
  * restores about 7% of a 3,000 pool over a 40-tick fight, +2 about 14% (foes' regen comes from their own lines).
  */
 export const MP_REGEN_STEP = 3 * P;
+/**
+ * A piece's max MP step brings an HP step beside it, over its budget: MP is worth little in a fight beside the other stats (a
+ * fight from a part-full bar seldom spends the pool), so a mana piece's MP comes free, and for a class that doesn't spend MP the
+ * piece is as good as its neighbours. Barrage, whose pieces carry most of the MP, had left its members the frailest in the set.
+ */
+export const MP_STEP_HP = 1;
 /** The step for a stat, in the data's units. */
 export const stepFor = (stat: string) => (stat === "max_hp" ? HP_STEP : stat === "aggro" ? AGGRO_STEP : stat === "mp_regen" ? MP_REGEN_STEP : STEP);
 

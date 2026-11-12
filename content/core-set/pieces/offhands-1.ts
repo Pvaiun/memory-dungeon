@@ -72,10 +72,10 @@ offhand("kite_shield", "common", "Blazoned kite", { stats: [st("aggro", 1)], ser
 }
 {
   const name = "Monolith shield";
-  const effect = "Its holder's abilities that deal damage take twice as long to come round, and their hits land two and a half times as hard. What they apply is unchanged.";
+  const effect = "Its holder's abilities that deal damage take twice as long to come round, and their hits land twice as hard. What they apply is unchanged.";
   offhand("kite_shield", "rare", name, {
     effect, stats: [st("defense", 2), st("max_hp", 1)],
-    statuses: [own_(name, effect, { mods: [{ of: { does: ["damage"] }, cooldown: 100, damage: 150 }] })],
+    statuses: [own_(name, effect, { mods: [{ of: { does: ["damage"] }, cooldown: 100, damage: 100 }] })],
     serves: "Landslide 2 ●●●, Hunt ● ⚙ shatter bell (half) ◆ heavy-blow",
   });
 }

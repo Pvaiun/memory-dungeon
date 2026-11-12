@@ -50,14 +50,15 @@ add(
 }
 {
   // The Breaker's aim: a Stunned foe, by draw among several, inside the Taunt rule and ahead of a Mark.
-  const frost = "Basic attacks add a few Chill.", breaker = "While a foe is Stunned, its basic attacks go to that foe. Its hits on a Stunned foe deal double.";
+  // A Chill a swing, not a few: two Frost seats at a few each, beside the riders, filled the counter in a couple of swings.
+  const frost = "Basic attacks add a Chill.", breaker = "While a foe is Stunned, its basic attacks go to that foe. Its hits on a Stunned foe deal double.";
   add(
     formation("Hoarfrost line", "common", "Two lay frost with every blow; the third breaks what freezes.", [
       ...twice({ name: "Frost", text: frost, statuses: ["hoarfrost_line_frost"] }),
       { name: "Breaker", text: breaker, statuses: ["hoarfrost_line_breaker"] },
     ]),
     [
-      held("hoarfrost_line_frost", "Frost", frost, { reactions: [react(EV.basic, give("chill", "other", FLAT_STACKS.few))] }),
+      held("hoarfrost_line_frost", "Frost", frost, { reactions: [react(EV.basic, give("chill", "other", FLAT_STACKS.one))] }),
       held("hoarfrost_line_breaker", "Breaker", breaker, { aim: { rule: { side: "foes", where: { has: "stun" }, pick: "random" }, first: true }, boosts: hits(against(100, { has: "stun" })) }),
     ],
     "Snap 1 ●●●, Landslide ● ⚙ lead's colour (half)",
@@ -115,13 +116,14 @@ add(
   const conductor = "Each ability it casts gives the Soloist MP: a tenth of the Soloist's max MP.";
   add(
     formation("Wellspring", "common", "Two keep one caster casting.", [
-      { name: "Soloist", text: "Its abilities come round a fifth faster. Draws far less.", stats: [FIFTH_SOONER, st("aggro", -2)] },
+      { name: "Soloist", text: "Its abilities come round a third faster and deal half again as much. Draws far less.", stats: [THIRD_SOONER, st("aggro", -2)], statuses: ["wellspring_soloist"] },
       { name: "Conductor", text: conductor, statuses: ["wellspring_conductor"] },
-      { name: "Well", text: "Draws more. Each hit it takes gives the Soloist MP: a twentieth of the Soloist's max MP.", stats: [st("aggro", 1)], statuses: ["wellspring_well"] },
+      { name: "Well", text: "Draws more. Each hit it takes gives the Soloist MP: a hundredth of the Soloist's max MP.", stats: [st("aggro", 1)], statuses: ["wellspring_well"] },
     ]),
     [
+      held("wellspring_soloist", "Soloist", "Its abilities deal half again as much.", { mods: [{ damage: 50 }] }),
       held("wellspring_conductor", "Conductor", conductor, { reactions: [react(EV.cast, { op: "mp", amount: share(0.1, "max_mp", "target"), to: TO.seat("soloist") })] }),
-      held("wellspring_well", "Well", "Each hit it takes gives the Soloist MP.", { reactions: [react(EV.struck, { op: "mp", amount: share(0.05, "max_mp", "target"), to: TO.seat("soloist") })] }),
+      held("wellspring_well", "Well", "Each hit it takes gives the Soloist MP.", { reactions: [react(EV.struck, { op: "mp", amount: share(0.01, "max_mp", "target"), to: TO.seat("soloist") })] }),
     ],
     "Barrage 1 ●●●, Toll ● ⚙ mana as armour (half)",
   );

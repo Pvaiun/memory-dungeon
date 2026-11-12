@@ -3,7 +3,7 @@
  * and 16 mythics read alike. Numbers come from scale.ts's words; nothing here decides a value.
  */
 import type { ConditionT, EffectT, EventSpecT, GearT, NumT, ReactionT, StatusT, TargetRuleT, TestT, ToT, UnitCondT, WeaponT } from "../../../src/schema.js";
-import { COOLDOWN, KIND_BUDGET, KIND_WORDS, P, SPECIAL, SPECIAL_KEY, STACKS, SWING_TRADE, crit, stepFor, swingOf, type KindWords, type SpecialLevel, type SpecialStat, type StackWord } from "../scale.js";
+import { COOLDOWN, HP_STEP, KIND_BUDGET, KIND_WORDS, MP_STEP_HP, P, PIECE_SPECIAL, SPECIAL, SPECIAL_KEY, STACKS, SWING_TRADE, crit, stepFor, swingOf, type KindWords, type SpecialLevel, type SpecialStat, type StackWord } from "../scale.js";
 
 /** An item's id from its name: lower case, apostrophes dropped, every other run of non-letters and non-digits an underscore. */
 export const idOf = (name: string): string =>
@@ -13,7 +13,8 @@ export type Change = { stat: string; flat: number };
 /** A gear step: +1 or +2 on a stat (a negative n gives it up), in the data's units: a point 1,000, HP half a point, Aggro 10, MP regen as scale.ts sets it. */
 export const st = (stat: string, n: number): Change => ({ stat, flat: n * stepFor(stat) });
 /** A special stat at its word (Evasion, Accuracy, Crit damage, Double strike, Thorns, Lifesteal, Siphon). */
-export const sp = (s: SpecialStat, level: SpecialLevel): Change => ({ stat: SPECIAL_KEY[s], flat: SPECIAL[s][level] });
+/** A piece's special stat at a level: the class lines' size (SPECIAL), or a piece's own where it has one (PIECE_SPECIAL). */
+export const sp = (s: SpecialStat, level: SpecialLevel): Change => ({ stat: SPECIAL_KEY[s], flat: (PIECE_SPECIAL[s] ?? SPECIAL[s])[level] });
 /** Crit chance in steps: +1 is 3 points, +2 is 5. */
 export const critStep = (n: number): Change => ({ stat: "crit_chance", flat: crit(n) });
 
@@ -48,7 +49,7 @@ export function stepsOf(stats: readonly Change[] = []): number {
   }
   return n;
 }
-const SPECIAL_LEVELS: Record<string, { medium: number; high: number }> = Object.fromEntries((Object.keys(SPECIAL) as SpecialStat[]).map((s) => [SPECIAL_KEY[s], SPECIAL[s]]));
+const SPECIAL_LEVELS: Record<string, { medium: number; high: number }> = Object.fromEntries((Object.keys(SPECIAL) as SpecialStat[]).map((s) => [SPECIAL_KEY[s], PIECE_SPECIAL[s] ?? SPECIAL[s]]));
 
 /** Stacks from the holder's stat, read when a piece's status fires (a passive's words: a few 0.7 a point, several 1.3, many 2.3). */
 export const own = (word: StackWord, stat: string, mult = 1): NumT => ({ scale: [{ ratio: (mult * STACKS[word]) / P, stat, of: "holder" }] });
@@ -162,6 +163,12 @@ export function piece(o: PieceOpts): GearT {
   if (o.rarity !== "legendary" && o.rarity !== "mythic") {
     const high = o.stats?.find((c) => c.stat in SPECIAL_LEVELS && c.flat === SPECIAL_LEVELS[c.stat].high);
     if (high) throw new Error(`${o.name}: a ${o.rarity} with ${SPECIAL_NAME[high.stat]} high; high is a legendary's`);
+  }
+  // A max MP step brings HP beside it (scale.ts MP_STEP_HP), over the budget the checks above counted.
+  const mp = o.rarity === "mythic" ? 0 : (o.stats ?? []).filter((c) => c.stat === "max_mp" && (c.flat ?? 0) > 0).reduce((n, c) => n + Math.round((c.flat ?? 0) / stepFor("max_mp")), 0);
+  if (mp && g.stats) {
+    const add = mp * MP_STEP_HP * HP_STEP, hp = g.stats.find((c) => c.stat === "max_hp");
+    g.stats = hp ? g.stats.map((c) => (c === hp ? { ...c, flat: (c.flat ?? 0) + add } : c)) : [...g.stats, { stat: "max_hp", flat: add }];
   }
   (g as GearT & { rarity?: Rarity }).rarity = o.rarity;
   return g;

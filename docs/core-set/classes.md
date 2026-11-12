@@ -249,7 +249,7 @@ Four mages, and they share no template: fire is the long cast, ice the wall that
 - **Passive – Stoke.** Each ability it casts adds a few Burn to the foe with the most Burn; stacks scale from Attack. The caster: its swings carry no fire unless a version says so.
 - **Firebolt.** Deals damage that scales from Attack to the foe with the most Burn, and adds several Burn; stacks scale from Attack.
 - **Fireball.** Deals damage that scales from Attack to every foe, and adds a few Burn to each; stacks scale from Attack.
-- **Pyre.** Deals heavy damage to the foe with the most Burn; the damage scales from Attack and rises with each Burn stack on that foe. The Burn stays. The dearest ability in the set.
+- **Pyre.** Deals heavy damage to the foe with the most Burn; the damage scales from Attack and rises with each Burn stack on that foe. The Burn stays. With Fireball, its dearest ability.
 
 **Identities.** The ritualist (staff, lantern): Slow burn, Conflagration (many Burn on each foe, with a very long wind-up: Cast speed pays), High pyre (waits for a foe holding a deep fire, then a heavy blow that cashes each stack). The kindler (wand, orb): Kindling (its basic attacks add a few Burn, in place of its casts), Flash bolt, Flashfire. The conflagration (staff or wand, orb): Wildfire (each cast adds Burn to every burning foe, half as much each), Funeral pyre.
 

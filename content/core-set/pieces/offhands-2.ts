@@ -68,12 +68,12 @@ offhand("tome", "common", "Hymnal", { stats: [sp("cooldown", "medium")], serves:
 {
   // The third of its own casts is cast again, free (a free repeat isn't counted, so it's never cast again).
   const name = "Twice-told tome", n = `${id(name)}_count`;
-  const effect = "Every third ability its holder casts in a fight is cast twice. The second cast comes at once and is free; it isn't counted, and it isn't cast again.";
+  const effect = "Every second ability its holder casts in a fight is cast twice. The second cast comes at once and is free; it isn't counted, and it isn't cast again.";
   offhand("tome", "rare", name, {
     effect, stats: [sp("cooldown", "medium"), sp("cast_speed", "medium"), st("max_mp", 1)],
     statuses: [
-      own_(name, effect, { reactions: [reactIf(OWN_CAST, { side: "self", where: countAt(n, 2) }, { op: "recast" }), react(OWN_CAST, give(n, "holder", 1))] }),
-      count(n, "TWICE-TOLD", "Every third ability it casts is cast twice.", 3),
+      own_(name, effect, { reactions: [reactIf(OWN_CAST, { side: "self", where: countAt(n, 1) }, { op: "recast" }), react(OWN_CAST, give(n, "holder", 1))] }),
+      count(n, "TWICE-TOLD", "Every second ability it casts is cast twice.", 2),
     ],
     serves: "Barrage 2 ●●●, Snap ●●, Landslide ● ⚙ crescendo (half) ◆ free-cast",
   });
@@ -156,10 +156,10 @@ offhand("orb", "common", "Ember orb", { stats: [st("attack", 1)], serves: "Bonfi
   });
 }
 {
-  const name = "Meltwater orb", effect = "When a foe's Chill shatters, its holder regains a quarter of its max MP.";
+  const name = "Meltwater orb", effect = "When a foe's Chill shatters, its holder regains a tenth of its max MP.";
   offhand("orb", "rare", name, {
     effect, stats: [st("max_mp", 1), st("attack", 1), sp("cooldown", "medium")],
-    statuses: [own_(name, effect, { reactions: [react(EV.shatter, { op: "mp", amount: share(0.25, "max_mp"), to: "holder" })] })],
+    statuses: [own_(name, effect, { reactions: [react(EV.shatter, { op: "mp", amount: share(0.1, "max_mp"), to: "holder" })] })],
     serves: "Snap 2 ●●●, Barrage 2 ●● ⚙ frozen gate (half), resonance (half) ◆ free-cast",
   });
 }
@@ -324,8 +324,10 @@ offhand("vial", "common", "Hemlock phial", { stats: [critStep(1)], serves: "Thou
 {
   // What the wound closes under its holder's hit is put back: d/(1−d) of what the foe holds, the same whichever reads first.
   const name = "Venom vial";
-  const effect = "A foe's Bleed doesn't close under its holder's hits: the wound pays for the hit and stays as deep as it was. It still closes under everyone else's.";
-  const back = STATUS.bleed.drop / (1 - STATUS.bleed.drop);
+  // Each hit's third closes, then a fifth of what's left goes back on: 2/3 × 6/5 = 4/5 stays, so the wound closes a fifth. Fresh
+  // Bleed the hit itself lays is in what's left, so the share back stays well under a half (at a half the wound grows without end).
+  const effect = "A foe's Bleed closes only a fifth under its holder's hits, not a third. It still closes a third under everyone else's.";
+  const back = 0.2;
   offhand("vial", "rare", name, {
     effect, stats: [sp("lifesteal", "medium"), critStep(1), sp("crit_damage", "medium")],
     statuses: [own_(name, effect, { reactions: [reactIf(EV.hit, { unit: "other", where: { has: "bleed" } }, give("bleed", "other", stacksOf("bleed", back, "target"), { rider: false }))] })],
@@ -347,10 +349,11 @@ offhand("vial", "common", "Hemlock phial", { stats: [critStep(1)], serves: "Thou
   });
 }
 {
-  // Its own Lifesteal, healed and past full, given to every other ally as healing that goes no further.
+  // Half its own Lifesteal, healed and past full, given to every other ally as healing that goes no further. At the same amount,
+  // one drinker kept a whole party full.
   const name = "Heartsblood";
-  const effect = "Whatever its holder's Lifesteal would heal it for, full or not, every other ally is healed for the same. Healing given this way isn't passed on again.";
-  const pass = { op: "heal" as const, amount: ofAmount(1), final: true as const, to: TO.otherAllies };
+  const effect = "Whatever its holder's Lifesteal would heal it for, full or not, every other ally is healed for half as much. Healing given this way isn't passed on again.";
+  const pass = { op: "heal" as const, amount: ofAmount(0.5), final: true as const, to: TO.otherAllies };
   offhand("vial", "legendary", name, {
     effect, stats: [sp("lifesteal", "high"), st("max_hp", 1), st("attack", 1)],
     statuses: [own_(name, effect, { reactions: [react(on("healed", { status: "lifesteal" }), pass), react(on("overhealed", { status: "lifesteal" }), pass)] })],
@@ -450,12 +453,12 @@ offhand("bell", "common", "Cantor's bell", { stats: [st("mp_regen", 1)], serves:
 }
 {
   const name = "Bell of the hour", n = `${id(name)}_count`;
-  const effect = "Every fifth basic attack its holder lands casts its first-slotted ability at once, whatever its cooldown, with no wind-up. Its cooldown stays where it was, and its MP is paid.";
+  const effect = "Every fourth basic attack its holder lands casts its first-slotted ability at once, whatever its cooldown, with no wind-up. Its cooldown stays where it was, and its MP is paid.";
   offhand("bell", "rare", name, {
     effect, stats: [sp("attack_speed", "medium"), st("mp_regen", 2)],
     statuses: [
-      own_(name, effect, { reactions: [reactIf(EV.basic, { side: "self", where: countAt(n, 4) }, { op: "recast", which: "first", paid: true }), react(EV.basic, give(n, "holder", 1))] }),
-      count(n, "HOUR", "Every fifth basic attack it lands casts its first-slotted ability.", 5),
+      own_(name, effect, { reactions: [reactIf(EV.basic, { side: "self", where: countAt(n, 3) }, { op: "recast", which: "first", paid: true }), react(EV.basic, give(n, "holder", 1))] }),
+      count(n, "HOUR", "Every fourth basic attack it lands casts its first-slotted ability.", 4),
     ],
     serves: "Cuts 2 ●●●, Barrage 2 ●●● ⚙ spell on the swing (key)",
   });

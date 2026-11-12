@@ -70,10 +70,10 @@ weapon("dagger", "common", "Keen dirk", { stats: [critStep(1)], serves: "Hunt, C
   });
 }
 {
-  const name = "Bloodscent knife", effect = "Its wearer's hits on a bleeding foe crit far more often: +50% Crit chance, up to 80%.";
+  const name = "Bloodscent knife", effect = "Its wearer's hits on a bleeding foe crit far more often: +30% Crit chance, up to 60%.";
   weapon("dagger", "rare", name, {
     effect, stats: [critStep(1), sp("attack_speed", "medium"), sp("crit_damage", "medium")],
-    statuses: [own_(name, effect, { crits: [{ when: { has: "bleed" }, chance: 50, cap: 80 }] })],
+    statuses: [own_(name, effect, { crits: [{ when: { has: "bleed" }, chance: 30, cap: 60 }] })],
     serves: "Cuts 2 ●●●, Hunt ●● ⚙ emptied quiver (half)",
   });
 }
@@ -234,10 +234,10 @@ weapon("wand", "common", "Hazel wand", { stats: [sp("cooldown", "medium"), st("m
   });
 }
 {
-  const name = "Tithe wand", effect = "Each basic attack it lands gives the ally with the least MP some MP: 3% of its wearer's Attack.";
+  const name = "Tithe wand", effect = "Each basic attack it lands gives the ally with the least MP some MP: a tenth of its wearer's Attack.";
   weapon("wand", "uncommon", name, {
     effect, stats: [sp("cooldown", "medium"), sp("attack_speed", "medium"), st("mp_regen", 1)],
-    statuses: [own_(name, effect, { reactions: [react(EV.basic, { op: "mp", amount: share(0.03, "attack"), to: TO.leastMpAlly })] })],
+    statuses: [own_(name, effect, { reactions: [react(EV.basic, { op: "mp", amount: share(0.1, "attack"), to: TO.leastMpAlly })] })],
     serves: "Barrage 1 ●● ⚙ mana as armour (half) ◆ free-cast",
   });
 }
@@ -500,7 +500,8 @@ weapon("axe", "common", "Cleaver", { stats: [st("attack", 1)], serves: "Hunt" })
 }
 {
   const name = "The Red Feast", on_ = `${id(name)}_on`;
-  const effect = "While its wearer is below half its max HP, its hits deal double and its Lifesteal is doubled. When a fight is won, its wearer, if it's standing, is healed back to half its max HP, if it's below that.";
+  // Half again, not double, on the hits: a Pact party holds its wearer below half all fight (the brink).
+  const effect = "While its wearer is below half its max HP, its hits deal half again as much and its Lifesteal is doubled. When a fight is won, its wearer, if it's standing, is healed back to half its max HP, if it's below that.";
   weapon("axe", "legendary", name, {
     effect, stats: [sp("lifesteal", "high"), st("max_hp", 1)],
     statuses: [
@@ -510,8 +511,8 @@ weapon("axe", "common", "Cleaver", { stats: [st("attack", 1)], serves: "Hunt" })
           reactIf(on("fight_won"), { side: "self", where: { hpBelow: 50 } }, { op: "heal", amount: { scale: [{ ratio: 0.5, stat: "max_hp", of: "holder" }, { ratio: -1, hp: "current", of: "holder" }] }, to: "holder" }),
         ],
       }),
-      switched(on_, "FEAST", "Its hits deal double and its Lifesteal is doubled.", {
-        boosts: hits(100), stats: [{ stat: "lifesteal", flat: share(1, "lifesteal"), live: true }],
+      switched(on_, "FEAST", "Its hits deal half again as much and its Lifesteal is doubled.", {
+        boosts: hits(50), stats: [{ stat: "lifesteal", flat: share(1, "lifesteal"), live: true }],
       }),
     ],
     serves: "Pact 3 ●●●, Cuts ● ⚙ brink (half)",

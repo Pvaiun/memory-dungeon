@@ -271,7 +271,8 @@ weapon("mace", "common", "Friar's mace", { stats: [st("max_hp", 1), st("mp_regen
   weapon("mace", "rare", name, {
     effect, stats: [st("max_hp", 1), st("mp_regen", 2), sp("cooldown", "medium")],
     statuses: [
-      own_(name, effect, { reactions: [react(on("healed", given), give(tally, "owner", ofAmount(0.5))), react(on("overhealed", given), give(tally, "owner", ofAmount(0.5)))] }),
+      // What lands, not what's cast: healing past full (or past a cap on healing) gives nothing.
+      own_(name, effect, { reactions: [react(on("healed", given), give(tally, "owner", ofAmount(0.5)))] }),
       { id: tally, name: "BLESSED", text: "Its next hit deals extra damage: half the heals it was given.", label: "buff", show: "icon", stacking: "intensity", adds: [{ on: "physical", amount: 1 }], trigger: { on: EV.hit }, drop: "all" },
     ],
     serves: "Pact 2 ●●●, Landslide ●●",
@@ -321,10 +322,10 @@ weapon("staff", "common", "Willow staff", { stats: [sp("cast_speed", "medium"), 
   });
 }
 {
-  const name = "Canopy staff", effect = "When each fight starts, its wearer and the other ally with the least max HP each gain a Shield of a quarter of its wearer's Attack.";
+  const name = "Canopy staff", effect = "When each fight starts, its wearer and the other ally with the least max HP each gain a Shield of a sixth of its wearer's Attack.";
   weapon("staff", "uncommon", name, {
     effect, stats: [sp("cast_speed", "medium"), st("mp_regen", 1), st("max_hp", 1)],
-    statuses: [own_(name, effect, { reactions: [atStart(give("shield", "holder", share(0.25, "attack")), give("shield", { side: "others", pick: "lowest", by: { stat: "max_hp" } }, share(0.25, "attack")))] })],
+    statuses: [own_(name, effect, { reactions: [atStart(give("shield", "holder", share(1 / 6, "attack")), give("shield", { side: "others", pick: "lowest", by: { stat: "max_hp" } }, share(1 / 6, "attack")))] })],
     serves: "net, Barrage ●, Landslide ● ⚙ opening again (half), detonation (half)",
   });
 }
@@ -337,10 +338,10 @@ weapon("staff", "common", "Willow staff", { stats: [sp("cast_speed", "medium"), 
   });
 }
 {
-  const name = "Ritual staff", effect = "Its wearer's abilities wind up half again as long, deal half again as much and add twice the stacks.";
+  const name = "Ritual staff", effect = "Its wearer's abilities wind up half again as long, deal half again as much and add half again as many stacks.";
   weapon("staff", "rare", name, {
     effect, stats: [sp("cast_speed", "medium"), st("attack", 2), st("max_mp", 1)],
-    statuses: [own_(name, effect, { mods: [{ wind: 50, damage: 50, stacks: { pct: 100 } }] })],
+    statuses: [own_(name, effect, { mods: [{ wind: 50, damage: 50, stacks: { pct: 50 } }] })],
     serves: "Bonfire 2 ●●●, Snap 2 ●●, Landslide ●, Barrage ●",
   });
 }
@@ -432,10 +433,11 @@ weapon("great_weapon", "common", "Halberd", { stats: [st("attack", 1), st("max_h
 }
 {
   const name = "Twinfall";
-  const effect = "Each hit its wearer lands, a basic attack's or an ability's, lands a second time a tick later: the same damage again, on the same foe. The second carries none of the first's statuses, and nothing repeats it.";
+  // Half again, not double: the second landing is half the first (the held-back lever: half again where the condition holds all fight).
+  const effect = "Each hit its wearer lands, a basic attack's or an ability's, lands a second time a tick later: half the damage again, on the same foe. The second carries none of the first's statuses, and nothing repeats it.";
   weapon("great_weapon", "legendary", name, {
     effect, stats: [st("attack", 2), st("max_hp", 2), sp("crit_damage", "medium")],
-    statuses: [own_(name, effect, { reactions: [react(on("hit_lands", { notTags: ["bare"] }), { op: "strike", of: "dealt", after: 1, to: "other" })] })],
+    statuses: [own_(name, effect, { reactions: [react(on("hit_lands", { notTags: ["bare"] }), { op: "strike", of: "dealt", share: 50, after: 1, to: "other" })] })],
     serves: "Landslide 3 ●●●, Hunt ●●, Cuts ● ◆ heavy-blow",
   });
 }

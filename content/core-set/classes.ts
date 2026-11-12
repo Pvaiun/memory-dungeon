@@ -189,13 +189,13 @@ export const abilities: A[] = [
   a("bramble_knight", "regrowth", "Regrowth", "Regen on the lowest ally.", { ...timing("medium", "normal"), mp: 325, target: T.lowestShareAlly, do: [apply("regen")] }),
   a("bramble_knight", "bramble_lash", "Bramble lash", "Lashes a random foe with its thorns.", { ...timing("quick", "quick"), mp: 200, do: [phys({ scale: [{ ratio: 4.5, stat: "thorns" }] })] }),
   // Hoplite
-  a("hoplite", "aspis", "Aspis", "Aegis on the lowest ally.", { ...timing("long", "quick"), mp: 500, ...waitsFor("allies", { lacks: "aegis" }), target: lacking(T.lowestShareAlly, "aegis"), do: [apply("aegis")] }),
+  a("hoplite", "aspis", "Aspis", "Aegis on the lowest ally.", { ...timing("long", "quick"), mp: 325, ...waitsFor("allies", { lacks: "aegis" }), target: lacking(T.lowestShareAlly, "aegis"), do: [apply("aegis")] }),
   // The shove: the bruiser's Defense as damage on every foe, with Sunder from the same stat. No Taunt anywhere in the kit.
   a("hoplite", "othismos", "Othismos", "A shove with the whole shield: damage scaling from Defense to every foe, adding a few Sunder to each.", {
     ...timing("medium", "long"), mp: 325, target: T.everyFoe, do: [phys(hit("defense", "light"), { apply: [{ status: "sunder", stacks: stacks("few", "defense") }] })],
   }),
   // Bigger than a normal hit: Phalanx boosts the Hoplite's swing, not the thrust.
-  a("hoplite", "spear_thrust", "Spear thrust", "A thrust at a random foe that adds a few Sunder.", { ...timing("medium", "long"), mp: 325, do: [phys(from("attack", 1.1), { apply: [{ status: "sunder", stacks: stacks("few", "attack") }] })] }),
+  a("hoplite", "spear_thrust", "Spear thrust", "A thrust at a random foe that adds a few Sunder.", { ...timing("medium", "normal"), mp: 325, do: [phys(from("attack", 1.1), { apply: [{ status: "sunder", stacks: stacks("few", "attack") }] })] }),
   // Paladin
   // Condemn: Marked is a debuff, so the Mark turns Judgement on, and the party's volley lands on the judged.
   a("paladin", "condemn", "Condemn", "Marks the foe with the highest Attack, and every ally's next basic attack comes at once.", {
@@ -214,7 +214,9 @@ export const abilities: A[] = [
   }),
   // Choosing: one target, a fallen ally first, else the lowest; a revive lands only on the fallen and a heal only on the living, so it does one or the other.
   a("valkyrie", "choosing", "Choosing", "Chooses one ally: a fallen one, raised with a tenth of its HP; else the lowest, healed from Attack.", {
-    ...timing("medium", "normal"), mp: 650, if: { any: [{ side: "allies", where: { hpBelow: 80 } }, { side: "allies", where: { ko: true } }] }, target: T.fallenElseLowestShareAlly,
+    // Below half, not below 80%: a good player arrives with someone a little down, and the revive's cooldown spent on a top-up at
+    // the first tick leaves nothing for the fall.
+    ...timing("medium", "normal"), mp: 650, if: { any: [{ side: "allies", where: { hpBelow: 50 } }, { side: "allies", where: { ko: true } }] }, target: T.fallenElseLowestShareAlly,
     // The heal first: a heal skips a fallen target and a revive skips a living one, so the one target gets the one outcome its state calls for.
     do: [{ op: "heal", amount: from("attack", KIT.choosing) }, { op: "revive", hp: { scale: [{ ratio: REVIVE.tenth, stat: "max_hp", of: "target" }] } }],
   }),
@@ -226,7 +228,7 @@ export const abilities: A[] = [
   a("bard", "war_ballad", "War ballad", "A few Might on every ally.", { ...timing("quick", "quick"), mp: 450, target: T.everyAlly, do: [apply("might", { stacks: stacks("few", "attack") })] }),
   a("bard", "allegro", "Allegro", "Haste on every ally.", { ...timing("long", "quick"), mp: 650, target: T.everyAlly, do: [apply("haste")] }),
   // The conductor's verb: an ally's next spell sounds twice.
-  a("bard", "encore", "Encore", "The other ally with the highest Attack casts its next ability twice; the second cast is free.", { ...timing("medium", "quick"), mp: 650, target: T.otherHighestAMAlly, do: [apply("encore")] }),
+  a("bard", "encore", "Encore", "The other ally with the highest Attack casts its next ability twice; the second cast is free.", { ...timing("medium", "quick"), mp: 450, target: T.otherHighestAMAlly, do: [apply("encore")] }),
   // Hexer
   // The curse every colour reads: a light hit on every foe, a fifth more for each different affliction it holds, then Bleed of its own.
   a("hexer", "malison", "Malison", "Curses every foe: light damage that scales from Attack, a fifth more for each different affliction the foe holds (Burn, Chill, Shock, Bleed, Sunder), then a few Bleed; stacks scale from Attack.", {
@@ -237,7 +239,7 @@ export const abilities: A[] = [
   }),
   a("hexer", "enfeeble", "Enfeeble", "Weakens the foe with the highest Attack and adds a few Sunder.", { ...timing("quick", "normal"), mp: 450, target: T.highestAMFoe, do: [apply("weaken"), apply("sunder", { stacks: stacks("few", "attack") })] }),
   // Monk
-  a("monk", "flow", "Flow", "Haste on itself.", { ...timing("long", "quick"), mp: 200, target: "self", do: [apply("haste")] }),
+  a("monk", "flow", "Flow", "Haste on itself.", { ...timing("medium", "quick"), mp: 200, target: "self", do: [apply("haste")] }),
   a("monk", "burning_fist", "Burning fist", "Three quick burning blows on the foe with the most Burn, each adding a few.", {
     // About 3 Burn a hit, 9 a cast at base, so the Monk stays a smaller Burn engine than the Pyromancer.
     ...timing("quick", "quick"), mp: 200, target: T.mostFoe("burn"), do: [phys(from("attack", 0.11), { hits: 3, apply: [{ status: "burn", stacks: stacks("few", "attack", 0.6) }] })],
@@ -265,16 +267,20 @@ export const abilities: A[] = [
   a("pyromancer", "fireball", "Fireball", "A ball of fire on every foe, adding a few Burn to each.", { ...timing("medium", "long"), mp: 1000, target: T.everyFoe, do: [phys(hit("attack", "touch"), { apply: [{ status: "burn", stacks: stacks("few", "attack", BURN_STACKS) }] })] }),
   a("pyromancer", "pyre", "Pyre", "Heavy damage on the foe with the most Burn, rising with each stack. The Burn stays.", {
     // 200 a stack of Burn: the ramp's payoff, not a second ramp.
-    ...timing("long", "very_long"), mp: 1500, target: T.mostFoe("burn"), do: [phys({ scale: [{ ratio: HIT.heavy, stat: "attack" }, { ratio: 200, stacks: "burn", of: "target" }] })],
+    // On the medium cooldown with a long wind-up, at 1,000 MP: on the long one with a very long wind-up it came 0.15 times a
+    // regular fight and a third of a boss fight, the reader of the fire that the fire never saw.
+    ...timing("medium", "long"), mp: 1000, target: T.mostFoe("burn"), do: [phys({ scale: [{ ratio: HIT.heavy, stat: "attack" }, { ratio: 200, stacks: "burn", of: "target" }] })],
   }),
   // Frostweaver
   // About 6 Chill a lance at Attack 4, so a shatter takes more than one cast.
-  a("frostweaver", "frost_lance", "Frost lance", "A lance of ice at the foe with the most Chill, adding several.", { ...timing("quick", "normal"), mp: 450, target: T.mostFoe("chill"), do: [phys(hit("attack", "light"), { apply: [{ status: "chill", stacks: stacks("several", "attack", 0.6) }] })] }),
-  a("frostweaver", "blizzard", "Blizzard", "A blizzard on every foe, adding a few Chill to each.", { ...timing("medium", "long"), mp: 1000, target: T.everyFoe, do: [phys(hit("attack", "touch"), { apply: [{ status: "chill", stacks: stacks("few", "attack", 0.45) }] })] }),
+  a("frostweaver", "frost_lance", "Frost lance", "A lance of ice at the foe with the most Chill, adding several.", { ...timing("quick", "normal"), mp: 450, target: T.mostFoe("chill"), do: [phys(hit("attack", "normal"), { apply: [{ status: "chill", stacks: stacks("several", "attack", 0.6) }] })] }),
+  a("frostweaver", "blizzard", "Blizzard", "A blizzard on every foe, adding a few Chill to each.", { ...timing("medium", "long"), mp: 1000, target: T.everyFoe, do: [phys(hit("attack", "light"), { apply: [{ status: "chill", stacks: stacks("few", "attack", 0.45) }] })] }),
   a("frostweaver", "stillness", "Stillness", "Clarity on the ally with the least MP, if one is under half, and a few Chill on every foe.", { ...timing("medium", "quick"), mp: 650, target: T.everyFoe, do: [apply("chill", { stacks: stacks("few", "attack", 0.5) }), apply("clarity", { to: T.needsMpAlly })] }),
   // Stormcaller
+  // 450, as the other casters' quick spells: at 650 on the quick cooldown it was the dearest spell a tick in the set, and a
+  // Stormcaller with no regen cast it once a fight.
   a("stormcaller", "chain_lightning", "Chain lightning", "Lightning at a random foe, then up to three others, adding a few Shock to each.", {
-    ...timing("quick", "quick"), mp: 650,
+    ...timing("quick", "quick"), mp: 450,
     do: [
       phys(hit("attack", "light"), { apply: [{ status: "shock", stacks: stacks("few", "attack", SHOCK_STACKS) }] }),
       phys(hit("attack", "touch"), { apply: [{ status: "shock", stacks: stacks("few", "attack", SHOCK_STACKS) }], to: T.threeOtherFoes }),
@@ -282,14 +288,14 @@ export const abilities: A[] = [
   }),
   // The party's storm: Shock on every ally's swings for a while, not a nuke (Fireball is the nuke, Blizzard the field's Chill).
   a("stormcaller", "thunderstorm", "Thunderstorm", "For a while, every ally's basic attacks add a few Shock; stacks scale from the Stormcaller's Attack.", { ...timing("medium", "normal"), mp: 650, target: T.everyAlly, do: [apply("thunderstorm_storm")] }),
-  a("stormcaller", "static_charge", "Static charge", "Its basic attacks come faster for a while.", { ...timing("long", "quick"), mp: 650, target: "self", do: [apply("static_charge_on")] }),
+  a("stormcaller", "static_charge", "Static charge", "Its basic attacks come faster for a while.", { ...timing("medium", "quick"), mp: 650, target: "self", do: [apply("static_charge_on")] }),
   // Geomancer
   a("geomancer", "earthen_shell", "Earthen shell", "Shields itself and the other lowest ally; the amount scales from Defense.", {
     ...timing("medium", "normal"), mp: 650, ...waitsFor("allies", { belowCap: "shield" }), target: "self",
     do: [apply("shield", { stacks: from("defense", 1.0), to: { side: "self", where: { belowCap: "shield" } } }), apply("shield", { stacks: from("defense", 1.0), to: { ...T.otherLowestShareAlly, where: { belowCap: "shield" } } })],
   }),
   a("geomancer", "rockfall", "Rockfall", "Damage scaling from Defense on a random foe.", { ...timing("short", "long"), mp: 450, do: [phys(hit("defense", "normal"))] }),
-  a("geomancer", "tremor", "Tremor", "Damage scaling from Defense on a random foe, which is Stunned.", { ...timing("long", "very_long"), mp: 1000, target: lacking({ side: "foes" }, "stun", true), do: [phys(hit("defense", "normal"), { apply: [{ status: "stun" }] })] }),
+  a("geomancer", "tremor", "Tremor", "Damage scaling from Defense on a random foe, which is Stunned.", { ...timing("long", "long"), mp: 650, target: lacking({ side: "foes" }, "stun", true), do: [phys(hit("defense", "normal"), { apply: [{ status: "stun" }] })] }),
 ];
 
 // ─── Classes ─────────────────────────────────────────────────────────────────
@@ -356,11 +362,14 @@ export const classes: ClassDefT[] = [
 /**
  * Each class's MP pool, in points, set by how many regular fights it lasts from full (`npx tsx tools/rogue-acts.ts`, the
  * endurance line): every class runs dry in about two or three fights, casters and walls close together, erring scarce. MP
- * comes back on the bench, never in a fight by itself. The pool, not the cost ladder, is the class's MP identity.
+ * comes back on the bench, never in a fight by itself. The pool, not the cost ladder, is the class's MP identity. The Knight's,
+ * Hoplite's, Valkyrie's, Monk's and Vampire's are on half steps, bigger since the balance pass's knobs made fights two or three
+ * times longer: they ran dry inside one (short of MP 14–23% of their time, against the balance sheet's band of 8%), while the
+ * casters' regen gear kept theirs.
  */
 export const MP_POOL: Record<string, number> = {
-  knight: 1, cleric: 2.2, ranger: 2.1, bramble_knight: 1.7, hoplite: 1.3, paladin: 3.3,
-  valkyrie: 1.5, bard: 2.4, hexer: 1.7, monk: 0.75, assassin: 1.45, vampire: 1.7,
+  knight: 2, cleric: 2.2, ranger: 2.1, bramble_knight: 1.7, hoplite: 2, paladin: 3.3,
+  valkyrie: 2.5, bard: 2.4, hexer: 1.7, monk: 1.5, assassin: 1.45, vampire: 2.5,
   pyromancer: 3.8, frostweaver: 2.3, stormcaller: 2.3, geomancer: 2.3,
 };
 for (const k of classes) if (MP_POOL[k.id] !== undefined) k.stats.max_mp = pts(MP_POOL[k.id]);

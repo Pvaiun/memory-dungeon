@@ -1216,7 +1216,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00042,
           "stat": "defense",
           "of": "holder"
          }
@@ -1412,7 +1412,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0009099999999999999,
+          "ratio": 0.000182,
           "stat": "attack",
           "of": "holder"
          }
@@ -1502,7 +1502,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0013,
+          "ratio": 0.00078,
           "stat": "attack",
           "of": "holder"
          }
@@ -1603,7 +1603,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.000175,
           "stat": "attack",
           "of": "holder"
          }
@@ -1980,7 +1980,7 @@
   {
    "id": "hoarfrost_line_frost",
    "name": "Frost",
-   "text": "Basic attacks add a few Chill.",
+   "text": "Basic attacks add a Chill.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -1996,7 +1996,7 @@
        "op": "apply",
        "status": "chill",
        "to": "other",
-       "stacks": 2
+       "stacks": 1
       }
      ]
     }
@@ -2189,6 +2189,20 @@
    ]
   },
   {
+   "id": "wellspring_soloist",
+   "name": "Soloist",
+   "text": "Its abilities deal half again as much.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "mods": [
+    {
+     "damage": 50
+    }
+   ]
+  },
+  {
    "id": "wellspring_conductor",
    "name": "Conductor",
    "text": "Each ability it casts gives the Soloist MP: a tenth of the Soloist's max MP.",
@@ -2242,7 +2256,7 @@
        "amount": {
         "scale": [
          {
-          "ratio": 0.05,
+          "ratio": 0.01,
           "stat": "max_mp",
           "of": "target"
          }
@@ -2467,7 +2481,7 @@
   {
    "id": "bloodied_ground_opener",
    "name": "Opener",
-   "text": "Its crits add many Bleed.",
+   "text": "Its crits add several Bleed.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2485,7 +2499,7 @@
        "op": "apply",
        "status": "bleed",
        "to": "other",
-       "stacks": 7
+       "stacks": 4
       }
      ]
     }
@@ -2494,7 +2508,7 @@
   {
    "id": "bloodied_ground_blade",
    "name": "Blade",
-   "text": "Each hit it lands on a bleeding foe heals the Blade for 3% of its max HP.",
+   "text": "Each hit it lands on a bleeding foe heals the Blade for 2% of its max HP.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2516,7 +2530,7 @@
        "amount": {
         "scale": [
          {
-          "ratio": 0.03,
+          "ratio": 0.02,
           "stat": "max_hp",
           "of": "holder"
          }
@@ -2632,7 +2646,7 @@
   {
    "id": "icefall_sleet",
    "name": "Sleet",
-   "text": "Its basic attacks add a few Chill.",
+   "text": "Its basic attacks add a Chill.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2648,7 +2662,7 @@
        "op": "apply",
        "status": "chill",
        "to": "other",
-       "stacks": 2
+       "stacks": 1
       }
      ]
     }
@@ -2865,11 +2879,16 @@
   {
    "id": "the_stage_soloist",
    "name": "Soloist",
-   "text": "Each ability another ally casts takes a fifth off the cooldowns it has left.",
+   "text": "Its abilities deal half again as much. Each ability another ally casts takes a third off the cooldowns it has left.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
+   "mods": [
+    {
+     "damage": 50
+    }
+   ],
    "reactions": [
     {
      "on": {
@@ -2882,7 +2901,7 @@
        "op": "cooldown",
        "which": "abilities",
        "set": {
-        "times": 80
+        "times": 67
        },
        "to": "holder"
       }
@@ -2893,12 +2912,24 @@
   {
    "id": "the_stage_well",
    "name": "Well",
-   "text": "Whenever the Soloist finishes a cast, the Well gains a Shield.",
+   "text": "Taunts when each fight starts. Whenever the Soloist finishes a cast, the Well gains a Shield.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
    "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "taunt",
+       "to": "holder"
+      }
+     ]
+    },
     {
      "on": {
       "event": "action_resolve",
@@ -3644,7 +3675,7 @@
   {
    "id": "the_long_winter",
    "name": "The long winter",
-   "text": "When a foe's Chill shatters, every other foe gains a few Chill, and a few more for each Cascade the party held before it (a Cascade for each shatter this fight, up to 10).",
+   "text": "When a foe's Chill shatters, every other foe gains a Chill, and one more for every two Cascades the party held before it (a Cascade for each shatter this fight, up to 10).",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -3667,10 +3698,10 @@
         "exclude": "owner"
        },
        "stacks": {
-        "base": 2,
+        "base": 1,
         "scale": [
          {
-          "ratio": 2,
+          "ratio": 0.5,
           "stacks": "cascade",
           "of": "holder"
          }
@@ -4454,7 +4485,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0013,
+          "ratio": 0.00078,
           "stat": "attack",
           "of": "holder"
          }
@@ -4502,7 +4533,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00014,
           "stat": "attack",
           "of": "holder"
          }
@@ -4605,7 +4636,7 @@
   {
    "id": "bloodscent_knife",
    "name": "Bloodscent knife",
-   "text": "Its wearer's hits on a bleeding foe crit far more often: +50% Crit chance, up to 80%.",
+   "text": "Its wearer's hits on a bleeding foe crit far more often: +30% Crit chance, up to 60%.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -4615,8 +4646,8 @@
      "when": {
       "has": "bleed"
      },
-     "chance": 50,
-     "cap": 80
+     "chance": 30,
+     "cap": 60
     }
    ]
   },
@@ -4778,7 +4809,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.000175,
           "stat": "attack",
           "of": "holder"
          }
@@ -4800,7 +4831,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.000175,
           "stat": "attack",
           "of": "holder"
          }
@@ -4833,7 +4864,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00014,
           "stat": "attack",
           "of": "holder"
          }
@@ -4855,7 +4886,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00014,
           "stat": "attack",
           "of": "holder"
          }
@@ -5136,7 +5167,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.000175,
           "stat": "attack",
           "of": "holder"
          }
@@ -5183,7 +5214,7 @@
   {
    "id": "tithe_wand",
    "name": "Tithe wand",
-   "text": "Each basic attack it lands gives the ally with the least MP some MP: 3% of its wearer's Attack.",
+   "text": "Each basic attack it lands gives the ally with the least MP some MP: a tenth of its wearer's Attack.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -5200,7 +5231,7 @@
        "amount": {
         "scale": [
          {
-          "ratio": 0.03,
+          "ratio": 0.1,
           "stat": "attack",
           "of": "holder"
          }
@@ -5279,7 +5310,7 @@
          "stacks": {
           "scale": [
            {
-            "ratio": 0.0007,
+            "ratio": 0.000175,
             "stat": "attack",
             "of": "holder"
            }
@@ -5291,7 +5322,7 @@
          "stacks": {
           "scale": [
            {
-            "ratio": 0.0007,
+            "ratio": 0.00014,
             "stat": "attack",
             "of": "holder"
            }
@@ -5315,7 +5346,7 @@
          "stacks": {
           "scale": [
            {
-            "ratio": 0.0007,
+            "ratio": 0.00042,
             "stat": "attack",
             "of": "holder"
            }
@@ -5390,7 +5421,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00014,
           "stat": "max_hp",
           "of": "holder"
          }
@@ -6054,7 +6085,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00042,
           "stat": "attack",
           "of": "holder"
          }
@@ -6165,7 +6196,7 @@
   {
    "id": "the_red_feast",
    "name": "The Red Feast",
-   "text": "While its wearer is below half its max HP, its hits deal double and its Lifesteal is doubled. When a fight is won, its wearer, if it's standing, is healed back to half its max HP, if it's below that.",
+   "text": "While its wearer is below half its max HP, its hits deal half again as much and its Lifesteal is doubled. When a fight is won, its wearer, if it's standing, is healed back to half its max HP, if it's below that.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -6234,7 +6265,7 @@
   {
    "id": "the_red_feast_on",
    "name": "FEAST",
-   "text": "Its hits deal double and its Lifesteal is doubled.",
+   "text": "Its hits deal half again as much and its Lifesteal is doubled.",
    "label": "buff",
    "show": "icon",
    "stacking": "fizzle",
@@ -6242,7 +6273,7 @@
    "boosts": [
     {
      "tag": "physical",
-     "pct": 100
+     "pct": 50
     }
    ],
    "stats": [
@@ -6320,7 +6351,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0023,
+          "ratio": 0.00138,
           "stat": "attack",
           "of": "holder"
          }
@@ -6404,7 +6435,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0013,
+          "ratio": 0.00026,
           "stat": "attack",
           "of": "holder"
          }
@@ -6589,7 +6620,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0013,
+          "ratio": 0.00026,
           "stat": "attack",
           "of": "holder"
          }
@@ -6737,7 +6768,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0013,
+          "ratio": 0.00026,
           "stat": "attack",
           "of": "holder"
          }
@@ -7117,7 +7148,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0023,
+          "ratio": 0.000575,
           "stat": "attack",
           "of": "holder"
          }
@@ -7206,31 +7237,6 @@
     {
      "on": {
       "event": "healed",
-      "whose": "team",
-      "other": "holder",
-      "notTags": [
-       "pulse"
-      ]
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "saints_mace_blessing",
-       "to": "owner",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.5,
-          "amount": true
-         }
-        ]
-       }
-      }
-     ]
-    },
-    {
-     "on": {
-      "event": "overhealed",
       "whose": "team",
       "other": "holder",
       "notTags": [
@@ -7452,7 +7458,7 @@
   {
    "id": "canopy_staff",
    "name": "Canopy staff",
-   "text": "When each fight starts, its wearer and the other ally with the least max HP each gain a Shield of a quarter of its wearer's Attack.",
+   "text": "When each fight starts, its wearer and the other ally with the least max HP each gain a Shield of a sixth of its wearer's Attack.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -7470,7 +7476,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.25,
+          "ratio": 0.16666666666666666,
           "stat": "attack",
           "of": "holder"
          }
@@ -7490,7 +7496,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.25,
+          "ratio": 0.16666666666666666,
           "stat": "attack",
           "of": "holder"
          }
@@ -7540,7 +7546,7 @@
   {
    "id": "ritual_staff",
    "name": "Ritual staff",
-   "text": "Its wearer's abilities wind up half again as long, deal half again as much and add twice the stacks.",
+   "text": "Its wearer's abilities wind up half again as long, deal half again as much and add half again as many stacks.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -7550,7 +7556,7 @@
      "wind": 50,
      "damage": 50,
      "stacks": {
-      "pct": 100
+      "pct": 50
      }
     }
    ]
@@ -7832,7 +7838,7 @@
   {
    "id": "twinfall",
    "name": "Twinfall",
-   "text": "Each hit its wearer lands, a basic attack's or an ability's, lands a second time a tick later: the same damage again, on the same foe. The second carries none of the first's statuses, and nothing repeats it.",
+   "text": "Each hit its wearer lands, a basic attack's or an ability's, lands a second time a tick later: half the damage again, on the same foe. The second carries none of the first's statuses, and nothing repeats it.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -7849,6 +7855,7 @@
       {
        "op": "strike",
        "of": "dealt",
+       "share": 50,
        "after": 1,
        "to": "other"
       }
@@ -8104,7 +8111,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00014,
           "stat": "defense",
           "of": "holder"
          }
@@ -8723,7 +8730,7 @@
   {
    "id": "tallymail",
    "name": "Tallymail",
-   "text": "Its wearer counts Cuts (a Cut for each hit it lands, kept for the fight, up to 25), and has Lifesteal +2% for each Cut.",
+   "text": "Its wearer counts Cuts (a Cut for each hit it lands, kept for the fight, up to 25), and has Lifesteal +1% for each Cut.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -8749,7 +8756,7 @@
      "flat": {
       "scale": [
        {
-        "ratio": 2,
+        "ratio": 1,
         "stacks": "cuts",
         "of": "holder"
        }
@@ -8762,7 +8769,7 @@
   {
    "id": "gleaners_leathers",
    "name": "Gleaner's leathers",
-   "text": "Each hit its wearer lands heals it for 3% of its max HP.",
+   "text": "Each hit its wearer lands heals it for 2% of its max HP.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -8778,7 +8785,7 @@
        "amount": {
         "scale": [
          {
-          "ratio": 0.03,
+          "ratio": 0.02,
           "stat": "max_hp",
           "of": "holder"
          }
@@ -9010,7 +9017,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00014,
           "stat": "attack",
           "of": "holder"
          }
@@ -9201,7 +9208,7 @@
   {
    "id": "matins_robe",
    "name": "Matins robe",
-   "text": "Every third ability its wearer casts in a fight is free.",
+   "text": "Every second ability its wearer casts in a fight is free.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -9212,7 +9219,7 @@
      "if": {
       "stacks": {
        "status": "matins_robe_count",
-       "atLeast": 2
+       "atLeast": 1
       }
      }
     }
@@ -9238,12 +9245,12 @@
   {
    "id": "matins_robe_count",
    "name": "MATINS",
-   "text": "Every third ability it casts is free.",
+   "text": "Every second ability it casts is free.",
    "label": "buff",
    "show": "icon",
    "stacking": "intensity",
    "unremovable": true,
-   "cap": 3,
+   "cap": 2,
    "trigger": {
     "on": {
      "event": "status_capped",
@@ -9436,7 +9443,7 @@
   {
    "id": "glimmer_robe",
    "name": "Glimmer robe",
-   "text": "Each time an ally gives its wearer MP, the next ability its wearer casts that deals damage deals a third more.",
+   "text": "Each time an ally gives its wearer MP, the next ability its wearer casts that deals damage deals half again as much.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -9460,7 +9467,7 @@
   {
    "id": "glimmer_robe_on",
    "name": "GLIMMER",
-   "text": "Its next ability that deals damage deals a third more.",
+   "text": "Its next ability that deals damage deals half again as much.",
    "label": "buff",
    "show": "icon",
    "stacking": "intensity",
@@ -9482,7 +9489,7 @@
        "damage"
       ]
      },
-     "damage": 33
+     "damage": 50
     }
    ]
   },
@@ -9576,7 +9583,7 @@
          "stacks": {
           "scale": [
            {
-            "ratio": 0.0007,
+            "ratio": 0.000175,
             "stat": "attack",
             "of": "holder"
            }
@@ -9588,7 +9595,7 @@
          "stacks": {
           "scale": [
            {
-            "ratio": 0.0007,
+            "ratio": 0.00014,
             "stat": "attack",
             "of": "holder"
            }
@@ -9612,7 +9619,7 @@
          "stacks": {
           "scale": [
            {
-            "ratio": 0.0007,
+            "ratio": 0.00042,
             "stat": "attack",
             "of": "holder"
            }
@@ -9723,7 +9730,7 @@
   {
    "id": "hummingbird_charm",
    "name": "Hummingbird charm",
-   "text": "Its wearer's basic attacks come twice as often and deal half as much.",
+   "text": "Its wearer's basic attacks come half again as often and deal two thirds as much.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -9731,7 +9738,7 @@
    "boosts": [
     {
      "tag": "basic",
-     "pct": -50
+     "pct": -33
     }
    ]
   },
@@ -9879,7 +9886,7 @@
   {
    "id": "floe_charm",
    "name": "Floe charm",
-   "text": "When a foe's Chill shatters, its wearer's first-slotted ability is ready at once. If it's ready already, nothing happens.",
+   "text": "When a foe's Chill shatters, its wearer's first-slotted ability comes half its wait closer.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -9895,7 +9902,9 @@
       {
        "op": "cooldown",
        "which": "first",
-       "set": "ready",
+       "set": {
+        "times": 50
+       },
        "to": "holder"
       }
      ]
@@ -10484,7 +10493,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.000175,
           "stat": "defense",
           "of": "holder"
          }
@@ -10614,7 +10623,7 @@
   {
    "id": "monolith_shield",
    "name": "Monolith shield",
-   "text": "Its holder's abilities that deal damage take twice as long to come round, and their hits land two and a half times as hard. What they apply is unchanged.",
+   "text": "Its holder's abilities that deal damage take twice as long to come round, and their hits land twice as hard. What they apply is unchanged.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -10627,7 +10636,7 @@
       ]
      },
      "cooldown": 100,
-     "damage": 150
+     "damage": 100
     }
    ]
   },
@@ -11510,7 +11519,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00042,
           "stat": "defense",
           "of": "holder"
          }
@@ -11966,7 +11975,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0013,
+          "ratio": 0.000325,
           "stat": "attack",
           "of": "holder"
          }
@@ -12183,7 +12192,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00014,
           "stat": "attack",
           "of": "holder"
          }
@@ -12238,7 +12247,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0013,
+          "ratio": 0.00078,
           "stat": "attack",
           "of": "self"
          }
@@ -12275,7 +12284,7 @@
   {
    "id": "twice_told_tome",
    "name": "Twice-told tome",
-   "text": "Every third ability its holder casts in a fight is cast twice. The second cast comes at once and is free; it isn't counted, and it isn't cast again.",
+   "text": "Every second ability its holder casts in a fight is cast twice. The second cast comes at once and is free; it isn't counted, and it isn't cast again.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -12293,7 +12302,7 @@
       "where": {
        "stacks": {
         "status": "twice_told_tome_count",
-        "atLeast": 2
+        "atLeast": 1
        }
       }
      },
@@ -12324,12 +12333,12 @@
   {
    "id": "twice_told_tome_count",
    "name": "TWICE-TOLD",
-   "text": "Every third ability it casts is cast twice.",
+   "text": "Every second ability it casts is cast twice.",
    "label": "buff",
    "show": "icon",
    "stacking": "intensity",
    "unremovable": true,
-   "cap": 3,
+   "cap": 2,
    "trigger": {
     "on": {
      "event": "status_capped",
@@ -12360,7 +12369,7 @@
          "stacks": {
           "scale": [
            {
-            "ratio": 0.0007,
+            "ratio": 0.000175,
             "stat": "attack",
             "of": "holder"
            }
@@ -12372,7 +12381,7 @@
          "stacks": {
           "scale": [
            {
-            "ratio": 0.0007,
+            "ratio": 0.00014,
             "stat": "attack",
             "of": "holder"
            }
@@ -12396,7 +12405,7 @@
          "stacks": {
           "scale": [
            {
-            "ratio": 0.0007,
+            "ratio": 0.00042,
             "stat": "attack",
             "of": "holder"
            }
@@ -12667,7 +12676,7 @@
   {
    "id": "meltwater_orb",
    "name": "Meltwater orb",
-   "text": "When a foe's Chill shatters, its holder regains a quarter of its max MP.",
+   "text": "When a foe's Chill shatters, its holder regains a tenth of its max MP.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -12685,7 +12694,7 @@
        "amount": {
         "scale": [
          {
-          "ratio": 0.25,
+          "ratio": 0.1,
           "stat": "max_mp",
           "of": "holder"
          }
@@ -13323,7 +13332,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00042,
           "stat": "attack",
           "of": "holder"
          }
@@ -13354,7 +13363,7 @@
   {
    "id": "venom_vial",
    "name": "Venom vial",
-   "text": "A foe's Bleed doesn't close under its holder's hits: the wound pays for the hit and stays as deep as it was. It still closes under everyone else's.",
+   "text": "A foe's Bleed closes only a fifth under its holder's hits, not a third. It still closes a third under everyone else's.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -13378,7 +13387,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.49999999999999994,
+          "ratio": 0.2,
           "stacks": "bleed",
           "of": "target"
          }
@@ -13480,7 +13489,7 @@
   {
    "id": "heartsblood",
    "name": "Heartsblood",
-   "text": "Whatever its holder's Lifesteal would heal it for, full or not, every other ally is healed for the same. Healing given this way isn't passed on again.",
+   "text": "Whatever its holder's Lifesteal would heal it for, full or not, every other ally is healed for half as much. Healing given this way isn't passed on again.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -13497,7 +13506,7 @@
        "amount": {
         "scale": [
          {
-          "ratio": 1,
+          "ratio": 0.5,
           "amount": true
          }
         ]
@@ -13521,7 +13530,7 @@
        "amount": {
         "scale": [
          {
-          "ratio": 1,
+          "ratio": 0.5,
           "amount": true
          }
         ]
@@ -13813,7 +13822,7 @@
   {
    "id": "bell_of_the_hour",
    "name": "Bell of the hour",
-   "text": "Every fifth basic attack its holder lands casts its first-slotted ability at once, whatever its cooldown, with no wind-up. Its cooldown stays where it was, and its MP is paid.",
+   "text": "Every fourth basic attack its holder lands casts its first-slotted ability at once, whatever its cooldown, with no wind-up. Its cooldown stays where it was, and its MP is paid.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -13829,7 +13838,7 @@
       "where": {
        "stacks": {
         "status": "bell_of_the_hour_count",
-        "atLeast": 4
+        "atLeast": 3
        }
       }
      },
@@ -13860,12 +13869,12 @@
   {
    "id": "bell_of_the_hour_count",
    "name": "HOUR",
-   "text": "Every fifth basic attack it lands casts its first-slotted ability.",
+   "text": "Every fourth basic attack it lands casts its first-slotted ability.",
    "label": "buff",
    "show": "icon",
    "stacking": "intensity",
    "unremovable": true,
-   "cap": 5,
+   "cap": 4,
    "trigger": {
     "on": {
      "event": "status_capped",
@@ -15314,7 +15323,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00098,
+          "ratio": 0.000588,
           "stat": "defense",
           "of": "holder"
          }
@@ -15336,7 +15345,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00098,
+          "ratio": 0.000588,
           "stat": "defense",
           "of": "holder"
          }
@@ -15369,7 +15378,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00042,
           "stat": "defense",
           "of": "holder"
          }
@@ -15396,7 +15405,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00042,
           "stat": "defense",
           "of": "holder"
          }
@@ -15434,7 +15443,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00042,
           "stat": "defense",
           "of": "holder"
          }
@@ -15456,7 +15465,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00042,
           "stat": "defense",
           "of": "holder"
          }
@@ -15478,7 +15487,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00042,
           "stat": "defense",
           "of": "holder"
          }
@@ -15563,7 +15572,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00098,
+          "ratio": 0.000588,
           "stat": "defense",
           "of": "holder"
          }
@@ -15590,7 +15599,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00098,
+          "ratio": 0.000588,
           "stat": "defense",
           "of": "holder"
          }
@@ -15628,7 +15637,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00098,
+          "ratio": 0.000588,
           "stat": "defense",
           "of": "holder"
          }
@@ -15650,7 +15659,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00098,
+          "ratio": 0.000588,
           "stat": "defense",
           "of": "holder"
          }
@@ -15672,7 +15681,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00098,
+          "ratio": 0.000588,
           "stat": "defense",
           "of": "holder"
          }
@@ -16186,7 +16195,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.000175,
           "stat": "attack",
           "of": "holder"
          }
@@ -16215,7 +16224,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.000175,
           "stat": "attack",
           "of": "holder"
          }
@@ -16326,7 +16335,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.000175,
           "stat": "attack",
           "of": "holder"
          }
@@ -16355,7 +16364,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.000175,
           "stat": "attack",
           "of": "holder"
          }
@@ -16945,7 +16954,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.001274,
+          "ratio": 0.0002548,
           "stat": "attack",
           "of": "holder"
          }
@@ -16978,7 +16987,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.000175,
           "stat": "attack",
           "of": "holder"
          }
@@ -17035,7 +17044,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00098,
+          "ratio": 0.000245,
           "stat": "attack",
           "of": "holder"
          }
@@ -17607,7 +17616,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00182,
+          "ratio": 0.001092,
           "stat": "attack",
           "of": "holder"
          }
@@ -17642,7 +17651,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0013,
+          "ratio": 0.00078,
           "stat": "attack",
           "of": "holder"
          }
@@ -17711,7 +17720,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0013,
+          "ratio": 0.00078,
           "stat": "attack",
           "of": "holder"
          }
@@ -17746,7 +17755,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00182,
+          "ratio": 0.001092,
           "stat": "attack",
           "of": "holder"
          }
@@ -17815,7 +17824,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00182,
+          "ratio": 0.001092,
           "stat": "attack",
           "of": "holder"
          }
@@ -18537,7 +18546,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00098,
+          "ratio": 0.000245,
           "stat": "attack",
           "of": "holder"
          }
@@ -18576,7 +18585,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.000175,
           "stat": "attack",
           "of": "holder"
          }
@@ -18609,7 +18618,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00035,
+          "ratio": 0.0000875,
           "stat": "attack",
           "of": "holder"
          }
@@ -18648,7 +18657,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00098,
+          "ratio": 0.000245,
           "stat": "attack",
           "of": "holder"
          }
@@ -18681,7 +18690,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00049,
+          "ratio": 0.0001225,
           "stat": "attack",
           "of": "holder"
          }
@@ -18933,7 +18942,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00105,
+          "ratio": 0.00021,
           "stat": "attack",
           "of": "source"
          }
@@ -18965,7 +18974,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00147,
+          "ratio": 0.000294,
           "stat": "attack",
           "of": "source"
          }
@@ -20245,7 +20254,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0007,
+          "ratio": 0.00042,
           "stat": "defense",
           "of": "holder"
          }
@@ -20339,7 +20348,7 @@
          "stacks": {
           "scale": [
            {
-            "ratio": 0.0013,
+            "ratio": 0.000325,
             "stat": "attack",
             "of": "self"
            }
@@ -20814,7 +20823,7 @@
   {
    "id": "glaciers_heart",
    "name": "Glacier's heart",
-   "text": "Whenever a foe's Chill shatters, 6 Chill go back on that foe.",
+   "text": "Whenever a foe's Chill shatters, 3 Chill go back on that foe.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -20833,7 +20842,7 @@
       {
        "op": "apply",
        "status": "chill",
-       "stacks": 6,
+       "stacks": 3,
        "to": "owner"
       }
      ]
@@ -20944,7 +20953,7 @@
    "source": "starter",
    "stats": {
     "max_hp": 5000,
-    "max_mp": 1000,
+    "max_mp": 2000,
     "mp_regen": 0,
     "attack": 2000,
     "defense": 4000,
@@ -21099,7 +21108,7 @@
    "source": "unlock",
    "stats": {
     "max_hp": 4000,
-    "max_mp": 1300,
+    "max_mp": 2000,
     "mp_regen": 0,
     "attack": 5000,
     "defense": 5000,
@@ -21176,7 +21185,7 @@
    "source": "unlock",
    "stats": {
     "max_hp": 3000,
-    "max_mp": 1500,
+    "max_mp": 2500,
     "mp_regen": 0,
     "attack": 4000,
     "defense": 3000,
@@ -21295,7 +21304,7 @@
    "source": "unlock",
    "stats": {
     "max_hp": 3000,
-    "max_mp": 750,
+    "max_mp": 1500,
     "mp_regen": 0,
     "attack": 4000,
     "defense": 1000,
@@ -21375,7 +21384,7 @@
    "source": "unlock",
    "stats": {
     "max_hp": 4000,
-    "max_mp": 1700,
+    "max_mp": 2500,
     "mp_regen": 0,
     "attack": 4000,
     "defense": 2000,
@@ -21938,7 +21947,7 @@
    "text": "Aegis on the lowest ally.",
    "cooldown": 42.4,
    "cast": 1,
-   "mp": 500,
+   "mp": 325,
    "if": {
     "side": "allies",
     "where": {
@@ -22006,7 +22015,7 @@
    "name": "Spear thrust",
    "text": "A thrust at a random foe that adds a few Sunder.",
    "cooldown": 34,
-   "cast": 6,
+   "cast": 3,
    "mp": 325,
    "do": [
     {
@@ -22230,7 +22239,7 @@
      {
       "side": "allies",
       "where": {
-       "hpBelow": 80
+       "hpBelow": 50
       }
      },
      {
@@ -22364,7 +22373,7 @@
    "text": "The other ally with the highest Attack casts its next ability twice; the second cast is free.",
    "cooldown": 32.7,
    "cast": 1,
-   "mp": 650,
+   "mp": 450,
    "target": {
     "side": "others",
     "pick": "highest",
@@ -22553,7 +22562,7 @@
    "class": "monk",
    "name": "Flow",
    "text": "Haste on itself.",
-   "cooldown": 40,
+   "cooldown": 30,
    "cast": 1,
    "mp": 200,
    "target": "self",
@@ -22937,9 +22946,9 @@
    "class": "pyromancer",
    "name": "Pyre",
    "text": "Heavy damage on the foe with the most Burn, rising with each stack. The Burn stays.",
-   "cooldown": 44.9,
-   "cast": 8,
-   "mp": 1500,
+   "cooldown": 33.7,
+   "cast": 6,
+   "mp": 1000,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -22989,7 +22998,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.29,
+        "ratio": 0.5,
         "stat": "attack"
        }
       ]
@@ -23029,7 +23038,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.17,
+        "ratio": 0.29,
         "stat": "attack"
        }
       ]
@@ -23097,7 +23106,7 @@
    "text": "Lightning at a random foe, then up to three others, adding a few Shock to each.",
    "cooldown": 14.2,
    "cast": 1,
-   "mp": 650,
+   "mp": 450,
    "do": [
     {
      "op": "damage",
@@ -23181,7 +23190,7 @@
    "class": "stormcaller",
    "name": "Static charge",
    "text": "Its basic attacks come faster for a while.",
-   "cooldown": 41.4,
+   "cooldown": 31.1,
    "cast": 1,
    "mp": 650,
    "target": "self",
@@ -23277,8 +23286,8 @@
    "name": "Tremor",
    "text": "Damage scaling from Defense on a random foe, which is Stunned.",
    "cooldown": 36.4,
-   "cast": 8,
-   "mp": 1000,
+   "cast": 6,
+   "mp": 650,
    "target": {
     "side": "foes",
     "where": {
@@ -26055,7 +26064,7 @@
    "text": "Aegis on the lowest ally. Comes round sooner.",
    "cooldown": 31.8,
    "cast": 1,
-   "mp": 500,
+   "mp": 325,
    "if": {
     "side": "allies",
     "where": {
@@ -26084,7 +26093,7 @@
    "text": "Aegis on the ally with the highest Aggro that holds none.",
    "cooldown": 42.4,
    "cast": 1,
-   "mp": 500,
+   "mp": 325,
    "if": {
     "side": "allies",
     "where": {
@@ -26143,7 +26152,7 @@
    "text": "Aegis on the ally with the highest Aggro that holds none. Comes round sooner.",
    "cooldown": 31.8,
    "cast": 1,
-   "mp": 500,
+   "mp": 325,
    "if": {
     "side": "allies",
     "where": {
@@ -26435,7 +26444,7 @@
    "name": "Spear thrust+",
    "text": "A thrust at a random foe that adds a few Sunder. Deals two fifths more damage.",
    "cooldown": 34,
-   "cast": 6,
+   "cast": 3,
    "mp": 325,
    "do": [
     {
@@ -26471,7 +26480,7 @@
    "name": "Skewer",
    "text": "A thrust through a random foe and on into the foe with the most HP, each for three quarters, each adding a few Sunder.",
    "cooldown": 34,
-   "cast": 6,
+   "cast": 3,
    "mp": 325,
    "do": [
     {
@@ -26538,7 +26547,7 @@
    "name": "Disarm",
    "text": "A thrust at the foe with the highest Attack, which is Weakened. No Sunder.",
    "cooldown": 34,
-   "cast": 6,
+   "cast": 3,
    "mp": 325,
    "do": [
     {
@@ -26575,7 +26584,7 @@
    "name": "Skewer+",
    "text": "A thrust through a random foe and on into the foe with the most HP, each for three quarters, each adding a few Sunder. Deals two fifths more damage.",
    "cooldown": 34,
-   "cast": 6,
+   "cast": 3,
    "mp": 325,
    "do": [
     {
@@ -26642,7 +26651,7 @@
    "name": "Disarm+",
    "text": "A thrust at the foe with the highest Attack, which is Weakened. No Sunder. Deals two fifths more damage.",
    "cooldown": 34,
-   "cast": 6,
+   "cast": 3,
    "mp": 325,
    "do": [
     {
@@ -26894,7 +26903,7 @@
    "id": "absolve__a",
    "class": "paladin",
    "name": "Penance",
-   "text": "Cleanses and heals both other allies for twice as much, and pays a fifth of each heal in its own HP. Not itself.",
+   "text": "Cleanses and heals both other allies for twice as much, and pays a tenth of each heal in its own HP. Not itself.",
    "cooldown": 30.7,
    "cast": 3,
    "mp": 650,
@@ -26937,7 +26946,7 @@
      "hp": {
       "scale": [
        {
-        "ratio": 0.16,
+        "ratio": 0.08,
         "count": "targets",
         "times": {
          "stat": "attack",
@@ -26989,7 +26998,7 @@
    "id": "absolve__ap",
    "class": "paladin",
    "name": "Penance+",
-   "text": "Cleanses and heals both other allies for twice as much, and pays a fifth of each heal in its own HP. Not itself. Heals two fifths more.",
+   "text": "Cleanses and heals both other allies for twice as much, and pays a tenth of each heal in its own HP. Not itself. Heals two fifths more.",
    "cooldown": 30.7,
    "cast": 3,
    "mp": 650,
@@ -27032,7 +27041,7 @@
      "hp": {
       "scale": [
        {
-        "ratio": 0.224,
+        "ratio": 0.112,
         "count": "targets",
         "times": {
          "stat": "attack",
@@ -27599,7 +27608,7 @@
      {
       "side": "allies",
       "where": {
-       "hpBelow": 80
+       "hpBelow": 50
       }
      },
      {
@@ -27658,7 +27667,7 @@
      {
       "side": "allies",
       "where": {
-       "hpBelow": 80
+       "hpBelow": 50
       }
      },
      {
@@ -27789,7 +27798,7 @@
      {
       "side": "allies",
       "where": {
-       "hpBelow": 80
+       "hpBelow": 50
       }
      },
      {
@@ -28271,10 +28280,10 @@
    "id": "allegro__p",
    "class": "bard",
    "name": "Allegro+",
-   "text": "Haste on every ally. Comes round sooner.",
+   "text": "Haste on every ally. Comes round sooner, and costs less.",
    "cooldown": 31.9,
    "cast": 1,
-   "mp": 650,
+   "mp": 450,
    "target": {
     "side": "allies",
     "pick": "all"
@@ -28334,7 +28343,7 @@
    "id": "allegro__ap",
    "class": "bard",
    "name": "Rubato+",
-   "text": "Haste on every ally, and every ally's ability nearest to ready is ready at once. It never readies itself: for the Bard, another of its own. Comes round sooner.",
+   "text": "Haste on every ally, and every ally's ability nearest to ready is ready at once. It never readies itself: for the Bard, another of its own. Comes round sooner, and costs less.",
    "cooldown": 31.9,
    "cast": 1,
    "mp": 650,
@@ -28358,7 +28367,7 @@
    "id": "allegro__bp",
    "class": "bard",
    "name": "Accelerando+",
-   "text": "Haste on the ally that attacks fastest. Comes round sooner.",
+   "text": "Haste on the ally that attacks fastest. Comes round sooner, and costs less.",
    "cooldown": 14.9,
    "cast": 1,
    "mp": 450,
@@ -28381,7 +28390,7 @@
    "text": "The other ally with the highest Attack casts its next ability twice; the second cast is free. Comes round sooner.",
    "cooldown": 24,
    "cast": 1,
-   "mp": 650,
+   "mp": 450,
    "target": {
     "side": "others",
     "pick": "highest",
@@ -28405,7 +28414,7 @@
    "text": "The other ally with the highest Attack has its ability with the longest cooldown left ready at once. No repeat.",
    "cooldown": 32.7,
    "cast": 1,
-   "mp": 650,
+   "mp": 450,
    "target": {
     "side": "others",
     "pick": "highest",
@@ -28430,7 +28439,7 @@
    "text": "No Encore for an ally: the Bard's own next three basic attacks come at once.",
    "cooldown": 32.7,
    "cast": 1,
-   "mp": 650,
+   "mp": 450,
    "target": "self",
    "do": [
     {
@@ -28447,7 +28456,7 @@
    "text": "The other ally with the highest Attack has its ability with the longest cooldown left ready at once. No repeat. Comes round sooner.",
    "cooldown": 24,
    "cast": 1,
-   "mp": 650,
+   "mp": 450,
    "target": {
     "side": "others",
     "pick": "highest",
@@ -28472,7 +28481,7 @@
    "text": "No Encore for an ally: the Bard's own next three basic attacks come at once. Comes round sooner.",
    "cooldown": 24,
    "cast": 1,
-   "mp": 650,
+   "mp": 450,
    "target": "self",
    "do": [
     {
@@ -29352,7 +29361,7 @@
    "class": "monk",
    "name": "Flow+",
    "text": "Haste on itself. A shorter cooldown.",
-   "cooldown": 30,
+   "cooldown": 22,
    "cast": 1,
    "mp": 200,
    "target": "self",
@@ -29368,7 +29377,7 @@
    "class": "monk",
    "name": "Flow state",
    "text": "Applies Haste to itself. While that Haste lasts, every fifth hit it lands renews it, at most twice a cast.",
-   "cooldown": 40,
+   "cooldown": 30,
    "cast": 1,
    "mp": 200,
    "target": "self",
@@ -29389,7 +29398,7 @@
    "class": "monk",
    "name": "Stillness of mind",
    "text": "Taunts, and raises its Evasion by 35 for as long as the Taunt. No Haste.",
-   "cooldown": 40,
+   "cooldown": 30,
    "cast": 1,
    "mp": 200,
    "target": "self",
@@ -29409,7 +29418,7 @@
    "class": "monk",
    "name": "Flow state+",
    "text": "Applies Haste to itself. While that Haste lasts, every fifth hit it lands renews it, at most twice a cast. A shorter cooldown.",
-   "cooldown": 30,
+   "cooldown": 22,
    "cast": 1,
    "mp": 200,
    "target": "self",
@@ -29430,7 +29439,7 @@
    "class": "monk",
    "name": "Stillness of mind+",
    "text": "Taunts, and raises its Evasion by 35 for as long as the Taunt. No Haste. A shorter cooldown.",
-   "cooldown": 30,
+   "cooldown": 22,
    "cast": 1,
    "mp": 200,
    "target": "self",
@@ -31378,9 +31387,9 @@
    "class": "pyromancer",
    "name": "Pyre+",
    "text": "Heavy damage on the foe with the most Burn, rising with each stack. The Burn stays. 40% more damage.",
-   "cooldown": 44.9,
-   "cast": 8,
-   "mp": 1500,
+   "cooldown": 33.7,
+   "cast": 6,
+   "mp": 1000,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -31413,9 +31422,9 @@
    "class": "pyromancer",
    "name": "Funeral pyre",
    "text": "Deals damage to every foe; the damage scales from Attack and rises by 100 with each Burn stack on that foe. The Burn stays.",
-   "cooldown": 44.9,
-   "cast": 8,
-   "mp": 1500,
+   "cooldown": 33.7,
+   "cast": 6,
+   "mp": 1000,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -31445,9 +31454,9 @@
    "class": "pyromancer",
    "name": "High pyre",
    "text": "Waits until a foe holds 20 Burn or more. Deals heavy damage that scales from Attack to the foe with the most Burn, rising by 500 with each Burn stack on that foe as it lands. The Burn stays.",
-   "cooldown": 44.9,
-   "cast": 8,
-   "mp": 1500,
+   "cooldown": 33.7,
+   "cast": 6,
+   "mp": 1000,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -31489,9 +31498,9 @@
    "class": "pyromancer",
    "name": "Funeral pyre+",
    "text": "Deals damage to every foe; the damage scales from Attack and rises by 100 with each Burn stack on that foe. The Burn stays. 40% more damage.",
-   "cooldown": 44.9,
-   "cast": 8,
-   "mp": 1500,
+   "cooldown": 33.7,
+   "cast": 6,
+   "mp": 1000,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -31521,9 +31530,9 @@
    "class": "pyromancer",
    "name": "High pyre+",
    "text": "Waits until a foe holds 20 Burn or more. Deals heavy damage that scales from Attack to the foe with the most Burn, rising by 500 with each Burn stack on that foe as it lands. The Burn stays. 40% more damage.",
-   "cooldown": 44.9,
-   "cast": 8,
-   "mp": 1500,
+   "cooldown": 33.7,
+   "cast": 6,
+   "mp": 1000,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -31582,7 +31591,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.29,
+        "ratio": 0.5,
         "stat": "attack"
        }
       ]
@@ -31627,7 +31636,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.29,
+        "ratio": 0.5,
         "stat": "attack"
        }
       ]
@@ -31672,7 +31681,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.17,
+        "ratio": 0.29,
         "stat": "attack"
        }
       ]
@@ -31717,7 +31726,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.29,
+        "ratio": 0.5,
         "stat": "attack"
        }
       ]
@@ -31762,7 +31771,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.17,
+        "ratio": 0.29,
         "stat": "attack"
        }
       ]
@@ -31802,7 +31811,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.238,
+        "ratio": 0.406,
         "stat": "attack"
        }
       ]
@@ -32144,7 +32153,7 @@
    "text": "Lightning at a random foe, then up to three others, adding a few Shock to each. 40% more damage on every strike.",
    "cooldown": 14.2,
    "cast": 1,
-   "mp": 650,
+   "mp": 450,
    "do": [
     {
      "op": "damage",
@@ -32211,7 +32220,7 @@
    "text": "Lightning strikes the foe with the lowest HP four times: once hard, adding a few Shock, then three smaller strikes. If it falls, the strikes left go to the next lowest; stacks scale from Attack.",
    "cooldown": 14.2,
    "cast": 1,
-   "mp": 650,
+   "mp": 450,
    "do": [
     {
      "op": "damage",
@@ -32303,7 +32312,7 @@
    "text": "Deals damage that scales from Attack to a random foe, then to up to three other random foes, and adds a few Shock to each; stacks scale from Attack. The Stormcaller regains 120 MP for each foe it hits.",
    "cooldown": 14.2,
    "cast": 1,
-   "mp": 650,
+   "mp": 450,
    "do": [
     {
      "op": "damage",
@@ -32382,7 +32391,7 @@
    "text": "Lightning strikes the foe with the lowest HP four times: once hard, adding a few Shock, then three smaller strikes. If it falls, the strikes left go to the next lowest; stacks scale from Attack. 40% more damage on every strike.",
    "cooldown": 14.2,
    "cast": 1,
-   "mp": 650,
+   "mp": 450,
    "do": [
     {
      "op": "damage",
@@ -32474,7 +32483,7 @@
    "text": "Deals damage that scales from Attack to a random foe, then to up to three other random foes, and adds a few Shock to each; stacks scale from Attack. The Stormcaller regains 120 MP for each foe it hits. 40% more damage on every strike.",
    "cooldown": 14.2,
    "cast": 1,
-   "mp": 650,
+   "mp": 450,
    "do": [
     {
      "op": "damage",
@@ -32646,7 +32655,7 @@
    "class": "stormcaller",
    "name": "Static charge+",
    "text": "Its basic attacks come faster for a while. A shorter cooldown.",
-   "cooldown": 31.1,
+   "cooldown": 22.8,
    "cast": 1,
    "mp": 650,
    "target": "self",
@@ -32662,7 +32671,7 @@
    "class": "stormcaller",
    "name": "Overcharge",
    "text": "Its basic attacks come faster for a while. While that lasts, its next three abilities cost no MP.",
-   "cooldown": 41.4,
+   "cooldown": 31.1,
    "cast": 1,
    "mp": 650,
    "target": "self",
@@ -32682,7 +32691,7 @@
    "class": "stormcaller",
    "name": "Storm shield",
    "text": "Raises its Thorns by 150 and its Aggro by 40 for 20 ticks. No speed.",
-   "cooldown": 41.4,
+   "cooldown": 31.1,
    "cast": 1,
    "mp": 650,
    "target": "self",
@@ -32698,7 +32707,7 @@
    "class": "stormcaller",
    "name": "Overcharge+",
    "text": "Its basic attacks come faster for a while. While that lasts, its next three abilities cost no MP. A shorter cooldown.",
-   "cooldown": 31.1,
+   "cooldown": 22.8,
    "cast": 1,
    "mp": 650,
    "target": "self",
@@ -32718,7 +32727,7 @@
    "class": "stormcaller",
    "name": "Storm shield+",
    "text": "Raises its Thorns by 150 and its Aggro by 40 for 20 ticks. No speed. A shorter cooldown.",
-   "cooldown": 31.1,
+   "cooldown": 22.8,
    "cast": 1,
    "mp": 650,
    "target": "self",
@@ -33074,8 +33083,8 @@
    "name": "Tremor+",
    "text": "Damage scaling from Defense on a random foe, which is Stunned. 40% more damage.",
    "cooldown": 36.4,
-   "cast": 8,
-   "mp": 1000,
+   "cast": 6,
+   "mp": 650,
    "target": {
     "side": "foes",
     "where": {
@@ -33109,8 +33118,8 @@
    "name": "Aftershock",
    "text": "Deals damage that scales from Defense to a random foe, and Stuns every foe.",
    "cooldown": 36.4,
-   "cast": 8,
-   "mp": 1000,
+   "cast": 6,
+   "mp": 650,
    "target": {
     "side": "foes",
     "where": {
@@ -33148,7 +33157,7 @@
    "text": "Deals damage that scales from Defense to a Stunned foe, triple; with no foe Stunned, to a random foe. A shorter wind-up. No Stun.",
    "cooldown": 36.4,
    "cast": 3,
-   "mp": 1000,
+   "mp": 650,
    "target": {
     "side": "foes",
     "where": {
@@ -33188,8 +33197,8 @@
    "name": "Aftershock+",
    "text": "Deals damage that scales from Defense to a random foe, and Stuns every foe. 40% more damage.",
    "cooldown": 36.4,
-   "cast": 8,
-   "mp": 1000,
+   "cast": 6,
+   "mp": 650,
    "target": {
     "side": "foes",
     "where": {
@@ -33227,7 +33236,7 @@
    "text": "Deals damage that scales from Defense to a Stunned foe, triple; with no foe Stunned, to a random foe. A shorter wind-up. No Stun. 40% more damage.",
    "cooldown": 36.4,
    "cast": 3,
-   "mp": 1000,
+   "mp": 650,
    "target": {
     "side": "foes",
     "where": {
@@ -33578,7 +33587,7 @@
    "power": "Heals two fifths more; if it raises, the raised ally comes back with two fifths more HP.",
    "a": {
     "name": "Penance",
-    "text": "Cleanses and heals both other allies for twice as much, and pays a fifth of each heal in its own HP. Not itself."
+    "text": "Cleanses and heals both other allies for twice as much, and pays a tenth of each heal in its own HP. Not itself."
    },
    "b": {
     "name": "Absolution",
@@ -33687,7 +33696,7 @@
    "id": "allegro",
    "class": "bard",
    "kind": "ability",
-   "power": "Comes round sooner.",
+   "power": "Comes round sooner, and costs less.",
    "a": {
     "name": "Rubato",
     "text": "Haste on every ally, and every ally's ability nearest to ready is ready at once. It never readies itself: for the Bard, another of its own."
@@ -34594,7 +34603,7 @@
   {
    "id": "bloodscent_knife",
    "name": "Bloodscent knife",
-   "text": "Its wearer's hits on a bleeding foe crit far more often: +50% Crit chance, up to 80%.",
+   "text": "Its wearer's hits on a bleeding foe crit far more often: +30% Crit chance, up to 60%.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -34977,7 +34986,7 @@
     },
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     }
    ],
    "statuses": [
@@ -35133,7 +35142,7 @@
     },
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     }
    ],
    "statuses": [
@@ -35294,7 +35303,7 @@
   {
    "id": "tithe_wand",
    "name": "Tithe wand",
-   "text": "Each basic attack it lands gives the ally with the least MP some MP: 3% of its wearer's Attack.",
+   "text": "Each basic attack it lands gives the ally with the least MP some MP: a tenth of its wearer's Attack.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -36035,7 +36044,7 @@
     },
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     }
    ],
    "statuses": [
@@ -36376,7 +36385,7 @@
   {
    "id": "the_red_feast",
    "name": "The Red Feast",
-   "text": "While its wearer is below half its max HP, its hits deal double and its Lifesteal is doubled. When a fight is won, its wearer, if it's standing, is healed back to half its max HP, if it's below that.",
+   "text": "While its wearer is below half its max HP, its hits deal half again as much and its Lifesteal is doubled. When a fight is won, its wearer, if it's standing, is healed back to half its max HP, if it's below that.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
@@ -36818,6 +36827,10 @@
     {
      "stat": "max_mp",
      "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -36962,6 +36975,10 @@
     {
      "stat": "max_mp",
      "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -37000,6 +37017,10 @@
     {
      "stat": "cooldown_reduction",
      "flat": 15
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -37736,7 +37757,7 @@
   {
    "id": "canopy_staff",
    "name": "Canopy staff",
-   "text": "When each fight starts, its wearer and the other ally with the least max HP each gain a Shield of a quarter of its wearer's Attack.",
+   "text": "When each fight starts, its wearer and the other ally with the least max HP each gain a Shield of a sixth of its wearer's Attack.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -37812,7 +37833,7 @@
   {
    "id": "ritual_staff",
    "name": "Ritual staff",
-   "text": "Its wearer's abilities wind up half again as long, deal half again as much and add twice the stacks.",
+   "text": "Its wearer's abilities wind up half again as long, deal half again as much and add half again as many stacks.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -37828,6 +37849,10 @@
     {
      "stat": "max_mp",
      "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -37870,6 +37895,10 @@
     {
      "stat": "mp_regen",
      "flat": 3000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -37908,6 +37937,10 @@
     {
      "stat": "cooldown_reduction",
      "flat": 15
+    },
+    {
+     "stat": "max_hp",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -38250,7 +38283,7 @@
   {
    "id": "twinfall",
    "name": "Twinfall",
-   "text": "Each hit its wearer lands, a basic attack's or an ability's, lands a second time a tick later: the same damage again, on the same foe. The second carries none of the first's statuses, and nothing repeats it.",
+   "text": "Each hit its wearer lands, a basic attack's or an ability's, lands a second time a tick later: half the damage again, on the same foe. The second carries none of the first's statuses, and nothing repeats it.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
@@ -38842,7 +38875,7 @@
   {
    "id": "tallymail",
    "name": "Tallymail",
-   "text": "Its wearer counts Cuts (a Cut for each hit it lands, kept for the fight, up to 25), and has Lifesteal +2% for each Cut.",
+   "text": "Its wearer counts Cuts (a Cut for each hit it lands, kept for the fight, up to 25), and has Lifesteal +1% for each Cut.",
    "slot": "armor",
    "tier": "powerful",
    "source": "unlock",
@@ -38877,7 +38910,7 @@
    "stats": [
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     }
    ],
    "rarity": "common"
@@ -38917,7 +38950,7 @@
   {
    "id": "gleaners_leathers",
    "name": "Gleaner's leathers",
-   "text": "Each hit its wearer lands heals it for 3% of its max HP.",
+   "text": "Each hit its wearer lands heals it for 2% of its max HP.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -38925,7 +38958,7 @@
    "stats": [
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     },
     {
      "stat": "max_hp",
@@ -38971,7 +39004,7 @@
    "stats": [
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     },
     {
      "stat": "crit_chance",
@@ -38994,7 +39027,7 @@
    "stats": [
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     },
     {
      "stat": "attack",
@@ -39017,7 +39050,7 @@
    "stats": [
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     },
     {
      "stat": "aggro",
@@ -39094,7 +39127,7 @@
    "stats": [
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     },
     {
      "stat": "attack",
@@ -39144,7 +39177,7 @@
    "stats": [
     {
      "stat": "evasion",
-     "flat": 35
+     "flat": 20
     },
     {
      "stat": "attack",
@@ -39195,6 +39228,10 @@
     {
      "stat": "max_mp",
      "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "rarity": "common"
@@ -39234,7 +39271,7 @@
   {
    "id": "matins_robe",
    "name": "Matins robe",
-   "text": "Every third ability its wearer casts in a fight is free.",
+   "text": "Every second ability its wearer casts in a fight is free.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -39247,6 +39284,10 @@
     {
      "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -39293,6 +39334,10 @@
     {
      "stat": "aggro",
      "flat": -10
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -39316,6 +39361,10 @@
     {
      "stat": "mp_regen",
      "flat": 3000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -39370,6 +39419,10 @@
     {
      "stat": "aggro",
      "flat": -10
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -39397,6 +39450,10 @@
     {
      "stat": "cast_time_reduction",
      "flat": 15
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -39420,6 +39477,10 @@
     {
      "stat": "aggro",
      "flat": -10
+    },
+    {
+     "stat": "max_hp",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -39430,7 +39491,7 @@
   {
    "id": "glimmer_robe",
    "name": "Glimmer robe",
-   "text": "Each time an ally gives its wearer MP, the next ability its wearer casts that deals damage deals a third more.",
+   "text": "Each time an ally gives its wearer MP, the next ability its wearer casts that deals damage deals half again as much.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -39447,6 +39508,10 @@
     {
      "stat": "aggro",
      "flat": -10
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -39473,6 +39538,10 @@
     },
     {
      "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "max_hp",
      "flat": 1000
     }
    ],
@@ -39501,6 +39570,10 @@
     {
      "stat": "aggro",
      "flat": -10
+    },
+    {
+     "stat": "max_hp",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -39620,7 +39693,7 @@
    "stats": [
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     }
    ],
    "rarity": "common"
@@ -39802,7 +39875,7 @@
   {
    "id": "hummingbird_charm",
    "name": "Hummingbird charm",
-   "text": "Its wearer's basic attacks come twice as often and deal half as much.",
+   "text": "Its wearer's basic attacks come half again as often and deal two thirds as much.",
    "slot": "amulet",
    "tier": "ordinary",
    "source": "drop",
@@ -39813,11 +39886,11 @@
     },
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     },
     {
      "stat": "attack_speed",
-     "flat": 100
+     "flat": 50
     }
    ],
    "statuses": [
@@ -39840,6 +39913,10 @@
     {
      "stat": "aggro",
      "flat": -10
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -39892,6 +39969,10 @@
     {
      "stat": "max_mp",
      "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -39917,7 +39998,7 @@
     },
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     }
    ],
    "statuses": [
@@ -39928,7 +40009,7 @@
   {
    "id": "floe_charm",
    "name": "Floe charm",
-   "text": "When a foe's Chill shatters, its wearer's first-slotted ability is ready at once. If it's ready already, nothing happens.",
+   "text": "When a foe's Chill shatters, its wearer's first-slotted ability comes half its wait closer.",
    "slot": "amulet",
    "tier": "ordinary",
    "source": "drop",
@@ -39943,7 +40024,7 @@
     },
     {
      "stat": "max_hp",
-     "flat": 500
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -39970,6 +40051,10 @@
     {
      "stat": "max_mp",
      "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -40022,6 +40107,10 @@
     {
      "stat": "cooldown_reduction",
      "flat": 15
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -40091,7 +40180,7 @@
    "stats": [
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     },
     {
      "stat": "aggro",
@@ -40297,7 +40386,7 @@
     },
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     },
     {
      "stat": "mp_regen",
@@ -40331,11 +40420,15 @@
     },
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     },
     {
      "stat": "cooldown_reduction",
      "flat": -16.7
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -40361,7 +40454,7 @@
     },
     {
      "stat": "max_hp",
-     "flat": 500
+     "flat": 1000
     },
     {
      "stat": "max_mp",
@@ -40391,7 +40484,7 @@
     },
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     }
    ],
    "statuses": [
@@ -40553,7 +40646,7 @@
   {
    "id": "monolith_shield",
    "name": "Monolith shield",
-   "text": "Its holder's abilities that deal damage take twice as long to come round, and their hits land two and a half times as hard. What they apply is unchanged.",
+   "text": "Its holder's abilities that deal damage take twice as long to come round, and their hits land twice as hard. What they apply is unchanged.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -41472,6 +41565,10 @@
     {
      "stat": "max_mp",
      "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "rarity": "common"
@@ -41542,6 +41639,10 @@
     {
      "stat": "max_mp",
      "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -41568,7 +41669,7 @@
     },
     {
      "stat": "max_hp",
-     "flat": 500
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -41614,7 +41715,7 @@
     },
     {
      "stat": "max_hp",
-     "flat": 500
+     "flat": 1000
     },
     {
      "stat": "max_mp",
@@ -41753,7 +41854,7 @@
   {
    "id": "twice_told_tome",
    "name": "Twice-told tome",
-   "text": "Every third ability its holder casts in a fight is cast twice. The second cast comes at once and is free; it isn't counted, and it isn't cast again.",
+   "text": "Every second ability its holder casts in a fight is cast twice. The second cast comes at once and is free; it isn't counted, and it isn't cast again.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -41770,6 +41871,10 @@
     {
      "stat": "max_mp",
      "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -41824,6 +41929,10 @@
     {
      "stat": "max_mp",
      "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -41851,6 +41960,10 @@
     {
      "stat": "max_mp",
      "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -41878,6 +41991,10 @@
     {
      "stat": "mp_regen",
      "flat": 3000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -41924,6 +42041,10 @@
     {
      "stat": "max_mp",
      "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "rarity": "common"
@@ -41960,6 +42081,10 @@
     {
      "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -41983,6 +42108,10 @@
     {
      "stat": "mp_regen",
      "flat": 3000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -41993,7 +42122,7 @@
   {
    "id": "meltwater_orb",
    "name": "Meltwater orb",
-   "text": "When a foe's Chill shatters, its holder regains a quarter of its max MP.",
+   "text": "When a foe's Chill shatters, its holder regains a tenth of its max MP.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -42010,6 +42139,10 @@
     {
      "stat": "cooldown_reduction",
      "flat": 15
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -42037,6 +42170,10 @@
     {
      "stat": "cast_time_reduction",
      "flat": 15
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -42060,6 +42197,10 @@
     {
      "stat": "mp_regen",
      "flat": 3000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -42087,6 +42228,10 @@
     {
      "stat": "cast_time_reduction",
      "flat": 15
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -42114,6 +42259,10 @@
     {
      "stat": "mp_regen",
      "flat": 3000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -42291,7 +42440,7 @@
     },
     {
      "stat": "max_hp",
-     "flat": 500
+     "flat": 1000
     },
     {
      "stat": "max_mp",
@@ -42319,6 +42468,10 @@
     {
      "stat": "max_mp",
      "flat": 2000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -42457,7 +42610,7 @@
   {
    "id": "venom_vial",
    "name": "Venom vial",
-   "text": "A foe's Bleed doesn't close under its holder's hits: the wound pays for the hit and stays as deep as it was. It still closes under everyone else's.",
+   "text": "A foe's Bleed closes only a fifth under its holder's hits, not a third. It still closes a third under everyone else's.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -42511,7 +42664,7 @@
   {
    "id": "heartsblood",
    "name": "Heartsblood",
-   "text": "Whatever its holder's Lifesteal would heal it for, full or not, every other ally is healed for the same. Healing given this way isn't passed on again.",
+   "text": "Whatever its holder's Lifesteal would heal it for, full or not, every other ally is healed for half as much. Healing given this way isn't passed on again.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -42802,7 +42955,7 @@
   {
    "id": "bell_of_the_hour",
    "name": "Bell of the hour",
-   "text": "Every fifth basic attack its holder lands casts its first-slotted ability at once, whatever its cooldown, with no wind-up. Its cooldown stays where it was, and its MP is paid.",
+   "text": "Every fourth basic attack its holder lands casts its first-slotted ability at once, whatever its cooldown, with no wind-up. Its cooldown stays where it was, and its MP is paid.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -42841,7 +42994,7 @@
     },
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     }
    ],
    "statuses": [
@@ -42887,7 +43040,7 @@
    "stats": [
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     }
    ],
    "rarity": "common"
@@ -42919,7 +43072,7 @@
    "stats": [
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     },
     {
      "stat": "attack",
@@ -42942,7 +43095,7 @@
    "stats": [
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     },
     {
      "stat": "crit_chance",
@@ -42965,7 +43118,7 @@
    "stats": [
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     },
     {
      "stat": "defense",
@@ -42988,7 +43141,7 @@
    "stats": [
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     },
     {
      "stat": "defense",
@@ -43015,7 +43168,7 @@
    "stats": [
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     },
     {
      "stat": "attack_speed",
@@ -43042,7 +43195,7 @@
    "stats": [
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     },
     {
      "stat": "crit_chance",
@@ -43069,7 +43222,7 @@
    "stats": [
     {
      "stat": "evasion",
-     "flat": 35
+     "flat": 20
     },
     {
      "stat": "attack",
@@ -43305,7 +43458,7 @@
   {
    "id": "glaciers_heart",
    "name": "Glacier's heart",
-   "text": "Whenever a foe's Chill shatters, the Frostweaver puts half of it back: 6 Chill on that foe.",
+   "text": "Whenever a foe's Chill shatters, the Frostweaver puts a quarter of it back: 3 Chill on that foe.",
    "slot": "armor",
    "tier": "powerful",
    "source": "unlock",
@@ -43563,7 +43716,7 @@
     {
      "id": "frost_a",
      "name": "Frost",
-     "text": "Basic attacks add a few Chill.",
+     "text": "Basic attacks add a Chill.",
      "layout": {
       "line": "front",
       "column": 0
@@ -43575,7 +43728,7 @@
     {
      "id": "frost_b",
      "name": "Frost",
-     "text": "Basic attacks add a few Chill.",
+     "text": "Basic attacks add a Chill.",
      "layout": {
       "line": "middle",
       "column": 1
@@ -43764,7 +43917,7 @@
     {
      "id": "soloist",
      "name": "Soloist",
-     "text": "Its abilities come round a fifth faster. Draws far less.",
+     "text": "Its abilities come round a third faster and deal half again as much. Draws far less.",
      "layout": {
       "line": "front",
       "column": 0
@@ -43772,12 +43925,15 @@
      "stats": [
       {
        "stat": "cooldown_reduction",
-       "flat": 20
+       "flat": 33
       },
       {
        "stat": "aggro",
        "flat": -25
       }
+     ],
+     "statuses": [
+      "wellspring_soloist"
      ]
     },
     {
@@ -43795,7 +43951,7 @@
     {
      "id": "well",
      "name": "Well",
-     "text": "Draws more. Each hit it takes gives the Soloist MP: a twentieth of the Soloist's max MP.",
+     "text": "Draws more. Each hit it takes gives the Soloist MP: a hundredth of the Soloist's max MP.",
      "layout": {
       "line": "back",
       "column": 2
@@ -44132,7 +44288,7 @@
     {
      "id": "opener",
      "name": "Opener",
-     "text": "Its crits add many Bleed.",
+     "text": "Its crits add several Bleed.",
      "layout": {
       "line": "front",
       "column": 0
@@ -44144,7 +44300,7 @@
     {
      "id": "blade_a",
      "name": "Blade",
-     "text": "Each hit it lands on a bleeding foe heals the Blade for 3% of its max HP.",
+     "text": "Each hit it lands on a bleeding foe heals the Blade for 2% of its max HP.",
      "layout": {
       "line": "middle",
       "column": 1
@@ -44156,7 +44312,7 @@
     {
      "id": "blade_b",
      "name": "Blade",
-     "text": "Each hit it lands on a bleeding foe heals the Blade for 3% of its max HP.",
+     "text": "Each hit it lands on a bleeding foe heals the Blade for 2% of its max HP.",
      "layout": {
       "line": "back",
       "column": 2
@@ -44237,7 +44393,7 @@
     {
      "id": "sleet",
      "name": "Sleet",
-     "text": "Its basic attacks add a few Chill.",
+     "text": "Its basic attacks add a Chill.",
      "layout": {
       "line": "middle",
       "column": 1
@@ -44417,7 +44573,7 @@
     {
      "id": "soloist",
      "name": "Soloist",
-     "text": "Each ability another ally casts takes a fifth off the cooldowns it has left.",
+     "text": "Its abilities deal half again as much. Each ability another ally casts takes a third off the cooldowns it has left.",
      "layout": {
       "line": "front",
       "column": 0
@@ -44444,7 +44600,7 @@
     {
      "id": "well",
      "name": "Well",
-     "text": "Draws far more. Whenever the Soloist finishes a cast, the Well gains a Shield: a tenth of the Well's max HP.",
+     "text": "Draws far more, and Taunts when each fight starts. Whenever the Soloist finishes a cast, the Well gains a Shield: a tenth of the Well's max HP.",
      "layout": {
       "line": "back",
       "column": 2
@@ -44777,7 +44933,7 @@
   {
    "id": "the_long_winter",
    "name": "The long winter",
-   "text": "Every shatter sends its cold down the line, and each sends more than the last. The party: When a foe's Chill shatters, every other foe gains a few Chill, and a few more for each Cascade the party held before it (a Cascade for each shatter this fight, up to 10).",
+   "text": "Every shatter sends its cold down the line, and each sends more than the last. The party: When a foe's Chill shatters, every other foe gains a Chill, and one more for every two Cascades the party held before it (a Cascade for each shatter this fight, up to 10).",
    "rarity": "legendary",
    "source": "unlock",
    "positions": [
@@ -44987,7 +45143,7 @@
   {
    "id": "the_covenant",
    "name": "The covenant",
-   "text": "Life is the party's one currency. The party: Every ally's abilities cost HP in place of MP: half the share of its max HP that they'd cost of its max MP. No ally casts one that would leave it below a tenth of its max HP. Every ally has Lifesteal, high.",
+   "text": "Life is the party's one currency. The party: Every ally's abilities cost HP in place of MP: half the share of its max HP that they'd cost of its max MP. No ally casts one that would leave it below a tenth of its max HP. Every ally has Lifesteal.",
    "rarity": "legendary",
    "source": "unlock",
    "positions": [
@@ -45022,7 +45178,7 @@
    "stats": [
     {
      "stat": "lifesteal",
-     "flat": 20
+     "flat": 10
     }
    ],
    "statuses": [
@@ -46775,7 +46931,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 121
+      "knob": 258
      },
      {
       "id": "snake_pit",
@@ -46787,7 +46943,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 29
+      "knob": 135
      },
      {
       "id": "bandit_camp",
@@ -46798,7 +46954,7 @@
        "archer",
        "bandit"
       ],
-      "knob": -22
+      "knob": 46
      },
      {
       "id": "night_wolves",
@@ -46812,7 +46968,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 116
+      "knob": 229
      },
      {
       "id": "archers_nest",
@@ -46823,7 +46979,7 @@
        "archer",
        "archer"
       ],
-      "knob": -41
+      "knob": 36
      },
      {
       "id": "viper_den",
@@ -46836,7 +46992,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 9
+      "knob": 99
      },
      {
       "id": "bandit_horde",
@@ -46848,7 +47004,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 11
+      "knob": 95
      }
     ],
     "elite": [
@@ -46860,7 +47016,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 32
+      "knob": 126
      },
      {
       "id": "twin_ogres",
@@ -46869,7 +47025,7 @@
        "ogre",
        "ogre"
       ],
-      "knob": -4
+      "knob": 77
      },
      {
       "id": "war_camp",
@@ -46880,7 +47036,7 @@
        "archer",
        "ogre"
       ],
-      "knob": -35
+      "knob": 43
      }
     ],
     "bosses": [
@@ -46892,7 +47048,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 7
+      "knob": 64
      },
      {
       "id": "packmaster",
@@ -46904,7 +47060,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": -8
+      "knob": 71
      },
      {
       "id": "chiefs_return",
@@ -46913,7 +47069,7 @@
        "ogre_chief",
        "ogre"
       ],
-      "knob": -19
+      "knob": 35
      }
     ]
    },
@@ -46969,7 +47125,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 114
+      "knob": 257
      },
      {
       "id": "dark_hall",
@@ -46980,7 +47136,7 @@
        "bat",
        "bat"
       ],
-      "knob": 129
+      "knob": 233
      },
      {
       "id": "curse_room",
@@ -46990,7 +47146,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 172
+      "knob": 240
      },
      {
       "id": "haunted_hall",
@@ -47001,7 +47157,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 61
+      "knob": 187
      },
      {
       "id": "bone_wall",
@@ -47013,7 +47169,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 85
+      "knob": 222
      },
      {
       "id": "dead_watch",
@@ -47024,7 +47180,7 @@
        "witch",
        "ghost"
       ],
-      "knob": 65
+      "knob": 172
      }
     ],
     "elite": [
@@ -47037,7 +47193,7 @@
        "ghoul",
        "ghoul"
       ],
-      "knob": 17
+      "knob": 219
      },
      {
       "id": "lich_lair",
@@ -47046,7 +47202,7 @@
        "lich",
        "mummy"
       ],
-      "knob": 86
+      "knob": 318
      },
      {
       "id": "grave_watch",
@@ -47056,7 +47212,7 @@
        "troll",
        "troll"
       ],
-      "knob": -29
+      "knob": 96
      }
     ],
     "bosses": [
@@ -47068,7 +47224,7 @@
        "bat",
        "bat"
       ],
-      "knob": -19
+      "knob": 108
      },
      {
       "id": "reapers_court",
@@ -47078,7 +47234,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": -21
+      "knob": 92
      }
     ]
    },
@@ -47136,7 +47292,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 3
+      "knob": 93
      },
      {
       "id": "bomb_room",
@@ -47147,7 +47303,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": -33
+      "knob": 14
      },
      {
       "id": "imp_kennel",
@@ -47158,7 +47314,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 30
+      "knob": 102
      },
      {
       "id": "hound_run",
@@ -47171,7 +47327,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": -36
+      "knob": 26
      },
      {
       "id": "slag_heap",
@@ -47181,7 +47337,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 65
+      "knob": 168
      },
      {
       "id": "miners",
@@ -47192,7 +47348,7 @@
        "bandit",
        "bomb_bug"
       ],
-      "knob": 67
+      "knob": 157
      }
     ],
     "elite": [
@@ -47203,7 +47359,7 @@
        "lava_slime",
        "lava_slime"
       ],
-      "knob": 22
+      "knob": 274
      },
      {
       "id": "imp_court",
@@ -47215,7 +47371,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": -16
+      "knob": 165
      },
      {
       "id": "powder_room",
@@ -47225,7 +47381,7 @@
        "bomb_bug",
        "ogre"
       ],
-      "knob": -60
+      "knob": 54
      },
      {
       "id": "bomb_nest",
@@ -47235,7 +47391,7 @@
        "bomb_bug",
        "bomb_bug"
       ],
-      "knob": -86
+      "knob": 87
      }
     ],
     "bosses": [
@@ -47245,7 +47401,7 @@
       "enemies": [
        "fire_giant"
       ],
-      "knob": -21
+      "knob": 91
      },
      {
       "id": "giants_forge",
@@ -47255,7 +47411,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": -45
+      "knob": 64
      },
      {
       "id": "giants_wrath",
@@ -47265,7 +47421,7 @@
        "fire_imp",
        "fire_imp"
       ],
-      "knob": -50
+      "knob": 49
      }
     ]
    },
@@ -47322,7 +47478,7 @@
        "snow_wolf",
        "snow_wolf"
       ],
-      "knob": 228
+      "knob": 361
      },
      {
       "id": "ice_heart",
@@ -47332,7 +47488,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 75
+      "knob": 127
      },
      {
       "id": "whiteout",
@@ -47342,7 +47498,7 @@
        "ice_ghost",
        "ice_spirit"
       ],
-      "knob": 80
+      "knob": 167
      },
      {
       "id": "ghost_lights",
@@ -47352,7 +47508,7 @@
        "ice_ghost",
        "ice_ghost"
       ],
-      "knob": 72
+      "knob": 191
      },
      {
       "id": "long_pack",
@@ -47366,7 +47522,7 @@
        "snow_wolf",
        "snow_wolf"
       ],
-      "knob": 193
+      "knob": 311
      },
      {
       "id": "drift",
@@ -47377,7 +47533,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 99
+      "knob": 172
      }
     ],
     "elite": [
@@ -47388,7 +47544,7 @@
        "ice_golem",
        "ice_golem"
       ],
-      "knob": 35
+      "knob": 250
      },
      {
       "id": "golem_gate",
@@ -47398,7 +47554,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 17
+      "knob": 185
      },
      {
       "id": "frost_trolls",
@@ -47409,7 +47565,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": -43
+      "knob": 52
      }
     ],
     "bosses": [
@@ -47419,7 +47575,7 @@
       "enemies": [
        "ice_titan"
       ],
-      "knob": 8
+      "knob": 139
      },
      {
       "id": "glacier_king",
@@ -47429,7 +47585,7 @@
        "snow_wolf",
        "snow_wolf"
       ],
-      "knob": -8
+      "knob": 120
      }
     ]
    },
@@ -47492,7 +47648,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": -4
+      "knob": 158
      },
      {
       "id": "wisp_nest",
@@ -47505,7 +47661,7 @@
        "leech",
        "leech"
       ],
-      "knob": 11
+      "knob": 175
      },
      {
       "id": "leech_den",
@@ -47516,7 +47672,7 @@
        "leech",
        "leech"
       ],
-      "knob": 83
+      "knob": 336
      },
      {
       "id": "drone_wall",
@@ -47529,7 +47685,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 3
+      "knob": 151
      },
      {
       "id": "storm_front",
@@ -47542,7 +47698,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": -2
+      "knob": 156
      }
     ],
     "elite": [
@@ -47555,7 +47711,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 75
+      "knob": 459
      },
      {
       "id": "sniper_ridge",
@@ -47567,7 +47723,7 @@
        "archer",
        "archer"
       ],
-      "knob": 5
+      "knob": 149
      },
      {
       "id": "lich_pair",
@@ -47577,7 +47733,7 @@
        "lich",
        "lich"
       ],
-      "knob": 35
+      "knob": 303
      }
     ],
     "bosses": [
@@ -47589,7 +47745,7 @@
        "drone",
        "drone"
       ],
-      "knob": 7
+      "knob": 221
      },
      {
       "id": "hive_queen",
@@ -47601,7 +47757,7 @@
        "drone",
        "drone"
       ],
-      "knob": -10
+      "knob": 163
      }
     ]
    },
@@ -47655,7 +47811,7 @@
        "troll",
        "troll"
       ],
-      "knob": -56
+      "knob": 116
      },
      {
       "id": "lich_lair",
@@ -47664,7 +47820,7 @@
        "lich",
        "mummy"
       ],
-      "knob": 68
+      "knob": 316
      },
      {
       "id": "silent_hall",
@@ -47675,7 +47831,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 22
+      "knob": 207
      },
      {
       "id": "quiet_hall",
@@ -47686,7 +47842,7 @@
        "ghost",
        "ghost"
       ],
-      "knob": -9
+      "knob": 159
      },
      {
       "id": "coven",
@@ -47697,7 +47853,7 @@
        "wraith",
        "wraith"
       ],
-      "knob": -3
+      "knob": 126
      },
      {
       "id": "ghoul_feast",
@@ -47708,7 +47864,7 @@
        "ghoul",
        "ghoul"
       ],
-      "knob": -12
+      "knob": 224
      }
     ],
     "elite": [
@@ -47720,7 +47876,7 @@
        "bone_priest",
        "troll"
       ],
-      "knob": 15
+      "knob": 221
      },
      {
       "id": "lich_court",
@@ -47731,7 +47887,7 @@
        "lich",
        "lich"
       ],
-      "knob": 12
+      "knob": 208
      },
      {
       "id": "tomb_lords",
@@ -47741,7 +47897,7 @@
        "mummy",
        "witch"
       ],
-      "knob": 9
+      "knob": 246
      }
     ],
     "bosses": [
@@ -47751,7 +47907,7 @@
       "enemies": [
        "silent_one"
       ],
-      "knob": 9
+      "knob": 121
      },
      {
       "id": "silent_court",
@@ -47761,7 +47917,7 @@
        "bone_priest",
        "bone_priest"
       ],
-      "knob": -20
+      "knob": 88
      }
     ]
    },
@@ -47822,7 +47978,7 @@
        "leech",
        "leech"
       ],
-      "knob": -11
+      "knob": 99
      },
      {
       "id": "wisp_nest",
@@ -47835,7 +47991,7 @@
        "leech",
        "leech"
       ],
-      "knob": 11
+      "knob": 170
      },
      {
       "id": "barracks",
@@ -47845,7 +48001,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 95
+      "knob": 523
      },
      {
       "id": "drone_wall",
@@ -47858,7 +48014,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 3
+      "knob": 128
      },
      {
       "id": "watch",
@@ -47869,7 +48025,7 @@
        "drone",
        "drone"
       ],
-      "knob": 70
+      "knob": 336
      }
     ],
     "elite": [
@@ -47881,7 +48037,7 @@
        "drone",
        "drone"
       ],
-      "knob": -32
+      "knob": 181
      },
      {
       "id": "honour_guard",
@@ -47892,7 +48048,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 75
+      "knob": 485
      },
      {
       "id": "leech_den",
@@ -47904,7 +48060,7 @@
        "leech",
        "leech"
       ],
-      "knob": 83
+      "knob": 360
      }
     ],
     "bosses": [
@@ -47914,7 +48070,7 @@
       "enemies": [
        "storm_king"
       ],
-      "knob": -12
+      "knob": 140
      },
      {
       "id": "kings_guard",
@@ -47924,7 +48080,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": -43
+      "knob": 95
      }
     ]
    }
