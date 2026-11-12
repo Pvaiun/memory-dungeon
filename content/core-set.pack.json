@@ -23978,7 +23978,7 @@
   {
    "id": "rally_soldiers",
    "name": "Rally",
-   "text": "Summons two Soldiers.",
+   "text": "Summons two Soldiers, each with half a Soldier's HP.",
    "cooldown": 38.7,
    "cast": 6,
    "mp": 500,
@@ -23986,7 +23986,8 @@
     {
      "op": "summon",
      "enemy": "soldier",
-     "count": 2
+     "count": 2,
+     "hp": -50
     }
    ]
   },
@@ -47065,7 +47066,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 79
+      "knob": 76
      },
      {
       "id": "chiefs_return",
@@ -47074,7 +47075,7 @@
        "ogre_chief",
        "ogre"
       ],
-      "knob": 45
+      "knob": 44
      }
     ]
    },
@@ -47083,7 +47084,7 @@
     "name": "The Crypt",
     "act": 2,
     "knob": {
-     "mob": -31,
+     "mob": -29,
      "elite": -21,
      "boss": 0
     },
@@ -47229,7 +47230,7 @@
        "bat",
        "bat"
       ],
-      "knob": 139
+      "knob": 147
      },
      {
       "id": "reapers_court",
@@ -47239,7 +47240,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 125
+      "knob": 117
      }
     ]
    },
@@ -47248,7 +47249,7 @@
     "name": "The Fire Mine",
     "act": 2,
     "knob": {
-     "mob": 39,
+     "mob": 40,
      "elite": 26,
      "boss": 0
     },
@@ -47406,7 +47407,7 @@
       "enemies": [
        "fire_giant"
       ],
-      "knob": 122
+      "knob": 123
      },
      {
       "id": "giants_forge",
@@ -47426,7 +47427,7 @@
        "fire_imp",
        "fire_imp"
       ],
-      "knob": 88
+      "knob": 86
      }
     ]
    },
@@ -47435,7 +47436,7 @@
     "name": "The Ice Pass",
     "act": 2,
     "knob": {
-     "mob": -9,
+     "mob": -10,
      "elite": -2,
      "boss": 0
     },
@@ -47580,7 +47581,7 @@
       "enemies": [
        "ice_titan"
       ],
-      "knob": 194
+      "knob": 192
      },
      {
       "id": "glacier_king",
@@ -47590,7 +47591,7 @@
        "snow_wolf",
        "snow_wolf"
       ],
-      "knob": 168
+      "knob": 171
      }
     ]
    },
@@ -47600,7 +47601,7 @@
     "act": 3,
     "knob": {
      "mob": 23,
-     "elite": 11,
+     "elite": 5,
      "boss": 0
     },
     "text": "Clouds of sparks, leeches that drink mana, and a queen behind a wall of drones.",
@@ -47750,7 +47751,7 @@
        "drone",
        "drone"
       ],
-      "knob": 328
+      "knob": 330
      },
      {
       "id": "hive_queen",
@@ -47762,7 +47763,7 @@
        "drone",
        "drone"
       ],
-      "knob": 283
+      "knob": 288
      }
     ]
    },
@@ -47771,8 +47772,8 @@
     "name": "The Deep Crypt",
     "act": 3,
     "knob": {
-     "mob": -24,
-     "elite": 2,
+     "mob": -30,
+     "elite": 5,
      "boss": 0
     },
     "text": "Beneath the Crypt, something takes every voice. Power that isn't an ability is the key.",
@@ -47912,7 +47913,7 @@
       "enemies": [
        "silent_one"
       ],
-      "knob": 259
+      "knob": 252
      },
      {
       "id": "silent_court",
@@ -47922,7 +47923,7 @@
        "bone_priest",
        "bone_priest"
       ],
-      "knob": 197
+      "knob": 183
      }
     ]
    },
@@ -47931,8 +47932,8 @@
     "name": "The Tower Top",
     "act": 3,
     "knob": {
-     "mob": 6,
-     "elite": -12,
+     "mob": 12,
+     "elite": -9,
      "boss": 0
     },
     "text": "Above the storm: the queen's drones, the king's soldiers, and the king who rages when they fall.",
@@ -48075,7 +48076,7 @@
       "enemies": [
        "storm_king"
       ],
-      "knob": 238
+      "knob": 270
      },
      {
       "id": "kings_guard",
@@ -48085,7 +48086,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 171
+      "knob": 200
      }
     ]
    }

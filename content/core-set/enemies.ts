@@ -110,7 +110,7 @@ export const enemyAbilities: AbilityT[] = [
   a("call_drones", "Call drones", "Summons two Drones.", { ...timing("medium", "long"), do: [{ op: "summon", enemy: "drone", count: 2 }] }),
   // Each bolt picks its own foe, so two may land on one.
   a("tempest", "Tempest", "Three lightning bolts at random foes, each with a stack of Shock.", { ...timing("short", "long"), target: { side: "foes", pick: "random" }, do: [1, 2, 3].map(() => ({ op: "damage" as const, type: "physical" as const, amount: fromStat("attack", ENEMY_HIT.tempest), apply: [{ status: "shock", stacks: FLAT_STACKS.one }], to: { side: "foes" as const, pick: "random" as const } })) }),
-  a("rally_soldiers", "Rally", "Summons two Soldiers.", { ...timing("medium", "long"), do: [{ op: "summon", enemy: "soldier", count: 2 }] }),
+  a("rally_soldiers", "Rally", "Summons two Soldiers, each with half a Soldier's HP.", { ...timing("medium", "long"), do: [{ op: "summon", enemy: "soldier", count: 2, hp: -50 }] }),
 ];
 
 // ─── Enemies ─────────────────────────────────────────────────────────────────

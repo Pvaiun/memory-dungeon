@@ -157,7 +157,7 @@ export const Effect = z
       .describe("The start-of-fight effects of each target's gear and seat happen again: their reactions to fight_start, as a repeat (`repeat: false` keeps a price or a drawback out). One event restarts a unit once."),
     z.strictObject({ op: z.literal("fell"), to: To }).describe("Each target is knocked out at once: not damage, so no Shield, Aegis or floor stands in the way. The actor's kill, but no hit's."),
     z
-      .strictObject({ op: z.literal("summon"), enemy: Id, count: PosInt.optional().describe("Default 1.") })
+      .strictObject({ op: z.literal("summon"), enemy: Id, count: PosInt.optional().describe("Default 1."), hp: z.number().int().min(-90).optional().describe("The summoned units' own max HP, +% (default 0); the fight's change to every foe applies on top.") })
       .describe("Brings new units into the fight on the actor's side, up to ruleset.maxEnemies living units on that side. They enter with every action on cooldown."),
     z
       .strictObject({ op: z.literal("replace"), enemy: Id, count: PosInt.optional().describe("Default 1."), to: To.optional() })

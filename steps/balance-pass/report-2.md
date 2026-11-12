@@ -1,6 +1,6 @@
 # The balance pass, part two: whole runs and the knobs
 
-The director's intent and this part's rulings are in `intent.md`; part one's report is `report.md`. Everything is committed on `claude/simulated-run-balancing-pass-d1qyam`. Engine 0.22; the schema gains one optional knob (`eliteEarly`).
+The director's intent and this part's rulings are in `intent.md`; part one's report is `report.md`. Everything is committed on `claude/simulated-run-balancing-pass-d1qyam`. Engine 0.22; the schema gains an optional knob (`eliteEarly`) and a summon's `hp` share.
 
 ## Decisions for the director
 
@@ -10,11 +10,8 @@ The director's intent and this part's rulings are in `intent.md`; part one's rep
    - **The alternative, measured:** act III's bosses 50 knob points softer. The builds win 44–65%, the simulated player loses 27% there, and the runs won go from 12% to 16%. This was measured before the last two changes (the class steps and the boss shape), so it's indicative.
 
    **Recommended:** as tuned. The bosses then rise to the last (22 → 35 → 48% lost).
-2. **The win rate is 9% at heat 0,** against the 14% estimated when you chose fights by cost. The class half steps (below) trimmed the simulated player's favourite picks, so it now loses more between bosses. To get back to about 14%, lower the bosses' targets (not measured). Otherwise it stays at 9%.
-3. **The Tower Top's bosses are slogs.**
-   - The King's Guard averages 155 ticks and the Storm King 180, against 62–115 for every other boss. The enrage starts at tick 200.
-   - The Storm King is an Avenger: his Soldiers are tough, Taunt and come in waves, and the boss knob scales their HP with his.
-   - **The fix is an enemy question:** a smaller share of the knob on summoned adds (a rule), or fewer Soldiers a Rally (content). Nothing is changed.
+2. **The win rate is 11% at heat 0,** against the 14% estimated when you chose fights by cost. The class steps (below) trimmed the simulated player's favourite picks, so it now loses more between bosses. To get back to about 14%, lower the bosses' targets (not measured). Otherwise it stays at 9%.
+3. **The Tower Top's bosses (settled, on your word).** The Storm King's Rally summons Soldiers at half a Soldier's HP (an `hp` share on the summon effect, new in the schema); the Soldiers that start beside him, and the Soldier everywhere else, are unchanged. With the bosses re-tuned, the Storm King runs 145 ticks (was 180) and the King's Guard 143 (was 155), against 75–107 for act III's other bosses. What's left is the King's own HP at the knob whole runs ask: at equal difficulty, Soldiers at a quarter HP measured no shorter than at half.
 4. **Wall-less starts:** set aside, as you said. For the record, at today's knobs a party without a wall loses about 15% of act I's regular fights on floors 4–6, against about 2% with one.
 
 ## What was built
@@ -42,15 +39,15 @@ The director's intent and this part's rulings are in `intent.md`; part one's rep
 - A boss shape of −40% HP and +30% damage on top of the knob. At the knobs whole runs need, the knob alone (HP +k%, damage +k/2.5%) gave act III's bosses 2.7–4.5 times their HP. Fights ran to 130–180 ticks, and the enrage decided them.
 - Boss fights now run about 65 ticks in act I, 66–99 in act II and 85–115 in act III (except the Tower Top's).
 
-**Class half steps,** on the five classes outside the sheet's ±8 band, where whole runs agreed on the direction.
+**Class steps,** on the five classes outside the sheet's ±8 band, where whole runs agreed on the direction. Each got a half step; the three still outside the band after it (the Vampire, the Valkyrie, the Assassin) got a second, so the Vampire and the Assassin moved a full step in HP, and the Valkyrie half a step in each of two stats.
 
-| Class | Change | Sheet before → after | Whole runs as leader (300 runs, same seeds) |
-| --- | --- | --- | --- |
-| Vampire | HP 4 → 3 | +11.4 → +6.9 | 27% → 14% |
-| Valkyrie | Attack 4 → 3.5, Defense 3 → 2.5 | +12.5 → +9.4 | 12% → 9% |
-| Bramble knight | Defense 3 → 2.5 | +9.9 → +7.2 | 13% → 11% |
-| Ranger | HP 3 → 3.5 | −10.2 → −7.5 | 5% → 6% |
-| Assassin | HP 2 → 3 | −14.2 → −8.8 | 5% → 5% |
+| Class | Change | Steps | Sheet before → after | Whole runs as leader (300 runs, same seeds) |
+| --- | --- | --- | --- | --- |
+| Vampire | HP 4 → 3 | two halves | +11.4 → +9.1 → +6.9 | 27% → 19% → 14% |
+| Valkyrie | Attack 4 → 3.5, then Defense 3 → 2.5 | two halves | +12.5 → +10.5 → +9.4 | 12% → 10% → 9% |
+| Bramble knight | Defense 3 → 2.5 | one half | +9.9 → +7.2 | 13% → 11% |
+| Ranger | HP 3 → 3.5 | one half | −10.2 → −7.5 | 5% → 6% |
+| Assassin | HP 2 → 3 | two halves | −14.2 → −10.8 → −8.8 | 5% → 7% → 5% |
 
 - The Vampire was the clearest. Its Lifesteal keeps it whole from fight to fight, which a single fight doesn't show, and it led whole runs at three times the mean.
 - The Valkyrie (+9.4) and the Assassin (−8.8) are still just outside the band.
@@ -66,9 +63,9 @@ The director's intent and this part's rulings are in `intent.md`; part one's rep
 
 | | Before | Now |
 | --- | --- | --- |
-| Runs won | 19% | 9% |
+| Runs won | 19% | 11% |
 | Lost on act I's road (fights, elites) | 47% of runs | 31% |
-| Bosses beaten, acts I / II / III | 91 / 75 / 90% | 76 / 64 / 52% |
+| Bosses beaten, acts I / II / III | 91 / 75 / 90% | 77 / 65 / 57% |
 | Regions within an act | 18–58% lost | act II 54–56%, act III 57–63% |
 
 Lost by floor, every fight on it, now (before in brackets, act I only, 200 runs):
@@ -111,7 +108,7 @@ Each act climbs to its boss; floors 1–3 lose under 2%.
 - **Bosses:** the build parties win bosses 42% from rolled starts and 53% from full ones, against 70% at part one's knobs (decision 1).
 - **Regular fights and elites:** the build parties still win 99% of regular fights and 91% of elites.
 
-**Heat** still steps evenly: 9% won at heat 0, 8% at 1, 4% at 5, 2% at 10.
+**Heat** still steps evenly: 11% won at heat 0; before the Soldiers' change, 9% at heat 0, 8% at 1, 4% at 5, 2% at 10.
 
 **How sure:**
 - The whole-run rates are good to a point or two.

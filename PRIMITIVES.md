@@ -45,7 +45,7 @@ A weapon belongs to a kind (a registry: speed, damage type and hands), a piece o
 | `riders` | `plain`, `to` | Reactions only: each target gains what the actor's basic attacks carry, in the stacks one swing adds. Two units answering one event add a status from one source once. |
 | `restart` | `to` | The start-of-fight effects of each target's gear and seat happen again: their reactions to fight_start, as a repeat (`repeat: false` keeps a price or a drawback out). One event restarts a unit once. |
 | `fell` | `to` | Each target is knocked out at once: not damage, so no Shield, Aegis or floor stands in the way. The actor's kill, but no hit's. |
-| `summon` | `enemy`, `count` | Brings new units into the fight on the actor's side, up to ruleset.maxEnemies living units on that side. They enter with every action on cooldown. |
+| `summon` | `enemy`, `count`, `hp` | Brings new units into the fight on the actor's side, up to ruleset.maxEnemies living units on that side. They enter with every action on cooldown. |
 | `replace` | `enemy`, `count`, `to` | Each target leaves the fight (not a knockout: its statuses end, nothing reacts to a KO) and `count` new units take its place, up to the cap. |
 
 
