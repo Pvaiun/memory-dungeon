@@ -22,7 +22,22 @@ The director's intent is in `intent.md`. This part balanced the build parties ag
      - route 1 barely moves.
 
      Rung-1 bosses stay near none.
-   - **Your call:** keep the routes as written and accept a weaker first rung, or give route 2 a server that can stand in front, and let route 3's Vampire learn its damage ability first. The Well-seat rule stays out (too narrow, as you said).
+   - **The Bard and the Frostweaver aren't what sinks it.** Swap tests, each team at rungs 1 / 2 / 3:
+
+     | Team | Rung 1 / 2 / 3 won |
+     | --- | --- |
+     | Route 2 as written: Frostweaver, Bard, Stormcaller | 43 / 50 / 96% |
+     | Bard swapped for a Valkyrie | 70 / 77 / 83% |
+     | Frostweaver swapped for a Knight | 68 / 75 / 94% |
+
+     Elsewhere they hold their own:
+     - In the Storm's and the Toll's tankless routes, the Bard beats the Cleric in its seat (Storm 93/98/77% against 83/94/71%).
+     - Cold Snap's tankless route needs the Frostweaver: with a Pyromancer in its place, 90/100/92% falls to 75/88/63%.
+
+     They're not the frailest: HP 3, while the Pyromancer, Stormcaller, Assassin and Cleric have 2. They deal the least damage of their roles: the Bard 0.29× an average unit (a support), and the Frostweaver 0.85×, the bottom of the dealers' band.
+
+     Other builds' tankless routes win because their damage or their control keeps them up (Cuts' Lifesteal, Cold Snap's slow and Stun). Route 2 puts the two least damaging back-row classes beside a 2,000-HP soloist.
+   - **Your call:** give route 2 a server that can stand in front (Knight, Frostweaver, Stormcaller wins 73/77/98%), and let route 3's Vampire learn its damage ability first. The other option is to keep the routes and accept a weaker first rung. The Well-seat rule stays out (too narrow, as you said).
 2. **Riders of a damage status are sized to the status.** `APPLIED` in `scale.ts` makes every rider stat-scaled at a share of its words, on the party's side only (applied when the pack is built, `pack.ts`):
    - Chill at 0.2;
    - Burn at 0.25;
@@ -33,11 +48,7 @@ The director's intent is in `intent.md`. This part balanced the build parties ag
    I read this as what the appliers add, which the rules allow, not as how the statuses work: their caps, values and lengths are untouched. But it moves every rider of three statuses at once, so it's yours to approve or redirect.
 3. **An engine fix.** A status at its cap capped again on an application that added nothing, before its own shatter had spent it. Two Chilled foes passing cold to each other shattered hundreds of times in one tick, refilling the Frostweaver's MP and readying Icicles each time. Now a status caps only when an application brings it to its cap, as Chill's card says.
 4. **Stat lines (contentious):**
-   - MP pools on half steps:
-     - Knight 2, Cleric 2.5, Ranger 2, Bramble knight 2, Hoplite 2, Paladin 3.5, Valkyrie 2.5, Bard 2.5;
-     - Hexer 1.5, Monk 1.5, Assassin 1.5, Vampire 2.5, Pyromancer 4, Frostweaver 2.5, Stormcaller 2.5, Geomancer 2.5.
-
-     They were sized for "two or three fights" when fights ran about 20 ticks. At the new knobs fights run 40–70, and the walls and fighters were short of MP 14–23% of their time (band: 8%).
+   - MP pools raised for longer fights, on half steps: Knight 2, Hoplite 2, Valkyrie 2.5, Monk 1.5, Vampire 2.5. They were sized for "two or three fights" when fights ran about 20 ticks. At the new knobs fights run 40–70, and these classes were short of MP 14–23% of their time (band: 8%). The other pools are as they were.
    - **A half-step pass over every class's stat line.** I don't expect it to balance the game dramatically: the big gaps this pass found were in the loot (riders, stacked Evasion, runaway pieces), and class wins now run −14 to +12 against a ±8 band. A quarter more HP on the Assassin, the class furthest under, lifted its builds only 1–3 points. A targeted half step on the six classes outside the band is worth doing in the next part, once whole runs show which way each leans.
    - A piece's Evasion is its own step, 12 and 20 (`PIECE_SPECIAL`); class lines keep 20 and 35. Thousand Cuts stacked two or three Evasion pieces to 60–75% (the cap), worth 2.5–4× their HP.
 5. **Two of loot.md's held-back levers are now in use:**

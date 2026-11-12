@@ -20972,7 +20972,7 @@
    "source": "starter",
    "stats": {
     "max_hp": 2000,
-    "max_mp": 2500,
+    "max_mp": 2200,
     "mp_regen": 0,
     "attack": 3000,
     "defense": 2000,
@@ -21010,7 +21010,7 @@
    "source": "starter",
    "stats": {
     "max_hp": 3000,
-    "max_mp": 2000,
+    "max_mp": 2100,
     "mp_regen": 0,
     "attack": 4000,
     "defense": 2000,
@@ -21049,7 +21049,7 @@
    "source": "unlock",
    "stats": {
     "max_hp": 5000,
-    "max_mp": 2000,
+    "max_mp": 1700,
     "mp_regen": 0,
     "attack": 2000,
     "defense": 3000,
@@ -21127,7 +21127,7 @@
    "source": "unlock",
    "stats": {
     "max_hp": 4000,
-    "max_mp": 3500,
+    "max_mp": 3300,
     "mp_regen": 0,
     "attack": 4000,
     "defense": 4000,
@@ -21206,7 +21206,7 @@
    "source": "unlock",
    "stats": {
     "max_hp": 3000,
-    "max_mp": 2500,
+    "max_mp": 2400,
     "mp_regen": 0,
     "attack": 3000,
     "defense": 2000,
@@ -21246,7 +21246,7 @@
    "source": "unlock",
    "stats": {
     "max_hp": 3000,
-    "max_mp": 1500,
+    "max_mp": 1700,
     "mp_regen": 0,
     "attack": 4000,
     "defense": 2000,
@@ -21325,7 +21325,7 @@
    "source": "unlock",
    "stats": {
     "max_hp": 2000,
-    "max_mp": 1500,
+    "max_mp": 1450,
     "mp_regen": 0,
     "attack": 5000,
     "defense": 1000,
@@ -21404,7 +21404,7 @@
    "source": "unlock",
    "stats": {
     "max_hp": 2000,
-    "max_mp": 4000,
+    "max_mp": 3800,
     "mp_regen": 0,
     "attack": 5000,
     "defense": 1000,
@@ -21443,7 +21443,7 @@
    "source": "unlock",
    "stats": {
     "max_hp": 3000,
-    "max_mp": 2500,
+    "max_mp": 2300,
     "mp_regen": 0,
     "attack": 3000,
     "defense": 3000,
@@ -21482,7 +21482,7 @@
    "source": "unlock",
    "stats": {
     "max_hp": 2000,
-    "max_mp": 2500,
+    "max_mp": 2300,
     "mp_regen": 0,
     "attack": 4000,
     "defense": 1000,
@@ -21522,7 +21522,7 @@
    "source": "unlock",
    "stats": {
     "max_hp": 3000,
-    "max_mp": 2500,
+    "max_mp": 2300,
     "mp_regen": 0,
     "attack": 3000,
     "defense": 5000,
@@ -46909,7 +46909,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 240
+      "knob": 236
      },
      {
       "id": "snake_pit",
@@ -47003,7 +47003,7 @@
        "ogre",
        "ogre"
       ],
-      "knob": 74
+      "knob": 70
      },
      {
       "id": "war_camp",
@@ -47114,7 +47114,7 @@
        "bat",
        "bat"
       ],
-      "knob": 236
+      "knob": 232
      },
      {
       "id": "curse_room",
@@ -47171,7 +47171,7 @@
        "ghoul",
        "ghoul"
       ],
-      "knob": 219
+      "knob": 215
      },
      {
       "id": "lich_lair",
@@ -47190,7 +47190,7 @@
        "troll",
        "troll"
       ],
-      "knob": 98
+      "knob": 96
      }
     ],
     "bosses": [
@@ -47212,7 +47212,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 88
+      "knob": 86
      }
     ]
    },
@@ -47315,7 +47315,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 164
+      "knob": 161
      },
      {
       "id": "miners",
@@ -47326,7 +47326,7 @@
        "bandit",
        "bomb_bug"
       ],
-      "knob": 140
+      "knob": 146
      }
     ],
     "elite": [
@@ -47337,7 +47337,7 @@
        "lava_slime",
        "lava_slime"
       ],
-      "knob": 270
+      "knob": 268
      },
      {
       "id": "imp_court",
@@ -47369,7 +47369,7 @@
        "bomb_bug",
        "bomb_bug"
       ],
-      "knob": 82
+      "knob": 77
      }
     ],
     "bosses": [
@@ -47389,7 +47389,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 63
+      "knob": 59
      },
      {
       "id": "giants_wrath",
@@ -47399,7 +47399,7 @@
        "fire_imp",
        "fire_imp"
       ],
-      "knob": 47
+      "knob": 44
      }
     ]
    },
@@ -47476,7 +47476,7 @@
        "ice_ghost",
        "ice_spirit"
       ],
-      "knob": 165
+      "knob": 162
      },
      {
       "id": "ghost_lights",
@@ -47486,7 +47486,7 @@
        "ice_ghost",
        "ice_ghost"
       ],
-      "knob": 188
+      "knob": 184
      },
      {
       "id": "long_pack",
@@ -47522,7 +47522,7 @@
        "ice_golem",
        "ice_golem"
       ],
-      "knob": 246
+      "knob": 244
      },
      {
       "id": "golem_gate",
@@ -47543,7 +47543,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 57
+      "knob": 53
      }
     ],
     "bosses": [
@@ -47553,7 +47553,7 @@
       "enemies": [
        "ice_titan"
       ],
-      "knob": 139
+      "knob": 145
      },
      {
       "id": "glacier_king",
@@ -47639,7 +47639,7 @@
        "leech",
        "leech"
       ],
-      "knob": 173
+      "knob": 176
      },
      {
       "id": "leech_den",
@@ -47650,7 +47650,7 @@
        "leech",
        "leech"
       ],
-      "knob": 340
+      "knob": 334
      },
      {
       "id": "drone_wall",
@@ -47663,7 +47663,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 155
+      "knob": 152
      },
      {
       "id": "storm_front",
@@ -47711,7 +47711,7 @@
        "lich",
        "lich"
       ],
-      "knob": 305
+      "knob": 302
      }
     ],
     "bosses": [
@@ -47735,7 +47735,7 @@
        "drone",
        "drone"
       ],
-      "knob": 166
+      "knob": 163
      }
     ]
    },
@@ -47789,7 +47789,7 @@
        "troll",
        "troll"
       ],
-      "knob": 118
+      "knob": 115
      },
      {
       "id": "lich_lair",
@@ -47798,7 +47798,7 @@
        "lich",
        "mummy"
       ],
-      "knob": 315
+      "knob": 312
      },
      {
       "id": "silent_hall",
@@ -47809,7 +47809,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 211
+      "knob": 207
      },
      {
       "id": "quiet_hall",
@@ -47820,7 +47820,7 @@
        "ghost",
        "ghost"
       ],
-      "knob": 160
+      "knob": 157
      },
      {
       "id": "coven",
@@ -47831,7 +47831,7 @@
        "wraith",
        "wraith"
       ],
-      "knob": 127
+      "knob": 131
      },
      {
       "id": "ghoul_feast",
@@ -47854,7 +47854,7 @@
        "bone_priest",
        "troll"
       ],
-      "knob": 228
+      "knob": 231
      },
      {
       "id": "lich_court",
@@ -47865,7 +47865,7 @@
        "lich",
        "lich"
       ],
-      "knob": 212
+      "knob": 215
      },
      {
       "id": "tomb_lords",
@@ -47992,7 +47992,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 133
+      "knob": 130
      },
      {
       "id": "watch",
@@ -48003,7 +48003,7 @@
        "drone",
        "drone"
       ],
-      "knob": 340
+      "knob": 334
      }
     ],
     "elite": [
@@ -48015,7 +48015,7 @@
        "drone",
        "drone"
       ],
-      "knob": 182
+      "knob": 178
      },
      {
       "id": "honour_guard",
@@ -48026,7 +48026,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 496
+      "knob": 483
      },
      {
       "id": "leech_den",
@@ -48038,7 +48038,7 @@
        "leech",
        "leech"
       ],
-      "knob": 367
+      "knob": 364
      }
     ],
     "bosses": [
