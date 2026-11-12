@@ -3,7 +3,8 @@
  * ability, status, enemy, gear piece and formation in the pack, in both modes, at frozen knobs and fixed seeds.
  *
  * A fixed spread of parties (every trio sampled evenly, every formation, every piece of gear a class can wear, plus the
- * sensible kits) plays every free-play run and every rogue fight at its calibrated knob.
+ * sensible kits) plays every free-play run and every rogue fight at its calibrated knob, each rogue fight from a rolled start
+ * (each ability anywhere from ready to just used, as cooldowns carry in a run).
  * Each line is compared with the others of its kind and flagged at both ends against bands written down with their
  * reasons (BANDS, in balance/sheet.ts). Win rates are context here, never the measure: the knobs absorb them.
  *

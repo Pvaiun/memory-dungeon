@@ -2,6 +2,7 @@
 import type { AbilityT, EffectT, ReactionT } from "../../../src/schema.js";
 import { from, SPECIAL, stacks, STATUS } from "../scale.js";
 import { abilityUp, apply, cd, helper, kit, ofHolder, passiveUp, phys } from "./kit.js";
+import { VANGUARD_SHIELD } from "../classes.js";
 
 const vanguardShield = (ratio: number): EffectT => apply("shield", { stacks: ofHolder(ratio, "max_hp"), to: "holder" });
 /** Stonewall: the other ally with the lowest Aggro starts behind a Shield of the Knight's size, up to half its own max HP (the Shield's own cap). */
@@ -14,7 +15,7 @@ passiveUp({
   b: { name: "Grudge", text: "Starts every fight behind a Shield from its max HP. When its Shield breaks, it Taunts and is Guarded.", builds: ["toll"] },
   form: (v, k) => ({
     reactions: [
-      { on: { event: "fight_start" }, do: v === "a" ? [vanguardShield(0.2 * k), stonewallShield(0.2 * k)] : [vanguardShield(0.2 * k)] },
+      { on: { event: "fight_start" }, do: v === "a" ? [vanguardShield(VANGUARD_SHIELD * k), stonewallShield(VANGUARD_SHIELD * k)] : [vanguardShield(VANGUARD_SHIELD * k)] },
       ...(v === "b" ? [grudge] : []),
     ],
   }),

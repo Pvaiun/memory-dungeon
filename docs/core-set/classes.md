@@ -82,7 +82,7 @@ The starters cover every Fundamental challenge between them: a wall, a healer an
 
 **Role:** the marksman. **Trunk:** arrows that bleed, chill and sunder whatever stands in front; plain arrows past any guard that crit for a living.
 
-**Weapons:** bow, dagger. **Armor:** Leather. **Offhands:** trophy, cloak. **Special stats:** Accuracy medium. **The line:** Attack and Crit high, a light body.
+**Weapons:** bow, dagger. **Armor:** Leather. **Offhands:** trophy, cloak. **Special stats:** Accuracy medium, Evasion medium. **The line:** Attack and Crit high, a light body that slips aside rather than takes the blow.
 
 - **Passive – Hunter's eye.** Its basic attacks ignore Taunt (they go to a random foe, Taunting or not) and crit more often (`KIT.hunterCrit` steps).
 - **Barbed arrow.** Deals light damage that scales from Attack to a random foe, and adds several Bleed; stacks scale from Attack.
@@ -214,7 +214,7 @@ Three damage dealers, each beating Defense its own way: the Monk with Sunder, th
 
 - **Passive – Lacerate.** Each of its crits adds several Bleed to the foe; stacks scale from Attack.
 - **Vanish.** Applies Hidden to itself. Waits until it isn't Hidden.
-- **Backstab.** Has Seek. Deals damage that scales from Crit chance to the foe with the lowest current HP.
+- **Backstab.** Has Seek. Deals heavy damage that scales from Crit chance to the foe with the lowest current HP.
 - **Garrote.** Has Seek. Deals damage that scales from Attack to a random foe that isn't Taunting, and applies Silence.
 
 **Identities.** The ambusher (dagger, trophy): Opening wound, Shadow step, From the shadows. The hunter (dagger or axe): Rupture (its crits deal extra damage for each Bleed the foe holds, and the Bleed stays), Coup de grâce, Smoke screen. The drinker (axe, vial): **Bleed them dry** (Seek, Rot and many Bleed on a random foe that isn't Taunting, and the Assassin's Lifesteal is doubled for a while; no Silence: Lifesteal), Choke.
@@ -225,7 +225,7 @@ Three damage dealers, each beating Defense its own way: the Monk with Sunder, th
 
 **Role:** drains to outlast. **Trunk:** feeds on everything it hits: the harder it hits, the more it heals, its prey is left weakened, and it bleeds its own life into an ally's wounds and mana. An exotic class, at the director's word. Its identity is healing back from the brink, not sustain all fight.
 
-**Weapons:** fist weapons, axe. **Armor:** Mail. **Offhands:** vial, idol. **Special stats:** Lifesteal high. **The line:** body as fuel: HP and Attack high.
+**Weapons:** fist weapons, axe. **Armor:** Mail. **Offhands:** vial, idol. **Special stats:** Lifesteal medium. **The line:** body as fuel: HP above average, Attack high.
 
 - **Passive – Bloodlust.** While it's below half of its max HP, its Lifesteal is doubled.
 - **Blood drain.** Deals damage that scales from max HP to a random foe, and applies Weaken. The one MP cost off the ladder: very cheap.
@@ -293,7 +293,7 @@ Four mages, and they share no template: fire is the long cast, ice the wall that
 
 - **Passive – Bedrock.** While its Shield pool is above zero, its crit chance is doubled.
 - **Earthen shell.** Applies Shield to itself and to the other ally with the lowest share of max HP; the amount scales from Defense.
-- **Rockfall.** Deals damage that scales from Defense to a random foe.
+- **Rockfall.** Deals heavy damage that scales from Defense to a random foe, on a medium cooldown: big, rarer rocks.
 - **Tremor.** Deals damage that scales from Defense to a random foe, and applies Stun.
 
 **Identities.** The landslide (great weapon): Faultline, Boulder, Fissure, Rampart. The quake (hammer, trophy): Stunning crits, Aftershock. The stone warden (hammer, kite shield): Stone skin, Rock shelter (the ally with the lowest share of HP gains a Shield as large as the damage Rockfall dealt).
@@ -338,6 +338,6 @@ Every piece of the vocabulary is used by a class or an enemy (`classes.ts`, `ene
 - **Stand fast.** The Knight's Taunt lasts less than its cooldown, so check it holds bosses on Aggro alone in the gaps.
 - **Aspis** goes to the lowest ally, who isn't always the one about to take the big hit. Check how often Aegis catches anything without a Knight drawing the boss.
 - **Bedrock** depends on how long the Geomancer's Shield lasts. Check its crit uptime with and without a protector beside it.
-- **Choosing** is a revive on a medium cooldown where the documents give revives the very long word; it brings a tenth, and the balance pass may lengthen it. With an ally down and another hurt it raises, and the hurt one waits for the next cast.
+- **Choosing** is a revive on a medium cooldown where the documents give revives the very long word; it brings a tenth, and a playtest may lengthen it. With an ally down and another hurt it raises, and the hurt one waits for the next cast.
 - **The Frostweaver's shatters:** a Frostweaver working alone on one foe should shatter it within a few casts, and more than once in a regular fight. Its Chill counts are the balance pass's first job.
 - **Cadenza** is esoteric, and worth trying by the director's word.

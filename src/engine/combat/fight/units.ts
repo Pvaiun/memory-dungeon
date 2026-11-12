@@ -101,14 +101,14 @@ export function revive(w: W, by: CUnit, t: CUnit, hp: number, ready: boolean) {
   hpMoved(w, t, true);
 }
 
-/** A unit for the enemy side, from an enemy definition: at fight start or when summoned. */
-export function makeUnit(c: Content, f: Pick<CFight, "units" | "seed" | "stage" | "foes">, enemyId: string, side: CUnit["side"], lettered: boolean): CUnit {
+/** A unit for the enemy side, from an enemy definition: at fight start or when summoned (`hpPct`: a summon's change to its own max HP). */
+export function makeUnit(c: Content, f: Pick<CFight, "units" | "seed" | "stage" | "foes">, enemyId: string, side: CUnit["side"], lettered: boolean, hpPct = 0): CUnit {
   const e = c.enemies.get(enemyId)!;
   const n = f.units.filter((u) => u.side === side).length + 1;
   const same = f.units.filter((u) => u.ref === enemyId).length;
   const id = `${side === "enemy" ? "e" : "p"}${n}`;
   const foes = side === "enemy" ? f.foes : undefined;
-  const m: Pick<CUnit, "base" | "flat" | "pct"> = { base: { ...e.stats }, flat: {}, pct: {} };
+  const m: Pick<CUnit, "base" | "flat" | "pct"> = { base: { ...e.stats, ...(hpPct ? { max_hp: Math.round((e.stats.max_hp * (100 + hpPct)) / 100) } : {}) }, flat: {}, pct: {} };
   if (foes?.power) m.flat.power = foes.power;
   if (foes?.hp) m.pct.max_hp = foes.hp;
   const stats = derive(c, m);
@@ -120,8 +120,8 @@ export function makeUnit(c: Content, f: Pick<CFight, "units" | "seed" | "stage" 
   };
 }
 
-/** Brings new units into the fight on a side, up to the cap, with every action on cooldown. */
-export function summon(w: W, by: CUnit, side: CUnit["side"], enemyId: string, count: number) {
+/** Brings new units into the fight on a side, up to the cap, with every action on cooldown; `hpPct` changes their own max HP. */
+export function summon(w: W, by: CUnit, side: CUnit["side"], enemyId: string, count: number, hpPct = 0) {
   const f = w.f;
   const lettered = f.units.filter((u) => u.ref === enemyId).length + count > 1;
   for (let n = 0; n < count; n++) {
@@ -129,7 +129,7 @@ export function summon(w: W, by: CUnit, side: CUnit["side"], enemyId: string, co
       w.log?.({ t: "cap", vis: "hidden", at: f.now, by: by.id, enemy: enemyId });
       return;
     }
-    const u = makeUnit(w.c, f, enemyId, side, lettered);
+    const u = makeUnit(w.c, f, enemyId, side, lettered, hpPct);
     f.units.push(u);
     for (const id of u.start) applyStatus(w, u, u, def(w, id), { stacks: 1, rng: u });
     refresh(w, u);

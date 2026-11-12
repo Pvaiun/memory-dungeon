@@ -20,9 +20,9 @@ The loot is made from these nine: each item's designer tags (`SERVED`, from its 
 - **Act II:** most slots filled, a version or two a unit, formations, a mythic. This is where a build is built.
 - **Act III:** whole kits and legendaries. The far end.
 
-**Left unjudged until the balance pass:** kits arriving one ability at a time, and cooldowns carrying. The set is written to hold either way.
+**Left unjudged until the playtest:** kits arriving one ability at a time, and cooldowns carrying. The set is written to hold either way.
 
-**A wall is not every build's start,** and neither is a front seat: a wall at the start of every build would make every run feel the same. Staying alive without one isn't the builds' to solve. The balance pass makes sure a party without a wall gets through the start of a run.
+**A wall is not every build's start,** and neither is a front seat: a wall at the start of every build would make every run feel the same. Staying alive without one isn't the builds' to solve, and not the knobs' either: a party without a wall loses far more of act I's regular fights than one with, at any knob, and the director will fix that by other means (`docs/rules.md`).
 
 **What every build answers:**
 - **Through a run:** its three rungs as the sign, the build and the far end. Each says what the player sees, what the step is and what it pays if the run goes no further.
@@ -266,7 +266,7 @@ The loot is made from these nine: each item's designer tags (`SERVED`, from its 
   - **Pieces:** links sized to be seen: a whole cast's mana, a whole cooldown, not a tenth of either; Cooldown and Cast speed where casters wear them; an answer to Silence; something of their own for the two who serve, so they're more than batteries.
   - **Formations:** soloist, conductor, well.
   - **Upgrades:** versions that make an ability ready again on a cast or a kill, or pass mana on.
-- **Asks of the game:** none in the kits. Clarity's and Refrain's mana have to be big enough to change what the caster does: the balance pass's.
+- **Asks of the game:** none in the kits. Clarity's and Refrain's mana have to be big enough to change what the caster does: the playtest's to judge.
 
 ### Blood Pact
 
@@ -691,7 +691,7 @@ Four things for the upgrades to know:
   - The foes' own doing: the Toll's attackers, the Storm's every action.
 
 **Set aside:**
-- **Stranglehold:** a build on debuffs. They can't keep a party alive at today's sizes, and may not neuter a foe team at any number. It could come back if the balance pass makes debuffs big enough to stand on.
+- **Stranglehold:** a build on debuffs. They can't keep a party alive at today's sizes, and may not neuter a foe team at any number. It could come back if debuffs are ever made big enough to stand on.
 - **Phoenix:** a build on falls. Nobody chooses who falls; revives are the net.
 - **Ambush alone:** an opening with no tail. Its rhythm is the most distinct of any opening, which is why the first strike is kept in the Hunt.
 - **Harvest alone:** spread as a build. It's each build's pack game, and the Storm's nature.

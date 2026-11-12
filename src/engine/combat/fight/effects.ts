@@ -83,7 +83,7 @@ export function num(w: W, ctx: Ctx, owner: object, n: S.NumT, target: CUnit | nu
 
 export function run(w: W, ctx: Ctx, e: S.EffectT) {
   if (e.op === "summon") {
-    if (!w.f.result && (!ctx.actor.ko || ctx.dead)) summon(w, ctx.actor, ctx.actor.side, e.enemy, e.count ?? 1);
+    if (!w.f.result && (!ctx.actor.ko || ctx.dead)) summon(w, ctx.actor, ctx.actor.side, e.enemy, e.count ?? 1, e.hp ?? 0);
     return;
   }
   if (e.op === "recast") return recast(w, ctx, e);

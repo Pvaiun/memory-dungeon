@@ -200,7 +200,7 @@ A long grind that drains mana: Shock's region.
 
 The tower's spike floor: a Lock with an elite mid-run (the Storm Queen) and a mana drain. The key is the Seek bench: the Valkyrie, Assassin and Monk.
 
-- **Storm King (boss).** The Storm Queen's mate: hurt his soldiers and he gets angry. *Avenger*, on summon waves. **Vengeance:** when one of his Soldiers is knocked out, he gains several Might. **Rally:** summons two Soldiers, up to the cap. **Soldier,** his add: tougher than a Drone, with **Shield up** (Taunt on itself).
+- **Storm King (boss).** The Storm Queen's mate: hurt his soldiers and he gets angry. *Avenger*, on summon waves. **Vengeance:** when one of his Soldiers is knocked out, he gains several Might. **Rally:** summons two Soldiers, each with half a Soldier's HP, up to the cap. **Soldier,** his add: tougher than a Drone, with **Shield up** (Taunt on itself).
 
 ## Encounters
 

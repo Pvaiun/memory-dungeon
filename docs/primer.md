@@ -6,7 +6,7 @@ The least you need to know to work on the game. Read it first, then open a detai
 
 - **The game** is a party-based JRPG dungeon crawler with automatic combat, played on a phone-sized browser interface.
 - **The core set is the game's content:** the combat rules, 16 classes, gear, formations, upgrades and mythics, 29 enemies, and the **rogue mode**, which is the game. Free play keeps everything available as a sandbox.
-- **The repo designs it:** a schema, a headless engine, simulations and the interface. Everything is built and approved, and nothing is balanced yet.
+- **The repo designs it:** a schema, a headless engine, simulations and the interface. Everything is built and approved, and tuned by simulation for a first playtest.
 
 ## How it plays
 
@@ -96,7 +96,7 @@ The least you need to know to work on the game. Read it first, then open a detai
 - **The data turns each word into a number,** in one place: `content/core-set/scale.ts`.
   - **Amounts** are stored at 1,000 a point (HP 2 is 2,000), and the interface divides them back down.
   - **Percentages** stay in percent.
-- **Every value is a first value, not a balanced one.** Tune by changing a constant and running `npm run content`. Don't copy numbers into the documents: name the constant instead.
+- **Every value is tuned by simulation, and none is final:** the playtest judges. Tune by changing a constant and running `npm run content`. Don't copy numbers into the documents: name the constant instead.
 
 ## Words used in this repo
 

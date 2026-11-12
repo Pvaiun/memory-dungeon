@@ -86,9 +86,9 @@ A run starts with Neutral. Formations are common, rare or legendary (`content/co
 
 ## Difficulty
 
-- **A fight's knob** adds its own (`rogue-knobs.json`), its act's for its tier (`knobs`), its region's (each region's `knob`), a climb a floor from its pool's reference floor (`map.ref`, `knobs[].step`, `early` below it; not for bosses) and the heat. A knob k gives foes k % more HP and k ÷ 2.5 % more damage (`knobFoes` in `src/rogue.ts`); each tier's `shape` adds HP and damage on top.
+- **A fight's knob** adds its own (`rogue-knobs.json`), its act's for its tier (`knobs`), its region's for its tier (each region's `knob`), a climb a floor from its pool's reference floor (`map.ref`, `knobs[].step`, `early` below it and the elites' own `eliteEarly`; not for bosses) and the heat. A knob k gives foes k % more HP and k ÷ 2.5 % more damage (`knobFoes` in `src/rogue.ts`); each tier's `shape` adds HP and damage on top: regular fights and elites longer and softer than the knob alone, bosses shorter and harder.
 - **Heat:** a won run opens the next level; the start screen picks any open level. Each adds `heat.per` to every knob. Heat 0 is the game as tuned.
-- **Knobs are measured, not set:** `npm run rogue:calibrate` against the hand-built rosters (`tools/rogue-parties.ts`), then `npm run rogue:tune` over whole runs of the simulated player.
+- **Knobs are measured, not set.** Each fight's own knob is set by what it costs a careful party: about a fifth of its HP for a regular fight, a third for an elite (`TARGETS` in each calibrator: `tools/build-calibrate.ts` against the build parties; act I's against the hand-built rosters at act I's power, `npm run rogue:calibrate`, with its climb from `--climb`). Then `npm run rogue:tune` plays whole runs of the simulated player: it sets each boss to its act's share of the parties that reach it (`RUN_TARGETS` in `tools/rogue-tune.ts`), and evens out the regions an act forks into. It doesn't aim the losses between bosses: the simulated player's come mostly from weak parties, so a target for them would make the fights free for every other party.
 
 ## The end of a run
 

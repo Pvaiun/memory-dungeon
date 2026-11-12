@@ -7,7 +7,8 @@
  * 2. For each fight: its knob is bisected until a regular fight or an elite, against those parties with their HP made
  *    whole (their MP as it was), costs its target share of the party's HP (net of healing, a fallen member counting as all
  *    of theirs), and a boss, against parties as they arrived, wins its target share of fights. The same parties and dice at every knob, so the curve is smooth.
- * 3. The knobs go to content/core-set/rogue-knobs.json; `npm run content` puts them in the pack.
+ * 3. The knobs go to content/core-set/rogue-knobs.json, each less its act's and region's offsets for its tier (so a run meets the measured
+ *    knob on the pool's reference floor); `npm run content` puts them in the pack.
  *
  * By default the parties are the hand-built rosters of tools/rogue-parties.ts at each act's and tier's power level, not the
  * simulated player's snapshots (`--snapshots` uses those). Each roster fields a good
@@ -153,6 +154,15 @@ function calibrate(c: Content, snaps: Snap[], t: Task): Result {
   return { key: `${t.region}/${t.tier === "boss" ? "bosses" : t.tier}/${t.fight.id}`, knob: best.k, cost: Math.round(best.m.cost), lost: Math.round(best.m.lost) };
 }
 
+/** What stands between a fight's own knob and what a run meets at its pool's reference floor: the act's and region's offsets. */
+function offset(c: Content, key: string): number {
+  const [region, pool] = key.split("/");
+  const reg = rogue(c).regions.find((g) => g.id === region)!;
+  const kn = rogue(c).config.knobs[reg.act - 1];
+  const tier = pool === "bosses" ? "boss" : pool === "elite" ? "elite" : "mob";
+  return kn[tier] + reg.knob[tier];
+}
+
 // ─── Main ───────────────────────────────────────────────────────────────────
 
 const args = process.argv.slice(2);
@@ -197,13 +207,17 @@ async function main() {
     const ref = rogue(c).config.map.ref?.normal ?? 5, first = (rogue(c).config.map.easyTo ?? 2) + 1;
     const d = results.filter((r) => r.key.includes("/normal/") && !Number.isNaN(r.cost)).map((r) => r.knob - (knobs[r.key] ?? 0)).sort((a, b) => a - b);
     const med = d[Math.floor(d.length / 2)];
-    console.log(`climb: act I's regular fights against a party a few rooms in need their knobs ${d.join(", ")} (median ${med}); knobs[0].early = ${(-med / (ref - first)).toFixed(1)} a floor (floor ${first} is ${ref - first} below the reference). Nothing written.`);
+    // The act's and the region's offsets for regular fights already stand between a fight's own knob and what it meets.
+    const off = rogue(c).config.knobs[0].mob + (rogue(c).regions.find((g) => g.act === 1)?.knob.mob ?? 0);
+    console.log(`climb: act I's regular fights against a party a few rooms in need their knobs ${d.join(", ")} (median ${med}) from their own; with the act's and region's offset (${off}), knobs[0].early = ${((off - med) / (ref - first)).toFixed(1)} a floor (floor ${first} is ${ref - first} below the reference). Nothing written.`);
     return;
   }
   // A pool no sampled run reached (act 3 on a hard build) keeps its knob rather than taking 0.
   const unmeasured = results.filter((r) => Number.isNaN(r.cost));
   if (unmeasured.length) console.log(`${unmeasured.length} fights had no parties to measure against and keep their knobs: ${unmeasured.map((r) => r.key).join(", ")}`);
-  for (const r of results) if (!Number.isNaN(r.cost)) knobs[r.key] = r.knob;
+  // The measured knob is what the fight should meet at its pool's reference floor; its own knob is that less the act's and
+  // the region's offsets for its tier, as tools/build-calibrate.ts writes it.
+  for (const r of results) if (!Number.isNaN(r.cost)) knobs[r.key] = r.knob - offset(c, r.key);
   writeFileSync(KNOBS, JSON.stringify(Object.fromEntries(Object.entries(knobs).sort()), null, 1) + "\n");
   console.log(`${results.length} fights calibrated in ${((Date.now() - t0) / 1000).toFixed(0)} s; written to ${KNOBS}. Run npm run content.`);
 }
