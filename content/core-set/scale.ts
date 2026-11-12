@@ -352,6 +352,12 @@ export const AGGRO_STEP = 10;
  * restores about 7% of a 3,000 pool over a 40-tick fight, +2 about 14% (foes' regen comes from their own lines).
  */
 export const MP_REGEN_STEP = 3 * P;
+/**
+ * A piece's max MP step brings this many HP steps beside it, over its budget. MP is worth less in a fight than the other stats
+ * (a fight from a part-full bar seldom spends the pool), and the pieces that carry it, most of them Barrage's, had left their
+ * wearers the frailest in the set: a Barrage party's Well fell first, about tick 20, in nearly every fight it lost.
+ */
+export const MP_STEP_HP = 1;
 /** The step for a stat, in the data's units. */
 export const stepFor = (stat: string) => (stat === "max_hp" ? HP_STEP : stat === "aggro" ? AGGRO_STEP : stat === "mp_regen" ? MP_REGEN_STEP : STEP);
 

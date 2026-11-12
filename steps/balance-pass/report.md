@@ -4,19 +4,25 @@ The director's intent is in `intent.md`. This part balanced the build parties ag
 
 ## Decisions for the director
 
-1. **Barrage is still the one build far under.** At the baseline knobs it wins 43% at rung 1, 56% at rung 2 and 69% at rung 3; every other build wins 77–100%. Bosses are its worst: 20% won.
-   - **Why.** Two of its three routes have no one who can stand in front at rungs 1 and 2:
-     - route 2 is three casters;
-     - route 3's Vampire, in the Well, knows only Blood gift at rung 1.
-   - **Its gear doesn't help.** Its pieces' stat lines are mostly MP, which one fight from a part-full bar doesn't value. In a run, where MP carries, they'd be worth more.
-   - **The Well falls first,** at about tick 15–25 (the Bard, the Frostweaver or the Vampire), and the rest follow.
-   - **Sensitivity.** Half again more HP on its members gives 69–78%; half again more Attack gives 51–69%.
-   - **Options:**
-     - (a) let Barrage's mana pieces carry some HP or Defense in place of part of their MP steps;
-     - (b) give the Well seat real protection, a Guard or a Shield (The stage's Well has a Shield on each Soloist cast and now a Taunt at the start);
-     - (c) put someone who can stand in front into route 2 (`builds.md`);
-     - (d) judge it in whole runs before changing more.
-   - **I'd try (a) and (d) together.**
+1. **Barrage's routes, a question for builds.md.** Barrage now wins 52% at rung 1, 71% at rung 2 and 85% at rung 3; every other build wins 75–100%. Bosses are its worst: 35% won.
+   - **Done since your answer:**
+     - a piece's max MP step brings an HP step beside it (`MP_STEP_HP` in `scale.ts`); that's 41 pieces, 33 of them Barrage's;
+     - every class's MP pool is on a half step, rounded up where a class was short of MP.
+
+     Before the recalibration these took Barrage from 36/56/69% to 61/78/86%.
+   - **The frame works; the routes are the weak part.** Played with every soloist and every pair of servers:
+     - Barrage wins 84–88% with a Pyromancer or Stormcaller soloist and two sturdy servers (any two of the Knight, Hoplite, Valkyrie, Bramble knight, Vampire and Paladin);
+     - with one support (the Bard or the Cleric) among them, 73–84%;
+     - with two, 30–40%.
+
+     All three of builds.md's routes hold the Bard or the Cleric, and two make the Frostweaver or the Geomancer the soloist. Those two average 60% as soloists, against 76–78% for the others.
+   - **A player's choice of abilities helps, but doesn't fix rung 1.** Of every combination of the abilities a unit knows at rung 1:
+     - route 3 goes from 33% to 68% if the Vampire knows Blood drain, not Blood gift;
+     - route 2 goes from 25% to 40% if the Bard knows War ballad, not Allegro;
+     - route 1 barely moves.
+
+     Rung-1 bosses stay near none.
+   - **Your call:** keep the routes as written and accept a weaker first rung, or give route 2 a server that can stand in front, and let route 3's Vampire learn its damage ability first. The Well-seat rule stays out (too narrow, as you said).
 2. **Riders of a damage status are sized to the status.** `APPLIED` in `scale.ts` makes every rider stat-scaled at a share of its words, on the party's side only (applied when the pack is built, `pack.ts`):
    - Chill at 0.2;
    - Burn at 0.25;
@@ -27,7 +33,12 @@ The director's intent is in `intent.md`. This part balanced the build parties ag
    I read this as what the appliers add, which the rules allow, not as how the statuses work: their caps, values and lengths are untouched. But it moves every rider of three statuses at once, so it's yours to approve or redirect.
 3. **An engine fix.** A status at its cap capped again on an application that added nothing, before its own shatter had spent it. Two Chilled foes passing cold to each other shattered hundreds of times in one tick, refilling the Frostweaver's MP and readying Icicles each time. Now a status caps only when an application brings it to its cap, as Chill's card says.
 4. **Stat lines (contentious):**
-   - MP pools: Knight 1.6, Hoplite 2.1, Valkyrie 2.4, Monk 1.2, Vampire 2.4. The pools were sized for "two or three fights" when fights ran about 20 ticks. At the new knobs fights run 40–70, and these classes were short of MP 14–23% of their time (band: 8%).
+   - MP pools on half steps:
+     - Knight 2, Cleric 2.5, Ranger 2, Bramble knight 2, Hoplite 2, Paladin 3.5, Valkyrie 2.5, Bard 2.5;
+     - Hexer 1.5, Monk 1.5, Assassin 1.5, Vampire 2.5, Pyromancer 4, Frostweaver 2.5, Stormcaller 2.5, Geomancer 2.5.
+
+     They were sized for "two or three fights" when fights ran about 20 ticks. At the new knobs fights run 40–70, and the walls and fighters were short of MP 14–23% of their time (band: 8%).
+   - **A half-step pass over every class's stat line.** I don't expect it to balance the game dramatically: the big gaps this pass found were in the loot (riders, stacked Evasion, runaway pieces), and class wins now run −14 to +12 against a ±8 band. A quarter more HP on the Assassin, the class furthest under, lifted its builds only 1–3 points. A targeted half step on the six classes outside the band is worth doing in the next part, once whole runs show which way each leans.
    - A piece's Evasion is its own step, 12 and 20 (`PIECE_SPECIAL`); class lines keep 20 and 35. Thousand Cuts stacked two or three Evasion pieces to 60–75% (the cap), worth 2.5–4× their HP.
 5. **Two of loot.md's held-back levers are now in use:**
    - half again in place of double: The Red Feast, Twinfall, Hummingbird charm;
@@ -62,15 +73,15 @@ The build test at the final knobs (own act, 6 seeds), and at every fight's knob 
 
 | Build | Win r1 / r2 / r3 | At +80 | Bosses | Ticks a fight |
 | --- | --- | --- | --- | --- |
-| Landslide | 93 / 95 / 89 | 73 / 77 / 75 | 76% | 52 |
-| Thousand Cuts | 99 / 97 / 89 | 80 / 78 / 67 | 88% | 42 |
-| Bonfire | 100 / 100 / 94 | 77 / **95** / 74 | 94% | 27 |
-| Cold Snap | 94 / 98 / 91 | 51 / 80 / 67 | 83% | 35 |
-| The Storm | 98 / 81 / 87 | 79 / 71 / 69 | 61% | 30 |
-| The Hunt | 82 / 88 / 89 | 42 / 64 / 69 | 61% | 29 |
-| The Toll | 99 / 90 / 77 | 73 / 77 / 62 | 66% | 54 |
-| Barrage | **43 / 56 / 69** | **6 / 39 / 48** | 20% | 60 |
-| Blood Pact | 93 / 92 / 98 | 66 / 84 / 88 | 81% | 77 |
+| Landslide | 92 / 96 / 88 | 73 / 77 / 72 | 73% | 52 |
+| Thousand Cuts | 99 / 95 / 85 | 78 / 76 / 58 | 83% | 44 |
+| Bonfire | 100 / 100 / 95 | 76 / **97** / 72 | 96% | 27 |
+| Cold Snap | 94 / 98 / 91 | 47 / 78 / 67 | 82% | 36 |
+| The Storm | 98 / 83 / 86 | 77 / 70 / 69 | 61% | 31 |
+| The Hunt | 81 / 88 / 87 | 36 / 66 / 68 | 57% | 31 |
+| The Toll | 98 / 88 / 75 | 71 / 76 / 55 | 62% | 54 |
+| Barrage | **52** / 71 / 85 | **6** / 55 / 70 | 35% | 67 |
+| Blood Pact | 93 / 91 / 95 | 66 / 83 / 88 | 78% | 79 |
 
 - **Build by build:**
   - The status builds are no longer two to three times faster than the rest. Cold Snap's fights went from 15 to 35 ticks, and Bonfire's from 20 to 27.

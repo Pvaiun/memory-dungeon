@@ -74,7 +74,7 @@ Plus the 12 plain weapons (the starters, and the cheapest drops) and the 16 myth
 ## Sizes, for new pieces
 
 The first values a new piece is written in. They aren't limits: no balancing rules are made while making content (`docs/rules.md`), and synergies may be overpowered. A build's first step is sized so it's seen the first time it fires, whatever its first value; in play, the small end of these was never seen to happen.
-- **Stat steps** as gear has them (`STEP`, `HP_STEP`, `AGGRO_STEP`, `MP_REGEN_STEP`). Special stats are medium, high only on a legendary. A piece's Evasion is its own, smaller step than a class line's (`PIECE_SPECIAL`): its worth climbs steeply as it stacks.
+- **Stat steps** as gear has them (`STEP`, `HP_STEP`, `AGGRO_STEP`, `MP_REGEN_STEP`). Special stats are medium, high only on a legendary. A piece's Evasion is its own, smaller step than a class line's (`PIECE_SPECIAL`): its worth climbs steeply as it stacks. A max MP step brings an HP step beside it, over the budget (`MP_STEP_HP`): MP is worth less in a fight than the other stats.
 - **Stacks** in the classes' words, a few, several or many, read off the applier's stat the way a kit's are. A rider on every hit is "a few" or less. A rider of a damage status adds its status's share of the word (`APPLIED`: Chill, Burn and Bleed riders are smaller than their words, since a stack of each is worth so much more than a swing); abilities keep their own sizes.
 - **Damage boosts:** a small one 10% to 20%, a narrow one 30% to 50%, and "double" only on a condition a fight meets a few times.
 - **Statuses keep their own numbers.** A piece decides who gets a status and when, never what it does.

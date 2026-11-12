@@ -362,15 +362,15 @@ export const classes: ClassDefT[] = [
 /**
  * Each class's MP pool, in points, set by how many regular fights it lasts from full (`npx tsx tools/rogue-acts.ts`, the
  * endurance line): every class runs dry in about two or three fights, casters and walls close together, erring scarce. MP
- * comes back on the bench, never in a fight by itself. The pool, not the cost ladder, is the class's MP identity. The walls'
- * and fighters' pools (the Knight, Hoplite, Valkyrie, Monk and Vampire) are half again bigger and more since the balance
- * pass's knobs made fights two or three times longer: they had run dry inside one (short of MP a sixth to a quarter of their
- * time, against the balance sheet's band of 8%), while the casters' regen gear kept theirs.
+ * comes back on the bench, never in a fight by itself. The pool, not the cost ladder, is the class's MP identity. Every pool is
+ * on a half step of the 1-to-5 scale, rounded up for a class short of MP more than the balance sheet's band allows; the
+ * walls' and fighters' pools are bigger since the balance pass's knobs made fights two or three times longer, when they ran
+ * dry inside one while the casters' regen gear kept theirs.
  */
 export const MP_POOL: Record<string, number> = {
-  knight: 1.6, cleric: 2.2, ranger: 2.1, bramble_knight: 1.7, hoplite: 2.1, paladin: 3.3,
-  valkyrie: 2.4, bard: 2.4, hexer: 1.7, monk: 1.2, assassin: 1.45, vampire: 2.4,
-  pyromancer: 3.8, frostweaver: 2.3, stormcaller: 2.3, geomancer: 2.3,
+  knight: 2, cleric: 2.5, ranger: 2, bramble_knight: 2, hoplite: 2, paladin: 3.5,
+  valkyrie: 2.5, bard: 2.5, hexer: 1.5, monk: 1.5, assassin: 1.5, vampire: 2.5,
+  pyromancer: 4, frostweaver: 2.5, stormcaller: 2.5, geomancer: 2.5,
 };
 for (const k of classes) if (MP_POOL[k.id] !== undefined) k.stats.max_mp = pts(MP_POOL[k.id]);
 
