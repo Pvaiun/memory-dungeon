@@ -19,7 +19,7 @@ The director's intent is in `intent.md`. This part balanced the build parties ag
    - **What's left is the routes, not the payoff.**
      - The Knight-Bard-Pyromancer route is in line: 82/83/92%.
      - The three-caster route (Frostweaver, Bard, Stormcaller) stays at 43/63% at rungs 1–2: its soloist, a 2,000-HP Stormcaller, falls with nobody in front.
-     - The Cleric route is 62% at rung 1, where its Vampire knows only Blood gift.
+     - The Cleric route was 62% at rung 1, when its Vampire knew only Blood gift.
 
      With every soloist and every pair of servers:
      - a Pyromancer or Stormcaller soloist with two sturdy servers wins most;
@@ -39,7 +39,7 @@ The director's intent is in `intent.md`. This part balanced the build parties ag
 
      Their weakness is damage, not frailty: they have HP 3, the Bard deals 0.29× an average unit, and the Frostweaver 0.85×, the bottom of the dealers' band. Other builds' tankless routes win on their own damage or control.
    - **The build parties' Soloist** slots the abilities that deal damage first, as a player would. The cathedral had freed the Geomancer's Earthen shell, cast 15 times a fight.
-   - **Your call:** whether route 2 keeps three casters, and whether route 3's Vampire learns its damage ability first (rung 1: 33% to 68%).
+   - **Your call:** whether route 2 keeps three casters. Route 3's Vampire now knows Blood drain at rung 1, on your word (it measured 33% to 68% there, before this round's other changes); the build test hasn't been run with it.
 2. **Riders of a damage status are sized to the status.** `APPLIED` in `scale.ts` makes every rider stat-scaled at a share of its words, on the party's side only (applied when the pack is built, `pack.ts`):
    - Chill at 0.2;
    - Burn at 0.25;

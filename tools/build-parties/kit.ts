@@ -16,7 +16,7 @@
  * - **Seats:** each formation's seats have a role (wall, heal, cast, hit, any); the most particular seats are filled first,
  *   each with the member whose class fits that role best (ties: the route's order).
  * - **Abilities:** at rung 1 a member knows one or two (the route's first and third classes two, its second one), the ones
- *   whose versions are worth most to the build; from rung 2 all three. In the kit's order, but a Soloist slots its abilities
+ *   whose versions are worth most to the build, unless the route names them; from rung 2 all three. In the kit's order, but a Soloist slots its abilities
  *   that deal damage first.
  * Nothing here is balanced: a route is what the documents name, and the gear is what the tags say serves it.
  */
@@ -209,7 +209,7 @@ function member(cls: string, seat: string, build: BuildId, rung: Rung, used: Set
  * A route: its build, its three classes (builds.md's routes), what it's built around, and its formation at each rung. Each
  * rung is filled from the tags (the file's header says how).
  */
-export function route(build: BuildId, classIds: [string, string, string], note: string, forms: [string, string, string]): Route {
+export function route(build: BuildId, classIds: [string, string, string], note: string, forms: [string, string, string], firstKnown: Partial<Record<string, string[]>> = {}): Route {
   const id = classIds.map((c) => c.replace(/_/g, "-")).join("-");
   const rungs = forms.map((formation, i): Party => {
     const rung = (i + 1) as Rung;
@@ -217,7 +217,11 @@ export function route(build: BuildId, classIds: [string, string, string], note: 
     if (!seats) throw new Error(`build parties: no formation '${formation}'`);
     const order = seated(formation, classIds);
     const used = new Set<string>(), myth = rung === 3 ? mythicsFor(build, classIds) : new Map<string, GearT>();
-    const members = order.map((cls, s) => member(cls, seats[s], build, rung, used, rung === 1 ? KNOWN_AT_RUNG_1[classIds.indexOf(cls)] : 3, SEAT_ROLES[formation][s], myth.get(cls))) as [Member, Member, Member];
+    const members = order.map((cls, s) => {
+      const m = member(cls, seats[s], build, rung, used, rung === 1 ? KNOWN_AT_RUNG_1[classIds.indexOf(cls)] : 3, SEAT_ROLES[formation][s], myth.get(cls));
+      // A route may name what a member knows at rung 1, in place of the tags' pick.
+      return rung === 1 && firstKnown[cls] ? { ...m, abilities: firstKnown[cls]! } : m;
+    }) as [Member, Member, Member];
     return { id: `${build}/${id}/${rung}`, build, route: id, rung, act: ACT[rung], version: "formation", formation, members };
   }) as [Party, Party, Party];
   return { build, id, classes: classIds, note, rungs };
