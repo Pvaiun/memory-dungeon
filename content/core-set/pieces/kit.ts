@@ -3,7 +3,7 @@
  * and 16 mythics read alike. Numbers come from scale.ts's words; nothing here decides a value.
  */
 import type { ConditionT, EffectT, EventSpecT, GearT, NumT, ReactionT, StatusT, TargetRuleT, TestT, ToT, UnitCondT, WeaponT } from "../../../src/schema.js";
-import { COOLDOWN, HP_STEP, KIND_BUDGET, KIND_WORDS, MP_STEP_HP, P, PIECE_SPECIAL, SPECIAL, SPECIAL_KEY, STACKS, SWING_TRADE, crit, stepFor, swingOf, type KindWords, type SpecialLevel, type SpecialStat, type StackWord } from "../scale.js";
+import { COOLDOWN, HP_STEP, KIND_BUDGET, KIND_WORDS, MP_STEP_ATK, MP_STEP_HP, P, PIECE_SPECIAL, SPECIAL, SPECIAL_KEY, STACKS, SWING_TRADE, crit, stepFor, swingOf, type KindWords, type SpecialLevel, type SpecialStat, type StackWord } from "../scale.js";
 
 /** An item's id from its name: lower case, apostrophes dropped, every other run of non-letters and non-digits an underscore. */
 export const idOf = (name: string): string =>
@@ -164,11 +164,13 @@ export function piece(o: PieceOpts): GearT {
     const high = o.stats?.find((c) => c.stat in SPECIAL_LEVELS && c.flat === SPECIAL_LEVELS[c.stat].high);
     if (high) throw new Error(`${o.name}: a ${o.rarity} with ${SPECIAL_NAME[high.stat]} high; high is a legendary's`);
   }
-  // A max MP step brings HP beside it (scale.ts MP_STEP_HP), over the budget the checks above counted.
+  // A max MP step brings HP and Attack beside it (scale.ts MP_STEP_HP, MP_STEP_ATK), over the budget the checks above counted.
   const mp = o.rarity === "mythic" ? 0 : (o.stats ?? []).filter((c) => c.stat === "max_mp" && (c.flat ?? 0) > 0).reduce((n, c) => n + Math.round((c.flat ?? 0) / stepFor("max_mp")), 0);
   if (mp && g.stats) {
     const add = mp * MP_STEP_HP * HP_STEP, hp = g.stats.find((c) => c.stat === "max_hp");
     g.stats = hp ? g.stats.map((c) => (c === hp ? { ...c, flat: (c.flat ?? 0) + add } : c)) : [...g.stats, { stat: "max_hp", flat: add }];
+    const atk = mp * MP_STEP_ATK * P, a0 = g.stats.find((c) => c.stat === "attack");
+    g.stats = a0 ? g.stats.map((c) => (c === a0 ? { ...c, flat: (c.flat ?? 0) + atk } : c)) : [...g.stats, { stat: "attack", flat: atk }];
   }
   (g as GearT & { rarity?: Rarity }).rarity = o.rarity;
   return g;

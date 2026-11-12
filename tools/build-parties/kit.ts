@@ -16,7 +16,8 @@
  * - **Seats:** each formation's seats have a role (wall, heal, cast, hit, any); the most particular seats are filled first,
  *   each with the member whose class fits that role best (ties: the route's order).
  * - **Abilities:** at rung 1 a member knows one or two (the route's first and third classes two, its second one), the ones
- *   whose versions are worth most to the build; from rung 2 all three. Always in the kit's order.
+ *   whose versions are worth most to the build; from rung 2 all three. In the kit's order, but a Soloist slots its abilities
+ *   that deal damage first.
  * Nothing here is balanced: a route is what the documents name, and the gear is what the tags say serves it.
  */
 import type { ClassDefT, GearT } from "../../src/schema.js";
@@ -178,7 +179,7 @@ function knownOf(cls: string, build: BuildId, known: number): string[] {
 const KNOWN_AT_RUNG_1 = [2, 1, 2];
 
 /** A rung's member: what it knows (`knownOf`), its gear by the tags, its versions from rung 2, the power step on them at rung 3. */
-function member(cls: string, seat: string, build: BuildId, rung: Rung, used: Set<string>, known: number, role: Role, mythic?: GearT): Member {
+function member(cls: string, seat: string, build: BuildId, rung: Rung, used: Set<string>, known_: number, role: Role, mythic?: GearT): Member {
   const c = classOf(cls);
   const gear: Partial<Gear> = {};
   for (const slot of ["weapon", "armor", "offhand", "amulet"] as Slot[]) {
@@ -196,7 +197,12 @@ function member(cls: string, seat: string, build: BuildId, rung: Rung, used: Set
       if (a || b) trained.push({ ability: u.id, power: rung === 3, version: a >= b ? "a" : "b" });
     }
   }
-  return { cls, seat, abilities: knownOf(cls, build, known), trained, gear: gear as Gear };
+  // A Soloist slots what deals damage first (a good player's order: The cathedral frees the first slot's cooldown, and the
+  // first ready ability is the one cast); everyone else keeps the kit's order.
+  const known = knownOf(cls, build, known_);
+  const deals = (id: string) => (kitAbilities.find((a) => a.id === id)?.do ?? []).some((op) => op.op === "damage");
+  const abilities = seat.startsWith("soloist") ? [...known.filter(deals), ...known.filter((a) => !deals(a))] : known;
+  return { cls, seat, abilities, trained, gear: gear as Gear };
 }
 
 /**

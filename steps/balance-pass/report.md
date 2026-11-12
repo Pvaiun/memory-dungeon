@@ -4,40 +4,38 @@ The director's intent is in `intent.md`. This part balanced the build parties ag
 
 ## Decisions for the director
 
-1. **Barrage's routes, a question for builds.md.** Barrage now wins 52% at rung 1, 71% at rung 2 and 85% at rung 3; every other build wins 75–100%. Bosses are its worst: 35% won.
-   - **Done since your answer:**
-     - a piece's max MP step brings an HP step beside it (`MP_STEP_HP` in `scale.ts`); that's 41 pieces, 33 of them Barrage's;
-     - every class's MP pool is on a half step, rounded up where a class was short of MP.
+1. **Barrage, now in range: a max MP step brings an HP step and an Attack step beside it** (`MP_STEP_HP`, `MP_STEP_ATK` in `scale.ts`, over the piece's budget; 41 pieces, 33 of them Barrage's).
+   - **Where it stands.** Barrage wins 69% at rung 1, 89% at rung 2 and 85% at rung 3, and 58% of bosses. The other builds win 71–100% by rung and 53–94% of bosses, and moved 0–4 points.
+   - **Why both.** Its soloist, meant to be the biggest single dealer of the nine, dealt less than most builds' top unit (428 a tick at rung 2, against 445–1,320), and its Well fell first. The two steps compound: a party that lives longer lets its faster kills land.
 
-     Before the recalibration these took Barrage from 36/56/69% to 61/78/86%.
-   - **The frame works; the routes are the weak part.** Played with every soloist and every pair of servers:
-     - Barrage wins 84–88% with a Pyromancer or Stormcaller soloist and two sturdy servers (any two of the Knight, Hoplite, Valkyrie, Bramble knight, Vampire and Paladin);
-     - with one support (the Bard or the Cleric) among them, 73–84%;
-     - with two, 30–40%.
+     | What a max MP step brought beside it | Barrage won, by rung | Bosses |
+     | --- | --- | --- |
+     | HP alone | 52 / 72 / 84% | 35% |
+     | Attack alone | 54 / 67 / 81% | 34% |
+     | Both | 72 / 91 / 88% | 59% |
 
-     All three of builds.md's routes hold the Bard or the Cleric, and two make the Frostweaver or the Geomancer the soloist. Those two average 60% as soloists, against 76–78% for the others.
-   - **A player's choice of abilities helps, but doesn't fix rung 1.** Of every combination of the abilities a unit knows at rung 1:
-     - route 3 goes from 33% to 68% if the Vampire knows Blood drain, not Blood gift;
-     - route 2 goes from 25% to 40% if the Bard knows War ballad, not Allegro;
-     - route 1 barely moves.
+     These are before the knobs were re-measured; the totals above are after.
+   - **The engine isn't the short part.** On top of the HP and Attack, making the soloist's spells come round faster (Wellspring a third sooner, The stage two fifths) added only 2–5 points, so the formations stay as they were.
+   - **The build parties' Soloist** now slots the abilities that deal damage first, as a player would. The cathedral had freed the Geomancer's Earthen shell, cast 15 times a fight.
+   - **Rung 1 is still Barrage's weakest:** 417 damage a tick for the party.
+   - **The routes, a question for builds.md.** With every soloist and every pair of servers:
+     - a Pyromancer or Stormcaller soloist with two sturdy servers wins most;
+     - one support (the Bard or the Cleric) among them costs a few points;
+     - both supports cost far more.
 
-     Rung-1 bosses stay near none.
-   - **The Bard and the Frostweaver aren't what sinks it.** Swap tests, each team at rungs 1 / 2 / 3:
+     The written route 2 (Frostweaver, Bard, Stormcaller) is the weakest at rungs 1–2. Each swap below is from the earlier test, before the Attack step:
 
-     | Team | Rung 1 / 2 / 3 won |
+     | Route 2 with | Rung 1 / 2 / 3 won |
      | --- | --- |
-     | Route 2 as written: Frostweaver, Bard, Stormcaller | 43 / 50 / 96% |
-     | Bard swapped for a Valkyrie | 70 / 77 / 83% |
-     | Frostweaver swapped for a Knight | 68 / 75 / 94% |
+     | the Bard swapped for a Valkyrie | 70 / 77 / 83% |
+     | the Frostweaver swapped for a Knight | 68 / 75 / 94% |
 
-     Elsewhere they hold their own:
-     - In the Storm's and the Toll's tankless routes, the Bard beats the Cleric in its seat (Storm 93/98/77% against 83/94/71%).
-     - Cold Snap's tankless route needs the Frostweaver: with a Pyromancer in its place, 90/100/92% falls to 75/88/63%.
+     Elsewhere the Bard and the Frostweaver hold their own:
+     - in the Storm's and the Toll's tankless routes, the Bard beats the Cleric in its seat;
+     - Cold Snap's tankless route falls from 90/100/92% to 75/88/63% without the Frostweaver.
 
-     They're not the frailest: HP 3, while the Pyromancer, Stormcaller, Assassin and Cleric have 2. They deal the least damage of their roles: the Bard 0.29× an average unit (a support), and the Frostweaver 0.85×, the bottom of the dealers' band.
-
-     Other builds' tankless routes win because their damage or their control keeps them up (Cuts' Lifesteal, Cold Snap's slow and Stun). Route 2 puts the two least damaging back-row classes beside a 2,000-HP soloist.
-   - **Your call:** give route 2 a server that can stand in front (Knight, Frostweaver, Stormcaller wins 73/77/98%), and let route 3's Vampire learn its damage ability first. The other option is to keep the routes and accept a weaker first rung. The Well-seat rule stays out (too narrow, as you said).
+     Their weakness is damage, not frailty: they have HP 3, the Bard deals 0.29× an average unit, and the Frostweaver 0.85×, the bottom of the dealers' band. Other builds' tankless routes win on their own damage or control.
+   - **Your call:** whether route 2 keeps three casters, and whether route 3's Vampire learns its damage ability first (rung 1: 33% to 68%).
 2. **Riders of a damage status are sized to the status.** `APPLIED` in `scale.ts` makes every rider stat-scaled at a share of its words, on the party's side only (applied when the pack is built, `pack.ts`):
    - Chill at 0.2;
    - Burn at 0.25;
