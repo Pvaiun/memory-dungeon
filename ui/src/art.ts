@@ -182,7 +182,9 @@ const shade = (cell: Cell, s: Shade): Cell => [cell[0] + SHADE[s], cell[1]];
 export function gearCell(g: GearT): number | undefined {
   if (g.slot === "weapon" || !manifest.gear) return undefined;
   const kind = g.armor ?? g.offhand ?? (g.slot === "amulet" ? "amulet" : undefined);
-  return manifest.gear[g.id] ?? manifest.gear[baseGearId(g.id)] ?? (kind ? manifest.gear[`kind:${kind}`] : undefined) ?? manifest.gear[`slot:${g.slot}`];
+  // A run's item names its base piece in its note, whether or not it's been taken (and so registered) yet.
+  const base = /^rogue \w+: (\w+)/.exec(g.note ?? "")?.[1] ?? baseGearId(g.id);
+  return manifest.gear[g.id] ?? manifest.gear[base] ?? (kind ? manifest.gear[`kind:${kind}`] : undefined) ?? manifest.gear[`slot:${g.slot}`];
 }
 /** An empty slot's cell in the gear sheet, dimmed; undefined for the weapon's, which keeps the iconset's. */
 export const slotCell = (slot: string): number | undefined => manifest.gear?.[`slot:${slot}`];
