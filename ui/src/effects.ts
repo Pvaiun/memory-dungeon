@@ -29,9 +29,9 @@ export type Look = { hit: Fx[]; missile?: Missile; self?: Fx[] };
 const fx = (s: string, o: Omit<Fx, "s"> = {}): Fx => ({ s, ...o });
 const look = (hit: Fx | Fx[], o: Omit<Look, "hit"> = {}): Look => ({ hit: Array.isArray(hit) ? hit : [hit], ...o });
 /** Three notes rising over the head and swaying, one after another: a song. */
-const notes = (d = 0): Fx[] => [0, 1, 2].map((f) => fx("music_note", { f, x: 1, at: "head", ms: 700, d: d + f * 140, ox: [-8, 7, 0][f], oy: 6, dy: -14, dx: [-3, 3, -2][f] }));
+const notes = (d = 0): Fx[] => [0, 1, 2].map((f) => fx("music_note", { f, x: 2, at: "head", ms: 800, d: d + f * 140, ox: [-8, 7, 0][f], oy: 6, dy: -14, dx: [-3, 3, -2][f] }));
 /** Blood drops falling from a wound. */
-const drops = (n = 2, f = 0): Fx[] => Array.from({ length: n }, (_, i) => fx("drop", { f, x: 1, ms: 420, d: i * 120, ox: i % 2 ? 6 : -5, oy: -4, dy: 12 }));
+const drops = (n = 2, f = 0): Fx[] => Array.from({ length: n }, (_, i) => fx("drop", { f, x: 2, ms: 560, d: i * 120, ox: i % 2 ? 6 : -5, oy: -4, dy: 12 }));
 
 /** Basic attacks by weapon kind: how each swing lands. */
 const KIND_FX: Record<string, Look> = {
@@ -106,7 +106,7 @@ const ABILITY_FX: Record<string, Look> = {
   // Hexer
   malison: look(fx("curse", { size: 1.4 })), unmake: look([fx("void", { size: 1.4 }), fx("shadow_cloud", { d: 200 })]), enfeeble: look(fx("shadow_cloud")),
   // Monk
-  flow: look(fx("whirlwind", { at: "feet" })), burning_fist: look([fx("uppercut_fire"), fx("star_hit", { d: 60 })]), pressure_point: look([fx("pierce_flash", { x: 2 }), fx("spark_scatter", { d: 80 })]),
+  flow: look(fx("whirlwind", { at: "feet" })), burning_fist: look([fx("uppercut_fire"), fx("star_hit", { d: 60 })]), pressure_point: look([fx("pierce_flash"), fx("spark_scatter", { d: 80 })]),
   // Assassin
   vanish: look(fx("smoke_puff", { size: 1.6 })), backstab: look([fx("quick_slash", { size: 1.4 }), ...drops(2)]), garrote: look(fx("quick_slash")),
   // Vampire
@@ -132,7 +132,7 @@ const ABILITY_FX: Record<string, Look> = {
   reap: look(fx("crescent_cut_dark", { size: 1.4 })), tolling: look([fx("shockwave_dark", { size: 1.4 }), fx("shockwave_dark", { d: 260 })]),
   kindle: look(fx("fire_pillar", { at: "feet", size: 1.4 })), take_aim: look(fx("target_lock", { fps: 6 })), cheer: look(fx("uppercut_might")),
   brand: look([fx("flame", { at: "feet", size: 1.3 }), fx("ember", { d: 160 })], { missile: { s: "fireball" } }),
-  inferno: look([fx("explosion", { x: 2 }), fx("fire_pillar", { at: "feet", d: 200 })]),
+  inferno: look([fx("explosion", { size: 1.6 }), fx("fire_pillar", { at: "feet", d: 200 })]),
   hailstorm: look([fx("ice_shard", { size: 1.4 }), fx("frost_burst", { d: 220 })]),
   tempest: look([fx("lightning_bolt", { at: "feet", size: 1.6 }), fx("static", { d: 120 })]),
   call_drones: look(fx("static")), rally_soldiers: look(fx("static")),
@@ -174,7 +174,7 @@ const STATUS_FX: Record<string, Fx[]> = {
   rot: [fx("poison_rot")], sunder: [fx("debris_hit")], weaken: [fx("sadness", { at: "head", still: true })], slow: [fx("slow", { at: "head", still: true })],
   stun: [fx("star_hit", { at: "head" }), fx("confuse", { at: "head", d: 100, still: true, fps: 10 })],
   silence: [fx("silence", { at: "head", still: true, fps: 10 })], marked: [fx("target_lock", { fps: 5, still: true })],
-  doom: [fx("doom_timer", { at: "head", still: true, fps: 10, size: 0.8 })], taunt: [fx("rage", { at: "head", still: true, fps: 8 })],
+  doom: [fx("doom_timer", { at: "head", still: true, fps: 10 })], taunt: [fx("rage", { at: "head", still: true, fps: 8 })],
   hidden: [fx("smoke_puff", { size: 1.6 })], might: [fx("uppercut_might", { at: "feet" })], haste: [fx("gust", { still: true })],
   guard: [fx("crystal_steel")], shield: [fx("crystal_shield")], aegis: [fx("shockwave_gold", { size: 1.4 })], regen: [fx("regen_aura_green", { at: "feet", oy: 3, size: 1.6 })],
   clarity: [fx("radiance_mp", { at: "feet" })], bulwark: [fx("crystal_steel", { size: 1.3 })], bulwark_broken: [fx("debris_hit", { size: 1.6 }), fx("ring_pop", { d: 100 })],
@@ -205,8 +205,8 @@ export function statusFx(id: string): { fx: Fx[]; always: boolean } {
 }
 /** A status's tick (its pulse) on its holder: small, so a fight full of Burn stays readable. */
 const TICK_FX: Record<string, Fx[]> = {
-  burn: [fx("ember", { x: 2 })], bleed: drops(2), shock: [fx("spark_hit")], rot: [fx("poison_rot", { x: 1 })], regen: [fx("minor_heal_green")],
-  chill: [fx("frost_twinkle", { x: 1 })], doom: [fx("doom_timer", { at: "head", still: true, fps: 20, size: 0.8 })],
+  burn: [fx("ember")], bleed: drops(2), shock: [fx("spark_hit")], rot: [fx("poison_rot")], regen: [fx("minor_heal_green")],
+  chill: [fx("frost_twinkle")], doom: [fx("doom_timer", { at: "head", still: true, fps: 20 })],
 };
 export const tickFx = (id: string): Fx[] => TICK_FX[id] ?? [];
 /** A status's own blow out of turn (a reaction's damage: thorns, an explosion as a bomb dies). */
@@ -223,23 +223,23 @@ export const EVENT_FX = {
   revive: [fx("healing_circle", { at: "ground" }), fx("angel_wings", { d: 160 })] as Fx[],
   /** A foe brought back by its own kind (the Ghoul's Raise). */
   reviveFoe: [fx("healing_circle_dark", { at: "ground" }), fx("smoke_puff", { d: 160 })] as Fx[],
-  summon: [fx("cloud_puff", { x: 2 })] as Fx[],
-  miss: [fx("dust_kick", { at: "feet", x: 2 })] as Fx[],
+  summon: [fx("cloud_puff")] as Fx[],
+  miss: [fx("dust_kick", { at: "feet" })] as Fx[],
   aegis: [fx("shockwave_gold", { size: 1.4 })] as Fx[],
-  block: [fx("gleam", { x: 2 })] as Fx[],
+  block: [fx("gleam")] as Fx[],
   /** A foe knocked out: a puff as it fades. */
   down: [fx("smoke_puff", { size: 1.6 })] as Fx[],
   /** A wind-up starting: a circle under the caster's feet (dark under a foe). */
   cast: [fx("healing_circle_cast", { at: "ground" })] as Fx[],
   castFoe: [fx("healing_circle_dark", { at: "ground" })] as Fx[],
   /** A wind-up stopped. */
-  interrupt: [fx("spark_scatter", { x: 2 })] as Fx[],
+  interrupt: [fx("spark_scatter")] as Fx[],
   /** An extra strike's Arc. */
   arc: [fx("shock", { rev: true })] as Fx[],
 };
 /** Who arrives, and how: a summoned or split foe's own puff. */
 const JOIN_FX: Record<string, Fx[]> = {
-  drone: [fx("ball_lightning", { x: 2 })], soldier: [fx("lightning_bolt", { at: "feet" })], mini_slime: [fx("splash_slime")],
+  drone: [fx("ball_lightning")], soldier: [fx("lightning_bolt", { at: "feet" })], mini_slime: [fx("splash_slime")],
 };
 export const joinFx = (ref: string): Fx[] => JOIN_FX[ref] ?? EVENT_FX.summon;
 /** Who leaves, and how (a slime splitting). */

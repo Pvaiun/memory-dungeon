@@ -48,6 +48,12 @@ type Play = {
   f?: number; loop?: boolean; to?: { x: number; y: number }; arc?: number; under?: boolean;
 };
 
+/**
+ * How fast an effect's frames play: about ten a second, but a short strip held to half a second so it can be seen, and
+ * a long one to 0.9 seconds so it doesn't outstay its blow. Effects keep this time at any battle speed.
+ */
+const fxFps = (frames: number) => frames / Math.min(0.9, Math.max(0.5, frames / 10));
+
 // ─── Layout ───
 
 const LINE_X: Record<string, number> = { back: 30, middle: 44, front: 58 };
@@ -331,17 +337,20 @@ export class Scene {
     return { x: v.x + lean, y: v.y - this.bodyH(v) / 2 };
   }
   /**
-   * The whole-number scale an effect plays at on a unit: as many times the art as fit one and a half times the unit's
-   * height times `size` (at least 1; at most 2 on most units, 3 on the big ones), unless the effect fixes it. A `mark`
-   * (a status landing or ticking) fits the unit's height alone, at most twice the art: it tells, a blow shows.
+   * The whole-number scale an effect plays at on a unit, unless the effect fixes it (`x`). A blow plays at twice its art
+   * at least: three times a small spark (24 pixels or less), once only a big piece of art (48 or more). It grows past
+   * that while it fits 1.6 times the unit's height times `size` (64 pixels at least), up to three times on a big foe.
+   * A `mark` (a status landing or ticking) is a step smaller: twice a small one, the rest as drawn, at most twice.
    */
   private scaleFor(e: Fx, v: UV, mark = false): number {
     if (e.x) return e.x;
     const art = manifest.vfx[e.s];
     if (!art) return 1;
-    const h = this.bodyH(v);
-    const fit = Math.floor((h * (mark ? 1 : 1.5) * (e.size ?? 1)) / Math.max(art.w, art.h));
-    return Math.max(1, Math.min(h >= 56 && !mark ? 3 : 2, fit));
+    const h = this.bodyH(v), dim = Math.max(art.w, art.h);
+    const room = Math.max(mark ? 44 : 64, h * (mark ? 1.2 : 1.6)) * (e.size ?? 1);
+    const least = mark ? (dim <= 24 ? 2 : 1) : dim <= 24 ? 3 : dim < 48 ? 2 : 1;
+    const most = mark ? 2 : dim <= 24 || h >= 56 ? 3 : 2;
+    return Math.max(least, Math.min(most, Math.floor(room / dim)));
   }
   /**
    * Plays effects on a unit. `from` is who dealt the blow: an effect that follows a blow is mirrored when the blow comes
@@ -362,12 +371,13 @@ export class Scene {
       const y = at === "feet" ? v.y + 1 - h / 2 : at === "head" ? v.y - bh - h / 2 + 4 : at === "ground" ? v.y - 1 : v.y - bh / 2;
       const flip = !e.still && !!by && leftward !== !!e.rev;
       const still = e.f !== undefined;
-      const life = still ? e.ms ?? 600 : (art.frames / (e.fps ?? 14)) * 1000;
+      const fps = e.fps ?? fxFps(art.frames);
+      const life = still ? e.ms ?? 600 : (art.frames / fps) * 1000;
       const ox = (e.ox ?? 0) * scale * (flip ? -1 : 1);
       const x = Math.max(w / 2 - 8, Math.min(W - w / 2 + 8, v.x + ox));
       const y0 = y + (e.oy ?? 0) * scale;
       this.fx.push({
-        strip: e.s, x, y: y0, scale, born: this.wall + (o.delay ?? 0) + (e.d ?? 0), fps: e.fps ?? 14, flip, life, f: e.f, under: at === "ground",
+        strip: e.s, x, y: y0, scale, born: this.wall + (o.delay ?? 0) + (e.d ?? 0), fps, flip, life, f: e.f, under: at === "ground",
         ...(e.dx || e.dy ? { to: { x: x + (e.dx ?? 0) * (flip ? -1 : 1), y: y0 + (e.dy ?? 0) } } : {}),
       });
     }
