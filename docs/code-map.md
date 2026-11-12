@@ -189,7 +189,7 @@ ui/
     bestiary.ts              the bestiary's record: enemies met and looked at
     dom.ts                   DOM helpers: h(), windows, rows, buttons, the back gesture
     art.ts                   art tables: which sprite, icon or look shows what
-    effects.ts               the effects tables: which VFX strip each action, status and event plays
+    effects.ts               the effects tables: which VFX strip each action, status and event plays; the designer's sizes; the catalogue
     pixel.ts                 graphics: the pixel scale, sprites, icons, the font, effects enlarged by Scale2x and Scale3x
     update.ts                reloading onto a newer build
     rogue-screens.ts         the rogue screens' public face; lists them
@@ -204,6 +204,7 @@ ui/
       battle.ts              the battle screen: the field, messages, the party, controls, a fight's end
       driver.ts              steps the engine one moment at a time for the screen
       effects.ts             plays the effects in step with the story: missiles, blows that follow, statuses that land with them
+      tuner.ts               the FX SIZES screen: a sample fight where each look plays again and again, sized by the designer
       narrate.ts             turns the log into messages
       scene.ts               the field, backdrops, the campfire, the menus' stages and party strip; drawing the effects
       audio.ts               sound effects and music

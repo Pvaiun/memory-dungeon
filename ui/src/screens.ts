@@ -7,7 +7,7 @@ import { gearFor as gearThatFits } from "../../src/sim/parties.js";
 import { c, className, classes, cls as classOf, dungeons, enemies, fightName, formations, gearOf, NUMBER_SCALES, runName, setNumberScale, shortName } from "./content.js";
 import { enemyDisplayName } from "./art.js";
 import { button, h, header, nav, row, settleBack, win, type Child } from "./dom.js";
-import { abilitiesFor, applyHeadStart, BAR_SHOWS, gearFor, HEAD_STARTS, HIT_PAUSES, SPEEDS, reset, save, setup } from "./state.js";
+import { abilitiesFor, applyHeadStart, BAR_SHOWS, FX_SPEEDS, gearFor, HEAD_STARTS, HIT_PAUSES, SPEEDS, reset, save, setup } from "./state.js";
 import { onRogue, setMode } from "./mode.js";
 import { anyNewEnemy, known, look, metCount, newEnemy } from "./bestiary.js";
 import { aggShares, abilityBlock, basicLine, canUse, classHead, classPassive, enemySheet, formationNote, gearRow, lockedRow, memberFor, portraitEl, RARITY_TONE, role, seatCodes, seatNotes, section, SLOTS, specialLines, statGrid, twoHanded, type GearSlot } from "./sheet.js";
@@ -15,6 +15,7 @@ import { enemyEl, enemyThumb } from "./pixel.js";
 import { weaponOf } from "../../src/engine/combat/fight.js";
 import { foesOnStage, partyOnStage, stageEl, Strip, STRIP_H, themeOf } from "./battle/scene.js";
 import { startBattle, type BattleArgs } from "./battle/battle.js";
+import { TUNER_FIGHT } from "./battle/tuner.js";
 import { music, setMusic, setSound, sfx } from "./battle/audio.js";
 import { bindRogue, rbossScreen, rclassScreen, rgearScreen, rogueMenuLine, rogueScreen, rpartyScreen, runitScreen } from "./rogue-screens.js";
 import { abandonRun, current as rogueRun, resetRogue } from "./rogue/state.js";
@@ -406,6 +407,7 @@ function settings(): Child[] {
       row([h("span", { class: "grow" }, "THEME"), h("span", null, s.theme.toUpperCase())], () => { s.theme = s.theme === "night" ? "day" : "night"; setTheme(s.theme); save(); refresh(); }, { cursor: false }),
       cycle("SPEED", [...SPEEDS], s.speed, (v) => `${v}×`, (v) => (s.speed = v)),
       cycle("HIT PAUSE", HIT_PAUSES, s.hitPause as (typeof HIT_PAUSES)[number], (v) => `${Math.round(v * 100)}%`, (v) => (s.hitPause = v)),
+      cycle("FX SPEED", FX_SPEEDS, s.fxSpeed as (typeof FX_SPEEDS)[number], (v) => `${Math.round(v * 100)}%`, (v) => (s.fxSpeed = v)),
       toggle("SOUND", "sound"),
       toggle("MUSIC", "music"),
       toggle("AUTO NEXT", "autoContinue"),
@@ -415,6 +417,7 @@ function settings(): Child[] {
       cycle("PORTRAITS", ["faces", "sprites", "mixed"] as const, s.portraits, (v) => v.toUpperCase(), (v) => (s.portraits = v)),
       ...([0, 1, 2] as const).map((i) => cycle(`HEAD START ${["1ST", "2ND", "3RD"][i]} SLOT`, HEAD_STARTS, s.headStart[i] as (typeof HEAD_STARTS)[number], (v) => `${v} TICKS`, (v) => { s.headStart[i] = v; applyHeadStart(s.headStart); })),
       toggle("DESIGNER", "designer"),
+      s.designer ? row([h("span", { class: "grow" }, "FX SIZES"), h("span", { class: "dim" }, "▶")], () => go("battle", { dungeon: TUNER_FIGHT, seed: 1, tuner: true }), { cursor: false }) : null,
       s.designer ? toggle("SEED LOCK", "seedLock") : null,
       s.designer && s.seedLock ? seedRow() : null,
       onRogue() && rogueRun() ? row([h("span", { class: "grow" }, "GIVE UP THE RUN")], () => ask("GIVE UP THE RUN?", "", "GIVE UP", () => { abandonRun(); go("home"); }), { cursor: false }) : null,

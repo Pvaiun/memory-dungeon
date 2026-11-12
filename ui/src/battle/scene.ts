@@ -12,7 +12,7 @@ import { SUBTICKS } from "../../../src/schema.js";
 import type { CUnit } from "../../../src/engine/combat/fight.js";
 import { c, disp } from "../content.js";
 import { manifest, type Pose } from "../art.js";
-import type { Fx, Missile } from "../effects.js";
+import { fxSize, type Fx, type Missile } from "../effects.js";
 import { actorSpan, backdropImage, drawActor, drawCampfire, drawChest, drawEnemy, drawStatus, drawText, enemyK, enemySprite, FRAME_W, OUTLINE, STATUS_ICON, statusIconOf, vfxSprite } from "../pixel.js";
 import type { Driver } from "./driver.js";
 import type { BarShow } from "../state.js";
@@ -168,6 +168,8 @@ export class Scene {
   numbers: Num[] = [];
   fx: Play[] = [];
   banner: { text: string; sub: string; until: number } | null = null;
+  /** How fast effects play, against their own pace (Settings → FX SPEED). */
+  fxSpeed = 1;
   /** Whose HP and MP bars show under the units (Settings → HP BARS, MP BARS). */
   hpBars: BarShow = "both";
   mpBars: BarShow = "party";
@@ -355,35 +357,37 @@ export class Scene {
   /**
    * Plays effects on a unit. `from` is who dealt the blow: an effect that follows a blow is mirrored when the blow comes
    * from the right (unless it's `still`), so a slash or a fireball travels the way it was thrown. `delay` is added to each
-   * effect's own; `mark` sizes them as a status's.
+   * effect's own; `mark` sizes them as a status's; `key` names the look, whose chosen size (FX SIZES) wins.
    */
-  play(id: string, effects: Fx[], o: { from?: string; delay?: number; mark?: boolean } = {}) {
+  play(id: string, effects: Fx[], o: { from?: string; delay?: number; mark?: boolean; key?: string } = {}) {
     const v = this.units.get(id);
     if (!v) return;
     const by = o.from ? this.units.get(o.from) : undefined;
     const leftward = !!by && by.x > v.x;
+    const chosen = fxSize(o.key);
+    const sp = this.fxSpeed;
     for (const e of effects) {
       const art = manifest.vfx[e.s];
       if (!art) continue;
-      const scale = this.scaleFor(e, v, o.mark);
+      const scale = chosen ?? this.scaleFor(e, v, o.mark);
       const w = art.w * scale, h = art.h * scale, bh = this.bodyH(v);
       const at = e.at ?? "mid";
       const y = at === "feet" ? v.y + 1 - h / 2 : at === "head" ? v.y - bh - h / 2 + 4 : at === "ground" ? v.y - 1 : v.y - bh / 2;
       const flip = !e.still && !!by && leftward !== !!e.rev;
       const still = e.f !== undefined;
-      const fps = e.fps ?? fxFps(art.frames);
-      const life = still ? e.ms ?? 600 : (art.frames / fps) * 1000;
+      const fps = (e.fps ?? fxFps(art.frames)) * sp;
+      const life = (still ? e.ms ?? 600 : (art.frames / fps) * 1000) / (still ? sp : 1);
       const ox = (e.ox ?? 0) * scale * (flip ? -1 : 1);
       const x = Math.max(w / 2 - 8, Math.min(W - w / 2 + 8, v.x + ox));
       const y0 = y + (e.oy ?? 0) * scale;
       this.fx.push({
-        strip: e.s, x, y: y0, scale, born: this.wall + (o.delay ?? 0) + (e.d ?? 0), fps, flip, life, f: e.f, under: at === "ground",
+        strip: e.s, x, y: y0, scale, born: this.wall + ((o.delay ?? 0) + (e.d ?? 0)) / sp, fps, flip, life, f: e.f, under: at === "ground",
         ...(e.dx || e.dy ? { to: { x: x + (e.dx ?? 0) * (flip ? -1 : 1), y: y0 + (e.dy ?? 0) } } : {}),
       });
     }
   }
-  /** A missile from one unit to another, leaving after `delay`: how long until it lands (ms at this speed). */
-  missile(fromId: string, toId: string, m: Missile, delay = 0, pace = 1): number {
+  /** A missile from one unit to another, leaving after `delay`: how long until it lands (ms at this pace). `key` names its look, whose chosen size wins. */
+  missile(fromId: string, toId: string, m: Missile, delay = 0, pace = 1, key?: string): number {
     const a = this.units.get(fromId), b = this.units.get(toId);
     const art = manifest.vfx[m.s];
     if (!a || !b || !art) return 0;
@@ -391,7 +395,7 @@ export class Scene {
     const dist = Math.hypot(q.x - p.x, q.y - p.y);
     const life = Math.max(90, dist / ((m.speed ?? 1) * 0.55)) / pace;
     this.fx.push({
-      strip: m.s, x: p.x, y: p.y, scale: m.x ?? 1, born: this.wall + delay, fps: 14, flip: q.x < p.x, life, loop: true, f: m.f,
+      strip: m.s, x: p.x, y: p.y, scale: fxSize(key) ?? m.x ?? 1, born: this.wall + delay, fps: 14, flip: q.x < p.x, life, loop: true, f: m.f,
       to: q, arc: m.arc ?? 0,
     });
     return delay + life;

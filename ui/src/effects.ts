@@ -3,7 +3,7 @@
  * director's "VFX Spells" pack, named as it names them, with recoloured and turned copies (ui/tools/assets.py).
  * battle/effects.ts plays them; scene.ts draws them.
  */
-import { abilityLook, pieceLook, weaponLook } from "./art.js";
+import { abilityLook, enemyDisplayName, pieceLook, weaponLook } from "./art.js";
 import { baseGearId, c } from "./content.js";
 
 /*
@@ -23,13 +23,15 @@ export type Anchor = "mid" | "feet" | "head" | "ground";
 export type Fx = { s: string; at?: Anchor; size?: number; x?: number; d?: number; fps?: number; f?: number; ms?: number; dx?: number; dy?: number; ox?: number; oy?: number; rev?: boolean; still?: boolean };
 /** A missile: a strip (or one still frame of a prop) flying from the actor's hand to the unit hit, before the hit's effects. */
 export type Missile = { s: string; f?: number; x?: number; speed?: number; arc?: number };
-/** How an action looks: what flies, what plays on each unit it reaches, and what plays on the actor as it acts. */
-export type Look = { hit: Fx[]; missile?: Missile; self?: Fx[] };
+/** How an action looks: what flies, what plays on each unit it reaches, and what plays on the actor as it acts; `key` names it for its size (FX SIZES). */
+export type Look = { hit: Fx[]; missile?: Missile; self?: Fx[]; key?: string };
+/** Effects that aren't an action's (a status landing, a tick, a revive), with the key that names them for their size. */
+export type Keyed = { key: string; fx: Fx[] };
 
 const fx = (s: string, o: Omit<Fx, "s"> = {}): Fx => ({ s, ...o });
 const look = (hit: Fx | Fx[], o: Omit<Look, "hit"> = {}): Look => ({ hit: Array.isArray(hit) ? hit : [hit], ...o });
 /** Three notes rising over the head and swaying, one after another: a song. */
-const notes = (d = 0): Fx[] => [0, 1, 2].map((f) => fx("music_note", { f, x: 2, at: "head", ms: 800, d: d + f * 140, ox: [-8, 7, 0][f], oy: 6, dy: -14, dx: [-3, 3, -2][f] }));
+const notes = (d = 0): Fx[] => [0, 1, 2].map((f) => fx("music_note", { f, x: 1, at: "head", ms: 800, d: d + f * 140, ox: [-8, 7, 0][f], oy: 6, dy: -14, dx: [-3, 3, -2][f] }));
 /** Blood drops falling from a wound. */
 const drops = (n = 2, f = 0): Fx[] => Array.from({ length: n }, (_, i) => fx("drop", { f, x: 2, ms: 560, d: i * 120, ox: i % 2 ? 6 : -5, oy: -4, dy: 12 }));
 
@@ -145,6 +147,14 @@ const THEME_ABILITY: Record<string, Look> = {
   arcane: look(fx("ripple_burst")), slash: look(fx("slash")), pierce: look(fx("thrust")), blunt: look(fx("pound")), physical: look(fx("debris_hit")),
 };
 
+/** Names each look in a table by its key: "ability:fireball", "foe:wolf", "kind:sword"… */
+const keyed = (table: Record<string, Look>, prefix: string) => { for (const [k, l] of Object.entries(table)) l.key = `${prefix}:${k}`; };
+keyed(KIND_FX, "kind");
+keyed(THEME_BASIC, "theme");
+keyed(ENEMY_BASIC, "foe");
+keyed(ABILITY_FX, "ability");
+keyed(THEME_ABILITY, "theme-ability");
+
 /** An ability's own look, if it has one. */
 export const abilityFx = (id: string): Look | undefined => ABILITY_FX[id.replace(/__\w+$/, "")];
 /** A damaging ability with no look of its own: its theme's or its motion's. */
@@ -186,65 +196,175 @@ const STATUS_FX: Record<string, Fx[]> = {
 };
 /** Statuses that say what they are by their look alone (control, marks, hiding): they play even right after a hit's own effect. */
 const STATUS_ALWAYS = new Set(["stun", "silence", "doom", "marked", "taunt", "hidden", "bulwark_broken", "slow"]);
-/** A status with no look of its own: by a word in its id, else a buff's or a debuff's. */
-const STATUS_THEMES: [RegExp, Fx[]][] = [
-  [/frost|ice|rime|winter|hoarfrost|cold/, [fx("frost_twinkle")]], [/storm|static|thunder|bolt|squall|charge|spear/, [fx("static")]],
-  [/ember|fire|forge|pyre|stoke|heat|hearth|cinder|crown_of_embers/, [fx("flame", { at: "feet" })]],
-  [/blood|sanguine|feast|thirst|red_feast|gorged|bleed/, drops(2)], [/bell|song|score|matins|evensong|cathedral|refrain|cadenza|stage|tome/, notes()],
-  [/bedrock|mountain|rampart|faultline|stone|palisade|portcullis|bastion|urchin/, [fx("crystal_earth")]],
-  [/prayer|saint|rite|chosen|oath|covenant|blessing|light/, [fx("holy_cross")]], [/root|growth|thorn|briar|hedge/, [fx("sprout", { at: "feet" })]],
-  [/shadow|hidden|night|witch|hushing/, [fx("smoke_wisp")]], [/calm|stillness|clear|mind|deep/, [fx("bubble")]],
+/** A status with no look of its own (the gear's, formations' and upgrades'): by a word in its id, else a buff's or a debuff's. */
+const STATUS_THEMES: [string, RegExp, Fx[]][] = [
+  ["frost", /frost|ice|rime|winter|hoarfrost|cold/, [fx("frost_twinkle")]], ["storm", /storm|static|thunder|bolt|squall|charge|spear/, [fx("static")]],
+  ["fire", /ember|fire|forge|pyre|stoke|heat|hearth|cinder|crown_of_embers/, [fx("flame", { at: "feet" })]],
+  ["blood", /blood|sanguine|feast|thirst|red_feast|gorged|bleed/, drops(2)], ["song", /bell|song|score|matins|evensong|cathedral|refrain|cadenza|stage|tome/, notes()],
+  ["stone", /bedrock|mountain|rampart|faultline|stone|palisade|portcullis|bastion|urchin/, [fx("crystal_earth")]],
+  ["holy", /prayer|saint|rite|chosen|oath|covenant|blessing|light/, [fx("holy_cross")]], ["growth", /root|growth|thorn|briar|hedge/, [fx("sprout", { at: "feet" })]],
+  ["shadow", /shadow|hidden|night|witch|hushing/, [fx("smoke_wisp")]], ["calm", /calm|stillness|clear|mind|deep/, [fx("bubble")]],
 ];
 const BUFF_FX: Fx[] = [fx("uppercut", { at: "feet" })];
 const DEBUFF_FX: Fx[] = [fx("void")];
 /** What plays as a status lands, and whether it plays even on a unit a hit's effect has just played on. */
-export function statusFx(id: string): { fx: Fx[]; always: boolean } {
-  const own = STATUS_FX[id] ?? STATUS_THEMES.find(([re]) => re.test(id))?.[1];
-  const label = c.statuses.get(id)?.label;
-  return { fx: own ?? (label === "debuff" ? DEBUFF_FX : BUFF_FX), always: STATUS_ALWAYS.has(id) };
+export function statusFx(id: string): Keyed & { always: boolean } {
+  const always = STATUS_ALWAYS.has(id);
+  if (STATUS_FX[id]) return { key: `status:${id}`, fx: STATUS_FX[id], always };
+  const theme = STATUS_THEMES.find(([, re]) => re.test(id));
+  if (theme) return { key: `status:${theme[0]}`, fx: theme[2], always };
+  const debuff = c.statuses.get(id)?.label === "debuff";
+  return { key: debuff ? "status:debuff" : "status:buff", fx: debuff ? DEBUFF_FX : BUFF_FX, always };
 }
-/** A status's tick (its pulse) on its holder: small, so a fight full of Burn stays readable. */
+/** A status's tick (its pulse) on its holder. */
 const TICK_FX: Record<string, Fx[]> = {
   burn: [fx("ember")], bleed: drops(2), shock: [fx("spark_hit")], rot: [fx("poison_rot")], regen: [fx("minor_heal_green")],
   chill: [fx("frost_twinkle")], doom: [fx("doom_timer", { at: "head", still: true, fps: 20 })],
 };
-export const tickFx = (id: string): Fx[] => TICK_FX[id] ?? [];
+export const tickFx = (id: string): Keyed => ({ key: `tick:${id}`, fx: TICK_FX[id] ?? [] });
 /** A status's own blow out of turn (a reaction's damage: thorns, an explosion as a bomb dies). */
 const REACTION_FX: Record<string, Fx[]> = {
   thorns: [fx("thorns", { at: "feet", size: 0.7 })], volatile: [fx("explosion")], briar: [fx("thorns", { at: "feet", size: 0.7 })],
 };
-export const reactionFx = (id: string): Fx[] => REACTION_FX[id] ?? [fx("spark_scatter")];
+const REACTION_ANY: Fx[] = [fx("spark_scatter")];
+export const reactionFx = (id: string): Keyed => (REACTION_FX[id] ? { key: `reaction:${id}`, fx: REACTION_FX[id] } : { key: "reaction:any", fx: REACTION_ANY });
 
 /** The field's other moments. */
-export const EVENT_FX = {
+const MOMENT_FX = {
   /** A heal with no look of its own (lifesteal, a reaction). */
-  heal: [fx("restore", { size: 1.6 })] as Fx[],
-  mp: [fx("restore_mp", { size: 0.7 })] as Fx[],
-  revive: [fx("healing_circle", { at: "ground" }), fx("angel_wings", { d: 160 })] as Fx[],
+  heal: [fx("restore", { size: 1.6 })],
+  mp: [fx("restore_mp", { size: 0.7 })],
+  revive: [fx("healing_circle", { at: "ground" }), fx("angel_wings", { d: 160 })],
   /** A foe brought back by its own kind (the Ghoul's Raise). */
-  reviveFoe: [fx("healing_circle_dark", { at: "ground" }), fx("smoke_puff", { d: 160 })] as Fx[],
-  summon: [fx("cloud_puff")] as Fx[],
-  miss: [fx("dust_kick", { at: "feet" })] as Fx[],
-  aegis: [fx("shockwave_gold", { size: 1.4 })] as Fx[],
-  block: [fx("gleam")] as Fx[],
+  reviveFoe: [fx("healing_circle_dark", { at: "ground" }), fx("smoke_puff", { d: 160 })],
+  summon: [fx("cloud_puff")],
+  miss: [fx("dust_kick", { at: "feet" })],
+  aegis: [fx("shockwave_gold", { size: 1.4 })],
+  block: [fx("gleam")],
   /** A foe knocked out: a puff as it fades. */
-  down: [fx("smoke_puff", { size: 1.6 })] as Fx[],
+  down: [fx("smoke_puff", { size: 1.6 })],
+  /** A foe leaving the field (a slime splitting). */
+  leave: [fx("smoke_puff")],
   /** A wind-up starting: a circle under the caster's feet (dark under a foe). */
-  cast: [fx("healing_circle_cast", { at: "ground" })] as Fx[],
-  castFoe: [fx("healing_circle_dark", { at: "ground" })] as Fx[],
+  cast: [fx("healing_circle_cast", { at: "ground" })],
+  castFoe: [fx("healing_circle_dark", { at: "ground" })],
   /** A wind-up stopped. */
-  interrupt: [fx("spark_scatter")] as Fx[],
+  interrupt: [fx("spark_scatter")],
   /** An extra strike's Arc. */
-  arc: [fx("shock", { rev: true })] as Fx[],
-};
+  arc: [fx("shock", { rev: true })],
+} satisfies Record<string, Fx[]>;
+export type Moment = keyof typeof MOMENT_FX;
+export const momentFx = (m: Moment): Keyed => ({ key: `moment:${m}`, fx: MOMENT_FX[m] });
 /** Who arrives, and how: a summoned or split foe's own puff. */
 const JOIN_FX: Record<string, Fx[]> = {
   drone: [fx("ball_lightning")], soldier: [fx("lightning_bolt", { at: "feet" })], mini_slime: [fx("splash_slime")],
 };
-export const joinFx = (ref: string): Fx[] => JOIN_FX[ref] ?? EVENT_FX.summon;
+export const joinFx = (ref: string): Keyed => (JOIN_FX[ref] ? { key: `join:${ref}`, fx: JOIN_FX[ref] } : momentFx("summon"));
 /** Who leaves, and how (a slime splitting). */
 const LEAVE_FX: Record<string, Fx[]> = { lava_slime: [fx("splash_lava", { size: 1.4 })] };
-export const leaveFx = (ref: string): Fx[] => LEAVE_FX[ref] ?? [fx("smoke_puff")];
+export const leaveFx = (ref: string): Keyed => (LEAVE_FX[ref] ? { key: `leave:${ref}`, fx: LEAVE_FX[ref] } : momentFx("leave"));
 /** A foe's knockout, where it isn't the plain puff. */
 const DOWN_FX: Record<string, Fx[]> = { bomb_bug: [fx("explosion")], lava_slime: [fx("splash_lava")], mini_slime: [fx("splash_slime")], ghost: [fx("shadow_cloud")], ice_ghost: [fx("diamond_dust")], wisp: [fx("ball_lightning")] };
-export const downFx = (ref: string): Fx[] => DOWN_FX[ref] ?? EVENT_FX.down;
+export const downFx = (ref: string): Keyed => (DOWN_FX[ref] ? { key: `down:${ref}`, fx: DOWN_FX[ref] } : momentFx("down"));
+
+// ─── Sizes: the designer's own, look by look ───
+/*
+ * A look's size, chosen on the FX SIZES screen (Settings, with DESIGNER on): one whole scale for all of a look's effects,
+ * in place of the field's own choice (scene.ts). SIZES are the committed choices. A device's own, chosen since, are kept
+ * in its browser and win over them; 0 there means "the field's own" over a committed one. The screen's EXPORT writes
+ * them all out, to be committed here.
+ */
+const SIZES: Record<string, number> = {};
+const SIZES_KEY = "memory-dungeon.fx-sizes.v1";
+let mine: Record<string, number> = (() => {
+  try {
+    const v = JSON.parse(localStorage.getItem(SIZES_KEY) ?? "{}") as unknown;
+    return v && typeof v === "object" ? (v as Record<string, number>) : {};
+  } catch {
+    return {};
+  }
+})();
+const keep = () => {
+  try {
+    localStorage.setItem(SIZES_KEY, JSON.stringify(mine));
+  } catch {
+    /* private mode: kept for this visit only */
+  }
+};
+/** A look's chosen scale, if it has one (none: the field picks, by the unit). */
+export function fxSize(key: string | undefined): number | undefined {
+  if (!key) return undefined;
+  const n = mine[key] ?? SIZES[key];
+  return n ? n : undefined;
+}
+/** Chooses a look's scale on this device; 0 for the field's own. */
+export function setFxSize(key: string, n: number) {
+  if (n === (SIZES[key] ?? 0)) delete mine[key];
+  else mine[key] = n;
+  keep();
+}
+/** Forgets this device's choices: the committed ones again. */
+export function resetFxSizes() {
+  mine = {};
+  keep();
+}
+/** Every choice in force, committed and this device's, as JSON to commit. */
+export function exportFxSizes(): string {
+  const all: Record<string, number> = { ...SIZES, ...mine };
+  for (const k of Object.keys(all)) if (!all[k]) delete all[k];
+  return JSON.stringify({ sizes: all }, null, 1);
+}
+/** How many choices this device holds that aren't committed. */
+export const fxSizeChanges = (): number => Object.keys(mine).length;
+
+// ─── The catalogue, for the FX SIZES screen ───
+/** How the screen plays a look: an ability as it's used; a basic attack's look from either side; a status landing; effects on units. */
+export type FxSample =
+  | { kind: "ability"; id: string }
+  | { kind: "basic"; look: Look; from: "party" | "foe" }
+  | { kind: "status"; id: string }
+  | { kind: "fx"; fx: Fx[]; mark?: boolean; on: "party" | "foe" | "both" };
+export type FxEntry = { key: string; group: string; label: string; sample: FxSample };
+const MOMENT_ON: Record<Moment, "party" | "foe"> = {
+  heal: "party", mp: "party", revive: "party", reviveFoe: "foe", summon: "foe", miss: "party", aegis: "party", block: "party", down: "foe", leave: "foe",
+  cast: "party", castFoe: "foe", interrupt: "foe", arc: "foe",
+};
+const MOMENT_NAME: Record<Moment, string> = {
+  heal: "a heal", mp: "MP gained", revive: "a revive", reviveFoe: "a foe raised", summon: "a summon", miss: "a miss", aegis: "Aegis blocks", block: "a block",
+  down: "a foe falls", leave: "a foe leaves", cast: "a wind-up", castFoe: "a foe's wind-up", interrupt: "a wind-up stopped", arc: "Arc's strike",
+};
+/** Every look with a key, grouped as the screen shows them. */
+export function fxCatalog(): FxEntry[] {
+  const out: FxEntry[] = [];
+  const up = (t: string) => t.toUpperCase();
+  for (const k of c.pack.classes) for (const a of k.abilities) {
+    const l = ABILITY_FX[a];
+    if (l) out.push({ key: l.key!, group: "PARTY SKILLS", label: up(`${c.abilities.get(a)?.name ?? a} · ${k.name}`), sample: { kind: "ability", id: a } });
+  }
+  for (const e of c.pack.enemies) for (const a of e.abilities ?? []) {
+    const l = ABILITY_FX[a];
+    if (l && !out.some((x) => x.key === l.key)) out.push({ key: l.key!, group: "FOE SKILLS", label: up(`${c.abilities.get(a)?.name ?? a} · ${enemyDisplayName(e.id)}`), sample: { kind: "ability", id: a } });
+  }
+  for (const [id, l] of Object.entries(ENEMY_BASIC)) out.push({ key: l.key!, group: "FOE ATTACKS", label: up(enemyDisplayName(id)), sample: { kind: "basic", look: l, from: "foe" } });
+  for (const [id, l] of Object.entries(KIND_FX)) out.push({ key: l.key!, group: "WEAPONS", label: up(c.weaponKinds.get(id)?.name ?? id), sample: { kind: "basic", look: l, from: "party" } });
+  for (const [id, l] of Object.entries(THEME_BASIC)) out.push({ key: l.key!, group: "WEAPONS", label: up(`${id} caster`), sample: { kind: "basic", look: l, from: "party" } });
+  for (const id of Object.keys(STATUS_FX)) out.push({ key: `status:${id}`, group: "STATUSES", label: up(c.statuses.get(id)?.name ?? id), sample: { kind: "status", id } });
+  // The gear's statuses by theme, and the plain buff and debuff, each shown by a status that has that look.
+  const shown = c.pack.statuses.filter((x) => x.show === "icon" && !STATUS_FX[x.id]);
+  for (const [name, re] of STATUS_THEMES) {
+    const st = shown.find((x) => re.test(x.id));
+    if (st) out.push({ key: `status:${name}`, group: "STATUSES", label: up(`${name} gear · ${st.name}`), sample: { kind: "status", id: st.id } });
+  }
+  for (const label of ["buff", "debuff"] as const) {
+    const st = shown.find((x) => x.label === label && !STATUS_THEMES.some(([, re]) => re.test(x.id)));
+    if (st) out.push({ key: `status:${label}`, group: "STATUSES", label: up(`any ${label} · ${st.name}`), sample: { kind: "status", id: st.id } });
+  }
+  for (const [id, f] of Object.entries(TICK_FX)) out.push({ key: `tick:${id}`, group: "TICKS", label: up(`${c.statuses.get(id)?.name ?? id} tick`), sample: { kind: "fx", fx: f, mark: true, on: "both" } });
+  for (const [id, f] of Object.entries(REACTION_FX)) out.push({ key: `reaction:${id}`, group: "TICKS", label: up(c.statuses.get(id)?.name ?? id), sample: { kind: "fx", fx: f, on: "foe" } });
+  out.push({ key: "reaction:any", group: "TICKS", label: "ANY OTHER REACTION", sample: { kind: "fx", fx: REACTION_ANY, on: "foe" } });
+  for (const m of Object.keys(MOMENT_FX) as Moment[]) out.push({ key: `moment:${m}`, group: "MOMENTS", label: up(MOMENT_NAME[m]), sample: { kind: "fx", fx: MOMENT_FX[m], on: MOMENT_ON[m] } });
+  for (const [ref, f] of Object.entries(JOIN_FX)) out.push({ key: `join:${ref}`, group: "MOMENTS", label: up(`${enemyDisplayName(ref)} arrives`), sample: { kind: "fx", fx: f, on: "foe" } });
+  for (const [ref, f] of Object.entries(LEAVE_FX)) out.push({ key: `leave:${ref}`, group: "MOMENTS", label: up(`${enemyDisplayName(ref)} splits`), sample: { kind: "fx", fx: f, on: "foe" } });
+  for (const [ref, f] of Object.entries(DOWN_FX)) out.push({ key: `down:${ref}`, group: "MOMENTS", label: up(`${enemyDisplayName(ref)} falls`), sample: { kind: "fx", fx: f, on: "foe" } });
+  return out;
+}
