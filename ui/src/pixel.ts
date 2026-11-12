@@ -315,8 +315,72 @@ export function enemyThumb(ref: string, size = 24, shadowed = false): HTMLCanvas
   return canvasEl(shadowed ? silhouette(s, "#3a4260") : s, 1, "thumb");
 }
 
-// ─── VFX: 64-pixel frames in strips ───
-export const vfxSprite = (strip: string, k: number) => spriteOf(manifest.vfx[strip]?.file ?? "", k, { align: false, threshold: 0.3 });
+// ─── VFX: strips of frames side by side (manifest.vfx: frames of w×h) ───
+/*
+ * An effect drawn bigger is enlarged here by Scale2x and Scale3x (the EPX family, 4× as Scale2x twice), not by
+ * stretching: they round a shape's stair-steps as they enlarge it, so a big fire keeps pixels the size of the sprites'
+ * instead of showing blocks. Each frame is scaled on its own, cached by strip and scale.
+ */
+const scaledFx = new Map<string, HTMLCanvasElement>();
+/** A strip at `scale` times its art (1 to 4), frames side by side. */
+export function vfxSprite(strip: string, scale = 1): HTMLCanvasElement {
+  const base = spriteOf(manifest.vfx[strip]?.file ?? "", 1, { align: false, threshold: 0.3 });
+  const def = manifest.vfx[strip];
+  if (scale <= 1 || !def) return base;
+  const key = `${strip}|${scale}`;
+  let cv = scaledFx.get(key);
+  if (cv) return cv;
+  const src = base.getContext("2d", { willReadFrequently: true })!.getImageData(0, 0, base.width, base.height);
+  // Every fully clear pixel is the same clear pixel, so the scalers see one background.
+  const px = new Uint32Array(src.data.buffer).slice();
+  for (let i = 0; i < px.length; i++) if (src.data[i * 4 + 3] === 0) px[i] = 0;
+  cv = cv2d(base.width * scale, base.height * scale);
+  const out = cv.getContext("2d")!.createImageData(cv.width, cv.height);
+  const dst = new Uint32Array(out.data.buffer);
+  for (let f = 0; f < def.frames; f++) {
+    let frame: Px = { w: def.w, h: def.h, px: Uint32Array.from({ length: def.w * def.h }, (_, i) => px[Math.floor(i / def.w) * base.width + f * def.w + (i % def.w)]) };
+    if (scale === 3) frame = scale3x(frame);
+    else for (let k = 1; k < scale; k *= 2) frame = scale2x(frame);
+    for (let y = 0; y < frame.h; y++) for (let x = 0; x < frame.w; x++) dst[y * cv.width + f * frame.w + x] = frame.px[y * frame.w + x];
+  }
+  cv.getContext("2d")!.putImageData(out, 0, 0);
+  scaledFx.set(key, cv);
+  return cv;
+}
+type Px = { w: number; h: number; px: Uint32Array };
+/** Scale2x (AdvMAME2x): each pixel becomes four, taking an edge neighbour's colour where two edges meet at a corner. */
+function scale2x(s: Px): Px {
+  const { w, h, px } = s;
+  const o = new Uint32Array(w * h * 4);
+  const at = (x: number, y: number, d: number) => (x < 0 || y < 0 || x >= w || y >= h ? d : px[y * w + x]);
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const P = px[y * w + x], A = at(x, y - 1, P), B = at(x + 1, y, P), C = at(x - 1, y, P), D = at(x, y + 1, P);
+    const i = 2 * y * 2 * w + 2 * x;
+    o[i] = C === A && C !== D && A !== B ? A : P;
+    o[i + 1] = A === B && A !== C && B !== D ? B : P;
+    o[i + 2 * w] = D === C && D !== B && C !== A ? C : P;
+    o[i + 2 * w + 1] = B === D && B !== A && D !== C ? D : P;
+  }
+  return { w: w * 2, h: h * 2, px: o };
+}
+/** Scale3x (AdvMAME3x): each pixel becomes nine, by the same rule over its eight neighbours. */
+function scale3x(s: Px): Px {
+  const { w, h, px } = s;
+  const o = new Uint32Array(w * h * 9);
+  const at = (x: number, y: number, d: number) => (x < 0 || y < 0 || x >= w || y >= h ? d : px[y * w + x]);
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const E = px[y * w + x];
+    const A = at(x - 1, y - 1, E), B = at(x, y - 1, E), C = at(x + 1, y - 1, E), D = at(x - 1, y, E), F = at(x + 1, y, E);
+    const G = at(x - 1, y + 1, E), H = at(x, y + 1, E), I = at(x + 1, y + 1, E);
+    const e = B !== H && D !== F
+      ? [D === B ? D : E, (D === B && E !== C) || (B === F && E !== A) ? B : E, B === F ? F : E,
+         (D === B && E !== G) || (D === H && E !== A) ? D : E, E, (B === F && E !== I) || (H === F && E !== C) ? F : E,
+         D === H ? D : E, (D === H && E !== I) || (H === F && E !== G) ? H : E, H === F ? F : E]
+      : [E, E, E, E, E, E, E, E, E];
+    for (let k = 0; k < 9; k++) o[(3 * y + Math.floor(k / 3)) * 3 * w + 3 * x + (k % 3)] = e[k];
+  }
+  return { w: w * 3, h: h * 3, px: o };
+}
 
 // ─── The iconset: 16×16 art pixels per 32×32 cell, 16 columns ───
 const icons = new Map<string, HTMLCanvasElement>();

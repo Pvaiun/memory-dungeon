@@ -40,7 +40,8 @@ python3 -I ui/tools/assets.py <folder with the packs extracted> ui/public/assets
 - **Effects:** the director's "VFX Spells" set, one strip per effect named as the set names it (`fireball`, `crescent_cut`), cropped to its frames, with recoloured and turned copies for looks the set draws in one colour (`VFX_DERIVED` in the tool: a blood claw, a dark fire, a flying arrow). Art only: nothing changes a fight.
   - `src/effects.ts` picks them: each ability its own (`ABILITY_FX`), each basic attack its foe's or weapon's (`ENEMY_BASIC`, a caster's theme, `KIND_FX`; a plain caster's weapon its class's), each status as it lands and as it ticks, and knockouts, revives, summons, misses and wind-ups.
   - `src/battle/effects.ts` plays them in step with the story. A blow's effect plays as each hit lands; a missile flies first (an arrow, a fireball); a second hit or a chain's next foe follows a beat later; the hit's number, statuses and a knockout wait for it.
-  - Sizes are whole multiples of the art, so pixels stay square: a hit fits about one and a half times its unit's height (up to 2×, 3× on the biggest foes), a status about its height (up to 2×). An effect can ask for more (`size`, a heavy blow) or fix its scale (`x`).
+  - Sizes are whole multiples of the art: a hit fits about one and a half times its unit's height (up to 2×, 3× on the biggest foes), a status about its height (up to 2×). An effect can ask for more (`size`, a heavy blow) or fix its scale (`x`).
+  - An enlarged effect is redrawn by Scale2x or Scale3x (`vfxSprite` in `src/pixel.ts`), not stretched: its edges are rounded off and its pixels stay the size of the sprites', where a plain stretch showed blocks.
 - **Sound and music:** the director's packs, converted by hand to small mono mp3s in `public/audio/`, played by `src/battle/audio.ts`. Browsers start audio only after a tap, and music pauses while the app is in the background.
 
 ## For scripted checks

@@ -601,12 +601,13 @@ export class Scene {
         x += (f.to.x - f.x) * t;
         y += (f.to.y - f.y) * t - (f.arc ?? 0) * 4 * t * (1 - t);
       }
-      const img = vfxSprite(f.strip, 1);
+      // Enlarged by Scale2x and Scale3x (pixel.ts), drawn one to one.
+      const img = vfxSprite(f.strip, f.scale);
       const w = def.w * f.scale, h = def.h * f.scale;
       ctx.save();
       ctx.translate(Math.round(x), Math.round(y));
       if (f.flip) ctx.scale(-1, 1);
-      ctx.drawImage(img, frame * def.w, 0, def.w, def.h, -Math.floor(w / 2), -Math.floor(h / 2), w, h);
+      ctx.drawImage(img, frame * w, 0, w, h, -Math.floor(w / 2), -Math.floor(h / 2), w, h);
       ctx.restore();
     }
     if (!under) this.fx = keep;
@@ -801,9 +802,10 @@ export function drawStage(ctx: CanvasRenderingContext2D, o: StageOpts, wall: num
   }
   const sp = o.sparkle && manifest.vfx[o.sparkle.strip];
   if (o.sparkle && sp && (o.openAt === undefined || wall > o.openAt + 300)) {
-    const img = vfxSprite(o.sparkle.strip, 1);
     const k = Math.max(sp.w, sp.h) <= 16 ? 2 : 1;
-    ctx.drawImage(img, (Math.floor(wall / 70) % sp.frames) * sp.w, 0, sp.w, sp.h, Math.round(o.sparkle.x - (sp.w * k) / 2), Math.round(o.sparkle.y - (sp.h * k) / 2), sp.w * k, sp.h * k);
+    const img = vfxSprite(o.sparkle.strip, k);
+    const w = sp.w * k, h = sp.h * k;
+    ctx.drawImage(img, (Math.floor(wall / 70) % sp.frames) * w, 0, w, h, Math.round(o.sparkle.x - w / 2), Math.round(o.sparkle.y - h / 2), w, h);
   }
 }
 

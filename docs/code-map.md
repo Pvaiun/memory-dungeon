@@ -190,7 +190,7 @@ ui/
     dom.ts                   DOM helpers: h(), windows, rows, buttons, the back gesture
     art.ts                   art tables: which sprite, icon or look shows what
     effects.ts               the effects tables: which VFX strip each action, status and event plays
-    pixel.ts                 graphics: the pixel scale, sprites, icons, the font
+    pixel.ts                 graphics: the pixel scale, sprites, icons, the font, effects enlarged by Scale2x and Scale3x
     update.ts                reloading onto a newer build
     rogue-screens.ts         the rogue screens' public face; lists them
     rogue/
