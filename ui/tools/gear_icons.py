@@ -47,7 +47,6 @@ RAMP = {
     "pink": ["#ffe1e3", "#ff819b", "#eb6581", "#c85086", "#853954"],
     "green": ["#d3fc7e", "#99e65f", "#5ac54f", "#33984b", "#1e6f50"],
     "jade": ["#a5d0b5", "#00bd6f", "#009160", "#005a4a", "#134c4c"],
-    "empty": ["#858585", "#5d5d5d", "#4a4a5a", "#3d3d3d", "#302d36"],
 }
 hx = lambda s: tuple(int(s[i:i + 2], 16) for i in (1, 3, 5))
 lum = lambda c: 0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2]
@@ -119,6 +118,21 @@ def draw(name, mats):
             if not lit and not shaded and at(x + 1, y + 1) != ch:
                 col = dark
             im.putpixel((x, y), col + (255,))
+    return im
+
+
+def empty(im):
+    """An empty slot's icon: the piece as a soft grey silhouette, its outline a mid grey, so it reads as nothing worn on a light page or a dark one."""
+    im = im.copy()
+    px = im.load()
+    cols = sorted({px[x, y][:3] for y in range(16) for x in range(16) if px[x, y][3] and lum(px[x, y][:3]) > 40}, key=lum)
+    mid = lum(cols[len(cols) // 2]) if cols else 0
+    for y in range(16):
+        for x in range(16):
+            p = px[x, y]
+            if p[3]:
+                c = "#657392" if lum(p[:3]) <= 40 else "#92a1b9" if lum(p[:3]) < mid else "#c7cfdd"
+                px[x, y] = hx(c) + (p[3],)
     return im
 
 
@@ -254,7 +268,7 @@ def build(spec):
     if spec[0] == "drawn":
         return draw(spec[1], spec[2])
     im = Image.open(next((PACK / "icons").glob(f"{spec[1]}_*.png"))).convert("RGBA")
-    return recolor(im, spec[2]) if spec[2] else im
+    return empty(im) if spec[2] == "empty" else recolor(im, spec[2]) if spec[2] else im
 
 
 def main():
