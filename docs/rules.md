@@ -65,5 +65,5 @@ The philosophy behind these lines, and the director's intent in their words, are
 - **Read fights, not only averages.** A tick-by-tick read of real fights (`tools/rogue-feel.ts`, `docs/feel-reader.md`) finds what the balance sheet's averages hide.
 - **Balance is its own pass.** While making content, make no balancing rules: synergies may be overpowered.
 - **Test with hand-built parties** (`tools/rogue-parties.ts`, `tools/build-parties.ts`), not the simulated player.
-- **The coming difficulty pass aims harder than today.**
+- **Difficulty aims hard:** a first win is an achievement, and each act climbs to its boss, the hardest fight of the act.
 - **Checks sized to the need:** run the tests, studies and reads needed to know something, and skip the rest.

@@ -338,6 +338,6 @@ Every piece of the vocabulary is used by a class or an enemy (`classes.ts`, `ene
 - **Stand fast.** The Knight's Taunt lasts less than its cooldown, so check it holds bosses on Aggro alone in the gaps.
 - **Aspis** goes to the lowest ally, who isn't always the one about to take the big hit. Check how often Aegis catches anything without a Knight drawing the boss.
 - **Bedrock** depends on how long the Geomancer's Shield lasts. Check its crit uptime with and without a protector beside it.
-- **Choosing** is a revive on a medium cooldown where the documents give revives the very long word; it brings a tenth, and the balance pass may lengthen it. With an ally down and another hurt it raises, and the hurt one waits for the next cast.
+- **Choosing** is a revive on a medium cooldown where the documents give revives the very long word; it brings a tenth, and a playtest may lengthen it. With an ally down and another hurt it raises, and the hurt one waits for the next cast.
 - **The Frostweaver's shatters:** a Frostweaver working alone on one foe should shatter it within a few casts, and more than once in a regular fight. Its Chill counts are the balance pass's first job.
 - **Cadenza** is esoteric, and worth trying by the director's word.

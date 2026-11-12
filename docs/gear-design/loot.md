@@ -220,7 +220,7 @@ One per class, shown in crimson and offered in the boss boons that open acts II 
 
 ## Levers held back for balance
 
-At the director's word, the loot was made with no balancing rules: synergies may be overpowered. These rules were proposed while it was written and withdrawn, and they're kept as levers for a balance pass, to reach for only if the numbers call for them. Statuses stay universal: no lever shortens or lengthens a status.
+At the director's word, the loot was made with no balancing rules: synergies may be overpowered. These rules were proposed while it was written and withdrawn, and they're kept as levers, to reach for only if the numbers call for them. Statuses stay universal: no lever shortens or lengthens a status.
 - **One swing shape per unit.** Phalanx, Millstone, Hummingbird charm, Headsman's axe, Worldbreaker and the Heavy line's Hammer each reshape a unit's basic attacks, and two shapes on one unit add up. The lever: a unit takes one shape, and each other shape on it gives a stat step instead.
 - **No "many" in a single application:** one cast or hit lands at most "several", and "many" is for build-up over a fight. In use on Bloodied ground's Opener.
 - **Half again in place of double** where a party can hold the condition all fight. In use on The Red Feast's hits, Twinfall's second landing and Hummingbird charm's swing.
