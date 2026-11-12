@@ -51,7 +51,7 @@ abilityUp({
   id: "blood_drain", cls: "vampire",
   power: "40% more damage.",
   a: { name: "Savage drain", text: "Three quick hits on a random foe, each a third of the damage, scaling from max HP, each drinking; the foe is Weakened.", serves: "Cuts 1 ●●●, Pact ●●" },
-  b: { name: "Drain the well", text: "Deals physical damage that scales from max HP to a random foe, and drains MP from it: a quarter of the damage dealt, given to the ally with the least MP. No Weaken.", builds: ["barrage"] },
+  b: { name: "Drain the well", text: "Deals physical damage that scales from max HP to a random foe, and drains MP from it: a quarter of the damage dealt, given to the ally with the least MP. No Weaken.", serves: "Barrage 1 ●●●" },
   form: (v, k) =>
     v === "a" ? { do: [phys(from("max_hp", r6((0.4 * k) / 3)), { hits: 3, apply: [{ status: "weaken" }] })] }
       // A one-tick marker on the Vampire hears the cast's own hit and drains as Siphon does.

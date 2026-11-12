@@ -56,8 +56,7 @@ export const ROUTES: Route[] = [
   route("toll", ["monk", "valkyrie", "bard"], "The dancer: the Monk dodges and answers, the Valkyrie and the Bard profit.", TOLL),
   route("barrage", ["knight", "bard", "pyromancer"], "The Pyromancer's great spell, again and again, its mana from the Knight and the Bard.", BARRAGE),
   route("barrage", ["frostweaver", "bard", "stormcaller"], "Two casters, the Bard's Encore on the bigger spell.", BARRAGE),
-  // At rung 1 the Vampire knows Blood drain, not the tags' Blood gift: a heal for its one ability left the route nothing to hit with.
-  route("barrage", ["cleric", "vampire", "geomancer"], "No Bard: the Vampire's life for mana and the Cleric's font keep the Geomancer casting.", BARRAGE, { vampire: ["blood_drain"] }),
+  route("barrage", ["cleric", "vampire", "geomancer"], "No Bard: the Vampire's life for mana and the Cleric's font keep the Geomancer casting.", BARRAGE),
   route("pact", ["vampire", "valkyrie", "cleric"], "The Vampire drinks, the Valkyrie stands over it, the Cleric's heals land past full.", PACT),
   route("pact", ["vampire", "bard", "hoplite"], "The Vampire's price paid in blood, the Bard's songs and the Hoplite's Aegis.", PACT),
   route("pact", ["assassin", "paladin", "monk"], "No Vampire: Lifesteal on the blades, the Paladin's heals, every price in HP.", PACT),

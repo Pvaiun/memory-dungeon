@@ -39,7 +39,7 @@ The director's intent is in `intent.md`. This part balanced the build parties ag
 
      Their weakness is damage, not frailty: they have HP 3, the Bard deals 0.29× an average unit, and the Frostweaver 0.85×, the bottom of the dealers' band. Other builds' tankless routes win on their own damage or control.
    - **The build parties' Soloist** slots the abilities that deal damage first, as a player would. The cathedral had freed the Geomancer's Earthen shell, cast 15 times a fight.
-   - **Your call:** whether route 2 keeps three casters. Route 3's Vampire now knows Blood drain at rung 1, on your word (it measured 33% to 68% there, before this round's other changes); the build test hasn't been run with it.
+   - **Your call:** whether route 2 keeps three casters. Route 3's Vampire now knows Blood drain at rung 1, on your word: Drain the well, its Barrage version, is tagged for Barrage's first rung, as the mana link it is. It measured 33% to 68% there, before this round's other changes; the build test hasn't been run with it.
 2. **Riders of a damage status are sized to the status.** `APPLIED` in `scale.ts` makes every rider stat-scaled at a share of its words, on the party's side only (applied when the pack is built, `pack.ts`):
    - Chill at 0.2;
    - Burn at 0.25;
