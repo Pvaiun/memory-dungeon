@@ -359,7 +359,9 @@ export function heal(w: W, ctx: Ctx, t: CUnit, raw: number, final = false) {
   t.hp += restored;
   const kind = st ? null : ctx.kind;
   const more = { kind, status: st ? st.d.id : null, tags: st?.fixedBoost ? ["pulse"] : [] };
-  if (restored > 0) w.log?.({ t: "heal", vis: "player", at: w.f.now, by: ctx.actor.id, target: t.id, src: ctx.id, amount: restored, crit: crit > 0, hp: t.hp });
+  // A status's heal says so as its damage does (`part`), and who applied it (`from`), for reading a fight's healing by source (the log only).
+  const part = st ? { part: st.fixedBoost ? "pulse" : "reaction", ...(st.src ? { from: st.src } : {}) } : {};
+  if (restored > 0) w.log?.({ t: "heal", vis: "player", at: w.f.now, by: ctx.actor.id, target: t.id, src: ctx.id, ...part, amount: restored, crit: crit > 0, hp: t.hp });
   if (restored > 0) fire(w, ev("healed", t, healer, { amount: restored, ...more }));
   if (amount > restored && !final && st?.on !== "overhealed") fire(w, ev("overhealed", t, healer, { amount: amount - restored, ...more }));
   if (restored > 0) hpMoved(w, t);

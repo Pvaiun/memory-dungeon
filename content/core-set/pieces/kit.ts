@@ -32,7 +32,7 @@ export function weaponHit(kind: string, o: Partial<KindWords> & { trade?: Trade;
 export type Trade = "heavy" | "light";
 /** The stat steps a kind's pieces carry at a rarity (scale.ts KIND_BUDGET), a step fewer for a heavy piece and one more for a light one. */
 export const budgetOf = (kind: string, rarity: Rarity, trade?: Trade): number =>
-  rarity === "mythic" ? 0 : Math.max(0, KIND_BUDGET[KIND_WORDS[kind].budget][rarity] + (trade === "heavy" ? -1 : trade === "light" ? 1 : 0));
+  Math.max(0, KIND_BUDGET[KIND_WORDS[kind].budget][rarity] + (trade === "heavy" ? -1 : trade === "light" ? 1 : 0));
 /**
  * How many steps a piece's stats are: an amount stat's steps (HP's half points, Aggro's tens, MP regen's own), Crit chance's
  * table, a special stat at its medium word one and at its high word two. A stat that shapes a piece (the Worldbreaker's slow
@@ -148,23 +148,23 @@ export function piece(o: PieceOpts): GearT {
     const kind = o.weapon?.kind ?? o.kind;
     g.weapon = { ...(kind ? { kind } : {}), amount: kind ? weaponHit(kind, { trade: o.trade }) : 0, ...o.weapon } as WeaponT;
     // Every piece carries its kind's steps at its rarity (the director's rule: stats at every rarity, and the kind's budget says how many).
-    if (kind && o.rarity !== "mythic" && stepsOf(o.stats) !== budgetOf(kind, o.rarity, o.trade)) {
+    if (kind && stepsOf(o.stats) !== budgetOf(kind, o.rarity, o.trade)) {
       throw new Error(`${o.name}: a ${o.rarity} ${kind} carries ${budgetOf(kind, o.rarity, o.trade)} stat steps, not ${stepsOf(o.stats)}`);
     }
-  } else if (o.rarity !== "mythic") {
-    // An offhand, armor or amulet has no swing to trade against: the standard budget, exact for an offhand's kind and a common or
-    // uncommon of any slot; a rare or legendary armor or amulet carries at least its step beside the effect that is its shape.
+  } else {
+    // An offhand, armor or amulet has no swing to trade against: the standard budget, exact for an offhand and a common or
+    // uncommon of any slot; a rare, legendary or mythic armor or amulet carries at least its steps beside the effect that is its shape.
     const want = KIND_BUDGET.standard[o.rarity], have = stepsOf(o.stats);
     const exact = o.slot === "offhand" || o.rarity === "common" || o.rarity === "uncommon";
     if (exact ? have !== want : have < want) throw new Error(`${o.name}: a ${o.rarity} ${o.slot} carries ${exact ? "" : "at least "}${want} stat steps, not ${have}`);
   }
-  // A special stat on gear is medium, or high on a legendary (the loot's rule).
+  // A special stat on gear is medium, or high on a legendary or a mythic (the loot's rule).
   if (o.rarity !== "legendary" && o.rarity !== "mythic") {
     const high = o.stats?.find((c) => c.stat in SPECIAL_LEVELS && c.flat === SPECIAL_LEVELS[c.stat].high);
     if (high) throw new Error(`${o.name}: a ${o.rarity} with ${SPECIAL_NAME[high.stat]} high; high is a legendary's`);
   }
   // A max MP step brings HP beside it (scale.ts MP_STEP_HP), over the budget the checks above counted.
-  const mp = o.rarity === "mythic" ? 0 : (o.stats ?? []).filter((c) => c.stat === "max_mp" && (c.flat ?? 0) > 0).reduce((n, c) => n + Math.round((c.flat ?? 0) / stepFor("max_mp")), 0);
+  const mp = (o.stats ?? []).filter((c) => c.stat === "max_mp" && (c.flat ?? 0) > 0).reduce((n, c) => n + Math.round((c.flat ?? 0) / stepFor("max_mp")), 0);
   if (mp && g.stats) {
     const add = mp * MP_STEP_HP * HP_STEP, hp = g.stats.find((c) => c.stat === "max_hp");
     g.stats = hp ? g.stats.map((c) => (c === hp ? { ...c, flat: (c.flat ?? 0) + add } : c)) : [...g.stats, { stat: "max_hp", flat: add }];
@@ -326,7 +326,7 @@ export function beatHalfway(pid: string, name: string, effects: EffectT[]): { re
     reactions: [atStart(give(wait)), react(on("revived"), give(wait)), react(on("status_ended", { status: wait, cause: ["expired"] }), ...effects, give(pulse))],
     statuses: [
       marker(wait, `${name} (waiting)`, "Its first beat comes when this runs out.", { duration: SO_OFTEN / 2 }),
-      marker(pulse, `${name} (beating)`, "Its beat, every so often.", { pulse: { every: SO_OFTEN, do: effects } }),
+      marker(pulse, `${name} (beating)`, `Its beat, every ${SO_OFTEN} ticks.`, { pulse: { every: SO_OFTEN, do: effects } }),
     ],
   };
 }

@@ -11,7 +11,7 @@ import { abilityUp, apply, both, helper, kit, passiveUp, phys } from "./kit.js";
     id: "shieldmaiden", cls: "valkyrie",
     power: "Shield +40%.",
     a: { name: "Chooser of the slain", text: "No Shield. Hits deal +20% to foes below half HP.", builds: ["hunt", "storm"], plus: "+28%, not +20%." },
-    b: { name: "Shield-sister", text: `On a hit: Shields the lowest ally instead, for ${KIT.shieldmaiden * 100}% of the damage.`, builds: ["toll", "pact"] },
+    b: { name: "Shield-sister", text: `On a hit: Shields the ally with the lowest HP% instead, for ${KIT.shieldmaiden * 100}% of the damage.`, builds: ["toll", "pact"] },
     // Chooser of the slain gives the Shield up: offence in place of defence, and the power step has nothing to grow.
     form: (v, k) =>
       v === "a" ? { reactions: [], boosts: both({ scale: [{ ratio: 20 * k, when: { hpBelow: 50 }, of: "target" }] }) as StatusT["boosts"] }
@@ -48,8 +48,8 @@ import { abilityUp, apply, both, helper, kit, passiveUp, phys } from "./kit.js";
   abilityUp({
     id: "choosing", cls: "valkyrie",
     power: "Heals or raises 40% more.",
-    a: { name: "Einherjar", text: "Raises a fallen ally at 10% HP, every action ready; else heals the lowest ally.", builds: ["hunt"] },
-    b: { name: "Over the fallen", text: "Raises a fallen ally or heals the lowest one below 30% HP, then Taunts and is Guarded.", serves: "Toll 2 ●●●, Pact ●● ⚙ riposte (half), brink (half)" },
+    a: { name: "Einherjar", text: "Raises a fallen ally at 10% HP, every action ready; else heals the ally with the lowest HP%.", builds: ["hunt"] },
+    b: { name: "Over the fallen", text: "Raises a fallen ally, or heals the ally with the lowest HP% once one is below 30% HP; then Taunts and is Guarded.", serves: "Toll 2 ●●●, Pact ●● ⚙ riposte (half), brink (half)" },
     form: (v, k) =>
       v === "a" ? { statuses: ["einherjar"], do: choose(KIT.choosing * k, REVIVE.tenth * k) }
         : v === "b" ? over(k)
@@ -68,7 +68,7 @@ import { abilityUp, apply, both, helper, kit, passiveUp, phys } from "./kit.js";
   abilityUp({
     id: "skyfall", cls: "valkyrie",
     power: "+40% damage.", shown: true,
-    a: { name: "Thunderclap", text: "A blow from above on every foe that holds Shock. The Shock stays.", serves: "Storm 3 ●●● ⚙ held charge (key)" },
+    a: { name: "Thunderclap", text: "A blow from above on every foe that holds Shock.", serves: "Storm 3 ●●● ⚙ held charge (key)" },
     b: { name: "Valkyrie's descent", text: "A blow on the foe with the least HP, double below a quarter HP. Ignores Taunt.", builds: ["hunt"] },
     form: (v, k) =>
       v === "a" ? { if: { side: "foes", where: { has: "shock" } }, target: { side: "foes", where: { has: "shock" }, pick: "all" }, do: [fall(0.5, k)] }

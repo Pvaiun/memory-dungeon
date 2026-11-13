@@ -30,6 +30,8 @@ export type RunRec = {
   trace: [number, number, string, number, number, string, number][];
   /** Legendary pieces the final party wears, by base id. */
   worn: string[];
+  /** Mythics the run holds, and how many of them the final party wears. */
+  mythics: [number, number];
   swaps: number;
 };
 
@@ -81,6 +83,7 @@ export function playOne(c: Content, seed: number, leader: string, heat: number, 
     formation: run.formation, formations: run.formations.length, bossHp, bossFight, picks: run.stats.picks,
     known: run.party.reduce((s, cls) => s + member(run, cls).known.length, 0), items: run.items.length, supplies: run.supplies.length, trace, swaps,
     worn: run.party.flatMap((cls) => Object.values(member(run, cls).gear).map((uid) => run.items.find((it) => it.uid === uid)).filter((it) => it?.rarity === "legendary").map((it) => it!.base)),
+    mythics: [run.items.filter((it) => it.rarity === "mythic").length, run.party.reduce((s, cls) => s + Object.values(member(run, cls).gear).filter((uid) => run.items.find((it) => it.uid === uid)?.rarity === "mythic").length, 0)],
     ...(diary ? { notes: run.notes.map((n) => `${n.act}.${n.floor} ${n.text}`) } : {}),
   };
 }
@@ -170,6 +173,8 @@ export function digest(recs: RunRec[]): string {
   });
   lines.push(`regions: ${Object.entries(regs).map(([g, v]) => `${g} ${v.met} (lost ${pct(v.lost, v.met)})`).join("  ")}`);
   lines.push(`gold earned ${Math.round(mean(recs.map((r) => r.gold)))}, spent ${Math.round(mean(recs.map((r) => r.spent)))}  ·  legendaries worn ${mean(recs.map((r) => r.legendaries)).toFixed(2)}  formations ${mean(recs.map((r) => r.formations)).toFixed(2)}  abilities known ${mean(recs.map((r) => r.known)).toFixed(1)}`);
+  const myth = recs.filter((r) => r.mythics[0] > 0);
+  if (myth.length) lines.push(`mythics: held in ${myth.length} runs (${pct(myth.length, recs.length)}), ${mean(myth.map((r) => r.mythics[0])).toFixed(2)} a run; the final party wears ${pct(myth.reduce((s, r) => s + r.mythics[1], 0), myth.reduce((s, r) => s + r.mythics[0], 0))} of them`);
   // By leader.
   const leaders = [...new Set(recs.map((r) => r.leader))];
   lines.push(`by leader: ${leaders.map((l) => `${l} ${pct(recs.filter((r) => r.leader === l && r.won).length, recs.filter((r) => r.leader === l).length)}`).join("  ")}`);

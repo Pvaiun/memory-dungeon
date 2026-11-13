@@ -1,11 +1,13 @@
 /**
- * The 16 mythics, one per class: no stat steps, each rewriting how its class plays. A piece's text is its effect only: the
- * interface shows its slot and its one class. Each adds its piece to kit.ts's mythics, its statuses to its statuses, and
- * its Serves line (the loot pass's tags) to its served.
+ * The 16 mythics, one per class, each rewriting how its class plays. Each carries a legendary's stat steps beside its effect
+ * (scale.ts KIND_BUDGET), checked as any piece's are: a weapon its kind's, every other slot the standard. Its stats lean to its
+ * kind's or its armor's profile, the signature first, and to what its class and its effect read. A piece's text is its effect
+ * only: the interface shows its slot, its stats and its one class. Each adds its piece to kit.ts's mythics, its statuses to its
+ * statuses, and its Serves line (the loot pass's tags) to its served.
  */
 import type { NumT } from "../../../src/schema.js";
 import { HIT, KIND_SPEED, KIT, STATUS, swingAt } from "../scale.js";
-import { countAt, count, own, piece, pieceStatus, serves, share, stacksOf, swingStacks, weaponHit } from "../pieces/kit.js";
+import { countAt, count, critStep, own, piece, pieceStatus, serves, share, sp, st, stacksOf, swingStacks, weaponHit } from "../pieces/kit.js";
 import { T } from "../classes.js";
 import { apply, both, helper, kit, marker, mythics, ofHolder, removeMine, served, tidy } from "./kit.js";
 
@@ -25,8 +27,9 @@ const mythic = (m: Parameters<typeof piece>[0], line: string) => {
 
 // Knight: Horn of the keep. A status doesn't know which ability applied it, so any Taunt the Knight loses while another ally casts comes back.
 mythic({ name: "Horn of the keep", slot: "offhand", rarity: "mythic", kind: "horn", mythic: "knight", statuses: ["horn_of_the_keep"],
-    text: "When hit: the other ally with the least MP gains half the damage as MP. A Taunt that ends during an ally's wind-up comes back." }, "Barrage 3 ●●●, Toll ●● ⚙ mana as armour (half)");
-helper(pieceStatus("horn_of_the_keep", "Horn of the keep", "When hit: the other ally with the least MP gains half the damage as MP. A Taunt that ends during an ally's wind-up comes back.", {
+    stats: [st("aggro", 1), st("max_hp", 2), st("defense", 1)],
+    text: "When hit: the other ally with the lowest MP% gains half the damage as MP. A Taunt that ends during an ally's wind-up comes back." }, "Barrage 3 ●●●, Toll ●● ⚙ mana as armour (half)");
+helper(pieceStatus("horn_of_the_keep", "Horn of the keep", "When hit: the other ally with the lowest MP% gains half the damage as MP. A Taunt that ends during an ally's wind-up comes back.", {
     reactions: [
       { on: { event: "hit_taken" }, do: [{ op: "mp", amount: { scale: [{ ratio: 0.5, amount: true }] }, to: { side: "others", pick: "lowest", by: "mp_share" } }] },
       { on: { event: "status_ended", status: "taunt", cause: ["expired"] }, if: { side: "others", where: { casting: true } }, do: [apply("taunt", { to: "holder" })] },
@@ -39,6 +42,7 @@ helper(pieceStatus("horn_of_the_keep", "Horn of the keep", "When hit: the other 
   const below = { side: "allies" as const, where: { hpBelow: 50 }, pick: "all" as const, exclude: "owner" as const };
   const again = { op: "heal" as const, amount: { scale: [{ ratio: 1, amount: true as const }] }, final: true as const, to: below };
   mythic({ name: "Halo of the saint", slot: "amulet", rarity: "mythic", mythic: "cleric", statuses: ["halo_of_the_saint"],
+      stats: [st("attack", 1), st("max_mp", 1), st("mp_regen", 1), st("max_hp", 1)],
       text: "Its abilities' heals and Regen also land on every other ally below half HP." }, "Pact 3 ●●● ⚙ brink (half)");
   helper(pieceStatus("halo_of_the_saint", "Halo of the saint", "Its abilities' heals and Regen also land on every other ally below half HP.", {
       reactions: [
@@ -52,6 +56,7 @@ helper(pieceStatus("horn_of_the_keep", "Horn of the keep", "When hit: the other 
 // Ranger: Huntmaster's quiver. Its abilities that aim at one foe re-aimed past any guard at the lowest HP, marking what they
 // hit; a marked foe's fall readies every ability the Ranger has.
 mythic({ name: "Huntmaster's quiver", slot: "armor", rarity: "mythic", kind: "leather", mythic: "ranger", statuses: ["huntmasters_quiver"],
+    stats: [st("attack", 2), critStep(1), sp("evasion", "medium")],
     text: "Abilities aimed at one foe ignore Taunt and go to the foe with the least HP. When a foe they hit falls, they're ready again." }, "Hunt 3 ●●● ⚙ reaping (half)");
 helper(pieceStatus("huntmasters_quiver", "Huntmaster's quiver", "Abilities aimed at one foe ignore Taunt and go to the foe with the least HP. When a foe they hit falls, they're ready again.", {
       mods: [{ of: { single: true }, target: T.lowestHpFoe, seek: true, apply: [{ status: "huntmasters_quiver_mark" }] }],
@@ -63,6 +68,7 @@ helper(marker("huntmasters_quiver_mark", "QUARRY", "Its fall readies the hunter'
 
 // Bramble knight: Heartwood mail. Its Thorns on every attacker of an ally; the base Briar's Bleed follows them from here (the passive forms hear this status's damage themselves).
 mythic({ name: "Heartwood mail", slot: "armor", rarity: "mythic", kind: "mail", mythic: "bramble_knight", statuses: ["heartwood_mail"],
+    stats: [sp("thorns", "medium"), st("max_hp", 2), st("defense", 1)],
     text: "Its Thorns strike whoever hits an ally." }, "Toll 3 ●●●, Cuts ●● ⚙ red rain (half)");
 helper(pieceStatus("heartwood_mail", "Heartwood mail", "Its Thorns strike whoever hits an ally.", {
     reactions: [
@@ -73,6 +79,7 @@ helper(pieceStatus("heartwood_mail", "Heartwood mail", "Its Thorns strike whoeve
 
 // Hoplite: The last wall. An Aegis it gave that's spent (`source: holder`; its end carries the blocked amount and the attacker) strikes back in full, and Aspis is ready.
 mythic({ name: "The last wall", slot: "offhand", rarity: "mythic", kind: "round_shield", mythic: "hoplite", statuses: ["the_last_wall"],
+    stats: [st("max_hp", 2), st("defense", 1), st("aggro", 1)],
     text: "When an Aegis it gave blocks a blow, the attacker takes the blocked damage and Aspis is ready." }, "Toll 3 ●●●, Landslide ●● ⚙ mirror (key)");
 helper(pieceStatus("the_last_wall", "The last wall", "When an Aegis it gave blocks a blow, the attacker takes the blocked damage and Aspis is ready.", {
     reactions: [{ on: { event: "status_ended", status: "aegis", cause: ["spent"], whose: "any", source: "holder" }, do: [
@@ -83,6 +90,7 @@ helper(pieceStatus("the_last_wall", "The last wall", "When an Aegis it gave bloc
 
 // Paladin: Writ of judgement. Condemn (every form, by name) calls a blow of its own on the foe it Marked, as it resolves.
 mythic({ name: "Writ of judgement", slot: "offhand", rarity: "mythic", kind: "relic", mythic: "paladin", statuses: ["writ_of_judgement"],
+    stats: [st("mp_regen", 1), st("attack", 2), st("max_hp", 1)],
     text: "When Condemn Marks a foe, a blow falls on it, adding Burn." }, "Hunt 3 ●●●, Bonfire ●●, Landslide ●●");
 helper(pieceStatus("writ_of_judgement", "Writ of judgement", "When Condemn Marks a foe, a blow falls on it, adding Burn.", {
     reactions: [{ on: { event: "action_resolve", kind: "ability", ability: ["condemn"] }, do: [{ op: "strike", amount: share(HIT.heavy, "attack"), apply: [{ status: "burn", stacks: swingStacks("several") }], to: "other" }] }],
@@ -93,9 +101,10 @@ helper(pieceStatus("writ_of_judgement", "Writ of judgement", "When Condemn Marks
 {
   const counted = { event: "hit_lands" as const, notTags: ["stormspear"] };
   mythic({ name: "Stormspear", slot: "weapon", rarity: "mythic", mythic: "valkyrie", statuses: ["stormspear"],
-      text: "Every 4th hit calls a blow on the foe with the most Shock, ignoring Taunt. The Shock stays.",
+      stats: [st("aggro", 1), st("attack", 1), sp("attack_speed", "medium"), st("max_hp", 1)],
+      text: "Every 4th hit calls a blow on the foe with the most Shock, ignoring Taunt.",
       weapon: { kind: "spear", type: "physical", hands: 1, cooldown: KIND_SPEED.spear, amount: weaponHit("spear") } }, "Storm 3 ●●●, Hunt ● ⚙ held charge (key)");
-  helper(pieceStatus("stormspear", "Stormspear", "Every 4th hit calls a blow on the foe with the most Shock, ignoring Taunt. The Shock stays.", {
+  helper(pieceStatus("stormspear", "Stormspear", "Every 4th hit calls a blow on the foe with the most Shock, ignoring Taunt.", {
     reactions: [
       { on: counted, if: { side: "self", where: countAt("stormspear_count", 3) }, do: [{
         op: "strike", tag: "stormspear", seek: true, to: { side: "foes", pick: "highest", by: { stacks: "shock" } },
@@ -109,6 +118,7 @@ helper(pieceStatus("writ_of_judgement", "Writ of judgement", "When Condemn Marks
 
 // Bard: Metronome. A count of the party's hits (extra strikes and each hit of a multi-hit ability included); at 20 the three songs are ready (by name) and the count is spent.
 mythic({ name: "Metronome", slot: "offhand", rarity: "mythic", kind: "bell", mythic: "bard", statuses: ["metronome"],
+    stats: [sp("attack_speed", "medium"), st("max_mp", 1), st("mp_regen", 1), st("max_hp", 1)],
     text: "Counts the party's hits. At 20, War ballad, Allegro and Encore are ready, and the count restarts." }, "Cuts 3 ●●●, Barrage ●●, Storm ● ⚙ spell on the swing (key)");
 helper(pieceStatus("metronome", "Metronome", "Counts the party's hits. At 20, War ballad, Allegro and Encore are ready, and the count restarts.", {
       reactions: [
@@ -127,6 +137,7 @@ mythic({
   name: "The witch-blade", slot: "weapon", rarity: "mythic", mythic: "hexer",
   text: "After each ability, its next 3 basic attacks hit every foe with a debuff.",
   weapon: { kind: "sword", type: "physical", hands: 1, cooldown: 5.8, amount: ownHit(5.8, "attack") },
+  stats: [st("attack", 1), sp("cooldown", "medium"), st("max_mp", 1), sp("siphon", "medium")],
   statuses: ["the_witch_blade"],
 }, "Snap 3 ●●●, Bonfire ●●, Storm ●● ⚙ every colour (half), red rain (half)");
 helper(pieceStatus("the_witch_blade", "The witch-blade", "After each ability, its next 3 basic attacks hit every foe with a debuff.", {
@@ -142,11 +153,13 @@ helper(kit("the_witch_blade_swings", "THE WITCH-BLADE", "Basic attacks hit every
 // Monk: Ember palms. Every hit it lands deals more for each Burn on the foe hit, added before boosts; the Burn stays.
 mythic({
   name: "Ember palms", slot: "weapon", rarity: "mythic", mythic: "monk",
-  text: "Hits deal a little extra for each Burn on the target. The Burn stays.",
+  text: "Hits deal extra damage for each Burn on the target.",
   weapon: { kind: "fist", type: "physical", hands: 1, cooldown: 6.0, amount: ownHit(6.0, "attack") },
+  // A full swing where the fist's is light: a heavy step along the trade, so a step fewer.
+  trade: "heavy", stats: [sp("double_strike", "medium"), st("attack", 1), sp("attack_speed", "medium")],
   statuses: ["ember_palms"],
 }, "Bonfire 3 ●●●, Cuts ●●");
-helper(pieceStatus("ember_palms", "Ember palms", "Hits deal a little extra for each Burn on the target. The Burn stays.", {
+helper(pieceStatus("ember_palms", "Ember palms", "Hits deal extra damage for each Burn on the target.", {
   adds: [{ on: "physical", amount: stacksOf("burn", 25, "target") }],
 }));
 
@@ -154,6 +167,7 @@ helper(pieceStatus("ember_palms", "Ember palms", "Hits deal a little extra for e
 mythic({
   name: "Night's edge", slot: "armor", rarity: "mythic", mythic: "assassin",
   text: "On a kill: Hidden, and its next hit deals double.",
+  stats: [st("attack", 1), critStep(1), sp("crit_damage", "medium"), sp("evasion", "medium")],
   statuses: ["nights_edge"],
 }, "Hunt 3 ●●● ⚙ two in the dark (half)");
 helper(pieceStatus("nights_edge", "Night's edge", "On a kill: Hidden, and its next hit deals double.", {
@@ -171,6 +185,7 @@ helper(kit("nights_edge_strike", "NIGHT'S EDGE", "Next hit deals double.", {
   mythic({
     name: "The chalice", slot: "offhand", rarity: "mythic", mythic: "vampire",
     text: "Other allies cast with its HP instead of their MP, while it stays above 10% HP.",
+    stats: [sp("lifesteal", "medium"), st("max_hp", 2), st("defense", 1)],
     statuses: ["the_chalice"],
   }, "Pact 3 ●●●, Barrage ●●● ⚙ blood mage (half), brink (key)");
   helper(pieceStatus("the_chalice", "The chalice", "Other allies cast with its HP instead of their MP, while it stays above 10% HP.", {
@@ -186,6 +201,7 @@ helper(kit("nights_edge_strike", "NIGHT'S EDGE", "Next hit deals double.", {
 mythic({
   name: "Crown of embers", slot: "amulet", rarity: "mythic", mythic: "pyromancer",
   text: "While it stands, every ally's hits add a Burn.",
+  stats: [st("max_hp", 2), st("attack", 1), sp("cast_speed", "medium")],
   statuses: ["crown_of_embers"],
 }, "Bonfire 3 ●●● ⚙ lead's colour (half)");
 helper(pieceStatus("crown_of_embers", "Crown of embers", "While it stands, every ally's hits add a Burn.", {
@@ -205,6 +221,7 @@ helper(kit("crown_of_embers_aura", "CROWN OF EMBERS", "Hits add a Burn while the
 mythic({
   name: "Glacier's heart", slot: "armor", rarity: "mythic", mythic: "frostweaver",
   text: `When a foe's Chill shatters, ${STATUS.chill.cap / 4} Chill go back on it.`,
+  stats: [st("max_mp", 1), st("mp_regen", 1), st("attack", 1), sp("cast_speed", "medium")],
   statuses: ["glaciers_heart"],
 }, "Snap 3 ●●● ⚙ firecracker (key)");
 helper(pieceStatus("glaciers_heart", "Glacier's heart", `When a foe's Chill shatters, ${STATUS.chill.cap / 4} Chill go back on it.`, {
@@ -217,6 +234,7 @@ mythic({
   name: "Eye of the tempest", slot: "weapon", rarity: "mythic", mythic: "stormcaller",
   text: "Every hit also jumps to a random foe for half. When a foe falls holding Shock, every other foe gains half of it.",
   weapon: { kind: "rune_sword", type: "physical", hands: 1, cooldown: 6.6, amount: ownHit(6.6, "attack") },
+  stats: [st("mp_regen", 1), sp("attack_speed", "medium"), st("attack", 1), st("max_hp", 1)],
   statuses: ["eye_of_the_tempest"],
 }, "Storm 3 ●●●");
 helper(pieceStatus("eye_of_the_tempest", "Eye of the tempest", "Every hit also jumps to a random foe for half. When a foe falls holding Shock, every other foe gains half of it.", {
@@ -230,6 +248,7 @@ helper(pieceStatus("eye_of_the_tempest", "Eye of the tempest", "Every hit also j
 mythic({
   name: "Mountain's crown", slot: "amulet", rarity: "mythic", mythic: "geomancer",
   text: "Each crit rebuilds its Shield by the damage dealt.",
+  stats: [critStep(1), sp("crit_damage", "medium"), st("defense", 1), st("max_hp", 1)],
   statuses: ["mountains_crown"],
 }, "Landslide 3 ●●● ⚙ detonation (half)");
 helper(pieceStatus("mountains_crown", "Mountain's crown", "Each crit rebuilds its Shield by the damage dealt.", {

@@ -7,7 +7,7 @@
 import type { StatusT } from "../../../src/schema.js";
 import { FLAT_STACKS, HIT, STATUS } from "../scale.js";
 import { COUNTER, CRESCENDO } from "./shared.js";
-import { EV, TO, against, atFirstStart, atStart, beatHalfway, count, countAt, critStep, give, hits, lift, marker, ofAmount, on, onceBelow, oneUse, own, piece, pieceStatus, react, reactIf, share, shelf, sp, st, stacksOf, state, swingNow, swingStacks, used, type Change, type Rarity } from "./kit.js";
+import { EV, SO_OFTEN, TO, against, atFirstStart, atStart, beatHalfway, count, countAt, critStep, give, hits, lift, marker, ofAmount, on, onceBelow, oneUse, own, piece, pieceStatus, react, reactIf, share, shelf, sp, st, stacksOf, state, swingNow, swingStacks, used, type Change, type Rarity } from "./kit.js";
 
 const S = shelf();
 
@@ -142,7 +142,7 @@ offhand("orb", "common", "Glass orb", { stats: [st("max_mp", 1)], serves: "Barra
 offhand("orb", "common", "Ember orb", { stats: [st("attack", 1)], serves: "Bonfire and Cold Snap." });
 
 {
-  const name = "Scrying orb", effect = "At fight start: its nearest-ready ability is ready.";
+  const name = "Scrying orb", effect = "At fight start: its ability nearest to ready is ready.";
   offhand("orb", "uncommon", name, {
     effect, stats: [st("max_mp", 1), st("attack", 1)],
     statuses: [own_(name, effect, { reactions: [atStart({ op: "cooldown", which: "soonest", set: "ready", to: "holder" })] })],
@@ -217,7 +217,7 @@ offhand("idol", "common", "Carved effigy", { stats: [st("max_hp", 1)], serves: "
   });
 }
 {
-  const name = "Leech idol", effect = "MP it gains past full goes to the ally with the least MP.";
+  const name = "Leech idol", effect = "MP it gains past full goes to the ally with the lowest MP%.";
   offhand("idol", "uncommon", name, {
     effect, stats: [sp("siphon", "medium"), st("attack", 1)],
     statuses: [own_(name, effect, { reactions: [react(on("mp_over"), { op: "mp", amount: ofAmount(1), to: TO.leastMpAlly })] })],
@@ -267,7 +267,7 @@ offhand("idol", "common", "Carved effigy", { stats: [st("max_hp", 1)], serves: "
 {
   // The newest buff a foe can lose, moved with its stacks and time left; the enemy-only Bulwark stays.
   const name = "Idol of the hungry dark";
-  const effect = "Every so often: steals a buff from a random foe, never Bulwark.";
+  const effect = `Every ${SO_OFTEN} ticks (the first at ${SO_OFTEN / 2}): steals a buff from a random foe, never Bulwark.`;
   const b = beatHalfway(id(name), name, [{ op: "remove", label: "buff", count: 1, move: true, except: ["bulwark"], to: { side: "foes", where: { buffs: true }, pick: "random" } }]);
   offhand("idol", "legendary", name, {
     effect, stats: [sp("siphon", "high"), st("max_hp", 1), st("max_mp", 1)],
@@ -285,7 +285,7 @@ offhand("idol", "common", "Carved effigy", { stats: [st("max_hp", 1)], serves: "
   });
 }
 {
-  const name = "Idol of the blood-well", effect = "When it pays HP: the ally with the least MP gains as much.";
+  const name = "Idol of the blood-well", effect = "When it pays HP: the ally with the lowest MP% gains as much.";
   offhand("idol", "legendary", name, {
     effect, stats: [sp("siphon", "medium"), st("max_hp", 2), sp("lifesteal", "medium")],
     statuses: [own_(name, effect, { reactions: [react(on("hp_paid"), { op: "mp", amount: ofAmount(1), to: TO.leastMpAlly })] })],
@@ -385,7 +385,7 @@ offhand("trophy", "common", "Geode", { stats: [st("defense", 1)], serves: "Lands
   });
 }
 {
-  const name = "Vulture's skull", effect = "Hits on Stunned foes have exactly 80% Crit chance.";
+  const name = "Vulture's skull", effect = "Hits on Stunned foes have 80% Crit chance.";
   offhand("trophy", "rare", name, {
     effect, stats: [sp("crit_damage", "medium"), st("defense", 1), st("attack", 1)],
     statuses: [own_(name, effect, { crits: [{ when: { has: "stun" }, set: 80 }] })],
@@ -469,7 +469,7 @@ offhand("bell", "common", "Cantor's bell", { stats: [st("mp_regen", 1)], serves:
   // Each beat rings once: with no ally Silenced it lifts a debuff from the ally with the most; with one Silenced, that Silence.
   // The order of the two answers keeps it to one: the first can't make a Silence, and the second waits on one.
   const name = "Warding bell", ring = `${id(name)}_ring`;
-  const effect = "Every so often: lifts a debuff from the most-debuffed ally, Silence first.";
+  const effect = `Every ${SO_OFTEN} ticks (the first at ${SO_OFTEN / 2}): lifts a debuff from the ally with the most debuffs, Silence first.`;
   const b = beatHalfway(id(name), name, [give(ring)]);
   const silenced = { side: "allies" as const, where: { has: "silence" } };
   offhand("bell", "rare", name, {
@@ -527,7 +527,7 @@ offhand("cloak", "common", "Swallowtail cloak", { stats: [sp("attack_speed", "me
   });
 }
 {
-  const name = "Dancer's cloak", effect = "On a dodge: its nearest-ready ability is ready.";
+  const name = "Dancer's cloak", effect = "On a dodge: its ability nearest to ready is ready.";
   offhand("cloak", "rare", name, {
     effect, stats: [sp("evasion", "medium"), st("defense", 1), st("attack", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.dodge, { op: "cooldown", which: "soonest", set: "ready", to: "holder" })] })],

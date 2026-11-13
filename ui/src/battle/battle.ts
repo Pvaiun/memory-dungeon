@@ -14,7 +14,7 @@ import { SUBTICKS, type AbilityT } from "../../../src/schema.js";
 import type { CUnit } from "../../../src/engine/combat/fight.js";
 import { weaponOf } from "../../../src/engine/combat/fight.js";
 import { c, className, disp, fightName, runName, shortName, shownAsIcon } from "../content.js";
-import { enemyName, statusStyle, type Pose } from "../art.js";
+import { damageLook, enemyName, statusStyle, type Pose } from "../art.js";
 import { bar, button, clear, h, nav, win, type Child } from "../dom.js";
 import { nextSeed, party as partyLoadout, save, setup, SPEEDS } from "../state.js";
 import { dealsDamage, heldParts, isSpell, statusNumbers, statusText } from "../describe.js";
@@ -25,6 +25,8 @@ import { Driver, type Ev } from "./driver.js";
 import { isCount, Narrator, type Beat, type Line, type Tone } from "./narrate.js";
 import { Scene, shieldOf, themeOf, W, H } from "./scene.js";
 import { FieldFx } from "./effects.js";
+import { tallyFight, type Tally } from "./tally.js";
+import { recapBody } from "./recap.js";
 import { tuner } from "./tuner.js";
 import { setMusic, setSound, sfx } from "./audio.js";
 import { go } from "../screens.js";
@@ -453,13 +455,15 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
       return;
     }
     const crit = !!ev.crit;
-    const shown = disp(amount + soaked);
+    // A hit's amount includes what a Shield soaked of it.
+    const shown = disp(amount);
     if (isStatus && shown <= 0) return;
-    // A hit's number in white, big; a status's small, in its own colour with its icon.
-    const style = isStatus && c.statuses.has(src) ? statusStyle(src) : null;
+    // A hit's number in white, big; a status's small, in the colour and with the icon of the damage it is (art.ts).
+    const look = isStatus ? damageLook(src) : undefined;
+    const style = look ? statusStyle(look) : null;
     const color = crit ? "#ffd54a" : style ? style.color : "#ffffff";
-    const sub = crit ? "CRITICAL" : soaked && amount ? "SHIELD" : soaked ? "SOAKED" : undefined;
-    scene.number(target, `${shown}${crit ? "!" : ""}`, { color, big: !isStatus, sub, subColor: crit ? "#ffd54a" : "#a8e8ff", icon: isStatus && c.statuses.has(src) ? src : undefined });
+    const sub = crit ? "CRITICAL" : soaked && amount > soaked ? "SHIELD" : soaked ? "SOAKED" : undefined;
+    scene.number(target, `${shown}${crit ? "!" : ""}`, { color, big: !isStatus, sub, subColor: crit ? "#ffd54a" : "#a8e8ff", icon: look });
     if (!isStatus || amount >= 100) scene.hit(target);
     if (!isStatus) (crit ? sfx.crit : sfx.hit)();
     else sfx.status();
@@ -725,7 +729,6 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     (won ? sfx.win : sfx.lose)();
     if (won) for (const u of driver.units()) if (u.side === "party" && !u.ko) scene.pose(u.id, "victory", 2500);
   }
-  type Tally = { dealt: number; taken: number; healed: number; acts: number };
   function endOfFight() {
     if (ended) return;
     ended = true;
@@ -736,13 +739,15 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     const partyUnits = driver.units().filter((u) => u.side === "party");
     const tally = fightTally();
     const last = single || driver.fightNo >= driver.fightTotal;
-    const table = h("table", { class: "sum" },
-      h("thead", null, h("tr", null, h("th", null, ""), h("th", null, "DEALT"), h("th", null, "TAKEN"), h("th", null, "HP"))),
+    // The summary: each member's damage dealt and taken, and HP left. A tap opens the recap.
+    const table = h("table", { class: "sum sum-tap" },
+      h("thead", null, h("tr", null, h("th", null, "RECAP ▶"), h("th", null, "DEALT"), h("th", null, "TAKEN"), h("th", null, "HP"))),
       h("tbody", null, ...partyUnits.map((u) => {
-        const t = tally.get(u.id) ?? { dealt: 0, taken: 0, healed: 0, acts: 0 };
-        return h("tr", null, h("td", null, className(u.ref)), h("td", null, String(disp(t.dealt))), h("td", null, String(disp(t.taken))), h("td", { class: u.ko ? "bad" : "" }, u.ko ? "KO" : String(disp(u.hp))));
+        const t = tally.units.get(u.id);
+        return h("tr", null, h("td", null, className(u.ref)), h("td", null, String(disp(t?.dealt ?? 0))), h("td", null, String(disp(t?.taken ?? 0))), h("td", { class: u.ko ? "bad" : "" }, u.ko ? "KO" : String(disp(u.hp))));
       })),
     );
+    table.addEventListener("click", () => openRecap(tally, won, f.round));
     const title = won ? (last && !single ? "RUN CLEARED" : "VICTORY") : "DEFEAT";
     const where = single ? "" : `${driver.fightNo}/${driver.fightTotal}`;
     // One big way on, where the message window was; the rest below.
@@ -762,24 +767,16 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     }, 900);
     if (won && !last && !rogue && setup.settings.autoContinue) setTimeout(() => { if (!stopped && ended) nextFight(); }, 2200);
   }
-  /** Damage dealt and taken, healing done and actions resolved, per unit, from this fight's log. */
-  function fightTally(): Map<string, Tally> {
-    const log = driver.run.log!;
-    let start = log.length - 1;
-    while (start > 0 && log[start].t !== "fight_start") start--;
-    const m = new Map<string, Tally>();
-    const get = (id: string) => { let t = m.get(id); if (!t) m.set(id, (t = { dealt: 0, taken: 0, healed: 0, acts: 0 })); return t; };
-    for (let i = start; i < log.length; i++) {
-      const e = log[i];
-      if (e.t === "dmg") {
-        const amount = ((e.amount as number) || 0) + ((e.soaked as number) || 0);
-        if (e.by) get(e.by as string).dealt += amount;
-        get(e.target as string).taken += amount;
-      } else if (e.t === "heal") {
-        if (e.by) get(e.by as string).healed += (e.amount as number) || 0;
-      } else if (e.t === "act") get(e.by as string).acts++;
-    }
-    return m;
+  /** This fight's numbers, from its log (tally.ts). */
+  function fightTally(): Tally {
+    const absorb = [...c.statuses.values()].find((d) => d.absorb)?.id ?? "shield";
+    return tallyFight(driver.run.log!, { side: (id) => driver.unit(id)?.side, shown: (id) => shownAsIcon(id), absorb });
+  }
+  /** The recap over the end screen: what each member did, and what each status did (recap.ts). */
+  function openRecap(tally: Tally, won: boolean, ticks: number) {
+    const party = driver.units().filter((u) => u.side === "party");
+    const right = h("span", null, h("span", { class: won ? "good" : "bad" }, won ? "VICTORY" : "DEFEAT"), h("span", { class: "dim" }, ` T${ticks}`));
+    openOverlay("RECAP", recapBody({ tally, party, tagOf: (by, act) => narrator.tagOf(by, act) }), undefined, right);
   }
   function nextFight() {
     showFight(true);

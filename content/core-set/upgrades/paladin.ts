@@ -41,7 +41,7 @@ import { abilityUp, apply, both, cd, helper, kit, passiveUp, phys, r6 } from "./
     id: "condemn", cls: "paladin",
     power: "Shorter cooldown.", shown: true,
     a: { name: "Challenge", text: "Marks the foe with the most Attack, and Taunts.", builds: ["toll", "landslide"] },
-    b: { name: "Swift justice", text: "Marks the lowest foe; every ally attacks at once. Ready again when its Marked foe falls.", serves: "Hunt 2 ●●●, Landslide ●●, Bonfire ● ⚙ judge's drum (key)" },
+    b: { name: "Swift justice", text: "Marks the foe with the lowest HP%; every ally attacks at once. Ready again when its Marked foe falls.", serves: "Hunt 2 ●●●, Landslide ●●, Bonfire ● ⚙ judge's drum (key)" },
     form: (v, _k, plus) => ({ ...(v === "a" ? challenge : v === "b" ? swift : {}), ...(plus ? { cooldown: cd("short", "condemn") } : {}) }),
   });
 }

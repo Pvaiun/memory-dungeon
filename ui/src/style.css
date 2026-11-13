@@ -302,3 +302,22 @@ table.sum th { color: var(--dim); }
 .art.glow-rare > * { filter: drop-shadow(0 0 .125rem var(--buff)); }
 .art.glow-legendary > * { filter: drop-shadow(0 0 .1875rem var(--gold)); }
 .art.glow-mythic > * { filter: drop-shadow(0 0 .1875rem var(--mythic)); }
+
+/* the fight's recap (battle/recap.ts): every bar one width, so one scale reads across the screen */
+.sum-tap { cursor: pointer; }
+.sum-tap th:first-child { color: var(--hi); }
+.recap .rc-unit { display: grid; grid-template-columns: auto 1fr; column-gap: .5rem; align-items: center; cursor: pointer; border-radius: .25rem; padding: .125rem .25rem .25rem 0; }
+.recap .rc-unit.open { background: var(--sel); }
+.recap .rc-unit.ko .portrait { opacity: .4; }
+.recap .rc-body { min-width: 0; }
+.recap .rc-meter { display: flex; align-items: center; gap: .375rem; min-height: 1.5rem; text-transform: uppercase; white-space: nowrap; }
+.recap .rc-meter .lbl { flex: 1 1 auto; min-width: 0; color: var(--dim); display: flex; align-items: center; gap: .375rem; overflow: hidden; }
+.recap .rc-meter.st { min-height: 2rem; }
+.recap .rc-meter.st .lbl { color: var(--ink); }
+.recap .rc-meter .val { flex: 0 0 4.5rem; text-align: right; }
+.bar.rc { flex: 0 0 11rem; min-width: 0; }
+.recap .rc-more { grid-column: 1 / -1; padding: .25rem 0 .125rem .5rem; }
+.recap .rc-src { display: flex; align-items: center; gap: .375rem; min-height: 2rem; text-transform: uppercase; white-space: nowrap; }
+.recap .rc-src .ic { flex: 0 0 2rem; display: inline-flex; justify-content: center; }
+.recap .rc-src .nums { flex: 0 0 auto; min-width: 4.5rem; text-align: right; display: flex; gap: .5rem; justify-content: flex-end; }
+.recap .rc-laid { display: flex; flex-wrap: wrap; align-items: center; gap: .25rem .75rem; min-height: 2rem; text-transform: uppercase; }

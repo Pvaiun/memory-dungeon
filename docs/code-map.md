@@ -92,7 +92,7 @@ src/
     combat.ts                the combat rule language: numbers, conditions, targeting, effects, statuses, actions
     content.ts               classes, upgrades, gear, formations, enemies, perks
     dungeons.ts              dungeons, loot, challenges, the starter, progression, the rogue block, totals, unused entries
-    party.ts                 party loadouts, challenge constraints, canEquip, handsOf
+    party.ts                 party loadouts, challenge constraints, canEquip, handsOf, the weapon a class arrives with
   sim/                       the simulation library (the interface uses content.ts and parties.ts)
     content.ts               content with patches (variants), and single fights as one-stage dungeons
     parties.ts               parties: building and listing them, plain weapons, what fits a slot
@@ -206,6 +206,8 @@ ui/
       effects.ts             plays the effects in step with the story: missiles, blows that follow, statuses that land with them
       tuner.ts               the FX SIZES screen: a sample fight where each look plays again and again, sized by the designer
       narrate.ts             turns the log into messages
+      tally.ts               a fight's numbers from its log: each unit's damage dealt and taken, healing, actions and statuses laid, and what each status did for the side it served
+      recap.ts               the fight's recap, opened from the summary at a fight's end: each member's numbers on one scale, its actions on a tap, and what each status did
       scene.ts               the field, backdrops, the campfire, the menus' stages and party strip; drawing the effects
       audio.ts               sound effects and music
   tools/

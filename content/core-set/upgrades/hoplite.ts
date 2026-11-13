@@ -49,7 +49,7 @@ import { abilityUp, apply, cd, helper, kit, passiveUp, phys, r6, removeMine } fr
   abilityUp({
     id: "othismos", cls: "hoplite",
     power: "+40% Sunder.", shown: true,
-    a: { name: "Locked shields", text: "Shoves every foe, adding Sunder; Guards itself and the lowest ally.", builds: ["toll", "storm"] },
+    a: { name: "Locked shields", text: "Shoves every foe, adding Sunder; Guards itself and the ally with the lowest HP%.", builds: ["toll", "storm"] },
     b: { name: "Breach", text: "Shoves only the foe with the most Defense, adding Sunder.", builds: ["landslide", "hunt"] },
     form: (v, k) =>
       v === "a" ? { do: [shove(HIT.light, "few", k), apply("guard", { to: "self" }), apply("guard", { to: T.lowestShareAlly })] }

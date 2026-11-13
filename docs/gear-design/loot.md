@@ -13,10 +13,10 @@ Rarity is specificity, not size: how far a piece bends the game. A rare can be b
 | **Common** | Fills a slot and carries a build's first stats. | One step as the standard, two on a rich kind (`KIND_BUDGET`). A special stat at medium is a step, at high two. | None. |
 | **Uncommon** | A build's first rung: a simple effect most runs find. | Two steps as the standard, one on a lean kind, three on a rich one. | One simple, general effect on a thread (a rider, a start-of-fight status, a reaction), with no condition on a class, sized so it's seen the first time it fires. Each one helps two to four builds a little. |
 | **Rare** | A build's second rung: specific, often conditional. | Three steps as the standard, two on a lean kind, four on a rich one, beside the effect. | One designed effect, worth a lot to one or two builds and little elsewhere. |
-| **Legendary** | A build's far end, or an exotic: it bends a rule. | Four steps as the standard, three on a lean kind, five on a rich one, beside the effect. The only rarity where a special stat is high. | A rule change, a new trigger or a payoff that grows. Strong where it fits; where it's strong in many places, it gives something up. |
-| **Mythic** | Rewrites one class, past any one ability. | As its shape needs. | One per class (see Mythics). |
+| **Legendary** | A build's far end, or an exotic: it bends a rule. | Four steps as the standard, three on a lean kind, five on a rich one, beside the effect. With the mythic, the only rarity where a special stat is high. | A rule change, a new trigger or a payoff that grows. Strong where it fits; where it's strong in many places, it gives something up. |
+| **Mythic** | Rewrites one class, past any one ability. | A legendary's, beside the effect. | One per class (see Mythics). |
 
-Every piece carries stats at every rarity, each rarity carries a step more than the last, and higher rarity is generally better: a rare or legendary carries its steps beside its effect, not instead of it. A weapon kind's budget word moves the ladder a step down or up (*Core set: rules and vocabulary*, Weapons); armor, offhands and amulets take the standard ladder. A piece's stats lean to its kind's profile, the signature first. The content checks every piece against its budget as the pack is built. The stats are shown as values beside the piece's name; the card's words are its swing trade and its effect, never its stats.
+Every piece carries stats at every rarity, each rarity up to the legendary carries a step more than the last, and higher rarity is generally better: a rare, legendary or mythic carries its steps beside its effect, not instead of it. A weapon kind's budget word moves the ladder a step down or up (*Core set: rules and vocabulary*, Weapons); armor, offhands and amulets take the standard ladder. A piece's stats lean to its kind's profile, the signature first. The content checks every piece against its budget as the pack is built. The stats are shown as values beside the piece's name; the card's words are its swing trade and its effect, never its stats.
 
 - **No random affixes,** at any rarity: every piece is fixed. Tempering turns a piece into one of the next rarity, in the same kind, that fits the same wearer.
 - **No piece says what it's for.** Which builds, rungs and engines an item serves is the designer's: its Serves line, gathered as `SERVED` (`content/core-set/pieces/index.ts`), never on a card. Offers aren't aimed by it yet: the first playtest rolls them without it.
@@ -126,8 +126,9 @@ Every card the player reads (an ability, a passive, an upgrade, a piece, a mythi
 - **No subject.** A card is read on its holder: it says "hits on", not "its wearer's hits on". It names a unit only when it isn't the holder.
 - **The trigger first:** "On a kill:", "On a crit:", "When hit:", "At fight start:", "Below half HP:", "While Taunting:".
 - **Numbers, not fractions in words:** +50%, not "half again as much"; 5% of max HP, not "a twentieth". "Double" stays.
-- **One phrase for each target:** the lowest ally (the lowest share of max HP), the foe with the least HP (current HP), the foe with the most of a status or a stat, the ally with the least MP, the ally with the most Aggro, the most wounded foe (the lowest share of max HP), a random foe, every foe, a fallen ally. "Ignores Taunt" is Seek; "attacks at once" is a next basic attack called at once. "Effects included" is carrying what the swing carries.
-- **The rules below hold without being printed.** A card leaves out what this page already rules (chains end, a redirect is final, a price never takes its payer below 1 HP, Stun holds a wind-up), and keeps only a clause that changes what the player would predict.
+- **One phrase for each target:** "lowest HP%" and "lowest MP%" for a share of max (the ally with the lowest HP%, the foe with the lowest HP%, the ally with the lowest MP%); "least" and "most" for an amount (the foe with the least HP, the foe with the most Attack, the foe with the most of a status, the ally with the most Aggro, the ally with the slowest basic attack); a random foe, every foe, a fallen ally. "Other" when the holder is left out. "Ignores Taunt" is Seek; "attacks at once" is a next basic attack called at once. "Effects included" is carrying what the swing carries.
+- **Time in ticks:** anything on a timer says its ticks ("every 22 ticks", "for 20 ticks"), written from its constant, and a first beat that comes early says when ("the first at 11"). No "every so often", "for a while" or "for a moment"; no "a little", "faster" or "more" without its number.
+- **The rules below hold without being printed.** A card leaves out what this page already rules (chains end, a redirect is final, a price never takes its payer below 1 HP, Stun holds a wind-up), and keeps only a clause that changes what the player would predict. Nothing restates a rule: no "the Shock stays" (a payoff always leaves its status, `docs/rules.md`), no "a wipe is still lost", no "as hits" on a left-over.
 - **A cost stays in words** ("pays", "costs", "less", "down", "no"): the piece check reads them.
 - **A power step's card** is its change in a few words. One that only moves numbers the ability's card shows (cost, cooldown, wind-up, damage, stacks) is marked `shown` in `upgrades/`, so it isn't added to the trained ability's card.
 
@@ -181,7 +182,7 @@ Every card the player reads (an ability, a passive, an upgrade, a piece, a mythi
 Rules that hold for every piece, version and mythic. None of them is about balance.
 - **Every uncommon carries an effect.** A special stat alone is a common's step.
 - **Every piece carries its kind's budget of steps** at its rarity, a rare's or legendary's beside its effect; a piece may step along the swing trade, which its swing's values show. A stat that shapes a swing (half as often, twice as often) counts no step.
-- **Mythics carry no stat steps** unless the line's shape needs one.
+- **A mythic carries a legendary's steps,** checked as any piece's are, its stats leaning to its kind's or armor's profile, the signature first, and to what its class and its effect read.
 - **A revive** brings its ally back with every ability on full cooldown, whoever revives, unless the Valkyrie's Einherjar version or a piece says otherwise.
 - **Paying HP** means losing that much HP at once. It isn't damage, so no Shield soaks it and nothing reacts to it, and it can't take the payer below 1 HP.
 - **Each status or counter is defined once,** for every piece that uses it (the counters in `pieces/shared.ts`; Marked in the vocabulary).
@@ -210,7 +211,7 @@ Every ability and passive has three upgrades: a **power step** and two **version
 
 ## Mythics
 
-One per class, shown in crimson and offered in the boss boons that open acts II and III. Each fits one class, in the slot named, and reaches past any one ability. It pulls toward the class's roads, and a unit wears one at most. A mythic is found and can be taken off; an upgrade is trained and changes one ability or the passive. None repeats a piece or a version. What each one does is its card text, in `upgrades/mythics.ts`.
+One per class, shown in crimson and offered in the boss boons that open acts II and III. Each fits one class, in the slot named, and reaches past any one ability. Each carries a legendary's stats beside its effect, so it's never a downgrade for the stats it replaces. It pulls toward the class's roads, and a unit wears one at most. A mythic is found and can be taken off; an upgrade is trained and changes one ability or the passive. None repeats a piece or a version. What each one does is its card text, in `upgrades/mythics.ts`.
 
 | Class | Mythic | Slot | Pulls toward |
 | --- | --- | --- | --- |
