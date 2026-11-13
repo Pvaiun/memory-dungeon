@@ -157,8 +157,11 @@ export function basicIconKind(ref: string, enemy?: string): string {
     return look && THEMES.has(look) ? "wand" : "fist";
   }
   if (ref === "unarmed") return "fist";
-  return (c.gear.get(ref) ?? c.gear.get(baseGearId(ref)))?.weapon?.kind ?? "fist";
+  const g = c.gear.get(ref) ?? c.gear.get(baseGearId(ref));
+  return g?.weapon?.kind ?? MYTHIC_KIND[g?.id ?? ""] ?? "fist";
 }
+/** The mythic weapons have no kind of their own; their icon is the kind their art draws. */
+const MYTHIC_KIND: Record<string, string> = { stormspear: "spear", the_witch_blade: "sword", ember_palms: "fist", eye_of_the_tempest: "wand" };
 /** A basic attack's look, from its weapon's ref (a gear id, "enemy:<id>" or "unarmed"), or a foe's own. */
 export function weaponLook(ref: string, enemy?: string): string {
   if (enemy && ENEMY_LOOK[enemy]) return ENEMY_LOOK[enemy];
