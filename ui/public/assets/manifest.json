@@ -1968,5 +1968,20 @@
   "weapons/forked_knuckles.png",
   "weapons/flurry_wraps.png",
   "weapons/answering_thunder.png"
- ]
+ ],
+ "basic": {
+  "sword": "basic/sword.png",
+  "dagger": "basic/dagger.png",
+  "spear": "basic/spear.png",
+  "axe": "basic/axe.png",
+  "great_weapon": "basic/great_weapon.png",
+  "hammer": "basic/hammer.png",
+  "mace": "basic/mace.png",
+  "bow": "basic/bow.png",
+  "staff": "basic/staff.png",
+  "wand": "basic/wand.png",
+  "rune_sword": "basic/rune_sword.png",
+  "fist": "basic/fist.png",
+  "bite": "basic/bite.png"
+ }
 }

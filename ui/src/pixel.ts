@@ -442,9 +442,25 @@ export function abilityIconOf(id: string): HTMLCanvasElement | undefined {
   }
   return cv ?? undefined;
 }
-/** An action's icon: an ability's own (32 square), else its look's iconset cell (16 square). */
+/** A basic attack's icon by weapon kind (32 square), or undefined when the kind has none. */
+const basicIcons = new Map<string, HTMLCanvasElement | null>();
+function basicIconOf(kind: string): HTMLCanvasElement | undefined {
+  let cv = basicIcons.get(kind);
+  if (cv === undefined) {
+    const file = manifest.basic?.[kind];
+    const img = file ? image(file) : undefined;
+    cv = null;
+    if (img?.complete && img.naturalWidth) {
+      cv = cv2d(img.naturalWidth, img.naturalHeight);
+      cv.getContext("2d")!.drawImage(img, 0, 0);
+    }
+    basicIcons.set(kind, cv);
+  }
+  return cv ?? undefined;
+}
+/** An action's icon: an ability's own (32 square), a basic attack's by its weapon kind ("kind:<kind>"), else its look's iconset cell (16 square). */
 export function actionIconOf(tag: string, act?: string): HTMLCanvasElement {
-  const own = act && act !== "basic" ? abilityIconOf(act) : undefined;
+  const own = act && act !== "basic" ? abilityIconOf(act) : tag.startsWith("kind:") ? basicIconOf(tag.slice(5)) : undefined;
   if (own) return own;
   const cell = TAG_ICON[tag] ?? TAG_ICON.physical;
   return iconOf(cell[0], cell[1]);

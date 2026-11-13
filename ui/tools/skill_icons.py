@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
 Builds the classes' icons: every class ability (abilities/<id>.png, 32x32) and every class passive (status/<id>.png,
-16x16), and their entries in manifest.json's "abilities" and "statuses" maps.
+16x16), and the basic attack's icon for each weapon kind (basic/<kind>.png, 32x32), with their entries in
+manifest.json's "abilities", "statuses" and "basic" maps.
 
     python3 -I ui/tools/skill_icons.py <dir with the packs extracted> ui/public/assets
 
@@ -12,10 +13,12 @@ The director chose each icon from three packs, found by their file names anywher
   - KURAI's RPG Skill Icons ("Skill Icons 16x16/IconNNN.png").
 Each pack draws its own tile (KURAI a bevelled frame, the status icons a coloured square, the skill pack hatching and
 a halo), so the tool lifts every icon's symbol off its tile, colours it, and draws all of them the same way: a dark
-square with a rim in the icon's colour, a near-black outline round the symbol, the symbol's own shading kept.
+square with a rim in the icon's colour, a near-black outline round the symbol, the symbol's own shading kept. A basic
+attack's icon is its weapon kind's, on the same tile with a grey rim, so the abilities stand out beside it; its
+symbol is steel, wood brown, or crimson for a bite.
 Run it after assets.py, which leaves these icons alone.
 """
-import json, sys
+import colorsys, json, sys
 from collections import deque
 from pathlib import Path
 from PIL import Image
@@ -67,6 +70,20 @@ LIFT = {"vanish": (0, .15), "blood_gift": (0, .15), "lacerate": (0, .3), "iron_p
 # The rim's colour for an icon drawn in its own colours, by class.
 CLASS_RAMP = {"briar": "green", "thicket": "green", "choosing": "ice", "malison": "purple", "stoke": "orange", "firebolt": "orange",
               "fireball": "orange", "pyre": "orange", "frost_lance": "ice", "chain_lightning": "yellow", "thunderstorm": "yellow"}
+
+# A basic attack's icon, by weapon kind, and "bite" for beasts (src/art.ts picks one for every unit). Each is lifted in
+# its pack's own colours and then recoloured: metal steel, wood and leather brown, a bite crimson; the rune sword is
+# the sword's blade in ice, its runes' glow.
+KINDS = {
+    "sword": ("v:43:-", "steel"), "dagger": ("v:74:-", "steel"), "spear": ("k:133", "steel"), "axe": ("v:61:-", "steel"),
+    "great_weapon": ("k:56", "steel"), "hammer": ("v:59:-", "steel"), "mace": ("v:60:-", "steel"), "bow": ("v:45:-", "brown"),
+    "staff": ("v:87:-", "brown"), "wand": ("k:34", "brown"), "rune_sword": ("v:43:-", "ice"), "fist": ("s:105", "brown"),
+    "bite": ("c:79", "crimson"),
+}
+# KURAI's double axe draws its haft in its frame's red: its grey heads are kept by colour (anything saturated, or near
+# black, cleared), and the haft drawn back by hand.
+KIND_GREY = {"great_weapon": (0, .4)}
+KIND_HAFT = {"great_weapon": [(10, 5), (9, 6), (8, 7), (7, 8), (6, 9), (5, 10), (4, 11), (3, 12)]}
 
 # Colour ramps, darkest to lightest: the status icons' (assets.py) and two more.
 RAMPS = {
@@ -190,6 +207,44 @@ def lift(im, pack, override=None):
     return out
 
 
+def lift_grey(im, band, sat_max):
+    """The metal alone: the frame's outer ring cleared, then everything coloured or near-black, flooded from the edge."""
+    px = im.load()
+    depth = lambda x, y: min(x, y, 15 - x, 15 - y)
+
+    def bg(x, y):
+        r, g, b, a = px[x, y]
+        if not a or depth(x, y) <= band:
+            return True
+        _, light, sat = colorsys.rgb_to_hls(r / 255, g / 255, b / 255)
+        return sat > sat_max or light < .12
+    seen = set(); todo = deque((x, y) for x in range(16) for y in range(16) if depth(x, y) == 0)
+    while todo:
+        x, y = todo.popleft()
+        if (x, y) in seen or not (0 <= x < 16 and 0 <= y < 16) or not bg(x, y):
+            continue
+        seen.add((x, y)); todo.extend([(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)])
+    out = Image.new("RGBA", (16, 16), (0, 0, 0, 0)); op = out.load()
+    for y in range(16):
+        for x in range(16):
+            if (x, y) not in seen and px[x, y][3]:
+                op[x, y] = px[x, y]
+    return out
+
+
+def basic_icon(kind):
+    """A weapon kind's basic-attack icon: its symbol in one colour, on the tile with a grey rim."""
+    key, colour = KINDS[kind]
+    im, pack, _ = source(key)
+    sym = lift_grey(im, *KIND_GREY[kind]) if kind in KIND_GREY else lift(im, pack)
+    sym = by_brightness(sym, RAMPS[colour])
+    sp = sym.load()
+    for x, y in KIND_HAFT.get(kind, []):
+        if not sp[x, y][3]:
+            sp[x, y] = (*RAMPS["brown"][3], 255)
+    return tile(sym, RAMPS["gray"])
+
+
 def tile(sym, ramp):
     """The one tile: a 14px dark square with a rim in the icon's colour, the symbol outlined in near-black on it."""
     t = Image.new("RGBA", (16, 16), (0, 0, 0, 0)); tp = t.load(); sp = sym.load()
@@ -228,9 +283,12 @@ def main():
             icon.save(OUT / "status" / f"{aid}.png"); manifest["statuses"][aid] = f"status/{aid}.png"
         else:
             icon.resize((32, 32), Image.NEAREST).save(OUT / "abilities" / f"{aid}.png"); manifest["abilities"][aid] = f"abilities/{aid}.png"
+    (OUT / "basic").mkdir(exist_ok=True); manifest["basic"] = {}
+    for kind in KINDS:
+        basic_icon(kind).resize((32, 32), Image.NEAREST).save(OUT / "basic" / f"{kind}.png"); manifest["basic"][kind] = f"basic/{kind}.png"
     with open(OUT / "manifest.json", "w") as f:
         json.dump(manifest, f, indent=1)
-    print(f"skill icons: {len(ICONS) - len(PASSIVES)} abilities, {len(PASSIVES)} passives")
+    print(f"skill icons: {len(ICONS) - len(PASSIVES)} abilities, {len(PASSIVES)} passives, {len(KINDS)} basic attacks")
 
 
 if __name__ == "__main__":
