@@ -7,7 +7,7 @@ import type { RogueNodeKindT } from "../../../src/schema.js";
 import { type Cell, type Pose } from "../art.js";
 import { bagRoom, bench, formationRarity, type Item, itemGear, member, type Offer, parseTraining, rogue, type RogueRun, seatsOf, wearer } from "../../../src/rogue.js";
 import { c, cls as classOf, shortName } from "../content.js";
-import { abilityBlock, formationNote, gearRow, RARITY_TONE, role, seatLines } from "../sheet.js";
+import { abilityBlock, gearRow, RARITY_TONE, role, seatLines } from "../sheet.js";
 import { actionIcon16, faceEl, gearIconOf, iconEl, iconOf, weaponIcon } from "../pixel.js";
 import { foesOnStage, partyInLine, partyOnStage, type StageActor, stageEl, type StageOpts, themeOf } from "../battle/scene.js";
 import { abilityTag } from "../describe.js";
@@ -86,7 +86,7 @@ export function offerBody(run: RogueRun, o: Offer): Child[] {
   }
   if (o.kind === "gear") return [itemRow(run, o.item, undefined, { right: null })];
   if (o.kind === "tome") {
-    return [h("div", { class: "line" }, faceEl(o.cls), h("span", { class: "grow hi" }, `TOME: ${shortName(o.cls)} LEARNS`)), abilityBlock(c.abilities.get(o.ability)!, null, false)];
+    return [h("div", { class: "line" }, faceEl(o.cls), h("span", { class: "grow hi" }, `TOME: ${shortName(o.cls)} LEARNS`)), abilityBlock(c.abilities.get(o.ability)!, null)];
   }
   if (o.kind === "recruit") {
     const k = classOf(o.cls);
@@ -104,7 +104,7 @@ export function offerBody(run: RogueRun, o: Offer): Child[] {
     // A formation's rarity in the gear's colours (common, rare, legendary), and what each seat does.
     const f = c.formations.get(o.id)!;
     const rar = formationRarity(c, o.id);
-    return [h("div", { class: "line wrap" }, h("span", { class: RARITY_CLASS[rar] || "hi" }, `${rar === "legendary" ? "★" : ""}FORMATION: ${f.name.toUpperCase()}`), rar !== "common" ? h("span", { class: `small r ${RARITY_CLASS[rar]}` }, rar.toUpperCase()) : null), h("div", { class: "text dim small wrap" }, f.text, formationNote(f)), ...seatLines(f)];
+    return [h("div", { class: "line wrap" }, h("span", { class: RARITY_CLASS[rar] || "hi" }, `${rar === "legendary" ? "★" : ""}FORMATION: ${f.name.toUpperCase()}`), rar !== "common" ? h("span", { class: `small r ${RARITY_CLASS[rar]}` }, rar.toUpperCase()) : null), h("div", { class: "text dim small wrap" }, f.text), ...seatLines(f)];
   }
   if (o.kind === "seat") return [h("div", { class: "line" }, iconEl(ICON.campfire), h("span", { class: "grow hi" }, "A SEAT AT CAMP")), h("div", { class: "line dim small wrap" }, `ROOM FOR ONE MORE IN THE ROSTER · ${seatsOf(c, run)} → ${seatsOf(c, run) + 1} AT CAMP`)];
   return [h("div", { class: "line" }, iconEl(SUPPLY_ICON[o.id]), h("span", { class: "grow" }, o.id.toUpperCase())), h("div", { class: "line dim small" }, SUPPLY_TEXT[o.id])];

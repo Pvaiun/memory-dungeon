@@ -118,6 +118,19 @@ Commons are written from a rule per kind, not designed one by one: they lean on 
 | Cloak | Evasion | Attack, Crit chance, Attack speed, Defense |
 | Amulet | (everyone) | one each for a stat a road starts from: HP, Defense, Attack, Crit chance, MP regen, Evasion, Lifesteal, Thorns, Double strike, Cooldown |
 
+## Writing cards
+
+Every card the player reads (an ability, a passive, an upgrade, a piece, a mythic, a formation, a seat, a status) says what happens once, in the fewest words a new player can follow. Words only where a player would otherwise misread the fight.
+- **Never repeat the screen.** An ability's card shows its MP, cooldown and wind-up in its head, and a size line under the text: each hit's damage, heals, Shields, MP given and stacks of a stacking status, with the stats each scales from. Its text never says a cost, a timing, a damage word (light, heavy) or a stack word, or what anything scales from; it says the action, its target, its condition, and the statuses that show no number (Stun, Guard, Taunt, Haste, Clarity and the like). A training card shows the changes in MP, cooldown, wind-up and size, so a version never mentions them. A piece's stats and swing, and a seat's stat changes, show as values, so their cards say only the effect.
+- **Where no number shows** (a piece, a passive, a seat, a mythic), stacks keep the classes' words, a few, several or many, and every amount says its stat in a bracket: "(from Attack)".
+- **No subject.** A card is read on its holder: it says "hits on", not "its wearer's hits on". It names a unit only when it isn't the holder.
+- **The trigger first:** "On a kill:", "On a crit:", "When hit:", "At fight start:", "Below half HP:", "While Taunting:".
+- **Numbers, not fractions in words:** +50%, not "half again as much"; 5% of max HP, not "a twentieth". "Double" stays.
+- **One phrase for each target:** the lowest ally (the lowest share of max HP), the foe with the least HP (current HP), the foe with the most of a status or a stat, the ally with the least MP, the ally with the most Aggro, a random foe, every foe, a fallen ally. "Ignores Taunt" is Seek. "Effects included" is carrying what the swing carries.
+- **The rules below hold without being printed.** A card leaves out what this page already rules (chains end, a redirect is final, a price never takes its payer below 1 HP, Stun holds a wind-up), and keeps only a clause that changes what the player would predict.
+- **A cost stays in words** ("pays", "costs", "less", "down", "no"): the piece check reads them.
+- **A power step's card** is its change in a few words. One that only moves numbers the ability's card shows (cost, cooldown, wind-up, damage, stacks) is marked `shown` in `upgrades/`, so it isn't added to the trained ability's card.
+
 ## Words the cards lean on
 
 - **Marked** takes the party's basic attacks and its abilities aimed at a random foe (*Core set: rules and vocabulary*). A piece or a seat Marks only while no foe is Marked, so gear never adds a second Mark.
@@ -167,7 +180,7 @@ Commons are written from a rule per kind, not designed one by one: they lean on 
 
 Rules that hold for every piece, version and mythic. None of them is about balance.
 - **Every uncommon carries an effect.** A special stat alone is a common's step.
-- **Every piece carries its kind's budget of steps** at its rarity, a rare's or legendary's beside its effect; a piece that steps along the swing trade says so on its card ("a heavier swing"). A stat that shapes a swing (half as often, twice as often) counts no step.
+- **Every piece carries its kind's budget of steps** at its rarity, a rare's or legendary's beside its effect; a piece may step along the swing trade, which its swing's values show. A stat that shapes a swing (half as often, twice as often) counts no step.
 - **Mythics carry no stat steps** unless the line's shape needs one.
 - **A revive** brings its ally back with every ability on full cooldown, whoever revives, unless the Valkyrie's Einherjar version or a piece says otherwise.
 - **Paying HP** means losing that much HP at once. It isn't damage, so no Shield soaks it and nothing reacts to it, and it can't take the payer below 1 HP.
@@ -184,7 +197,7 @@ A formation is a shape: three seats and, if it wants, rules of its own. It gives
 - **Seats can depend on who sits there:** a class, a kind of weapon or armor, a kind of ability, or what another seat is doing.
 - **Party effects:** always, on a condition or on a trigger; a stat, a status, or a rule that changes how the party fights. A formation can have several, or none.
 - **It can give something up:** a drawback, a seat that costs, a rule that cuts both ways.
-- **The words.** Every effect is phrased so the player knows what will happen, at whatever length that takes.
+- **The words.** Every effect is phrased so the player knows what will happen, as briefly as that takes (Writing cards).
 
 **By rarity.** Commons lean on the roles builds share and plain party effects. Rares are lopsided and read who sits where. Legendaries change how the party fights. There are no mythic formations.
 

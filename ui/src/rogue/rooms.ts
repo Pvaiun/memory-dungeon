@@ -158,7 +158,7 @@ function trainMember(run: RogueRun, cls: string, entries: TrainEntry[]): Child[]
     out.push(section(now.name.toUpperCase(), known ? null : "NOT LEARNED"));
     if (!known) {
       const e = by.get(trainingId({ verb: "learn", cls, id: a }));
-      const el = abilityBlock(c.abilities.get(a)!, stats, setup.settings.designer);
+      const el = abilityBlock(c.abilities.get(a)!, stats);
       el.querySelector(".head")?.append(trainButton(e, false) ?? "");
       if (!e) el.classList.add("dimmed");
       out.push(el);
