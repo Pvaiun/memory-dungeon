@@ -199,7 +199,7 @@ Each status has one fixed definition and does the same specific thing every time
 
 - **Refresh:** reapplying replaces the old copy.
 - **Fizzle:** reapplying fails while it's there.
-- **Stacks:** each application adds stacks to one shared total, and the effect scales with the total. The total can drop on each timer or event (halve each time, or lose one), and the status ends when it falls below one stack.
+- **Stacks:** each application adds stacks to one shared total, and the effect scales with the total. The total can drop on each timer or event (halve each time, or lose one), and the status ends when it falls below one stack. A status starts at one stack: on a unit that doesn't hold it, applications under one stack wait on that unit and add up, doing nothing and never fading, until together they make a stack; then the status lands with all of them.
 - **Pool (Shield):** each application adds to one shared pool per unit, up to the pool's cap. The pool has no timer: the status ends when the pool is used up or the fight ends.
 - **Per source:** each applier keeps its own copy; it can end when its applier is knocked out (an aura).
 
