@@ -14,7 +14,7 @@ import { SUBTICKS, type AbilityT } from "../../../src/schema.js";
 import type { CUnit } from "../../../src/engine/combat/fight.js";
 import { weaponOf } from "../../../src/engine/combat/fight.js";
 import { c, className, disp, fightName, runName, shortName, shownAsIcon } from "../content.js";
-import { enemyName, statusStyle, type Pose } from "../art.js";
+import { damageLook, enemyName, statusStyle, type Pose } from "../art.js";
 import { bar, button, clear, h, nav, win, type Child } from "../dom.js";
 import { nextSeed, party as partyLoadout, save, setup, SPEEDS } from "../state.js";
 import { dealsDamage, heldParts, isSpell, statusNumbers, statusText } from "../describe.js";
@@ -458,11 +458,12 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     // A hit's amount includes what a Shield soaked of it.
     const shown = disp(amount);
     if (isStatus && shown <= 0) return;
-    // A hit's number in white, big; a status's small, in its own colour with its icon.
-    const style = isStatus && c.statuses.has(src) ? statusStyle(src) : null;
+    // A hit's number in white, big; a status's small, in the colour and with the icon of the damage it is (art.ts).
+    const look = isStatus ? damageLook(src) : undefined;
+    const style = look ? statusStyle(look) : null;
     const color = crit ? "#ffd54a" : style ? style.color : "#ffffff";
     const sub = crit ? "CRITICAL" : soaked && amount > soaked ? "SHIELD" : soaked ? "SOAKED" : undefined;
-    scene.number(target, `${shown}${crit ? "!" : ""}`, { color, big: !isStatus, sub, subColor: crit ? "#ffd54a" : "#a8e8ff", icon: isStatus && c.statuses.has(src) ? src : undefined });
+    scene.number(target, `${shown}${crit ? "!" : ""}`, { color, big: !isStatus, sub, subColor: crit ? "#ffd54a" : "#a8e8ff", icon: look });
     if (!isStatus || amount >= 100) scene.hit(target);
     if (!isStatus) (crit ? sfx.crit : sfx.hit)();
     else sfx.status();

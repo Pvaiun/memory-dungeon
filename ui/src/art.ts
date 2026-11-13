@@ -248,6 +248,16 @@ export const STATUS_STYLE: Record<string, { color: string; light?: string }> = {
   marked: { color: "#f05a4a" }, cuts: { color: "#c8d2e0" }, heat: { color: "#f05a4a" }, spite: { color: "#e8284e" }, wrath: { color: "#fad040" },
   crescendo: { color: "#c46ef0" }, cascade: { color: "#8ae6ff" },
 };
+/**
+ * Damage a status deals shows the look of the damage it is, not of the status that dealt it: a status with an icon its
+ * own, else Thorns' for a piece or version whose card says its Thorns strike, else none. Nothing else borrows a look.
+ */
+const DAMAGE_AS: Record<string, string> = { briar__b: "thorns", briar__bp: "thorns", heartwood_mail: "thorns" };
+export function damageLook(src: string): string | undefined {
+  if (manifest.statuses[src]) return src;
+  const as = DAMAGE_AS[src];
+  return as && manifest.statuses[as] ? as : undefined;
+}
 /** A status's colour: its own, else a buff's cool or a debuff's warm. */
 export function statusStyle(id: string): { color: string; light?: string } {
   if (STATUS_STYLE[id]) return STATUS_STYLE[id];
