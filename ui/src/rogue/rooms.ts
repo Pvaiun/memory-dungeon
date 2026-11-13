@@ -2,7 +2,7 @@
  * The rooms and what they offer: spoils, a boss's boon and a chest, a captive, the shop and its training, the campfire,
  * events, choices (learn, upgrade, temper), the Muster and the Drill ground, a level-up, the next region.
  */
-import { actRoll, bagRoom, bossFoes, eventView as eventOfRun, formOf, improveOptions, itemOf, learnOptions, member, type Member, options, parseTraining, passiveOf, rogue, type RogueRun, seatsOf, sellPrice, type Trained, type Training, trainingId, trainOptions, trainPrice, upgradeOf, wearer } from "../../../src/rogue.js";
+import { actRoll, bagRoom, bossFoes, eventView as eventOfRun, formOf, improveOptions, type Item, itemOf, learnOptions, member, type Member, options, parseTraining, passiveOf, rogue, type RogueRun, seatsOf, sellPrice, type Trained, type Training, trainingId, trainOptions, trainPrice, upgradeOf, wearer } from "../../../src/rogue.js";
 import { button, type Child, h, header, win } from "../dom.js";
 import { c, disp, shortName } from "../content.js";
 import { faceEl, iconEl } from "../pixel.js";
@@ -12,7 +12,7 @@ import { setup } from "../state.js";
 import { abilityInfo, heldParts, sizeParts, sizeText, type Stats } from "../describe.js";
 import type { AbilityT } from "../../../src/schema.js";
 import { campEl, themeOf } from "../battle/scene.js";
-import { actions, choice, go, gold, ICON, itemRow, lootActors, offerBody, partyActors, partyStrip, pickOrSave, redraw, ROMAN, scene, standoff, trainWord } from "./parts.js";
+import { actions, choice, go, gold, ICON, itemRow, junkRow, lootActors, offerBody, partyActors, partyStrip, pickOrSave, redraw, ROMAN, scene, standoff, trainWord } from "./parts.js";
 import { foeLines } from "./run.js";
 
 // ─── Spoils, the boss's boon, a chest ──────────────────────────────────────
@@ -97,9 +97,18 @@ export function shopView(run: RogueRun): Child[] {
     ];
     list.push(...trainPicker(run, entries));
   } else {
+    // Junk first, under its own heading, with a button that sells it all; then the rest of the bag.
     const items = run.items.filter((it) => !wearer(run, it.uid));
+    const junked = items.filter((it) => it.junk), kept = items.filter((it) => !it.junk);
+    const sell = (it: Item) => button(`SELL ${sellPrice(c, it)}G`, () => pickOrSave(run, `sell:${it.uid}`), "sm");
     if (!items.length) list.push(h("div", { class: "line dim" }, "NOTHING IN THE BAG"));
-    for (const it of items) list.push(itemRow(run, it, undefined, { right: button(`SELL ${sellPrice(c, it)}G`, () => pickOrSave(run, `sell:${it.uid}`), "sm") }));
+    if (junked.length) {
+      const all = junked.reduce((n, it) => n + sellPrice(c, it), 0);
+      list.push(section("JUNK", `${junked.length} PIECE${junked.length === 1 ? "" : "S"}`), h("div", { class: "btns" }, button(`SELL ALL JUNK ${all}G`, () => pickOrSave(run, "sell-junk"), "hi sm")));
+      for (const it of junked) list.push(junkRow(run, it, undefined, sell(it)));
+      if (kept.length) list.push(section("THE BAG"));
+    }
+    for (const it of kept) list.push(itemRow(run, it, undefined, { right: sell(it) }));
   }
   return [
     header("SHOP", () => go("home")),

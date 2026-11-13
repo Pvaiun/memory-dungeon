@@ -25,6 +25,6 @@ export { registerGear, itemGear, itemOf, wearer, bag, partyOf, FIGHT_DUNGEON, fi
 export { rollKnown, recruitKnown, seatsOf, plainWeapon, newItem, recruit, type NewRun, leaderKnown, newRogue, heals, makeMap, actRoll, reachable } from "./rogue/acts.js";
 export { pieceRarity, kindOf, kindsFor, stockOf, canRoll, usable, rollItem, rollMythic, formationRarity, priceOf, trainPrice, sellPrice, take, canTake, offerText } from "./rogue/offers.js";
 export { type Training, trainingId, parseTraining, upgradeOf, passiveOf, formOf, unlearned, trainable, trainingsFor, trainingText, learn, train } from "./rogue/training.js";
-export { equip, twoHanded, maxOf, setFormation, seat, setOrder, swap, dismiss, discard, useSupply, canManage } from "./rogue/party.js";
+export { equip, twoHanded, maxOf, setFormation, seat, setOrder, swap, dismiss, junk, discard, useSupply, canManage } from "./rogue/party.js";
 export { options, whyNot, temperInto, learnOptions, improveOptions, eventOf, eventView, trainOptions, choose } from "./rogue/decisions.js";
 export { arriveCamp } from "./rogue/rooms.js";

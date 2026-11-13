@@ -8,7 +8,7 @@ import { rngFor } from "../engine/rng.js";
 import {
   autoFight, bench, choose, discard, dismiss, endFight, equip, eventView, finish, unlockable, formationRarity, freshMeta, heals, improveOptions, itemGear, kindOf, leaderKnown, learn, makeMap, maxOf, member,
   newItem, newRogue, options, parseTraining, partyOf, priceOf, reachable, recruit, recruitKnown, rogue, rollItem, seatsOf, startFight, stockOf, swap, temperInto, train, trainingsFor,
-  trainOptions, usable, whyNot, wearer, type RogueRun,
+  trainOptions, usable, whyNot, wearer, junk, sellPrice, type RogueRun,
 } from "../rogue.js";
 import { aiPlayer, playRogue } from "../sim/rogue-ai.js";
 import { canEquip, checkParty } from "../validate.js";
@@ -667,6 +667,36 @@ test("rogue (5h): the Muster, the Drill ground and training; a seat at camp; eve
   }
   assert.equal(supplies, 0, "no supplies in a fight's spoils");
   assert.ok(gear > 0 && off > 0 && off < gear, `some gear off the roster (${off} of ${gear})`);
+});
+
+test("rogue: a piece in the bag can be marked junk and unmarked; putting it on takes the mark off; a shop sells all the junk at once", () => {
+  const c = withLoot();
+  const run = newRogue(c, { seed: 7, leader: "knight" });
+  while (run.pending.kind === "draft") choose(c, run, options(c, run)[0]);
+  run.pending = { kind: "map" };
+  const a = newItem(run, "fx_heart", "common"), b = newItem(run, "fx_amulet_rare_1", "rare"), kept = newItem(run, "fx_amulet_common_1", "common");
+  run.items.push(a, b, kept);
+  // Only a piece in the bag; a worn one, or one already marked, can't be.
+  assert.equal(junk(run, member(run, "knight").gear.weapon!, true), false);
+  assert.equal(junk(run, a.uid, true), true);
+  assert.equal(junk(run, a.uid, true), false);
+  assert.equal(junk(run, a.uid, false), true);
+  assert.equal(a.junk, undefined);
+  // Put on, it's junk no more.
+  junk(run, a.uid, true);
+  assert.ok(equip(c, run, "knight", "amulet", a.uid));
+  assert.equal(a.junk, undefined);
+  assert.ok(equip(c, run, "knight", "amulet", null));
+  // The shop offers SELL ALL JUNK only with junk in the bag, and it sells the junk and nothing else.
+  run.pending = { kind: "shop", stock: [], learn: false, upgrade: false };
+  assert.ok(!options(c, run).includes("sell-junk"));
+  junk(run, a.uid, true);
+  junk(run, b.uid, true);
+  const gold = run.gold;
+  choose(c, run, "sell-junk");
+  assert.equal(run.gold, gold + sellPrice(c, a) + sellPrice(c, b));
+  assert.ok(!run.items.includes(a) && !run.items.includes(b) && run.items.includes(kept));
+  assert.ok(!options(c, run).includes("sell-junk"));
 });
 
 test("rogue: gear changes max HP, not current HP: a +HP piece doesn't heal, and taking it off caps HP at the new max", () => {
