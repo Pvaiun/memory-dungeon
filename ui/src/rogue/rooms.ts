@@ -13,7 +13,7 @@ import { abilityInfo, heldParts, sizeParts, sizeText, type Stats } from "../desc
 import type { AbilityT } from "../../../src/schema.js";
 import { campEl, themeOf } from "../battle/scene.js";
 import { actions, choice, go, gold, ICON, itemRow, junkRow, lootActors, offerBody, partyActors, partyStrip, pickOrSave, redraw, ROMAN, scene, standoff, trainWord } from "./parts.js";
-import { foeLines } from "./run.js";
+import { foeLines, foeSheet } from "./run.js";
 
 // ─── Spoils, the boss's boon, a chest ──────────────────────────────────────
 
@@ -387,7 +387,8 @@ export function regionView(run: RogueRun): Child[] {
       const r = rogue(c).regions.find((x) => x.id === id)!;
       // The boss this way is already set by the act's dice: shown with its moves, so the fork is a choice with its eyes open.
       const boss = actRoll(c, run, id, run.act + 1).boss;
-      return [standoff(run, boss.enemies, `fork:${id}`, id, 112), win("roffer", h("div", { class: "line hi" }, r.name.toUpperCase()), h("div", { class: "text dim small wrap" }, r.text), h("div", { class: "line small" }, iconEl(ICON.boss), h("span", { class: "gold" }, `BOSS: ${boss.name.toUpperCase()}`)), ...foeLines(boss.enemies, bossFoes(c, run, { act: run.act + 1, region: id })), actions(button("GO THIS WAY", () => pickOrSave(run, id), "hi")))];
+      const foes = bossFoes(c, run, { act: run.act + 1, region: id });
+      return [standoff(run, boss.enemies, `fork:${id}`, { theme: id, h: 112, onFoe: (ref) => foeSheet(ref, foes) }), win("roffer", h("div", { class: "line hi" }, r.name.toUpperCase()), h("div", { class: "text dim small wrap" }, r.text), h("div", { class: "line small" }, iconEl(ICON.boss), h("span", { class: "gold" }, `BOSS: ${boss.name.toUpperCase()}`)), ...foeLines(boss.enemies, foes), actions(button("GO THIS WAY", () => pickOrSave(run, id), "hi")))];
     })),
   ];
 }

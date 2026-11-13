@@ -411,17 +411,16 @@ export const enemyStats = (e: EnemyT): Stats => ({ ...Object.fromEntries(c.pack.
 export const ENEMY_STATS = ["max_hp", "attack", "defense"] as const;
 
 /**
- * Everything about an enemy, for the bestiary and a fight's inspect window: its line, its stats (`live` for a fight's
- * unit, with the run's changes), what it can't be given, its passives and
- * its actions with their sizes. `power` is a fight's damage change, in percent.
+ * Everything about an enemy, for the bestiary, a fight's preview and its inspect window: its line, its stats (`stats`
+ * for a fight's, with the run's changes), what it can't be given, its passives and its actions with their sizes.
+ * `power` is a fight's damage change, in percent; `hpAbove`, a fight's foe whose live HP shows above the sheet.
  */
-export function enemySheet(e: EnemyT, designer: boolean, live?: Stats, power = 0): Child[] {
-  const stats = live ?? enemyStats(e);
-  const mult = 1 + power / 100;
+export function enemySheet(e: EnemyT, designer: boolean, o: { stats?: Stats; power?: number; hpAbove?: boolean } = {}): Child[] {
+  const stats = o.stats ?? enemyStats(e);
+  const mult = 1 + (o.power ?? 0) / 100;
   const out: Child[] = [];
   if (e.text) out.push(h("div", { class: "text dim wrap small", style: "margin-bottom:.375rem" }, e.text));
-  // A fight's foe has its HP just above, live: the grid leaves it out.
-  out.push(statGrid(stats, null, designer, live ? ENEMY_STATS.slice(1) : ENEMY_STATS));
+  out.push(statGrid(stats, null, designer, o.hpAbove ? ENEMY_STATS.slice(1) : ENEMY_STATS));
   const immune = Object.entries(stats).filter(([k, v]) => k.startsWith("immune:") && v).map(([k]) => immuneTo(k));
   if (immune.length) out.push(h("div", { class: "line wrap small" }, h("span", { class: "dim" }, "IMMUNE TO"), ...immune.map((s) => h("span", { class: "nowrap" }, c.statuses.has(s) ? statusEl(s) : null, ` ${(c.statuses.get(s)?.name ?? s).toUpperCase()}`))));
   if (e.statuses?.length) {

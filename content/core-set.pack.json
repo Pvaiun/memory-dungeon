@@ -45547,7 +45547,7 @@
   {
    "id": "archer",
    "name": "Archer",
-   "text": "Hits hard, falls fast.",
+   "text": "Half horse, all bow: its arrows hit hard, its hide is thin.",
    "rank": "minion",
    "stats": {
     "max_hp": 2000,
@@ -45591,7 +45591,7 @@
   {
    "id": "shieldman",
    "name": "Shieldman",
-   "text": "Hides behind a big shield.",
+   "text": "Plants a big shield and dares you to hit anything else.",
    "rank": "elite",
    "stats": {
     "max_hp": 10000,
@@ -45684,7 +45684,7 @@
   {
    "id": "bat",
    "name": "Bat",
-   "text": "Fast, and hard to hit.",
+   "text": "A winged wyrm of the crypt's dark: blades find only air.",
    "rank": "minion",
    "stats": {
     "max_hp": 2000,
@@ -45727,7 +45727,7 @@
   {
    "id": "bone_priest",
    "name": "Bone Priest",
-   "text": "Heals the other dead.",
+   "text": "Mends the other dead as fast as you break them.",
    "rank": "minion",
    "stats": {
     "max_hp": 3000,
@@ -45750,7 +45750,7 @@
   {
    "id": "witch",
    "name": "Witch",
-   "text": "Curses the whole party.",
+   "text": "Her curse saps every arm and slows every step.",
    "rank": "minion",
    "stats": {
     "max_hp": 3000,
@@ -45842,7 +45842,7 @@
   {
    "id": "wraith",
    "name": "Wraith",
-   "text": "Steals voices.",
+   "text": "Steals the voice of whoever hits hardest.",
    "rank": "minion",
    "stats": {
     "max_hp": 4000,
@@ -45954,7 +45954,7 @@
   {
    "id": "bomb_bug",
    "name": "Bomb Bug",
-   "text": "Explodes when it dies.",
+   "text": "Swollen with fire. When it dies, it bursts over everyone.",
    "rank": "minion",
    "stats": {
     "max_hp": 6000,
@@ -46000,7 +46000,7 @@
   {
    "id": "fire_giant",
    "name": "Fire Giant",
-   "text": "Lord of the furnace.",
+   "text": "Lord of the furnace: he stokes his fire, then the room burns.",
    "rank": "boss",
    "stats": {
     "max_hp": 52250,
@@ -46072,7 +46072,7 @@
   {
    "id": "ice_titan",
    "name": "Ice Titan",
-   "text": "A walking glacier.",
+   "text": "A walking glacier. Chip away its ice and it cracks open.",
    "rank": "boss",
    "stats": {
     "max_hp": 60500,
@@ -46120,7 +46120,7 @@
   {
    "id": "leech",
    "name": "Leech",
-   "text": "Drinks mana.",
+   "text": "Latches on and drinks the mana out of you.",
    "rank": "minion",
    "stats": {
     "max_hp": 3000,
@@ -46140,7 +46140,7 @@
   {
    "id": "storm_queen",
    "name": "Storm Queen",
-   "text": "Queen of the storm drones.",
+   "text": "Calls her drones to her side, and lightning down on you.",
    "rank": "boss",
    "stats": {
     "max_hp": 46750,
@@ -46186,7 +46186,7 @@
   {
    "id": "storm_king",
    "name": "Storm King",
-   "text": "The Storm Queen's mate. Hurt his soldiers and he gets angry.",
+   "text": "The Storm Queen's mate. Every soldier you fell makes him angrier.",
    "rank": "boss",
    "stats": {
     "max_hp": 55000,
@@ -46255,7 +46255,7 @@
   {
    "id": "troll",
    "name": "Troll",
-   "text": "Big, slow, and swings a tree, under the ground.",
+   "text": "The ogre's cave cousin: big, slow, and swings a tree.",
    "rank": "elite",
    "stats": {
     "max_hp": 16000,
@@ -46280,7 +46280,7 @@
   {
    "id": "mummy",
    "name": "Mummy",
-   "text": "Hides behind a big, old shield.",
+   "text": "Dead for ages, and still holding the line behind its shield.",
    "rank": "elite",
    "stats": {
     "max_hp": 10000,
@@ -46304,7 +46304,7 @@
   {
    "id": "ice_ghost",
    "name": "Ice Ghost",
-   "text": "Blows pass right through it, cold as it is.",
+   "text": "A ghost of the frozen pass: blows go right through it.",
    "rank": "minion",
    "stats": {
     "max_hp": 6000,
@@ -47360,7 +47360,7 @@
      "elite": -26,
      "boss": 0
     },
-    "text": "Armored bones, bats you can't hit, ghosts that blows pass through, and Death with a bell.",
+    "text": "Armored bones, wyrms you can't hit, ghosts your blows pass through, and Death with a bell.",
     "easy": [
      {
       "id": "bone_pile",
@@ -47374,7 +47374,7 @@
      },
      {
       "id": "bat_roost",
-      "name": "Bat Roost",
+      "name": "Wyrm Roost",
       "enemies": [
        "bat",
        "bat",

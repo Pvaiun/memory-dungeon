@@ -1,15 +1,14 @@
 /** The rogue screen's dispatcher, and the run's way through an act: the leader, the draft, the map, a fight in waiting. */
-import { button, type Child, h, header, win } from "../dom.js";
+import { button, type Child, h, header, nav, win } from "../dom.js";
 import { current, lastRun, meta, nextSeed, saveRogue, setHeat, startRun, vitals } from "./state.js";
 import { bossFoes, canManage, leaderKnown, type MapNode, reachable, rogue, type RogueRun } from "../../../src/rogue.js";
 import { c, className, cls as classOf, disp, shortName } from "../content.js";
-import { enemyThumb, faceEl, iconEl, shardEl, shardIcon } from "../pixel.js";
-import { abilityBlock, classHead, classPassive, ENEMY_STATS, enemyStats, section, sizeEl, statGrid } from "../sheet.js";
+import { enemyEl, enemyThumb, faceEl, iconEl, shardEl, shardIcon } from "../pixel.js";
+import { abilityBlock, classHead, classPassive, enemySheet, enemyStats, section } from "../sheet.js";
 import { plainWeapon } from "../../../src/sim/parties.js";
 import { setup } from "../state.js";
 import { sfx } from "../battle/audio.js";
 import { useSupply } from "../../../src/rogue/record.js";
-import { sizeParts } from "../describe.js";
 import { enemyDisplayName } from "../art.js";
 import { campView, captiveView, chooseView, eventScreen, levelView, regionView, rewardView, roomView, shopView, trainView } from "./rooms.js";
 import { fateView, overView } from "./end.js";
@@ -192,46 +191,66 @@ function shardView(run: RogueRun): Child[] {
 
 // ─── A fight in waiting ────────────────────────────────────────────────────
 
+/** A fight's changes to its foes, in percent: HP, and damage (`power`). */
+type FoeMods = { hp?: number; power?: number };
+/** A foe's likeness in the list: the art's own pixels where they fit this box (logical pixels), the biggest a step smaller. */
+const FOE_ICON = 56;
+const rankTone = (rank: string) => (rank === "boss" ? "gold" : rank === "elite" ? "debuff" : "");
+
 /**
- * A fight's foes as the preview shows them, with this fight's changes to HP and damage: each kind's likeness, name and
- * count, its HP, ATK and DEF (and any special stat, such as Evasion), and its abilities with
- * their sizes, so a boss's big move can be planned for (Slay the Spire shows intents).
+ * A fight's foes as the preview shows them: one row a kind, its likeness, name and count, and its line, which says what
+ * it does through what it is. A tap on a row, or on the foe on the field, opens its whole sheet (`foeSheet`).
  */
-export function foeLines(enemies: string[], foes: { hp?: number; power?: number } = {}): Child[] {
+export function foeLines(enemies: string[], foes: FoeMods = {}): Child[] {
   const kinds = [...new Set(enemies)];
   const n = (id: string) => enemies.filter((e) => e === id).length;
-  const mult = 1 + (foes.power ?? 0) / 100;
   return kinds.map((id) => {
     const en = c.enemies.get(id)!;
-    const st = enemyStats(en);
-    st.max_hp = Math.round(st.max_hp * (1 + (foes.hp ?? 0) / 100));
-    const acts = (en.abilities ?? []).map((a) => { const ab = c.abilities.get(a)!; return h("div", { class: "foe-act" }, h("div", { class: "text small wrap" }, h("span", { class: "hi" }, `${ab.name.toUpperCase()} `), h("span", { class: "dim" }, ab.text)), sizeEl(sizeParts(ab, st, mult))); });
-    return h("div", { class: "foe" },
-      h("div", { class: "line" }, h("span", { class: "foe-art" }, enemyThumb(id, 24)), h("span", { class: `grow trunc ${en.rank === "boss" ? "gold" : en.rank === "elite" ? "debuff" : ""}` }, `${enemyDisplayName(id).toUpperCase()}${n(id) > 1 ? ` ×${n(id)}` : ""}`)),
-      statGrid(st, null, false, ENEMY_STATS),
-      ...acts);
+    return h("div", { class: "foe-row", onClick: () => foeSheet(id, foes) },
+      h("div", { class: "foe-icon" }, enemyThumb(id, FOE_ICON)),
+      h("div", { class: "grow" },
+        h("div", { class: "line" }, h("span", { class: `grow trunc ${rankTone(en.rank)}` }, `${enemyDisplayName(id).toUpperCase()}${n(id) > 1 ? ` ×${n(id)}` : ""}`), h("span", { class: "dim" }, "▶")),
+        en.text ? h("div", { class: "text dim small wrap" }, en.text) : null));
   });
+}
+/**
+ * A foe's whole sheet over the screen, with this fight's changes to its HP and damage: its likeness, line, stats, what
+ * it can't be given, its passives and its actions with their sizes, so a boss's big move can be planned for.
+ */
+export function foeSheet(id: string, foes: FoeMods = {}) {
+  if (!frameEl) return;
+  const en = c.enemies.get(id)!;
+  const stats = enemyStats(en);
+  stats.max_hp = Math.round(stats.max_hp * (1 + (foes.hp ?? 0) / 100));
+  const close = () => { box.remove(); nav.overlay = null; };
+  // The name and × inside the window, so the screen's own header doesn't show through them.
+  const box: HTMLElement = h("div", { class: "overlay", onClick: (e?: Event) => { if (e?.target === box) close(); } },
+    win("",
+      h("div", { class: "hdr" }, h("span", { class: "title" }, enemyDisplayName(id).toUpperCase()), h("span", { class: rankTone(en.rank) || "dim" }, en.rank === "boss" ? "★BOSS" : en.rank.toUpperCase()), button("×", close, "sm")),
+      h("div", { class: "scroll" }, h("div", { class: "beast-art" }, enemyEl(id, 3, 1)), ...enemySheet(en, setup.settings.designer, { stats, power: foes.power ?? 0 }))));
+  frameEl.append(box);
+  nav.overlay = close;
 }
 /** The act's boss, from the map: known from the act's start, so the party can be built and swapped toward it. */
 export function rbossScreen(): Child[] {
   const run = current();
   if (!run) return rogueScreen();
+  const foes = bossFoes(c, run);
   return [
     header("BOSS", () => go("rogue")),
-    standoff(run, run.boss.enemies, "boss"),
-    win("scroll", h("div", { class: "line gold" }, run.boss.name.toUpperCase()), ...foeLines(run.boss.enemies, bossFoes(c, run))),
+    standoff(run, run.boss.enemies, "boss", { onFoe: (ref) => foeSheet(ref, foes) }),
+    win("scroll", h("div", { class: "line gold" }, run.boss.name.toUpperCase()), ...foeLines(run.boss.enemies, foes)),
   ];
 }
 
 function fightView(run: RogueRun): Child[] {
   const p = run.pending;
   if (p.kind !== "fight") return [];
-  const foes = foeLines(p.fight.enemies, p.foes);
   return [
     header(p.tier === "boss" ? "BOSS" : p.tier === "elite" ? "ELITE" : "FIGHT", () => go("home"), shardTag(run)),
-    standoff(run, p.fight.enemies, `fight:${p.fight.id}`),
+    standoff(run, p.fight.enemies, `fight:${p.fight.id}`, { onFoe: (ref) => foeSheet(ref, p.foes) }),
     partyStrip(run),
-    win("scroll", h("div", { class: "line hi" }, p.fight.name.toUpperCase()), ...foes),
+    win("scroll", h("div", { class: "line hi" }, p.fight.name.toUpperCase()), ...foeLines(p.fight.enemies, p.foes)),
     supplyRow(run),
     actions(button("FIGHT", () => go("battle", { rogue: true }), "hi"), p.begun ? null : button("PARTY", () => go("rparty"))),
   ];
