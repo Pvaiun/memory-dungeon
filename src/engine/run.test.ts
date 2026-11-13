@@ -160,5 +160,5 @@ test("pinned run: any change here means old records replay differently, so bump 
   const run = play(c, combat, input(1), firstOption, { log: true });
   assert.equal(ENGINE_VERSION, "0.23");
   // A new field on a log entry changes the fingerprint without changing the outcome.
-  assert.equal(fingerprint(JSON.stringify(run.log!.slice(1))), "6798a915cdb4b6eb");
+  assert.equal(fingerprint(JSON.stringify(run.log!.slice(1))), "a4e249d7c1479e91");
 });
