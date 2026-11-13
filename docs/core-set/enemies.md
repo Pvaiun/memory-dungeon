@@ -129,6 +129,8 @@ The original design gave Poison as the Fundamental answer to Armored shell, Dodg
 
 By region. In the rogue mode each region is an act, its fight pools made from these foes (`ROGUE_REGIONS` in `content/core-set/rogue.ts`). In free play the regions are seven dungeons, played in order (`dungeons.ts`). The challenge each enemy is built on is in italics; a passive or ability is in bold, and what it does follows.
 
+A foe's passive shows on its status bar from the start of a fight, first and always on, with no count and no timer: about three foes in ten have one, so the bar signposts it. A class's doesn't, as every class has one.
+
 ### Old Road
 
 All Fundamental: the gentle mixed gauntlet, clearable by the ungeared starting trio. Reskins: the Wolf returns as the Snow Wolf in the Ice Pass, and the Ogre as the Troll and the Shieldman as the Mummy in the Crypt.

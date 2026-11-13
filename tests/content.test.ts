@@ -28,6 +28,20 @@ test("every weapon in the pack has its strip in the interface's art, and no stri
   assert.deepEqual(readdirSync(new URL("../ui/public/assets/weapons/", import.meta.url)).sort(), weapons.map((id) => `${id}.png`));
 });
 
+// The interface draws a status from its icon (ui/tools/skill_icons.py builds them from the director's picks), else a
+// coloured square with the status's first letter: a status that shows, a foe's passive or a class's, added without
+// an icon, shows here. Add it to STATUS_ICONS (or ICONS, for a class passive) and run the tool.
+test("every status that shows, every foe passive and every class passive has its icon", () => {
+  const pack: ContentPack = JSON.parse(read("content/core-set.pack.json"));
+  const icons: Record<string, string> = JSON.parse(read("ui/public/assets/manifest.json")).statuses;
+  const needed = new Set([
+    ...pack.statuses.filter((s) => s.show === "icon" || s.show === "stat").map((s) => s.id),
+    ...pack.enemies.flatMap((e) => e.statuses ?? []),
+    ...pack.classes.flatMap((k) => k.passive?.statuses ?? []),
+  ]);
+  assert.deepEqual([...needed].filter((id) => !icons[id]).sort(), []);
+});
+
 test("the party files the command-line tools use are valid against the pack", () => {
   const pack: ContentPack = JSON.parse(read("content/core-set.pack.json"));
   for (const file of readdirSync(new URL("../content/parties/", import.meta.url))) {
