@@ -18,8 +18,10 @@ export type Manifest = {
   abilities?: Record<string, string>;
   /** VFX strips by name: `frames` frames of w×h side by side, cropped from the pack's 64×64 at (ox, oy). */
   vfx: Record<string, { file: string; frames: number; w: number; h: number; ox: number; oy: number }>;
-  /** Weapon strips by gear id: three frames of 48×32, drawn in the hand of a party member. */
+  /** Weapon strips by gear id: three frames of 48×32, the weapon facing right, drawn in the hand of a party member. */
   weapons: Record<string, string>;
+  /** The strips that show in gear lists only, never in a hand: the fist weapons'. */
+  weaponsUnheld?: string[];
   /** A 36×36 face per class. */
   faces: Record<string, string>;
   /** A 270×224 scene per dungeon, and the home strip. */
@@ -47,7 +49,7 @@ export async function loadArt(): Promise<void> {
   manifest.backdrops ??= {};
   manifest.abilities ??= {};
   // The plain pieces of kinds with no art of their own borrow a strip.
-  for (const [id, from] of Object.entries(WEAPON_STAND_INS)) if (!manifest.weapons[id] && manifest.weapons[from]) manifest.weapons[id] = manifest.weapons[from];
+  unheld = new Set(manifest.weaponsUnheld ?? []);
   const files = [
     ...Object.values(manifest.classes), ...Object.values(manifest.enemies).map((e) => e.file), ...Object.values(manifest.vfx).map((v) => v.file), manifest.iconset,
     ...Object.values(manifest.statuses), ...Object.values(manifest.abilities), ...Object.values(manifest.weapons), ...Object.values(manifest.faces), ...Object.values(manifest.backdrops),
@@ -78,16 +80,6 @@ export function enemyName(ref: string, unitName: string): string {
   return unitName.startsWith(base) ? art.name + unitName.slice(base.length) : art.name;
 }
 export const enemyDisplayName = (ref: string): string => manifest?.enemies[ref]?.name ?? c.enemies.get(ref)?.name ?? ref;
-/**
- * Stand-in strips for the plain pieces of kinds with no art of their own, from the strips the packs give: the great weapon and
- * the axe hold the axe; the hammer the Earthshaker's maul; the rune sword the Oathblade's glowing blade; the fist weapons the dagger's
- * strip; the mace, the wand and the staff the plain staffs whose look fits who carries them first (the Light staff for the mace;
- * the Bard's and Hexer's lightning wand, the Pyromancer's fire staff).
- */
-const WEAPON_STAND_INS: Record<string, string> = {
-  plain_great_weapon: "plain_axe", plain_axe: "plain_axe", plain_hammer: "earthshaker", plain_rune_sword: "oathblade", plain_fist: "plain_dagger", plain_mace: "plain_light_staff",
-  plain_wand: "plain_lightning_staff", plain_staff: "plain_fire_staff",
-};
 /** A weapon's strip: its own, or for a rogue run's item, its base piece's, or else its kind's plain piece's. */
 export function weaponArt(gearId: string | undefined): string | undefined {
   if (!gearId) return undefined;
@@ -96,6 +88,9 @@ export function weaponArt(gearId: string | undefined): string | undefined {
   const kind = c.gear.get(gearId)?.weapon?.kind;
   return kind ? manifest.weapons[`plain_${kind}`] : undefined;
 }
+let unheld = new Set<string>();
+/** Whether a strip shows in its wearer's hand: not the fist weapons', which are for gear lists (the fists are the sprite's own). */
+export const weaponHeld = (file: string): boolean => !unheld.has(file);
 
 // ─── Actor sheets: RPG Maker MV sideview layout, 18 poses × 3 frames ───
 export const POSE = { walk: 0, wait: 1, chant: 2, guard: 3, damage: 4, evade: 5, thrust: 6, swing: 7, missile: 8, skill: 9, spell: 10, item: 11, escape: 12, victory: 13, dying: 14, abnormal: 15, sleep: 16, dead: 17 } as const;
