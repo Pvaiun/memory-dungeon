@@ -3,7 +3,7 @@ import { button, type Child, h, header, win } from "../dom.js";
 import { current, lastRun, meta, nextSeed, saveRogue, setHeat, startRun, vitals } from "./state.js";
 import { bossFoes, canManage, leaderKnown, type MapNode, reachable, rogue, type RogueRun } from "../../../src/rogue.js";
 import { c, className, cls as classOf, disp, shortName } from "../content.js";
-import { enemyThumb, faceEl, iconEl } from "../pixel.js";
+import { enemyThumb, faceEl, iconEl, shardEl, shardIcon } from "../pixel.js";
 import { abilityBlock, classHead, classPassive, ENEMY_STATS, enemyStats, section, sizeEl, statGrid } from "../sheet.js";
 import { plainWeapon } from "../../../src/sim/parties.js";
 import { setup } from "../state.js";
@@ -25,6 +25,7 @@ export function rogueScreen(): Child[] {
     case "map": return mapView(run);
     case "fight": return fightView(run);
     case "drop": return dropView(run);
+    case "shard": return shardView(run);
     case "spoils": case "boon": case "treasure": case "trophy": return rewardView(run);
     case "captive": return captiveView(run);
     case "shop": return shopView(run);
@@ -175,6 +176,20 @@ function dropView(run: RogueRun): Child[] {
   ];
 }
 
+/** After act I's and act II's bosses: the Destiny Shard on the ground, taken by hand like the spoils. */
+function shardView(run: RogueRun): Child[] {
+  if (run.pending.kind !== "shard") return [];
+  const max = rogue(c).config.shards?.max ?? 0;
+  const actors = [...partyActors(run, 96, "victory", { cx: 100 }), { kind: "loot" as const, x: 200, y: 92, art: shardIcon() }];
+  return [
+    header("DESTINY SHARD", () => go("home")),
+    scene(run, "shard", { h: 96, actors }),
+    win("roffer", h("div", { class: "line" }, shardEl(), h("span", { class: "grow hi" }, " DESTINY SHARD"), h("span", { class: "dim small" }, `${run.shards ?? 0}/${max} HELD`)),
+      h("div", { class: "line dim small wrap" }, "A LOST FIGHT CAN SPEND IT TO GO BACK TO THE FIGHT'S PREVIEW, EVERYTHING AS IT WAS.")),
+    actions(button("TAKE", () => pickOrSave(run, "take"), "hi")),
+  ];
+}
+
 // ─── A fight in waiting ────────────────────────────────────────────────────
 
 /**
@@ -223,7 +238,7 @@ function fightView(run: RogueRun): Child[] {
 }
 
 /** The Destiny Shards held, where a fight is near: a lost fight can spend one to come back to its preview. */
-const shardTag = (run: RogueRun) => (run.shards ? h("span", { class: "gold" }, `${run.shards} SHARD${run.shards > 1 ? "S" : ""} `) : null);
+const shardTag = (run: RogueRun) => (run.shards ? h("span", null, `${run.shards}`, shardEl(), " ") : null);
 
 /** The home menu's line for the rogue mode. */
 export function rogueMenuLine(): string {

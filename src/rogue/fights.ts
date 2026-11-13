@@ -64,22 +64,23 @@ export function startFight(c: Content, run: RogueRun, opts: { log?: boolean } = 
   if (p.kind !== "fight") throw new Error("no fight is pending");
   registerGear(c, run);
   fightDungeon(c, p);
-  // The run as the fight begins, for a Destiny Shard to return to; a reload in the fight keeps the first.
-  if (!p.begun) run.retry = snapshot(run);
   // From here the party is set: leaving and coming back replays this fight as it starts, the same way.
   p.begun = true;
   const er = newRun(c, combat, { dungeon: FIGHT_DUNGEON, party: partyOf(c, run), seed: p.seed }, { checked: true, log: opts.log });
   carryIn(run, er);
   return er;
 }
-/** The whole run as it stands, without the snapshot it may hold or the interface's record (`src/rogue/record.ts`). */
-function snapshot(run: RogueRun): RogueRun {
+/**
+ * The whole run as it stands, without the snapshot it may hold or the interface's record (`src/rogue/record.ts`): taken as a
+ * fight's preview opens (`choose`), for a Destiny Shard to return to.
+ */
+export function snapshot(run: RogueRun): RogueRun {
   const { retry: _, record: __, ...rest } = run as RogueRun & { record?: unknown };
   return structuredClone(rest);
 }
 /**
- * Spends a Destiny Shard after a lost fight: the run goes back to exactly where it stood as the fight began, at the fight's
- * preview, with one shard fewer. The interface's record, if any, carries on.
+ * Spends a Destiny Shard after a lost fight: the run goes back to exactly where it stood as the fight's preview opened, its
+ * supplies and everything else as they were, with one shard fewer. The interface's record, if any, carries on.
  */
 export function useShard(run: RogueRun) {
   const back = run.retry;
@@ -141,9 +142,9 @@ export function endFight(c: Content, run: RogueRun, er: Run) {
       run.pending = { kind: "over", won: true };
       return;
     }
-    // Every boss but the last gives a Destiny Shard, up to the most a run holds.
-    if ((run.shards ?? 0) < (cfg(c).shards?.max ?? 0)) (run.shards = (run.shards ?? 0) + 1), note(run, "Won a Destiny Shard.");
-    run.pending = offerDrop(c, run, { kind: "boon", offers: boonOffers(c, run) });
+    // Every boss but the last leaves a Destiny Shard to take, while the run holds fewer than it can.
+    const after = offerDrop(c, run, { kind: "boon", offers: boonOffers(c, run) });
+    run.pending = (run.shards ?? 0) < (cfg(c).shards?.max ?? 0) ? { kind: "shard", then: after } : after;
     return;
   }
   const offers = spoilOffers(c, run, p.tier, p.node);
@@ -203,14 +204,15 @@ function captiveFor(c: Content, run: RogueRun, enemies: string[], node: string):
   return o;
 }
 /**
- * Plays the pending fight at once (the simulations), and carries the result back. The simulations play without Destiny
- * Shards: a lost fight ends the run, so what they measure is the game without a second try.
+ * Plays the pending fight at once (the simulations), and carries the result back. A lost fight with a Destiny Shard held
+ * leaves the choice pending only with `shards` (whole runs by the simulated player); otherwise the run ends, so a tool that
+ * measures one fight sees a loss as a loss.
  */
-export function autoFight(c: Content, run: RogueRun): Run {
+export function autoFight(c: Content, run: RogueRun, opts: { shards?: boolean } = {}): Run {
   const er = startFight(c, run);
   advance(c, combat, er);
   endFight(c, run, er);
-  if (run.pending.kind === "fate") (run.pending = { kind: "over", won: false }), delete run.retry;
+  if (run.pending.kind === "fate" && !opts.shards) (run.pending = { kind: "over", won: false }), delete run.retry;
   return er;
 }
 

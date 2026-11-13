@@ -66,7 +66,7 @@ src/
   rogue.ts                   the rogue mode's public face; lists its parts
   rogue/                     the rogue mode: a run as data, moved on one decision at a time
     state.ts                 the run's data (RogueRun, Member, Offer, Pending), shared helpers, the meta
-    fights.ts                the run's items as content, the party a fight takes, starting and ending a fight, a Destiny Shard's return, knobs, foes
+    fights.ts                the run's items as content, the party a fight takes, starting and ending a fight, a boss's Destiny Shard, a shard's return, knobs, foes
     acts.ts                  a new run (leader, draft, known abilities); each act's map and rooms
     offers.ts                the stock and every offer: gear, mythics, tomes, recruits, formations, supplies, prices, the shop
     training.ts              learning abilities; power steps and versions
@@ -97,7 +97,7 @@ src/
     content.ts               content with patches (variants), and single fights as one-stage dungeons
     parties.ts               parties: building and listing them, plain weapons, what fits a slot
     kits.ts                  sensible kits from the pack by class profile, seating, ability order
-    rogue-ai.ts              the simulated rogue player, with dials
+    rogue-ai.ts              the simulated rogue player, with dials; it spends Destiny Shards and retries a fight prepared at random
     study.ts                 a study: the data file that says what to run
     combat.ts                a study's combat level: many parties against dungeons and fights
     measure.ts               probes watching each fight's HP, MP and pace
@@ -190,12 +190,12 @@ ui/
     dom.ts                   DOM helpers: h(), windows, rows, buttons, the back gesture
     art.ts                   art tables: which sprite, icon or look shows what
     effects.ts               the effects tables: which VFX strip each action, status and event plays; the designer's sizes; the catalogue
-    pixel.ts                 graphics: the pixel scale, sprites, icons, the font, effects enlarged by Scale2x and Scale3x
+    pixel.ts                 graphics: the pixel scale, sprites, icons (the Destiny Shard's among them), the font, effects enlarged by Scale2x and Scale3x
     update.ts                reloading onto a newer build
     rogue-screens.ts         the rogue screens' public face; lists them
     rogue/
       parts.ts               the navigation, small parts and scenes the rogue screens share
-      run.ts                 the dispatcher, the leader, the draft, the map, a fight in waiting
+      run.ts                 the dispatcher, the leader, the draft, the map, a boss's Destiny Shard, a fight in waiting
       rooms.ts               spoils, a captive, the shop and training, the campfire, events, choices, Muster and Drill, level up, the next region
       end.ts                 a lost fight's Destiny Shard offer, the run's end, its record, a won run's moment
       party.ts               managing the party: seats, a unit's sheet and order, its gear

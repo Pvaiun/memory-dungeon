@@ -43,7 +43,7 @@ Every win pays gold by tier (`gold.fight`, `gold.elite`, `gold.boss`, plus `gold
 
 **Elite.** A hard fight from the elite pool. A pick of three legendary pieces, the first for someone in the party (`spoils.elite`), then a pick of two formations.
 
-**Boss.** Act III's ends the run, won. Acts I and II's pay a Destiny Shard (below) and a supply, then the **boon** (`boon`): a pick of three from a legendary piece (a mythic in its place in the boons that open the acts in `boon.mythic`), a formation of rare or better, and a recruit. Then the fork, the restore, and the **level-up**: each member takes one training, or `levelGold` gold.
+**Boss.** Act III's ends the run, won. Acts I and II's leave a Destiny Shard to take (below; none while the run holds `shards.max`), then a supply, then the **boon** (`boon`): a pick of three from a legendary piece (a mythic in its place in the boons that open the acts in `boon.mythic`), a formation of rare or better, and a recruit. Then the fork, the restore, and the **level-up**: each member takes one training, or `levelGold` gold.
 
 **After any other won fight**, in order:
 1. **A supply:** a potion or a tonic, a choice of one (`drops`); a kind with a full slot isn't offered.
@@ -93,7 +93,7 @@ A run starts with Neutral. Formations are common, rare or legendary (`content/co
 ## The end of a run
 
 - **Any lost fight ends it,** unless a Destiny Shard is spent. A wipe ends the run even with members at camp.
-- **Destiny Shards** let a run try a fight again with a different preparation. Act I's and act II's bosses give one each, and a run holds up to `shards.max`. When a fight is lost with a shard held, the player can spend one: the run goes back to exactly where it stood as FIGHT was pressed, at the fight's preview. Everything returns as it was then: HP, MP, knockouts, cooldowns, gold, gear, seats, the same foes (a supply used at the preview stays used). Only the shard is gone. Then everything is free as before (swaps, gear, seats, order, formation, supplies). The same fight with the same party and choices plays the same way, so a second try has to change something. The player can also decline the shard and end the run. The simulations play without shards (`autoFight` and the simulated player decline them), so the measured win rates are the game without a second try.
+- **Destiny Shards** let a run try a fight again with a different preparation. Act I's and act II's bosses each leave one, taken by hand like the spoils, and a run holds up to `shards.max`. When a fight is lost with a shard held, the player can spend one: the run goes back to exactly where it stood as the fight's preview opened. Everything returns as it was then: HP, MP, knockouts, cooldowns, gold, gear, seats, the supplies used at the preview, the same foes. Only the shard is gone. The same fight with the same party and choices plays the same way, so a second try has to change something. The player can also decline and end the run. The simulated player always spends a shard and prepares the fight again differently, for now at random (`shake` in `src/sim/rogue-ai.ts`); a tool that plays single fights (`autoFight` without `shards`) counts a loss as a loss.
 - **Beating act III's boss wins it.** A won run adds every class in its final party (the three seated) to the classes a run can start with, and, played at the highest heat open, opens the next (`finish`). Every run adds to the record: runs, wins, furthest act and floor.
 
 ## Dice and saves

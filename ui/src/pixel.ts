@@ -551,6 +551,17 @@ export function statusEl(id: string, count?: number | null, scale = 1): HTMLCanv
   return canvasEl(cv, scale, "sticon");
 }
 
+// ─── The Destiny Shard: one 16×16 icon ───
+let shardCv: HTMLCanvasElement | null = null;
+export function shardIcon(): HTMLCanvasElement {
+  if (shardCv) return shardCv;
+  const img = manifest.shard ? image(manifest.shard) : undefined;
+  const cv = cv2d(16, 16);
+  if (img) cv.getContext("2d")!.drawImage(img, 0, 0, 16, 16);
+  return (shardCv = cv);
+}
+export const shardEl = (scale = 1) => canvasEl(shardIcon(), scale, "icon");
+
 // ─── The campfire: an animated strip of square frames ───
 export function drawCampfire(ctx: CanvasRenderingContext2D, x: number, feet: number, wall: number) {
   const cf = manifest.campfire;

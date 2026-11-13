@@ -263,9 +263,12 @@ function look(run: RogueRun): string {
         out.push(`  pick ${id}: ${r.name}. ${r.text} Its boss: ${boss.name}: ${[...new Set(boss.enemies)].map((e) => bestiary(e, power)).join(" ")}`);
       }
       break;
+    case "shard":
+      out.push(`A DESTINY SHARD lies where the boss fell. You hold ${run.shards ?? 0} of ${rogue(c).config.shards?.max ?? 0}. A lost fight can spend one to go back to its preview.`, "  pick take");
+      break;
     case "fate":
       out.push(`THE PARTY FELL to ${p.fight}. You hold ${run.shards} Destiny Shard${run.shards === 1 ? "" : "s"}.`);
-      out.push("  pick shard: spend one to go back to the moment before the fight, at its preview, everything as it was then; change what you like and fight again (the same party and choices play the same fight the same way).");
+      out.push("  pick shard: spend one to go back to the moment the fight's preview opened, everything as it was then (supplies used since included); change what you like and fight again (the same party and choices play the same fight the same way).");
       out.push("  pick end: the run ends here.");
       break;
     case "over":

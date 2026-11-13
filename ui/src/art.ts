@@ -38,6 +38,8 @@ export type Manifest = {
   /** Gear icons, 16×16 at art size in a 16-column sheet: a cell per piece that isn't a weapon, by id, and per "kind:<kind>" and "slot:<slot>". */
   gearSheet?: string;
   gear?: Record<string, number>;
+  /** The Destiny Shard's icon, 16×16 at art size (the director's own). */
+  shard?: string;
 };
 
 export let manifest: Manifest;
@@ -56,7 +58,7 @@ export async function loadArt(): Promise<void> {
   const files = [
     ...Object.values(manifest.classes), ...Object.values(manifest.enemies).map((e) => e.file), ...Object.values(manifest.vfx).map((v) => v.file), manifest.iconset,
     ...Object.values(manifest.statuses), ...Object.values(manifest.abilities), ...Object.values(manifest.basic), ...Object.values(manifest.weapons), ...Object.values(manifest.faces), ...Object.values(manifest.backdrops),
-    ...(manifest.campfire ? [manifest.campfire.file] : []), ...(manifest.chest ? [manifest.chest.file] : []), ...(manifest.gearSheet ? [manifest.gearSheet] : []),
+    ...(manifest.campfire ? [manifest.campfire.file] : []), ...(manifest.chest ? [manifest.chest.file] : []), ...(manifest.gearSheet ? [manifest.gearSheet] : []), ...(manifest.shard ? [manifest.shard] : []),
   ];
   await Promise.all(files.map(load));
 }
