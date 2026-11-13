@@ -10,9 +10,9 @@ import { abilityUp, apply, cd, FIST_BURN, helper, hitOf, kit, marker, passiveUp,
 const sunderOn = (kind: "basic" | "extra" | "ability", k: number): ReactionT => ({ on: { event: "hit_lands", kind }, do: [apply("sunder", { stacks: own("few", "attack", k), to: "other" })] });
 passiveUp({
   id: "iron_palm", cls: "monk",
-  power: "40% more Sunder.",
-  a: { name: "Hundred hands", text: "Every hit it lands adds a few Sunder: its basic attacks, Double strike's second strike, and its abilities' hits; stacks scale from Attack.", builds: ["cuts"] },
-  b: { name: "Drinking palm", text: "Its basic attacks, and the second strike of its Double strike, add a few Sunder; stacks scale from Attack. Its hits on a Sundered foe heal it for a fifth of the damage.", serves: "Pact ●●, Toll ●● ⚙ riposte (half)" },
+  power: "+40% Sunder.",
+  a: { name: "Hundred hands", text: "Every hit, abilities' included, adds a few Sunder (from Attack).", builds: ["cuts"] },
+  b: { name: "Drinking palm", text: "Basic attacks and extra strikes add a few Sunder (from Attack). Hits on a Sundered foe heal it for 20% of the damage.", serves: "Pact ●●, Toll ●● ⚙ riposte (half)" },
   form: (v, k) => ({
     reactions: [
       // First, so its test reads the foe as the hit found it, before this hit's own Sunder lands.
@@ -28,16 +28,17 @@ passiveUp({
 const FLOW_RENEWALS = 2;
 abilityUp({
   id: "flow", cls: "monk",
-  power: "A shorter cooldown.",
-  a: { name: "Flow state", text: "Applies Haste to itself. While that Haste lasts, every fifth hit it lands renews it, at most twice a cast.", builds: ["cuts"] },
-  b: { name: "Stillness of mind", text: "Taunts, and raises its Evasion by 35 for as long as the Taunt. No Haste.", serves: "Toll 2 ●●● ⚙ riposte (half)" },
+  power: "Shorter cooldown.",
+  shown: true,
+  a: { name: "Flow state", text: "Hastes itself. While Hasted, every 5th hit renews the Haste, twice a cast at most.", builds: ["cuts"] },
+  b: { name: "Stillness of mind", text: "Taunts, with +35 Evasion while the Taunt lasts. No Haste.", serves: "Toll 2 ●●● ⚙ riposte (half)" },
   form: (v, _k, plus) => ({
     ...(plus ? { cooldown: cd("short", "flow") } : {}),
     ...(v === "a" ? { do: [apply("haste"), apply("flow_state", { stacks: FLOW_RENEWALS })] } : {}),
     ...(v === "b" ? { do: [apply("taunt"), apply("stillness_of_mind")] } : {}),
   }),
 });
-helper(kit("flow_state", "FLOW STATE", "While Hasted, every fifth hit it lands renews its Haste.", {
+helper(kit("flow_state", "FLOW STATE", "While Hasted, every 5th hit renews the Haste.", {
   show: "sheet", stacking: "intensity", cap: FLOW_RENEWALS,
   reactions: [
     { on: { event: "hit_lands" }, if: { side: "self", where: { has: "haste" } }, do: [apply("flow_state_count", { stacks: 1, to: "self" })] },
@@ -45,7 +46,7 @@ helper(kit("flow_state", "FLOW STATE", "While Hasted, every fifth hit it lands r
   ],
   trigger: { on: { event: "status_capped", status: "flow_state_count" } }, drop: { count: 1 },
 }));
-helper(kit("flow_state_count", "FLOW STATE", "Hits landed while Hasted; the fifth renews the Haste.", {
+helper(kit("flow_state_count", "FLOW STATE", "Hits while Hasted; the 5th renews the Haste.", {
   stacking: "intensity", cap: 5, trigger: { on: { event: "status_capped", status: "flow_state_count" } }, drop: "all",
 }));
 // Statuses are universal: the Taunt at its own 20 ticks, and the Evasion beside it for as long.
@@ -53,9 +54,10 @@ helper(kit("stillness_of_mind", "STILLNESS OF MIND", "Evasion up.", { duration: 
 
 abilityUp({
   id: "burning_fist", cls: "monk",
-  power: "Its hits add 40% more of their status.",
-  a: { name: "Frost fist", text: "Three quick hits on the foe with the most Chill; each deals damage that scales from Attack and adds a few Chill; stacks scale from Attack.", serves: "Snap 1 ●●●" },
-  b: { name: "Fanned flames", text: "Five quick, light hits on the foe with the most Burn; each deals physical damage that scales from Attack and adds a little Burn; stacks scale from Attack.", builds: ["bonfire", "cuts"] },
+  power: "+40% stacks.",
+  shown: true,
+  a: { name: "Frost fist", text: "Three blows on the foe with the most Chill, each adding more.", serves: "Snap 1 ●●●" },
+  b: { name: "Fanned flames", text: "Five lighter blows on the foe with the most Burn, each adding more.", builds: ["bonfire", "cuts"] },
   form: (v, k) =>
     v === "a" ? { target: T.mostFoe("chill"), do: [phys(from("attack", 0.11), { hits: 3, apply: [{ status: "chill", stacks: stacks("few", "attack", FIST_BURN * k) }] })] } // Burning fist's own share of the word.
       : v === "b" ? { do: [phys(from("attack", 0.07), { hits: 5, apply: [{ status: "burn", stacks: stacks("few", "attack", 0.4 * k) }] })] }
@@ -64,9 +66,10 @@ abilityUp({
 
 abilityUp({
   id: "pressure_point", cls: "monk",
-  power: "40% more damage.",
-  a: { name: "Lingering point", text: "Has Seek. Deals physical damage that scales from Attack to the foe with the highest Attack, and applies Stun. When that Stun ends, the foe is Slowed.", builds: [] },
-  b: { name: "Vital strike", text: "Has Seek. Deals triple physical damage that scales from Attack to the foe with the lowest HP. No Stun.", builds: ["hunt"] },
+  power: "+40% damage.",
+  shown: true,
+  a: { name: "Lingering point", text: "Stuns the foe with the most Attack; when the Stun ends, it's Slowed. Ignores Taunt.", builds: [] },
+  b: { name: "Vital strike", text: "Strikes the foe with the least HP. Ignores Taunt. No Stun.", builds: ["hunt"] },
   form: (v, k) =>
     v === "b" ? { target: T.lowestHpFoe, do: [phys(from("attack", HIT.normal * 3 * k))] }
       : { do: [phys(hitOf("attack", "normal", k), { apply: [{ status: "stun" }, ...(v === "a" ? [{ status: "lingering_point" }] : [])] })] },
