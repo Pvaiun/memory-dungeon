@@ -17962,7 +17962,7 @@
   {
    "id": "bloodlust_on_plus",
    "name": "BLOODLUST",
-   "text": "Lifesteal 250% of its own.",
+   "text": "Lifesteal 150% higher.",
    "label": "buff",
    "show": "icon",
    "stacking": "fizzle",
@@ -18035,7 +18035,7 @@
   {
    "id": "shared_feast_on_plus",
    "name": "SHARED FEAST",
-   "text": "Lifesteal 250% of its own; each hit it lands heals the ally lowest in HP as much as it drank.",
+   "text": "Lifesteal 150% higher; each hit it lands heals the ally lowest in HP as much as it drank.",
    "label": "buff",
    "show": "icon",
    "stacking": "fizzle",
@@ -18086,7 +18086,7 @@
   {
    "id": "undying_thirst",
    "name": "UNDYING THIRST",
-   "text": "Can't fall below 1 HP; Lifesteal three times its own.",
+   "text": "Can't fall below 1 HP; Lifesteal tripled.",
    "label": "buff",
    "show": "icon",
    "stacking": "fizzle",
@@ -18110,7 +18110,7 @@
   {
    "id": "undying_thirst_plus",
    "name": "UNDYING THIRST",
-   "text": "Can't fall below 1 HP; Lifesteal three times its own.",
+   "text": "Can't fall below 1 HP; Lifesteal tripled.",
    "label": "buff",
    "show": "icon",
    "stacking": "fizzle",
@@ -18147,7 +18147,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "While it's below 50% of its max HP, its Lifesteal is doubled. Below 50% of its max HP, its Lifesteal is 250% of its own, not doubled.",
+   "text": "While it's below 50% of its max HP, its Lifesteal is doubled. Below 50% of its max HP, its Lifesteal is 150% higher, not doubled.",
    "reactions": [
     {
      "on": {
@@ -18309,7 +18309,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "While it's below 50% of its max HP, its Lifesteal is doubled, and each hit it lands heals the other ally with the lowest share of HP as much as it drank. Below 50% of its max HP, its Lifesteal is 250% of its own, not doubled.",
+   "text": "While it's below 50% of its max HP, its Lifesteal is doubled, and each hit it lands heals the other ally with the lowest share of HP as much as it drank. Below 50% of its max HP, its Lifesteal is 150% higher, not doubled.",
    "reactions": [
     {
      "on": {
@@ -18355,7 +18355,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "While it's below 50% of its max HP, its Lifesteal is doubled. Once a fight, when it falls below 10% of its max HP, for 5 ticks it can't fall below 1 HP and its Lifesteal is tripled. Below 50% of its max HP, its Lifesteal is 250% of its own, not doubled.",
+   "text": "While it's below 50% of its max HP, its Lifesteal is doubled. Once a fight, when it falls below 10% of its max HP, for 5 ticks it can't fall below 1 HP and its Lifesteal is tripled. Below 50% of its max HP, its Lifesteal is 150% higher, not doubled.",
    "reactions": [
     {
      "on": {
@@ -33894,7 +33894,7 @@
    "id": "bloodlust",
    "class": "vampire",
    "kind": "passive",
-   "power": "Below 50% of its max HP, its Lifesteal is 250% of its own, not doubled.",
+   "power": "Below 50% of its max HP, its Lifesteal is 150% higher, not doubled.",
    "a": {
     "name": "Shared feast",
     "text": "While it's below 50% of its max HP, its Lifesteal is doubled, and each hit it lands heals the other ally with the lowest share of HP as much as it drank."

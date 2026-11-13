@@ -8,7 +8,7 @@ import { abilityUp, apply, cd, helper, kit, marker, passiveUp, phys, r6, removeM
 
 /** Bloodlust's doubling (classes.ts bloodlust_on), and the power step's two and a half times, as on-states that Bloodlust's reactions keep. */
 const lustOn = (id: string, name: string, times: number, extra: Partial<StatusT> = {}): StatusT =>
-  kit(id, name, times === 1 ? "Lifesteal doubled." : "Lifesteal 250% of its own.", { stacking: "fizzle", stats: [{ stat: "lifesteal", flat: { scale: [{ ratio: times, stat: "lifesteal", of: "holder" }] } }], ...extra });
+  kit(id, name, times === 1 ? "Lifesteal doubled." : "Lifesteal 150% higher.", { stacking: "fizzle", stats: [{ stat: "lifesteal", flat: { scale: [{ ratio: times, stat: "lifesteal", of: "holder" }] } }], ...extra });
 const feast: ReactionT = {
   // The other ally lowest in HP share gets as much as the Vampire drinks: Lifesteal's own shape (its `times`, read live).
   on: { event: "hit_lands" },
@@ -16,12 +16,12 @@ const feast: ReactionT = {
 };
 helper(lustOn("bloodlust_on_plus", "BLOODLUST", 1.5));
 helper(lustOn("shared_feast_on", "SHARED FEAST", 1, { text: "Lifesteal doubled; each hit it lands heals the ally lowest in HP as much as it drank.", reactions: [feast] }));
-helper(lustOn("shared_feast_on_plus", "SHARED FEAST", 1.5, { text: "Lifesteal 250% of its own; each hit it lands heals the ally lowest in HP as much as it drank.", reactions: [feast] }));
-// Undying thirst: for 5 ticks, an HP floor and Lifesteal three times its own in place of the doubling (or of the power step's two and a
+helper(lustOn("shared_feast_on_plus", "SHARED FEAST", 1.5, { text: "Lifesteal 150% higher; each hit it lands heals the ally lowest in HP as much as it drank.", reactions: [feast] }));
+// Undying thirst: for 5 ticks, an HP floor and Lifesteal tripled in place of the doubling (or of the power step's two and a
 // half): read once as it lands, on top of the on-state Bloodlust has just given it (half again of 40, or a fifth of 50).
 const UNDYING = 5;
 const thirst = (id: string, ratio: number): StatusT =>
-  kit(id, "UNDYING THIRST", "Can't fall below 1 HP; Lifesteal three times its own.", { stacking: "fizzle", duration: UNDYING, floor: {}, stats: [{ stat: "lifesteal", flat: { scale: [{ ratio, stat: "lifesteal", of: "holder" }] } }] });
+  kit(id, "UNDYING THIRST", "Can't fall below 1 HP; Lifesteal tripled.", { stacking: "fizzle", duration: UNDYING, floor: {}, stats: [{ stat: "lifesteal", flat: { scale: [{ ratio, stat: "lifesteal", of: "holder" }] } }] });
 helper(thirst("undying_thirst", 0.5));
 helper(thirst("undying_thirst_plus", 0.2));
 // Once a fight, through a knockout too.
@@ -29,7 +29,7 @@ helper(marker("undying_thirst_spent", "UNDYING THIRST", "Spent this fight.", { s
 
 passiveUp({
   id: "bloodlust", cls: "vampire",
-  power: "Below 50% of its max HP, its Lifesteal is 250% of its own, not doubled.",
+  power: "Below 50% of its max HP, its Lifesteal is 150% higher, not doubled.",
   a: { name: "Shared feast", text: "While it's below 50% of its max HP, its Lifesteal is doubled, and each hit it lands heals the other ally with the lowest share of HP as much as it drank.", builds: ["pact"] },
   b: { name: "Undying thirst", text: "While it's below 50% of its max HP, its Lifesteal is doubled. Once a fight, when it falls below 10% of its max HP, for 5 ticks it can't fall below 1 HP and its Lifesteal is tripled.", builds: ["pact"] },
   form: (v, _k, plus) => {
