@@ -375,10 +375,13 @@ WEAPON_IDS = {
     "rune_sword": "plain_rune_sword", "great_weapon": "plain_great_weapon", "hammer": "plain_hammer", "mace": "plain_mace",
     "wand": "plain_wand", "staff": "plain_staff", "fist_weapons": "plain_fist",
 }
-# Sheets resized to fit the hand, used in place of the pack's own of the same name: the haloed axes drawn bigger than
-# their wearer, made smaller. They keep the pack's format, so one redrawn in the pack only needs its file here deleted.
+# Sheets used in place of the pack's own of the same name: the haloed axes drawn bigger than their wearer, made smaller;
+# Spellbinder, redrawn by the director; and Eye of the tempest, a rune sword the pack drew as a sceptre, which takes the
+# pack's Spellbinder (its forked-lightning blade) in the Eye's own gold. They keep the pack's format, so once the pack holds the sheet a game
+# should use, its file here is deleted.
 FITTED = Path(__file__).parent / "weapons-fitted"
-# Drawn for gear lists only, never in a hand (the fists are the sprite's own): the fist weapons, and the mythic that is one.
+# Drawn for gear lists only, never in a hand (the fists are the sprite's own): the fist weapons, and the mythic that is
+# one (the pack files the mythics under a kind of their own).
 UNHELD_KINDS = {"Fist weapons"}
 UNHELD = {"ember_palms"}
 
@@ -399,7 +402,7 @@ if WEAPON_ART:
         if entry["kind"] in UNHELD_KINDS or gid in UNHELD:
             manifest["weaponsUnheld"].append(f"weapons/{gid}.png")
     manifest["weaponFrame"] = [48, 32]
-    print(f"weapons: {len(pack)} strips ({len(manifest['weaponsUnheld'])} for gear lists only, {len(list(FITTED.glob('*.png')))} resized to fit)")
+    print(f"weapons: {len(pack)} strips ({len(manifest['weaponsUnheld'])} for gear lists only, {len(list(FITTED.glob('*.png')))} from ui/tools/weapons-fitted)")
 else:
     print("weapons: pack not found, kept")
 

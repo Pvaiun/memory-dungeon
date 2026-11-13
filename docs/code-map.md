@@ -210,7 +210,7 @@ ui/
       audio.ts               sound effects and music
   tools/
     assets.py                builds ui/public/assets/ from the director's art packs (all but the skill and status icons)
-    weapons-fitted/          weapon sheets resized to fit the hand, used in place of the pack's own of the same name
+    weapons-fitted/          weapon sheets used in place of the pack's own of the same name (resized, redrawn or moved)
     gear_icons.py            builds the gear icons (gear.png): every piece but the weapons, from the gear icon pack and icons drawn in its style
     skill_icons.py           builds the classes' ability and passive icons, the basic attacks' by weapon kind and every status's, from the director's picks in three packs, all on one tile
 tests/                       the pack's own tests
