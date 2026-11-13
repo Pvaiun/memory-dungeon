@@ -3,12 +3,12 @@
  * party strip, a confirm), and the scenes: each moment of the run drawn in its region.
  */
 import { bar, button, type Child, h, nav, toast, win } from "../dom.js";
-import type { RogueNodeKindT } from "../../../src/schema.js";
+import type { GearT, RogueNodeKindT } from "../../../src/schema.js";
 import { type Cell, type Pose } from "../art.js";
-import { bagRoom, bench, eventView, formationRarity, type Item, itemGear, member, type Offer, parseTraining, type Pending, rogue, type RogueRun, seatsOf, wearer } from "../../../src/rogue.js";
+import { bagRoom, bench, eventView, formationRarity, type Item, itemGear, member, type Offer, parseTraining, type Pending, rogue, type RogueRun, seatsOf, type Slot, wearer } from "../../../src/rogue.js";
 import { c, cls as classOf, shortName } from "../content.js";
-import { abilityBlock, gearRow, RARITY_TONE, role, seatLines } from "../sheet.js";
-import { actionIcon16, faceEl, gearIconOf, iconEl, iconOf, weaponIcon } from "../pixel.js";
+import { abilityBlock, gearRow, RARITY_TONE, role, seatLines, twoHanded } from "../sheet.js";
+import { actionIcon16, canvasEl, faceEl, gearIconEl, gearIconOf, iconEl, iconOf, slotIconEl, weaponIcon } from "../pixel.js";
 import { foeAt, foesOnStage, partyInLine, partyOnStage, type StageActor, stageEl, type StageOpts, themeOf, W } from "../battle/scene.js";
 import { abilityTag } from "../describe.js";
 import { fighter, saveRogue, vitals } from "./state.js";
@@ -63,13 +63,16 @@ export const gold = (n: number) => h("span", { class: "gold" }, `${n}G`);
 const rosterOrder = (run: RogueRun) => [...run.party, ...bench(run)];
 /**
  * A run's item as a gear card (its rarity, kind and numbers, `gearRow`), with who wears it at the right. With `who` (the
- * default), the line of who can wear it, the roster first; never what it's for, which would spoil the discovery. The
+ * default), the line of who can wear it, the roster first; never what it's for, which would spoil the discovery. With
+ * `wears` (an offer), the roster's faces beside what they wear in its slot now, under everything (`wearsLine`). The
  * stacks it lays are shown for its wearer, else the first of the roster who can wear it.
  */
-export function itemRow(run: RogueRun, it: Item, onClick?: () => void, opts: { arrow?: boolean; stats?: Record<string, number> | null; right?: HTMLElement | null; who?: boolean; brief?: boolean } = {}): HTMLElement {
+export function itemRow(run: RogueRun, it: Item, onClick?: () => void, opts: { arrow?: boolean; stats?: Record<string, number> | null; right?: HTMLElement | null; who?: boolean; brief?: boolean; wears?: boolean } = {}): HTMLElement {
   const g = c.gear.get(it.uid) ?? itemGear(c, it);
   const by = wearer(run, it.uid) ?? rosterOrder(run).find((cls) => canEquip(classOf(cls), g));
   const r = gearRow(g, g.slot, opts.stats ?? (by ? fighter(run, by).stats : null), onClick, opts.arrow ?? false, opts.who === false || opts.brief ? undefined : rosterOrder(run), opts.brief);
+  const wears = opts.wears ? wearsLine(run, g) : null;
+  if (wears) r.querySelector(".grow")?.append(wears);
   const w = wearer(run, it.uid);
   const right = "right" in opts ? opts.right : w ? h("span", { class: "tag" }, shortName(w)) : null;
   if (right) r.querySelector(".grow .line")?.append(right);
@@ -81,9 +84,33 @@ export function junkRow(run: RogueRun, it: Item, onClick?: () => void, right: HT
   r.classList.add("junk");
   return r;
 }
+/**
+ * What everyone in the roster who could wear a piece wears in its slot now, in one line (the party first, then camp):
+ * each one's face beside the piece's icon in its rarity's glow, the slot's faded icon for an empty one (as the party
+ * screen shows it), or 2H for an offhand under a two-handed weapon. Nothing when nobody in the roster could wear it.
+ */
+export function wearsLine(run: RogueRun, g: GearT): HTMLElement | null {
+  const slot = g.slot as Slot;
+  const mine = rosterOrder(run).filter((cls) => canEquip(classOf(cls), g));
+  if (!mine.length) return null;
+  return h("div", { class: "line wrap wears" }, ...mine.map((cls) => {
+    const m = member(run, cls);
+    const now = m.gear[slot] ? c.gear.get(m.gear[slot]!) : undefined;
+    const glow = now?.rarity && now.rarity !== "common" ? ` glow-${now.rarity}` : "";
+    const what = slot === "offhand" && twoHanded(m.gear) ? h("span", { class: "slot dim small" }, "2H")
+      : now ? h("span", { class: `slot art${glow}` }, (now.slot === "weapon" ? smallWeapon(now.id) : null) ?? gearIconEl(now))
+      : h("span", { class: "slot" }, slotIconEl(slot));
+    return h("span", { class: "wear-of" }, faceEl(cls, 0.75), what);
+  }));
+}
+/** A weapon's icon made to sit beside a face: at most 3.5 by 2.5 rem, never enlarged. */
+function smallWeapon(id: string): HTMLCanvasElement | null {
+  const cv = weaponIcon(id);
+  return cv ? canvasEl(cv, Math.min(1, 28 / cv.width, 20 / cv.height), "weapon") : null;
+}
 /** A training's button: LEARN an ability, TRAIN a power step or a version. */
 export const trainWord = (opt: string) => (parseTraining(opt)?.verb === "learn" ? "LEARN" : "TRAIN");
-/** An offer as a card's body. */
+/** An offer as a card's body; a piece ends with what the roster who could wear it wear in its slot now. */
 export function offerBody(run: RogueRun, o: Offer): Child[] {
   // A sealed piece shows only its slot; a bundle, its piece and its supply.
   if (o.kind === "gear" && o.sealed) {
@@ -91,9 +118,9 @@ export function offerBody(run: RogueRun, o: Offer): Child[] {
     return [h("div", { class: "line" }, iconEl(ICON.treasure), h("span", { class: "grow hi" }, `SEALED ${g.slot.toUpperCase()}`)), h("div", { class: "line small dim wrap" }, "RARE OR BETTER · SHOWN WHEN TAKEN")];
   }
   if (o.kind === "bundle") {
-    return [h("div", { class: "line hi" }, "A BUNDLE"), itemRow(run, o.item, undefined, { right: null }), h("div", { class: "line small" }, iconEl(SUPPLY_ICON[o.supply]), h("span", null, ` AND A ${o.supply.toUpperCase()}`), bagRoom(c, run, o.supply) ? null : h("span", { class: "dim" }, " (BAG FULL)"))];
+    return [h("div", { class: "line hi" }, "A BUNDLE"), itemRow(run, o.item, undefined, { right: null, wears: true }), h("div", { class: "line small" }, iconEl(SUPPLY_ICON[o.supply]), h("span", null, ` AND A ${o.supply.toUpperCase()}`), bagRoom(c, run, o.supply) ? null : h("span", { class: "dim" }, " (BAG FULL)"))];
   }
-  if (o.kind === "gear") return [itemRow(run, o.item, undefined, { right: null })];
+  if (o.kind === "gear") return [itemRow(run, o.item, undefined, { right: null, wears: true })];
   if (o.kind === "tome") {
     return [h("div", { class: "line" }, faceEl(o.cls), h("span", { class: "grow hi" }, `TOME: ${shortName(o.cls)} LEARNS`)), abilityBlock(c.abilities.get(o.ability)!, null)];
   }

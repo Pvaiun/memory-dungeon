@@ -548,7 +548,10 @@ export class Scene {
         else if (!v.stsGone.has(id)) v.stsGone.set(id, this.wall);
         else if (this.wall - v.stsGone.get(id)! > 1500) (v.stsTold.delete(id), v.stsGone.delete(id));
       }
-      const sts = [...v.stsTold].map((id) => ({ id, count: live.has(id) ? live.get(id)! : v.stsLast.get(id) ?? null })).slice(0, 4);
+      // A foe's passives first, always on while it holds them: few foes have one, so the bar signposts it (no count, no timer).
+      const held = new Set(u.statuses.map((x) => x.id));
+      const passives = v.side === "enemy" ? (c.enemies.get(v.ref)?.statuses ?? []).filter((id) => held.has(id)).map((id) => ({ id, count: null })) : [];
+      const sts = [...passives, ...[...v.stsTold].map((id) => ({ id, count: live.has(id) ? live.get(id)! : v.stsLast.get(id) ?? null }))].slice(0, 4);
       v.fades = v.fades.filter((f) => f.until > this.wall);
       const fading = v.fades.filter((f) => !sts.some((s) => s.id === f.id)).slice(0, 4 - sts.length);
       const n = sts.length + fading.length;

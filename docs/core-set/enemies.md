@@ -131,6 +131,8 @@ By region. In the rogue mode each region is an act, its fight pools made from th
 
 Each enemy also has a line, its `text` in `content/core-set/enemies.ts`: the flavour a fight's preview shows under its name, beside its likeness, with its whole sheet a tap away. A line says what the foe does through what it is ("Big, slow, and swings a tree"), never as a rule, and fits in three short lines. It's written for the name the screen shows: four foes show under another name, to match their sprite (the Archer as the Centaur Archer, the Shieldman as the Shield Knight, the Bat as the Night Wyrm, the Mummy as the Crypt Guard).
 
+A foe's passive shows on its status bar from the start of a fight, first and always on, with no count and no timer: about three foes in ten have one, so the bar signposts it. A class's doesn't, as every class has one.
+
 ### Old Road
 
 All Fundamental: the gentle mixed gauntlet, clearable by the ungeared starting trio. Reskins: the Wolf returns as the Snow Wolf in the Ice Pass, and the Ogre as the Troll and the Shieldman as the Mummy in the Crypt.
