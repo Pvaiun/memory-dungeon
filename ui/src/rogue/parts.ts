@@ -8,7 +8,7 @@ import { type Cell, type Pose } from "../art.js";
 import { bagRoom, bench, eventView, formationRarity, type Item, itemGear, member, type Offer, parseTraining, type Pending, rogue, type RogueRun, seatsOf, type Slot, wearer } from "../../../src/rogue.js";
 import { c, cls as classOf, shortName } from "../content.js";
 import { abilityBlock, gearRow, RARITY_TONE, role, seatLines, twoHanded } from "../sheet.js";
-import { actionIcon16, canvasEl, faceEl, gearIconEl, gearIconOf, iconEl, iconOf, weaponIcon } from "../pixel.js";
+import { actionIcon16, canvasEl, faceEl, gearIconEl, gearIconOf, iconEl, iconOf, slotIconEl, weaponIcon } from "../pixel.js";
 import { foesOnStage, partyInLine, partyOnStage, type StageActor, stageEl, type StageOpts, themeOf } from "../battle/scene.js";
 import { abilityTag } from "../describe.js";
 import { fighter, saveRogue, vitals } from "./state.js";
@@ -86,8 +86,8 @@ export function junkRow(run: RogueRun, it: Item, onClick?: () => void, right: HT
 }
 /**
  * What everyone in the roster who could wear a piece wears in its slot now, in one line (the party first, then camp):
- * each one's face beside the piece's icon in its rarity's glow, an X for an empty slot, or 2H for an offhand under a
- * two-handed weapon. Nothing when nobody in the roster could wear it.
+ * each one's face beside the piece's icon in its rarity's glow, the slot's faded icon for an empty one (as the party
+ * screen shows it), or 2H for an offhand under a two-handed weapon. Nothing when nobody in the roster could wear it.
  */
 export function wearsLine(run: RogueRun, g: GearT): HTMLElement | null {
   const slot = g.slot as Slot;
@@ -99,7 +99,7 @@ export function wearsLine(run: RogueRun, g: GearT): HTMLElement | null {
     const glow = now?.rarity && now.rarity !== "common" ? ` glow-${now.rarity}` : "";
     const what = slot === "offhand" && twoHanded(m.gear) ? h("span", { class: "slot dim small" }, "2H")
       : now ? h("span", { class: `slot art${glow}` }, (now.slot === "weapon" ? smallWeapon(now.id) : null) ?? gearIconEl(now))
-      : h("span", { class: "slot dim" }, "X");
+      : h("span", { class: "slot" }, slotIconEl(slot));
     return h("span", { class: "wear-of" }, faceEl(cls, 0.75), what);
   }));
 }
