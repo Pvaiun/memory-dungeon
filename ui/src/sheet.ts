@@ -15,10 +15,10 @@ import { combat, type Member } from "../../src/engine/combat/rules.js";
 import { drawOf, resolveWeapon, weaponOf } from "../../src/engine/combat/fight.js";
 import { armorName, c, cls, disp, DISPLAY_DIV, immuneTo, kindOf, offhandName, SHEET_STATS, shortName, SPECIAL_STATS, showStat, statCode, status, tagline } from "./content.js";
 import { abilityInfo, abilityTag, evalNum, heldParts, scalesOf, sizeParts, statusText, TYPE_TONE, TYPE_WORD, type Scale, type SizePart, type Stats } from "./describe.js";
-import { TAG_ICON, weaponLook } from "./art.js";
+import { basicIconKind, weaponLook } from "./art.js";
 import { canEquip, handsOf } from "../../src/validate.js";
 import { h, type Child } from "./dom.js";
-import { actionIconOf, actorEl, faceEl, gearIconEl, iconEl, pipEl, slotIconEl, statusEl, weaponEl } from "./pixel.js";
+import { actionIconEl, actionIconOf, actorEl, faceEl, gearIconEl, pipEl, slotIconEl, statusEl, weaponEl } from "./pixel.js";
 import { gearFor, party, setup, soloParty } from "./state.js";
 
 /** The four gear slots, in the order the sheets list them. */
@@ -298,11 +298,11 @@ export function abilityBlock(a: AbilityT, stats: Stats | null, opts: { n?: numbe
   return h("div", { class: `ab${opts.cur ? " cur" : ""}` }, head, ...body);
 }
 
-/** The basic attack a weapon gives, worked out for a unit's stats: type, cooldown, hit, damage per tick, what it grows with; `ref` gives its look. */
+/** The basic attack a weapon gives, worked out for a unit's stats: type, cooldown, hit, damage per tick, what it grows with; `ref` gives its icon. */
 export function basicLine(wp: WeaponT, stats: Stats | null, opts: { mult?: number; slot?: boolean; ref?: string } = {}): HTMLElement {
   const w = weaponParts(wp, stats, opts.ref, opts.mult ?? 1);
   return h("div", { class: "ab" },
-    h("div", { class: "head" }, opts.slot === false ? null : h("span", { class: "n dim" }, "·"), h("span", { class: "pip" }, iconEl(TAG_ICON[w.tag] ?? TAG_ICON.physical, ICON_SCALE)),
+    h("div", { class: "head" }, opts.slot === false ? null : h("span", { class: "n dim" }, "·"), h("span", { class: "pip" }, actionIconEl(`kind:${opts.ref ? basicIconKind(opts.ref) : wp.kind ?? "fist"}`, "basic", ICON_SCALE)),
       h("div", { class: "grow" }, h("div", null, "ATTACK"), h("div", { class: "cost" }, timing("CD", tk(w.cooldown)), w.perTick ? h("span", { class: "nowrap hi" }, `${w.perTick}/T`) : null))),
     h("div", { class: "size" }, w.value ? `${w.value} ` : "", h("span", { class: w.tone }, w.word), w.scales.length ? " " : null, scaleEl(w.scales)),
   );

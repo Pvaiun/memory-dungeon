@@ -9,7 +9,7 @@
 import type { CUnit } from "../../../src/engine/combat/fight.js";
 import { c, disp, shownAsIcon } from "../content.js";
 import { abilityTag, isSpell } from "../describe.js";
-import { enemyDisplayName, weaponLook } from "../art.js";
+import { basicIconKind, enemyDisplayName } from "../art.js";
 import type { Ev } from "./driver.js";
 
 export type Tone = "act" | "hit" | "crit" | "heal" | "buff" | "debuff" | "bad" | "good" | "sys" | "quiet";
@@ -78,7 +78,7 @@ export class Narrator {
   private sname(id: string): string {
     return c.statuses.get(id)?.name ?? id;
   }
-  /** What a unit's action looks like, for its icon and effect: the ability's look, or its weapon's (art.ts). */
+  /** A unit's action's icon: the ability's look, or a basic attack's weapon kind, "kind:<kind>" (art.ts). */
   tagOf(by: string, act: string): string {
     if (act !== "basic") {
       const ab = c.abilities.get(act);
@@ -86,7 +86,7 @@ export class Narrator {
     }
     const u = this.L.unit(by);
     if (!u) return "physical";
-    return weaponLook(u.weapon, u.side === "enemy" ? u.ref : undefined);
+    return `kind:${basicIconKind(u.weapon, u.side === "enemy" ? u.ref : undefined)}`;
   }
 
   push(ev: Ev) {

@@ -16,6 +16,8 @@ export type Manifest = {
   statuses: Record<string, string>;
   /** An ability's own icon by base id: 32×32, one pixel per art pixel. */
   abilities?: Record<string, string>;
+  /** A basic attack's icon by weapon kind (and "bite"): 32×32, one pixel per art pixel (ui/tools/skill_icons.py). */
+  basic?: Record<string, string>;
   /** VFX strips by name: `frames` frames of w×h side by side, cropped from the pack's 64×64 at (ox, oy). */
   vfx: Record<string, { file: string; frames: number; w: number; h: number; ox: number; oy: number }>;
   /** Weapon strips by gear id: three frames of 48×32, the weapon facing right, drawn in the hand of a party member. */
@@ -48,11 +50,12 @@ export async function loadArt(): Promise<void> {
   manifest.faces ??= {};
   manifest.backdrops ??= {};
   manifest.abilities ??= {};
+  manifest.basic ??= {};
   // The plain pieces of kinds with no art of their own borrow a strip.
   unheld = new Set(manifest.weaponsUnheld ?? []);
   const files = [
     ...Object.values(manifest.classes), ...Object.values(manifest.enemies).map((e) => e.file), ...Object.values(manifest.vfx).map((v) => v.file), manifest.iconset,
-    ...Object.values(manifest.statuses), ...Object.values(manifest.abilities), ...Object.values(manifest.weapons), ...Object.values(manifest.faces), ...Object.values(manifest.backdrops),
+    ...Object.values(manifest.statuses), ...Object.values(manifest.abilities), ...Object.values(manifest.basic), ...Object.values(manifest.weapons), ...Object.values(manifest.faces), ...Object.values(manifest.backdrops),
     ...(manifest.campfire ? [manifest.campfire.file] : []), ...(manifest.chest ? [manifest.chest.file] : []), ...(manifest.gearSheet ? [manifest.gearSheet] : []),
   ];
   await Promise.all(files.map(load));
@@ -140,6 +143,25 @@ export const abilityLook = (id: string): string => ABILITY_LOOK[id.replace(/__\w
 /** The looks that are a theme, not a weapon's motion: a damaging ability with one is a spell (cast, with the spell's pose and sound). */
 const THEMES = new Set(["fire", "ice", "lightning", "wind", "earth", "light", "dark", "arcane"]);
 export const isTheme = (look: string): boolean => THEMES.has(look);
+/**
+ * A basic attack's icon, by the weapon it swings: its kind's, from a weapon's ref (a gear id, "enemy:<id>" or
+ * "unarmed"), or a foe's own. Beasts bite; a weaponless foe that throws bolts shows the wand's, one that bashes the fist's.
+ */
+export function basicIconKind(ref: string, enemy?: string): string {
+  const id = enemy ?? (ref.startsWith("enemy:") ? ref.slice(6) : undefined);
+  if (id) {
+    const look = ENEMY_LOOK[id];
+    if (look === "bite") return "bite";
+    const kind = c.enemies.get(id)?.weapon?.kind;
+    if (kind) return kind;
+    return look && THEMES.has(look) ? "wand" : "fist";
+  }
+  if (ref === "unarmed") return "fist";
+  const g = c.gear.get(ref) ?? c.gear.get(baseGearId(ref));
+  return g?.weapon?.kind ?? MYTHIC_KIND[g?.id ?? ""] ?? "fist";
+}
+/** The mythic weapons have no kind of their own; their icon is the kind their art draws. */
+const MYTHIC_KIND: Record<string, string> = { stormspear: "spear", the_witch_blade: "sword", ember_palms: "fist", eye_of_the_tempest: "wand" };
 /** A basic attack's look, from its weapon's ref (a gear id, "enemy:<id>" or "unarmed"), or a foe's own. */
 export function weaponLook(ref: string, enemy?: string): string {
   if (enemy && ENEMY_LOOK[enemy]) return ENEMY_LOOK[enemy];

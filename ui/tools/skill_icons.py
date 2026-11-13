@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """
-Builds the classes' icons: every class ability (abilities/<id>.png, 32x32) and every class passive (status/<id>.png,
-16x16), and their entries in manifest.json's "abilities" and "statuses" maps.
+Builds the game's skill and status icons: every class ability (abilities/<id>.png, 32x32), the basic attack's icon for
+each weapon kind (basic/<kind>.png, 32x32), and every status that shows, the class passives among them
+(status/<id>.png, 16x16), with their entries in manifest.json's "abilities", "basic" and "statuses" maps. A status icon
+no status uses any more is deleted.
 
     python3 -I ui/tools/skill_icons.py <dir with the packs extracted> ui/public/assets
 
@@ -12,15 +14,18 @@ The director chose each icon from three packs, found by their file names anywher
   - KURAI's RPG Skill Icons ("Skill Icons 16x16/IconNNN.png").
 Each pack draws its own tile (KURAI a bevelled frame, the status icons a coloured square, the skill pack hatching and
 a halo), so the tool lifts every icon's symbol off its tile, colours it, and draws all of them the same way: a dark
-square with a rim in the icon's colour, a near-black outline round the symbol, the symbol's own shading kept.
+square with a rim in the icon's colour, a near-black outline round the symbol, the symbol's own shading kept. A basic
+attack's icon is its weapon kind's, on the same tile with a grey rim, so the abilities stand out beside it; its
+symbol is steel, wood brown, or crimson for a bite. A status's icon is on the same tile with its own colour on the
+rim; a gear piece's effect may show the piece's icon, a class upgrade's the ability or passive it trains.
 Run it after assets.py, which leaves these icons alone.
 """
-import json, sys
+import colorsys, json, sys
 from collections import deque
 from pathlib import Path
 from PIL import Image
 
-SRC, OUT = Path(sys.argv[1]), Path(sys.argv[2])
+SRC = OUT = None  # set by main(), or by a tool that borrows the drawing below
 
 # Each icon: "<pack>:<number>[:<colour>]". k KURAI, s a status icon, v the skill pack's framed motifs (by their number
 # in its gold row, 41 to 94, or "-" for an icon drawn in its own colours), e and c its loose effect and combat sprites.
@@ -68,6 +73,145 @@ LIFT = {"vanish": (0, .15), "blood_gift": (0, .15), "lacerate": (0, .3), "iron_p
 CLASS_RAMP = {"briar": "green", "thicket": "green", "choosing": "ice", "malison": "purple", "stoke": "orange", "firebolt": "orange",
               "fireball": "orange", "pyre": "orange", "frost_lance": "ice", "chain_lightning": "yellow", "thunderstorm": "yellow"}
 
+# A basic attack's icon, by weapon kind, and "bite" for beasts (src/art.ts picks one for every unit). Each is lifted in
+# its pack's own colours and then recoloured: metal steel, wood and leather brown, a bite crimson; the rune sword is
+# the sword's blade in ice, its runes' glow.
+KINDS = {
+    "sword": ("v:43:-", "steel"), "dagger": ("v:74:-", "steel"), "spear": ("k:133", "steel"), "axe": ("v:61:-", "steel"),
+    "great_weapon": ("k:56", "steel"), "hammer": ("v:59:-", "steel"), "mace": ("v:60:-", "steel"), "bow": ("v:45:-", "brown"),
+    "staff": ("v:87:-", "brown"), "wand": ("k:34", "brown"), "rune_sword": ("v:43:-", "ice"), "fist": ("s:105", "brown"),
+    "bite": ("c:79", "crimson"),
+}
+# KURAI's double axe draws its haft in its frame's red: its grey heads are kept by colour (anything saturated, or near
+# black, cleared), and the haft drawn back by hand.
+KIND_GREY = {"great_weapon": (0, .4)}
+KIND_HAFT = {"great_weapon": [(10, 5), (9, 6), (8, 7), (7, 8), (6, 9), (5, 10), (4, 11), (3, 12)]}
+
+STATUS_ICONS = {  # status id(s) → (icon, the status's colour: its rim, and the symbol's for a recoloured pick)
+    # The statuses
+    'bleed': ('s:283:red', 'red'),
+    'regen': ('s:83:green', 'green'),
+    'shield': ('s:41:ice', 'ice'),
+    'might': ('s:102:orange', 'orange'),
+    'weaken': ('s:162:purple', 'purple'),
+    'guard': ('s:48:steel', 'steel'),
+    'stun': ('s:322:yellow', 'yellow'),
+    'slow': ('s:13:blue', 'blue'),
+    'haste': ('s:341:yellow', 'yellow'),
+    'taunt': ('s:35:red', 'red'),
+    'burn': ('s:301:orange', 'orange'),
+    'chill': ('s:193:ice', 'ice'),
+    'shock': ('s:382:yellow', 'yellow'),
+    'sunder': ('s:263:brown', 'brown'),
+    'silence': ('s:402:gray', 'gray'),
+    'hidden': ('s:371:gray', 'gray'),
+    'marked': ('s:34:red', 'red'),
+    'rot': ('s:9:sick', 'sick'),
+    'clarity': ('s:311:blue', 'blue'),
+    'aegis': ('s:50:gold', 'gold'),
+    'doom': ('s:15:crimson', 'crimson'),
+    'bulwark': ('s:44:steel', 'steel'),
+    'bulwark_broken': ('s:269:red', 'red'),
+    'ice_crust': ('s:194:ice', 'ice'),
+    'encore': ('cls:encore', 'purple'),
+    # Counters
+    'cuts': ('s:286:steel', 'steel'),
+    'heat': ('s:436:orange', 'orange'),
+    'spite': ('s:296:crimson', 'crimson'),
+    'wrath': ('s:175:gold', 'gold'),
+    'crescendo': ('s:455:purple', 'purple'),
+    'cascade': ('s:198:ice', 'ice'),
+    'rebuke_count': ('cls:bramble_lash', 'green'),
+    'metronome_count': ('gear:metronome', 'gold'),
+    # Stats
+    'mp_regen': ('s:311:blue', 'blue'),
+    'thorns': ('s:352:green', 'green'),
+    'lifesteal': ('s:61:crimson', 'crimson'),
+    'siphon': ('s:313:purple', 'purple'),
+    'double_strike': ('s:209:steel', 'steel'),
+    # Foe passives
+    'venom': ('s:94:red', 'red'),
+    'fire_bite': ('s:301:orange', 'orange'),
+    'split': ('s:481:orange', 'orange'),
+    'volatile': ('s:164:orange', 'orange'),
+    'rime': ('s:191:ice', 'ice'),
+    'ice_crust_passive': ('s:194:ice', 'ice'),
+    'frozen_core': ('s:45:ice', 'ice'),
+    'static': ('s:382:yellow', 'yellow'),
+    'vengeance': ('s:171:red', 'red'),
+    # Gear effects
+    'second_thrust_on': ('kind:dagger', 'gold'),
+    'gorged_claws_on': ('kind:fist', 'crimson'),
+    'oathkeeper_on': ('kind:sword', 'gold'),
+    'squall_lance_count': ('kind:spear', 'cyan'),
+    'the_red_feast_on': ('kind:axe', 'crimson'),
+    'opening_shot_on': ('kind:bow', 'gold'),
+    'volley_bow_count': ('kind:bow', 'brown'),
+    'spellbinder_on': ('kind:rune_sword', 'purple'),
+    'bellringer_count': ('kind:hammer', 'yellow'),
+    'saints_mace_blessing': ('kind:mace', 'gold'),
+    'evensong_staff_count': ('kind:staff', 'purple'),
+    'stormspear_count': ('kind:spear', 'yellow'),
+    'the_witch_blade_swings': ('kind:sword', 'purple'),
+    'portcullis_on': ('gear:portcullis', 'steel'),
+    'urchin_plate_on': ('gear:urchin_plate', 'green'),
+    'last_bastion_on': ('gear:last_bastion', 'red'),
+    'bloodsworn_mail_on': ('gear:bloodsworn_mail', 'crimson'),
+    'sanguine_mail_low sanguine_mail_high': ('gear:sanguine_mail', 'crimson'),
+    'mottled_hide_on': ('gear:mottled_hide', 'brown'),
+    'frostwalkers_furs_on': ('gear:frostwalkers_furs', 'ice'),
+    'matins_robe_count': ('gear:matins_robe', 'gold'),
+    'glimmer_robe_on': ('gear:glimmer_robe', 'gold'),
+    'nights_edge_strike': ('gear:nights_edge', 'purple'),
+    'ember_heart_held': ('gear:ember_heart', 'orange'),
+    'crown_of_embers_aura': ('gear:crown_of_embers', 'orange'),
+    'spiked_targe_on': ('gear:spiked_targe', 'green'),
+    'twice_told_tome_count': ('gear:twice_told_tome', 'purple'),
+    'accompanists_score_free': ('gear:accompanists_score', 'blue'),
+    'hushing_idol_on': ('gear:hushing_idol', 'gray'),
+    'ravening_draught_on': ('gear:ravening_draught', 'crimson'),
+    'the_kings_head_on': ('gear:the_kings_head', 'gold'),
+    'ringing_bell_count': ('gear:ringing_bell', 'yellow'),
+    'bell_of_the_hour_count': ('gear:bell_of_the_hour', 'gold'),
+    'tempest_cloak_on': ('gear:tempest_cloak', 'cyan'),
+    # Class upgrades
+    'last_rites_on': ('cls:last_rites', 'purple'),
+    'rite_of_passage': ('cls:last_rites', 'crimson'),
+    'bloodlust_on bloodlust_on_plus': ('cls:bloodlust', 'crimson'),
+    'bedrock_on bedrock_on_plus': ('cls:bedrock', 'brown'),
+    'thunderstorm_storm thunderstorm_storm_plus': ('cls:thunderstorm', 'yellow'),
+    'static_charge_on': ('cls:static_charge', 'yellow'),
+    'hold_the_line': ('cls:stand_fast', 'steel'),
+    'battle_prayer battle_prayer_plus': ('cls:cure', 'gold'),
+    'bloodroot': ('cls:briar', 'crimson'),
+    'overgrowth': ('cls:thicket', 'green'),
+    'deep_roots': ('cls:regrowth', 'brown'),
+    'opening_thrust': ('cls:phalanx', 'steel'),
+    'cadenza': ('cls:encore', 'purple'),
+    'flow_state_count': ('cls:flow', 'cyan'),
+    'stillness_of_mind': ('cls:flow', 'blue'),
+    'shadow_step_strike': ('cls:vanish', 'purple'),
+    'shared_feast_on shared_feast_on_plus': ('cls:bloodlust', 'gold'),
+    'undying_thirst undying_thirst_plus': ('cls:bloodlust', 'crimson'),
+    'bloodthirst': ('cls:frenzy', 'red'),
+    'feeding_frenzy': ('cls:frenzy', 'red'),
+    'bleed_them_dry': ('cls:garrote', 'crimson'),
+    'frost_armor frost_armor_plus': ('cls:blizzard', 'ice'),
+    'deep_calm_free': ('cls:stillness', 'blue'),
+    'static_field static_field_plus': ('cls:thunderstorm', 'yellow'),
+    'storms_eye storms_eye_plus': ('cls:thunderstorm', 'yellow'),
+    'overcharge_charges': ('s:311:yellow', 'yellow'),
+    'storm_shield': ('cls:static_charge', 'yellow'),
+    'faultline': ('cls:bedrock', 'brown'),
+    'rampart': ('cls:earthen_shell', 'steel'),
+    # Formations
+    'the_wheel_wall the_wheel_wall_opening': ('s:47:steel', 'steel'),
+    'the_wheel_blade the_wheel_blade_opening': ('s:201:gold', 'gold'),
+    'the_wheel_well the_wheel_well_opening': ('s:311:blue', 'blue'),
+}
+# KURAI icons whose frame is part of the symbol, picked for statuses: lifted as the class icons' twins are.
+STATUS_LIFT = {57: (0, .15), 86: (0, .15), 68: (0, .3), 106: (2, .35), 197: (1, .3), 66: (0, .15)}
+
 # Colour ramps, darkest to lightest: the status icons' (assets.py) and two more.
 RAMPS = {
     "orange": [(48, 15, 10), (85, 15, 10), (155, 26, 10), (239, 105, 47), (239, 216, 161)],
@@ -83,6 +227,7 @@ RAMPS = {
     "brown": [(30, 18, 8), (60, 35, 15), (120, 75, 30), (200, 140, 70), (245, 228, 195)],
     "crimson": [(25, 5, 10), (60, 10, 20), (130, 15, 40), (220, 40, 80), (255, 205, 220)],
     "cyan": [(8, 35, 40), (12, 70, 80), (30, 150, 160), (110, 235, 225), (225, 255, 250)],
+    "sick": [(20, 30, 10), (40, 60, 15), (90, 120, 30), (160, 200, 70), (235, 250, 200)],
 }
 RAMPS["tan"], RAMPS["fire"] = RAMPS["brown"], RAMPS["orange"]
 # The skill pack draws its motifs in four colours, each a row of the same 54: gold from icon 41, crimson 107, tan 173,
@@ -190,6 +335,73 @@ def lift(im, pack, override=None):
     return out
 
 
+def lift_grey(im, band, sat_max):
+    """The metal alone: the frame's outer ring cleared, then everything coloured or near-black, flooded from the edge."""
+    px = im.load()
+    depth = lambda x, y: min(x, y, 15 - x, 15 - y)
+
+    def bg(x, y):
+        r, g, b, a = px[x, y]
+        if not a or depth(x, y) <= band:
+            return True
+        _, light, sat = colorsys.rgb_to_hls(r / 255, g / 255, b / 255)
+        return sat > sat_max or light < .12
+    seen = set(); todo = deque((x, y) for x in range(16) for y in range(16) if depth(x, y) == 0)
+    while todo:
+        x, y = todo.popleft()
+        if (x, y) in seen or not (0 <= x < 16 and 0 <= y < 16) or not bg(x, y):
+            continue
+        seen.add((x, y)); todo.extend([(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)])
+    out = Image.new("RGBA", (16, 16), (0, 0, 0, 0)); op = out.load()
+    for y in range(16):
+        for x in range(16):
+            if (x, y) not in seen and px[x, y][3]:
+                op[x, y] = px[x, y]
+    return out
+
+
+def basic_icon(kind):
+    """A weapon kind's basic-attack icon: its symbol in one colour, on the tile with a grey rim."""
+    key, colour = KINDS[kind]
+    im, pack, _ = source(key)
+    sym = lift_grey(im, *KIND_GREY[kind]) if kind in KIND_GREY else lift(im, pack)
+    sym = by_brightness(sym, RAMPS[colour])
+    sp = sym.load()
+    for x, y in KIND_HAFT.get(kind, []):
+        if not sp[x, y][3]:
+            sp[x, y] = (*RAMPS["brown"][3], 255)
+    return tile(sym, RAMPS["gray"])
+
+
+def rerim(icon, ramp):
+    """A built icon (the shared tile) with its rim in another colour."""
+    icon = icon.copy(); px = icon.load()
+    for i in range(1, 15):
+        for x, y in ((i, 1), (i, 14), (1, i), (14, i)):
+            px[x, y] = (*ramp[2], 255)
+    return icon
+
+
+def status_icon(key, colour):
+    """A status's icon, 16x16: its pick on the shared tile, the status's colour on the rim. "cls:<id>" is a class ability's
+    or passive's icon, "kind:<kind>" a weapon kind's, "gear:<id>" a gear piece's from the gear sheet; else a pack icon."""
+    ramp = RAMPS[colour]; p = key.split(":")
+    if p[0] == "cls":
+        f = OUT / "status" / f"{p[1]}.png" if p[1] in PASSIVES else OUT / "abilities" / f"{p[1]}.png"
+        return rerim(Image.open(f).convert("RGBA").resize((16, 16), Image.NEAREST), ramp)
+    if p[0] == "kind":
+        return rerim(basic_icon(p[1]), ramp)
+    if p[0] == "gear":
+        manifest = json.load(open(OUT / "manifest.json")); n = manifest["gear"][p[1]]
+        sheet = Image.open(OUT / manifest["gearSheet"]).convert("RGBA")
+        return tile(sheet.crop(((n % 16) * 16, (n // 16) * 16, (n % 16) * 16 + 16, (n // 16) * 16 + 16)), ramp)
+    im, pack, recolour = source(key)
+    sym = lift(im, pack, STATUS_LIFT.get(int(p[1])) if p[0] == "k" else None)
+    if recolour:
+        sym = by_brightness(sym, RAMPS[recolour])
+    return tile(sym, ramp)
+
+
 def tile(sym, ramp):
     """The one tile: a 14px dark square with a rim in the icon's colour, the symbol outlined in near-black on it."""
     t = Image.new("RGBA", (16, 16), (0, 0, 0, 0)); tp = t.load(); sp = sym.load()
@@ -212,19 +424,41 @@ def rim_ramp(aid, key):
     return RAMPS[p[2]] if len(p) == 3 and p[2] in RAMPS else RAMPS[CLASS_RAMP[aid]]
 
 
-(OUT / "abilities").mkdir(parents=True, exist_ok=True); (OUT / "status").mkdir(parents=True, exist_ok=True)
-manifest = json.load(open(OUT / "manifest.json"))
-manifest.setdefault("abilities", {})
-for aid, key in ICONS.items():
-    im, pack, colour = source(key)
-    sym = lift(im, pack, LIFT.get(aid))
-    if colour:
-        sym = by_brightness(sym, RAMPS[colour])
-    icon = tile(sym, rim_ramp(aid, key))
-    if aid in PASSIVES:
-        icon.save(OUT / "status" / f"{aid}.png"); manifest["statuses"][aid] = f"status/{aid}.png"
-    else:
-        icon.resize((32, 32), Image.NEAREST).save(OUT / "abilities" / f"{aid}.png"); manifest["abilities"][aid] = f"abilities/{aid}.png"
-with open(OUT / "manifest.json", "w") as f:
-    json.dump(manifest, f, indent=1)
-print(f"skill icons: {len(ICONS) - len(PASSIVES)} abilities, {len(PASSIVES)} passives")
+def main():
+    global SRC, OUT
+    SRC, OUT = Path(sys.argv[1]), Path(sys.argv[2])
+    (OUT / "abilities").mkdir(parents=True, exist_ok=True); (OUT / "status").mkdir(parents=True, exist_ok=True)
+    manifest = json.load(open(OUT / "manifest.json"))
+    manifest.setdefault("abilities", {})
+    for aid, key in ICONS.items():
+        im, pack, colour = source(key)
+        sym = lift(im, pack, LIFT.get(aid))
+        if colour:
+            sym = by_brightness(sym, RAMPS[colour])
+        icon = tile(sym, rim_ramp(aid, key))
+        if aid in PASSIVES:
+            icon.save(OUT / "status" / f"{aid}.png"); manifest["statuses"][aid] = f"status/{aid}.png"
+        else:
+            icon.resize((32, 32), Image.NEAREST).save(OUT / "abilities" / f"{aid}.png"); manifest["abilities"][aid] = f"abilities/{aid}.png"
+    (OUT / "basic").mkdir(exist_ok=True); manifest["basic"] = {}
+    for kind in KINDS:
+        basic_icon(kind).resize((32, 32), Image.NEAREST).save(OUT / "basic" / f"{kind}.png"); manifest["basic"][kind] = f"basic/{kind}.png"
+    with open(OUT / "manifest.json", "w") as f:
+        json.dump(manifest, f, indent=1)
+    # the statuses last: some show a class icon or a weapon kind's, built above
+    shown = set(PASSIVES)
+    for ids, (key, colour) in STATUS_ICONS.items():
+        icon = status_icon(key, colour)
+        for sid in ids.split():
+            icon.save(OUT / "status" / f"{sid}.png"); manifest["statuses"][sid] = f"status/{sid}.png"; shown.add(sid)
+    stale = [sid for sid in manifest["statuses"] if sid not in shown]
+    for sid in stale:
+        (OUT / manifest["statuses"].pop(sid)).unlink(missing_ok=True)
+    with open(OUT / "manifest.json", "w") as f:
+        json.dump(manifest, f, indent=1)
+    print(f"skill icons: {len(ICONS) - len(PASSIVES)} abilities, {len(PASSIVES)} passives, {len(KINDS)} basic attacks, "
+          f"{len(shown) - len(PASSIVES)} statuses ({len(stale)} unused icons deleted)")
+
+
+if __name__ == "__main__":
+    main()
