@@ -88,12 +88,20 @@ const WEAPON_STAND_INS: Record<string, string> = {
   plain_great_weapon: "plain_axe", plain_axe: "plain_axe", plain_hammer: "earthshaker", plain_rune_sword: "oathblade", plain_fist: "plain_dagger", plain_mace: "plain_light_staff",
   plain_wand: "plain_lightning_staff", plain_staff: "plain_fire_staff",
 };
+/**
+ * The mythic weapons the data gives no kind (a mythic can have its own swing), drawn as the kind each reads as; art only.
+ * The Stormcaller's Eye of the tempest is drawn as its other kind, the rune sword, so it shows in the hand.
+ */
+const MYTHIC_WEAPON_KIND: Record<string, string> = { stormspear: "spear", the_witch_blade: "sword", ember_palms: "fist", eye_of_the_tempest: "rune_sword" };
+/** A weapon's kind as drawn: its own, else a kindless mythic's (a rogue run's item, its base piece's). */
+export const drawnKind = (g: GearT): string | undefined => g.weapon?.kind ?? MYTHIC_WEAPON_KIND[g.id] ?? MYTHIC_WEAPON_KIND[baseGearId(g.id)];
 /** A weapon's strip: its own, or for a rogue run's item, its base piece's, or else its kind's plain piece's. */
 export function weaponArt(gearId: string | undefined): string | undefined {
   if (!gearId) return undefined;
   const own = manifest.weapons[gearId] ?? manifest.weapons[baseGearId(gearId)];
   if (own) return own;
-  const kind = c.gear.get(gearId)?.weapon?.kind;
+  const g = c.gear.get(gearId);
+  const kind = g ? drawnKind(g) : undefined;
   return kind ? manifest.weapons[`plain_${kind}`] : undefined;
 }
 
@@ -192,7 +200,7 @@ export const slotCell = (slot: string): number | undefined => manifest.gear?.[`s
 /** The iconset cell for a piece of gear, where the gear sheet has none (a weapon): its kind's or type's icon, the casters' weapons purple and the rest blue, gold for legendary and mythic pieces. */
 export function gearIcon(g: GearT): Cell {
   const gold = g.tier === "powerful";
-  if (g.slot === "weapon") return kindIcon(g.weapon?.kind ?? "sword", gold);
+  if (g.slot === "weapon") return kindIcon(drawnKind(g) ?? "sword", gold);
   if (g.slot === "armor") {
     const t = g.armor ?? "mail";
     return shade(ARMOR_CELL[t] ?? ARMOR_CELL.mail, gold ? "yellow" : ARMOR_SHADE[t] ?? "blue");
