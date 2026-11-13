@@ -389,7 +389,12 @@
   "the_witch_blade_swings": "status/the_witch_blade_swings.png",
   "nights_edge_strike": "status/nights_edge_strike.png",
   "thralls_chalice_debt": "status/thralls_chalice_debt.png",
-  "crown_of_embers_aura": "status/crown_of_embers_aura.png"
+  "crown_of_embers_aura": "status/crown_of_embers_aura.png",
+  "vanguard": "status/vanguard.png",
+  "last_rites": "status/last_rites.png",
+  "shieldmaiden": "status/shieldmaiden.png",
+  "stoke": "status/stoke.png",
+  "shatterpoint": "status/shatterpoint.png"
  },
  "vfx": {
   "ember": {
@@ -1643,17 +1648,12 @@
   "regrowth": "abilities/regrowth.png",
   "bramble_lash": "abilities/bramble_lash.png",
   "aspis": "abilities/aspis.png",
-  "paired_guard": "abilities/paired_guard.png",
   "spear_thrust": "abilities/spear_thrust.png",
-  "sanctuary": "abilities/sanctuary.png",
   "absolve": "abilities/absolve.png",
   "smite": "abilities/smite.png",
   "gale_spear": "abilities/gale_spear.png",
-  "rally": "abilities/rally.png",
-  "valhalla": "abilities/valhalla.png",
   "war_ballad": "abilities/war_ballad.png",
   "allegro": "abilities/allegro.png",
-  "thunder_chord": "abilities/thunder_chord.png",
   "malison": "abilities/malison.png",
   "unmake": "abilities/unmake.png",
   "enfeeble": "abilities/enfeeble.png",
@@ -1701,7 +1701,12 @@
   "hailstorm": "abilities/hailstorm.png",
   "call_drones": "abilities/call_drones.png",
   "tempest": "abilities/tempest.png",
-  "rally_soldiers": "abilities/rally_soldiers.png"
+  "rally_soldiers": "abilities/rally_soldiers.png",
+  "othismos": "abilities/othismos.png",
+  "condemn": "abilities/condemn.png",
+  "choosing": "abilities/choosing.png",
+  "skyfall": "abilities/skyfall.png",
+  "encore": "abilities/encore.png"
  },
  "gear": {
   "ironclad": 0,

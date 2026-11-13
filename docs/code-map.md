@@ -212,6 +212,7 @@ ui/
     assets.py                builds ui/public/assets/ from the director's art packs
     weapons-fitted/          weapon sheets resized to fit the hand, used in place of the pack's own of the same name
     gear_icons.py            builds the gear icons (gear.png): every piece but the weapons, from the gear icon pack and icons drawn in its style
+    skill_icons.py           builds the classes' ability and passive icons from the director's picks in three packs, all on one tile
 tests/                       the pack's own tests
   content.test.ts            the committed pack matches its sources; the tools' party files are valid; every weapon has its strip in the interface's art
   json-schema.test.ts        the exported JSON schema accepts and rejects what the zod schema does
