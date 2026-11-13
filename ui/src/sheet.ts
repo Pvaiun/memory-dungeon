@@ -244,16 +244,16 @@ export const twoHanded = (gear: Record<string, string | undefined>) => !!gear.we
  * A piece of gear as a card: its sprite or icon (glowing in its rarity's colour), its name (★ legendary or mythic, in the
  * rarity's colour), then its rarity and kind with a weapon's hit and speed and the stat codes; with `who`, the line of who
  * can wear it, the roster first; then what it does, in the content's words, and the stacks it lays as numbers for
- * `stats` (the unit in view; with none, the first class that can wear it).
+ * `stats` (the unit in view; with none, the first class that can wear it). `brief` stops at the codes (junk in a list).
  */
-export function gearRow(g: GearT | null, slot: string, stats: Stats | null, onClick?: () => void, arrow = true, who?: readonly string[]): HTMLElement {
+export function gearRow(g: GearT | null, slot: string, stats: Stats | null, onClick?: () => void, arrow = true, who?: readonly string[], brief = false): HTMLElement {
   const slotName = h("span", { class: "dim" }, slot.toUpperCase());
   if (!g) return h("div", { class: "gear-row", onClick }, h("span", { class: "art" }, slotIconEl(slot, GEAR_ICON_SCALE)), h("div", { class: "grow trunc" }, h("div", { class: "line" }, slotName), h("div", { class: "line small dim" }, "NOTHING")), onClick && arrow ? h("span", { class: "dim" }, "▶") : null);
   const art = (g.slot === "weapon" ? weaponEl(g.id) : null) ?? gearIconEl(g, GEAR_ICON_SCALE);
   const tone = pieceTone(g);
   const rare = g.rarity && g.rarity !== "common" ? g.rarity : null;
   // Everything wraps: a long name, a weapon's hit and its codes, the card's sentence and the stacks it lays.
-  const effect = gearEffect(g);
+  const effect = brief ? null : gearEffect(g);
   const size = effect ? sizeEl(heldParts(g.statuses ?? [], stats ?? c.pack.classes.find((k) => canEquip(k, g))?.stats ?? {})) : null;
   return h("div", { class: "gear-row", onClick },
     h("span", { class: `art${rare ? ` glow-${rare}` : ""}` }, art),

@@ -70,7 +70,7 @@ src/
     acts.ts                  a new run (leader, draft, known abilities); each act's map and rooms
     offers.ts                the stock and every offer: gear, mythics, tomes, recruits, formations, supplies, prices, the shop
     training.ts              learning abilities; power steps and versions
-    party.ts                 free actions between rooms: gear, formation, seats, order, swaps, supplies
+    party.ts                 free actions between rooms: gear, formation, seats, order, swaps, supplies, junk
     decisions.ts             what the pending decision offers, and choose()
     rooms.ts                 entering a room, a campfire, the next region, an event's effects
     record.ts                a run's record for balancing: every choice and free action (interface runs only)
@@ -198,7 +198,7 @@ ui/
       run.ts                 the dispatcher, the leader, the draft, the map, a boss's Destiny Shard, a fight in waiting
       rooms.ts               spoils, a captive, the shop and training, the campfire, events, choices, Muster and Drill, level up, the next region
       end.ts                 a lost fight's Destiny Shard offer, the run's end, its record, a won run's moment
-      party.ts               managing the party: seats, a unit's sheet and order, its gear
+      party.ts               managing the party: seats, the bag and its junk, a piece put on from the bag, a unit's sheet and order, its gear
       state.ts               the run and the rogue meta, saved
     battle/
       battle.ts              the battle screen: the field, messages, the party, controls, a fight's end

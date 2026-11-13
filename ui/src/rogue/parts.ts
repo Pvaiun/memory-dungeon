@@ -66,13 +66,19 @@ const rosterOrder = (run: RogueRun) => [...run.party, ...bench(run)];
  * default), the line of who can wear it, the roster first; never what it's for, which would spoil the discovery. The
  * stacks it lays are shown for its wearer, else the first of the roster who can wear it.
  */
-export function itemRow(run: RogueRun, it: Item, onClick?: () => void, opts: { arrow?: boolean; stats?: Record<string, number> | null; right?: HTMLElement | null; who?: boolean } = {}): HTMLElement {
+export function itemRow(run: RogueRun, it: Item, onClick?: () => void, opts: { arrow?: boolean; stats?: Record<string, number> | null; right?: HTMLElement | null; who?: boolean; brief?: boolean } = {}): HTMLElement {
   const g = c.gear.get(it.uid) ?? itemGear(c, it);
   const by = wearer(run, it.uid) ?? rosterOrder(run).find((cls) => canEquip(classOf(cls), g));
-  const r = gearRow(g, g.slot, opts.stats ?? (by ? fighter(run, by).stats : null), onClick, opts.arrow ?? false, opts.who === false ? undefined : rosterOrder(run));
+  const r = gearRow(g, g.slot, opts.stats ?? (by ? fighter(run, by).stats : null), onClick, opts.arrow ?? false, opts.who === false || opts.brief ? undefined : rosterOrder(run), opts.brief);
   const w = wearer(run, it.uid);
   const right = "right" in opts ? opts.right : w ? h("span", { class: "tag" }, shortName(w)) : null;
   if (right) r.querySelector(".grow .line")?.append(right);
+  return r;
+}
+/** A piece marked junk: greyed, one short card (its name and codes), with `right` beside the name. */
+export function junkRow(run: RogueRun, it: Item, onClick?: () => void, right: HTMLElement | null = null): HTMLElement {
+  const r = itemRow(run, it, onClick, { right, brief: true });
+  r.classList.add("junk");
   return r;
 }
 /** A training's button: LEARN an ability, TRAIN a power step or a version. */

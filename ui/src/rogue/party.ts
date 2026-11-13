@@ -1,17 +1,17 @@
-/** Managing the party outside a fight: seats and the camp, a unit's sheet and ability order, its gear. */
-import { bar, button, type Child, h, header, win } from "../dom.js";
+/** Managing the party outside a fight: seats and the camp, the bag and its junk, a piece put on from the bag, a unit's sheet and ability order, its gear. */
+import { bar, button, type Child, h, header, nav, toast, win } from "../dom.js";
 import { current, fighter, saveRogue, vitals } from "./state.js";
-import { bench, canManage, formationRarity, formOf, type Item, itemGear, itemOf, member, passiveOf, rogue, seatsOf, wearer } from "../../../src/rogue.js";
+import { bag, bench, canManage, formationRarity, formOf, type Item, itemGear, itemOf, member, passiveOf, rogue, type RogueRun, seatsOf, type Slot, SLOT_LIST, wearer } from "../../../src/rogue.js";
 import { c, cls as classOf, disp, shortName } from "../content.js";
-import { discard, dismiss, equip, seat, setFormation, setOrder, swap } from "../../../src/rogue/record.js";
+import { dismiss, equip, junk, seat, setFormation, setOrder, swap } from "../../../src/rogue/record.js";
 import { abilityBlock, aggShares, basicLine, canUse, classHead, classPassive, gearRow, type GearSlot, lockedRow, seatCodes, seatNotes, section, SLOTS, specialLines, statGrid, twoHanded } from "../sheet.js";
 import { faceEl } from "../pixel.js";
 import { setup } from "../state.js";
 import { weaponOf } from "../../../src/engine/combat/fight.js";
 import { plainWeapon } from "../../../src/sim/parties.js";
-import { canEquip } from "../../../src/validate.js";
+import { canEquip, handsOf } from "../../../src/validate.js";
 import { rogueScreen, supplyRow } from "./run.js";
-import { confirm, go, itemRow, RARITY_CLASS, ROMAN } from "./parts.js";
+import { confirm, frameEl, go, itemRow, junkRow, RARITY_CLASS, ROMAN } from "./parts.js";
 
 // ─── Managing the party ────────────────────────────────────────────────────
 
@@ -46,6 +46,10 @@ export function rpartyScreen(): Child[] {
     );
   });
   const camp = bench(run);
+  // The bag: a piece tapped shows who could wear it; JUNK sends it to the bottom, greyed, to sell at a shop.
+  const kept = bag(run).filter((it) => !it.junk), junked = bag(run).filter((it) => it.junk);
+  const mark = (it: Item, on: boolean) => button(on ? "JUNK" : "UNJUNK", (e?: Event) => { e?.stopPropagation(); junk(run, it.uid, on); saveRogue(); go("rparty", undefined, true); }, "sm");
+  const wear = (it: Item) => (manage ? () => wearPopup(run, it) : undefined);
   // Any time outside a fight. A party card picked, then someone at camp: they trade places.
   const picked = seatPick !== null ? run.party[seatPick] : null;
   const into = (cls: string) => { if (!picked) return; swap(c, run, picked, cls); seatPick = null; saveRogue(); go("rparty", undefined, true); };
@@ -69,10 +73,59 @@ export function rpartyScreen(): Child[] {
           h("div", { class: "stats" }, h("div", { class: "name" }, shortName(cls)), v.maxMp ? bar(v.mp / v.maxMp, "mp") : null, v.ko ? h("div", { class: "bad" }, "KO") : bar(v.hp / v.maxHp)),
           stand ?? h("div", { class: "small dim" }, v.maxMp ? h("span", { class: "mp" }, `${disp(v.mp)}/${disp(v.maxMp)}`) : `${disp(v.hp)}/${disp(v.maxHp)}`));
       }),
-      section("BAG", `${run.items.filter((it) => !wearer(run, it.uid)).length} PIECES`),
-      ...run.items.filter((it) => !wearer(run, it.uid)).map((it) => itemRow(run, it, undefined, { right: manage ? button("DROP", (e?: Event) => { e?.stopPropagation(); confirm("DROP IT?", (c.gear.get(it.uid) ?? itemGear(c, it)).name.toUpperCase(), "DROP", () => { discard(run, it.uid); saveRogue(); go("rparty", undefined, true); }); }, "sm") : null })),
+      section("BAG", `${kept.length} PIECE${kept.length === 1 ? "" : "S"}`),
+      ...kept.map((it) => itemRow(run, it, wear(it), { right: manage ? mark(it, true) : null })),
+      junked.length ? section("JUNK", "SELL AT A SHOP") : null,
+      ...junked.map((it) => junkRow(run, it, wear(it), manage ? mark(it, false) : null)),
     ),
   ];
+}
+
+/**
+ * A piece in the bag, tapped: the piece, then everyone in the roster who could wear it (the party first), each with what
+ * they wear in its slot now and a button to put it on; what they wore goes to the bag. Under a two-handed weapon the
+ * offhand is locked; anything else that would come off (an offhand under a two-handed weapon, a second mythic) is named.
+ */
+function wearPopup(run: RogueRun, it: Item) {
+  if (!frameEl) return;
+  const frame = frameEl;
+  const g = c.gear.get(it.uid) ?? itemGear(c, it);
+  const slot = g.slot as Slot;
+  const nameOf = (uid: string) => (c.gear.get(uid)?.name ?? uid).toUpperCase();
+  const close = () => { box.remove(); nav.overlay = null; };
+  const who = [...run.party, ...bench(run)].filter((cls) => canEquip(c.classes.get(cls)!, g));
+  const rows = who.map((cls) => {
+    const m = member(run, cls);
+    const locked = slot === "offhand" && twoHanded(m.gear);
+    const now = m.gear[slot] ? itemOf(run, m.gear[slot]!) : undefined;
+    const off = [
+      ...(slot === "weapon" && handsOf(c.pack, g) === 2 && m.gear.offhand ? [m.gear.offhand] : []),
+      ...(g.mythic ? SLOT_LIST.filter((s) => s !== slot && m.gear[s] && c.gear.get(m.gear[s]!)?.mythic).map((s) => m.gear[s]!) : []),
+    ];
+    const put = () => {
+      close();
+      if (equip(c, run, cls, slot, it.uid)) { saveRogue(); go("rparty", undefined, true); toast(frame, `${shortName(cls)} WEARS ${g.name.toUpperCase()}`); }
+    };
+    return h("div", { class: "wear" },
+      h("div", { class: "line" }, faceEl(cls), h("span", { class: "grow" }, shortName(cls), h("span", { class: "dim small" }, run.party.includes(cls) ? ` · SLOT ${run.party.indexOf(cls) + 1}` : " · CAMP")),
+        locked ? null : button(now ? "SWAP" : "EQUIP", put, "sm hi")),
+      locked ? lockedRow(slot) : now ? itemRow(run, now, undefined, { stats: fighter(run, cls).stats, right: null, who: false }) : gearRow(null, slot, null),
+      locked ? h("div", { class: "line small dim" }, "A TWO-HANDED WEAPON IN HAND") : null,
+      off.length ? h("div", { class: "line small dim wrap" }, `${off.map(nameOf).join(", ")} TO THE BAG TOO`) : null,
+    );
+  });
+  const box: HTMLElement = h("div", { class: "overlay dialog", onClick: (e?: Event) => { if (e?.target === box) close(); } },
+    win("scroll",
+      itemRow(run, it, undefined, { right: null }),
+      section("PUT IT ON"),
+      ...(rows.length ? rows : [h("div", { class: "line dim small" }, "NOBODY IN THE ROSTER CAN")]),
+    ),
+    h("div", { class: "btns even" },
+      button(it.junk ? "UNJUNK" : "JUNK", () => { close(); junk(run, it.uid, !it.junk); saveRogue(); go("rparty", undefined, true); }),
+      button("CLOSE", close)),
+  );
+  frame.append(box);
+  nav.overlay = close;
 }
 
 let orderPick: number | null = null;
@@ -170,7 +223,8 @@ export function rgearScreen(arg?: unknown): Child[] {
     if (w) r.classList.add("dimmed");
     return r;
   };
-  const mine = fits.filter((it) => it.uid === cur), free = fits.filter((it) => !wearer(run, it.uid)), others = fits.filter((it) => worn(it));
+  const inBag = fits.filter((it) => !wearer(run, it.uid));
+  const mine = fits.filter((it) => it.uid === cur), free = inBag.filter((it) => !it.junk), junked = inBag.filter((it) => it.junk), others = fits.filter((it) => worn(it));
   return [
     header(`${shortName(cls)} · ${slot.toUpperCase()}`, () => go("runit", cls)),
     win("list scroll",
@@ -180,6 +234,9 @@ export function rgearScreen(arg?: unknown): Child[] {
       ...free.map(row),
       others.length ? section("WORN BY OTHERS") : null,
       ...others.map(row),
+      // Junk last, greyed; put on, it's junk no more.
+      junked.length ? section("JUNK") : null,
+      ...junked.map((it) => junkRow(run, it, () => pick(it.uid))),
     ),
   ];
 }

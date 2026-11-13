@@ -35,6 +35,8 @@ export function options(c: Content, run: RogueRun): string[] {
       // A power step or a version, at the upgrade price.
       if (p.upgrade && run.gold >= trainPrice(c, p, "upgrade")) out.push(...improveOptions(c, run));
       out.push(...bag(run).map((it) => `sell:${it.uid}`));
+      // Everything marked junk, in one go.
+      if (bag(run).some((it) => it.junk)) out.push("sell-junk");
       return [...out, "leave"];
     }
     case "campfire": {
@@ -249,6 +251,12 @@ function chooseIn(c: Content, run: RogueRun, pick: string) {
         run.items = run.items.filter((x) => x.uid !== arg);
         gainGold(run, price);
         note(run, `Sold ${c.gear.get(arg)?.name ?? it.base} for ${price}.`);
+      } else if (verb === "sell-junk") {
+        const junked = bag(run).filter((it) => it.junk);
+        const price = junked.reduce((n, it) => n + sellPrice(c, it), 0);
+        run.items = run.items.filter((x) => !junked.includes(x));
+        gainGold(run, price);
+        note(run, `Sold ${junked.length} junk piece${junked.length === 1 ? "" : "s"} for ${price}.`);
       } else if (verb === "learn") {
         const [cls, ab] = arg.split(":");
         const price = trainPrice(c, p, "learn");

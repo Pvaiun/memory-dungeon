@@ -23,7 +23,7 @@ The rules are `src/rogue.ts`, pure and deterministic: a run is plain data (`Rogu
 - **The roster:** a party of three (`party`) and seats at camp, the bench: two in act I, three in act II, four in act III (`benchByAct`), each new act bringing its seat.
 - **Recruits mostly come one at a time:** a recruit is there to take or turn down (a captive or a stranger can teach a lesson instead), and a boon can offer one recruit beside a piece and a formation. Two events offer a pick among recruits: Mercenaries (one of three; in its veterans' version, one of two who know all three abilities) and the Prisoner Convoy (one of three prisoners, each with a piece from the sack). Otherwise the start's draft is the only pick.
 - **A recruit** joins with its class's plain weapon at full HP and MP (unless its offer says less), into the party if a seat is free, else to camp. Offers come with a full roster too: the player sends someone at camp home first (never the leader; their gear stays in the bag). An offer never repeats a class in the roster, and a class that could wear a bagged legendary nobody can wear is three times as likely.
-- **Between rooms**, a fight's preview included, everything is free: swap a party member with one at camp, step one back or fill an empty seat, reorder seats, change formation, move gear, set each member's ability order (leaving some out), use supplies, drop a piece, send someone home. Nothing can be done during a fight.
+- **Between rooms**, a fight's preview included, everything is free: swap a party member with one at camp, step one back or fill an empty seat, reorder seats, change formation, move gear, set each member's ability order (leaving some out), use supplies, mark a piece in the bag as junk or take the mark off, send someone home. Nothing can be done during a fight.
 
 ## What carries between fights
 
@@ -54,7 +54,7 @@ Every win pays gold by tier (`gold.fight`, `gold.elite`, `gold.boss`, plus `gold
 
 **Campfire.** On arrival the whole roster recovers a share and the fallen rise (`campfire.auto`). Then one pick of two: **REST**, everyone healing again (`campfire.hp`, `campfire.mp`), or **TRAIN**, three members training once each (`campfire.train`). At `campfire.stranger` % of campfires a stranger asks to join: take them in or take a lesson, without using the pick.
 
-**Shop.** Pieces by rarity (`shop.gear`, legendaries by act in `shop.legendaryByAct`), recruits, formations and all three supplies, at `prices`. Training as often as gold allows (`prices.learn`, `prices.upgrade`), each one a visit dearer by `prices.trainStep`. Any bagged piece sells for `prices.sell` % of its price. The shop's pieces are only for classes in the roster.
+**Shop.** Pieces by rarity (`shop.gear`, legendaries by act in `shop.legendaryByAct`), recruits, formations and all three supplies, at `prices`. Training as often as gold allows (`prices.learn`, `prices.upgrade`), each one a visit dearer by `prices.trainStep`. Any bagged piece sells for `prices.sell` % of its price, and everything marked junk sells at once. The shop's pieces are only for classes in the roster.
 
 **Chest.** Every room on floor 7: gold (`treasure.gold`) and a piece (`treasure.rarity`), or, `treasure.cage` % of the time, a recruit with a piece suited to it.
 
@@ -68,7 +68,7 @@ Every win pays gold by tier (`gold.fight`, `gold.elite`, `gold.boss`, plus `gold
 - **An offered piece** rolls its slot (`slots`), then a class: one in the roster, one in the party for an aimed offer, or, for spoils, chests and events, one not in the roster `spoils.offRoster` % of the time, so a piece can make a run want a class. Then a kind that class wears there, and a piece of that kind at the offer's rarity, or the nearest rarity that has one. No piece twice in a pick; no legendary the run holds while others are left.
 - **Mythics** come only from the boons that open acts II and III, one for a class in the party (else at camp) whose mythic the run doesn't hold. A unit wears one at most.
 - **Tempering** (events) turns a piece into one of the next rarity of its slot and kind that its wearer can wear; a risky smith can crack it instead.
-- **The bag** is the run's, unlimited. Taking a piece another member wears gives them yours if it fits.
+- **The bag** is the run's, unlimited. Taking a piece another member wears gives them yours if it fits. Tapped, a piece in the bag shows everyone in the roster who could wear it, with what they wear in its slot now, and puts it on in one tap. **Junk** is the player's mark on a piece in the bag: it goes to the bottom, greyed, out of the way, until it's sold or unmarked; putting it on takes the mark off. It changes nothing in play.
 
 ### Formations
 
