@@ -151,11 +151,11 @@ export function scaleEl(scales: Scale[]): Child {
   if (!scales.length) return null;
   return h("span", { class: "scale" }, `(${scales.map((s) => s.text).join(", ")})`);
 }
-/** An ability's size: "150 DMG (125% ATK) + 10 BURN (ATK)". */
-export function sizeEl(parts: SizePart[]): HTMLElement | null {
+/** An ability's size: "150 DMG (125% ATK) + 10 BURN (ATK)"; `sep` joins parts that aren't added up (a status's numbers). */
+export function sizeEl(parts: SizePart[], sep = " + "): HTMLElement | null {
   if (!parts.length) return null;
   return h("div", { class: "size" }, ...parts.flatMap((p, i) => [
-    i ? h("span", { class: "dim" }, p.or ? " / " : " + ") : null,
+    i ? h("span", { class: "dim" }, p.or ? " / " : sep) : null,
     h("span", { class: "nowrap" }, p.value ? `${p.value} ` : "", h("span", { class: p.tone ?? "" }, p.word), p.chance ? h("span", { class: "dim" }, ` ${p.chance}%`) : null),
     p.scales.length ? " " : null, scaleEl(p.scales),
   ]));
