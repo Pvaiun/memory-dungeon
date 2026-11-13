@@ -381,7 +381,8 @@
   "frost_armor": "status/frost_armor.png",
   "frost_armor_plus": "status/frost_armor_plus.png",
   "storms_eye": "status/storms_eye.png",
-  "storms_eye_plus": "status/storms_eye_plus.png"
+  "storms_eye_plus": "status/storms_eye_plus.png",
+  "incorporeal": "status/incorporeal.png"
  },
  "vfx": {
   "ember": {
