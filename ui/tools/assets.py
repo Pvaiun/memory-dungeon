@@ -499,7 +499,7 @@ WEAPON_IDS = {
 }
 # Sheets used in place of the pack's own of the same name: the haloed axes drawn bigger than their wearer, made smaller;
 # Spellbinder, redrawn by the director; and Eye of the tempest, a rune sword the pack drew as a sceptre, which takes the
-# pack's Spellbinder (its forked-lightning blade). They keep the pack's format, so once the pack holds the sheet a game
+# pack's Spellbinder (its forked-lightning blade) in the Eye's own gold. They keep the pack's format, so once the pack holds the sheet a game
 # should use, its file here is deleted.
 FITTED = Path(__file__).parent / "weapons-fitted"
 # Drawn for gear lists only, never in a hand (the fists are the sprite's own): the fist weapons, and the mythic that is
