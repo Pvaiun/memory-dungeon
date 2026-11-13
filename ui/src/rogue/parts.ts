@@ -7,11 +7,12 @@ import type { RogueNodeKindT } from "../../../src/schema.js";
 import { type Cell, type Pose } from "../art.js";
 import { bagRoom, bench, formationRarity, type Item, itemGear, member, type Offer, parseTraining, rogue, type RogueRun, seatsOf, wearer } from "../../../src/rogue.js";
 import { c, cls as classOf, shortName } from "../content.js";
-import { abilityBlock, formationNote, gearRow, RARITY_TONE, role, seatLines } from "../sheet.js";
+import { abilityBlock, gearRow, RARITY_TONE, role, seatLines } from "../sheet.js";
 import { actionIcon16, faceEl, gearIconOf, iconEl, iconOf, weaponIcon } from "../pixel.js";
 import { foesOnStage, partyInLine, partyOnStage, type StageActor, stageEl, type StageOpts, themeOf } from "../battle/scene.js";
 import { abilityTag } from "../describe.js";
-import { saveRogue, vitals } from "./state.js";
+import { fighter, saveRogue, vitals } from "./state.js";
+import { canEquip } from "../../../src/validate.js";
 import { choose } from "../../../src/rogue/record.js";
 import { sfx } from "../battle/audio.js";
 
@@ -62,11 +63,13 @@ export const gold = (n: number) => h("span", { class: "gold" }, `${n}G`);
 const rosterOrder = (run: RogueRun) => [...run.party, ...bench(run)];
 /**
  * A run's item as a gear card (its rarity, kind and numbers, `gearRow`), with who wears it at the right. With `who` (the
- * default), the line of who can wear it, the roster first; never what it's for, which would spoil the discovery.
+ * default), the line of who can wear it, the roster first; never what it's for, which would spoil the discovery. The
+ * stacks it lays are shown for its wearer, else the first of the roster who can wear it.
  */
 export function itemRow(run: RogueRun, it: Item, onClick?: () => void, opts: { arrow?: boolean; stats?: Record<string, number> | null; right?: HTMLElement | null; who?: boolean } = {}): HTMLElement {
   const g = c.gear.get(it.uid) ?? itemGear(c, it);
-  const r = gearRow(g, g.slot, opts.stats ?? null, onClick, opts.arrow ?? false, opts.who === false ? undefined : rosterOrder(run));
+  const by = wearer(run, it.uid) ?? rosterOrder(run).find((cls) => canEquip(classOf(cls), g));
+  const r = gearRow(g, g.slot, opts.stats ?? (by ? fighter(run, by).stats : null), onClick, opts.arrow ?? false, opts.who === false ? undefined : rosterOrder(run));
   const w = wearer(run, it.uid);
   const right = "right" in opts ? opts.right : w ? h("span", { class: "tag" }, shortName(w)) : null;
   if (right) r.querySelector(".grow .line")?.append(right);
@@ -86,7 +89,7 @@ export function offerBody(run: RogueRun, o: Offer): Child[] {
   }
   if (o.kind === "gear") return [itemRow(run, o.item, undefined, { right: null })];
   if (o.kind === "tome") {
-    return [h("div", { class: "line" }, faceEl(o.cls), h("span", { class: "grow hi" }, `TOME: ${shortName(o.cls)} LEARNS`)), abilityBlock(c.abilities.get(o.ability)!, null, false)];
+    return [h("div", { class: "line" }, faceEl(o.cls), h("span", { class: "grow hi" }, `TOME: ${shortName(o.cls)} LEARNS`)), abilityBlock(c.abilities.get(o.ability)!, null)];
   }
   if (o.kind === "recruit") {
     const k = classOf(o.cls);
@@ -104,7 +107,7 @@ export function offerBody(run: RogueRun, o: Offer): Child[] {
     // A formation's rarity in the gear's colours (common, rare, legendary), and what each seat does.
     const f = c.formations.get(o.id)!;
     const rar = formationRarity(c, o.id);
-    return [h("div", { class: "line wrap" }, h("span", { class: RARITY_CLASS[rar] || "hi" }, `${rar === "legendary" ? "★" : ""}FORMATION: ${f.name.toUpperCase()}`), rar !== "common" ? h("span", { class: `small r ${RARITY_CLASS[rar]}` }, rar.toUpperCase()) : null), h("div", { class: "text dim small wrap" }, f.text, formationNote(f)), ...seatLines(f)];
+    return [h("div", { class: "line wrap" }, h("span", { class: RARITY_CLASS[rar] || "hi" }, `${rar === "legendary" ? "★" : ""}FORMATION: ${f.name.toUpperCase()}`), rar !== "common" ? h("span", { class: `small r ${RARITY_CLASS[rar]}` }, rar.toUpperCase()) : null), h("div", { class: "text dim small wrap" }, f.text), ...seatLines(f)];
   }
   if (o.kind === "seat") return [h("div", { class: "line" }, iconEl(ICON.campfire), h("span", { class: "grow hi" }, "A SEAT AT CAMP")), h("div", { class: "line dim small wrap" }, `ROOM FOR ONE MORE IN THE ROSTER · ${seatsOf(c, run)} → ${seatsOf(c, run) + 1} AT CAMP`)];
   return [h("div", { class: "line" }, iconEl(SUPPLY_ICON[o.id]), h("span", { class: "grow" }, o.id.toUpperCase())), h("div", { class: "line dim small" }, SUPPLY_TEXT[o.id])];

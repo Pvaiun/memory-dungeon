@@ -9,9 +9,9 @@ import { abilityUp, apply, cd, COLD_HEX, helper, marker, passiveUp, phys } from 
 
 passiveUp({
   id: "cold_hex", cls: "hexer",
-  power: "Its basic attacks add 40% more.",
-  a: { name: "Hex of flames", text: "Its basic attacks add a few Burn, whatever weapon it carries; stacks scale from Attack.", serves: "Bonfire 1 ●●● ⚙ lead's colour (half)" },
-  b: { name: "Withering hex", text: "Its basic attacks Weaken their target in place of the Chill.", builds: ["toll"], plus: "" },
+  power: "+40% stacks.",
+  a: { name: "Hex of flames", text: "Basic attacks add Burn, not Chill.", serves: "Bonfire 1 ●●● ⚙ lead's colour (half)" },
+  b: { name: "Withering hex", text: "Basic attacks Weaken their target instead of adding Chill.", builds: ["toll"], plus: "" },
   form: (v, k) => ({
     reactions: [{
       on: { event: "hit_lands", kind: "basic" },
@@ -28,9 +28,10 @@ passiveUp({
 const cursed = (ratio: number) => phys(curse(ratio));
 abilityUp({
   id: "malison", cls: "hexer",
-  power: "40% more damage, and 40% more of every status it adds.",
-  a: { name: "Plague", text: "Curses every foe for three fifths of Malison's damage, scaling from Attack, a fifth more for each different affliction the foe holds (Burn, Chill, Shock, Bleed, Sunder), then a few Burn, a few Shock and a few Bleed; stacks scale from Attack.", serves: "Bonfire ●●, Storm ●●, Cuts ●● ⚙ every colour (key), red rain (half)" },
-  b: { name: "Focused curse", text: "Curses the foe with the highest Attack alone: three times Malison's damage, scaling from Attack, a fifth more for each different affliction it holds (Burn, Chill, Shock, Bleed, Sunder), then three times the Bleed; stacks scale from Attack.", serves: "Hunt ●● ⚙ every colour (half)" },
+  power: "+40% damage and stacks.",
+  shown: true,
+  a: { name: "Plague", text: "Curses every foe, adding Burn, Shock and Bleed. +20% damage for each of Burn, Chill, Shock, Bleed and Sunder a foe holds.", serves: "Bonfire ●●, Storm ●●, Cuts ●● ⚙ every colour (key), red rain (half)" },
+  b: { name: "Focused curse", text: "Curses only the foe with the most Attack, adding Bleed. +20% damage for each of Burn, Chill, Shock, Bleed and Sunder it holds.", serves: "Hunt ●● ⚙ every colour (half)" },
   form: (v, k) =>
     v === "b"
       ? { target: T.highestAMFoe, do: [cursed(3 * HIT.light * k), apply("bleed", { stacks: stacks("few", "attack", 3 * k) })] } // No Seek: a Taunting foe catches it first.
@@ -44,9 +45,10 @@ abilityUp({
 const MANA_BURN = 0.2;
 abilityUp({
   id: "unmake", cls: "hexer",
-  power: "A shorter cooldown.",
-  a: { name: "Silence all", text: "Silences every foe in a wind-up and strips their buffs. Waits until a foe is in a wind-up.", builds: [] },
-  b: { name: "Mana burn", text: "Silences the casting foe with the highest Attack and strips its buffs, and drains a fifth of its MP, which the Hexer gains. Waits until a foe is in a wind-up.", builds: ["barrage"] },
+  power: "Shorter cooldown.",
+  shown: true,
+  a: { name: "Silence all", text: "Waits for a foe to cast, then Silences every casting foe and strips their buffs.", builds: [] },
+  b: { name: "Mana burn", text: "Waits for a foe to cast, then Silences it, strips its buffs and takes 20% of its max MP as MP.", builds: ["barrage"] },
   form: (v, _k, plus) => ({
     ...(plus ? { cooldown: cd("short", "unmake") } : {}),
     ...(v === "a" ? { target: { side: "foes", where: { casting: true }, pick: "all" } as TargetRuleT } : {}), // An all-pick: the Taunt and Hidden rules don't apply.
@@ -55,16 +57,17 @@ abilityUp({
       : {}),
   }),
 });
-helper(marker("mana_burn", "MANA BURN", "The Hexer that burned its mana gains a share of it.", {
+helper(marker("mana_burn", "MANA BURN", "Its MP goes to the Hexer that burned it.", {
   perSource: {}, duration: 1,
   reactions: [{ on: { event: "status_gained", status: "mana_burn" }, actor: "source", do: [{ op: "mp", amount: { scale: [{ ratio: MANA_BURN, stat: "max_mp", of: "holder" }] }, to: "source" }] }],
 }));
 
 abilityUp({
   id: "enfeeble", cls: "hexer",
-  power: "40% more Sunder; if it adds none, it costs less MP.",
-  a: { name: "Wither", text: "Weakens every foe.", builds: ["toll"], plus: "It costs less MP." },
-  b: { name: "Expose", text: "Adds many Sunder to the foe with the lowest HP; stacks scale from Attack.", builds: ["hunt", "cuts"], plus: "40% more Sunder." },
+  power: "+40% Sunder, or costs less MP.",
+  shown: true,
+  a: { name: "Wither", text: "Weakens every foe. No Sunder.", builds: ["toll"] },
+  b: { name: "Expose", text: "Sunder on the foe with the least HP. No Weaken.", builds: ["hunt", "cuts"] },
   form: (v, k, plus) =>
     v === "a" ? { target: T.everyFoe, cooldown: cd("medium", "enfeeble"), mp: plus ? 450 : 650, do: [apply("weaken")] }
       : v === "b" ? { target: T.lowestHpFoe, do: [apply("sunder", { stacks: stacks("many", "attack", k) })] } // The lowest current HP, no Seek.
