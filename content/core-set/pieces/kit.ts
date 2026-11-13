@@ -110,7 +110,7 @@ export const PLAIN_CARD = "Nothing beyond its stats.";
 
 type PieceOpts = {
   name: string;
-  /** The card's effect, as the player reads it: what the piece does beyond its stats, or nothing for a common. The card is the swing trade, then this. */
+  /** The card's effect, as the player reads it: what the piece does beyond its stats, or nothing for a common. */
   effect?: string;
   /** The whole card, in place of the trade and `effect` (a mythic's). */
   text?: string;
@@ -123,7 +123,7 @@ type PieceOpts = {
   statuses?: string[];
   /** Weapons: the hit (default: its kind's swing by its words), and anything else the weapon states (riders, apply, a mythic's own cooldown). */
   weapon?: Partial<WeaponT>;
-  /** Weapons: a step along the trade. heavy: a harder swing for a stat step fewer; light: a lighter swing for one more. The card says it. */
+  /** Weapons: a step along the trade. heavy: a harder swing for a stat step fewer; light: a lighter swing for one more. The swing's values show it. */
   trade?: Trade;
   /** A mythic: the one class it fits. */
   mythic?: string;
@@ -131,9 +131,8 @@ type PieceOpts = {
 };
 /** One piece of gear, fixed: its rarity is its own (no affixes at any rarity). */
 export function piece(o: PieceOpts): GearT {
-  const trade = o.trade === "heavy" ? "A heavier swing." : o.trade === "light" ? "A lighter swing." : "";
-  // The card is the swing trade and the effect. The stats are the interface's (shown as values beside the name), never words on the card.
-  const text = o.text ?? ([trade, o.effect ?? ""].filter(Boolean).join(" ") || PLAIN_CARD);
+  // The card is the effect. The stats and the swing (its trade included) are the interface's, shown as values beside the name, never words on the card.
+  const text = o.text ?? (o.effect || PLAIN_CARD);
   const g: GearT = {
     id: idOf(o.name), name: o.name, text, slot: o.slot,
     // The validator's tiers: an ordinary piece drops, a powerful one (legendary, mythic) is an unlock. Neither changes play in the rogue.

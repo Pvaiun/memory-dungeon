@@ -14,7 +14,7 @@ import type { AbilityT, EnemyT, FormationT, GearT, WeaponT } from "../../src/sch
 import { combat, type Member } from "../../src/engine/combat/rules.js";
 import { drawOf, resolveWeapon, weaponOf } from "../../src/engine/combat/fight.js";
 import { armorName, c, cls, disp, DISPLAY_DIV, immuneTo, kindOf, offhandName, SHEET_STATS, shortName, SPECIAL_STATS, showStat, statCode, status, tagline } from "./content.js";
-import { abilityInfo, abilityTag, evalNum, scalesOf, sizeParts, statusText, TYPE_TONE, TYPE_WORD, type Scale, type SizePart, type Stats } from "./describe.js";
+import { abilityInfo, abilityTag, evalNum, heldParts, scalesOf, sizeParts, statusText, TYPE_TONE, TYPE_WORD, type Scale, type SizePart, type Stats } from "./describe.js";
 import { TAG_ICON, weaponLook } from "./art.js";
 import { canEquip, handsOf } from "../../src/validate.js";
 import { h, type Child } from "./dom.js";
@@ -114,11 +114,6 @@ export function codeSpans(stats: { stat: string; flat?: number; pct?: number }[]
 // ─── Formations ───
 
 type Seat = FormationT["positions"][number];
-/**
- * What a formation's own statuses do to everyone, after its text (" Starts each fight with Regen."), in designer view only:
- * a formation's text is its card and says the same, so a player reads it once.
- */
-export const formationNote = (f: FormationT): string => (setup.settings.designer && f.statuses?.length ? ` ${f.statuses.map((s) => c.statuses.get(s)?.text ?? "").join(" ")}` : "");
 /** A seat's stat changes as codes on a card; "no change" only when it has neither codes nor statuses of its own. */
 export function seatCodes(p: Seat): Child[] {
   const codes = codeSpans(p.stats);
@@ -160,7 +155,7 @@ export function scaleEl(scales: Scale[]): Child {
 export function sizeEl(parts: SizePart[]): HTMLElement | null {
   if (!parts.length) return null;
   return h("div", { class: "size" }, ...parts.flatMap((p, i) => [
-    i ? h("span", { class: "dim" }, " + ") : null,
+    i ? h("span", { class: "dim" }, p.or ? " / " : " + ") : null,
     h("span", { class: "nowrap" }, p.value ? `${p.value} ` : "", h("span", { class: p.tone ?? "" }, p.word), p.chance ? h("span", { class: "dim" }, ` ${p.chance}%`) : null),
     p.scales.length ? " " : null, scaleEl(p.scales),
   ]));
@@ -248,7 +243,8 @@ export const twoHanded = (gear: Record<string, string | undefined>) => !!gear.we
 /**
  * A piece of gear as a card: its sprite or icon (glowing in its rarity's colour), its name (★ legendary or mythic, in the
  * rarity's colour), then its rarity and kind with a weapon's hit and speed and the stat codes; with `who`, the line of who
- * can wear it, the roster first; then what it does, in the content's words.
+ * can wear it, the roster first; then what it does, in the content's words, and the stacks it lays as numbers for
+ * `stats` (the unit in view; with none, the first class that can wear it).
  */
 export function gearRow(g: GearT | null, slot: string, stats: Stats | null, onClick?: () => void, arrow = true, who?: readonly string[]): HTMLElement {
   const slotName = h("span", { class: "dim" }, slot.toUpperCase());
@@ -256,8 +252,9 @@ export function gearRow(g: GearT | null, slot: string, stats: Stats | null, onCl
   const art = (g.slot === "weapon" ? weaponEl(g.id) : null) ?? gearIconEl(g, GEAR_ICON_SCALE);
   const tone = pieceTone(g);
   const rare = g.rarity && g.rarity !== "common" ? g.rarity : null;
-  // Everything wraps: a long name, a weapon's hit and its codes, the card's sentence.
+  // Everything wraps: a long name, a weapon's hit and its codes, the card's sentence and the stacks it lays.
   const effect = gearEffect(g);
+  const size = effect ? sizeEl(heldParts(g.statuses ?? [], stats ?? c.pack.classes.find((k) => canEquip(k, g))?.stats ?? {})) : null;
   return h("div", { class: "gear-row", onClick },
     h("span", { class: `art${rare ? ` glow-${rare}` : ""}` }, art),
     h("div", { class: "grow" },
@@ -265,6 +262,7 @@ export function gearRow(g: GearT | null, slot: string, stats: Stats | null, onCl
       h("div", { class: "line wrap small codes" }, rare ? h("span", { class: `nowrap ${tone}` }, rare.toUpperCase()) : null, h("span", { class: "nowrap" }, kindName(g).toUpperCase()), ...(g.weapon ? weaponCode(g, stats) : []), ...codeSpans(g.stats)),
       who ? wearersLine(g, who) : null,
       effect ? h("div", { class: `text small wrap ${tone === "gold" || tone === "mythic" ? tone : "ink"} effect` }, effect) : null,
+      size,
     ),
     onClick && arrow ? h("span", { class: "dim go" }, "▶") : null,
   );
@@ -273,9 +271,9 @@ export function gearRow(g: GearT | null, slot: string, stats: Stats | null, onCl
 /**
  * An ability card: the slot number to tap, the icon (shaded until it first comes round, the ticks in its corner), the
  * name (heals green), the MP, cooldown and wind-up ("CAST") in words and whole numbers; the documents' sentence; and
- * its size for this unit with what it grows with. In designer view, the target and every effect in words.
+ * its size for this unit with what it grows with. Designer view adds nothing: every line would repeat one of these.
  */
-export function abilityBlock(a: AbilityT, stats: Stats | null, designer: boolean, opts: { n?: number; onN?: () => void; cur?: boolean; target?: boolean; dmgMult?: number; opening?: boolean } = {}): HTMLElement {
+export function abilityBlock(a: AbilityT, stats: Stats | null, opts: { n?: number; onN?: () => void; cur?: boolean; target?: boolean; dmgMult?: number; opening?: boolean } = {}): HTMLElement {
   const i = abilityInfo(a, stats);
   const tag = abilityTag(a);
   // An ability starts a fight charged by its slot (ruleset.opening.slots), so its first use is part of the plan.
@@ -294,12 +292,9 @@ export function abilityBlock(a: AbilityT, stats: Stats | null, designer: boolean
       ),
     ),
   );
+  // The card's text and its size: the head already shows MP, cooldown and wind-up, so nothing below repeats them.
   const body: Child[] = [h("div", { class: "body" }, i.text)];
   if (stats) body.push(sizeEl(sizeParts(a, stats, opts.dmgMult)));
-  if (designer) {
-    body.push(h("div", { class: "body" }, `Wind-up ${i.cast}t, cooldown ${i.cooldown}t, recovery ${i.recovery}t${i.seek ? ", Seek" : ""}. Target: ${i.target}${i.waits ? `; ${i.waits}` : ""}.`));
-    for (const e of i.effects) body.push(h("div", { class: "body" }, `→ ${e}`));
-  }
   return h("div", { class: `ab${opts.cur ? " cur" : ""}` }, head, ...body);
 }
 
@@ -316,24 +311,25 @@ export function basicLine(wp: WeaponT, stats: Stats | null, opts: { mult?: numbe
 /** A section title with a note at its right. */
 export const section = (title: string, note?: Child) => h("div", { class: "section" }, title, note ? h("span", { class: "r dim small text" }, note) : null);
 /** A passive's block: its icon when it has a status, its name, its text. */
-export function passiveBlock(name: string, text: string, icon?: string | null, more?: string | null): Child[] {
+export function passiveBlock(name: string, text: string, icon?: string | null, more?: string | null, size?: HTMLElement | null): Child[] {
   return [
     h("div", { class: "line" }, icon ? statusEl(icon) : null, h("span", { class: "grow trunc hi" }, name.toUpperCase())),
     text ? h("div", { class: "text dim wrap small" }, text) : null,
     more ? h("div", { class: "text dim wrap small" }, more) : null,
+    size ?? null,
   ];
 }
 /**
  * A class's passive: its own, or the Valkyrie's Einherjar. `form`, the status a trained passive plays as (a
- * version's name, "+" for the power step), shown in its place under the passive's icon.
+ * version's name, "+" for the power step), shown in its place under the passive's icon; the stacks it lays, for `stats`.
  */
-export function classPassive(id: string, designer = false, form?: string): Child[] {
+export function classPassive(id: string, form?: string, stats: Stats = cls(id).stats): Child[] {
   const k = cls(id);
   const st = k.passive?.statuses?.[0];
   const fd = form && form !== st ? c.statuses.get(form) : undefined;
-  if (fd) return passiveBlock(fd.name, fd.text ?? "", st, designer ? statusText(fd).slice(1).join(" ") : null);
+  if (fd) return passiveBlock(fd.name, fd.text ?? "", st, null, sizeEl(heldParts([fd.id], stats)));
   if (!k.passive) return passiveBlock("Einherjar", "Allies it revives come back with every action ready.", null);
-  return passiveBlock(k.passive.name, k.passive.text, st, designer && st ? statusText(status(st)).slice(1).join(" ") : null);
+  return passiveBlock(k.passive.name, k.passive.text, st, null, sizeEl(heldParts(k.passive.statuses ?? [], stats)));
 }
 
 /** What a class can carry: its weapon kinds (2H for a two-handed one), its armor types and its offhand kinds. */
@@ -349,12 +345,12 @@ export function classSheet(id: string, designer: boolean, member: Member = membe
   const out: Child[] = [statGrid(member.stats, k.stats, designer)];
   const sp = specialLines(member.stats);
   if (sp.length) out.push(h("div", { class: "text up small wrap" }, ...sp.flatMap((s, i) => (i ? [" · ", s] : [s]))));
-  out.push(section("PASSIVE"), ...classPassive(id, designer, passive));
+  out.push(section("PASSIVE"), ...classPassive(id, passive, member.stats));
   out.push(section("GEAR"));
   for (const slot of SLOTS) out.push(slot === "offhand" && twoHanded(gear) ? lockedRow(slot) : gearRow(gear[slot] ? c.gear.get(gear[slot]) ?? null : null, slot, member.stats, undefined, false));
   out.push(section("ABILITIES"));
   // In a fight the rows show each cooldown live: the sheet's icons stay plain.
-  member.abilities.forEach((a, i) => out.push(abilityBlock(c.abilities.get(a)!, member.stats, designer, { n: i + 1, opening: false })));
+  member.abilities.forEach((a, i) => out.push(abilityBlock(c.abilities.get(a)!, member.stats, { n: i + 1, opening: false })));
   out.push(basicLine(weaponOf(c, member.weapon), member.stats, { ref: member.weapon }));
   return out;
 }
@@ -390,7 +386,7 @@ export function enemySheet(e: EnemyT, designer: boolean, live?: Stats, power = 0
   }
   out.push(section("ACTIONS"));
   out.push(basicLine(e.weapon ?? c.pack.ruleset.unarmed, stats, { mult, slot: false, ref: e.weapon ? `enemy:${e.id}` : "unarmed" }));
-  for (const a of e.abilities ?? []) out.push(abilityBlock(c.abilities.get(a)!, stats, designer, { dmgMult: mult }));
+  for (const a of e.abilities ?? []) out.push(abilityBlock(c.abilities.get(a)!, stats, { dmgMult: mult }));
   if (designer) out.push(section("HIDDEN STATS"), statGrid(stats, null, true, ["max_mp", "mp_regen", "crit_chance", "aggro"]));
   return out;
 }

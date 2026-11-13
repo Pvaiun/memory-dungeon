@@ -10,9 +10,9 @@ const stonewallShield = (ratio: number): EffectT => apply("shield", { stacks: of
 const grudge: ReactionT = { on: { event: "status_ended", status: "shield", cause: ["stacks"] }, do: [apply("taunt", { to: "holder" }), apply("guard", { to: "holder" })] };
 passiveUp({
   id: "vanguard", cls: "knight",
-  power: "A Shield two fifths bigger.",
-  a: { name: "Stonewall", text: "Starts every fight behind a Shield from its max HP. The other ally with the lowest Aggro starts behind a Shield of the same size.", builds: ["landslide", "hunt"] },
-  b: { name: "Grudge", text: "Starts every fight behind a Shield from its max HP. When its Shield breaks, it Taunts and is Guarded.", builds: ["toll"] },
+  power: "Shield +40%.",
+  a: { name: "Stonewall", text: `At fight start: a Shield of ${Math.round(VANGUARD_SHIELD * 100)}% of max HP, for itself and the ally with the least Aggro.`, builds: ["landslide", "hunt"] },
+  b: { name: "Grudge", text: `At fight start: a Shield of ${Math.round(VANGUARD_SHIELD * 100)}% of max HP. When it breaks: Taunts and is Guarded.`, builds: ["toll"] },
   form: (v, k) => ({
     reactions: [
       { on: { event: "fight_start" }, do: v === "a" ? [vanguardShield(VANGUARD_SHIELD * k), stonewallShield(VANGUARD_SHIELD * k)] : [vanguardShield(VANGUARD_SHIELD * k)] },
@@ -28,9 +28,9 @@ passiveUp({
   const valor: Partial<AbilityT> = { target: "self", do: [apply("guard"), apply("might", { stacks: stacks("several", "attack") })] };
   abilityUp({
     id: "fortify", cls: "knight",
-    power: "Comes round sooner.",
-    a: { name: "Stone guard", text: "Guards the other ally with the most Defense, and gives it a Shield from the Knight's Defense.", builds: ["landslide"] },
-    b: { name: "Valor", text: "Guards itself and gains several Might; stacks scale from Attack.", builds: ["landslide"] },
+    power: "Shorter cooldown.", shown: true,
+    a: { name: "Stone guard", text: "Guards and Shields the other ally with the most Defense.", builds: ["landslide"] },
+    b: { name: "Valor", text: "Guards itself and gains Might.", builds: ["landslide"] },
     form: (v, _k, plus) => ({ ...(v === "a" ? stoneGuard : v === "b" ? valor : {}), ...(plus ? { cooldown: cd("medium", "fortify") } : {}) }),
   });
 }
@@ -41,9 +41,9 @@ passiveUp({
   helper(kit("hold_the_line", "HOLD THE LINE", "Thorns up.", { duration: STATUS.taunt.duration, stats: [{ stat: "thorns", flat: SPECIAL.thorns.medium }] }));
   abilityUp({
     id: "stand_fast", cls: "knight",
-    power: "Costs less MP.",
-    a: { name: "Rally the well", text: "Gives Clarity to every ally under half its max MP. Waits until one is. No Taunt.", serves: "Barrage 1 ●●● ⚙ mana as armour (half)" },
-    b: { name: "Hold the line", text: "Taunts, and has Thorns for as long as the Taunt. No Clarity.", serves: "Toll 1 ●●● ⚙ goad (half)" },
+    power: "Costs less MP.", shown: true,
+    a: { name: "Rally the well", text: "Clarity to every ally below half MP; waits for one. No Taunt.", serves: "Barrage 1 ●●● ⚙ mana as armour (half)" },
+    b: { name: "Hold the line", text: "Taunts, with Thorns while the Taunt lasts. No Clarity.", serves: "Toll 1 ●●● ⚙ goad (half)" },
     form: (v, _k, plus) => ({ ...(v === "a" ? rallyTheWell : v === "b" ? holdTheLine : {}), ...(plus ? { mp: 125 } : {}) }),
   });
 }
@@ -63,9 +63,9 @@ passiveUp({
   });
   abilityUp({
     id: "shield_bash", cls: "knight",
-    power: "Deals two fifths more damage.",
-    a: { name: "Measured blow", text: "Waits for a foe to start a wind-up, then bashes the casting foe with the highest Attack, scaling from max HP, and Stuns it. The Stun holds the wind-up where it is.", builds: [] },
-    b: { name: "Crushing bash", text: "Bashes a random foe for double, scaling from max HP and its current Shield together. No Stun. A longer cooldown.", builds: ["landslide"] },
+    power: "+40% damage.", shown: true,
+    a: { name: "Measured blow", text: "Waits for a foe to wind up, then bashes and Stuns it.", builds: [] },
+    b: { name: "Crushing bash", text: "Bashes a random foe, harder with its own Shield. No Stun.", builds: ["landslide"] },
     form: (v, k) => (v === "a" ? measured(0.29 * k) : v === "b" ? crushing(0.58 * k) : { do: [bash(0.29 * k, stun)] }),
   });
 }
