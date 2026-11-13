@@ -158,13 +158,19 @@ export const between = (rng: Rng, [a, b]: readonly [number, number] | number[]) 
 
 // ─── Meta: what a run leaves behind ────────────────────────────────────────
 
-/** A finished run: a win adds its final party to the classes a run can start with, and opens the next heat. */
-export function finish(meta: RogueMeta, run: RogueRun): { unlocked: string[]; heat: boolean } {
+/** The classes a won run can add to the leaders: those in its final party (the three seated) not yet owned. */
+export const unlockable = (meta: RogueMeta, run: RogueRun): string[] => run.party.filter((cls) => !meta.owned.includes(cls));
+
+/**
+ * A finished run: a win adds the one class the player picks from its final party (`pick`, one of `unlockable`) to the
+ * classes a run can start with, and opens the next heat. A pick outside `unlockable` adds nothing.
+ */
+export function finish(meta: RogueMeta, run: RogueRun, pick?: string): { unlocked: string[]; heat: boolean } {
   meta.runs++;
   if (run.act > meta.best.act || (run.act === meta.best.act && run.floor > meta.best.floor)) meta.best = { act: run.act, floor: run.floor };
   if (run.pending.kind !== "over" || !run.pending.won) return { unlocked: [], heat: false };
   meta.wins++;
-  const unlocked = run.party.filter((cls) => !meta.owned.includes(cls));
+  const unlocked = pick && unlockable(meta, run).includes(pick) ? [pick] : [];
   meta.owned.push(...unlocked);
   const heat = run.heat >= meta.maxHeat;
   if (heat) meta.maxHeat = run.heat + 1;

@@ -1,5 +1,5 @@
 /** The run's end: a Destiny Shard's offer after a lost fight, the run's summary, its record (SAVE RUN), and a won run's moment. */
-import { rogue, type RogueRun } from "../../../src/rogue.js";
+import { rogue, type RogueRun, unlockable } from "../../../src/rogue.js";
 import { button, type Child, h, header, toast, win } from "../dom.js";
 import { c, cls as classOf, shortName } from "../content.js";
 import { section } from "../sheet.js";
@@ -30,19 +30,33 @@ export function fateView(run: RogueRun): Child[] {
 
 // ─── The end ───────────────────────────────────────────────────────────────
 
+/** A won run's new leader: one of the party's three the player doesn't own yet, picked on the victory screen. */
+let leadPick: string | null = null;
+function leadChoice(run: RogueRun): Child {
+  const open = unlockable(meta(), run);
+  if (!open.length) return null;
+  if (!leadPick || !open.includes(leadPick)) leadPick = open[0];
+  return win("roster", h("div", { class: "line hi" }, "CHOOSE A NEW LEADER"),
+    h("div", { class: "grid" }, ...run.party.map((id) => open.includes(id)
+      ? h("div", { class: `cell${leadPick === id ? " cur" : ""}`, onClick: () => { leadPick = id; redraw(); } }, h("div", { class: "portrait" }, faceEl(id)), h("span", { class: "trunc", style: "max-width:100%" }, shortName(id)))
+      : h("div", { class: "cell static dim" }, h("div", { class: "portrait" }, faceEl(id)), h("span", { class: "trunc", style: "max-width:100%" }, shortName(id)), h("span", { class: "small" }, "OWNED")))));
+}
+
 export function overView(run: RogueRun): Child[] {
   const p = run.pending;
   if (p.kind !== "over") return [];
   const won = p.won;
+  const choice = won ? leadChoice(run) : null;
   return [
     header(won ? "VICTORY" : "THE RUN ENDS", null),
     scene(run, "over", { h: 112, night: !won, actors: partyActors(run, 112, won ? "victory" : "dead", { cx: 135 }) }),
     win("", h("div", { class: `line ${won ? "good" : "bad"}` }, won ? "ALL THREE ACTS CLEARED" : `FELL IN ACT ${ROMAN[run.act]}, FLOOR ${run.floor}`),
       h("div", { class: "line small dim wrap" }, `${run.stats.fights} FIGHTS · ${run.stats.elites} ELITES · ${run.stats.gold}G EARNED`),
-      won ? h("div", { class: "line small hi wrap" }, `${run.party.map(shortName).join(", ")} CAN NOW LEAD A RUN`) : null),
+      won && !choice ? h("div", { class: "line small dim wrap" }, "THE WHOLE PARTY CAN ALREADY LEAD A RUN") : null),
+    choice,
     win("scroll", section("THE ROAD"), ...run.notes.map((n) => h("div", { class: "text small wrap" }, h("span", { class: "dim" }, `${ROMAN[n.act]}.${n.floor} `), n.text))),
     recordLine(run),
-    actions(button("DONE", () => { const r = endRun(); go("rogue"); if (r.won) cheer(r.unlocked, r.heat); }, "hi"), button("SAVE RUN", () => saveRunFile(run))),
+    actions(button("DONE", () => { const r = endRun(choice ? leadPick ?? undefined : undefined); leadPick = null; go("rogue"); if (r.won) cheer(r.unlocked, r.heat); }, "hi"), button("SAVE RUN", () => saveRunFile(run))),
   ];
 }
 /** The record's check (a replay of the whole run from its record), once per finished run: it takes a moment, so it runs after the screen is drawn. */
@@ -75,7 +89,7 @@ function saveRunFile(run: RogueRun) {
   if (frameEl) toast(frameEl, "RUN SAVED");
 }
 
-/** A won run's moment: one card for the win, then one per class that can now lead, then the heat opened. A tap goes on. */
+/** A won run's moment: one card for the win, then the class picked to lead, then the heat opened. A tap goes on. */
 function cheer(unlocked: string[], heat: boolean) {
   if (!frameEl) return;
   const cards: Child[][] = [[h("div", { class: "cele-top" }, "VICTORY!")]];

@@ -6,7 +6,7 @@ import { combat } from "../engine/combat/rules.js";
 import type { Member as EngineMember } from "../engine/combat/rules.js";
 import { rngFor } from "../engine/rng.js";
 import {
-  autoFight, bench, choose, discard, dismiss, endFight, equip, eventView, finish, formationRarity, freshMeta, heals, improveOptions, itemGear, kindOf, leaderKnown, learn, makeMap, maxOf, member,
+  autoFight, bench, choose, discard, dismiss, endFight, equip, eventView, finish, unlockable, formationRarity, freshMeta, heals, improveOptions, itemGear, kindOf, leaderKnown, learn, makeMap, maxOf, member,
   newItem, newRogue, options, parseTraining, partyOf, priceOf, reachable, recruit, recruitKnown, rogue, rollItem, seatsOf, startFight, stockOf, swap, temperInto, train, trainingsFor,
   trainOptions, usable, whyNot, wearer, type RogueRun,
 } from "../rogue.js";
@@ -353,7 +353,7 @@ test("rogue (5i): a formation's rarity is its own", () => {
   assert.equal(formationRarity(c, run.formations.at(-1)!), "legendary");
 });
 
-test("rogue (5h): starting units know one rolled ability; a recruit knows what it's given; fresh abilities start half charged; a won run adds its party to the leaders", () => {
+test("rogue (5h): starting units know one rolled ability; a recruit knows what it's given; fresh abilities start half charged; a won run adds the one class picked from its party to the leaders", () => {
   const c = loadContent(raw);
   const run: RogueRun = newRogue(c, { seed: 3, leader: "cleric" });
   assert.equal(member(run, "cleric").known.length, 1, "the leader knows one ability");
@@ -366,11 +366,12 @@ test("rogue (5h): starting units know one rolled ability; a recruit knows what i
   learn(c, run, "pyromancer", "firebolt");
   assert.ok(Math.abs(member(run, "pyromancer").cooldowns!.firebolt - (c.abilities.get("firebolt")!.cooldown * (100 - fresh)) / 100) < 0.01, "an ability just learned is half charged");
   const meta = freshMeta();
-  run.party = ["cleric", "pyromancer"];
+  run.party = ["cleric", "pyromancer", "monk"];
   run.pending = { kind: "over", won: true };
-  const r = finish(meta, run);
+  assert.deepEqual(unlockable(meta, run), ["pyromancer", "monk"], "an owned class isn't offered");
+  const r = finish(meta, run, "pyromancer");
   assert.deepEqual(r.unlocked, ["pyromancer"]);
-  assert.ok(meta.owned.includes("pyromancer"));
+  assert.ok(meta.owned.includes("pyromancer") && !meta.owned.includes("monk"), "only the pick joins the leaders");
   assert.equal(meta.maxHeat, 1);
 });
 
