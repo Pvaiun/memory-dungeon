@@ -226,7 +226,7 @@ weapon("hammer", "common", "Horseman's hammer", { stats: [st("max_hp", 1), st("a
   });
 }
 {
-  const name = "Cornerstone hammer", effect = "Basic attacks deal extra damage equal to half of all Shield the party holds. The Shields stay.";
+  const name = "Cornerstone hammer", effect = "Basic attacks deal extra damage equal to half of all Shield the party holds.";
   weapon("hammer", "legendary", name, {
     effect, stats: [st("defense", 2), sp("crit_damage", "medium")],
     statuses: [own_(name, effect, { adds: [{ on: "basic", amount: { scale: [{ ratio: 0.5, count: { side: "allies", stacks: "shield" } }] } }] })],
@@ -248,7 +248,7 @@ weapon("mace", "common", "Friar's mace", { stats: [st("max_hp", 1), st("mp_regen
   });
 }
 {
-  const name = "Mender's mace", effect = "Every so often: heals the lowest ally for 20% of the wearer's max HP.";
+  const name = "Mender's mace", effect = `Every ${SO_OFTEN} ticks: heals the ally with the lowest HP% for 20% of the wearer's max HP.`;
   weapon("mace", "uncommon", name, {
     effect, stats: [st("max_hp", 2), st("mp_regen", 1)],
     statuses: [own_(name, effect, { pulse: { every: SO_OFTEN, do: [{ op: "heal", amount: share(0.2, "max_hp"), to: TO.lowestAlly }] } })],
@@ -256,7 +256,7 @@ weapon("mace", "common", "Friar's mace", { stats: [st("max_hp", 1), st("mp_regen
   });
 }
 {
-  const name = "Penitent's mace", effect = "When hit: heals the lowest ally for 2% of the wearer's max HP.";
+  const name = "Penitent's mace", effect = "When hit: heals the ally with the lowest HP% for 2% of the wearer's max HP.";
   weapon("mace", "uncommon", name, {
     effect, stats: [st("max_hp", 1), st("defense", 1), sp("thorns", "medium")],
     statuses: [own_(name, effect, { reactions: [react(EV.struck, { op: "heal", amount: share(0.02, "max_hp"), to: TO.lowestAlly })] })],
@@ -314,7 +314,7 @@ weapon("staff", "common", "Rowan staff", { stats: [sp("cast_speed", "medium"), s
 weapon("staff", "common", "Willow staff", { stats: [sp("cast_speed", "medium"), st("mp_regen", 1)], serves: "the healers, and Barrage's well (Cast speed, MP regen)" });
 
 {
-  const name = "Shepherd's staff", effect = "Each cast gives the ally with the least MP half its MP cost.";
+  const name = "Shepherd's staff", effect = "Each cast gives the ally with the lowest MP% half its MP cost.";
   weapon("staff", "uncommon", name, {
     effect, stats: [sp("cast_speed", "medium"), sp("cooldown", "medium"), st("mp_regen", 1)],
     statuses: [own_(name, effect, { reactions: [react(on("action_resolve", { kind: "ability", paid: true }), { op: "mp", amount: ofAmount(0.5), to: TO.leastMpAlly })] })],
@@ -330,7 +330,7 @@ weapon("staff", "common", "Willow staff", { stats: [sp("cast_speed", "medium"), 
   });
 }
 {
-  const name = "Vesper staff", effect = "Each cast heals the lowest ally for 10% of Attack.";
+  const name = "Vesper staff", effect = "Each cast heals the ally with the lowest HP% for 10% of Attack.";
   weapon("staff", "uncommon", name, {
     effect, stats: [sp("cast_speed", "medium"), st("attack", 1), st("mp_regen", 1)],
     statuses: [own_(name, effect, { reactions: [react(CAST, { op: "heal", amount: share(0.1, "attack"), to: TO.lowestAlly })] })],

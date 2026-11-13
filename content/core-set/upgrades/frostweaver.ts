@@ -12,7 +12,7 @@ const RIME = 0.3;
 passiveUp({
   id: "shatterpoint", cls: "frostweaver",
   power: "+40% Sunder.",
-  a: { name: "Rime shield", text: "On a shatter: the lowest ally gains a Shield of 30% of the Frostweaver's max HP, instead of the Sunder.", serves: "Snap 2 ●●, Toll ●● ⚙ frozen gate (half), detonation (half), brink (half)", plus: "+40% Shield." },
+  a: { name: "Rime shield", text: "On a shatter: the ally with the lowest HP% gains a Shield of 30% of the Frostweaver's max HP, instead of the Sunder.", serves: "Snap 2 ●●, Toll ●● ⚙ frozen gate (half), detonation (half), brink (half)", plus: "+40% Shield." },
   b: { name: "Splinters", text: "On a shatter: that foe gains Sunder, and every other foe a third of its Chill.", serves: "Snap 2 ●●● ⚙ firecracker (key)" },
   form: (v, k) => ({
     reactions: [{
@@ -64,8 +64,8 @@ abilityUp({
   id: "stillness", cls: "frostweaver",
   power: "Costs less MP.",
   shown: true,
-  a: { name: "Deep calm", text: "Clarity on the ally with the least MP; its own next ability costs nothing. No Chill.", serves: "Barrage 2 ●●● ⚙ crescendo (half), mana as armour (half)" },
-  b: { name: "Frozen moment", text: "Waits for a foe to cast. Chill on every casting foe, and Clarity on the ally with the least MP.", builds: ["snap"] },
+  a: { name: "Deep calm", text: "Clarity on the ally with the lowest MP%; its own next ability costs nothing. No Chill.", serves: "Barrage 2 ●●● ⚙ crescendo (half), mana as armour (half)" },
+  b: { name: "Frozen moment", text: "Waits for a foe to cast. Chill on every casting foe, and Clarity on the ally with the lowest MP%.", builds: ["snap"] },
   form: (v, _k, plus) => ({
     ...(plus ? { mp: 450 } : {}),
     ...(v === "a" ? { target: T.lowestMpAlly, do: [apply("clarity"), apply("deep_calm", { to: "self" })] } : {}),

@@ -13,7 +13,7 @@ import { abilityUp, apply, cd, helper, hitOf, kit, passiveUp, phys, POWER, r6 } 
   passiveUp({
     id: "hunters_eye", cls: "ranger",
     power: `+${crit(KIT.hunterCrit + 1)}% Crit chance, not +${crit(KIT.hunterCrit)}%.`,
-    a: { name: "Quarry", text: `Basic attacks ignore Taunt, have +${crit(KIT.hunterCrit)}% Crit chance, and aim at the most wounded foe.`, serves: "Hunt 1 ●●●" },
+    a: { name: "Quarry", text: `Basic attacks ignore Taunt, have +${crit(KIT.hunterCrit)}% Crit chance, and aim at the foe with the lowest HP%.`, serves: "Hunt 1 ●●●" },
     b: { name: "Quick draw", text: `Basic attacks ignore Taunt and have +${crit(KIT.hunterCrit)}% Crit chance; a crit makes the next basic attack ready at once.`, serves: "Cuts 2 ●●●, Hunt ●● ⚙ emptied quiver (key)" },
     form: (v, _k, plus) => ({ seek: "basic", ...crits(plus ? KIT.hunterCrit + 1 : KIT.hunterCrit), ...(v === "a" ? quarry : v === "b" ? quickDraw : {}) }),
   });

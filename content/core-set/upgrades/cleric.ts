@@ -46,8 +46,8 @@ import { abilityUp, apply, DRAWN, helper, kit, ofHolder, passiveUp, removeMine }
   abilityUp({
     id: "renew", cls: "cleric",
     power: "Costs less MP.", shown: true,
-    a: { name: "Font", text: "Cleanses the lowest debuffed ally (else the lowest) and gives it Regen and Clarity.", builds: ["barrage"] },
-    b: { name: "Anchor's blessing", text: "Cleanses the ally foes are drawn to and gives it Regen.", builds: ["toll"] },
+    a: { name: "Font", text: "Cleanses the ally with the lowest HP%, a debuffed one first, and gives it Regen and Clarity.", builds: ["barrage"] },
+    b: { name: "Anchor's blessing", text: "Cleanses the ally with the most Aggro and gives it Regen.", builds: ["toll"] },
     form: (v, _k, plus) => ({ ...(v === "a" ? font : v === "b" ? anchor : {}), ...(plus ? { mp: 450 } : {}) }),
   });
 }
@@ -68,8 +68,8 @@ import { abilityUp, apply, DRAWN, helper, kit, ofHolder, passiveUp, removeMine }
   abilityUp({
     id: "cure", cls: "cleric",
     power: "+40% healing.", shown: true,
-    a: { name: "Triage", text: "Heals the lowest ally; waits until one is below 40% HP.", builds: ["pact"] },
-    b: { name: "Battle prayer", text: "Heals the lowest ally. Its next basic attack deals that much extra.", builds: ["pact", "landslide"] },
+    a: { name: "Triage", text: "Heals the ally with the lowest HP%; waits until one is below 40% HP.", builds: ["pact"] },
+    b: { name: "Battle prayer", text: "Heals the ally with the lowest HP%. Its next basic attack deals that much extra.", builds: ["pact", "landslide"] },
     form: (v, k, plus) =>
       v === "a" ? triage(k)
         : v === "b" ? { do: [heal(0.35 * k), apply(plus ? "battle_prayer_plus" : "battle_prayer", { to: "self" })] }
@@ -86,7 +86,7 @@ import { abilityUp, apply, DRAWN, helper, kit, ofHolder, passiveUp, removeMine }
   });
   /**
    * Ward of life: waits for either condition (`if: { any }`), a fallen ally or one below a third. Each part has its own target, and an
-   * effect has no condition of its own, so when both hold it does both: it raises the fallen and shields the lowest ally below a third.
+   * effect has no condition of its own, so when both hold it does both: it raises the fallen and shields the ally with the lowest HP% below a third.
    * The Shield reads the Cleric's own max HP (everything scales from the user).
    */
   const ward = (raise: number, shield: number): Partial<AbilityT> => ({
@@ -102,7 +102,7 @@ import { abilityUp, apply, DRAWN, helper, kit, ofHolder, passiveUp, removeMine }
     id: "raise", cls: "cleric",
     power: "Raises at 70% HP, not 50%.",
     a: { name: "Martyr's raise", text: "Pays half its HP to raise a random fallen ally with that much.", builds: ["pact"], plus: "Raises with 40% more HP than it pays." },
-    b: { name: "Ward of life", text: "Raises a fallen ally at 50% HP, and Shields the lowest ally below 33% HP.", builds: ["toll", "pact"] },
+    b: { name: "Ward of life", text: "Raises a fallen ally at 50% HP, and Shields the ally with the lowest HP% below 33% HP.", builds: ["toll", "pact"] },
     form: (v, k) => (v === "a" ? martyr(0.5 * k) : v === "b" ? ward(0.5 * k, k / 3) : { do: [{ op: "revive", hp: raiseHp(0.5 * k) }] }),
   });
 }
