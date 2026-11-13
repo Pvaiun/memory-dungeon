@@ -498,8 +498,7 @@ WEAPON_IDS = {
     "wand": "plain_wand", "staff": "plain_staff", "fist_weapons": "plain_fist",
 }
 # Sheets resized to fit the hand, used in place of the pack's own of the same name: the haloed axes drawn bigger than
-# their wearer made smaller, the two-handers drawn smaller than a one-handed hammer given a longer haft. They keep the
-# pack's format, so one redrawn in the pack only needs its file here deleted.
+# their wearer, made smaller. They keep the pack's format, so one redrawn in the pack only needs its file here deleted.
 FITTED = Path(__file__).parent / "weapons-fitted"
 # Drawn for gear lists only, never in a hand (the fists are the sprite's own): the fist weapons, and the mythic that is one.
 UNHELD_KINDS = {"Fist weapons"}
