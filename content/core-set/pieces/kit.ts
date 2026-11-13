@@ -326,7 +326,7 @@ export function beatHalfway(pid: string, name: string, effects: EffectT[]): { re
     reactions: [atStart(give(wait)), react(on("revived"), give(wait)), react(on("status_ended", { status: wait, cause: ["expired"] }), ...effects, give(pulse))],
     statuses: [
       marker(wait, `${name} (waiting)`, "Its first beat comes when this runs out.", { duration: SO_OFTEN / 2 }),
-      marker(pulse, `${name} (beating)`, "Its beat, every so often.", { pulse: { every: SO_OFTEN, do: effects } }),
+      marker(pulse, `${name} (beating)`, `Its beat, every ${SO_OFTEN} ticks.`, { pulse: { every: SO_OFTEN, do: effects } }),
     ],
   };
 }

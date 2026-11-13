@@ -13,7 +13,7 @@ passiveUp({
   id: "lacerate", cls: "assassin",
   power: "+40% Bleed.",
   a: { name: "Opening wound", text: "Its first hit on each foe always crits. Crits add Bleed.", builds: ["hunt"] },
-  b: { name: "Rupture", text: "Crits deal extra damage for each Bleed on the foe, then add Bleed. The Bleed stays.", builds: ["hunt"] },
+  b: { name: "Rupture", text: "Crits deal extra damage for each Bleed on the foe, then add Bleed.", builds: ["hunt"] },
   form: (v, k) => ({
     // Opening wound: hits on a foe it hasn't yet landed a hit on always crit (a crit rule: chance after every stat change, so Gambler's coin too).
     ...(v === "a" ? { crits: [{ when: { lacks: "opening_wound" }, chance: 100 }] } : {}),
@@ -37,7 +37,7 @@ abilityUp({
   id: "vanish", cls: "assassin",
   power: "Shorter cooldown.",
   shown: true,
-  a: { name: "Smoke screen", text: "Hides the lowest ally that isn't Taunting or Hidden. Waits for an ally below 80% HP.", serves: "Pact ●●, Toll ●● ⚙ two in the dark (key), brink (half)" },
+  a: { name: "Smoke screen", text: "Hides the ally with the lowest HP% that isn't Taunting or Hidden. Waits for an ally below 80% HP.", serves: "Pact ●●, Toll ●● ⚙ two in the dark (key), brink (half)" },
   b: { name: "Shadow step", text: "Goes Hidden. When the Hidden runs out, its next hit deals triple damage.", builds: ["hunt"] },
   form: (v, _k, plus) => ({
     // A quarter off (22 → 16): one word down would hide it about 70% of a fight.
@@ -79,7 +79,7 @@ abilityUp({
   power: "Costs less MP.",
   shown: true,
   a: { name: "Choke", text: "Waits for a foe to cast, then Silences the casting foe with the most Attack. Ignores Taunt.", builds: [] },
-  b: { name: "Bleed them dry", text: "Strikes a random foe that isn't Taunting, adding Rot and Bleed; its own Lifesteal doubles for a while. No Silence.", builds: ["pact", "hunt"] },
+  b: { name: "Bleed them dry", text: `Strikes a random foe that isn't Taunting, adding Rot and Bleed; its own Lifesteal doubles for ${DRY} ticks. No Silence.`, builds: ["pact", "hunt"] },
   form: (v, _k, plus) => ({
     ...(plus ? { mp: 200 } : {}),
     ...(v === "a" ? { if: { side: "foes", where: { casting: true } }, target: T.castingFoe } : {}),

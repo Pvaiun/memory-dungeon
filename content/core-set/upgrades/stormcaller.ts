@@ -64,7 +64,7 @@ abilityUp({
   id: "static_charge", cls: "stormcaller",
   power: "Shorter cooldown.",
   shown: true,
-  a: { name: "Overcharge", text: `Its basic attacks come faster for ${KIT.staticCharge.duration} ticks, and its next three abilities in that time cost no MP.`, serves: "Barrage 2 ●●● ⚙ crescendo (half)" },
+  a: { name: "Overcharge", text: `Its basic attacks come ${KIT.staticCharge.speed}% faster for ${KIT.staticCharge.duration} ticks, and its next three abilities in that time cost no MP.`, serves: "Barrage 2 ●●● ⚙ crescendo (half)" },
   b: { name: "Storm shield", text: `Thorns up and +${4 * AGGRO_STEP} Aggro for 20 ticks. No speed.`, builds: ["toll", "storm"] },
   form: (v, _k, plus) => ({
     ...(plus ? { cooldown: cd("short", "static_charge") } : {}),

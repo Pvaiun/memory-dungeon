@@ -55,15 +55,15 @@ abilityUp({
   power: "+40% damage.",
   shown: true,
   a: { name: "Boulder", text: "Drops a boulder on the foe with the most HP.", builds: ["landslide"] },
-  b: { name: "Rock shelter", text: "Drops a rock on a random foe; the lowest ally gains a Shield of the damage dealt.", builds: ["landslide"] },
+  b: { name: "Rock shelter", text: "Drops a rock on a random foe; the ally with the lowest HP% gains a Shield of the damage dealt.", builds: ["landslide"] },
   form: (v, k) =>
     // Boulder takes the next cooldown word and 650 MP, so a double hit doesn't double the spell's output.
     v === "a" ? { cast: WINDUP.very_long, cooldown: cd(ROCKFALL.boulder, "rockfall"), mp: 650, target: { side: "foes", pick: "highest", by: "hp" }, do: [phys(from("defense", HIT[ROCKFALL.hit] * 2 * k))] }
-      // A one-tick marker on the Geomancer hears the cast's own hit and shelters the lowest ally for as much.
+      // A one-tick marker on the Geomancer hears the cast's own hit and shelters the ally with the lowest HP% for as much.
       : v === "b" ? { do: [apply("rock_shelter", { to: "self" }), phys(hitOf("defense", ROCKFALL.hit, k))] }
         : { do: [phys(hitOf("defense", ROCKFALL.hit, k))] },
 });
-helper(marker("rock_shelter", "ROCK SHELTER", "Its hit Shields the lowest ally for as much.", {
+helper(marker("rock_shelter", "ROCK SHELTER", "Its hit Shields the ally with the lowest HP% for as much.", {
   duration: 1,
   reactions: [{ on: { event: "hit_lands", kind: "ability" }, do: [apply("shield", { stacks: { scale: [{ ratio: 1, amount: true }] }, to: T.lowestShareAlly })] }],
 }));

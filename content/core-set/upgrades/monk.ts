@@ -57,7 +57,7 @@ abilityUp({
   power: "+40% stacks.",
   shown: true,
   a: { name: "Frost fist", text: "Three blows on the foe with the most Chill, each adding more.", serves: "Snap 1 ●●●" },
-  b: { name: "Fanned flames", text: "Five lighter blows on the foe with the most Burn, each adding more.", builds: ["bonfire", "cuts"] },
+  b: { name: "Fanned flames", text: "Five blows on the foe with the most Burn, each adding more.", builds: ["bonfire", "cuts"] },
   form: (v, k) =>
     v === "a" ? { target: T.mostFoe("chill"), do: [phys(from("attack", 0.11), { hits: 3, apply: [{ status: "chill", stacks: stacks("few", "attack", FIST_BURN * k) }] })] } // Burning fist's own share of the word.
       : v === "b" ? { do: [phys(from("attack", 0.07), { hits: 5, apply: [{ status: "burn", stacks: stacks("few", "attack", 0.4 * k) }] })] }

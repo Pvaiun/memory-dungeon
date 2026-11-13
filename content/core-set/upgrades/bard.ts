@@ -13,7 +13,7 @@ import { abilityUp, apply, cd, helper, kit, passiveUp, r6 } from "./kit.js";
   passiveUp({
     id: "refrain", cls: "bard",
     power: "42% of the damage, not 30%; +40% to any Might.",
-    a: { name: "Harmony", text: "Basic attacks heal the lowest ally and give MP to the ally with the least MP, each 30% of the damage.", builds: ["barrage", "pact"],
+    a: { name: "Harmony", text: "Basic attacks heal the ally with the lowest HP% and give MP to the ally with the lowest MP%, each 30% of the damage.", builds: ["barrage", "pact"],
       plus: "42% of the damage, not 30%." },
     b: { name: "Battle song", text: "Basic attacks give a random ally Might, and a random ally MP (30% of the damage).", builds: ["landslide", "cuts"] },
     form: (v, k) => ({ reactions: v === "a" ? harmony(k) : v === "b" ? song(k) : refrain(RANDOM, RANDOM, k) }),
@@ -44,7 +44,7 @@ import { abilityUp, apply, cd, helper, kit, passiveUp, r6 } from "./kit.js";
     // Cheaper too: sooner at the base's 650, the Bard spent its mana on Haste and War ballad went quiet (the party dealt 7% less).
     power: "Shorter cooldown; costs less MP.", shown: true,
     a: { name: "Rubato", text: "Haste on every ally, and readies each ally's ability nearest to ready.", serves: "Barrage 2 ●●●, Landslide ●" },
-    b: { name: "Accelerando", text: "Haste on the ally that attacks fastest.", builds: ["cuts"] },
+    b: { name: "Accelerando", text: "Haste on the ally with the fastest basic attack.", builds: ["cuts"] },
     form: (v, _k, plus) =>
       v === "a" ? { ...rubato, ...(plus ? { cooldown: cd("medium", "allegro") } : {}) }
         : v === "b" ? { ...accelerando, ...(plus ? { cooldown: cd("quick", "allegro") } : {}) }
@@ -61,7 +61,7 @@ import { abilityUp, apply, cd, helper, kit, passiveUp, r6 } from "./kit.js";
    */
   const CADENZA = 3;
   const cadenza: Partial<AbilityT> = { target: "self", do: [apply("cadenza", { stacks: CADENZA })] };
-  helper(kit("cadenza", "CADENZA", "Its next basic attacks come at once.", {
+  helper(kit("cadenza", "CADENZA", `Its next ${CADENZA} basic attacks come at once.`, {
     stacking: "intensity", cap: CADENZA,
     trigger: { on: { event: "action_resolve", kind: "basic" } }, drop: { count: 1 },
     reactions: [
