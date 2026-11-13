@@ -149,13 +149,14 @@ export const SWING_SCALING = { base_heavy: 0.3, even: 0.5, attack_heavy: 0.7 } a
 export const SWING_TRADE = 1.2;
 /**
  * Stat steps a piece carries, by rarity: every piece has stats, and each rarity carries more than the last (the director's rule).
+ * A mythic carries at least a legendary's (the director's word), beside the effect that rewrites its class.
  * A weapon kind's budget word moves the ladder a step down (lean, never below one) or up (rich); every other slot takes the standard.
  * A piece's step along the swing trade moves it once more (kit.ts).
  */
 export const KIND_BUDGET = {
-  lean: { common: 1, uncommon: 1, rare: 2, legendary: 3 },
-  standard: { common: 1, uncommon: 2, rare: 3, legendary: 4 },
-  rich: { common: 2, uncommon: 3, rare: 4, legendary: 5 },
+  lean: { common: 1, uncommon: 1, rare: 2, legendary: 3, mythic: 3 },
+  standard: { common: 1, uncommon: 2, rare: 3, legendary: 4, mythic: 4 },
+  rich: { common: 2, uncommon: 3, rare: 4, legendary: 5, mythic: 5 },
 } as const;
 export type SwingWordK = keyof typeof SWING_POWER;
 export type ScalingWord = keyof typeof SWING_SCALING;

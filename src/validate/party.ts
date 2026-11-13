@@ -24,6 +24,20 @@ export function handsOf(pack: Pack, g: S.GearT | undefined): 1 | 2 {
   return g.weapon.hands ?? pack.weaponKinds.find((k) => k.id === g.weapon!.kind)?.hands ?? 1;
 }
 
+/**
+ * The weapon kind a class arrives with: its first one-handed kind, so it starts with a hand free for an offhand
+ * (every class has one); its first kind only if a pack gives it none.
+ */
+export function startingKind(pack: Pack, cls: S.ClassDefT): string {
+  return cls.weapons.find((k) => (pack.weaponKinds.find((w) => w.id === k)?.hands ?? 1) === 1) ?? cls.weapons[0];
+}
+
+/** The plain weapon a class arrives with: the starter piece of its starting kind. */
+export function startingWeapon(pack: Pack, cls: S.ClassDefT): S.GearT | undefined {
+  const kind = startingKind(pack, cls);
+  return pack.gear.find((g) => g.slot === "weapon" && g.source === "starter" && g.weapon?.kind === kind);
+}
+
 /** Why this class can't wear this piece, in a few words (for issues). */
 function misfit(cls: S.ClassDefT, g: S.GearT): string {
   if (g.mythic) return `'${g.id}' is the ${g.mythic}'s mythic`;

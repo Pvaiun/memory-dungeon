@@ -92,7 +92,7 @@ src/
     combat.ts                the combat rule language: numbers, conditions, targeting, effects, statuses, actions
     content.ts               classes, upgrades, gear, formations, enemies, perks
     dungeons.ts              dungeons, loot, challenges, the starter, progression, the rogue block, totals, unused entries
-    party.ts                 party loadouts, challenge constraints, canEquip, handsOf
+    party.ts                 party loadouts, challenge constraints, canEquip, handsOf, the weapon a class arrives with
   sim/                       the simulation library (the interface uses content.ts and parties.ts)
     content.ts               content with patches (variants), and single fights as one-stage dungeons
     parties.ts               parties: building and listing them, plain weapons, what fits a slot

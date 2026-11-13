@@ -31,7 +31,7 @@ The Knight, Cleric and Ranger are the starters: a party that clears Fundamental 
 | Stormcaller | The striker among the mages | fist weapons, rune sword | totem, bell | Robes, Leather |
 | Geomancer | Hits hardest behind stone | hammer, great weapon | kite shield, trophy | Plate |
 
-A class arrives with the plain weapon of its first kind. Every kind's swing, scaling and budget words are under Weapons in *Core set: rules and vocabulary*.
+A class arrives with the plain weapon of its first one-handed kind, so it starts with a hand free for an offhand (the Ranger with a dagger, not a bow). Every kind's swing, scaling and budget words are under Weapons in *Core set: rules and vocabulary*.
 
 **Not in the core set for now:** the Berserker (the first to add next: Might, Lifesteal and Sunder on a great weapon), the Samurai, Dark knight, Time mage, Dancer, Alchemist and the rest of the class pool. Each can be built later from these pieces.
 
