@@ -139,6 +139,7 @@ STATUS_ICONS = {  # status id(s) → (icon, the status's colour: its rim, and th
     'frozen_core': ('s:45:ice', 'ice'),
     'static': ('s:382:yellow', 'yellow'),
     'vengeance': ('s:171:red', 'red'),
+    'incorporeal': ('k:189:purple', 'purple'),
     # Gear effects
     'second_thrust_on': ('kind:dagger', 'gold'),
     'gorged_claws_on': ('kind:fist', 'crimson'),
