@@ -206,6 +206,8 @@ ui/
       effects.ts             plays the effects in step with the story: missiles, blows that follow, statuses that land with them
       tuner.ts               the FX SIZES screen: a sample fight where each look plays again and again, sized by the designer
       narrate.ts             turns the log into messages
+      tally.ts               a fight's numbers from its log: each unit's damage dealt and taken, healing, actions and statuses laid, and what each status did for the side it served
+      recap.ts               the fight's recap, opened from the summary at a fight's end: each member's numbers on one scale, its actions on a tap, and what each status did
       scene.ts               the field, backdrops, the campfire, the menus' stages and party strip; drawing the effects
       audio.ts               sound effects and music
   tools/

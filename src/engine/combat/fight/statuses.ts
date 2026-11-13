@@ -157,12 +157,12 @@ export function drain(w: W, it: Extract<Item, { k: "drain" }>) {
 /** Whether a unit's stats read its statuses' stacks live (a stat for each Cut, Thorns for each Spite), so a change of stacks reworks them. */
 const readsStacks = (w: W, u: CUnit) => feats(w.c).live && u.statuses.some((s) => def(w, s.id).stats?.some((ch) => ch.live));
 
-/** An application landed. `added`: the stacks it added, in thousandths (Intensity only), which the event reports. */
+/** An application landed. `added`: the stacks it added, in thousandths (Intensity only), which the event and the log report. */
 function gained(w: W, to: CUnit, d: S.StatusT, s: SInst, by?: CUnit, added = 0, o: Partial<ApplyOpts> = {}) {
   if (d.absorb) s.peak = Math.max(s.peak ?? 0, s.stacks);
   w.log?.({
     t: "status", vis: d.show === "icon" ? "player" : "hidden", at: w.f.now, unit: to.id, status: d.id, name: d.name, ...(by ? { by: by.id } : {}),
-    total: isIntensity(d) ? s.stacks / SUBTICKS : null, end: s.end,
+    total: isIntensity(d) ? s.stacks / SUBTICKS : null, ...(isIntensity(d) ? { added: added / SUBTICKS } : {}), end: s.end,
   });
   if (d.stats || d.swap || (isIntensity(d) && readsStacks(w, to))) refresh(w, to);
   // A cap on healing takes what the unit has above it as it lands: not damage, and not a price.
