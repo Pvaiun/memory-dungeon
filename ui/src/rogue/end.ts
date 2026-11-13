@@ -22,8 +22,8 @@ export function fateView(run: RogueRun): Child[] {
     scene(run, "fate", { h: 112, night: true, actors: partyActors(run, 112, "dead", { cx: 135 }) }),
     win("", h("div", { class: "line bad wrap" }, `FELL TO ${p.fight.toUpperCase()}`),
       h("div", { class: "line gold" }, `${n} `, shardEl()),
-      h("div", { class: "text small dim wrap" }, "A shard glimmers, yearning to tempt fate.")),
-    actions(button("USE A SHARD", () => { pickOrSave(run, "shard"); sfx.win(); if (frameEl) toast(frameEl, "TIME TURNS BACK", 2000); }, "hi"),
+      h("div", { class: "text small dim wrap" }, "A SHARD GLIMMERS, YEARNING TO TEMPT FATE.")),
+    actions(button("USE A SHARD", () => { pickOrSave(run, "shard"); sfx.win(); if (frameEl) toast(frameEl, "UNWINDING FATE'S THREADS", 2000); }, "hi"),
       button("END THE RUN", () => confirm("END THE RUN?", `YOUR ${n} DESTINY SHARD${n === 1 ? "" : "S"} GO UNUSED.`, "END", () => pickOrSave(run, "end")))),
   ];
 }

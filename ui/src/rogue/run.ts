@@ -185,7 +185,7 @@ function shardView(run: RogueRun): Child[] {
     header("DESTINY SHARD", () => go("home")),
     scene(run, "shard", { h: 96, actors }),
     win("roffer", h("div", { class: "line" }, shardEl(), h("span", { class: "grow hi" }, " DESTINY SHARD"), h("span", { class: "dim small" }, `${run.shards ?? 0}/${max} HELD`)),
-      h("div", { class: "line dim small wrap" }, "A LOST FIGHT CAN SPEND IT TO GO BACK TO THE FIGHT'S PREVIEW, EVERYTHING AS IT WAS.")),
+      h("div", { class: "line dim small wrap" }, "IT RESONATES WITH SOME UNKNOWN POWER")),
     actions(button("TAKE", () => pickOrSave(run, "take"), "hi")),
   ];
 }
