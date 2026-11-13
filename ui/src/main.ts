@@ -26,9 +26,16 @@ Promise.all([loadArt(), document.fonts.load(`8px ${FONT}`)])
   });
 
 // A newer build on the site: reload onto it, at start and whenever the app comes back to the front, but not mid-fight.
+// Coming back, the check waits for the window to settle: a reload while the phone is still bringing the app up can be
+// handed the wrong screen height (the page ran under the navigation bar until the app was restarted).
 const notFighting = () => screen() !== "battle";
+const SETTLE_MS = 1500;
 void checkForUpdate(notFighting);
-document.addEventListener("visibilitychange", () => { if (!document.hidden) void checkForUpdate(notFighting); });
+let settle: ReturnType<typeof setTimeout> | undefined;
+document.addEventListener("visibilitychange", () => {
+  clearTimeout(settle);
+  if (!document.hidden) settle = setTimeout(() => { if (!document.hidden) void checkForUpdate(notFighting); }, SETTLE_MS);
+});
 
 // Hooks for scripted screenshots: window.__battle("old_road~ogre_bridge") starts that fight; window.__go("party") opens a screen.
 (window as unknown as { __battle: (d: string, seed?: number) => void }).__battle = (d: string, seed?: number) => go("battle", { dungeon: d, seed });
