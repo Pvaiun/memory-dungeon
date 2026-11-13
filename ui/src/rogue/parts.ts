@@ -7,7 +7,7 @@ import type { GearT, RogueNodeKindT } from "../../../src/schema.js";
 import { type Cell, type Pose } from "../art.js";
 import { bagRoom, bench, formationRarity, type Item, itemGear, member, type Offer, parseTraining, rogue, type RogueRun, seatsOf, type Slot, wearer } from "../../../src/rogue.js";
 import { c, cls as classOf, shortName } from "../content.js";
-import { abilityBlock, gearRow, RARITY_TONE, role, seatLines, twoHanded, wearersLine } from "../sheet.js";
+import { abilityBlock, gearRow, RARITY_TONE, role, seatLines, twoHanded } from "../sheet.js";
 import { actionIcon16, canvasEl, faceEl, gearIconEl, gearIconOf, iconEl, iconOf, weaponIcon } from "../pixel.js";
 import { foesOnStage, partyInLine, partyOnStage, type StageActor, stageEl, type StageOpts, themeOf } from "../battle/scene.js";
 import { abilityTag } from "../describe.js";
@@ -63,14 +63,16 @@ export const gold = (n: number) => h("span", { class: "gold" }, `${n}G`);
 const rosterOrder = (run: RogueRun) => [...run.party, ...bench(run)];
 /**
  * A run's item as a gear card (its rarity, kind and numbers, `gearRow`), with who wears it at the right. With `who` (the
- * default), the line of who can wear it, the roster first; never what it's for, which would spoil the discovery; `fits`,
- * an offer's line of who in the roster could wear it (`fitsLine`), in its place. The stacks it lays are shown for its
- * wearer, else the first of the roster who can wear it.
+ * default), the line of who can wear it, the roster first; never what it's for, which would spoil the discovery. With
+ * `wears` (an offer), the roster's faces beside what they wear in its slot now, under everything (`wearsLine`). The
+ * stacks it lays are shown for its wearer, else the first of the roster who can wear it.
  */
-export function itemRow(run: RogueRun, it: Item, onClick?: () => void, opts: { arrow?: boolean; stats?: Record<string, number> | null; right?: HTMLElement | null; who?: boolean; brief?: boolean; fits?: HTMLElement } = {}): HTMLElement {
+export function itemRow(run: RogueRun, it: Item, onClick?: () => void, opts: { arrow?: boolean; stats?: Record<string, number> | null; right?: HTMLElement | null; who?: boolean; brief?: boolean; wears?: boolean } = {}): HTMLElement {
   const g = c.gear.get(it.uid) ?? itemGear(c, it);
   const by = wearer(run, it.uid) ?? rosterOrder(run).find((cls) => canEquip(classOf(cls), g));
-  const r = gearRow(g, g.slot, opts.stats ?? (by ? fighter(run, by).stats : null), onClick, opts.arrow ?? false, opts.who === false || opts.brief ? undefined : opts.fits ?? rosterOrder(run), opts.brief);
+  const r = gearRow(g, g.slot, opts.stats ?? (by ? fighter(run, by).stats : null), onClick, opts.arrow ?? false, opts.who === false || opts.brief ? undefined : rosterOrder(run), opts.brief);
+  const wears = opts.wears ? wearsLine(run, g) : null;
+  if (wears) r.querySelector(".grow")?.append(wears);
   const w = wearer(run, it.uid);
   const right = "right" in opts ? opts.right : w ? h("span", { class: "tag" }, shortName(w)) : null;
   if (right) r.querySelector(".grow .line")?.append(right);
@@ -83,28 +85,23 @@ export function junkRow(run: RogueRun, it: Item, onClick?: () => void, right: HT
   return r;
 }
 /**
- * Who in the roster could wear an offered piece, in one line (the party first, then camp): each one's face with what it
- * wears in that slot now, the piece's icon in its rarity's glow, a dashed empty box, or 2H for an offhand under a
- * two-handed weapon. Then the names of the classes off the roster who could, dim. With nobody in the roster, the plain FITS line.
+ * What everyone in the roster who could wear a piece wears in its slot now, in one line (the party first, then camp):
+ * each one's face beside the piece's icon in its rarity's glow, an X for an empty slot, or 2H for an offhand under a
+ * two-handed weapon. Nothing when nobody in the roster could wear it.
  */
-export function fitsLine(run: RogueRun, g: GearT): HTMLElement {
+export function wearsLine(run: RogueRun, g: GearT): HTMLElement | null {
   const slot = g.slot as Slot;
-  const all = c.pack.classes.filter((k) => canEquip(k, g)).map((k) => k.id);
-  const mine = rosterOrder(run).filter((cls) => all.includes(cls));
-  if (!mine.length) return wearersLine(g, rosterOrder(run));
-  const everyone = !g.mythic && all.length === c.pack.classes.length;
-  const rest = everyone ? [] : all.filter((cls) => !mine.includes(cls));
-  const wears = mine.map((cls) => {
+  const mine = rosterOrder(run).filter((cls) => canEquip(classOf(cls), g));
+  if (!mine.length) return null;
+  return h("div", { class: "line wrap wears" }, ...mine.map((cls) => {
     const m = member(run, cls);
     const now = m.gear[slot] ? c.gear.get(m.gear[slot]!) : undefined;
     const glow = now?.rarity && now.rarity !== "common" ? ` glow-${now.rarity}` : "";
-    const what = slot === "offhand" && twoHanded(m.gear) ? h("span", { class: "slot dim" }, "2H")
+    const what = slot === "offhand" && twoHanded(m.gear) ? h("span", { class: "slot dim small" }, "2H")
       : now ? h("span", { class: `slot art${glow}` }, (now.slot === "weapon" ? smallWeapon(now.id) : null) ?? gearIconEl(now))
-      : h("span", { class: "slot empty" });
-    return h("span", { class: "wears" }, faceEl(cls, 0.75), what);
-  });
-  return h("div", { class: "line wrap small who fits" }, h("span", { class: "dim" }, everyone ? "FITS EVERYONE" : "FITS"), ...wears,
-    rest.length ? h("span", { class: "dim" }, rest.map(shortName).join(", ")) : null);
+      : h("span", { class: "slot dim" }, "X");
+    return h("span", { class: "wear-of" }, faceEl(cls, 0.75), what);
+  }));
 }
 /** A weapon's icon made to sit beside a face: at most 3.5 by 2.5 rem, never enlarged. */
 function smallWeapon(id: string): HTMLCanvasElement | null {
@@ -113,7 +110,7 @@ function smallWeapon(id: string): HTMLCanvasElement | null {
 }
 /** A training's button: LEARN an ability, TRAIN a power step or a version. */
 export const trainWord = (opt: string) => (parseTraining(opt)?.verb === "learn" ? "LEARN" : "TRAIN");
-/** An offer as a card's body; a piece shows who in the roster could wear it and what they wear there now. */
+/** An offer as a card's body; a piece ends with what the roster who could wear it wear in its slot now. */
 export function offerBody(run: RogueRun, o: Offer): Child[] {
   // A sealed piece shows only its slot; a bundle, its piece and its supply.
   if (o.kind === "gear" && o.sealed) {
@@ -121,9 +118,9 @@ export function offerBody(run: RogueRun, o: Offer): Child[] {
     return [h("div", { class: "line" }, iconEl(ICON.treasure), h("span", { class: "grow hi" }, `SEALED ${g.slot.toUpperCase()}`)), h("div", { class: "line small dim wrap" }, "RARE OR BETTER · SHOWN WHEN TAKEN")];
   }
   if (o.kind === "bundle") {
-    return [h("div", { class: "line hi" }, "A BUNDLE"), itemRow(run, o.item, undefined, { right: null, fits: fitsLine(run, c.gear.get(o.item.uid) ?? itemGear(c, o.item)) }), h("div", { class: "line small" }, iconEl(SUPPLY_ICON[o.supply]), h("span", null, ` AND A ${o.supply.toUpperCase()}`), bagRoom(c, run, o.supply) ? null : h("span", { class: "dim" }, " (BAG FULL)"))];
+    return [h("div", { class: "line hi" }, "A BUNDLE"), itemRow(run, o.item, undefined, { right: null, wears: true }), h("div", { class: "line small" }, iconEl(SUPPLY_ICON[o.supply]), h("span", null, ` AND A ${o.supply.toUpperCase()}`), bagRoom(c, run, o.supply) ? null : h("span", { class: "dim" }, " (BAG FULL)"))];
   }
-  if (o.kind === "gear") return [itemRow(run, o.item, undefined, { right: null, fits: fitsLine(run, c.gear.get(o.item.uid) ?? itemGear(c, o.item)) })];
+  if (o.kind === "gear") return [itemRow(run, o.item, undefined, { right: null, wears: true })];
   if (o.kind === "tome") {
     return [h("div", { class: "line" }, faceEl(o.cls), h("span", { class: "grow hi" }, `TOME: ${shortName(o.cls)} LEARNS`)), abilityBlock(c.abilities.get(o.ability)!, null)];
   }

@@ -177,11 +177,10 @@ button.mid { padding: .625rem .5rem; }
 .ab .head .chip.on { color: var(--hi); border-color: var(--hi); }
 .ab .size.changes { display: flex; flex-wrap: wrap; column-gap: .75rem; }
 .gear-row .who { column-gap: .5rem; row-gap: 0; line-height: 1.25rem; min-height: 1.25rem; }
-/* An offer's FITS line: each one in the roster who could wear it, its face and what it wears there now (or an empty box). */
-.gear-row .fits { column-gap: .5rem; row-gap: .125rem; }
-.gear-row .fits .wears { display: inline-flex; align-items: center; gap: .125rem; }
-.gear-row .fits .slot { display: inline-flex; justify-content: center; align-items: center; min-width: 2rem; height: 2rem; }
-.gear-row .fits .slot.empty { min-width: 0; width: 1.75rem; height: 1.75rem; border: .125rem dashed var(--line); border-radius: .25rem; box-sizing: border-box; }
+/* Under an offered piece: the roster's faces, each beside what it wears in the piece's slot now (X for nothing). */
+.gear-row .wears { column-gap: .5rem; row-gap: .125rem; margin-top: .25rem; }
+.gear-row .wear-of { display: inline-flex; align-items: center; gap: .125rem; }
+.gear-row .wear-of .slot { display: inline-flex; justify-content: center; align-items: center; min-width: 2rem; height: 2rem; }
 /* step 5i: a formation's seats on an offer, each with what its statuses do under it */
 .seat { margin-top: .25rem; }
 .seat-text { padding-left: 1rem; }
