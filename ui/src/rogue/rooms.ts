@@ -9,7 +9,7 @@ import { faceEl, iconEl } from "../pixel.js";
 import { fighter } from "./state.js";
 import { abilityBlock, classHead, section, sizeEl, tk } from "../sheet.js";
 import { setup } from "../state.js";
-import { abilityInfo, sizeParts, sizeText, type Stats } from "../describe.js";
+import { abilityInfo, heldParts, sizeParts, sizeText, type Stats } from "../describe.js";
 import type { AbilityT } from "../../../src/schema.js";
 import { campEl, themeOf } from "../battle/scene.js";
 import { actions, choice, go, gold, ICON, itemRow, lootActors, offerBody, partyActors, partyStrip, pickOrSave, redraw, ROMAN, scene, standoff, trainWord } from "./parts.js";
@@ -169,7 +169,7 @@ function trainMember(run: RogueRun, cls: string, entries: TrainEntry[]): Child[]
   const pform = pid ? formOf(m, pid) : undefined;
   const pname = (pid && pform !== pid ? c.statuses.get(pform!)?.name : undefined) ?? k.passive?.name ?? (pid ? c.statuses.get(pid)?.name : undefined) ?? "";
   out.push(section(pname.toUpperCase(), "PASSIVE"));
-  if (pid) out.push(...upgradeCards(m, pid, null, by));
+  if (pid) out.push(...upgradeCards(m, pid, stats, by));
   return out;
 }
 /** A training card's right end: its button, its price while it can't be bought, or TAKEN. */
@@ -177,7 +177,8 @@ const trainButton = (e: TrainEntry | undefined, taken: boolean): HTMLElement | n
   taken ? h("span", { class: "hi small" }, "TAKEN") : e ? (e.onClick ? button(e.label, e.onClick, "sm hi") : h("span", { class: "dim small" }, e.label)) : null;
 /**
  * The power step and the two versions of an ability or a passive, as cards: a chip (+, A, B), the name of the form it leads
- * to, the upgrade's own text, and with `stats` (an ability the member knows) what it changes in this member's numbers.
+ * to, the upgrade's own text, and with `stats` (an ability the member knows, or the passive) what it changes in this
+ * member's numbers.
  */
 function upgradeCards(m: Member, id: string, stats: Stats | null, by: Map<string, TrainEntry>): HTMLElement[] {
   const u = upgradeOf(c, id)!;
@@ -193,12 +194,19 @@ function upgradeCards(m: Member, id: string, stats: Stats | null, by: Map<string
   ];
   return cards.map(({ chip, t, text, taken, form }) => {
     const e = by.get(trainingId(t));
-    const nums = e && ability && stats && !taken && form !== now ? changeLines(c.abilities.get(now)!, c.abilities.get(form)!, stats) : [];
+    // An ability's form shows what changes in its numbers; a passive's, the stacks it lays for this member.
+    const nums = !e || !stats || taken || form === now ? [] : ability ? changeLines(c.abilities.get(now)!, c.abilities.get(form)!, stats) : [passiveSize(form, stats)];
     // An ability not learned yet shows what it can become by name only; its cards open once it's known.
     return h("div", { class: `ab${!e && !taken ? " dimmed" : ""}` },
       h("div", { class: "head" }, h("span", { class: `chip${taken ? " on" : ""}` }, chip), h("span", { class: `grow trunc${e ? " hi" : ""}` }, nameOf(form).toUpperCase()), trainButton(e, taken)),
       ability && !m.known.includes(id) ? null : h("div", { class: "body" }, text), ...nums);
   });
+}
+/** A passive form's stacks for this member, as "→ 5 CHILL (ATK)". */
+function passiveSize(form: string, stats: Stats): HTMLElement | null {
+  const el = sizeEl(heldParts([form], stats));
+  el?.prepend(h("span", { class: "dim" }, "→ "));
+  return el;
 }
 /** What an ability's form changes for this member: MP, cooldown and wind-up as "CD 28→21" (green better), then its new size. */
 function changeLines(was: AbilityT, now: AbilityT, stats: Stats): Child[] {

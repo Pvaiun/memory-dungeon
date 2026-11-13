@@ -70,7 +70,7 @@ export const enemyStatuses: StatusT[] = [
   { id: "ice_crust", name: "CRUST", text: "Defense up for each stack; thaws when the hits stop.", label: "buff", show: "icon", stacking: "intensity", unremovable: true, duration: STATUS.ice_crust.duration, cap: STATUS.ice_crust.cap, stats: [{ stat: "defense", flat: STATUS.ice_crust.perStack }] },
   passive("frozen_core", "Frozen core", "Its Bulwark stands from the start, and nothing strips its buffs.", { reactions: [{ on: { event: "fight_start" }, do: [apply("bulwark", { stacks: STATUS.bulwark.stacks, to: "holder" })] }] }),
   passive("static", "Static", "Its zaps shock.", { reactions: [{ on: { event: "hit_lands" }, do: [apply("shock", { stacks: FLAT_STACKS.one, to: "other" })] }] }),
-  passive("vengeance", "Vengeance", "Several Might when one of his Soldiers falls.", { reactions: [{ on: { event: "ko", whose: "ally" }, do: [apply("might", { stacks: FLAT_STACKS.several, to: "holder" })] }] }),
+  passive("vengeance", "Vengeance", `${FLAT_STACKS.several} Might when one of his Soldiers falls.`, { reactions: [{ on: { event: "ko", whose: "ally" }, do: [apply("might", { stacks: FLAT_STACKS.several, to: "holder" })] }] }),
 ];
 
 // ─── Abilities ───────────────────────────────────────────────────────────────
@@ -85,7 +85,7 @@ export const enemyAbilities: AbilityT[] = [
   a("shield_up", "Shield up", "Taunts.", { ...timing("short", "quick"), target: "self", do: [apply("taunt")] }),
   a("brace", "Brace", "Guards itself.", { ...timing("medium", "quick"), mp: 0, target: "self", do: [apply("guard")] }), // Free, as the Skeleton and Golem carry no MP.
   // Simple buffs on foes, so Judgement, Unmake and Dispel have targets.
-  a("take_aim", "Take aim", "Several Might on itself.", { ...timing("medium", "quick"), mp: 0, target: "self", do: [apply("might", { stacks: FLAT_STACKS.several })] }),
+  a("take_aim", "Take aim", "Might on itself.", { ...timing("medium", "quick"), mp: 0, target: "self", do: [apply("might", { stacks: FLAT_STACKS.several })] }),
   a("dark_ward", "Dark ward", "Guards itself.", { ...timing("medium", "quick"), mp: 0, target: "self", do: [apply("guard")] }), // Free, so it never takes the Soulfire's MP. Guard: Ward is gone.
   a("shield_slam", "Shield slam", "A blow with the shield that Stuns.", { ...timing("medium", "normal"), target: { side: "foes", where: { lacks: "stun" }, ifNone: "any" }, do: [{ op: "damage", type: "physical", amount: fromStat("attack", 1.0), apply: [{ status: "stun" }] }] }),
   a("flatten", "Flatten", "A heavy blow that Stuns.", { ...timing("medium", "long"), target: { side: "foes", where: { lacks: "stun" }, ifNone: "any" }, do: [{ op: "damage", type: "physical", amount: fromStat("attack", ENEMY_HIT.flatten), apply: [{ status: "stun" }] }] }),
@@ -98,14 +98,14 @@ export const enemyAbilities: AbilityT[] = [
   a("death_bell", "Death bell", "Dooms a foe.", { ...timing("short", "long"), if: { side: "foes", where: { lacks: "doom" } }, target: { side: "foes", where: { lacks: "doom" } }, do: [apply("doom")] }),
   // Bosses have behaviours of their own; the one-shot is the Ogre Chief's alone.
   a("reap", "Reap", "Three scythe slashes at random foes.", { ...timing("medium", "normal"), target: { side: "foes", pick: "random" }, do: [1, 2, 3].map(() => ({ op: "damage" as const, type: "physical" as const, amount: fromStat("attack", ENEMY_HIT.reap), to: { side: "foes" as const, pick: "random" as const } })) }),
-  a("tolling", "Tolling", "Many Might and Haste on itself: its swings come faster and harder.", { ...timing("short", "quick"), mp: 0, target: "self", do: [apply("might", { stacks: FLAT_STACKS.many }), apply("haste")] }),
-  a("kindle", "Kindle", "Several Might and a Guard on itself; the Inferno follows.", { ...timing("medium", "quick"), mp: 0, target: "self", do: [apply("might", { stacks: FLAT_STACKS.several }), apply("guard")] }),
+  a("tolling", "Tolling", "Might and Haste on itself: its swings come faster and harder.", { ...timing("short", "quick"), mp: 0, target: "self", do: [apply("might", { stacks: FLAT_STACKS.many }), apply("haste")] }),
+  a("kindle", "Kindle", "Might and a Guard on itself; the Inferno follows.", { ...timing("medium", "quick"), mp: 0, target: "self", do: [apply("might", { stacks: FLAT_STACKS.several }), apply("guard")] }),
   a("mute", "Mute", "Silences the foe with the highest Attack.", { ...timing("medium", "normal"), if: { side: "foes", where: { lacks: "silence" } }, target: { ...T.highestAMFoe, where: { lacks: "silence" } }, do: [apply("silence")] }),
   // On the medium word: a shorter one keeps the party silenced most of a fight.
   a("quiet", "Quiet", "Silences every foe.", { ...timing("medium", "long"), target: T.everyFoe, do: [apply("silence")] }),
   a("cheer", "Cheer", "Might and Haste on its strongest ally.", { ...timing("medium", "normal"), target: T.highestAMAlly, do: [apply("might", { stacks: FLAT_STACKS.several }), apply("haste")] }),
-  a("brand", "Brand", "A fiery spell on a foe, with a few Burn.", { ...timing("short", "quick"), do: [{ op: "damage", type: "physical", amount: fromStat("attack", ENEMY_HIT.brand), apply: [{ status: "burn", stacks: FLAT_STACKS.few }] }] }),
-  a("inferno", "Inferno", "A very long cast: a huge blast of fire on every foe, with several Burn. It waits until the Giant has kindled.", { ...timing("short", "very_long"), if: { side: "self", where: { has: "might" } }, target: T.everyFoe, do: [{ op: "damage", type: "physical", amount: fromStat("attack", ENEMY_HIT.inferno), apply: [{ status: "burn", stacks: FLAT_STACKS.several }] }] }),
+  a("brand", "Brand", "A fiery spell on a foe, adding Burn.", { ...timing("short", "quick"), do: [{ op: "damage", type: "physical", amount: fromStat("attack", ENEMY_HIT.brand), apply: [{ status: "burn", stacks: FLAT_STACKS.few }] }] }),
+  a("inferno", "Inferno", "A very long cast: a huge blast of fire on every foe, adding Burn. It waits until the Giant has kindled.", { ...timing("short", "very_long"), if: { side: "self", where: { has: "might" } }, target: T.everyFoe, do: [{ op: "damage", type: "physical", amount: fromStat("attack", ENEMY_HIT.inferno), apply: [{ status: "burn", stacks: FLAT_STACKS.several }] }] }),
   a("hailstorm", "Hailstorm", "Hail on every foe, with a stack of Chill.", { ...timing("short", "normal"), target: T.everyFoe, do: [{ op: "damage", type: "physical", amount: fromStat("attack", ENEMY_HIT.hailstorm), apply: [{ status: "chill", stacks: FLAT_STACKS.one }] }] }),
   a("call_drones", "Call drones", "Summons two Drones.", { ...timing("medium", "long"), do: [{ op: "summon", enemy: "drone", count: 2 }] }),
   // Each bolt picks its own foe, so two may land on one.

@@ -12,8 +12,8 @@ const stoke = (to: ToT, mult: number): EffectT => apply("burn", { stacks: own("f
 passiveUp({
   id: "stoke", cls: "pyromancer",
   power: "+40% Burn.",
-  a: { name: "Kindling", text: "Basic attacks, not casts, add a few Burn (from Attack).", serves: "Bonfire 1 ●●● ⚙ lead's colour (half)" },
-  b: { name: "Wildfire", text: "Each cast adds Burn to every burning foe: half of a few (from Attack).", builds: ["storm"] },
+  a: { name: "Kindling", text: "Basic attacks, not casts, add Burn.", serves: "Bonfire 1 ●●● ⚙ lead's colour (half)" },
+  b: { name: "Wildfire", text: "Each cast adds Burn to every burning foe.", builds: ["storm"] },
   form: (v, k) => ({
     reactions: [
       v === "a" ? { on: { event: "hit_lands", kind: "basic" }, do: [stoke("other", k)] }

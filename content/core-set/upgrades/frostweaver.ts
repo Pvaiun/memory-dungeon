@@ -13,7 +13,7 @@ passiveUp({
   id: "shatterpoint", cls: "frostweaver",
   power: "+40% Sunder.",
   a: { name: "Rime shield", text: "On a shatter: the lowest ally gains a Shield of 30% of the Frostweaver's max HP, instead of the Sunder.", serves: "Snap 2 ●●, Toll ●● ⚙ frozen gate (half), detonation (half), brink (half)", plus: "+40% Shield." },
-  b: { name: "Splinters", text: "On a shatter: that foe gains several Sunder (from Attack), and every other foe a third of its Chill.", serves: "Snap 2 ●●● ⚙ firecracker (key)" },
+  b: { name: "Splinters", text: "On a shatter: that foe gains Sunder, and every other foe a third of its Chill.", serves: "Snap 2 ●●● ⚙ firecracker (key)" },
   form: (v, k) => ({
     reactions: [{
       on: { event: "status_capped", status: "chill", whose: "foe" },
@@ -41,7 +41,7 @@ abilityUp({
 });
 
 /** Frost armor: for the Guard's length, a foe that hits its holder gains a few Chill, half again the passive's count, from the Frostweaver's Attack. */
-const frostArmor = (sid: string, k: number) => helper(kit(sid, "FROST ARMOR", "Foes that hit it gain a few Chill.", {
+const frostArmor = (sid: string, k: number) => helper(kit(sid, "FROST ARMOR", "Foes that hit it gain Chill.", {
   duration: STATUS.guard.duration,
   reactions: [{ on: { event: "hit_taken" }, do: [apply("chill", { stacks: { scale: [{ ratio: (1.5 * STACKS.few * k) / P, stat: "attack", of: "source" }] }, to: "other" })] }],
 }));
@@ -52,7 +52,7 @@ abilityUp({
   id: "blizzard", cls: "frostweaver",
   power: "+40% damage, or +40% Chill.",
   shown: true,
-  a: { name: "Frost armor", text: "Guards every ally. While the Guard lasts, foes that hit them gain a few Chill (from the Frostweaver's Attack). No damage.", serves: "Snap 2 ●●, Toll 2 ●●● ⚙ frozen gate (key)", plus: "+40% Chill." },
+  a: { name: "Frost armor", text: "Guards every ally. While the Guard lasts, foes that hit them gain Chill. No damage.", serves: "Snap 2 ●●, Toll 2 ●●● ⚙ frozen gate (key)", plus: "+40% Chill." },
   b: { name: "Avalanche", text: "Hits every foe, each harder for its Chill. No Chill.", builds: ["snap", "storm"] },
   form: (v, k) =>
     v === "a" ? { do: [apply("guard", { to: T.everyAlly }), apply(k > 1 ? "frost_armor_plus" : "frost_armor", { to: T.everyAlly })] }

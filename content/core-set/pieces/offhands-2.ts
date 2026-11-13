@@ -34,7 +34,7 @@ offhand("tome", "common", "Scholar's codex", { stats: [st("attack", 1)], serves:
 offhand("tome", "common", "Hymnal", { stats: [sp("cooldown", "medium")], serves: "Barrage." });
 
 {
-  const name = "Snowbound folio", effect = "At fight start: a few Chill on every foe (from Attack).";
+  const name = "Snowbound folio", effect = "At fight start: Chill on every foe.";
   offhand("tome", "uncommon", name, {
     effect, stats: [sp("cooldown", "medium"), st("attack", 1)],
     statuses: [own_(name, effect, { reactions: [atStart(give("chill", TO.everyFoe, own("few", "attack")))] })],
@@ -52,7 +52,7 @@ offhand("tome", "common", "Hymnal", { stats: [sp("cooldown", "medium")], serves:
   });
 }
 {
-  const name = "Curse-book", effect = "Abilities add several Bleed to every foe hit (from Attack).";
+  const name = "Curse-book", effect = "Abilities add Bleed to every foe they hit.";
   offhand("tome", "uncommon", name, {
     effect, stats: [sp("cooldown", "medium"), st("mp_regen", 1)],
     statuses: [own_(name, effect, { mods: [{ apply: [{ status: "bleed", stacks: swingStacks("several") }] }] })],
@@ -82,7 +82,7 @@ offhand("tome", "common", "Hymnal", { stats: [sp("cooldown", "medium")], serves:
 }
 {
   const name = "Grimoire of plagues";
-  const effect = "At fight start: a few of two random statuses of Burn, Chill, Shock and Bleed on every foe (from Attack).";
+  const effect = "At fight start: two of Burn, Chill, Shock and Bleed, at random, on every foe.";
   offhand("tome", "rare", name, {
     effect, stats: [sp("cooldown", "medium"), st("attack", 1), st("mp_regen", 1)],
     statuses: [own_(name, effect, { reactions: [atStart({ op: "one", of: FOUR.map((status) => ({ status, stacks: own("few", "attack") })), count: 2, same: true, to: TO.everyFoe })] })],
@@ -307,7 +307,7 @@ offhand("vial", "common", "Hemlock phial", { stats: [critStep(1)], serves: "Thou
   });
 }
 {
-  const name = "Lancet phial", effect = "At fight start: a few Bleed on every foe (from Attack).";
+  const name = "Lancet phial", effect = "At fight start: Bleed on every foe.";
   offhand("vial", "uncommon", name, {
     effect, stats: [sp("lifesteal", "medium"), critStep(1)],
     statuses: [own_(name, effect, { reactions: [atStart(give("bleed", TO.everyFoe, own("few", "attack")))] })],

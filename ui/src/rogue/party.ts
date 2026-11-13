@@ -113,7 +113,7 @@ export function runitScreen(arg?: unknown): Child[] {
     win("scroll",
       section("PASSIVE"),
       // A trained passive shows as its form.
-      ...classPassive(cls, passiveOf(c, cls) ? formOf(m, passiveOf(c, cls)!) : undefined),
+      ...classPassive(cls, passiveOf(c, cls) ? formOf(m, passiveOf(c, cls)!) : undefined, fm.stats),
       section("GEAR"),
       // Four slots; under a two-handed weapon the offhand reads locked.
       ...SLOTS.map((s) => {

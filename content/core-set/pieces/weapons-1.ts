@@ -30,7 +30,7 @@ weapon("dagger", "common", "Keen dirk", { stats: [critStep(1)], serves: "Hunt, C
 {
   // Once the foe holds the mark, the reaction's test skips it, so later hits add nothing. A marker: no Cleanse lifts it.
   const name = "Weeping kris", mark = `${id(name)}_mark`;
-  const effect = "First hit on each foe: adds several Bleed (from Attack).";
+  const effect = "The first hit on each foe adds Bleed.";
   weapon("dagger", "uncommon", name, {
     effect, stats: [critStep(1), sp("attack_speed", "medium")],
     statuses: [
@@ -41,7 +41,7 @@ weapon("dagger", "common", "Keen dirk", { stats: [critStep(1)], serves: "Hunt, C
   });
 }
 {
-  const name = "Sleet dirk", effect = "Basic attacks add a few Chill (from Attack).";
+  const name = "Sleet dirk", effect = "Basic attacks add Chill.";
   weapon("dagger", "uncommon", name, {
     effect, stats: [critStep(1), sp("accuracy", "medium")],
     statuses: [own_(name, effect, { reactions: [react(EV.basic, give("chill", "other", own("few", "attack")))] })],
@@ -116,7 +116,7 @@ weapon("fist", "common", "Mantis claws", { stats: [sp("double_strike", "medium")
 weapon("fist", "common", "Red talons", { stats: [sp("lifesteal", "medium")], serves: "Pact" });
 
 {
-  const name = "Live-wire knuckles", effect = "Basic attacks and extra strikes add a few Shock (from Attack).";
+  const name = "Live-wire knuckles", effect = "Basic attacks and extra strikes add Shock.";
   weapon("fist", "uncommon", name, {
     effect, stats: [sp("double_strike", "medium"), sp("attack_speed", "medium")],
     statuses: [own_(name, effect, { reactions: swingRider("shock", own("few", "attack")) })],
@@ -124,7 +124,7 @@ weapon("fist", "common", "Red talons", { stats: [sp("lifesteal", "medium")], ser
   });
 }
 {
-  const name = "Cinder wraps", effect = "Basic attacks and extra strikes add a few Burn (from Attack).";
+  const name = "Cinder wraps", effect = "Basic attacks and extra strikes add Burn.";
   weapon("fist", "uncommon", name, {
     effect, stats: [sp("double_strike", "medium"), sp("attack_speed", "medium")],
     statuses: [own_(name, effect, { reactions: swingRider("burn", own("few", "attack")) })],
@@ -132,7 +132,7 @@ weapon("fist", "common", "Red talons", { stats: [sp("lifesteal", "medium")], ser
   });
 }
 {
-  const name = "Rime knuckles", effect = "Basic attacks and extra strikes add a few Chill (from Attack).";
+  const name = "Rime knuckles", effect = "Basic attacks and extra strikes add Chill.";
   weapon("fist", "uncommon", name, {
     effect, stats: [sp("double_strike", "medium"), sp("attack_speed", "medium")],
     statuses: [own_(name, effect, { reactions: swingRider("chill", own("few", "attack")) })],
@@ -218,7 +218,7 @@ weapon("wand", "common", "Quickbeam wand", { stats: [sp("cooldown", "medium"), s
 weapon("wand", "common", "Hazel wand", { stats: [sp("cooldown", "medium"), st("mp_regen", 1)], serves: "Barrage" });
 
 {
-  const name = "Spark wand", effect = "Basic attacks add a few Burn (from Attack).";
+  const name = "Spark wand", effect = "Basic attacks add Burn.";
   weapon("wand", "uncommon", name, {
     effect, stats: [sp("cooldown", "medium"), sp("attack_speed", "medium"), st("attack", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.basic, give("burn", "other", own("few", "attack")))] })],
@@ -226,7 +226,7 @@ weapon("wand", "common", "Hazel wand", { stats: [sp("cooldown", "medium"), st("m
   });
 }
 {
-  const name = "Jolt wand", effect = "Basic attacks add a few Shock (from Attack).";
+  const name = "Jolt wand", effect = "Basic attacks add Shock.";
   weapon("wand", "uncommon", name, {
     effect, stats: [sp("cooldown", "medium"), sp("attack_speed", "medium"), st("attack", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.basic, give("shock", "other", own("few", "attack")))] })],
@@ -259,7 +259,7 @@ weapon("wand", "common", "Hazel wand", { stats: [sp("cooldown", "medium"), st("m
   });
 }
 {
-  const name = "Wildmagic wand", effect = "Basic attacks add a few of one random affliction (from Attack): Burn, Chill, Shock, Bleed or Sunder.";
+  const name = "Wildmagic wand", effect = "Basic attacks add one of Burn, Chill, Shock, Bleed or Sunder, at random.";
   weapon("wand", "legendary", name, {
     effect, stats: [sp("cooldown", "high"), sp("attack_speed", "medium"), st("attack", 1), st("mp_regen", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.basic, { op: "one", of: AFFLICTIONS.map((status) => ({ status, stacks: own("few", "attack") })), to: "other" })] })],
@@ -281,7 +281,7 @@ weapon("sword", "common", "Arming sword", { stats: [st("attack", 1)], serves: "H
 weapon("sword", "common", "Gilded sword", { stats: [st("max_hp", 1)], serves: "Toll, Pact, Barrage" });
 
 {
-  const name = "Rimed blade", effect = "Basic attacks add a few Chill (from max HP).";
+  const name = "Rimed blade", effect = "Basic attacks add Chill, from max HP.";
   weapon("sword", "uncommon", name, {
     effect, stats: [st("attack", 1), st("defense", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.basic, give("chill", "other", own("few", "max_hp")))] })],
@@ -366,7 +366,7 @@ weapon("spear", "common", "Pennon spear", { stats: [st("aggro", 1)], serves: "To
 weapon("spear", "common", "Boar spear", { stats: [st("attack", 1)], serves: "Hunt, Storm" });
 
 {
-  const name = "Jolt spear", effect = "Every hit adds a few Shock (from Attack), abilities included.";
+  const name = "Jolt spear", effect = "Every hit adds Shock, abilities included.";
   weapon("spear", "uncommon", name, {
     effect, stats: [sp("attack_speed", "medium"), st("attack", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.hit, give("shock", "other", own("few", "attack")))] })],
@@ -409,7 +409,7 @@ weapon("spear", "common", "Boar spear", { stats: [st("attack", 1)], serves: "Hun
 {
   // The fifth hit pays before the count takes it (the count empties itself at five); the flash's hits are tagged and uncounted.
   const name = "Squall lance", n = `${id(name)}_count`;
-  const effect = "Every 5th hit also hits every other foe: a light hit (from Attack), effects included.";
+  const effect = "Every 5th hit also hits every other foe, effects included.";
   const counted = on("hit_lands", { notTags: ["squall"] });
   weapon("spear", "rare", name, {
     effect, stats: [sp("attack_speed", "medium"), st("attack", 2)],
@@ -448,7 +448,7 @@ weapon("axe", "common", "Hand axe", { stats: [sp("lifesteal", "medium")], serves
 weapon("axe", "common", "Cleaver", { stats: [st("attack", 1)], serves: "Hunt" });
 
 {
-  const name = "Reaver's axe", effect = "On a kill: gains many Might (from Attack).";
+  const name = "Reaver's axe", effect = "On a kill: gains Might.";
   weapon("axe", "uncommon", name, {
     effect, stats: [sp("crit_damage", "medium")],
     statuses: [own_(name, effect, { reactions: [react(EV.kill, give("might", "holder", own("many", "attack")))] })],
@@ -465,7 +465,7 @@ weapon("axe", "common", "Cleaver", { stats: [st("attack", 1)], serves: "Hunt" })
   });
 }
 {
-  const name = "Ragged axe", effect = "Every hit adds a few Bleed (from Attack).";
+  const name = "Ragged axe", effect = "Every hit adds Bleed.";
   weapon("axe", "uncommon", name, {
     effect, stats: [st("attack", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.hit, give("bleed", "other", own("few", "attack")))] })],

@@ -31,8 +31,8 @@ import { abilityUp, apply, cd, helper, kit, marker, ofHolder, passiveUp, phys, r
   passiveUp({
     id: "briar", cls: "bramble_knight",
     power: "+40% Bleed.",
-    a: { name: "Bloodroot", text: "Its Thorns add a few Bleed (from Defense). While that Bleed lasts, the foe heals it 1.5% of max HP each time it acts.", builds: ["pact", "toll"] },
-    b: { name: "Spreading thorns", text: "Its Thorns also strike a second random foe; both gain a few Bleed (from Defense).", builds: ["storm"] },
+    a: { name: "Bloodroot", text: "Its Thorns add Bleed. While that Bleed lasts, the foe heals it 1.5% of max HP each time it acts.", builds: ["pact", "toll"] },
+    b: { name: "Spreading thorns", text: "Its Thorns also strike a second random foe; both gain Bleed.", builds: ["storm"] },
     form: (v, k, plus) => ({ reactions: v === "a" ? bloodroot(k) : v === "b" ? spreading(plus ? "briar__bp" : "briar__b", k) : plain(k) }),
   });
 }

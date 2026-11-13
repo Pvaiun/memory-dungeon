@@ -306,7 +306,7 @@ function unit(arg?: unknown): Child[] {
     win("", statGrid(member.stats, k.stats, designer), sp.length ? h("div", { class: "text up small wrap", style: "margin-top:.25rem" }, ...sp.flatMap((s, i) => (i ? [" · ", s] : [s]))) : null),
     win("scroll",
       section("PASSIVE"),
-      ...classPassive(id),
+      ...classPassive(id, undefined, member.stats),
       section("GEAR"),
       ...gearRows,
       canUse(id),

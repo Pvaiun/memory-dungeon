@@ -72,7 +72,7 @@ armor("plate", "common", "Bristled plate", { stats: [sp("thorns", "medium")], se
   });
 }
 {
-  const name = "Hoarfrost plate", effect = "When hit: the attacker gains a few Chill (from Defense).";
+  const name = "Hoarfrost plate", effect = "When hit: the attacker gains Chill.";
   armor("plate", "rare", name, {
     effect, stats: [st("defense", 2), st("aggro", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.struck, give("chill", "other", own("few", "defense")))] })],
@@ -180,7 +180,7 @@ armor("mail", "common", "Thick byrnie", { stats: [st("max_hp", 1)], serves: "Blo
   });
 }
 {
-  const name = "Static mail", effect = "When hit: the attacker gains a few Shock (from Defense).";
+  const name = "Static mail", effect = "When hit: the attacker gains Shock.";
   armor("mail", "rare", name, {
     effect, stats: [st("max_hp", 1), st("defense", 1), st("aggro", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.struck, give("shock", "other", own("few", "defense")))] })],
@@ -299,12 +299,12 @@ armor("leather", "common", "Spotter's coat", { stats: [sp("accuracy", "medium")]
 }
 {
   const name = "Frostwalker's furs", on_ = `${id(name)}_on`;
-  const effect = "On a shatter: Hasted; its next hit adds a few Chill (from Attack) to every foe.";
+  const effect = "On a shatter: Hasted; its next hit adds Chill to every foe.";
   armor("leather", "rare", name, {
     effect, stats: [sp("evasion", "medium"), st("attack", 1), sp("attack_speed", "medium")],
     statuses: [
       own_(name, effect, { reactions: [react(EV.shatter, give("haste"), give(on_))] }),
-      switched(on_, "FROSTWALK", "Next hit adds a few Chill to every foe.", {
+      switched(on_, "FROSTWALK", "Next hit adds Chill to every foe.", {
         stacking: "refresh", reactions: [react(EV.hit, give("chill", TO.everyFoe, own("few", "attack"), { rider: false }), lift(on_))],
       }),
     ],

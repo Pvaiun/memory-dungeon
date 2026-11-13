@@ -12,8 +12,8 @@ const RUPTURE = 0.5;
 passiveUp({
   id: "lacerate", cls: "assassin",
   power: "+40% Bleed.",
-  a: { name: "Opening wound", text: "Its first hit on each foe always crits. Crits add several Bleed (from Attack).", builds: ["hunt"] },
-  b: { name: "Rupture", text: "Crits deal extra damage for each Bleed on the foe, then add several Bleed (from Attack). The Bleed stays.", builds: ["hunt"] },
+  a: { name: "Opening wound", text: "Its first hit on each foe always crits. Crits add Bleed.", builds: ["hunt"] },
+  b: { name: "Rupture", text: "Crits deal extra damage for each Bleed on the foe, then add Bleed. The Bleed stays.", builds: ["hunt"] },
   form: (v, k) => ({
     // Opening wound: hits on a foe it hasn't yet landed a hit on always crit (a crit rule: chance after every stat change, so Gambler's coin too).
     ...(v === "a" ? { crits: [{ when: { lacks: "opening_wound" }, chance: 100 }] } : {}),

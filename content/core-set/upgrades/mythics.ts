@@ -79,8 +79,8 @@ helper(pieceStatus("the_last_wall", "The last wall", "When an Aegis it gave bloc
 
 // Paladin: Writ of judgement. Condemn (every form, by name) calls a blow of its own on the foe it Marked, as it resolves.
 mythic({ name: "Writ of judgement", slot: "offhand", rarity: "mythic", kind: "relic", mythic: "paladin", statuses: ["writ_of_judgement"],
-    text: "When Condemn Marks a foe, a heavy blow falls on it, adding several Burn (both from Attack)." }, "Hunt 3 ●●●, Bonfire ●●, Landslide ●●");
-helper(pieceStatus("writ_of_judgement", "Writ of judgement", "When Condemn Marks a foe, a heavy blow falls on it, adding several Burn (both from Attack).", {
+    text: "When Condemn Marks a foe, a blow falls on it, adding Burn." }, "Hunt 3 ●●●, Bonfire ●●, Landslide ●●");
+helper(pieceStatus("writ_of_judgement", "Writ of judgement", "When Condemn Marks a foe, a blow falls on it, adding Burn.", {
     reactions: [{ on: { event: "action_resolve", kind: "ability", ability: ["condemn"] }, do: [{ op: "strike", amount: share(HIT.heavy, "attack"), apply: [{ status: "burn", stacks: swingStacks("several") }], to: "other" }] }],
   }));
 
@@ -89,9 +89,9 @@ helper(pieceStatus("writ_of_judgement", "Writ of judgement", "When Condemn Marks
 {
   const counted = { event: "hit_lands" as const, notTags: ["stormspear"] };
   mythic({ name: "Stormspear", slot: "weapon", rarity: "mythic", mythic: "valkyrie", statuses: ["stormspear"],
-      text: "Every 4th hit calls a heavy blow (from Attack) on the foe with the most Shock, ignoring Taunt, bigger for each Shock. The Shock stays.",
+      text: "Every 4th hit calls a blow on the foe with the most Shock, ignoring Taunt. The Shock stays.",
       weapon: { type: "physical", hands: 1, cooldown: KIND_SPEED.spear, amount: weaponHit("spear") } }, "Storm 3 ●●●, Hunt ● ⚙ held charge (key)");
-  helper(pieceStatus("stormspear", "Stormspear", "Every 4th hit calls a heavy blow (from Attack) on the foe with the most Shock, ignoring Taunt, bigger for each Shock. The Shock stays.", {
+  helper(pieceStatus("stormspear", "Stormspear", "Every 4th hit calls a blow on the foe with the most Shock, ignoring Taunt. The Shock stays.", {
     reactions: [
       { on: counted, if: { side: "self", where: countAt("stormspear_count", 3) }, do: [{
         op: "strike", tag: "stormspear", seek: true, to: { side: "foes", pick: "highest", by: { stacks: "shock" } },

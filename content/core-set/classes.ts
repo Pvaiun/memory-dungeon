@@ -97,7 +97,7 @@ export const passives: StatusT[] = [
   passive("hunters_eye", "Hunter's eye", { text: `Basic attacks ignore Taunt and have +${crit(KIT.hunterCrit)}% Crit chance.`, seek: "basic", crits: [{ tag: "basic", chance: crit(KIT.hunterCrit) }] }),
   // Survivable by attacking: the Shield grows as she fights and is spent as she's hit. It reads Attack (bigger hits) and max HP (the cap).
   passive("shieldmaiden", "Shieldmaiden", { text: `On a hit: a Shield of ${Math.round(KIT.shieldmaiden * 100)}% of the damage.`, reactions: [{ on: { event: "hit_lands" }, do: [apply("shield", { stacks: { scale: [{ ratio: KIT.shieldmaiden, amount: true }] }, to: "holder" })] }] }),
-  passive("briar", "Briar", { text: "Its Thorns add a few Bleed (from Defense).", reactions: [{ on: { event: "damage_dealt", status: "thorns" }, do: [apply("bleed", { stacks: own("few", "defense"), to: "other" })] }] }),
+  passive("briar", "Briar", { text: "Its Thorns add Bleed.", reactions: [{ on: { event: "damage_dealt", status: "thorns" }, do: [apply("bleed", { stacks: own("few", "defense"), to: "other" })] }] }),
   passive("phalanx", "Phalanx", { text: "Basic attacks come half as often and deal double.", stats: [{ stat: "attack_speed", flat: -100 }], boosts: [{ tag: "basic", pct: 100 }] }),
   // The judge: a buff or a debuff, either one, half again (a foe holding both isn't doubled: the second term asks for no debuff).
   passive("judgement", "Judgement", { text: "Hits deal +50% to foes with a buff or a debuff.", boosts: bothKinds({ scale: [{ ratio: 50, when: { debuffs: true }, of: "target" }, { ratio: 50, when: { buffs: true, debuffs: false }, of: "target" }] }) }),
@@ -115,15 +115,15 @@ export const passives: StatusT[] = [
     { op: "heal", amount: { scale: [{ ratio: STATUS.refrain.share, amount: true }] }, to: { side: "allies", pick: "random" } },
     { op: "mp", amount: { scale: [{ ratio: STATUS.refrain.share, amount: true }] }, to: { side: "allies", pick: "random" } },
   ] }] }),
-  passive("cold_hex", "Cold hex", { text: "Basic attacks add a few Chill (from Attack).", reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("chill", { stacks: own("few", "attack", 1.3), to: "other" })] }] }), // 3.6 Chill a hit at Attack 4, so the Hexer can reach a shatter alone over a fight.
+  passive("cold_hex", "Cold hex", { text: "Basic attacks add Chill.", reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("chill", { stacks: own("few", "attack", 1.3), to: "other" })] }] }), // A rider, so APPLIED takes it to a fifth: about 0.7 Chill a hit at Attack 4, and the shatter comes from a fight of swings.
   passive("iron_palm", "Iron palm", {
-    text: "Basic attacks and extra strikes add a few Sunder (from Attack).",
+    text: "Basic attacks and extra strikes add Sunder.",
     reactions: [
       { on: { event: "hit_lands", kind: "basic" }, do: [apply("sunder", { stacks: own("few", "attack"), to: "other" })] },
       { on: { event: "hit_lands", kind: "extra" }, do: [apply("sunder", { stacks: own("few", "attack"), to: "other" })] },
     ],
   }),
-  passive("lacerate", "Lacerate", { text: "Crits add several Bleed (from Attack).", reactions: [{ on: { event: "hit_lands", tags: ["crit"] }, do: [apply("bleed", { stacks: own("several", "attack"), to: "other" })] }] }),
+  passive("lacerate", "Lacerate", { text: "Crits add Bleed.", reactions: [{ on: { event: "hit_lands", tags: ["crit"] }, do: [apply("bleed", { stacks: own("several", "attack"), to: "other" })] }] }),
   passive("bloodlust", "Bloodlust", {
     text: "Below half HP: Lifesteal doubled.",
     reactions: [
@@ -133,10 +133,10 @@ export const passives: StatusT[] = [
   }),
   { id: "bloodlust_on", name: "BLOODLUST", text: "Lifesteal doubled.", label: "buff", show: "icon", stacking: "fizzle", stats: [{ stat: "lifesteal", flat: { scale: [{ ratio: 1, stat: "lifesteal", of: "holder" }] } }] },
   // Burn stoked by its casts, not its swings: the caster. With no foe burning, the pick falls on any foe.
-  passive("stoke", "Stoke", { text: "Each cast adds a few Burn (from Attack) to the foe with the most Burn.", reactions: [{ on: { event: "action_resolve", kind: "ability" }, do: [apply("burn", { stacks: own("few", "attack", BURN_STACKS), to: T.mostFoe("burn") })] }] }),
-  passive("shatterpoint", "Shatterpoint", { text: "A foe whose Chill shatters gains several Sunder (from Attack).", reactions: [{ on: { event: "status_capped", status: "chill", whose: "foe" }, do: [apply("sunder", { stacks: own("several", "attack"), to: "owner" })] }] }),
+  passive("stoke", "Stoke", { text: "Each cast adds Burn to the foe with the most Burn.", reactions: [{ on: { event: "action_resolve", kind: "ability" }, do: [apply("burn", { stacks: own("few", "attack", BURN_STACKS), to: T.mostFoe("burn") })] }] }),
+  passive("shatterpoint", "Shatterpoint", { text: "A foe whose Chill shatters gains Sunder.", reactions: [{ on: { event: "status_capped", status: "chill", whose: "foe" }, do: [apply("sunder", { stacks: own("several", "attack"), to: "owner" })] }] }),
   passive("arc", "Arc", {
-    text: "Basic attacks also hit a second random foe; both gain a few Shock (from Attack).",
+    text: "Basic attacks also hit a second random foe; both gain Shock.",
     strike: { to: T.secondFoe },
     reactions: [
       { on: { event: "hit_lands", kind: "basic" }, do: [apply("shock", { stacks: own("few", "attack", SHOCK_STACKS), to: "other" })] },
@@ -155,7 +155,7 @@ export const passives: StatusT[] = [
   // Encore: the ally's next ability resolves again at once, free (a recast), and the Encore is spent. The repeat's own event skips it.
   { id: "encore", name: "ENCORE", text: "Its next ability is cast twice; the second is free.", label: "buff", show: "icon", stacking: "refresh", reactions: [{ on: { event: "action_resolve", kind: "ability", repeat: false }, do: [{ op: "recast" }, { op: "remove", label: "buff", status: "encore", to: "holder" }] }] },
   // Thunderstorm: the party's storm. Each ally's swings add Shock sized from the Stormcaller's Attack (the status knows its source).
-  { id: "thunderstorm_storm", name: "THUNDERSTORM", text: "Its basic attacks add a few Shock.", label: "buff", show: "icon", stacking: "refresh", perSource: {}, duration: KIT.storm.duration,
+  { id: "thunderstorm_storm", name: "THUNDERSTORM", text: "Basic attacks add Shock.", label: "buff", show: "icon", stacking: "refresh", perSource: {}, duration: KIT.storm.duration,
     reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("shock", { stacks: { scale: [{ ratio: (STACKS.few * SHOCK_STACKS) / P, stat: "attack", of: "source" }] }, to: "other" })] }] },
   // Static charge: Attack speed, not Haste (the Monk's Flow is Haste).
   { id: "static_charge_on", name: "CHARGED", text: "Basic attacks come faster.", label: "buff", show: "icon", stacking: "refresh", duration: KIT.staticCharge.duration, stats: [{ stat: "attack_speed", flat: KIT.staticCharge.speed }] },
@@ -301,7 +301,7 @@ export const abilities: A[] = [
     ],
   }),
   // The party's storm: Shock on every ally's swings for a while, not a nuke (Fireball is the nuke, Blizzard the field's Chill).
-  a("stormcaller", "thunderstorm", "Thunderstorm", `For ${KIT.storm.duration} ticks, every ally's basic attacks add a few Shock (from the Stormcaller's Attack).`, { ...timing("medium", "normal"), mp: 650, target: T.everyAlly, do: [apply("thunderstorm_storm")] }),
+  a("stormcaller", "thunderstorm", "Thunderstorm", `For ${KIT.storm.duration} ticks, every ally's basic attacks add Shock.`, { ...timing("medium", "normal"), mp: 650, target: T.everyAlly, do: [apply("thunderstorm_storm")] }),
   a("stormcaller", "static_charge", "Static charge", `Basic attacks come faster for ${KIT.staticCharge.duration} ticks.`, { ...timing("medium", "quick"), mp: 650, target: "self", do: [apply("static_charge_on")] }),
   // Geomancer
   a("geomancer", "earthen_shell", "Earthen shell", "Shields itself and the lowest other ally.", {

@@ -35,7 +35,7 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
 
 {
   const name = "Tinder charm";
-  const effect = "Basic attacks add a few (from Attack) of whichever of Burn, Chill, Shock or Bleed the target holds most.";
+  const effect = "Basic attacks add whichever of Burn, Chill, Shock or Bleed the target holds most.";
   amulet("uncommon", name, {
     effect, stats: [st("attack", 1), st("max_hp", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.basic, { op: "one", of: ["burn", "chill", "shock", "bleed"].map((status) => ({ status, stacks: own("few", "attack") })), pick: "most", to: "other" })] })],
@@ -253,7 +253,7 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
 }
 {
   const name = "Burning heart";
-  const effect = "Every 10 ticks: a few Burn on itself (no stat). While it burns: hits deal +50%.";
+  const effect = `Every 10 ticks: ${FLAT_STACKS.few} Burn on itself. While it burns: hits deal +50%.`;
   amulet("legendary", name, {
     effect, stats: [sp("lifesteal", "high"), st("max_hp", 1), st("attack", 1)],
     statuses: [own_(name, effect, { pulse: { every: 10, do: [give("burn", "holder", FLAT_STACKS.few)] }, boosts: hits(whileIt(50, { has: "burn" })) })],

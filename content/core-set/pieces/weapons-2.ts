@@ -27,7 +27,7 @@ weapon("bow", "common", "War bow", { stats: [sp("crit_damage", "medium")], serve
 weapon("bow", "common", "Short bow", { stats: [sp("attack_speed", "medium")], serves: "Thousand Cuts (Attack speed)" });
 
 {
-  const name = "Broadhead bow", effect = "On a crit: adds many Bleed (from Attack).";
+  const name = "Broadhead bow", effect = "On a crit: adds Bleed.";
   weapon("bow", "uncommon", name, {
     effect, stats: [sp("crit_damage", "medium"), critStep(1)],
     statuses: [own_(name, effect, { reactions: [react(EV.crit, give("bleed", "other", own("many", "attack")))] })],
@@ -46,7 +46,7 @@ weapon("bow", "common", "Short bow", { stats: [sp("attack_speed", "medium")], se
   });
 }
 {
-  const name = "Frostbite bow", effect = "Basic attacks add several Chill (from Attack).";
+  const name = "Frostbite bow", effect = "Basic attacks add Chill.";
   weapon("bow", "uncommon", name, {
     effect, stats: [sp("crit_damage", "medium"), sp("attack_speed", "medium")],
     statuses: [own_(name, effect, { reactions: [react(EV.basic, give("chill", "other", own("several", "attack")))] })],
@@ -93,7 +93,7 @@ weapon("rune_sword", "common", "Runed saber", { stats: [st("mp_regen", 1)], serv
 weapon("rune_sword", "common", "Barrow blade", { stats: [st("max_hp", 1)], serves: "Cold Snap, and the Toll's wardens (HP)" });
 
 {
-  const name = "Sleet blade", effect = "Basic attacks add several Chill (from Attack).";
+  const name = "Sleet blade", effect = "Basic attacks add Chill.";
   weapon("rune_sword", "uncommon", name, {
     effect, stats: [st("mp_regen", 1), st("max_hp", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.basic, give("chill", "other", own("several", "attack")))] })],
@@ -126,7 +126,7 @@ weapon("rune_sword", "common", "Barrow blade", { stats: [st("max_hp", 1)], serve
   });
 }
 {
-  const name = "Frostward blade", effect = "Foes that hit the ally with the most Aggro gain several Chill (from Attack).";
+  const name = "Frostward blade", effect = "Foes that hit the ally with the most Aggro gain Chill.";
   weapon("rune_sword", "rare", name, {
     effect, stats: [st("mp_regen", 1), st("max_hp", 2)],
     statuses: [own_(name, effect, { reactions: [reactIf(on("hit_taken", { whose: "team" }), { unit: "owner", where: { top: { stats: ["aggro"] } } }, give("chill", "other", own("several", "attack")))] })],
@@ -240,7 +240,7 @@ weapon("mace", "common", "Morningstar", { stats: [st("max_hp", 1), st("defense",
 weapon("mace", "common", "Friar's mace", { stats: [st("max_hp", 1), st("mp_regen", 1)], serves: "Blood Pact, and Barrage's font (HP, MP regen)" });
 
 {
-  const name = "Censer mace", effect = "Basic attacks add many Burn (from Attack).";
+  const name = "Censer mace", effect = "Basic attacks add Burn.";
   weapon("mace", "uncommon", name, {
     effect, stats: [st("max_hp", 2), st("defense", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.basic, give("burn", "other", own("many", "attack")))] })],
@@ -374,7 +374,7 @@ weapon("great_weapon", "common", "Bardiche", { stats: [st("attack", 1)], trade: 
 weapon("great_weapon", "common", "Halberd", { stats: [st("attack", 1), st("max_hp", 1)], serves: "Landslide, and Blood Pact (Attack, HP)" });
 
 {
-  const name = "Roaring greataxe", effect = "At fight start: gains many Might (from Attack).";
+  const name = "Roaring greataxe", effect = "At fight start: gains Might.";
   weapon("great_weapon", "uncommon", name, {
     effect, stats: [st("attack", 1), st("max_hp", 1), sp("crit_damage", "medium")],
     statuses: [own_(name, effect, { reactions: [atStart(give("might", "holder", own("many", "attack")))] })],

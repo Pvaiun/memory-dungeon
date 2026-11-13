@@ -34,13 +34,13 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
   );
 }
 {
-  const party = "While a foe burns, every ally gains a Heat every 4 ticks (5% faster each, up to 10). When an ally is Stunned or Silenced, the foe with the most Burn gains many Burn.";
+  const party = `While a foe burns, every ally gains a Heat every 4 ticks (5% faster each, up to 10). When an ally is Stunned or Silenced, the foe with the most Burn gains ${FLAT_STACKS.many} Burn.`;
   const stoke = (status: string) => react(on("status_gained", { status, whose: "team" }), give("burn", TO.mostFoe("burn"), FLAT_STACKS.many));
   add(
     formation("The forge", "legendary", "A kept fire quickens the party.", thrice({ name: "Forgehand", text: NOTHING }), { text: party, statuses: ["the_forge", "the_forge_bellows"] }),
     [
       held("the_forge", "The forge", "While a foe burns: a Heat every 4 ticks.", { pulse: { every: FEW_TICKS, if: { side: "foes", where: { has: "burn" } }, do: [give("heat", "holder", 1)] } }),
-      held("the_forge_bellows", "The forge's bellows", "When an ally is Stunned or Silenced, the foe with the most Burn gains many Burn.", { party: true, reactions: [stoke("stun"), stoke("silence")] }),
+      held("the_forge_bellows", "The forge's bellows", `When an ally is Stunned or Silenced, the foe with the most Burn gains ${FLAT_STACKS.many} Burn.`, { party: true, reactions: [stoke("stun"), stoke("silence")] }),
     ],
     "Bonfire 3 ●●●",
   );
@@ -61,7 +61,7 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
   );
 }
 {
-  const bolt = "Abilities deal +3% per Shock the foes hold.", party = "Every ally's basic attacks add a few Shock.";
+  const bolt = "Abilities deal +3% per Shock the foes hold.", party = `Every ally's basic attacks add ${FLAT_STACKS.few} Shock.`;
   add(
     formation("Eye of the storm", "legendary", "The storm doesn't lift.", [
       { name: "Bolt", text: bolt, statuses: ["eye_of_the_storm_bolt"] },

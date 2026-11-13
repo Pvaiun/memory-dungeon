@@ -1202,7 +1202,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Its Thorns add a few Bleed (from Defense).",
+   "text": "Its Thorns add Bleed.",
    "reactions": [
     {
      "on": {
@@ -1398,7 +1398,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks add a few Chill (from Attack).",
+   "text": "Basic attacks add Chill.",
    "reactions": [
     {
      "on": {
@@ -1431,7 +1431,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks and extra strikes add a few Sunder (from Attack).",
+   "text": "Basic attacks and extra strikes add Sunder.",
    "reactions": [
     {
      "on": {
@@ -1486,7 +1486,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Crits add several Bleed (from Attack).",
+   "text": "Crits add Bleed.",
    "reactions": [
     {
      "on": {
@@ -1589,7 +1589,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Each cast adds a few Burn (from Attack) to the foe with the most Burn.",
+   "text": "Each cast adds Burn to the foe with the most Burn.",
    "reactions": [
     {
      "on": {
@@ -1628,7 +1628,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "A foe whose Chill shatters gains several Sunder (from Attack).",
+   "text": "A foe whose Chill shatters gains Sunder.",
    "reactions": [
     {
      "on": {
@@ -1662,7 +1662,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks also hit a second random foe; both gain a few Shock (from Attack).",
+   "text": "Basic attacks also hit a second random foe; both gain Shock.",
    "strike": {
     "to": {
      "side": "foes",
@@ -1808,7 +1808,7 @@
   {
    "id": "thunderstorm_storm",
    "name": "THUNDERSTORM",
-   "text": "Its basic attacks add a few Shock.",
+   "text": "Basic attacks add Shock.",
    "label": "buff",
    "show": "icon",
    "stacking": "refresh",
@@ -1872,7 +1872,7 @@
   {
    "id": "heavy_line_loader",
    "name": "Loader",
-   "text": "At fight start: the Hammer gains many Might.",
+   "text": "At fight start: the Hammer gains 7 Might.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2040,7 +2040,7 @@
   {
    "id": "squall_line_squall",
    "name": "Squall",
-   "text": "Basic attacks add a few Shock and also hit a second random foe for half, Shock included.",
+   "text": "Basic attacks add 2 Shock and also hit a second random foe for half, Shock included.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2481,7 +2481,7 @@
   {
    "id": "bloodied_ground_opener",
    "name": "Opener",
-   "text": "Crits add several Bleed.",
+   "text": "Crits add 4 Bleed.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2545,7 +2545,7 @@
   {
    "id": "pyre_line_keeper",
    "name": "Keeper",
-   "text": "At fight start: Taunts and is Guarded. Foes that hit it gain a few Burn.",
+   "text": "At fight start: Taunts and is Guarded. Foes that hit it gain 2 Burn.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2752,7 +2752,7 @@
   {
    "id": "storm_front_rod",
    "name": "Rod",
-   "text": "Foes that hit it gain a few Shock.",
+   "text": "Foes that hit it gain 2 Shock.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -3621,7 +3621,7 @@
   {
    "id": "the_forge_bellows",
    "name": "The forge's bellows",
-   "text": "When an ally is Stunned or Silenced, the foe with the most Burn gains many Burn.",
+   "text": "When an ally is Stunned or Silenced, the foe with the most Burn gains 7 Burn.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -3759,7 +3759,7 @@
   {
    "id": "eye_of_the_storm",
    "name": "Eye of the storm",
-   "text": "Every ally's basic attacks add a few Shock.",
+   "text": "Every ally's basic attacks add 2 Shock.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -4328,7 +4328,7 @@
   {
    "id": "vengeance",
    "name": "Vengeance",
-   "text": "Several Might when one of his Soldiers falls.",
+   "text": "4 Might when one of his Soldiers falls.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -4461,7 +4461,7 @@
   {
    "id": "weeping_kris",
    "name": "Weeping kris",
-   "text": "First hit on each foe: adds several Bleed (from Attack).",
+   "text": "The first hit on each foe adds Bleed.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -4514,7 +4514,7 @@
   {
    "id": "sleet_dirk",
    "name": "Sleet dirk",
-   "text": "Basic attacks add a few Chill (from Attack).",
+   "text": "Basic attacks add Chill.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -4735,7 +4735,7 @@
   {
    "id": "live_wire_knuckles",
    "name": "Live-wire knuckles",
-   "text": "Basic attacks and extra strikes add a few Shock (from Attack).",
+   "text": "Basic attacks and extra strikes add Shock.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -4790,7 +4790,7 @@
   {
    "id": "cinder_wraps",
    "name": "Cinder wraps",
-   "text": "Basic attacks and extra strikes add a few Burn (from Attack).",
+   "text": "Basic attacks and extra strikes add Burn.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -4845,7 +4845,7 @@
   {
    "id": "rime_knuckles",
    "name": "Rime knuckles",
-   "text": "Basic attacks and extra strikes add a few Chill (from Attack).",
+   "text": "Basic attacks and extra strikes add Chill.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -5148,7 +5148,7 @@
   {
    "id": "spark_wand",
    "name": "Spark wand",
-   "text": "Basic attacks add a few Burn (from Attack).",
+   "text": "Basic attacks add Burn.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -5181,7 +5181,7 @@
   {
    "id": "jolt_wand",
    "name": "Jolt wand",
-   "text": "Basic attacks add a few Shock (from Attack).",
+   "text": "Basic attacks add Shock.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -5290,7 +5290,7 @@
   {
    "id": "wildmagic_wand",
    "name": "Wildmagic wand",
-   "text": "Basic attacks add a few of one random affliction (from Attack): Burn, Chill, Shock, Bleed or Sunder.",
+   "text": "Basic attacks add one of Burn, Chill, Shock, Bleed or Sunder, at random.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -5402,7 +5402,7 @@
   {
    "id": "rimed_blade",
    "name": "Rimed blade",
-   "text": "Basic attacks add a few Chill (from max HP).",
+   "text": "Basic attacks add Chill, from max HP.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -5715,7 +5715,7 @@
   {
    "id": "jolt_spear",
    "name": "Jolt spear",
-   "text": "Every hit adds a few Shock (from Attack), abilities included.",
+   "text": "Every hit adds Shock, abilities included.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -5853,7 +5853,7 @@
   {
    "id": "squall_lance",
    "name": "Squall lance",
-   "text": "Every 5th hit also hits every other foe: a light hit (from Attack), effects included.",
+   "text": "Every 5th hit also hits every other foe, effects included.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -5995,7 +5995,7 @@
   {
    "id": "reavers_axe",
    "name": "Reaver's axe",
-   "text": "On a kill: gains many Might (from Attack).",
+   "text": "On a kill: gains Might.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -6067,7 +6067,7 @@
   {
    "id": "ragged_axe",
    "name": "Ragged axe",
-   "text": "Every hit adds a few Bleed (from Attack).",
+   "text": "Every hit adds Bleed.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -6330,7 +6330,7 @@
   {
    "id": "broadhead_bow",
    "name": "Broadhead bow",
-   "text": "On a crit: adds many Bleed (from Attack).",
+   "text": "On a crit: adds Bleed.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -6416,7 +6416,7 @@
   {
    "id": "frostbite_bow",
    "name": "Frostbite bow",
-   "text": "Basic attacks add several Chill (from Attack).",
+   "text": "Basic attacks add Chill.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -6601,7 +6601,7 @@
   {
    "id": "sleet_blade",
    "name": "Sleet blade",
-   "text": "Basic attacks add several Chill (from Attack).",
+   "text": "Basic attacks add Chill.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -6739,7 +6739,7 @@
   {
    "id": "frostward_blade",
    "name": "Frostward blade",
-   "text": "Foes that hit the ally with the most Aggro gain several Chill (from Attack).",
+   "text": "Foes that hit the ally with the most Aggro gain Chill.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -7129,7 +7129,7 @@
   {
    "id": "censer_mace",
    "name": "Censer mace",
-   "text": "Basic attacks add many Burn (from Attack).",
+   "text": "Basic attacks add Burn.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -7642,7 +7642,7 @@
   {
    "id": "roaring_greataxe",
    "name": "Roaring greataxe",
-   "text": "At fight start: gains many Might (from Attack).",
+   "text": "At fight start: gains Might.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -8093,7 +8093,7 @@
   {
    "id": "hoarfrost_plate",
    "name": "Hoarfrost plate",
-   "text": "When hit: the attacker gains a few Chill (from Defense).",
+   "text": "When hit: the attacker gains Chill.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -8524,7 +8524,7 @@
   {
    "id": "static_mail",
    "name": "Static mail",
-   "text": "When hit: the attacker gains a few Shock (from Defense).",
+   "text": "When hit: the attacker gains Shock.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -8966,7 +8966,7 @@
   {
    "id": "frostwalkers_furs",
    "name": "Frostwalker's furs",
-   "text": "On a shatter: Hasted; its next hit adds a few Chill (from Attack) to every foe.",
+   "text": "On a shatter: Hasted; its next hit adds Chill to every foe.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -8996,7 +8996,7 @@
   {
    "id": "frostwalkers_furs_on",
    "name": "FROSTWALK",
-   "text": "Next hit adds a few Chill to every foe.",
+   "text": "Next hit adds Chill to every foe.",
    "label": "buff",
    "show": "icon",
    "stacking": "refresh",
@@ -9563,7 +9563,7 @@
   {
    "id": "tinder_charm",
    "name": "Tinder charm",
-   "text": "Basic attacks add a few (from Attack) of whichever of Burn, Chill, Shock or Bleed the target holds most.",
+   "text": "Basic attacks add whichever of Burn, Chill, Shock or Bleed the target holds most.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -10299,7 +10299,7 @@
   {
    "id": "burning_heart",
    "name": "Burning heart",
-   "text": "Every 10 ticks: a few Burn on itself (no stat). While it burns: hits deal +50%.",
+   "text": "Every 10 ticks: 2 Burn on itself. While it burns: hits deal +50%.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -10475,7 +10475,7 @@
   {
    "id": "emberguard",
    "name": "Emberguard",
-   "text": "Attackers gain a few Burn (from Defense).",
+   "text": "Attackers gain Burn.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -11287,7 +11287,7 @@
   {
    "id": "war_horn",
    "name": "War horn",
-   "text": "At fight start: many Might on the slowest-swinging ally.",
+   "text": "At fight start: 7 Might on the slowest-swinging ally.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -11441,7 +11441,7 @@
   {
    "id": "stormglass_totem",
    "name": "Stormglass totem",
-   "text": "At fight start: a few Shock on every foe (from Attack).",
+   "text": "At fight start: Shock on every foe.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -11501,7 +11501,7 @@
   {
    "id": "nettle_totem",
    "name": "Nettle totem",
-   "text": "Attackers gain a few Bleed (from Defense).",
+   "text": "Attackers gain Bleed.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -11627,7 +11627,7 @@
   {
    "id": "earthmother_totem",
    "name": "Earthmother totem",
-   "text": "While it stands, allies' Shields are 33% bigger. A broken Shield gives its ally many Might.",
+   "text": "While it stands, allies' Shields are 33% bigger. A broken Shield gives its ally 7 Might.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -11954,7 +11954,7 @@
   {
    "id": "pitch_lantern",
    "name": "Pitch lantern",
-   "text": "At fight start: several Burn on every foe (from Attack).",
+   "text": "At fight start: Burn on every foe.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -12171,7 +12171,7 @@
   {
    "id": "snowbound_folio",
    "name": "Snowbound folio",
-   "text": "At fight start: a few Chill on every foe (from Attack).",
+   "text": "At fight start: Chill on every foe.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -12234,7 +12234,7 @@
   {
    "id": "curse_book",
    "name": "Curse-book",
-   "text": "Abilities add several Bleed to every foe hit (from Attack).",
+   "text": "Abilities add Bleed to every foe they hit.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -12350,7 +12350,7 @@
   {
    "id": "grimoire_of_plagues",
    "name": "Grimoire of plagues",
-   "text": "At fight start: a few of two random statuses of Burn, Chill, Shock and Bleed on every foe (from Attack).",
+   "text": "At fight start: two of Burn, Chill, Shock and Bleed, at random, on every foe.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -13311,7 +13311,7 @@
   {
    "id": "lancet_phial",
    "name": "Lancet phial",
-   "text": "At fight start: a few Bleed on every foe (from Attack).",
+   "text": "At fight start: Bleed on every foe.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -15309,7 +15309,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Its Thorns add a few Bleed (from Defense). +40% Bleed.",
+   "text": "Its Thorns add Bleed. +40% Bleed.",
    "reactions": [
     {
      "on": {
@@ -15364,7 +15364,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Its Thorns add a few Bleed (from Defense). While that Bleed lasts, the foe heals it 1.5% of max HP each time it acts.",
+   "text": "Its Thorns add Bleed. While that Bleed lasts, the foe heals it 1.5% of max HP each time it acts.",
    "reactions": [
     {
      "on": {
@@ -15429,7 +15429,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Its Thorns also strike a second random foe; both gain a few Bleed (from Defense).",
+   "text": "Its Thorns also strike a second random foe; both gain Bleed.",
    "reactions": [
     {
      "on": {
@@ -15558,7 +15558,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Its Thorns add a few Bleed (from Defense). While that Bleed lasts, the foe heals it 1.5% of max HP each time it acts. +40% Bleed.",
+   "text": "Its Thorns add Bleed. While that Bleed lasts, the foe heals it 1.5% of max HP each time it acts. +40% Bleed.",
    "reactions": [
     {
      "on": {
@@ -15623,7 +15623,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Its Thorns also strike a second random foe; both gain a few Bleed (from Defense). +40% Bleed.",
+   "text": "Its Thorns also strike a second random foe; both gain Bleed. +40% Bleed.",
    "reactions": [
     {
      "on": {
@@ -16151,7 +16151,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Hits deal +50% to buffed or debuffed foes; basic attacks add a few Burn (from Attack) to them.",
+   "text": "Hits deal +50% to buffed or debuffed foes; basic attacks add Burn to them.",
    "boosts": [
     {
      "tag": "physical",
@@ -16291,7 +16291,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Hits deal +50% to buffed or debuffed foes; basic attacks add a few Burn (from Attack) to them. +70%, not +50%.",
+   "text": "Hits deal +50% to buffed or debuffed foes; basic attacks add Burn to them. +70%, not +50%.",
    "boosts": [
     {
      "tag": "physical",
@@ -16730,7 +16730,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks give a random ally a few Might (from Attack) and a random ally MP, 30% of the damage.",
+   "text": "Basic attacks give a random ally Might, and a random ally MP (30% of the damage).",
    "reactions": [
     {
      "on": {
@@ -16832,7 +16832,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks give a random ally a few Might (from Attack) and a random ally MP, 30% of the damage. 42% of the damage, not 30%; +40% to any Might.",
+   "text": "Basic attacks give a random ally Might, and a random ally MP (30% of the damage). 42% of the damage, not 30%; +40% to any Might.",
    "reactions": [
     {
      "on": {
@@ -16940,7 +16940,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks add a few Chill (from Attack). +40% stacks.",
+   "text": "Basic attacks add Chill. +40% stacks.",
    "reactions": [
     {
      "on": {
@@ -16973,7 +16973,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks add a few Burn (from Attack), not Chill.",
+   "text": "Basic attacks add Burn, not Chill.",
    "reactions": [
     {
      "on": {
@@ -17030,7 +17030,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks add a few Burn (from Attack), not Chill. +40% stacks.",
+   "text": "Basic attacks add Burn, not Chill. +40% stacks.",
    "reactions": [
     {
      "on": {
@@ -17121,7 +17121,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks and extra strikes add a few Sunder (from Attack). +40% Sunder.",
+   "text": "Basic attacks and extra strikes add Sunder. +40% Sunder.",
    "reactions": [
     {
      "on": {
@@ -17176,7 +17176,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Every hit, abilities' included, adds a few Sunder (from Attack).",
+   "text": "Every hit adds Sunder, abilities included.",
    "reactions": [
     {
      "on": {
@@ -17253,7 +17253,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks and extra strikes add a few Sunder (from Attack). Hits on a Sundered foe heal it for 20% of the damage.",
+   "text": "Basic attacks and extra strikes add Sunder. Hits on a Sundered foe heal it for 20% of the damage.",
    "reactions": [
     {
      "on": {
@@ -17333,7 +17333,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Every hit, abilities' included, adds a few Sunder (from Attack). +40% Sunder.",
+   "text": "Every hit adds Sunder, abilities included. +40% Sunder.",
    "reactions": [
     {
      "on": {
@@ -17410,7 +17410,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks and extra strikes add a few Sunder (from Attack). Hits on a Sundered foe heal it for 20% of the damage. +40% Sunder.",
+   "text": "Basic attacks and extra strikes add Sunder. Hits on a Sundered foe heal it for 20% of the damage. +40% Sunder.",
    "reactions": [
     {
      "on": {
@@ -17600,7 +17600,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Crits add several Bleed (from Attack). +40% Bleed.",
+   "text": "Crits add Bleed. +40% Bleed.",
    "reactions": [
     {
      "on": {
@@ -17635,7 +17635,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Its first hit on each foe always crits. Crits add several Bleed (from Attack).",
+   "text": "Its first hit on each foe always crits. Crits add Bleed.",
    "reactions": [
     {
      "on": {
@@ -17690,7 +17690,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Crits deal extra damage for each Bleed on the foe, then add several Bleed (from Attack). The Bleed stays.",
+   "text": "Crits deal extra damage for each Bleed on the foe, then add Bleed. The Bleed stays.",
    "reactions": [
     {
      "on": {
@@ -17739,7 +17739,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Its first hit on each foe always crits. Crits add several Bleed (from Attack). +40% Bleed.",
+   "text": "Its first hit on each foe always crits. Crits add Bleed. +40% Bleed.",
    "reactions": [
     {
      "on": {
@@ -17794,7 +17794,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Crits deal extra damage for each Bleed on the foe, then add several Bleed (from Attack). The Bleed stays. +40% Bleed.",
+   "text": "Crits deal extra damage for each Bleed on the foe, then add Bleed. The Bleed stays. +40% Bleed.",
    "reactions": [
     {
      "on": {
@@ -18532,7 +18532,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Each cast adds a few Burn (from Attack) to the foe with the most Burn. +40% Burn.",
+   "text": "Each cast adds Burn to the foe with the most Burn. +40% Burn.",
    "reactions": [
     {
      "on": {
@@ -18571,7 +18571,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks, not casts, add a few Burn (from Attack).",
+   "text": "Basic attacks, not casts, add Burn.",
    "reactions": [
     {
      "on": {
@@ -18604,7 +18604,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Each cast adds Burn to every burning foe: half of a few (from Attack).",
+   "text": "Each cast adds Burn to every burning foe.",
    "reactions": [
     {
      "on": {
@@ -18643,7 +18643,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks, not casts, add a few Burn (from Attack). +40% Burn.",
+   "text": "Basic attacks, not casts, add Burn. +40% Burn.",
    "reactions": [
     {
      "on": {
@@ -18676,7 +18676,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Each cast adds Burn to every burning foe: half of a few (from Attack). +40% Burn.",
+   "text": "Each cast adds Burn to every burning foe. +40% Burn.",
    "reactions": [
     {
      "on": {
@@ -18715,7 +18715,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "A foe whose Chill shatters gains several Sunder (from Attack). +40% Sunder.",
+   "text": "A foe whose Chill shatters gains Sunder. +40% Sunder.",
    "reactions": [
     {
      "on": {
@@ -18787,7 +18787,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "On a shatter: that foe gains several Sunder (from Attack), and every other foe a third of its Chill.",
+   "text": "On a shatter: that foe gains Sunder, and every other foe a third of its Chill.",
    "reactions": [
     {
      "on": {
@@ -18877,7 +18877,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "On a shatter: that foe gains several Sunder (from Attack), and every other foe a third of its Chill. +40% Sunder.",
+   "text": "On a shatter: that foe gains Sunder, and every other foe a third of its Chill. +40% Sunder.",
    "reactions": [
     {
      "on": {
@@ -18925,7 +18925,7 @@
   {
    "id": "frost_armor",
    "name": "FROST ARMOR",
-   "text": "Foes that hit it gain a few Chill.",
+   "text": "Foes that hit it gain Chill.",
    "label": "buff",
    "show": "icon",
    "stacking": "refresh",
@@ -18957,7 +18957,7 @@
   {
    "id": "frost_armor_plus",
    "name": "FROST ARMOR",
-   "text": "Foes that hit it gain a few Chill.",
+   "text": "Foes that hit it gain Chill.",
    "label": "buff",
    "show": "icon",
    "stacking": "refresh",
@@ -19039,7 +19039,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks also hit a second random foe; both gain a few Shock (from Attack). +40% Shock.",
+   "text": "Basic attacks also hit a second random foe; both gain Shock. +40% Shock.",
    "strike": {
     "to": {
      "side": "foes",
@@ -19101,7 +19101,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks also hit two other random foes; all three gain a few Shock (from Attack).",
+   "text": "Basic attacks also hit two other random foes; all three gain Shock.",
    "strike": {
     "to": {
      "side": "foes",
@@ -19164,7 +19164,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks strike their target twice, each adding a few Shock (from Attack).",
+   "text": "Basic attacks strike their target twice, each adding Shock.",
    "strike": {
     "to": "target"
    },
@@ -19222,7 +19222,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks also hit two other random foes; all three gain a few Shock (from Attack). +40% Shock.",
+   "text": "Basic attacks also hit two other random foes; all three gain Shock. +40% Shock.",
    "strike": {
     "to": {
      "side": "foes",
@@ -19285,7 +19285,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks strike their target twice, each adding a few Shock (from Attack). +40% Shock.",
+   "text": "Basic attacks strike their target twice, each adding Shock. +40% Shock.",
    "strike": {
     "to": "target"
    },
@@ -19339,7 +19339,7 @@
   {
    "id": "static_field",
    "name": "THUNDERSTORM",
-   "text": "Foes that hit it gain a few Shock.",
+   "text": "Foes that hit it gain Shock.",
    "label": "buff",
    "show": "icon",
    "stacking": "refresh",
@@ -19412,7 +19412,7 @@
   {
    "id": "thunderstorm_storm_plus",
    "name": "THUNDERSTORM",
-   "text": "Basic attacks add a few Shock.",
+   "text": "Basic attacks add Shock.",
    "label": "buff",
    "show": "icon",
    "stacking": "refresh",
@@ -19446,7 +19446,7 @@
   {
    "id": "static_field_plus",
    "name": "THUNDERSTORM",
-   "text": "Foes that hit it gain a few Shock.",
+   "text": "Foes that hit it gain Shock.",
    "label": "buff",
    "show": "icon",
    "stacking": "refresh",
@@ -20316,7 +20316,7 @@
   {
    "id": "writ_of_judgement",
    "name": "Writ of judgement",
-   "text": "When Condemn Marks a foe, a heavy blow falls on it, adding several Burn (both from Attack).",
+   "text": "When Condemn Marks a foe, a blow falls on it, adding Burn.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -20365,7 +20365,7 @@
   {
    "id": "stormspear",
    "name": "Stormspear",
-   "text": "Every 4th hit calls a heavy blow (from Attack) on the foe with the most Shock, ignoring Taunt, bigger for each Shock. The Shock stays.",
+   "text": "Every 4th hit calls a blow on the foe with the most Shock, ignoring Taunt. The Shock stays.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -21091,7 +21091,7 @@
    ],
    "passive": {
     "name": "Briar",
-    "text": "Its Thorns add a few Bleed (from Defense).",
+    "text": "Its Thorns add Bleed.",
     "statuses": [
      "briar"
     ]
@@ -21287,7 +21287,7 @@
    ],
    "passive": {
     "name": "Cold hex",
-    "text": "Basic attacks add a few Chill (from Attack).",
+    "text": "Basic attacks add Chill.",
     "statuses": [
      "cold_hex"
     ]
@@ -21327,7 +21327,7 @@
    ],
    "passive": {
     "name": "Iron palm",
-    "text": "Basic attacks and extra strikes add a few Sunder (from Attack).",
+    "text": "Basic attacks and extra strikes add Sunder.",
     "statuses": [
      "iron_palm"
     ]
@@ -21367,7 +21367,7 @@
    ],
    "passive": {
     "name": "Lacerate",
-    "text": "Crits add several Bleed (from Attack).",
+    "text": "Crits add Bleed.",
     "statuses": [
      "lacerate"
     ]
@@ -21445,7 +21445,7 @@
    ],
    "passive": {
     "name": "Stoke",
-    "text": "Each cast adds a few Burn (from Attack) to the foe with the most Burn.",
+    "text": "Each cast adds Burn to the foe with the most Burn.",
     "statuses": [
      "stoke"
     ]
@@ -21484,7 +21484,7 @@
    ],
    "passive": {
     "name": "Shatterpoint",
-    "text": "A foe whose Chill shatters gains several Sunder (from Attack).",
+    "text": "A foe whose Chill shatters gains Sunder.",
     "statuses": [
      "shatterpoint"
     ]
@@ -21524,7 +21524,7 @@
    ],
    "passive": {
     "name": "Arc",
-    "text": "Basic attacks also hit a second random foe; both gain a few Shock (from Attack).",
+    "text": "Basic attacks also hit a second random foe; both gain Shock.",
     "statuses": [
      "arc"
     ]
@@ -23171,7 +23171,7 @@
    "id": "thunderstorm",
    "class": "stormcaller",
    "name": "Thunderstorm",
-   "text": "For 20 ticks, every ally's basic attacks add a few Shock (from the Stormcaller's Attack).",
+   "text": "For 20 ticks, every ally's basic attacks add Shock.",
    "cooldown": 27.9,
    "cast": 3,
    "mp": 650,
@@ -23349,7 +23349,7 @@
   {
    "id": "take_aim",
    "name": "Take aim",
-   "text": "Several Might on itself.",
+   "text": "Might on itself.",
    "cooldown": 35.1,
    "cast": 1,
    "mp": 0,
@@ -23668,7 +23668,7 @@
   {
    "id": "tolling",
    "name": "Tolling",
-   "text": "Many Might and Haste on itself: its swings come faster and harder.",
+   "text": "Might and Haste on itself: its swings come faster and harder.",
    "cooldown": 24.4,
    "cast": 1,
    "mp": 0,
@@ -23688,7 +23688,7 @@
   {
    "id": "kindle",
    "name": "Kindle",
-   "text": "Several Might and a Guard on itself; the Inferno follows.",
+   "text": "Might and a Guard on itself; the Inferno follows.",
    "cooldown": 43.4,
    "cast": 1,
    "mp": 0,
@@ -23786,7 +23786,7 @@
   {
    "id": "brand",
    "name": "Brand",
-   "text": "A fiery spell on a foe, with a few Burn.",
+   "text": "A fiery spell on a foe, adding Burn.",
    "cooldown": 26.2,
    "cast": 1,
    "mp": 300,
@@ -23814,7 +23814,7 @@
   {
    "id": "inferno",
    "name": "Inferno",
-   "text": "A very long cast: a huge blast of fire on every foe, with several Burn. It waits until the Giant has kindled.",
+   "text": "A very long cast: a huge blast of fire on every foe, adding Burn. It waits until the Giant has kindled.",
    "cooldown": 25.2,
    "cast": 8,
    "mp": 300,
@@ -31838,7 +31838,7 @@
    "id": "blizzard__a",
    "class": "frostweaver",
    "name": "Frost armor",
-   "text": "Guards every ally. While the Guard lasts, foes that hit them gain a few Chill (from the Frostweaver's Attack). No damage.",
+   "text": "Guards every ally. While the Guard lasts, foes that hit them gain Chill. No damage.",
    "cooldown": 26.5,
    "cast": 6,
    "mp": 1000,
@@ -31901,7 +31901,7 @@
    "id": "blizzard__ap",
    "class": "frostweaver",
    "name": "Frost armor+",
-   "text": "Guards every ally. While the Guard lasts, foes that hit them gain a few Chill (from the Frostweaver's Attack). No damage. +40% Chill.",
+   "text": "Guards every ally. While the Guard lasts, foes that hit them gain Chill. No damage. +40% Chill.",
    "cooldown": 26.5,
    "cast": 6,
    "mp": 1000,
@@ -32561,7 +32561,7 @@
    "id": "thunderstorm__p",
    "class": "stormcaller",
    "name": "Thunderstorm+",
-   "text": "For 20 ticks, every ally's basic attacks add a few Shock (from the Stormcaller's Attack). +40% Shock.",
+   "text": "For 20 ticks, every ally's basic attacks add Shock. +40% Shock.",
    "cooldown": 27.9,
    "cast": 3,
    "mp": 650,
@@ -32580,7 +32580,7 @@
    "id": "thunderstorm__a",
    "class": "stormcaller",
    "name": "Static field",
-   "text": "For 20 ticks, foes that hit an ally gain a few Shock (from the Stormcaller's Attack). None on the swings.",
+   "text": "For 20 ticks, foes that hit an ally gain Shock. None on the swings.",
    "cooldown": 27.9,
    "cast": 3,
    "mp": 650,
@@ -32599,7 +32599,7 @@
    "id": "thunderstorm__b",
    "class": "stormcaller",
    "name": "Storm's eye",
-   "text": "For 20 ticks, every ally's basic attacks send Shock to the foe with the most: a few, tripled (from the Stormcaller's Attack).",
+   "text": "For 20 ticks, every ally's basic attacks add triple Shock to the foe with the most Shock.",
    "cooldown": 27.9,
    "cast": 3,
    "mp": 650,
@@ -32618,7 +32618,7 @@
    "id": "thunderstorm__ap",
    "class": "stormcaller",
    "name": "Static field+",
-   "text": "For 20 ticks, foes that hit an ally gain a few Shock (from the Stormcaller's Attack). None on the swings. +40% Shock.",
+   "text": "For 20 ticks, foes that hit an ally gain Shock. None on the swings. +40% Shock.",
    "cooldown": 27.9,
    "cast": 3,
    "mp": 650,
@@ -32637,7 +32637,7 @@
    "id": "thunderstorm__bp",
    "class": "stormcaller",
    "name": "Storm's eye+",
-   "text": "For 20 ticks, every ally's basic attacks send Shock to the foe with the most: a few, tripled (from the Stormcaller's Attack). +40% Shock.",
+   "text": "For 20 ticks, every ally's basic attacks add triple Shock to the foe with the most Shock. +40% Shock.",
    "cooldown": 27.9,
    "cast": 3,
    "mp": 650,
@@ -33449,11 +33449,11 @@
    "power": "+40% Bleed.",
    "a": {
     "name": "Bloodroot",
-    "text": "Its Thorns add a few Bleed (from Defense). While that Bleed lasts, the foe heals it 1.5% of max HP each time it acts."
+    "text": "Its Thorns add Bleed. While that Bleed lasts, the foe heals it 1.5% of max HP each time it acts."
    },
    "b": {
     "name": "Spreading thorns",
-    "text": "Its Thorns also strike a second random foe; both gain a few Bleed (from Defense)."
+    "text": "Its Thorns also strike a second random foe; both gain Bleed."
    }
   },
   {
@@ -33561,7 +33561,7 @@
    "power": "+70%, not +50%.",
    "a": {
     "name": "Zeal",
-    "text": "Hits deal +50% to buffed or debuffed foes; basic attacks add a few Burn (from Attack) to them."
+    "text": "Hits deal +50% to buffed or debuffed foes; basic attacks add Burn to them."
    },
    "b": {
     "name": "Verdict",
@@ -33677,7 +33677,7 @@
    },
    "b": {
     "name": "Battle song",
-    "text": "Basic attacks give a random ally a few Might (from Attack) and a random ally MP, 30% of the damage."
+    "text": "Basic attacks give a random ally Might, and a random ally MP (30% of the damage)."
    }
   },
   {
@@ -33729,7 +33729,7 @@
    "power": "+40% stacks.",
    "a": {
     "name": "Hex of flames",
-    "text": "Basic attacks add a few Burn (from Attack), not Chill."
+    "text": "Basic attacks add Burn, not Chill."
    },
    "b": {
     "name": "Withering hex",
@@ -33785,11 +33785,11 @@
    "power": "+40% Sunder.",
    "a": {
     "name": "Hundred hands",
-    "text": "Every hit, abilities' included, adds a few Sunder (from Attack)."
+    "text": "Every hit adds Sunder, abilities included."
    },
    "b": {
     "name": "Drinking palm",
-    "text": "Basic attacks and extra strikes add a few Sunder (from Attack). Hits on a Sundered foe heal it for 20% of the damage."
+    "text": "Basic attacks and extra strikes add Sunder. Hits on a Sundered foe heal it for 20% of the damage."
    }
   },
   {
@@ -33841,11 +33841,11 @@
    "power": "+40% Bleed.",
    "a": {
     "name": "Opening wound",
-    "text": "Its first hit on each foe always crits. Crits add several Bleed (from Attack)."
+    "text": "Its first hit on each foe always crits. Crits add Bleed."
    },
    "b": {
     "name": "Rupture",
-    "text": "Crits deal extra damage for each Bleed on the foe, then add several Bleed (from Attack). The Bleed stays."
+    "text": "Crits deal extra damage for each Bleed on the foe, then add Bleed. The Bleed stays."
    }
   },
   {
@@ -33953,11 +33953,11 @@
    "power": "+40% Burn.",
    "a": {
     "name": "Kindling",
-    "text": "Basic attacks, not casts, add a few Burn (from Attack)."
+    "text": "Basic attacks, not casts, add Burn."
    },
    "b": {
     "name": "Wildfire",
-    "text": "Each cast adds Burn to every burning foe: half of a few (from Attack)."
+    "text": "Each cast adds Burn to every burning foe."
    }
   },
   {
@@ -34013,7 +34013,7 @@
    },
    "b": {
     "name": "Splinters",
-    "text": "On a shatter: that foe gains several Sunder (from Attack), and every other foe a third of its Chill."
+    "text": "On a shatter: that foe gains Sunder, and every other foe a third of its Chill."
    }
   },
   {
@@ -34037,7 +34037,7 @@
    "power": "+40% damage, or +40% Chill.",
    "a": {
     "name": "Frost armor",
-    "text": "Guards every ally. While the Guard lasts, foes that hit them gain a few Chill (from the Frostweaver's Attack). No damage."
+    "text": "Guards every ally. While the Guard lasts, foes that hit them gain Chill. No damage."
    },
    "b": {
     "name": "Avalanche",
@@ -34065,11 +34065,11 @@
    "power": "+40% Shock.",
    "a": {
     "name": "Forked arc",
-    "text": "Basic attacks also hit two other random foes; all three gain a few Shock (from Attack)."
+    "text": "Basic attacks also hit two other random foes; all three gain Shock."
    },
    "b": {
     "name": "Static grip",
-    "text": "Basic attacks strike their target twice, each adding a few Shock (from Attack)."
+    "text": "Basic attacks strike their target twice, each adding Shock."
    }
   },
   {
@@ -34093,11 +34093,11 @@
    "power": "+40% Shock.",
    "a": {
     "name": "Static field",
-    "text": "For 20 ticks, foes that hit an ally gain a few Shock (from the Stormcaller's Attack). None on the swings."
+    "text": "For 20 ticks, foes that hit an ally gain Shock. None on the swings."
    },
    "b": {
     "name": "Storm's eye",
-    "text": "For 20 ticks, every ally's basic attacks send Shock to the foe with the most: a few, tripled (from the Stormcaller's Attack)."
+    "text": "For 20 ticks, every ally's basic attacks add triple Shock to the foe with the most Shock."
    }
   },
   {
@@ -34469,7 +34469,7 @@
   {
    "id": "weeping_kris",
    "name": "Weeping kris",
-   "text": "First hit on each foe: adds several Bleed (from Attack).",
+   "text": "The first hit on each foe adds Bleed.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -34503,7 +34503,7 @@
   {
    "id": "sleet_dirk",
    "name": "Sleet dirk",
-   "text": "Basic attacks add a few Chill (from Attack).",
+   "text": "Basic attacks add Chill.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -34799,7 +34799,7 @@
   {
    "id": "live_wire_knuckles",
    "name": "Live-wire knuckles",
-   "text": "Basic attacks and extra strikes add a few Shock (from Attack).",
+   "text": "Basic attacks and extra strikes add Shock.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -34833,7 +34833,7 @@
   {
    "id": "cinder_wraps",
    "name": "Cinder wraps",
-   "text": "Basic attacks and extra strikes add a few Burn (from Attack).",
+   "text": "Basic attacks and extra strikes add Burn.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -34867,7 +34867,7 @@
   {
    "id": "rime_knuckles",
    "name": "Rime knuckles",
-   "text": "Basic attacks and extra strikes add a few Chill (from Attack).",
+   "text": "Basic attacks and extra strikes add Chill.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -35229,7 +35229,7 @@
   {
    "id": "spark_wand",
    "name": "Spark wand",
-   "text": "Basic attacks add a few Burn (from Attack).",
+   "text": "Basic attacks add Burn.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -35267,7 +35267,7 @@
   {
    "id": "jolt_wand",
    "name": "Jolt wand",
-   "text": "Basic attacks add a few Shock (from Attack).",
+   "text": "Basic attacks add Shock.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -35423,7 +35423,7 @@
   {
    "id": "wildmagic_wand",
    "name": "Wildmagic wand",
-   "text": "Basic attacks add a few of one random affliction (from Attack): Burn, Chill, Shock, Bleed or Sunder.",
+   "text": "Basic attacks add one of Burn, Chill, Shock, Bleed or Sunder, at random.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
@@ -35561,7 +35561,7 @@
   {
    "id": "rimed_blade",
    "name": "Rimed blade",
-   "text": "Basic attacks add a few Chill (from max HP).",
+   "text": "Basic attacks add Chill, from max HP.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -35899,7 +35899,7 @@
   {
    "id": "jolt_spear",
    "name": "Jolt spear",
-   "text": "Every hit adds a few Shock (from Attack), abilities included.",
+   "text": "Every hit adds Shock, abilities included.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -36069,7 +36069,7 @@
   {
    "id": "squall_lance",
    "name": "Squall lance",
-   "text": "Every 5th hit also hits every other foe: a light hit (from Attack), effects included.",
+   "text": "Every 5th hit also hits every other foe, effects included.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -36195,7 +36195,7 @@
   {
    "id": "reavers_axe",
    "name": "Reaver's axe",
-   "text": "On a kill: gains many Might (from Attack).",
+   "text": "On a kill: gains Might.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -36255,7 +36255,7 @@
   {
    "id": "ragged_axe",
    "name": "Ragged axe",
-   "text": "Every hit adds a few Bleed (from Attack).",
+   "text": "Every hit adds Bleed.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -36513,7 +36513,7 @@
   {
    "id": "broadhead_bow",
    "name": "Broadhead bow",
-   "text": "On a crit: adds many Bleed (from Attack).",
+   "text": "On a crit: adds Bleed.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -36581,7 +36581,7 @@
   {
    "id": "frostbite_bow",
    "name": "Frostbite bow",
-   "text": "Basic attacks add several Chill (from Attack).",
+   "text": "Basic attacks add Chill.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -36783,7 +36783,7 @@
   {
    "id": "sleet_blade",
    "name": "Sleet blade",
-   "text": "Basic attacks add several Chill (from Attack).",
+   "text": "Basic attacks add Chill.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -36927,7 +36927,7 @@
   {
    "id": "frostward_blade",
    "name": "Frostward blade",
-   "text": "Foes that hit the ally with the most Aggro gain several Chill (from Attack).",
+   "text": "Foes that hit the ally with the most Aggro gain Chill.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -37401,7 +37401,7 @@
   {
    "id": "censer_mace",
    "name": "Censer mace",
-   "text": "Basic attacks add many Burn (from Attack).",
+   "text": "Basic attacks add Burn.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -38023,7 +38023,7 @@
   {
    "id": "roaring_greataxe",
    "name": "Roaring greataxe",
-   "text": "At fight start: gains many Might (from Attack).",
+   "text": "At fight start: gains Might.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -38486,7 +38486,7 @@
   {
    "id": "hoarfrost_plate",
    "name": "Hoarfrost plate",
-   "text": "When hit: the attacker gains a few Chill (from Defense).",
+   "text": "When hit: the attacker gains Chill.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -38749,7 +38749,7 @@
   {
    "id": "static_mail",
    "name": "Static mail",
-   "text": "When hit: the attacker gains a few Shock (from Defense).",
+   "text": "When hit: the attacker gains Shock.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -39121,7 +39121,7 @@
   {
    "id": "frostwalkers_furs",
    "name": "Frostwalker's furs",
-   "text": "On a shatter: Hasted; its next hit adds a few Chill (from Attack) to every foe.",
+   "text": "On a shatter: Hasted; its next hit adds Chill to every foe.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -39763,7 +39763,7 @@
   {
    "id": "tinder_charm",
    "name": "Tinder charm",
-   "text": "Basic attacks add a few (from Attack) of whichever of Burn, Chill, Shock or Bleed the target holds most.",
+   "text": "Basic attacks add whichever of Burn, Chill, Shock or Bleed the target holds most.",
    "slot": "amulet",
    "tier": "ordinary",
    "source": "drop",
@@ -40347,7 +40347,7 @@
   {
    "id": "burning_heart",
    "name": "Burning heart",
-   "text": "Every 10 ticks: a few Burn on itself (no stat). While it burns: hits deal +50%.",
+   "text": "Every 10 ticks: 2 Burn on itself. While it burns: hits deal +50%.",
    "slot": "amulet",
    "tier": "powerful",
    "source": "unlock",
@@ -40529,7 +40529,7 @@
   {
    "id": "emberguard",
    "name": "Emberguard",
-   "text": "Attackers gain a few Burn (from Defense).",
+   "text": "Attackers gain Burn.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -41023,7 +41023,7 @@
   {
    "id": "war_horn",
    "name": "War horn",
-   "text": "At fight start: many Might on the slowest-swinging ally.",
+   "text": "At fight start: 7 Might on the slowest-swinging ally.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -41159,7 +41159,7 @@
   {
    "id": "stormglass_totem",
    "name": "Stormglass totem",
-   "text": "At fight start: a few Shock on every foe (from Attack).",
+   "text": "At fight start: Shock on every foe.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -41205,7 +41205,7 @@
   {
    "id": "nettle_totem",
    "name": "Nettle totem",
-   "text": "Attackers gain a few Bleed (from Defense).",
+   "text": "Attackers gain Bleed.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -41309,7 +41309,7 @@
   {
    "id": "earthmother_totem",
    "name": "Earthmother totem",
-   "text": "While it stands, allies' Shields are 33% bigger. A broken Shield gives its ally many Might.",
+   "text": "While it stands, allies' Shields are 33% bigger. A broken Shield gives its ally 7 Might.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -41578,7 +41578,7 @@
   {
    "id": "pitch_lantern",
    "name": "Pitch lantern",
-   "text": "At fight start: several Burn on every foe (from Attack).",
+   "text": "At fight start: Burn on every foe.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -41764,7 +41764,7 @@
   {
    "id": "snowbound_folio",
    "name": "Snowbound folio",
-   "text": "At fight start: a few Chill on every foe (from Attack).",
+   "text": "At fight start: Chill on every foe.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -41810,7 +41810,7 @@
   {
    "id": "curse_book",
    "name": "Curse-book",
-   "text": "Abilities add several Bleed to every foe hit (from Attack).",
+   "text": "Abilities add Bleed to every foe they hit.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -41887,7 +41887,7 @@
   {
    "id": "grimoire_of_plagues",
    "name": "Grimoire of plagues",
-   "text": "At fight start: a few of two random statuses of Burn, Chill, Shock and Bleed on every foe (from Attack).",
+   "text": "At fight start: two of Burn, Chill, Shock and Bleed, at random, on every foe.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -42566,7 +42566,7 @@
   {
    "id": "lancet_phial",
    "name": "Lancet phial",
-   "text": "At fight start: a few Bleed on every foe (from Attack).",
+   "text": "At fight start: Bleed on every foe.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -43312,7 +43312,7 @@
   {
    "id": "writ_of_judgement",
    "name": "Writ of judgement",
-   "text": "When Condemn Marks a foe, a heavy blow falls on it, adding several Burn (both from Attack).",
+   "text": "When Condemn Marks a foe, a blow falls on it, adding Burn.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -43326,7 +43326,7 @@
   {
    "id": "stormspear",
    "name": "Stormspear",
-   "text": "Every 4th hit calls a heavy blow (from Attack) on the foe with the most Shock, ignoring Taunt, bigger for each Shock. The Shock stays.",
+   "text": "Every 4th hit calls a blow on the foe with the most Shock, ignoring Taunt. The Shock stays.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
@@ -43592,7 +43592,7 @@
     {
      "id": "loader",
      "name": "Loader",
-     "text": "At fight start: the Hammer gains many Might.",
+     "text": "At fight start: the Hammer gains 7 Might.",
      "layout": {
       "line": "back",
       "column": 2
@@ -43763,7 +43763,7 @@
     {
      "id": "squall_a",
      "name": "Squall",
-     "text": "Basic attacks add a few Shock and also hit a second random foe for half, Shock included.",
+     "text": "Basic attacks add 2 Shock and also hit a second random foe for half, Shock included.",
      "layout": {
       "line": "front",
       "column": 0
@@ -43775,7 +43775,7 @@
     {
      "id": "squall_b",
      "name": "Squall",
-     "text": "Basic attacks add a few Shock and also hit a second random foe for half, Shock included.",
+     "text": "Basic attacks add 2 Shock and also hit a second random foe for half, Shock included.",
      "layout": {
       "line": "middle",
       "column": 1
@@ -44290,7 +44290,7 @@
     {
      "id": "opener",
      "name": "Opener",
-     "text": "Crits add several Bleed.",
+     "text": "Crits add 4 Bleed.",
      "layout": {
       "line": "front",
       "column": 0
@@ -44335,7 +44335,7 @@
     {
      "id": "keeper",
      "name": "Keeper",
-     "text": "At fight start: Taunts and is Guarded. Foes that hit it gain a few Burn.",
+     "text": "At fight start: Taunts and is Guarded. Foes that hit it gain 2 Burn.",
      "layout": {
       "line": "front",
       "column": 0
@@ -44452,7 +44452,7 @@
     {
      "id": "rod",
      "name": "Rod",
-     "text": "Draws far more. Foes that hit it gain a few Shock.",
+     "text": "Draws far more. Foes that hit it gain 2 Shock.",
      "layout": {
       "line": "back",
       "column": 2
@@ -44895,7 +44895,7 @@
   {
    "id": "the_forge",
    "name": "The forge",
-   "text": "A kept fire quickens the party. The party: While a foe burns, every ally gains a Heat every 4 ticks (5% faster each, up to 10). When an ally is Stunned or Silenced, the foe with the most Burn gains many Burn.",
+   "text": "A kept fire quickens the party. The party: While a foe burns, every ally gains a Heat every 4 ticks (5% faster each, up to 10). When an ally is Stunned or Silenced, the foe with the most Burn gains 7 Burn.",
    "rarity": "legendary",
    "source": "unlock",
    "positions": [
@@ -44974,7 +44974,7 @@
   {
    "id": "eye_of_the_storm",
    "name": "Eye of the storm",
-   "text": "The storm doesn't lift. The party: Every ally's basic attacks add a few Shock.",
+   "text": "The storm doesn't lift. The party: Every ally's basic attacks add 2 Shock.",
    "rarity": "legendary",
    "source": "unlock",
    "positions": [

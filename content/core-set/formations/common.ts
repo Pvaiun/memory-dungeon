@@ -9,7 +9,7 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
 
 {
   // The Hammer: Millstone's shape on a seat (Attack speed −100 is half as often).
-  const hammer = "Basic attacks come half as often, for 2.25× damage.", loader = "At fight start: the Hammer gains many Might.";
+  const hammer = "Basic attacks come half as often, for 2.25× damage.", loader = `At fight start: the Hammer gains ${FLAT_STACKS.many} Might.`;
   add(
     formation("Heavy line", "common", "One loads, one takes the blows, one strikes.", [
       { name: "Hammer", text: hammer, stats: [{ stat: "attack_speed", flat: -100 }], statuses: ["heavy_line_hammer"] },
@@ -65,7 +65,7 @@ add(
   );
 }
 {
-  const squall = "Basic attacks add a few Shock and also hit a second random foe for half, Shock included.";
+  const squall = `Basic attacks add ${FLAT_STACKS.few} Shock and also hit a second random foe for half, Shock included.`;
   add(
     formation("Squall line", "common", "Two charge the field; one draws the eye.", [
       ...twice({ name: "Squall", text: squall, statuses: ["squall_line_squall"] }),

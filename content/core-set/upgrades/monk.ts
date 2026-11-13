@@ -11,8 +11,8 @@ const sunderOn = (kind: "basic" | "extra" | "ability", k: number): ReactionT => 
 passiveUp({
   id: "iron_palm", cls: "monk",
   power: "+40% Sunder.",
-  a: { name: "Hundred hands", text: "Every hit, abilities' included, adds a few Sunder (from Attack).", builds: ["cuts"] },
-  b: { name: "Drinking palm", text: "Basic attacks and extra strikes add a few Sunder (from Attack). Hits on a Sundered foe heal it for 20% of the damage.", serves: "Pact ●●, Toll ●● ⚙ riposte (half)" },
+  a: { name: "Hundred hands", text: "Every hit adds Sunder, abilities included.", builds: ["cuts"] },
+  b: { name: "Drinking palm", text: "Basic attacks and extra strikes add Sunder. Hits on a Sundered foe heal it for 20% of the damage.", serves: "Pact ●●, Toll ●● ⚙ riposte (half)" },
   form: (v, k) => ({
     reactions: [
       // First, so its test reads the foe as the hit found it, before this hit's own Sunder lands.

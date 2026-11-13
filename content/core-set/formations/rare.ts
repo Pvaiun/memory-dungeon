@@ -26,7 +26,7 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
 }
 {
   // Several, not many, in one application; 2% a hit, as Gleaner's leathers.
-  const opener = "Crits add several Bleed.", blade = "Hits on a bleeding foe heal 2% of max HP.";
+  const opener = `Crits add ${FLAT_STACKS.several} Bleed.`, blade = "Hits on a bleeding foe heal 2% of max HP.";
   add(
     formation("Bloodied ground", "rare", "One opens the wound; two drink from it.", [
       { name: "Opener", text: opener, statuses: ["bloodied_ground_opener"] },
@@ -43,12 +43,12 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
   const torch = "When a burning foe falls, its Burn passes to the foe with the most HP.";
   add(
     formation("Pyre line", "rare", "The fire outlives whatever it's burning.", [
-      { name: "Keeper", text: "At fight start: Taunts and is Guarded. Foes that hit it gain a few Burn.", statuses: ["pyre_line_keeper"] },
+      { name: "Keeper", text: `At fight start: Taunts and is Guarded. Foes that hit it gain ${FLAT_STACKS.few} Burn.`, statuses: ["pyre_line_keeper"] },
       { name: "Stoker", text: "Basic attacks 33% faster.", stats: [THIRD_FASTER] },
       { name: "Torch", text: torch, statuses: ["pyre_line_torch"] },
     ]),
     [
-      held("pyre_line_keeper", "Keeper", "At fight start: Taunts and is Guarded. Foes that hit it gain a few Burn.", { reactions: [atStart(give("taunt"), give("guard")), react(EV.struck, give("burn", "other", FLAT_STACKS.few))] }),
+      held("pyre_line_keeper", "Keeper", `At fight start: Taunts and is Guarded. Foes that hit it gain ${FLAT_STACKS.few} Burn.`, { reactions: [atStart(give("taunt"), give("guard")), react(EV.struck, give("burn", "other", FLAT_STACKS.few))] }),
       held("pyre_line_torch", "Torch", torch, { reactions: [{ on: on("status_ended", { status: "burn", cause: ["ko"], whose: "foe" }), split: "fire", do: [give("burn", { side: "foes", pick: "highest", by: "hp" }, ofAmount())] }] }),
     ],
     "Bonfire 2 ●●●, Hunt ●● ⚙ fuse (key)",
@@ -76,12 +76,12 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
     formation("Storm front", "rare", "The wider the blow, the more it pays.", [
       { name: "Thunderhead", text: thunder, statuses: ["storm_front_thunderhead"] },
       { name: "Squall", text: squall, statuses: ["storm_front_squall"] },
-      { name: "Rod", text: "Draws far more. Foes that hit it gain a few Shock.", stats: [st("aggro", 2)], statuses: ["storm_front_rod"] },
+      { name: "Rod", text: `Draws far more. Foes that hit it gain ${FLAT_STACKS.few} Shock.`, stats: [st("aggro", 2)], statuses: ["storm_front_rod"] },
     ]),
     [
       held("storm_front_thunderhead", "Thunderhead", thunder, { reactions: [react(EV.cast, { op: "cooldown", which: "event", set: { lessPct: { scale: [{ ratio: 10, count: "hit" }] } }, to: "holder" })] }),
       held("storm_front_squall", "Squall", squall, { strike: { to: { side: "foes", pick: "all", where: { has: "shock" }, exclude: "targets" }, share: 100 / 3, kind: "bonus" } }),
-      held("storm_front_rod", "Rod", "Foes that hit it gain a few Shock.", { reactions: [react(EV.struck, give("shock", "other", FLAT_STACKS.few))] }),
+      held("storm_front_rod", "Rod", `Foes that hit it gain ${FLAT_STACKS.few} Shock.`, { reactions: [react(EV.struck, give("shock", "other", FLAT_STACKS.few))] }),
     ],
     "Storm 2 ●●●, Barrage ●●, Toll ●● ⚙ resonance (key), red rain (half), goad (half)",
   );

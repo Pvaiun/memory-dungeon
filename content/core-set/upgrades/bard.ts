@@ -15,7 +15,7 @@ import { abilityUp, apply, cd, helper, kit, passiveUp, r6 } from "./kit.js";
     power: "42% of the damage, not 30%; +40% to any Might.",
     a: { name: "Harmony", text: "Basic attacks heal the lowest ally and give MP to the ally with the least MP, each 30% of the damage.", builds: ["barrage", "pact"],
       plus: "42% of the damage, not 30%." },
-    b: { name: "Battle song", text: "Basic attacks give a random ally a few Might (from Attack) and a random ally MP, 30% of the damage.", builds: ["landslide", "cuts"] },
+    b: { name: "Battle song", text: "Basic attacks give a random ally Might, and a random ally MP (30% of the damage).", builds: ["landslide", "cuts"] },
     form: (v, k) => ({ reactions: v === "a" ? harmony(k) : v === "b" ? song(k) : refrain(RANDOM, RANDOM, k) }),
   });
 }

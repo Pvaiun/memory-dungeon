@@ -14,7 +14,7 @@ import type { AbilityT, EnemyT, FormationT, GearT, WeaponT } from "../../src/sch
 import { combat, type Member } from "../../src/engine/combat/rules.js";
 import { drawOf, resolveWeapon, weaponOf } from "../../src/engine/combat/fight.js";
 import { armorName, c, cls, disp, DISPLAY_DIV, immuneTo, kindOf, offhandName, SHEET_STATS, shortName, SPECIAL_STATS, showStat, statCode, status, tagline } from "./content.js";
-import { abilityInfo, abilityTag, evalNum, scalesOf, sizeParts, statusText, TYPE_TONE, TYPE_WORD, type Scale, type SizePart, type Stats } from "./describe.js";
+import { abilityInfo, abilityTag, evalNum, heldParts, scalesOf, sizeParts, statusText, TYPE_TONE, TYPE_WORD, type Scale, type SizePart, type Stats } from "./describe.js";
 import { TAG_ICON, weaponLook } from "./art.js";
 import { canEquip, handsOf } from "../../src/validate.js";
 import { h, type Child } from "./dom.js";
@@ -155,7 +155,7 @@ export function scaleEl(scales: Scale[]): Child {
 export function sizeEl(parts: SizePart[]): HTMLElement | null {
   if (!parts.length) return null;
   return h("div", { class: "size" }, ...parts.flatMap((p, i) => [
-    i ? h("span", { class: "dim" }, " + ") : null,
+    i ? h("span", { class: "dim" }, p.or ? " / " : " + ") : null,
     h("span", { class: "nowrap" }, p.value ? `${p.value} ` : "", h("span", { class: p.tone ?? "" }, p.word), p.chance ? h("span", { class: "dim" }, ` ${p.chance}%`) : null),
     p.scales.length ? " " : null, scaleEl(p.scales),
   ]));
@@ -243,7 +243,8 @@ export const twoHanded = (gear: Record<string, string | undefined>) => !!gear.we
 /**
  * A piece of gear as a card: its sprite or icon (glowing in its rarity's colour), its name (★ legendary or mythic, in the
  * rarity's colour), then its rarity and kind with a weapon's hit and speed and the stat codes; with `who`, the line of who
- * can wear it, the roster first; then what it does, in the content's words.
+ * can wear it, the roster first; then what it does, in the content's words, and the stacks it lays as numbers for
+ * `stats` (the unit in view; with none, the first class that can wear it).
  */
 export function gearRow(g: GearT | null, slot: string, stats: Stats | null, onClick?: () => void, arrow = true, who?: readonly string[]): HTMLElement {
   const slotName = h("span", { class: "dim" }, slot.toUpperCase());
@@ -251,8 +252,9 @@ export function gearRow(g: GearT | null, slot: string, stats: Stats | null, onCl
   const art = (g.slot === "weapon" ? weaponEl(g.id) : null) ?? gearIconEl(g, GEAR_ICON_SCALE);
   const tone = pieceTone(g);
   const rare = g.rarity && g.rarity !== "common" ? g.rarity : null;
-  // Everything wraps: a long name, a weapon's hit and its codes, the card's sentence.
+  // Everything wraps: a long name, a weapon's hit and its codes, the card's sentence and the stacks it lays.
   const effect = gearEffect(g);
+  const size = effect ? sizeEl(heldParts(g.statuses ?? [], stats ?? c.pack.classes.find((k) => canEquip(k, g))?.stats ?? {})) : null;
   return h("div", { class: "gear-row", onClick },
     h("span", { class: `art${rare ? ` glow-${rare}` : ""}` }, art),
     h("div", { class: "grow" },
@@ -260,6 +262,7 @@ export function gearRow(g: GearT | null, slot: string, stats: Stats | null, onCl
       h("div", { class: "line wrap small codes" }, rare ? h("span", { class: `nowrap ${tone}` }, rare.toUpperCase()) : null, h("span", { class: "nowrap" }, kindName(g).toUpperCase()), ...(g.weapon ? weaponCode(g, stats) : []), ...codeSpans(g.stats)),
       who ? wearersLine(g, who) : null,
       effect ? h("div", { class: `text small wrap ${tone === "gold" || tone === "mythic" ? tone : "ink"} effect` }, effect) : null,
+      size,
     ),
     onClick && arrow ? h("span", { class: "dim go" }, "▶") : null,
   );
@@ -308,24 +311,25 @@ export function basicLine(wp: WeaponT, stats: Stats | null, opts: { mult?: numbe
 /** A section title with a note at its right. */
 export const section = (title: string, note?: Child) => h("div", { class: "section" }, title, note ? h("span", { class: "r dim small text" }, note) : null);
 /** A passive's block: its icon when it has a status, its name, its text. */
-export function passiveBlock(name: string, text: string, icon?: string | null, more?: string | null): Child[] {
+export function passiveBlock(name: string, text: string, icon?: string | null, more?: string | null, size?: HTMLElement | null): Child[] {
   return [
     h("div", { class: "line" }, icon ? statusEl(icon) : null, h("span", { class: "grow trunc hi" }, name.toUpperCase())),
     text ? h("div", { class: "text dim wrap small" }, text) : null,
     more ? h("div", { class: "text dim wrap small" }, more) : null,
+    size ?? null,
   ];
 }
 /**
  * A class's passive: its own, or the Valkyrie's Einherjar. `form`, the status a trained passive plays as (a
- * version's name, "+" for the power step), shown in its place under the passive's icon.
+ * version's name, "+" for the power step), shown in its place under the passive's icon; the stacks it lays, for `stats`.
  */
-export function classPassive(id: string, form?: string): Child[] {
+export function classPassive(id: string, form?: string, stats: Stats = cls(id).stats): Child[] {
   const k = cls(id);
   const st = k.passive?.statuses?.[0];
   const fd = form && form !== st ? c.statuses.get(form) : undefined;
-  if (fd) return passiveBlock(fd.name, fd.text ?? "", st);
+  if (fd) return passiveBlock(fd.name, fd.text ?? "", st, null, sizeEl(heldParts([fd.id], stats)));
   if (!k.passive) return passiveBlock("Einherjar", "Allies it revives come back with every action ready.", null);
-  return passiveBlock(k.passive.name, k.passive.text, st);
+  return passiveBlock(k.passive.name, k.passive.text, st, null, sizeEl(heldParts(k.passive.statuses ?? [], stats)));
 }
 
 /** What a class can carry: its weapon kinds (2H for a two-handed one), its armor types and its offhand kinds. */
@@ -341,7 +345,7 @@ export function classSheet(id: string, designer: boolean, member: Member = membe
   const out: Child[] = [statGrid(member.stats, k.stats, designer)];
   const sp = specialLines(member.stats);
   if (sp.length) out.push(h("div", { class: "text up small wrap" }, ...sp.flatMap((s, i) => (i ? [" · ", s] : [s]))));
-  out.push(section("PASSIVE"), ...classPassive(id, passive));
+  out.push(section("PASSIVE"), ...classPassive(id, passive, member.stats));
   out.push(section("GEAR"));
   for (const slot of SLOTS) out.push(slot === "offhand" && twoHanded(gear) ? lockedRow(slot) : gearRow(gear[slot] ? c.gear.get(gear[slot]) ?? null : null, slot, member.stats, undefined, false));
   out.push(section("ABILITIES"));

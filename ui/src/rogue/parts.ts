@@ -11,7 +11,8 @@ import { abilityBlock, gearRow, RARITY_TONE, role, seatLines } from "../sheet.js
 import { actionIcon16, faceEl, gearIconOf, iconEl, iconOf, weaponIcon } from "../pixel.js";
 import { foesOnStage, partyInLine, partyOnStage, type StageActor, stageEl, type StageOpts, themeOf } from "../battle/scene.js";
 import { abilityTag } from "../describe.js";
-import { saveRogue, vitals } from "./state.js";
+import { fighter, saveRogue, vitals } from "./state.js";
+import { canEquip } from "../../../src/validate.js";
 import { choose } from "../../../src/rogue/record.js";
 import { sfx } from "../battle/audio.js";
 
@@ -62,11 +63,13 @@ export const gold = (n: number) => h("span", { class: "gold" }, `${n}G`);
 const rosterOrder = (run: RogueRun) => [...run.party, ...bench(run)];
 /**
  * A run's item as a gear card (its rarity, kind and numbers, `gearRow`), with who wears it at the right. With `who` (the
- * default), the line of who can wear it, the roster first; never what it's for, which would spoil the discovery.
+ * default), the line of who can wear it, the roster first; never what it's for, which would spoil the discovery. The
+ * stacks it lays are shown for its wearer, else the first of the roster who can wear it.
  */
 export function itemRow(run: RogueRun, it: Item, onClick?: () => void, opts: { arrow?: boolean; stats?: Record<string, number> | null; right?: HTMLElement | null; who?: boolean } = {}): HTMLElement {
   const g = c.gear.get(it.uid) ?? itemGear(c, it);
-  const r = gearRow(g, g.slot, opts.stats ?? null, onClick, opts.arrow ?? false, opts.who === false ? undefined : rosterOrder(run));
+  const by = wearer(run, it.uid) ?? rosterOrder(run).find((cls) => canEquip(classOf(cls), g));
+  const r = gearRow(g, g.slot, opts.stats ?? (by ? fighter(run, by).stats : null), onClick, opts.arrow ?? false, opts.who === false ? undefined : rosterOrder(run));
   const w = wearer(run, it.uid);
   const right = "right" in opts ? opts.right : w ? h("span", { class: "tag" }, shortName(w)) : null;
   if (right) r.querySelector(".grow .line")?.append(right);

@@ -32,7 +32,7 @@ offhand("kite_shield", "common", "Pavise", { stats: [st("defense", 1)], serves: 
 offhand("kite_shield", "common", "Blazoned kite", { stats: [st("aggro", 1)], serves: "the Toll: the draw is its first stat." });
 
 {
-  const name = "Emberguard", effect = "Attackers gain a few Burn (from Defense).";
+  const name = "Emberguard", effect = "Attackers gain Burn.";
   offhand("kite_shield", "uncommon", name, {
     effect, stats: [st("defense", 1), st("aggro", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.struck, give("burn", "other", own("few", "defense")))] })],
@@ -219,7 +219,7 @@ offhand("horn", "common", "Ivory horn", { stats: [st("mp_regen", 1)], serves: "B
   });
 }
 {
-  const name = "War horn", effect = "At fight start: many Might on the slowest-swinging ally.";
+  const name = "War horn", effect = `At fight start: ${FLAT_STACKS.many} Might on the slowest-swinging ally.`;
   offhand("horn", "rare", name, {
     effect, stats: [st("aggro", 1), st("attack", 1), st("defense", 1)],
     statuses: [own_(name, effect, { reactions: [atStart(give("might", TO.slowestAlly, FLAT_STACKS.many))] })],
@@ -259,7 +259,7 @@ offhand("totem", "common", "Hawthorn fetish", { stats: [st("attack", 1)], serves
   });
 }
 {
-  const name = "Stormglass totem", effect = "At fight start: a few Shock on every foe (from Attack).";
+  const name = "Stormglass totem", effect = "At fight start: Shock on every foe.";
   offhand("totem", "uncommon", name, {
     effect, stats: [sp("thorns", "medium"), st("attack", 1)],
     statuses: [own_(name, effect, { reactions: [atStart(give("shock", TO.everyFoe, own("few", "attack", SHOCK_STACKS)))] })],
@@ -275,7 +275,7 @@ offhand("totem", "common", "Hawthorn fetish", { stats: [st("attack", 1)], serves
   });
 }
 {
-  const name = "Nettle totem", effect = "Attackers gain a few Bleed (from Defense).";
+  const name = "Nettle totem", effect = "Attackers gain Bleed.";
   offhand("totem", "rare", name, {
     effect, stats: [sp("thorns", "medium"), st("defense", 1), st("aggro", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.struck, give("bleed", "other", own("few", "defense")))] })],
@@ -309,7 +309,7 @@ offhand("totem", "common", "Hawthorn fetish", { stats: [st("attack", 1)], serves
 {
   // An aura on every ally while the holder stands: the Shields each gives are a third larger. A broken Shield gives its holder Might.
   const name = "Earthmother totem", aura = `${id(name)}_aura`;
-  const effect = "While it stands, allies' Shields are 33% bigger. A broken Shield gives its ally many Might.";
+  const effect = `While it stands, allies' Shields are 33% bigger. A broken Shield gives its ally ${FLAT_STACKS.many} Might.`;
   const lay = give(aura, TO.everyAlly);
   offhand("totem", "legendary", name, {
     effect, stats: [sp("thorns", "high"), st("max_hp", 1), st("defense", 1)],
@@ -397,7 +397,7 @@ offhand("lantern", "common", "Bullseye lantern", { stats: [sp("cast_speed", "med
 offhand("lantern", "common", "Hooded lantern", { stats: [st("max_mp", 1)], serves: "Barrage: MP is its first stat." });
 
 {
-  const name = "Pitch lantern", effect = "At fight start: several Burn on every foe (from Attack).";
+  const name = "Pitch lantern", effect = "At fight start: Burn on every foe.";
   offhand("lantern", "uncommon", name, {
     effect, stats: [sp("cast_speed", "medium"), st("attack", 1)],
     statuses: [own_(name, effect, { reactions: [atStart(give("burn", TO.everyFoe, own("several", "attack")))] })],
