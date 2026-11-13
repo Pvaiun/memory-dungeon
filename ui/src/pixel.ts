@@ -27,11 +27,21 @@ export let px = 2;
 export function fitScale(): number {
   const dpr = window.devicePixelRatio || 1;
   const byW = Math.floor((Math.min(window.innerWidth, 600) * dpr) / FRAME_W);
-  const byH = Math.floor((window.innerHeight * dpr) / 400);
+  const byH = Math.floor(((window.innerHeight - safeInsets()) * dpr) / 400);
   const dev = Math.max(1, Math.min(byW, byH));
   px = dev / dpr;
   document.documentElement.style.setProperty("--u", `${px}px`);
   return px;
+}
+
+/** The height the status and navigation bars take from a page drawn edge to edge (CSS px; 0 where there are none). */
+function safeInsets(): number {
+  const probe = document.createElement("div");
+  probe.style.cssText = "position:fixed;visibility:hidden;pointer-events:none;top:0;height:calc(env(safe-area-inset-top, 0px) + env(safe-area-inset-bottom, 0px))";
+  document.body.append(probe);
+  const v = probe.getBoundingClientRect().height;
+  probe.remove();
+  return v;
 }
 
 const luma = (r: number, g: number, b: number) => 0.299 * r + 0.587 * g + 0.114 * b;
