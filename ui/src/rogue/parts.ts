@@ -98,7 +98,7 @@ export function offerBody(run: RogueRun, o: Offer): Child[] {
     const rar = known.length >= 3 ? "legendary" : known.length === 2 ? "rare" : "common";
     // A tap on the face opens the class with what this one knows.
     const face = h("span", { style: "cursor:pointer", onClick: (e?: Event) => { e?.stopPropagation(); go("rclass", { cls: o.cls, known }); } }, faceEl(o.cls));
-    return [h("div", { class: "line" }, face, h("div", { class: "grow" }, h("div", { class: RARITY_CLASS[rar] || "hi" }, `RECRUIT: ${k.name.toUpperCase()}`), h("div", { class: "text dim small wrap" }, role(o.cls)))),
+    return [h("div", { class: "line" }, face, h("div", { class: "grow" }, h("div", { class: RARITY_CLASS[rar] ?? "hi" }, `RECRUIT: ${k.name.toUpperCase()}`), h("div", { class: "text dim small wrap" }, role(o.cls)))),
       h("div", { class: "line small wrap" }, h("span", { class: "dim" }, `KNOWS ${known.length}/3: `), known.map((a) => c.abilities.get(a)!.name.toUpperCase()).join(", ")),
       o.item ? itemRow(run, o.item, undefined, { right: h("span", { class: "dim small" }, "CARRIES"), who: false }) : null,
       run.party.length >= 3 ? h("div", { class: "line small dim" }, "JOINS AT CAMP") : null];
