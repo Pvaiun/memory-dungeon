@@ -746,12 +746,12 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     const partyUnits = driver.units().filter((u) => u.side === "party");
     const tally = fightTally();
     const last = single || driver.fightNo >= driver.fightTotal;
-    // The summary: each member's damage dealt and taken, and HP left. A tap opens the recap.
+    // The summary: each member's damage dealt and taken. A tap opens the recap.
     const table = h("table", { class: "sum sum-tap" },
-      h("thead", null, h("tr", null, h("th", null, "RECAP ▶"), h("th", null, "DEALT"), h("th", null, "TAKEN"), h("th", null, "HP"))),
+      h("thead", null, h("tr", null, h("th", null, "RECAP ▶"), h("th", null, "DEALT"), h("th", null, "TAKEN"))),
       h("tbody", null, ...partyUnits.map((u) => {
         const t = tally.units.get(u.id);
-        return h("tr", null, h("td", null, className(u.ref)), h("td", null, String(disp(t?.dealt ?? 0))), h("td", null, String(disp(t?.taken ?? 0))), h("td", { class: u.ko ? "bad" : "" }, u.ko ? "KO" : String(disp(u.hp))));
+        return h("tr", null, h("td", null, className(u.ref)), h("td", null, String(disp(t?.dealt ?? 0))), h("td", null, String(disp(t?.taken ?? 0))));
       })),
     );
     table.addEventListener("click", () => openRecap(tally, won, f.round));
