@@ -118,6 +118,7 @@ How the four slots do it:
 
 - **A mythic rewrites one class,** where a legendary bends the game for whoever wears it.
 - **It's found, not trained.** An upgrade changes one ability or the passive; a mythic can be taken off and goes past any one ability.
+- **It's the best gear in the game** for its class: it carries a legendary's stats beside its effect, so it's never a downgrade for the stats it replaces.
 - **Upgrades and mythics are designed together,** so they don't overlap, and neither repeats a piece.
 
 ## How it reads

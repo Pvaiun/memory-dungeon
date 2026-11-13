@@ -92,7 +92,7 @@ src/
     combat.ts                the combat rule language: numbers, conditions, targeting, effects, statuses, actions
     content.ts               classes, upgrades, gear, formations, enemies, perks
     dungeons.ts              dungeons, loot, challenges, the starter, progression, the rogue block, totals, unused entries
-    party.ts                 party loadouts, challenge constraints, canEquip, handsOf
+    party.ts                 party loadouts, challenge constraints, canEquip, handsOf, the weapon a class arrives with
   sim/                       the simulation library (the interface uses content.ts and parties.ts)
     content.ts               content with patches (variants), and single fights as one-stage dungeons
     parties.ts               parties: building and listing them, plain weapons, what fits a slot
@@ -184,7 +184,7 @@ ui/
     state.ts                 free play's setup and the settings, saved
     mode.ts                  free play or the rogue mode, saved
     screens.ts               the menus and free play's screens; go() switches screens
-    sheet.ts                 unit sheets: a class or an enemy, its stats, abilities and gear
+    sheet.ts                 unit sheets: a class or an enemy, its stats, abilities and gear; a party member's seat in a fight, unfolding to the whole formation
     describe.ts              plain-language descriptions of abilities, effects and statuses; the sizes cards show, an ability's and the stacks a piece or a passive lays; a status's own numbers, a stack's worth
     bestiary.ts              the bestiary's record: enemies met and looked at
     dom.ts                   DOM helpers: h(), windows, rows, buttons, the back gesture
@@ -194,7 +194,7 @@ ui/
     update.ts                reloading onto a newer build
     rogue-screens.ts         the rogue screens' public face; lists them
     rogue/
-      parts.ts               the navigation, small parts and scenes the rogue screens share; under an offered piece, the roster's faces beside what they wear in its slot; a pick's answer, and a room's outcome held over its screen until ONWARD
+      parts.ts               the navigation, small parts and scenes the rogue screens share; under an offered piece, the roster's faces beside what they wear in its slot; a pick's answer, and a result the player couldn't see held over its screen until ONWARD
       run.ts                 the dispatcher, the leader, the draft, the map, a boss's Destiny Shard, a fight in waiting
       rooms.ts               spoils, a captive, the shop and training, the campfire, events, choices, Muster and Drill, level up, the next region
       end.ts                 a lost fight's Destiny Shard offer, the run's end, its record, a won run's moment

@@ -43248,6 +43248,20 @@
    "tier": "powerful",
    "source": "unlock",
    "offhand": "horn",
+   "stats": [
+    {
+     "stat": "aggro",
+     "flat": 10
+    },
+    {
+     "stat": "max_hp",
+     "flat": 1000
+    },
+    {
+     "stat": "defense",
+     "flat": 1000
+    }
+   ],
    "statuses": [
     "horn_of_the_keep"
    ],
@@ -43261,6 +43275,24 @@
    "slot": "amulet",
    "tier": "powerful",
    "source": "unlock",
+   "stats": [
+    {
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "max_mp",
+     "flat": 1000
+    },
+    {
+     "stat": "mp_regen",
+     "flat": 3000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 1000
+    }
+   ],
    "statuses": [
     "halo_of_the_saint"
    ],
@@ -43275,6 +43307,20 @@
    "tier": "powerful",
    "source": "unlock",
    "armor": "leather",
+   "stats": [
+    {
+     "stat": "attack",
+     "flat": 2000
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
+    },
+    {
+     "stat": "evasion",
+     "flat": 12
+    }
+   ],
    "statuses": [
     "huntmasters_quiver"
    ],
@@ -43289,6 +43335,20 @@
    "tier": "powerful",
    "source": "unlock",
    "armor": "mail",
+   "stats": [
+    {
+     "stat": "thorns",
+     "flat": 150
+    },
+    {
+     "stat": "max_hp",
+     "flat": 1000
+    },
+    {
+     "stat": "defense",
+     "flat": 1000
+    }
+   ],
    "statuses": [
     "heartwood_mail"
    ],
@@ -43303,6 +43363,20 @@
    "tier": "powerful",
    "source": "unlock",
    "offhand": "round_shield",
+   "stats": [
+    {
+     "stat": "max_hp",
+     "flat": 1000
+    },
+    {
+     "stat": "defense",
+     "flat": 1000
+    },
+    {
+     "stat": "aggro",
+     "flat": 10
+    }
+   ],
    "statuses": [
     "the_last_wall"
    ],
@@ -43317,6 +43391,20 @@
    "tier": "powerful",
    "source": "unlock",
    "offhand": "relic",
+   "stats": [
+    {
+     "stat": "mp_regen",
+     "flat": 3000
+    },
+    {
+     "stat": "attack",
+     "flat": 2000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
+    }
+   ],
    "statuses": [
     "writ_of_judgement"
    ],
@@ -43330,6 +43418,24 @@
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
+   "stats": [
+    {
+     "stat": "aggro",
+     "flat": 10
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "attack_speed",
+     "flat": 15
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
+    }
+   ],
    "statuses": [
     "stormspear"
    ],
@@ -43359,6 +43465,24 @@
    "tier": "powerful",
    "source": "unlock",
    "offhand": "bell",
+   "stats": [
+    {
+     "stat": "attack_speed",
+     "flat": 15
+    },
+    {
+     "stat": "max_mp",
+     "flat": 1000
+    },
+    {
+     "stat": "mp_regen",
+     "flat": 3000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 1000
+    }
+   ],
    "statuses": [
     "metronome"
    ],
@@ -43372,6 +43496,28 @@
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
+   "stats": [
+    {
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "cooldown_reduction",
+     "flat": 15
+    },
+    {
+     "stat": "max_mp",
+     "flat": 1000
+    },
+    {
+     "stat": "siphon",
+     "flat": 10
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
+    }
+   ],
    "statuses": [
     "the_witch_blade"
    ],
@@ -43400,6 +43546,20 @@
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
+   "stats": [
+    {
+     "stat": "double_strike",
+     "flat": 25
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "attack_speed",
+     "flat": 15
+    }
+   ],
    "statuses": [
     "ember_palms"
    ],
@@ -43428,6 +43588,24 @@
    "slot": "armor",
    "tier": "powerful",
    "source": "unlock",
+   "stats": [
+    {
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
+    },
+    {
+     "stat": "crit_multiplier",
+     "flat": 25
+    },
+    {
+     "stat": "evasion",
+     "flat": 12
+    }
+   ],
    "statuses": [
     "nights_edge"
    ],
@@ -43441,6 +43619,20 @@
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
+   "stats": [
+    {
+     "stat": "lifesteal",
+     "flat": 10
+    },
+    {
+     "stat": "max_hp",
+     "flat": 1000
+    },
+    {
+     "stat": "defense",
+     "flat": 1000
+    }
+   ],
    "statuses": [
     "the_chalice"
    ],
@@ -43454,6 +43646,20 @@
    "slot": "amulet",
    "tier": "powerful",
    "source": "unlock",
+   "stats": [
+    {
+     "stat": "max_hp",
+     "flat": 1000
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "cast_time_reduction",
+     "flat": 15
+    }
+   ],
    "statuses": [
     "crown_of_embers"
    ],
@@ -43467,6 +43673,28 @@
    "slot": "armor",
    "tier": "powerful",
    "source": "unlock",
+   "stats": [
+    {
+     "stat": "max_mp",
+     "flat": 1000
+    },
+    {
+     "stat": "mp_regen",
+     "flat": 3000
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "cast_time_reduction",
+     "flat": 15
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
+    }
+   ],
    "statuses": [
     "glaciers_heart"
    ],
@@ -43480,6 +43708,24 @@
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
+   "stats": [
+    {
+     "stat": "mp_regen",
+     "flat": 3000
+    },
+    {
+     "stat": "attack_speed",
+     "flat": 15
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
+    }
+   ],
    "statuses": [
     "eye_of_the_tempest"
    ],
@@ -43508,6 +43754,24 @@
    "slot": "amulet",
    "tier": "powerful",
    "source": "unlock",
+   "stats": [
+    {
+     "stat": "crit_chance",
+     "flat": 3
+    },
+    {
+     "stat": "crit_multiplier",
+     "flat": 25
+    },
+    {
+     "stat": "defense",
+     "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
+    }
+   ],
    "statuses": [
     "mountains_crown"
    ],

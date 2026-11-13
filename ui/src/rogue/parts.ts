@@ -5,7 +5,7 @@
 import { bar, button, type Child, h, nav, toast, win } from "../dom.js";
 import type { GearT, RogueNodeKindT } from "../../../src/schema.js";
 import { type Cell, type Pose } from "../art.js";
-import { bagRoom, bench, formationRarity, type Item, itemGear, member, type Offer, parseTraining, rogue, type RogueRun, seatsOf, type Slot, wearer } from "../../../src/rogue.js";
+import { bagRoom, bench, eventView, formationRarity, type Item, itemGear, member, type Offer, parseTraining, type Pending, rogue, type RogueRun, seatsOf, type Slot, wearer } from "../../../src/rogue.js";
 import { c, cls as classOf, shortName } from "../content.js";
 import { abilityBlock, gearRow, RARITY_TONE, role, seatLines, twoHanded } from "../sheet.js";
 import { actionIcon16, canvasEl, faceEl, gearIconEl, gearIconOf, iconEl, iconOf, weaponIcon } from "../pixel.js";
@@ -208,25 +208,31 @@ export function partyStrip(run: RogueRun, tap = true): HTMLElement {
     h("div", { class: "line small" }, gold(run.gold), h("span", { class: "dim" }, ` · `, iconEl(SUPPLY_ICON.potion), `${held(run, "potion")}/${rogue(c).config.bag.potion} `, iconEl(SUPPLY_ICON.tonic), `${held(run, "tonic")}/${rogue(c).config.bag.tonic}`, held(run, "phoenix") ? h("span", null, " ", iconEl(SUPPLY_ICON.phoenix), `${held(run, "phoenix")}`) : null), camp.length ? h("span", { class: "dim r" }, `CAMP: ${camp.map(shortName).join(", ")}`) : null));
 }
 
+/** An event's verbs whose result can't be seen when it's picked: a gamble, and a piece, a recruit or a formation rolled. */
+const ROLLED = new Set(["chance", "gear", "recruit", "formation", "trade"]);
+/** Whether a pick's result was hidden when it was made: an event option that rolls, a sealed piece, a tempering. */
+function hidden(was: Pending, pick: string): boolean {
+  if (was.kind === "event") return !!eventView(c, was).options.find((o) => o.id === pick)?.do.some((op) => ROLLED.has(op.op));
+  if (was.kind === "spoils" || was.kind === "boon") { const o = was.offers[Number(pick.split(":")[1])]; return o?.kind === "gear" && !!o.sealed; }
+  return was.kind === "choose" && was.what === "temper";
+}
 /**
- * Answers the run's decision, saves it and redraws. What the pick did is said once, so an event's gain isn't silent. A
- * room's outcome that moves the run on (a chest, an event, a recruit, a sealed piece) holds the screen it was chosen on
- * until the player has read it and goes on. A pick made knowing what it does (the map, the draft, a training) or one that
- * keeps its screen (a sale, a rest) says it in a toast.
+ * Answers the run's decision, saves it and redraws. Only a result the player couldn't see when they picked (`hidden`) is
+ * told, and it holds the screen it was chosen on until they've read it and go on. A pick that keeps its screen (a sale, a
+ * rest, a training) confirms itself in a toast; any other already said what it does before it was picked.
  */
 export function pickOrSave(run: RogueRun, pick: string) {
-  const was = run.pending, before = run.notes.length;
+  const was = run.pending, unseen = hidden(was, pick), before = run.notes.length;
   const bases = new Map(run.items.map((it) => [it.uid, it.base]));
   choose(c, run, pick);
   saveRogue();
   sfx.tap();
   const news = run.notes.slice(before).map((n) => n.text).filter((t) => !/^(Took|Bought|Act )/.test(t));
-  const knowing = ["map", "draft", "train", "levelup", "fate"].includes(was.kind) || (was.kind === "choose" && was.what !== "temper");
-  if (news.length && frameEl && run.pending !== was && !knowing) return outcome(run, news, run.items.filter((it) => bases.get(it.uid) !== it.base && c.gear.get(it.base)?.source !== "starter"));
+  if (unseen && news.length && frameEl) return outcome(run, news, run.items.filter((it) => bases.get(it.uid) !== it.base && c.gear.get(it.base)?.source !== "starter"));
   redraw();
-  if (news.length && frameEl) toast(frameEl, news.join(" "), 2600);
+  if (news.length && frameEl && run.pending === was) toast(frameEl, news.join(" "), 2600);
 }
-/** What a room came to, over its screen: each line of news and the card of each piece it brought or changed (not a recruit's plain weapon); ONWARD goes on. */
+/** A hidden result, over the screen it was picked on: each line of news and the card of each piece it brought or changed (not a recruit's plain weapon); ONWARD goes on. */
 function outcome(run: RogueRun, news: string[], pieces: Item[]) {
   const onward = () => { box.remove(); nav.overlay = null; redraw(); };
   const box = h("div", { class: "overlay dialog" }, win("outcome",

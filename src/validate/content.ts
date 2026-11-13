@@ -2,6 +2,7 @@
 import * as S from "../schema.js";
 import type { Index, Pack, Report, Walker } from "./core.js";
 import { type Combat, RELATIVE_SEATS } from "./combat.js";
+import { startingKind, startingWeapon } from "./party.js";
 
 // ─── Classes ─────────────────────────────────────────────────────────────────
 
@@ -102,9 +103,8 @@ export function checkGear(pack: Pack, ix: Index, w: Walker, r: Report, c: Combat
   });
   const ids = new Set(pack.gear.map((g) => g.id));
   for (const cl of pack.classes) {
-    // Each class arrives with the plain weapon of its first kind: a starter piece of that kind must exist.
-    const plain = pack.gear.find((g) => g.slot === "weapon" && g.source === "starter" && g.weapon?.kind === cl.weapons[0]);
-    if (!plain) r.warn("gear.plain", "gear", `no starter weapon of kind '${cl.weapons[0]}' for the ${cl.id} to arrive with`);
+    // Each class arrives with the plain weapon of its first one-handed kind: a starter piece of that kind must exist.
+    if (!startingWeapon(pack, cl)) r.warn("gear.plain", "gear", `no starter weapon of kind '${startingKind(pack, cl)}' for the ${cl.id} to arrive with`);
   }
   pack.starter.gear.forEach((id, i) => {
     if (ids.has(id) && ix.get<S.GearT>("gear", id)!.source !== "starter") r.error("starter.source", `starter.gear[${i}]`, `'${id}' isn't starter gear`);

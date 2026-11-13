@@ -164,7 +164,7 @@ function trainMember(run: RogueRun, cls: string, entries: TrainEntry[]): Child[]
   for (const a of k.abilities) {
     const known = m.known.includes(a);
     const now = c.abilities.get(formOf(m, a)) ?? c.abilities.get(a)!;
-    out.push(section(now.name.toUpperCase(), known ? null : "NOT LEARNED"));
+    out.push(section(c.abilities.get(a)!.name.toUpperCase(), known ? null : "NOT LEARNED"));
     if (!known) {
       const e = by.get(trainingId({ verb: "learn", cls, id: a }));
       const el = abilityBlock(c.abilities.get(a)!, stats);
@@ -172,9 +172,9 @@ function trainMember(run: RogueRun, cls: string, entries: TrainEntry[]): Child[]
       if (!e) el.classList.add("dimmed");
       out.push(el);
     } else {
-      // The ability as it plays now, so each upgrade below reads against it.
-      const el = abilityBlock(now, stats);
-      el.querySelector(".head")?.append(h("span", { class: "dim small" }, "NOW"));
+      // The base ability, untrained, so each upgrade below reads against the same card every time.
+      const el = abilityBlock(c.abilities.get(a)!, stats);
+      el.querySelector(".head")?.append(h("span", { class: "dim small" }, "BASE"));
       out.push(el);
     }
     if (upgradeOf(c, a)) out.push(...upgradeCards(m, a, known ? stats : null, by));
@@ -182,17 +182,17 @@ function trainMember(run: RogueRun, cls: string, entries: TrainEntry[]): Child[]
   const pid = passiveOf(c, cls);
   const pform = pid ? formOf(m, pid) : undefined;
   const pname = (pid && pform !== pid ? c.statuses.get(pform!)?.name : undefined) ?? k.passive?.name ?? (pid ? c.statuses.get(pid)?.name : undefined) ?? "";
-  out.push(section(pname.toUpperCase(), "PASSIVE"));
-  if (pid) out.push(...classPassive(cls, pform, stats), ...upgradeCards(m, pid, stats, by));
+  out.push(section((k.passive?.name ?? pname).toUpperCase(), "PASSIVE"));
+  if (pid) out.push(...classPassive(cls, undefined, stats), ...upgradeCards(m, pid, stats, by));
   return out;
 }
 /** A training card's right end: its button, its price while it can't be bought, or TAKEN. */
 const trainButton = (e: TrainEntry | undefined, taken: boolean): HTMLElement | null =>
   taken ? h("span", { class: "hi small" }, "TAKEN") : e ? (e.onClick ? button(e.label, e.onClick, "sm hi") : h("span", { class: "dim small" }, e.label)) : null;
 /**
- * The power step and the two versions of an ability or a passive, as cards: a chip (+, A, B), the name of the form it leads
- * to, the upgrade's own text, and with `stats` (an ability the member knows, or the passive) what it changes in this
- * member's numbers.
+ * The power step and the two versions of an ability or a passive, as cards: a chip (+, A, B), the upgrade's name, its own
+ * text, and with `stats` (an ability the member knows, or the passive) what it changes from the base in this member's
+ * numbers. The same card whatever else the member has trained; TAKEN marks what it has.
  */
 function upgradeCards(m: Member, id: string, stats: Stats | null, by: Map<string, TrainEntry>): HTMLElement[] {
   const u = upgradeOf(c, id)!;
@@ -200,24 +200,21 @@ function upgradeCards(m: Member, id: string, stats: Stats | null, by: Map<string
   const ability = u.kind === "ability";
   const nameOf = (form: string) => (ability ? c.abilities.get(form)?.name : c.statuses.get(form)?.name) ?? form;
   const after = (t: Trained) => formOf({ ...m, trained: { ...(m.trained ?? {}), [id]: t } }, id);
-  const now = formOf(m, id);
-  // The power step is more of the same: its card says what the ability or passive does now, then the change.
-  const nowText = (ability ? c.abilities.get(now)?.text : c.statuses.get(now)?.text) ?? "";
+  // Each card is fixed: the upgrade alone on the base, whatever else this member has trained.
+  const now = id;
   const cards: { chip: string; t: Training; text: string; taken: boolean; form: string }[] = [
-    { chip: "+", t: { verb: "power", cls: m.cls, id }, text: u.power, taken: !!was.power, form: after({ ...was, power: true }) },
-    { chip: "A", t: { verb: "version", cls: m.cls, id, version: "a" }, text: u.a.text, taken: was.version === "a", form: after({ ...was, version: "a" }) },
-    { chip: "B", t: { verb: "version", cls: m.cls, id, version: "b" }, text: u.b.text, taken: was.version === "b", form: after({ ...was, version: "b" }) },
+    { chip: "+", t: { verb: "power", cls: m.cls, id }, text: u.power, taken: !!was.power, form: after({ power: true }) },
+    { chip: "A", t: { verb: "version", cls: m.cls, id, version: "a" }, text: u.a.text, taken: was.version === "a", form: after({ version: "a" }) },
+    { chip: "B", t: { verb: "version", cls: m.cls, id, version: "b" }, text: u.b.text, taken: was.version === "b", form: after({ version: "b" }) },
   ];
   return cards.map(({ chip, t, text, taken, form }) => {
     const e = by.get(trainingId(t));
     // An ability's form shows what changes in its numbers; a passive's, the stacks it lays for this member.
-    const nums = !e || !stats || taken || form === now ? [] : ability ? changeLines(c.abilities.get(now)!, c.abilities.get(form)!, stats) : [passiveSize(form, stats)];
+    const nums = !stats || form === now ? [] : ability ? changeLines(c.abilities.get(now)!, c.abilities.get(form)!, stats) : [passiveSize(form, stats)];
     // An ability not learned yet shows what it can become by name only; its cards open once it's known.
     return h("div", { class: `ab${!e && !taken ? " dimmed" : ""}` },
       h("div", { class: "head" }, h("span", { class: `chip${taken ? " on" : ""}` }, chip), h("span", { class: `grow trunc${e ? " hi" : ""}` }, nameOf(form).toUpperCase()), trainButton(e, taken)),
-      ability && !m.known.includes(id) ? null : chip === "+" && nowText
-        ? h("div", { class: "body" }, h("span", { class: "dim" }, `${nowText} `), h("span", { class: "hi" }, text))
-        : h("div", { class: "body" }, text), ...nums);
+      ability && !m.known.includes(id) ? null : h("div", { class: "body" }, text), ...nums);
   });
 }
 /** A passive form's stacks for this member, as "→ 5 CHILL (ATK)". */
