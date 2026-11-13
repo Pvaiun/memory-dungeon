@@ -1842,7 +1842,7 @@
   {
    "id": "static_charge_on",
    "name": "CHARGED",
-   "text": "Basic attacks come faster.",
+   "text": "Basic attacks come 50% faster.",
    "label": "buff",
    "show": "icon",
    "stacking": "refresh",
@@ -2289,7 +2289,7 @@
   {
    "id": "shared_cup",
    "name": "Shared cup",
-   "text": "Healing past full goes to the lowest ally.",
+   "text": "Healing past full goes to the ally with the lowest HP%.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2359,7 +2359,7 @@
   {
    "id": "first_light",
    "name": "First light",
-   "text": "At fight start: each ally's ability closest to ready is ready.",
+   "text": "At fight start: each ally's ability nearest to ready is ready.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -4263,7 +4263,7 @@
   {
    "id": "ice_crust",
    "name": "CRUST",
-   "text": "Defense up for each stack; thaws when the hits stop.",
+   "text": "Defense up for each stack; ends 6 ticks after the last hit.",
    "label": "buff",
    "show": "icon",
    "stacking": "intensity",
@@ -4654,7 +4654,7 @@
   {
    "id": "ambush_knife",
    "name": "Ambush knife",
-   "text": "Hits on a foe that hasn't acted yet crit exactly 80% of the time.",
+   "text": "Hits on a foe that hasn't acted yet crit 80% of the time.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -5214,7 +5214,7 @@
   {
    "id": "tithe_wand",
    "name": "Tithe wand",
-   "text": "Basic attacks give the ally with the least MP 10% of Attack as MP.",
+   "text": "Basic attacks give the ally with the lowest MP% 10% of Attack as MP.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -5490,7 +5490,7 @@
   {
    "id": "mercys_edge",
    "name": "Mercy's edge",
-   "text": "Basic attacks heal the lowest ally for 33% of the damage.",
+   "text": "Basic attacks heal the ally with the lowest HP% for 33% of the damage.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -7104,7 +7104,7 @@
   {
    "id": "cornerstone_hammer",
    "name": "Cornerstone hammer",
-   "text": "Basic attacks deal extra damage equal to half of all Shield the party holds. The Shields stay.",
+   "text": "Basic attacks deal extra damage equal to half of all Shield the party holds.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -7162,7 +7162,7 @@
   {
    "id": "menders_mace",
    "name": "Mender's mace",
-   "text": "Every so often: heals the lowest ally for 20% of the wearer's max HP.",
+   "text": "Every 22 ticks: heals the ally with the lowest HP% for 20% of the wearer's max HP.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -7193,7 +7193,7 @@
   {
    "id": "penitents_mace",
    "name": "Penitent's mace",
-   "text": "When hit: heals the lowest ally for 2% of the wearer's max HP.",
+   "text": "When hit: heals the ally with the lowest HP% for 2% of the wearer's max HP.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -7422,7 +7422,7 @@
   {
    "id": "shepherds_staff",
    "name": "Shepherd's staff",
-   "text": "Each cast gives the ally with the least MP half its MP cost.",
+   "text": "Each cast gives the ally with the lowest MP% half its MP cost.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -7510,7 +7510,7 @@
   {
    "id": "vesper_staff",
    "name": "Vesper staff",
-   "text": "Each cast heals the lowest ally for 10% of Attack.",
+   "text": "Each cast heals the ally with the lowest HP% for 10% of Attack.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -7904,7 +7904,7 @@
   {
    "id": "portcullis_on",
    "name": "PORTCULLIS",
-   "text": "Draws far more.",
+   "text": "Aggro +25.",
    "label": "buff",
    "show": "icon",
    "stacking": "fizzle",
@@ -8848,7 +8848,7 @@
   {
    "id": "mottled_hide_on",
    "name": "MOTTLED",
-   "text": "Draws far less.",
+   "text": "Aggro −25.",
    "label": "buff",
    "show": "icon",
    "stacking": "fizzle",
@@ -9745,7 +9745,7 @@
   {
    "id": "clear_headed_charm",
    "name": "Clear-headed charm",
-   "text": "Below half MP: Clarity every so often, starting at once.",
+   "text": "Below half MP: Clarity every 22 ticks, starting at once.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -9914,7 +9914,7 @@
   {
    "id": "lightning_glass",
    "name": "Lightning-glass",
-   "text": "Abilities deal +4% per Shock on the target. The Shock stays.",
+   "text": "Abilities deal +4% per Shock on the target.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -10209,7 +10209,7 @@
   {
    "id": "downhill_charm",
    "name": "Downhill charm",
-   "text": "On a kill: the blow's leftover damage splits evenly among the other foes, as hits.",
+   "text": "On a kill: the blow's leftover damage splits evenly among the other foes.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -10245,7 +10245,7 @@
   {
    "id": "twin_knot",
    "name": "Twin-knot",
-   "text": "When it gives itself a status, the lowest other ally gains it too.",
+   "text": "When it gives itself a status, the other ally with the lowest HP% gains it too.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -10335,7 +10335,7 @@
   {
    "id": "phoenix_ember",
    "name": "Phoenix ember",
-   "text": "Once a fight: rises 4 ticks after falling, at 33% HP and Hidden. A wipe is still lost.",
+   "text": "Once a fight: rises 4 ticks after falling, at 33% HP and Hidden.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -10427,7 +10427,7 @@
   {
    "id": "gamblers_coin",
    "name": "Gambler's coin",
-   "text": "Crit chance is 50%. Hits that don't crit deal half; crits deal as usual.",
+   "text": "Crit chance is 50%. Hits that don't crit deal half.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -10507,7 +10507,7 @@
   {
    "id": "sheltering_kite",
    "name": "Sheltering kite",
-   "text": "At fight start: Guards itself and the other lowest-Defense ally.",
+   "text": "At fight start: Guards itself and the other ally with the least Defense.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -10655,7 +10655,7 @@
   {
    "id": "comrades_targe",
    "name": "Comrade's targe",
-   "text": "Every so often: Shield on the lowest ally (20% of max HP).",
+   "text": "Every 22 ticks (the first at 11): Shield on the ally with the lowest HP% (20% of max HP).",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -10733,7 +10733,7 @@
   {
    "id": "comrades_targe_beat",
    "name": "Comrade's targe (beating)",
-   "text": "Its beat, every so often.",
+   "text": "Its beat, every 22 ticks.",
    "label": "marker",
    "show": "sheet",
    "stacking": "refresh",
@@ -10845,7 +10845,7 @@
   {
    "id": "second_skin",
    "name": "Second skin",
-   "text": "When its Shield breaks: a new one at 50% of its peak, at most every so often.",
+   "text": "When its Shield breaks: a new one at 50% of its peak, at most once every 22 ticks.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -11287,7 +11287,7 @@
   {
    "id": "war_horn",
    "name": "War horn",
-   "text": "At fight start: 7 Might on the slowest-swinging ally.",
+   "text": "At fight start: 7 Might on the ally with the slowest basic attack.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -11747,7 +11747,7 @@
   {
    "id": "charnel_icon",
    "name": "Charnel icon",
-   "text": "When a foe falls: heals the lowest ally (29% of Attack).",
+   "text": "When a foe falls: heals the ally with the lowest HP% (29% of Attack).",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -11918,7 +11918,7 @@
   {
    "id": "bloodstone_reliquary",
    "name": "Bloodstone reliquary",
-   "text": "When an ally pays HP, the lowest other ally heals as much.",
+   "text": "When an ally pays HP, the other ally with the lowest HP% heals as much.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -12620,7 +12620,7 @@
   {
    "id": "scrying_orb",
    "name": "Scrying orb",
-   "text": "At fight start: its nearest-ready ability is ready.",
+   "text": "At fight start: its ability nearest to ready is ready.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -12844,7 +12844,7 @@
   {
    "id": "leech_idol",
    "name": "Leech idol",
-   "text": "MP it gains past full goes to the ally with the least MP.",
+   "text": "MP it gains past full goes to the ally with the lowest MP%.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -13104,7 +13104,7 @@
   {
    "id": "idol_of_the_hungry_dark",
    "name": "Idol of the hungry dark",
-   "text": "Every so often: steals a buff from a random foe, never Bulwark.",
+   "text": "Every 22 ticks (the first at 11): steals a buff from a random foe, never Bulwark.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -13180,7 +13180,7 @@
   {
    "id": "idol_of_the_hungry_dark_beat",
    "name": "Idol of the hungry dark (beating)",
-   "text": "Its beat, every so often.",
+   "text": "Its beat, every 22 ticks.",
    "label": "marker",
    "show": "sheet",
    "stacking": "refresh",
@@ -13241,7 +13241,7 @@
   {
    "id": "idol_of_the_blood_well",
    "name": "Idol of the blood-well",
-   "text": "When it pays HP: the ally with the least MP gains as much.",
+   "text": "When it pays HP: the ally with the lowest MP% gains as much.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -13603,7 +13603,7 @@
   {
    "id": "vultures_skull",
    "name": "Vulture's skull",
-   "text": "Hits on Stunned foes have exactly 80% Crit chance.",
+   "text": "Hits on Stunned foes have 80% Crit chance.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -13886,7 +13886,7 @@
   {
    "id": "warding_bell",
    "name": "Warding bell",
-   "text": "Every so often: lifts a debuff from the most-debuffed ally, Silence first.",
+   "text": "Every 22 ticks (the first at 11): lifts a debuff from the ally with the most debuffs, Silence first.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -14005,7 +14005,7 @@
   {
    "id": "warding_bell_beat",
    "name": "Warding bell (beating)",
-   "text": "Its beat, every so often.",
+   "text": "Its beat, every 22 ticks.",
    "label": "marker",
    "show": "sheet",
    "stacking": "refresh",
@@ -14140,7 +14140,7 @@
   {
    "id": "dancers_cloak",
    "name": "Dancer's cloak",
-   "text": "On a dodge: its nearest-ready ability is ready.",
+   "text": "On a dodge: its ability nearest to ready is ready.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -14351,7 +14351,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "At fight start: a Shield of 33% of max HP, for itself and the ally with the least Aggro.",
+   "text": "At fight start: a Shield of 33% of max HP, for itself and the other ally with the least Aggro.",
    "reactions": [
     {
      "on": {
@@ -14456,7 +14456,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "At fight start: a Shield of 33% of max HP, for itself and the ally with the least Aggro. Shield +40%.",
+   "text": "At fight start: a Shield of 33% of max HP, for itself and the other ally with the least Aggro. Shield +40%.",
    "reactions": [
     {
      "on": {
@@ -15147,7 +15147,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks ignore Taunt, have +5% Crit chance, and aim at the most wounded foe.",
+   "text": "Basic attacks ignore Taunt, have +5% Crit chance, and aim at the foe with the lowest HP%.",
    "seek": "basic",
    "crits": [
     {
@@ -15204,7 +15204,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks ignore Taunt, have +5% Crit chance, and aim at the most wounded foe. +9% Crit chance, not +5%.",
+   "text": "Basic attacks ignore Taunt, have +5% Crit chance, and aim at the foe with the lowest HP%. +9% Crit chance, not +5%.",
    "seek": "basic",
    "crits": [
     {
@@ -16522,7 +16522,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "On a hit: Shields the lowest ally instead, for 25% of the damage.",
+   "text": "On a hit: Shields the ally with the lowest HP% instead, for 25% of the damage.",
    "reactions": [
     {
      "on": {
@@ -16583,7 +16583,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "On a hit: Shields the lowest ally instead, for 25% of the damage. Shield +40%.",
+   "text": "On a hit: Shields the ally with the lowest HP% instead, for 25% of the damage. Shield +40%.",
    "reactions": [
     {
      "on": {
@@ -16679,7 +16679,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks heal the lowest ally and give MP to the ally with the least MP, each 30% of the damage.",
+   "text": "Basic attacks heal the ally with the lowest HP% and give MP to the ally with the lowest MP%, each 30% of the damage.",
    "reactions": [
     {
      "on": {
@@ -16781,7 +16781,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks heal the lowest ally and give MP to the ally with the least MP, each 30% of the damage. 42% of the damage, not 30%.",
+   "text": "Basic attacks heal the ally with the lowest HP% and give MP to the ally with the lowest MP%, each 30% of the damage. 42% of the damage, not 30%.",
    "reactions": [
     {
      "on": {
@@ -16879,7 +16879,7 @@
   {
    "id": "cadenza",
    "name": "CADENZA",
-   "text": "Its next basic attacks come at once.",
+   "text": "Its next 3 basic attacks come at once.",
    "label": "buff",
    "show": "icon",
    "stacking": "intensity",
@@ -17690,7 +17690,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Crits deal extra damage for each Bleed on the foe, then add Bleed. The Bleed stays.",
+   "text": "Crits deal extra damage for each Bleed on the foe, then add Bleed.",
    "reactions": [
     {
      "on": {
@@ -17794,7 +17794,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Crits deal extra damage for each Bleed on the foe, then add Bleed. The Bleed stays. +40% Bleed.",
+   "text": "Crits deal extra damage for each Bleed on the foe, then add Bleed. +40% Bleed.",
    "reactions": [
     {
      "on": {
@@ -17984,7 +17984,7 @@
   {
    "id": "shared_feast_on",
    "name": "SHARED FEAST",
-   "text": "Lifesteal doubled; each hit heals the lowest other ally as much as it drank.",
+   "text": "Lifesteal doubled; each hit heals the other ally with the lowest HP% as much as it drank.",
    "label": "buff",
    "show": "icon",
    "stacking": "fizzle",
@@ -18035,7 +18035,7 @@
   {
    "id": "shared_feast_on_plus",
    "name": "SHARED FEAST",
-   "text": "Lifesteal ×2.5; each hit heals the lowest other ally as much as it drank.",
+   "text": "Lifesteal ×2.5; each hit heals the other ally with the lowest HP% as much as it drank.",
    "label": "buff",
    "show": "icon",
    "stacking": "fizzle",
@@ -18193,7 +18193,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Below half HP: Lifesteal doubled, and each hit heals the lowest other ally as much as it drank.",
+   "text": "Below half HP: Lifesteal doubled, and each hit heals the other ally with the lowest HP% as much as it drank.",
    "reactions": [
     {
      "on": {
@@ -18309,7 +18309,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Below half HP: Lifesteal doubled, and each hit heals the lowest other ally as much as it drank. Lifesteal ×2.5 instead of doubled.",
+   "text": "Below half HP: Lifesteal doubled, and each hit heals the other ally with the lowest HP% as much as it drank. Lifesteal ×2.5 instead of doubled.",
    "reactions": [
     {
      "on": {
@@ -18421,7 +18421,7 @@
   {
    "id": "drain_the_well",
    "name": "DRAIN THE WELL",
-   "text": "Its hit gives MP to the ally with the least.",
+   "text": "Its hit gives MP to the ally with the lowest MP%.",
    "label": "marker",
    "show": "sheet",
    "stacking": "refresh",
@@ -18749,7 +18749,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "On a shatter: the lowest ally gains a Shield of 30% of the Frostweaver's max HP, instead of the Sunder.",
+   "text": "On a shatter: the ally with the lowest HP% gains a Shield of 30% of the Frostweaver's max HP, instead of the Sunder.",
    "reactions": [
     {
      "on": {
@@ -18839,7 +18839,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "On a shatter: the lowest ally gains a Shield of 30% of the Frostweaver's max HP, instead of the Sunder. +40% Shield.",
+   "text": "On a shatter: the ally with the lowest HP% gains a Shield of 30% of the Frostweaver's max HP, instead of the Sunder. +40% Shield.",
    "reactions": [
     {
      "on": {
@@ -19968,7 +19968,7 @@
   {
    "id": "rock_shelter",
    "name": "ROCK SHELTER",
-   "text": "Its hit Shields the lowest ally for as much.",
+   "text": "Its hit Shields the ally with the lowest HP% for as much.",
    "label": "marker",
    "show": "sheet",
    "stacking": "refresh",
@@ -20004,7 +20004,7 @@
   {
    "id": "horn_of_the_keep",
    "name": "Horn of the keep",
-   "text": "When hit: the other ally with the least MP gains half the damage as MP. A Taunt that ends during an ally's wind-up comes back.",
+   "text": "When hit: the other ally with the lowest MP% gains half the damage as MP. A Taunt that ends during an ally's wind-up comes back.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -20365,7 +20365,7 @@
   {
    "id": "stormspear",
    "name": "Stormspear",
-   "text": "Every 4th hit calls a blow on the foe with the most Shock, ignoring Taunt. The Shock stays.",
+   "text": "Every 4th hit calls a blow on the foe with the most Shock, ignoring Taunt.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -20578,7 +20578,7 @@
   {
    "id": "ember_palms",
    "name": "Ember palms",
-   "text": "Hits deal a little extra for each Burn on the target. The Burn stays.",
+   "text": "Hits deal extra damage for each Burn on the target.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -20949,7 +20949,7 @@
   {
    "id": "knight",
    "name": "Knight",
-   "text": "Protector. Starts every fight behind its own Shield, Guards whoever is lowest, calls every foe onto itself while an ally regains its mana, and bashes a foe with the weight of its own body.",
+   "text": "Protector. Starts every fight behind its own Shield, Guards the ally with the lowest HP%, calls every foe onto itself while an ally regains its mana, and bashes a foe with the weight of its own body.",
    "source": "starter",
    "stats": {
     "max_hp": 5000,
@@ -20987,7 +20987,7 @@
   {
    "id": "cleric",
    "name": "Cleric",
-   "text": "Healer. Mends whoever is lowest with quick, small heals, lifts a curse and wraps the ally in Regen, raises the fallen, and prays twice as fast when its own life is in danger.",
+   "text": "Healer. Heals the ally with the lowest HP% with quick, small heals, lifts a curse and wraps the ally in Regen, raises the fallen, and prays twice as fast when its own life is in danger.",
    "source": "starter",
    "stats": {
     "max_hp": 2000,
@@ -21065,7 +21065,7 @@
   {
    "id": "bramble_knight",
    "name": "Bramble knight",
-   "text": "Thorns tank. Draws every foe onto its thorns, where each attacker is left bleeding for the party's blows, regrows whoever is lowest, and lashes out with the thorns themselves.",
+   "text": "Thorns tank. Draws every foe onto its thorns, where each attacker is left bleeding for the party's blows, gives Regen to the ally with the lowest HP%, and lashes out with the thorns themselves.",
    "source": "unlock",
    "stats": {
     "max_hp": 5000,
@@ -21182,7 +21182,7 @@
   {
    "id": "valkyrie",
    "name": "Valkyrie",
-   "text": "The shieldmaiden: a quick, survivable damage dealer, not a tank. Her spear builds her Shield as it strikes, three quick hits reach past any guard and shock what they hit, a heavy blow from above cashes the Shock in, and she chooses the slain: one ability mends the lowest ally or raises a fallen one.",
+   "text": "The shieldmaiden: a quick, survivable damage dealer, not a tank. Her spear builds her Shield as it strikes, three quick hits reach past any guard and shock what they hit, a heavy blow from above hits harder for each Shock, and she chooses the slain: one ability mends the ally with the lowest HP% or raises a fallen one.",
    "source": "unlock",
    "stats": {
     "max_hp": 3000,
@@ -21222,7 +21222,7 @@
   {
    "id": "bard",
    "name": "Bard",
-   "text": "Party tempo. A caster at the back whose every note mends an ally a little and gives another mana, with a ballad that steadies the party, an allegro that quickens it, and an encore that makes an ally's next spell sound twice.",
+   "text": "Party tempo. A caster at the back whose every basic attack heals an ally and gives another MP, with a ballad that steadies the party, an allegro that quickens it, and an encore that makes an ally's next spell sound twice.",
    "source": "unlock",
    "stats": {
     "max_hp": 3000,
@@ -21262,7 +21262,7 @@
   {
    "id": "hexer",
    "name": "Hexer",
-   "text": "The spellblade. A blade that carries curses: its swing chills, its curses deepen every affliction a foe already holds, it weakens and sunders the most dangerous one, and it silences a foe mid-cast and strips its buffs.",
+   "text": "The spellblade. A blade that carries curses: its swing chills, its curses deepen every affliction a foe already holds, it weakens and sunders the foe with the most Attack, and it silences a foe mid-cast and strips its buffs.",
    "source": "unlock",
    "stats": {
     "max_hp": 3000,
@@ -21301,7 +21301,7 @@
   {
    "id": "monk",
    "name": "Monk",
-   "text": "Sunders with a blur of blows. Every blow leaves the foe a little more open, Flow keeps it fast, burning fists pile onto the hottest foe, and a pressure point drops the most dangerous one for a moment.",
+   "text": "Sunders with a blur of blows. Every blow adds Sunder, Flow keeps it fast, burning fists pile onto the foe with the most Burn, and a pressure point Stuns the foe with the most Attack.",
    "source": "unlock",
    "stats": {
     "max_hp": 3000,
@@ -21341,7 +21341,7 @@
   {
    "id": "assassin",
    "name": "Assassin",
-   "text": "Burst killer. Slips out of sight, picks off the weakest foe past any guard, leaves every crit a bleeding wound, and silences the back line.",
+   "text": "Burst killer. Slips out of sight, picks off the foe with the least HP past any Taunt, leaves every crit a bleeding wound, and silences the back line.",
    "source": "unlock",
    "stats": {
     "max_hp": 2000,
@@ -21420,7 +21420,7 @@
   {
    "id": "pyromancer",
    "name": "Pyromancer",
-   "text": "The glass cannon of long casts. Every spell it casts stokes the fire on the hottest foe, bolts pile more onto it, a fireball spreads it, and a pyre lands.",
+   "text": "The glass cannon of long casts. Every spell it casts stokes the fire on the foe with the most Burn, bolts pile more onto it, a fireball spreads it, and a pyre lands.",
    "source": "unlock",
    "stats": {
     "max_hp": 2000,
@@ -21459,7 +21459,7 @@
   {
    "id": "frostweaver",
    "name": "Frostweaver",
-   "text": "The ice wall: a chunky supporting mage, and the Chill applier. It lays Chill on the field and on the most-chilled foe until the Chill itself shatters, leaves the shattered foe sundered, and keeps an ally's mana flowing while the frost builds.",
+   "text": "The ice wall: a chunky supporting mage, and the Chill applier. It lays Chill on the field and on the foe with the most Chill until the Chill itself shatters, leaves the shattered foe sundered, and keeps an ally's mana flowing while the frost builds.",
    "source": "unlock",
    "stats": {
     "max_hp": 3000,
@@ -21538,7 +21538,7 @@
   {
    "id": "geomancer",
    "name": "Geomancer",
-   "text": "Hits hardest behind stone. Wraps itself and an ally in stone; while its own Shield holds, its rocks crit far more often and far harder, and a tremor drops a foe now and then.",
+   "text": "Hits hardest behind stone. Wraps itself and an ally in stone; while its own Shield holds, its rocks crit far more often and far harder, and a tremor Stuns a foe.",
    "source": "unlock",
    "stats": {
     "max_hp": 3000,
@@ -21580,7 +21580,7 @@
    "id": "fortify",
    "class": "knight",
    "name": "Fortify",
-   "text": "Guards the lowest ally.",
+   "text": "Guards the ally with the lowest HP%.",
    "cooldown": 36.6,
    "cast": 1,
    "mp": 325,
@@ -21600,7 +21600,7 @@
    "id": "stand_fast",
    "class": "knight",
    "name": "Stand fast",
-   "text": "Taunts, and gives Clarity to the ally with the least MP.",
+   "text": "Taunts, and gives Clarity to the ally with the lowest MP%.",
    "cooldown": 29.4,
    "cast": 1,
    "mp": 200,
@@ -21664,7 +21664,7 @@
    "id": "renew",
    "class": "cleric",
    "name": "Renew",
-   "text": "Cleanses the lowest debuffed ally (else the lowest ally) and gives it Regen.",
+   "text": "Cleanses the ally with the lowest HP%, a debuffed one first, and gives it Regen.",
    "cooldown": 29.3,
    "cast": 3,
    "mp": 650,
@@ -21692,7 +21692,7 @@
    "id": "cure",
    "class": "cleric",
    "name": "Cure",
-   "text": "Heals the lowest ally.",
+   "text": "Heals the ally with the lowest HP%.",
    "cooldown": 14.4,
    "cast": 1,
    "mp": 450,
@@ -21902,7 +21902,7 @@
    "id": "regrowth",
    "class": "bramble_knight",
    "name": "Regrowth",
-   "text": "Regen on the lowest ally.",
+   "text": "Regen on the ally with the lowest HP%.",
    "cooldown": 29.2,
    "cast": 3,
    "mp": 325,
@@ -21945,7 +21945,7 @@
    "id": "aspis",
    "class": "hoplite",
    "name": "Aspis",
-   "text": "Aegis on the lowest ally.",
+   "text": "Aegis on the ally with the lowest HP%.",
    "cooldown": 42.4,
    "cast": 1,
    "mp": 325,
@@ -22083,7 +22083,7 @@
    "id": "absolve",
    "class": "paladin",
    "name": "Absolve",
-   "text": "Cleanses and heals itself and the lowest other ally.",
+   "text": "Cleanses and heals itself and the other ally with the lowest HP%.",
    "cooldown": 30.7,
    "cast": 3,
    "mp": 650,
@@ -22231,7 +22231,7 @@
    "id": "choosing",
    "class": "valkyrie",
    "name": "Choosing",
-   "text": "Revives a fallen ally with 10% HP, or else heals the lowest ally.",
+   "text": "Revives a fallen ally with 10% HP, or else heals the ally with the lowest HP%.",
    "cooldown": 31.8,
    "cast": 3,
    "mp": 650,
@@ -22290,7 +22290,7 @@
    "id": "skyfall",
    "class": "valkyrie",
    "name": "Skyfall",
-   "text": "A blow from above on the foe with the most Shock. The Shock stays.",
+   "text": "A blow from above on the foe with the most Shock.",
    "cooldown": 25.6,
    "cast": 3,
    "mp": 325,
@@ -22782,7 +22782,7 @@
    "id": "blood_gift",
    "class": "vampire",
    "name": "Blood gift",
-   "text": "Pays 20% of its max HP to heal the lowest other ally as much, and gives it Clarity.",
+   "text": "Pays 20% of its max HP to heal the other ally with the lowest HP% as much, and gives it Clarity.",
    "cooldown": 27.2,
    "cast": 3,
    "mp": 450,
@@ -22946,7 +22946,7 @@
    "id": "pyre",
    "class": "pyromancer",
    "name": "Pyre",
-   "text": "Burns down the foe with the most Burn. The Burn stays.",
+   "text": "Burns down the foe with the most Burn.",
    "cooldown": 33.7,
    "cast": 6,
    "mp": 1000,
@@ -23064,7 +23064,7 @@
    "id": "stillness",
    "class": "frostweaver",
    "name": "Stillness",
-   "text": "Chill on every foe, and Clarity on the ally with the least MP.",
+   "text": "Chill on every foe, and Clarity on the ally with the lowest MP%.",
    "cooldown": 33.1,
    "cast": 1,
    "mp": 650,
@@ -23190,7 +23190,7 @@
    "id": "static_charge",
    "class": "stormcaller",
    "name": "Static charge",
-   "text": "Basic attacks come faster for 20 ticks.",
+   "text": "Basic attacks come 50% faster for 20 ticks.",
    "cooldown": 31.1,
    "cast": 1,
    "mp": 650,
@@ -23206,7 +23206,7 @@
    "id": "earthen_shell",
    "class": "geomancer",
    "name": "Earthen shell",
-   "text": "Shields itself and the lowest other ally.",
+   "text": "Shields itself and the other ally with the lowest HP%.",
    "cooldown": 33,
    "cast": 3,
    "mp": 650,
@@ -23470,7 +23470,7 @@
   {
    "id": "mend",
    "name": "Mend",
-   "text": "Heals the most hurt ally.",
+   "text": "Heals the ally with the lowest HP%.",
    "cooldown": 26.6,
    "cast": 3,
    "mp": 300,
@@ -23708,7 +23708,7 @@
   {
    "id": "mute",
    "name": "Mute",
-   "text": "Silences the foe with the highest Attack.",
+   "text": "Silences the foe with the most Attack.",
    "cooldown": 37.7,
    "cast": 3,
    "mp": 500,
@@ -23758,7 +23758,7 @@
   {
    "id": "cheer",
    "name": "Cheer",
-   "text": "Might and Haste on its strongest ally.",
+   "text": "Might and Haste on the ally with the most Attack.",
    "cooldown": 42.4,
    "cast": 3,
    "mp": 500,
@@ -23996,7 +23996,7 @@
    "id": "fortify__p",
    "class": "knight",
    "name": "Fortify+",
-   "text": "Guards the lowest ally.",
+   "text": "Guards the ally with the lowest HP%.",
    "cooldown": 27.5,
    "cast": 1,
    "mp": 325,
@@ -24142,7 +24142,7 @@
    "id": "stand_fast__p",
    "class": "knight",
    "name": "Stand fast+",
-   "text": "Taunts, and gives Clarity to the ally with the least MP.",
+   "text": "Taunts, and gives Clarity to the ally with the lowest MP%.",
    "cooldown": 29.4,
    "cast": 1,
    "mp": 125,
@@ -24456,7 +24456,7 @@
    "id": "renew__p",
    "class": "cleric",
    "name": "Renew+",
-   "text": "Cleanses the lowest debuffed ally (else the lowest ally) and gives it Regen.",
+   "text": "Cleanses the ally with the lowest HP%, a debuffed one first, and gives it Regen.",
    "cooldown": 29.3,
    "cast": 3,
    "mp": 450,
@@ -24484,7 +24484,7 @@
    "id": "renew__a",
    "class": "cleric",
    "name": "Font",
-   "text": "Cleanses the lowest debuffed ally (else the lowest) and gives it Regen and Clarity.",
+   "text": "Cleanses the ally with the lowest HP%, a debuffed one first, and gives it Regen and Clarity.",
    "cooldown": 29.3,
    "cast": 3,
    "mp": 650,
@@ -24516,7 +24516,7 @@
    "id": "renew__b",
    "class": "cleric",
    "name": "Anchor's blessing",
-   "text": "Cleanses the ally foes are drawn to and gives it Regen.",
+   "text": "Cleanses the ally with the most Aggro and gives it Regen.",
    "cooldown": 29.3,
    "cast": 3,
    "mp": 650,
@@ -24546,7 +24546,7 @@
    "id": "renew__ap",
    "class": "cleric",
    "name": "Font+",
-   "text": "Cleanses the lowest debuffed ally (else the lowest) and gives it Regen and Clarity.",
+   "text": "Cleanses the ally with the lowest HP%, a debuffed one first, and gives it Regen and Clarity.",
    "cooldown": 29.3,
    "cast": 3,
    "mp": 450,
@@ -24578,7 +24578,7 @@
    "id": "renew__bp",
    "class": "cleric",
    "name": "Anchor's blessing+",
-   "text": "Cleanses the ally foes are drawn to and gives it Regen.",
+   "text": "Cleanses the ally with the most Aggro and gives it Regen.",
    "cooldown": 29.3,
    "cast": 3,
    "mp": 450,
@@ -24608,7 +24608,7 @@
    "id": "cure__p",
    "class": "cleric",
    "name": "Cure+",
-   "text": "Heals the lowest ally.",
+   "text": "Heals the ally with the lowest HP%.",
    "cooldown": 14.4,
    "cast": 1,
    "mp": 450,
@@ -24641,7 +24641,7 @@
    "id": "cure__a",
    "class": "cleric",
    "name": "Triage",
-   "text": "Heals the lowest ally; waits until one is below 40% HP.",
+   "text": "Heals the ally with the lowest HP%; waits until one is below 40% HP.",
    "cooldown": 14.4,
    "cast": 1,
    "mp": 450,
@@ -24674,7 +24674,7 @@
    "id": "cure__b",
    "class": "cleric",
    "name": "Battle prayer",
-   "text": "Heals the lowest ally. Its next basic attack deals that much extra.",
+   "text": "Heals the ally with the lowest HP%. Its next basic attack deals that much extra.",
    "cooldown": 14.4,
    "cast": 1,
    "mp": 450,
@@ -24712,7 +24712,7 @@
    "id": "cure__ap",
    "class": "cleric",
    "name": "Triage+",
-   "text": "Heals the lowest ally; waits until one is below 40% HP.",
+   "text": "Heals the ally with the lowest HP%; waits until one is below 40% HP.",
    "cooldown": 14.4,
    "cast": 1,
    "mp": 450,
@@ -24745,7 +24745,7 @@
    "id": "cure__bp",
    "class": "cleric",
    "name": "Battle prayer+",
-   "text": "Heals the lowest ally. Its next basic attack deals that much extra.",
+   "text": "Heals the ally with the lowest HP%. Its next basic attack deals that much extra.",
    "cooldown": 14.4,
    "cast": 1,
    "mp": 450,
@@ -24866,7 +24866,7 @@
    "id": "raise__b",
    "class": "cleric",
    "name": "Ward of life",
-   "text": "Raises a fallen ally at 50% HP, and Shields the lowest ally below 33% HP.",
+   "text": "Raises a fallen ally at 50% HP, and Shields the ally with the lowest HP% below 33% HP.",
    "cooldown": 55.9,
    "cast": 3,
    "mp": 650,
@@ -24981,7 +24981,7 @@
    "id": "raise__bp",
    "class": "cleric",
    "name": "Ward of life+",
-   "text": "Raises a fallen ally at 50% HP, and Shields the lowest ally below 33% HP. Raises at 70% HP, not 50%.",
+   "text": "Raises a fallen ally at 50% HP, and Shields the ally with the lowest HP% below 33% HP. Raises at 70% HP, not 50%.",
    "cooldown": 55.9,
    "cast": 3,
    "mp": 650,
@@ -25806,7 +25806,7 @@
    "id": "regrowth__p",
    "class": "bramble_knight",
    "name": "Regrowth+",
-   "text": "Regen on the lowest ally.",
+   "text": "Regen on the ally with the lowest HP%.",
    "cooldown": 29.2,
    "cast": 3,
    "mp": 200,
@@ -26063,7 +26063,7 @@
    "id": "aspis__p",
    "class": "hoplite",
    "name": "Aspis+",
-   "text": "Aegis on the lowest ally.",
+   "text": "Aegis on the ally with the lowest HP%.",
    "cooldown": 31.8,
    "cast": 1,
    "mp": 325,
@@ -26250,7 +26250,7 @@
    "id": "othismos__a",
    "class": "hoplite",
    "name": "Locked shields",
-   "text": "Shoves every foe, adding Sunder; Guards itself and the lowest ally.",
+   "text": "Shoves every foe, adding Sunder; Guards itself and the ally with the lowest HP%.",
    "cooldown": 28.8,
    "cast": 6,
    "mp": 325,
@@ -26347,7 +26347,7 @@
    "id": "othismos__ap",
    "class": "hoplite",
    "name": "Locked shields+",
-   "text": "Shoves every foe, adding Sunder; Guards itself and the lowest ally.",
+   "text": "Shoves every foe, adding Sunder; Guards itself and the ally with the lowest HP%.",
    "cooldown": 28.8,
    "cast": 6,
    "mp": 325,
@@ -26750,7 +26750,7 @@
    "id": "condemn__b",
    "class": "paladin",
    "name": "Swift justice",
-   "text": "Marks the lowest foe; every ally attacks at once. Ready again when its Marked foe falls.",
+   "text": "Marks the foe with the lowest HP%; every ally attacks at once. Ready again when its Marked foe falls.",
    "cooldown": 31.5,
    "cast": 1,
    "mp": 650,
@@ -26813,7 +26813,7 @@
    "id": "condemn__bp",
    "class": "paladin",
    "name": "Swift justice+",
-   "text": "Marks the lowest foe; every ally attacks at once. Ready again when its Marked foe falls.",
+   "text": "Marks the foe with the lowest HP%; every ally attacks at once. Ready again when its Marked foe falls.",
    "cooldown": 23.1,
    "cast": 1,
    "mp": 650,
@@ -26847,7 +26847,7 @@
    "id": "absolve__p",
    "class": "paladin",
    "name": "Absolve+",
-   "text": "Cleanses and heals itself and the lowest other ally.",
+   "text": "Cleanses and heals itself and the other ally with the lowest HP%.",
    "cooldown": 30.7,
    "cast": 3,
    "mp": 650,
@@ -27601,7 +27601,7 @@
    "id": "choosing__p",
    "class": "valkyrie",
    "name": "Choosing+",
-   "text": "Revives a fallen ally with 10% HP, or else heals the lowest ally. Heals or raises 40% more.",
+   "text": "Revives a fallen ally with 10% HP, or else heals the ally with the lowest HP%. Heals or raises 40% more.",
    "cooldown": 31.8,
    "cast": 3,
    "mp": 650,
@@ -27660,7 +27660,7 @@
    "id": "choosing__a",
    "class": "valkyrie",
    "name": "Einherjar",
-   "text": "Raises a fallen ally at 10% HP, every action ready; else heals the lowest ally.",
+   "text": "Raises a fallen ally at 10% HP, every action ready; else heals the ally with the lowest HP%.",
    "cooldown": 31.8,
    "cast": 3,
    "mp": 650,
@@ -27722,7 +27722,7 @@
    "id": "choosing__b",
    "class": "valkyrie",
    "name": "Over the fallen",
-   "text": "Raises a fallen ally or heals the lowest one below 30% HP, then Taunts and is Guarded.",
+   "text": "Raises a fallen ally, or heals the ally with the lowest HP% once one is below 30% HP; then Taunts and is Guarded.",
    "cooldown": 31.8,
    "cast": 3,
    "mp": 650,
@@ -27791,7 +27791,7 @@
    "id": "choosing__ap",
    "class": "valkyrie",
    "name": "Einherjar+",
-   "text": "Raises a fallen ally at 10% HP, every action ready; else heals the lowest ally. Heals or raises 40% more.",
+   "text": "Raises a fallen ally at 10% HP, every action ready; else heals the ally with the lowest HP%. Heals or raises 40% more.",
    "cooldown": 31.8,
    "cast": 3,
    "mp": 650,
@@ -27853,7 +27853,7 @@
    "id": "choosing__bp",
    "class": "valkyrie",
    "name": "Over the fallen+",
-   "text": "Raises a fallen ally or heals the lowest one below 30% HP, then Taunts and is Guarded. Heals or raises 40% more.",
+   "text": "Raises a fallen ally, or heals the ally with the lowest HP% once one is below 30% HP; then Taunts and is Guarded. Heals or raises 40% more.",
    "cooldown": 31.8,
    "cast": 3,
    "mp": 650,
@@ -27922,7 +27922,7 @@
    "id": "skyfall__p",
    "class": "valkyrie",
    "name": "Skyfall+",
-   "text": "A blow from above on the foe with the most Shock. The Shock stays.",
+   "text": "A blow from above on the foe with the most Shock.",
    "cooldown": 25.6,
    "cast": 3,
    "mp": 325,
@@ -27957,7 +27957,7 @@
    "id": "skyfall__a",
    "class": "valkyrie",
    "name": "Thunderclap",
-   "text": "A blow from above on every foe that holds Shock. The Shock stays.",
+   "text": "A blow from above on every foe that holds Shock.",
    "cooldown": 25.6,
    "cast": 3,
    "mp": 325,
@@ -28038,7 +28038,7 @@
    "id": "skyfall__ap",
    "class": "valkyrie",
    "name": "Thunderclap+",
-   "text": "A blow from above on every foe that holds Shock. The Shock stays.",
+   "text": "A blow from above on every foe that holds Shock.",
    "cooldown": 25.6,
    "cast": 3,
    "mp": 325,
@@ -28325,7 +28325,7 @@
    "id": "allegro__b",
    "class": "bard",
    "name": "Accelerando",
-   "text": "Haste on the ally that attacks fastest.",
+   "text": "Haste on the ally with the fastest basic attack.",
    "cooldown": 23.4,
    "cast": 1,
    "mp": 450,
@@ -28369,7 +28369,7 @@
    "id": "allegro__bp",
    "class": "bard",
    "name": "Accelerando+",
-   "text": "Haste on the ally that attacks fastest.",
+   "text": "Haste on the ally with the fastest basic attack.",
    "cooldown": 14.9,
    "cast": 1,
    "mp": 450,
@@ -29892,7 +29892,7 @@
    "id": "vanish__a",
    "class": "assassin",
    "name": "Smoke screen",
-   "text": "Hides the lowest ally that isn't Taunting or Hidden. Waits for an ally below 80% HP.",
+   "text": "Hides the ally with the lowest HP% that isn't Taunting or Hidden. Waits for an ally below 80% HP.",
    "cooldown": 24.5,
    "cast": 1,
    "mp": 200,
@@ -29950,7 +29950,7 @@
    "id": "vanish__ap",
    "class": "assassin",
    "name": "Smoke screen+",
-   "text": "Hides the lowest ally that isn't Taunting or Hidden. Waits for an ally below 80% HP.",
+   "text": "Hides the ally with the lowest HP% that isn't Taunting or Hidden. Waits for an ally below 80% HP.",
    "cooldown": 18.4,
    "cast": 1,
    "mp": 200,
@@ -30259,7 +30259,7 @@
    "id": "garrote__b",
    "class": "assassin",
    "name": "Bleed them dry",
-   "text": "Strikes a random foe that isn't Taunting, adding Rot and Bleed; its own Lifesteal doubles for a while. No Silence.",
+   "text": "Strikes a random foe that isn't Taunting, adding Rot and Bleed; its own Lifesteal doubles for 20 ticks. No Silence.",
    "cooldown": 31.8,
    "cast": 1,
    "mp": 325,
@@ -30358,7 +30358,7 @@
    "id": "garrote__bp",
    "class": "assassin",
    "name": "Bleed them dry+",
-   "text": "Strikes a random foe that isn't Taunting, adding Rot and Bleed; its own Lifesteal doubles for a while. No Silence.",
+   "text": "Strikes a random foe that isn't Taunting, adding Rot and Bleed; its own Lifesteal doubles for 20 ticks. No Silence.",
    "cooldown": 31.8,
    "cast": 1,
    "mp": 200,
@@ -30467,7 +30467,7 @@
    "id": "blood_drain__b",
    "class": "vampire",
    "name": "Drain the well",
-   "text": "Drains a random foe; the ally with the least MP gains MP: 25% of the damage. No Weaken.",
+   "text": "Drains a random foe; the ally with the lowest MP% gains MP: 25% of the damage. No Weaken.",
    "cooldown": 13.8,
    "cast": 1,
    "mp": 125,
@@ -30524,7 +30524,7 @@
    "id": "blood_drain__bp",
    "class": "vampire",
    "name": "Drain the well+",
-   "text": "Drains a random foe; the ally with the least MP gains MP: 25% of the damage. No Weaken.",
+   "text": "Drains a random foe; the ally with the lowest MP% gains MP: 25% of the damage. No Weaken.",
    "cooldown": 13.8,
    "cast": 1,
    "mp": 125,
@@ -30552,7 +30552,7 @@
    "id": "blood_gift__p",
    "class": "vampire",
    "name": "Blood gift+",
-   "text": "Pays 20% of its max HP to heal the lowest other ally as much, and gives it Clarity.",
+   "text": "Pays 20% of its max HP to heal the other ally with the lowest HP% as much, and gives it Clarity.",
    "cooldown": 27.2,
    "cast": 3,
    "mp": 450,
@@ -30609,7 +30609,7 @@
    "id": "blood_gift__a",
    "class": "vampire",
    "name": "Blood for mana",
-   "text": "Pays 20% of its max HP to give the other ally with the least MP as much MP, and Clarity. Waits for one under half MP.",
+   "text": "Pays 20% of its max HP to give the other ally with the lowest MP% as much MP, and Clarity. Waits for one under half MP.",
    "cooldown": 27.2,
    "cast": 3,
    "mp": 450,
@@ -30721,7 +30721,7 @@
    "id": "blood_gift__ap",
    "class": "vampire",
    "name": "Blood for mana+",
-   "text": "Pays 20% of its max HP to give the other ally with the least MP as much MP, and Clarity. Waits for one under half MP.",
+   "text": "Pays 20% of its max HP to give the other ally with the lowest MP% as much MP, and Clarity. Waits for one under half MP.",
    "cooldown": 27.2,
    "cast": 3,
    "mp": 450,
@@ -31388,7 +31388,7 @@
    "id": "pyre__p",
    "class": "pyromancer",
    "name": "Pyre+",
-   "text": "Burns down the foe with the most Burn. The Burn stays.",
+   "text": "Burns down the foe with the most Burn.",
    "cooldown": 33.7,
    "cast": 6,
    "mp": 1000,
@@ -31423,7 +31423,7 @@
    "id": "pyre__a",
    "class": "pyromancer",
    "name": "Funeral pyre",
-   "text": "Burns down every foe, each harder for its Burn. The Burn stays.",
+   "text": "Burns down every foe, each harder for its Burn.",
    "cooldown": 33.7,
    "cast": 6,
    "mp": 1000,
@@ -31455,7 +31455,7 @@
    "id": "pyre__b",
    "class": "pyromancer",
    "name": "High pyre",
-   "text": "Waits for a foe with 20+ Burn, then burns down the foe with the most. The Burn stays.",
+   "text": "Waits for a foe with 20+ Burn, then burns down the foe with the most.",
    "cooldown": 33.7,
    "cast": 6,
    "mp": 1000,
@@ -31499,7 +31499,7 @@
    "id": "pyre__ap",
    "class": "pyromancer",
    "name": "Funeral pyre+",
-   "text": "Burns down every foe, each harder for its Burn. The Burn stays.",
+   "text": "Burns down every foe, each harder for its Burn.",
    "cooldown": 33.7,
    "cast": 6,
    "mp": 1000,
@@ -31531,7 +31531,7 @@
    "id": "pyre__bp",
    "class": "pyromancer",
    "name": "High pyre+",
-   "text": "Waits for a foe with 20+ Burn, then burns down the foe with the most. The Burn stays.",
+   "text": "Waits for a foe with 20+ Burn, then burns down the foe with the most.",
    "cooldown": 33.7,
    "cast": 6,
    "mp": 1000,
@@ -31964,7 +31964,7 @@
    "id": "stillness__p",
    "class": "frostweaver",
    "name": "Stillness+",
-   "text": "Chill on every foe, and Clarity on the ally with the least MP.",
+   "text": "Chill on every foe, and Clarity on the ally with the lowest MP%.",
    "cooldown": 33.1,
    "cast": 1,
    "mp": 450,
@@ -32004,7 +32004,7 @@
    "id": "stillness__a",
    "class": "frostweaver",
    "name": "Deep calm",
-   "text": "Clarity on the ally with the least MP; its own next ability costs nothing. No Chill.",
+   "text": "Clarity on the ally with the lowest MP%; its own next ability costs nothing. No Chill.",
    "cooldown": 33.1,
    "cast": 1,
    "mp": 650,
@@ -32029,7 +32029,7 @@
    "id": "stillness__b",
    "class": "frostweaver",
    "name": "Frozen moment",
-   "text": "Waits for a foe to cast. Chill on every casting foe, and Clarity on the ally with the least MP.",
+   "text": "Waits for a foe to cast. Chill on every casting foe, and Clarity on the ally with the lowest MP%.",
    "cooldown": 33.1,
    "cast": 1,
    "mp": 650,
@@ -32078,7 +32078,7 @@
    "id": "stillness__ap",
    "class": "frostweaver",
    "name": "Deep calm+",
-   "text": "Clarity on the ally with the least MP; its own next ability costs nothing. No Chill.",
+   "text": "Clarity on the ally with the lowest MP%; its own next ability costs nothing. No Chill.",
    "cooldown": 33.1,
    "cast": 1,
    "mp": 450,
@@ -32103,7 +32103,7 @@
    "id": "stillness__bp",
    "class": "frostweaver",
    "name": "Frozen moment+",
-   "text": "Waits for a foe to cast. Chill on every casting foe, and Clarity on the ally with the least MP.",
+   "text": "Waits for a foe to cast. Chill on every casting foe, and Clarity on the ally with the lowest MP%.",
    "cooldown": 33.1,
    "cast": 1,
    "mp": 450,
@@ -32656,7 +32656,7 @@
    "id": "static_charge__p",
    "class": "stormcaller",
    "name": "Static charge+",
-   "text": "Basic attacks come faster for 20 ticks.",
+   "text": "Basic attacks come 50% faster for 20 ticks.",
    "cooldown": 22.8,
    "cast": 1,
    "mp": 650,
@@ -32672,7 +32672,7 @@
    "id": "static_charge__a",
    "class": "stormcaller",
    "name": "Overcharge",
-   "text": "Its basic attacks come faster for 20 ticks, and its next three abilities in that time cost no MP.",
+   "text": "Its basic attacks come 50% faster for 20 ticks, and its next three abilities in that time cost no MP.",
    "cooldown": 31.1,
    "cast": 1,
    "mp": 650,
@@ -32708,7 +32708,7 @@
    "id": "static_charge__ap",
    "class": "stormcaller",
    "name": "Overcharge+",
-   "text": "Its basic attacks come faster for 20 ticks, and its next three abilities in that time cost no MP.",
+   "text": "Its basic attacks come 50% faster for 20 ticks, and its next three abilities in that time cost no MP.",
    "cooldown": 22.8,
    "cast": 1,
    "mp": 650,
@@ -32744,7 +32744,7 @@
    "id": "earthen_shell__p",
    "class": "geomancer",
    "name": "Earthen shell+",
-   "text": "Shields itself and the lowest other ally.",
+   "text": "Shields itself and the other ally with the lowest HP%.",
    "cooldown": 24.2,
    "cast": 3,
    "mp": 650,
@@ -32999,7 +32999,7 @@
    "id": "rockfall__b",
    "class": "geomancer",
    "name": "Rock shelter",
-   "text": "Drops a rock on a random foe; the lowest ally gains a Shield of the damage dealt.",
+   "text": "Drops a rock on a random foe; the ally with the lowest HP% gains a Shield of the damage dealt.",
    "cooldown": 33.1,
    "cast": 6,
    "mp": 450,
@@ -33055,7 +33055,7 @@
    "id": "rockfall__bp",
    "class": "geomancer",
    "name": "Rock shelter+",
-   "text": "Drops a rock on a random foe; the lowest ally gains a Shield of the damage dealt.",
+   "text": "Drops a rock on a random foe; the ally with the lowest HP% gains a Shield of the damage dealt.",
    "cooldown": 33.1,
    "cast": 6,
    "mp": 450,
@@ -33281,7 +33281,7 @@
    "power": "Shield +40%.",
    "a": {
     "name": "Stonewall",
-    "text": "At fight start: a Shield of 33% of max HP, for itself and the ally with the least Aggro."
+    "text": "At fight start: a Shield of 33% of max HP, for itself and the other ally with the least Aggro."
    },
    "b": {
     "name": "Grudge",
@@ -33351,11 +33351,11 @@
    "power": "Costs less MP.",
    "a": {
     "name": "Font",
-    "text": "Cleanses the lowest debuffed ally (else the lowest) and gives it Regen and Clarity."
+    "text": "Cleanses the ally with the lowest HP%, a debuffed one first, and gives it Regen and Clarity."
    },
    "b": {
     "name": "Anchor's blessing",
-    "text": "Cleanses the ally foes are drawn to and gives it Regen."
+    "text": "Cleanses the ally with the most Aggro and gives it Regen."
    }
   },
   {
@@ -33365,11 +33365,11 @@
    "power": "+40% healing.",
    "a": {
     "name": "Triage",
-    "text": "Heals the lowest ally; waits until one is below 40% HP."
+    "text": "Heals the ally with the lowest HP%; waits until one is below 40% HP."
    },
    "b": {
     "name": "Battle prayer",
-    "text": "Heals the lowest ally. Its next basic attack deals that much extra."
+    "text": "Heals the ally with the lowest HP%. Its next basic attack deals that much extra."
    }
   },
   {
@@ -33383,7 +33383,7 @@
    },
    "b": {
     "name": "Ward of life",
-    "text": "Raises a fallen ally at 50% HP, and Shields the lowest ally below 33% HP."
+    "text": "Raises a fallen ally at 50% HP, and Shields the ally with the lowest HP% below 33% HP."
    }
   },
   {
@@ -33393,7 +33393,7 @@
    "power": "+9% Crit chance, not +5%.",
    "a": {
     "name": "Quarry",
-    "text": "Basic attacks ignore Taunt, have +5% Crit chance, and aim at the most wounded foe."
+    "text": "Basic attacks ignore Taunt, have +5% Crit chance, and aim at the foe with the lowest HP%."
    },
    "b": {
     "name": "Quick draw",
@@ -33533,7 +33533,7 @@
    "power": "+40% Sunder.",
    "a": {
     "name": "Locked shields",
-    "text": "Shoves every foe, adding Sunder; Guards itself and the lowest ally."
+    "text": "Shoves every foe, adding Sunder; Guards itself and the ally with the lowest HP%."
    },
    "b": {
     "name": "Breach",
@@ -33579,7 +33579,7 @@
    },
    "b": {
     "name": "Swift justice",
-    "text": "Marks the lowest foe; every ally attacks at once. Ready again when its Marked foe falls."
+    "text": "Marks the foe with the lowest HP%; every ally attacks at once. Ready again when its Marked foe falls."
    }
   },
   {
@@ -33621,7 +33621,7 @@
    },
    "b": {
     "name": "Shield-sister",
-    "text": "On a hit: Shields the lowest ally instead, for 25% of the damage."
+    "text": "On a hit: Shields the ally with the lowest HP% instead, for 25% of the damage."
    }
   },
   {
@@ -33645,11 +33645,11 @@
    "power": "Heals or raises 40% more.",
    "a": {
     "name": "Einherjar",
-    "text": "Raises a fallen ally at 10% HP, every action ready; else heals the lowest ally."
+    "text": "Raises a fallen ally at 10% HP, every action ready; else heals the ally with the lowest HP%."
    },
    "b": {
     "name": "Over the fallen",
-    "text": "Raises a fallen ally or heals the lowest one below 30% HP, then Taunts and is Guarded."
+    "text": "Raises a fallen ally, or heals the ally with the lowest HP% once one is below 30% HP; then Taunts and is Guarded."
    }
   },
   {
@@ -33659,7 +33659,7 @@
    "power": "+40% damage.",
    "a": {
     "name": "Thunderclap",
-    "text": "A blow from above on every foe that holds Shock. The Shock stays."
+    "text": "A blow from above on every foe that holds Shock."
    },
    "b": {
     "name": "Valkyrie's descent",
@@ -33673,7 +33673,7 @@
    "power": "42% of the damage, not 30%; +40% to any Might.",
    "a": {
     "name": "Harmony",
-    "text": "Basic attacks heal the lowest ally and give MP to the ally with the least MP, each 30% of the damage."
+    "text": "Basic attacks heal the ally with the lowest HP% and give MP to the ally with the lowest MP%, each 30% of the damage."
    },
    "b": {
     "name": "Battle song",
@@ -33705,7 +33705,7 @@
    },
    "b": {
     "name": "Accelerando",
-    "text": "Haste on the ally that attacks fastest."
+    "text": "Haste on the ally with the fastest basic attack."
    }
   },
   {
@@ -33845,7 +33845,7 @@
    },
    "b": {
     "name": "Rupture",
-    "text": "Crits deal extra damage for each Bleed on the foe, then add Bleed. The Bleed stays."
+    "text": "Crits deal extra damage for each Bleed on the foe, then add Bleed."
    }
   },
   {
@@ -33855,7 +33855,7 @@
    "power": "Shorter cooldown.",
    "a": {
     "name": "Smoke screen",
-    "text": "Hides the lowest ally that isn't Taunting or Hidden. Waits for an ally below 80% HP."
+    "text": "Hides the ally with the lowest HP% that isn't Taunting or Hidden. Waits for an ally below 80% HP."
    },
    "b": {
     "name": "Shadow step",
@@ -33887,7 +33887,7 @@
    },
    "b": {
     "name": "Bleed them dry",
-    "text": "Strikes a random foe that isn't Taunting, adding Rot and Bleed; its own Lifesteal doubles for a while. No Silence."
+    "text": "Strikes a random foe that isn't Taunting, adding Rot and Bleed; its own Lifesteal doubles for 20 ticks. No Silence."
    }
   },
   {
@@ -33897,7 +33897,7 @@
    "power": "Lifesteal ×2.5 instead of doubled.",
    "a": {
     "name": "Shared feast",
-    "text": "Below half HP: Lifesteal doubled, and each hit heals the lowest other ally as much as it drank."
+    "text": "Below half HP: Lifesteal doubled, and each hit heals the other ally with the lowest HP% as much as it drank."
    },
    "b": {
     "name": "Undying thirst",
@@ -33915,7 +33915,7 @@
    },
    "b": {
     "name": "Drain the well",
-    "text": "Drains a random foe; the ally with the least MP gains MP: 25% of the damage. No Weaken."
+    "text": "Drains a random foe; the ally with the lowest MP% gains MP: 25% of the damage. No Weaken."
    }
   },
   {
@@ -33925,7 +33925,7 @@
    "power": "Gives 40% more than it pays.",
    "a": {
     "name": "Blood for mana",
-    "text": "Pays 20% of its max HP to give the other ally with the least MP as much MP, and Clarity. Waits for one under half MP."
+    "text": "Pays 20% of its max HP to give the other ally with the lowest MP% as much MP, and Clarity. Waits for one under half MP."
    },
    "b": {
     "name": "Lifeblood",
@@ -33995,11 +33995,11 @@
    "power": "+40% damage.",
    "a": {
     "name": "Funeral pyre",
-    "text": "Burns down every foe, each harder for its Burn. The Burn stays."
+    "text": "Burns down every foe, each harder for its Burn."
    },
    "b": {
     "name": "High pyre",
-    "text": "Waits for a foe with 20+ Burn, then burns down the foe with the most. The Burn stays."
+    "text": "Waits for a foe with 20+ Burn, then burns down the foe with the most."
    }
   },
   {
@@ -34009,7 +34009,7 @@
    "power": "+40% Sunder.",
    "a": {
     "name": "Rime shield",
-    "text": "On a shatter: the lowest ally gains a Shield of 30% of the Frostweaver's max HP, instead of the Sunder."
+    "text": "On a shatter: the ally with the lowest HP% gains a Shield of 30% of the Frostweaver's max HP, instead of the Sunder."
    },
    "b": {
     "name": "Splinters",
@@ -34051,11 +34051,11 @@
    "power": "Costs less MP.",
    "a": {
     "name": "Deep calm",
-    "text": "Clarity on the ally with the least MP; its own next ability costs nothing. No Chill."
+    "text": "Clarity on the ally with the lowest MP%; its own next ability costs nothing. No Chill."
    },
    "b": {
     "name": "Frozen moment",
-    "text": "Waits for a foe to cast. Chill on every casting foe, and Clarity on the ally with the least MP."
+    "text": "Waits for a foe to cast. Chill on every casting foe, and Clarity on the ally with the lowest MP%."
    }
   },
   {
@@ -34107,7 +34107,7 @@
    "power": "Shorter cooldown.",
    "a": {
     "name": "Overcharge",
-    "text": "Its basic attacks come faster for 20 ticks, and its next three abilities in that time cost no MP."
+    "text": "Its basic attacks come 50% faster for 20 ticks, and its next three abilities in that time cost no MP."
    },
    "b": {
     "name": "Storm shield",
@@ -34153,7 +34153,7 @@
    },
    "b": {
     "name": "Rock shelter",
-    "text": "Drops a rock on a random foe; the lowest ally gains a Shield of the damage dealt."
+    "text": "Drops a rock on a random foe; the ally with the lowest HP% gains a Shield of the damage dealt."
    }
   },
   {
@@ -34643,7 +34643,7 @@
   {
    "id": "ambush_knife",
    "name": "Ambush knife",
-   "text": "Hits on a foe that hasn't acted yet crit exactly 80% of the time.",
+   "text": "Hits on a foe that hasn't acted yet crit 80% of the time.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -35305,7 +35305,7 @@
   {
    "id": "tithe_wand",
    "name": "Tithe wand",
-   "text": "Basic attacks give the ally with the least MP 10% of Attack as MP.",
+   "text": "Basic attacks give the ally with the lowest MP% 10% of Attack as MP.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -35629,7 +35629,7 @@
   {
    "id": "mercys_edge",
    "name": "Mercy's edge",
-   "text": "Basic attacks heal the lowest ally for 33% of the damage.",
+   "text": "Basic attacks heal the ally with the lowest HP% for 33% of the damage.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -37305,7 +37305,7 @@
   {
    "id": "cornerstone_hammer",
    "name": "Cornerstone hammer",
-   "text": "Basic attacks deal extra damage equal to half of all Shield the party holds. The Shields stay.",
+   "text": "Basic attacks deal extra damage equal to half of all Shield the party holds.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
@@ -37435,7 +37435,7 @@
   {
    "id": "menders_mace",
    "name": "Mender's mace",
-   "text": "Every so often: heals the lowest ally for 20% of the wearer's max HP.",
+   "text": "Every 22 ticks: heals the ally with the lowest HP% for 20% of the wearer's max HP.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -37469,7 +37469,7 @@
   {
    "id": "penitents_mace",
    "name": "Penitent's mace",
-   "text": "When hit: heals the lowest ally for 2% of the wearer's max HP.",
+   "text": "When hit: heals the ally with the lowest HP% for 2% of the wearer's max HP.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -37721,7 +37721,7 @@
   {
    "id": "shepherds_staff",
    "name": "Shepherd's staff",
-   "text": "Each cast gives the ally with the least MP half its MP cost.",
+   "text": "Each cast gives the ally with the lowest MP% half its MP cost.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -37797,7 +37797,7 @@
   {
    "id": "vesper_staff",
    "name": "Vesper staff",
-   "text": "Each cast heals the lowest ally for 10% of Attack.",
+   "text": "Each cast heals the ally with the lowest HP% for 10% of Attack.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -39903,7 +39903,7 @@
   {
    "id": "clear_headed_charm",
    "name": "Clear-headed charm",
-   "text": "Below half MP: Clarity every so often, starting at once.",
+   "text": "Below half MP: Clarity every 22 ticks, starting at once.",
    "slot": "amulet",
    "tier": "ordinary",
    "source": "drop",
@@ -40037,7 +40037,7 @@
   {
    "id": "lightning_glass",
    "name": "Lightning-glass",
-   "text": "Abilities deal +4% per Shock on the target. The Shock stays.",
+   "text": "Abilities deal +4% per Shock on the target.",
    "slot": "amulet",
    "tier": "ordinary",
    "source": "drop",
@@ -40261,7 +40261,7 @@
   {
    "id": "downhill_charm",
    "name": "Downhill charm",
-   "text": "On a kill: the blow's leftover damage splits evenly among the other foes, as hits.",
+   "text": "On a kill: the blow's leftover damage splits evenly among the other foes.",
    "slot": "amulet",
    "tier": "powerful",
    "source": "unlock",
@@ -40287,7 +40287,7 @@
   {
    "id": "twin_knot",
    "name": "Twin-knot",
-   "text": "When it gives itself a status, the lowest other ally gains it too.",
+   "text": "When it gives itself a status, the other ally with the lowest HP% gains it too.",
    "slot": "amulet",
    "tier": "powerful",
    "source": "unlock",
@@ -40373,7 +40373,7 @@
   {
    "id": "phoenix_ember",
    "name": "Phoenix ember",
-   "text": "Once a fight: rises 4 ticks after falling, at 33% HP and Hidden. A wipe is still lost.",
+   "text": "Once a fight: rises 4 ticks after falling, at 33% HP and Hidden.",
    "slot": "amulet",
    "tier": "powerful",
    "source": "unlock",
@@ -40441,7 +40441,7 @@
   {
    "id": "gamblers_coin",
    "name": "Gambler's coin",
-   "text": "Crit chance is 50%. Hits that don't crit deal half; crits deal as usual.",
+   "text": "Crit chance is 50%. Hits that don't crit deal half.",
    "slot": "amulet",
    "tier": "powerful",
    "source": "unlock",
@@ -40552,7 +40552,7 @@
   {
    "id": "sheltering_kite",
    "name": "Sheltering kite",
-   "text": "At fight start: Guards itself and the other lowest-Defense ally.",
+   "text": "At fight start: Guards itself and the other ally with the least Defense.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -40730,7 +40730,7 @@
   {
    "id": "comrades_targe",
    "name": "Comrade's targe",
-   "text": "Every so often: Shield on the lowest ally (20% of max HP).",
+   "text": "Every 22 ticks (the first at 11): Shield on the ally with the lowest HP% (20% of max HP).",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -40799,7 +40799,7 @@
   {
    "id": "second_skin",
    "name": "Second skin",
-   "text": "When its Shield breaks: a new one at 50% of its peak, at most every so often.",
+   "text": "When its Shield breaks: a new one at 50% of its peak, at most once every 22 ticks.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -41023,7 +41023,7 @@
   {
    "id": "war_horn",
    "name": "War horn",
-   "text": "At fight start: 7 Might on the slowest-swinging ally.",
+   "text": "At fight start: 7 Might on the ally with the slowest basic attack.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -41391,7 +41391,7 @@
   {
    "id": "charnel_icon",
    "name": "Charnel icon",
-   "text": "When a foe falls: heals the lowest ally (29% of Attack).",
+   "text": "When a foe falls: heals the ally with the lowest HP% (29% of Attack).",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -41519,7 +41519,7 @@
   {
    "id": "bloodstone_reliquary",
    "name": "Bloodstone reliquary",
-   "text": "When an ally pays HP, the lowest other ally heals as much.",
+   "text": "When an ally pays HP, the other ally with the lowest HP% heals as much.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -42070,7 +42070,7 @@
   {
    "id": "scrying_orb",
    "name": "Scrying orb",
-   "text": "At fight start: its nearest-ready ability is ready.",
+   "text": "At fight start: its ability nearest to ready is ready.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -42330,7 +42330,7 @@
   {
    "id": "leech_idol",
    "name": "Leech idol",
-   "text": "MP it gains past full goes to the ally with the least MP.",
+   "text": "MP it gains past full goes to the ally with the lowest MP%.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -42430,7 +42430,7 @@
   {
    "id": "idol_of_the_hungry_dark",
    "name": "Idol of the hungry dark",
-   "text": "Every so often: steals a buff from a random foe, never Bulwark.",
+   "text": "Every 22 ticks (the first at 11): steals a buff from a random foe, never Bulwark.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -42484,7 +42484,7 @@
   {
    "id": "idol_of_the_blood_well",
    "name": "Idol of the blood-well",
-   "text": "When it pays HP: the ally with the least MP gains as much.",
+   "text": "When it pays HP: the ally with the lowest MP% gains as much.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -42771,7 +42771,7 @@
   {
    "id": "vultures_skull",
    "name": "Vulture's skull",
-   "text": "Hits on Stunned foes have exactly 80% Crit chance.",
+   "text": "Hits on Stunned foes have 80% Crit chance.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -42980,7 +42980,7 @@
   {
    "id": "warding_bell",
    "name": "Warding bell",
-   "text": "Every so often: lifts a debuff from the most-debuffed ally, Silence first.",
+   "text": "Every 22 ticks (the first at 11): lifts a debuff from the ally with the most debuffs, Silence first.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -43135,7 +43135,7 @@
   {
    "id": "dancers_cloak",
    "name": "Dancer's cloak",
-   "text": "On a dodge: its nearest-ready ability is ready.",
+   "text": "On a dodge: its ability nearest to ready is ready.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -43243,7 +43243,7 @@
   {
    "id": "horn_of_the_keep",
    "name": "Horn of the keep",
-   "text": "When hit: the other ally with the least MP gains half the damage as MP. A Taunt that ends during an ally's wind-up comes back.",
+   "text": "When hit: the other ally with the lowest MP% gains half the damage as MP. A Taunt that ends during an ally's wind-up comes back.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -43414,7 +43414,7 @@
   {
    "id": "stormspear",
    "name": "Stormspear",
-   "text": "Every 4th hit calls a blow on the foe with the most Shock, ignoring Taunt. The Shock stays.",
+   "text": "Every 4th hit calls a blow on the foe with the most Shock, ignoring Taunt.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
@@ -43542,7 +43542,7 @@
   {
    "id": "ember_palms",
    "name": "Ember palms",
-   "text": "Hits deal a little extra for each Burn on the target. The Burn stays.",
+   "text": "Hits deal extra damage for each Burn on the target.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
@@ -44241,7 +44241,7 @@
   {
    "id": "shared_cup",
    "name": "Shared cup",
-   "text": "Nobody's healing is wasted. The party: Healing past full goes to the lowest ally.",
+   "text": "Nobody's healing is wasted. The party: Healing past full goes to the ally with the lowest HP%.",
    "rarity": "common",
    "source": "unlock",
    "positions": [
@@ -44395,7 +44395,7 @@
   {
    "id": "first_light",
    "name": "First light",
-   "text": "Up before dawn. The party: At fight start: each ally's ability closest to ready is ready.",
+   "text": "Up before dawn. The party: At fight start: each ally's ability nearest to ready is ready.",
    "rarity": "common",
    "source": "unlock",
    "positions": [
@@ -45031,7 +45031,7 @@
   {
    "id": "the_wheel",
    "name": "The wheel",
-   "text": "Every so often, each unit takes the next seat's part.",
+   "text": "Every 22 ticks (the first at 11), each unit takes the next seat's part.",
    "rarity": "rare",
    "source": "unlock",
    "positions": [

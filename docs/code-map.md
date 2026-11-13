@@ -70,7 +70,7 @@ src/
     acts.ts                  a new run (leader, draft, known abilities); each act's map and rooms
     offers.ts                the stock and every offer: gear, mythics, tomes, recruits, formations, supplies, prices, the shop
     training.ts              learning abilities; power steps and versions
-    party.ts                 free actions between rooms: gear, formation, seats, order, swaps, supplies
+    party.ts                 free actions between rooms: gear, formation, seats, order, swaps, supplies, junk
     decisions.ts             what the pending decision offers, and choose()
     rooms.ts                 entering a room, a campfire, the next region, an event's effects
     record.ts                a run's record for balancing: every choice and free action (interface runs only)
@@ -92,7 +92,7 @@ src/
     combat.ts                the combat rule language: numbers, conditions, targeting, effects, statuses, actions
     content.ts               classes, upgrades, gear, formations, enemies, perks
     dungeons.ts              dungeons, loot, challenges, the starter, progression, the rogue block, totals, unused entries
-    party.ts                 party loadouts, challenge constraints, canEquip, handsOf
+    party.ts                 party loadouts, challenge constraints, canEquip, handsOf, the weapon a class arrives with
   sim/                       the simulation library (the interface uses content.ts and parties.ts)
     content.ts               content with patches (variants), and single fights as one-stage dungeons
     parties.ts               parties: building and listing them, plain weapons, what fits a slot
@@ -194,11 +194,11 @@ ui/
     update.ts                reloading onto a newer build
     rogue-screens.ts         the rogue screens' public face; lists them
     rogue/
-      parts.ts               the navigation, small parts and scenes the rogue screens share
+      parts.ts               the navigation, small parts and scenes the rogue screens share; a pick's answer, and a room's outcome held over its screen until ONWARD
       run.ts                 the dispatcher, the leader, the draft, the map, a boss's Destiny Shard, a fight in waiting
       rooms.ts               spoils, a captive, the shop and training, the campfire, events, choices, Muster and Drill, level up, the next region
       end.ts                 a lost fight's Destiny Shard offer, the run's end, its record, a won run's moment
-      party.ts               managing the party: seats, a unit's sheet and order, its gear
+      party.ts               managing the party: seats, the bag and its junk, a piece put on from the bag, a unit's sheet and order, its gear
       state.ts               the run and the rogue meta, saved
     battle/
       battle.ts              the battle screen: the field, messages, the party, controls, a fight's end
@@ -206,6 +206,8 @@ ui/
       effects.ts             plays the effects in step with the story: missiles, blows that follow, statuses that land with them
       tuner.ts               the FX SIZES screen: a sample fight where each look plays again and again, sized by the designer
       narrate.ts             turns the log into messages
+      tally.ts               a fight's numbers from its log: each unit's damage dealt and taken, healing, actions and statuses laid, and what each status did for the side it served
+      recap.ts               the fight's recap, opened from the summary at a fight's end: each member's numbers on one scale, its actions on a tap, and what each status did
       scene.ts               the field, backdrops, the campfire, the menus' stages and party strip; drawing the effects
       audio.ts               sound effects and music
   tools/

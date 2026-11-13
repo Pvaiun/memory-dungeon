@@ -25,7 +25,7 @@ export const ClassDef = z.strictObject({
   text: Text,
   source: UnlockSource,
   stats: StatBlock.describe("The unit's base stats."),
-  weapons: z.array(Id).min(1).describe("The weapon kinds it can use, first kind first: it arrives with that kind's plain weapon."),
+  weapons: z.array(Id).min(1).describe("The weapon kinds it can use, first kind first: it arrives with the plain weapon of its first one-handed kind."),
   armor: z.array(Id).min(1).describe("The armor types it can wear."),
   offhands: z.array(Id).min(1).describe("The offhand kinds it can hold."),
   passive: z.strictObject({ name: Text, text: Text, ...grants }).optional().describe("The class passive. Its stat grants are stats; its behaviour lives in the statuses it applies at fight start."),

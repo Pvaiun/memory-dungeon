@@ -130,7 +130,7 @@ add(
 }
 {
   // Last in the order of healing past full: after the healed unit's own piece and the healer's. Held once by the side.
-  const party = "Healing past full goes to the lowest ally.";
+  const party = "Healing past full goes to the ally with the lowest HP%.";
   add(
     formation("Shared cup", "common", "Nobody's healing is wasted.", [
       ...twice({ name: "Drinker", text: "Lifesteal.", stats: [LIFESTEAL] }),
@@ -167,7 +167,7 @@ add(
   );
 }
 {
-  const party = "At fight start: each ally's ability closest to ready is ready.";
+  const party = "At fight start: each ally's ability nearest to ready is ready.";
   add(
     formation("First light", "common", "Up before dawn.", thrice({ name: "Riser", text: NOTHING }), { text: party, statuses: ["first_light"] }),
     [held("first_light", "First light", party, { reactions: [atStart({ op: "cooldown", which: "soonest", set: "ready", to: "holder" })] })],

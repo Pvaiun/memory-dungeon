@@ -11,7 +11,7 @@ const grudge: ReactionT = { on: { event: "status_ended", status: "shield", cause
 passiveUp({
   id: "vanguard", cls: "knight",
   power: "Shield +40%.",
-  a: { name: "Stonewall", text: `At fight start: a Shield of ${Math.round(VANGUARD_SHIELD * 100)}% of max HP, for itself and the ally with the least Aggro.`, builds: ["landslide", "hunt"] },
+  a: { name: "Stonewall", text: `At fight start: a Shield of ${Math.round(VANGUARD_SHIELD * 100)}% of max HP, for itself and the other ally with the least Aggro.`, builds: ["landslide", "hunt"] },
   b: { name: "Grudge", text: `At fight start: a Shield of ${Math.round(VANGUARD_SHIELD * 100)}% of max HP. When it breaks: Taunts and is Guarded.`, builds: ["toll"] },
   form: (v, k) => ({
     reactions: [

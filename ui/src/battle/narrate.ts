@@ -232,7 +232,8 @@ export class Narrator {
     if (word === "AEGIS") return this.add(ev, { text: `${t}'s Aegis blocks the blow!`, tone: "buff" }, kind);
     if (word === "IMMUNE") return this.add(ev, { text: `${t} is immune.`, tone: "sys" }, kind);
     if (word === "BLOCKED") return this.add(ev, { text: `${t} blocks it.`, tone: "hit" }, kind);
-    const n = disp(ev.amount as number), s = disp((ev.soaked as number) || 0);
+    // A hit's amount includes what a Shield soaked of it: n is the rest, what reached HP.
+    const s = disp((ev.soaked as number) || 0), n = disp(ev.amount as number) - s;
     if (isStatus && n + s <= 0) return;
     const crit = !!ev.crit;
     let text: string;

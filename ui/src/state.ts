@@ -120,7 +120,7 @@ export function reset() {
   save();
 }
 
-/** A class's gear as set up: the plain weapon of its first kind unless the player chose otherwise. Gear no longer in the content is left out. */
+/** A class's gear as set up: the plain weapon of its first one-handed kind unless the player chose otherwise. Gear no longer in the content is left out. */
 export function gearFor(cls: string): Record<string, string> {
   const g = { ...(setup.gear[cls] ?? {}) };
   for (const slot of Object.keys(g)) if (!c.gear.has(g[slot])) delete g[slot];
