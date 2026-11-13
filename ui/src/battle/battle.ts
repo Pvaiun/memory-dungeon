@@ -17,7 +17,7 @@ import { c, className, disp, fightName, runName, shortName, shownAsIcon } from "
 import { enemyName, statusStyle, type Pose } from "../art.js";
 import { bar, button, clear, h, nav, win, type Child } from "../dom.js";
 import { nextSeed, party as partyLoadout, save, setup, SPEEDS } from "../state.js";
-import { dealsDamage, heldParts, isSpell, statusText } from "../describe.js";
+import { dealsDamage, heldParts, isSpell, statusNumbers, statusText } from "../describe.js";
 import { actionIconEl, actionIconOf, drawDigits, enemyThumb, OUTLINE, statusEl } from "../pixel.js";
 import { classHead, classSheet, enemySheet, portraitEl, sizeEl } from "../sheet.js";
 import type { Member } from "../../../src/engine/combat/rules.js";
@@ -629,7 +629,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
   }
   /**
    * Tapping a unit: the fight pauses and its whole sheet opens, with what's happening to it now on top: HP, Shield and
-   * MP, what it's winding up, and its statuses with their stacks, time left and what they do. The party's cooldowns are
+   * MP, what it's winding up, and its statuses with their stacks, time left, what they do and their numbers (a stack's worth). The party's cooldowns are
    * left out (the rows show them); a foe's stats are the fight's own, with the run's changes.
    */
   function openInspect(id: string) {
@@ -663,6 +663,8 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
         h("div", { class: "grow" },
           h("div", { class: "line" }, h("span", { class: `grow trunc ${d.label === "buff" ? "buff" : d.label === "marker" ? "dim" : "debuff"}` }, d.name.toUpperCase(), n !== null ? h("span", { class: "dim" }, d.absorb ? ` ${n}` : ` ×${n}`) : null), h("span", { class: "dim" }, left)),
           h("div", { class: "text dim small wrap" }, d.text ?? statusText(d).slice(1).join(" ")),
+          // Its own numbers, a stack's worth (Sunder's +1.5% damage taken, Weaken's −30%).
+          d.text ? sizeEl(statusNumbers(d), " · ") : null,
           // The stacks it lays, for the unit that holds it: its words leave the number to this line.
           sizeEl(heldParts([s.id], u.stats)),
         ),

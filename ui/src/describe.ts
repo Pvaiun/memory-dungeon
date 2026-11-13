@@ -358,6 +358,71 @@ export function statusText(d: StatusT): string[] {
   if (d.unremovable) out.push("Can't be removed.");
   return out;
 }
+/** The three speed stats Haste, Slow, Chill and Heat move together read as one: SPEED. */
+const SPEED_STATS = ["attack_speed", "cooldown_reduction", "cast_time_reduction"];
+/** Stats that are a switch, not a size (Taunt's and Hidden's): their words say it all. */
+const FLAG_STATS = new Set(["forced", "forbidden"]);
+const signed = (v: number, unit = "") => `${v >= 0 ? "+" : "-"}${short(Math.abs(v))}${unit}`;
+/** What a boost's tag covers, as a size line names it. */
+const boostWord = (tag: string) =>
+  tag === "physical" ? "DMG" : tag === "basic" ? "BASIC ATTACK DMG" : tag === "ability" ? "ABILITY DMG" : tag === "healing" ? "HEALING" : tag === "shield" ? "SHIELDS" : c.statuses.has(tag) ? `${status(tag).name.toUpperCase()} ADDED` : tag.toUpperCase();
+/** An amount a status deals or gives each time, in plain numbers: a flat amount, a share of its holder's max HP or MP, or so much per stack of itself. */
+function statusAmount(n: NumT, self: string): { value: string; perStack?: boolean } | null {
+  if (typeof n === "number") return { value: short(n / DISPLAY_DIV) };
+  if (n.base || n.scale.length !== 1) return null;
+  const t = n.scale[0];
+  if (t.when || t.times || t.amount || t.hp) return null;
+  if ((t.stat === "max_hp" || t.stat === "max_mp") && (!t.of || t.of === "holder" || t.of === "self")) return { value: `${short(t.ratio * 100)}% MAX` };
+  if (t.stacks === self) return { value: short(t.ratio / DISPLAY_DIV), perStack: true };
+  return null;
+}
+/** When a status's trigger or reaction goes off, as a size line says it; unknown events aren't sized. */
+function whenWord(on: { event: string; status?: string; cause?: string[] }, self: string): string | null {
+  if (on.event === "hit_taken") return "EACH HIT TAKEN";
+  if (on.event === "action_resolve") return "EACH ACTION";
+  if (on.event === "status_capped" && on.status === self) return "AT FULL STACKS";
+  if (on.event === "status_ended" && on.status === self && on.cause?.length === 1 && on.cause[0] === "expired") return "WHEN IT RUNS OUT";
+  return null;
+}
+/**
+ * A status's own numbers, for the fight's sheet under its words: what one stack does to its holder (or the whole status, when
+ * it doesn't stack): a stat it moves, the damage it deals or takes more or less of, what it deals or heals and when. Not the
+ * total for the stacks held; the icon's count is beside it. A size its words carry alone (a condition, a counter) isn't sized.
+ */
+export function statusNumbers(d: StatusT): SizePart[] {
+  const out: SizePart[] = [];
+  const each = d.stacking === "intensity" && !d.absorb;
+  const notes = (...n: (string | null | false | undefined)[]): Scale[] => n.filter((x): x is string => !!x).map((text) => ({ text }));
+  const per = each ? "PER STACK" : null;
+  const stats = (d.stats ?? []).filter((s) => !FLAG_STATS.has(s.stat));
+  // Haste, Slow, Chill: the speed stats moved alike are one line.
+  const speed = stats.filter((s) => SPEED_STATS.includes(s.stat));
+  const together = speed.length === SPEED_STATS.length && speed.every((s) => typeof s.flat === "number" && s.flat === speed[0].flat && s.pct === undefined);
+  for (const s of together ? [speed[0], ...stats.filter((x) => !SPEED_STATS.includes(x.stat))] : stats) {
+    const word = together && s === speed[0] ? "SPEED" : statCode(s.stat);
+    const kind = c.stats.get(s.stat)?.kind;
+    if (typeof s.flat === "number") out.push({ value: kind === "points" ? signed(s.flat, "%") : s.stat === "aggro" ? signed(s.flat) : signed(s.flat / DISPLAY_DIV), word, scales: notes(per) });
+    // A share of the holder's own stat: Bloodlust's doubled Lifesteal.
+    else if (s.flat && !s.flat.base && s.flat.scale.length === 1 && s.flat.scale[0].stat === s.stat && !s.flat.scale[0].when) out.push({ value: `×${short(1 + s.flat.scale[0].ratio)}`, word, scales: notes(per) });
+    if (typeof s.pct === "number") out.push({ value: signed(s.pct, "%"), word, scales: notes(per) });
+  }
+  for (const b of d.boosts ?? []) if (typeof b.pct === "number") out.push({ value: signed(b.pct, "%"), word: boostWord(b.tag), scales: notes(per) });
+  for (const t of d.taken ?? []) if (typeof t.pct === "number") out.push({ value: signed(t.pct, "%"), word: t.tag === "physical" ? "HIT DMG TAKEN" : "DMG TAKEN", scales: notes(per) });
+  if (d.block) out.push({ word: `BLOCKS A BLOW OVER ${d.block.share}% MAX HP`, scales: [] });
+  // What it deals or gives each time it goes off.
+  const sized = (e: EffectT, when: string, perStack: boolean) => {
+    if (e.op !== "damage" && e.op !== "heal" && e.op !== "mp") return;
+    const a = statusAmount(e.amount, d.id);
+    if (!a) return;
+    const word = e.op === "damage" ? (a.value.endsWith("MAX") ? "HP DMG" : "DMG") : e.op === "heal" ? "HP" : "MP";
+    out.push({ value: a.value, word, tone: e.op === "heal" ? "good" : e.op === "mp" ? "mp" : undefined, scales: notes(perStack || a.perStack ? "PER STACK" : null, when) });
+  };
+  if (d.pulse) for (const e of d.pulse.do ?? []) sized(e, `EVERY ${d.pulse.every}T`, each);
+  if (d.trigger) { const w = whenWord(d.trigger.on, d.id); if (w) for (const e of d.trigger.do ?? []) sized(e, w, each); }
+  for (const r of d.reactions ?? []) { const w = whenWord(r.on, d.id); if (w) for (const e of r.do) sized(e, w, false); }
+  return out;
+}
+
 /** A damage tag in words: the physical tag is every hit (Ward's and Incorporeal's cut), no tag all damage, statuses' own included. */
 const tagWord = (tag: string | undefined) => (tag === "physical" ? "hit" : tag ?? "all");
 const dropText = (drop: NonNullable<StatusT["drop"]>) => (drop === "all" ? "ends" : "fraction" in drop ? `loses ${Math.round(drop.fraction * 100)}% of its stacks` : `loses ${drop.count} stack${drop.count === 1 ? "" : "s"}`);
