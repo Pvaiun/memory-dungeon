@@ -23668,7 +23668,7 @@
   {
    "id": "tolling",
    "name": "Tolling",
-   "text": "Might and Haste on itself.",
+   "text": "Might and Haste on itself: its swings come faster and harder.",
    "cooldown": 24.4,
    "cast": 1,
    "mp": 0,
@@ -23814,7 +23814,7 @@
   {
    "id": "inferno",
    "name": "Inferno",
-   "text": "Fire on every foe, adding Burn. Waits until the Giant has kindled.",
+   "text": "A very long cast: a huge blast of fire on every foe, adding Burn. It waits until the Giant has kindled.",
    "cooldown": 25.2,
    "cast": 8,
    "mp": 300,
@@ -23852,7 +23852,7 @@
   {
    "id": "hailstorm",
    "name": "Hailstorm",
-   "text": "Hail on every foe, adding Chill.",
+   "text": "Hail on every foe, with a stack of Chill.",
    "cooldown": 26.4,
    "cast": 3,
    "mp": 300,
@@ -23899,7 +23899,7 @@
   {
    "id": "tempest",
    "name": "Tempest",
-   "text": "Three lightning bolts at random foes, each adding Shock.",
+   "text": "Three lightning bolts at random foes, each with a stack of Shock.",
    "cooldown": 25.6,
    "cast": 6,
    "mp": 300,
@@ -29548,7 +29548,7 @@
    "id": "burning_fist__b",
    "class": "monk",
    "name": "Fanned flames",
-   "text": "Five blows on the foe with the most Burn, each adding more.",
+   "text": "Five lighter blows on the foe with the most Burn, each adding more.",
    "cooldown": 14.5,
    "cast": 1,
    "mp": 200,
@@ -29636,7 +29636,7 @@
    "id": "burning_fist__bp",
    "class": "monk",
    "name": "Fanned flames+",
-   "text": "Five blows on the foe with the most Burn, each adding more.",
+   "text": "Five lighter blows on the foe with the most Burn, each adding more.",
    "cooldown": 14.5,
    "cast": 1,
    "mp": 200,
@@ -30438,7 +30438,7 @@
    "id": "blood_drain__a",
    "class": "vampire",
    "name": "Savage drain",
-   "text": "Three drains on a random foe, Weakening it.",
+   "text": "Three quick drains on a random foe, Weakening it.",
    "cooldown": 13.8,
    "cast": 1,
    "mp": 125,
@@ -30495,7 +30495,7 @@
    "id": "blood_drain__ap",
    "class": "vampire",
    "name": "Savage drain+",
-   "text": "Three drains on a random foe, Weakening it.",
+   "text": "Three quick drains on a random foe, Weakening it.",
    "cooldown": 13.8,
    "cast": 1,
    "mp": 125,
@@ -33817,7 +33817,7 @@
    },
    "b": {
     "name": "Fanned flames",
-    "text": "Five blows on the foe with the most Burn, each adding more."
+    "text": "Five lighter blows on the foe with the most Burn, each adding more."
    }
   },
   {
@@ -33911,7 +33911,7 @@
    "power": "+40% damage.",
    "a": {
     "name": "Savage drain",
-    "text": "Three drains on a random foe, Weakening it."
+    "text": "Three quick drains on a random foe, Weakening it."
    },
    "b": {
     "name": "Drain the well",

@@ -51,7 +51,7 @@ abilityUp({
   id: "blood_drain", cls: "vampire",
   power: "+40% damage.",
   shown: true,
-  a: { name: "Savage drain", text: "Three drains on a random foe, Weakening it.", serves: "Cuts 1 ●●●, Pact ●●" },
+  a: { name: "Savage drain", text: "Three quick drains on a random foe, Weakening it.", serves: "Cuts 1 ●●●, Pact ●●" },
   b: { name: "Drain the well", text: "Drains a random foe; the ally with the lowest MP% gains MP: 25% of the damage. No Weaken.", serves: "Barrage 1 ●●●" },
   form: (v, k) =>
     v === "a" ? { do: [phys(from("max_hp", r6((0.4 * k) / 3)), { hits: 3, apply: [{ status: "weaken" }] })] }
