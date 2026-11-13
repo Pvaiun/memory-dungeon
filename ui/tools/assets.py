@@ -6,8 +6,8 @@ Builds ui/public/assets from the director's sprite packs.
 
 The packs are found by name anywhere under the input dir, so they can be
 unzipped as they come: the "Simple 8-bit Sideview Battlers" (its Style 2
-sv_actors are the class sheets, its Weapon_Pack the weapons), the sideview
-enemies, the 400 "Status effect and various icons", Willibab's Iconset,
+sv_actors are the class sheets), the director's weapon art (weapons.json and
+its sheets), the sideview enemies, the 400 "Status effect and various icons", Willibab's Iconset,
 humanoid faces (Willi_HFP), the overworld / dungeon / castle / town tilesets
 (1x), and the "VFX Spells" pack. A pack that isn't there is skipped and its output kept
 as committed, so the output can be rebuilt one pack at a time.
@@ -16,7 +16,7 @@ The output is committed, so the interface runs without the packs: one actor
 sheet per class at its art size (with two fixes to the pack: the "chant" pose
 is drawn turned around, so it's mirrored back; the "item" pose is a
 placeholder sprite, so it's replaced by "spell"), one sprite per enemy, one
-weapon strip per piece of gear that shows in a hand, one face per class, one
+weapon strip per weapon (facing right, as drawn), one face per class, one
 recoloured 16px icon per status, the iconset, VFX frame strips, one backdrop
 per dungeon composed from the tiles, and manifest.json, which maps content ids
 to files and holds the enemy renames.
@@ -41,9 +41,8 @@ def find_file(name):
     return None
 
 ACTORS = find_dir("Style 2", "sv_actors") or find_dir("sv_actors")
-WEAPONS = find_dir("Style 2", "weapons") or find_dir("Weapon_Pack", "weapons")
-# The standalone weapon pack has more sheets (blades past 19, maces, scythes, halberds) than the battlers' own copy.
-WEAPONS_MORE = next((p for p in sorted(SRC.rglob("weapons")) if p.is_dir() and (p / "SCYTHE_01.png").exists()), None)
+# The director's weapon art: the folder that holds weapons.json and its sheets.
+WEAPON_ART = next((p.parent for p in sorted(SRC.rglob("weapons.json")) if (p.parent / "sheets").is_dir()), None)
 # The enemies: the "Sideview Enemies" folder, or the same sprites as the Retro 8-bit Monster Pack's 300% Style 2.
 ENEMIES = find_dir("Sideview Enemies") or find_dir("300%", "Style 2")
 CAMPFIRE = find_file("Small_sheet.png")
@@ -491,70 +490,33 @@ if VFX:
 else:
     print("vfx: pack not found, kept")
 
-# ─── Weapons: the pack's sheets (3 frames of 48×32 at art size) by gear id; staffs recoloured by element ───
-# Fist weapons show nothing: the fists are the sprite's own.
-WEAPON_SPRITES = {
-    "plain_dagger": "DAGGER_02", "fang": "DAGGER_05", "stiletto": "DAGGER_03", "bodkin": "DAGGER_04", "needle": "DAGGER_06",
-    "plain_sword": "BLADE_01", "wardens_blade": "BLADE_19", "oathblade": "BLADE_18", "duellists_sword": "BLADE_02", "crusader_sword": "BLADE_17",
-    "plain_bow": "BOW_01", "warbow": "BOW_05", "longbow": "BOW_02", "minstrels_bow": "BOW_04",
-    "plain_spear": "SPEAR_01", "pike": "SPEAR_03", "sentinel_spear": "SPEAR_NEW3", "skyspear": "SPEAR_02",
-    "plain_axe": "AXE_01", "rune_axe": "AXE_07", "splitter": "AXE_08", "cornerstone_axe": "AXE_04",
-    "plain_fire_staff": ("STAFF_01", "fire"), "brand_staff": ("STAFF_02", "fire"), "ember_staff": ("STAFF_06", "fire"),
-    "plain_lightning_staff": ("STAFF_01", "lightning"), "storm_rod": ("STAFF_02", "lightning"), "grounding_rod": ("STAFF_03", "lightning"),
-    "plain_wind_staff": ("STAFF_01", "wind"), "zephyr_staff": ("STAFF_05", "wind"), "tailwind_staff": ("STAFF_03", "wind"),
-    "plain_earth_staff": ("STAFF_01", "earth"), "granite_staff": ("STAFF_03", "earth"), "rootstaff": ("STAFF_02", "earth"), "heartwood_staff": ("STAFF_06", "earth"),
-    "plain_ice_staff": ("STAFF_01", "ice"), "rime_staff": ("STAFF_05", "ice"), "hoarfrost_staff": ("STAFF_03", "ice"), "glacier_staff": ("STAFF_06", "ice"),
-    "plain_light_staff": ("STAFF_01", "light"), "sunstaff": ("STAFF_04", "light"), "dawn_staff": ("STAFF_06", "light"), "chapel_staff": ("STAFF_03", "light"), "templar_staff": ("STAFF_04", "light"),
-    "plain_dark_staff": ("STAFF_01", "dark"), "nightstaff": ("STAFF_05", "dark"), "leech_staff": ("STAFF_03", "dark"), "sanguine_staff": ("STAFF_02", "dark"),
-    # the rogue mode's own pieces (a run's items show their base piece's art)
-    "headsman_axe": "SCYTHE_02", "stormbrand": "BLADE_05", "frostfang": "BLADE_24", "hunters_bow": "BOW_03", "brand_of_kings": "SPEAR_05",
-    "gravecaller": ("STAFF_06", "dark"), "cinder_rod": ("STAFF_04", "lightning"), "earthshaker": ("STAFF_05", "earth"),
+# ─── Weapons: the director's weapon art, one sheet a weapon (3 frames of 48×32 at art size, drawn at 3×), by gear id ───
+# The pack names its sheets by the weapon's name; the game's plain pieces are "plain_<kind>".
+WEAPON_IDS = {
+    "dagger": "plain_dagger", "sword": "plain_sword", "spear": "plain_spear", "axe": "plain_axe", "bow": "plain_bow",
+    "rune_sword": "plain_rune_sword", "great_weapon": "plain_great_weapon", "hammer": "plain_hammer", "mace": "plain_mace",
+    "wand": "plain_wand", "staff": "plain_staff", "fist_weapons": "plain_fist",
 }
-# Four-step ramps, darkest first, for the staffs' gems and glow; the wooden shaft keeps its colour.
-ELEMENT_RAMPS = {
-    "fire": [(120, 30, 10), (220, 80, 30), (255, 150, 60), (255, 230, 160)],
-    "ice": [(20, 70, 130), (50, 140, 210), (130, 220, 255), (235, 250, 255)],
-    "lightning": [(130, 100, 0), (220, 180, 20), (255, 225, 70), (255, 250, 200)],
-    "wind": [(30, 110, 50), (70, 180, 90), (150, 240, 150), (230, 255, 230)],
-    "earth": [(90, 55, 20), (160, 110, 50), (220, 175, 110), (250, 235, 200)],
-    "light": [(170, 140, 40), (230, 210, 90), (255, 245, 180), (255, 255, 240)],
-    "dark": [(50, 15, 90), (120, 50, 180), (200, 140, 255), (240, 220, 255)],
-}
+# Drawn for gear lists only, never in a hand (the fists are the sprite's own): the fist weapons, and the mythic that is one.
+UNHELD_KINDS = {"Fist weapons"}
+UNHELD = {"ember_palms"}
 
-def is_wood(r, g, b):
-    """The staffs' shafts are brown or grey: low saturation, or orange-brown. Everything else is the gem and its glow."""
-    mx, mn = max(r, g, b), min(r, g, b)
-    sat = 0 if mx == 0 else (mx - mn) / mx
-    return sat < 0.35 or (r > g > b and mx < 200)
-
-def recolor_staff(im, element):
-    ramp = ELEMENT_RAMPS[element]
-    px = im.load()
-    for y in range(im.height):
-        for x in range(im.width):
-            r, g, b, a = px[x, y]
-            if a == 0 or is_wood(r, g, b):
-                continue
-            l = (r * 299 + g * 587 + b * 114) / 1000
-            step = 0 if l < 90 else 1 if l < 150 else 2 if l < 215 else 3
-            px[x, y] = ramp[step] + (a,)
-    return im
-
-if WEAPONS:
+if WEAPON_ART:
+    pack = json.load(open(WEAPON_ART / "weapons.json"))
     ensure(OUT / "weapons")
-    manifest["weapons"] = {}
-    for gid, spec in WEAPON_SPRITES.items():
-        name, element = (spec, None) if isinstance(spec, str) else spec
-        src = WEAPONS / f"{name}.png"
-        if not src.exists() and WEAPONS_MORE:
-            src = WEAPONS_MORE / f"{name}.png"
-        im = mode_downscale(Image.open(src), 3)
-        if element:
-            im = recolor_staff(im, element)
+    for old in (OUT / "weapons").glob("*.png"):
+        old.unlink()
+    manifest["weapons"], manifest["weaponsUnheld"] = {}, []
+    for name, entry in pack.items():
+        gid = WEAPON_IDS.get(name, name)
+        im = mode_downscale(Image.open(WEAPON_ART / entry["sheet"]), 3)
+        assert im.size == (144, 32), f"{name}: {im.size}, not three frames of 48×32"
         im.save(OUT / "weapons" / f"{gid}.png")
         manifest["weapons"][gid] = f"weapons/{gid}.png"
+        if entry["kind"] in UNHELD_KINDS or gid in UNHELD:
+            manifest["weaponsUnheld"].append(f"weapons/{gid}.png")
     manifest["weaponFrame"] = [48, 32]
-    print(f"weapons: {len(WEAPON_SPRITES)} strips")
+    print(f"weapons: {len(pack)} strips ({len(manifest['weaponsUnheld'])} for gear lists only)")
 else:
     print("weapons: pack not found, kept")
 

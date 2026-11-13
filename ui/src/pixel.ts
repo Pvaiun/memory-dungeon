@@ -17,7 +17,7 @@
  */
 import { c } from "./content.js";
 import type { GearT } from "../../src/schema.js";
-import { gearCell, gearIcon, image, manifest, POSE, SLOT_ICON, slotCell, statusStyle, TAG_ICON, weaponArt, type Pose } from "./art.js";
+import { gearCell, gearIcon, image, manifest, POSE, SLOT_ICON, slotCell, statusStyle, TAG_ICON, weaponArt, weaponHeld, type Pose } from "./art.js";
 
 export const FRAME_W = 270;
 export const OUTLINE = "#14141e";
@@ -267,13 +267,15 @@ export function drawActor(ctx: CanvasRenderingContext2D, cls: string, pose: Pose
   ctx.drawImage(src, sx, sy, fw, fh, -Math.round((fw * scale) / 2), -fh * scale, fw * scale, fh * scale);
   const wf = weapon ? weaponFrame(pose, frame, c.gear.get(weapon)?.weapon?.kind === "bow") : null;
   const art = weaponArt(weapon);
-  const strip = art && wf !== null ? image(art) : undefined;
+  const strip = art && wf !== null && weaponHeld(art) ? image(art) : undefined;
   if (strip) {
-    // The pack's anchor: the 48×32 frame's bottom centre sits 12 pixels in front of the feet. While winding up the
+    // The battlers' anchor: the 48×32 frame's bottom centre sits 12 pixels in front of the feet. While winding up the
     // figure steps back, so the weapon goes with it (by how far the chant pose's figure sits from the waiting one).
+    // The sheets face left and the strips right, so the strip is turned to its figure's side before the figure's own flip.
     const w = flash ? silhouette(spriteOf(art!, 1)) : strip;
     const step = pose === "chant" ? Math.round(((actorBBox(cls, "chant").left + actorBBox(cls, "chant").right) - (actorBBox(cls).left + actorBBox(cls).right)) / 2) : 0;
-    ctx.drawImage(w, wf! * 48, 0, 48, 32, Math.round((step - 36) * scale), -32 * scale, 48 * scale, 32 * scale);
+    ctx.scale(-1, 1);
+    ctx.drawImage(w, wf! * 48, 0, 48, 32, -Math.round((step - 36) * scale) - 48 * scale, -32 * scale, 48 * scale, 32 * scale);
   }
   ctx.restore();
 }
@@ -571,13 +573,13 @@ export function canvasEl(cv: HTMLCanvasElement, scale = 1, cls = ""): HTMLCanvas
   return el;
 }
 export const faceEl = (cls: string, scale = 1) => canvasEl(faceOf(cls), scale, "face");
-/** The weapon strip's held frame, trimmed: the weapon on its own, for gear lists and loot on a stage. */
+/** The weapon on its own as drawn, trimmed, for gear lists and loot on a stage: the strip's held frame, or a bow's drawn one, whose arrow tells the bows apart. */
 export function weaponIcon(gearId: string): HTMLCanvasElement | null {
   const file = weaponArt(gearId);
   if (!file) return null;
   const strip = spriteOf(file, 1);
-  const cv = cv2d(32, 32);
-  cv.getContext("2d")!.drawImage(strip, 96, 0, 48, 32, -8, 0, 48, 32);
+  const cv = cv2d(48, 32);
+  cv.getContext("2d")!.drawImage(strip, c.gear.get(gearId)?.weapon?.kind === "bow" ? 0 : 96, 0, 48, 32, 0, 0, 48, 32);
   return trimCanvas(cv);
 }
 /** The weapon as a DOM element, for gear lists. */

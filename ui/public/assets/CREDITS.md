@@ -3,7 +3,7 @@
 Sprites in this folder are a processed subset of packs the director supplied for the interface:
 
 - `actors/`: "Simple 8-bit Sideview Battlers" (Style 2 sheets) by Willibab / Monsteretrope, CC BY. The chant pose is mirrored back and the item pose replaced by `ui/tools/assets.py`.
-- `weapons/`: the same pack's weapon sheets, one per piece of weapon gear; staffs recoloured by element.
+- `weapons/`: the director's own weapon art, one strip per weapon, in the battlers' weapon-sheet layout.
 - `faces/`: "Humanoid Faces" pack by Willibab, CC BY, one 36×36 face per class.
 - `enemies/`: sideview enemy sprite pack (pixel art, RPG Maker MV sideview layout). One chosen recolor each.
 - `status/`: "Status effect and various icons", recolored per status by `ui/tools/assets.py`.
