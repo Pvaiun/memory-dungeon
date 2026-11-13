@@ -12,7 +12,7 @@ passiveUp({
   id: "iron_palm", cls: "monk",
   power: "40% more Sunder.",
   a: { name: "Hundred hands", text: "Every hit it lands adds a few Sunder: its basic attacks, Double strike's second strike, and its abilities' hits; stacks scale from Attack.", builds: ["cuts"] },
-  b: { name: "Drinking palm", text: "Its basic attacks, and the second strike of its Double strike, add a few Sunder; stacks scale from Attack. Its hits on a Sundered foe heal it for a fifth of the damage.", serves: "Pact ●●, Toll ●● ⚙ riposte (half)" },
+  b: { name: "Drinking palm", text: "Its basic attacks, and the second strike of its Double strike, add a few Sunder; stacks scale from Attack. Its hits on a Sundered foe heal it for 20% of the damage.", serves: "Pact ●●, Toll ●● ⚙ riposte (half)" },
   form: (v, k) => ({
     reactions: [
       // First, so its test reads the foe as the hit found it, before this hit's own Sunder lands.

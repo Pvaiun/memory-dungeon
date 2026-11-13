@@ -33,11 +33,11 @@ export const counters: StatusT[] = [
   }),
   counter("spite", "SPITE", "A Spite for each hit taken, kept for the fight.", { cap: COUNTER.spite.cap }),
   // Spent by the swing it boosts: the drop comes with the basic attack's action_resolve, after its hits have read the stacks.
-  counter("wrath", "WRATH", "Its next basic attack deals a fifth more for each Wrath, and spends them.", {
+  counter("wrath", "WRATH", "Its next basic attack deals 20% more for each Wrath, and spends them.", {
     boosts: [{ tag: "basic", pct: COUNTER.wrath.pct }], cap: COUNTER.wrath.cap, trigger: { on: { event: "action_resolve", kind: "basic" } }, drop: "all",
   }),
   // The engine keeps the count ability by ability (an ability change's `times: casts`) and shows the highest here.
-  counter("crescendo", "CRESCENDO", "An ability deals, heals and adds a fifth more for each Crescendo it holds.", { cap: COUNTER.crescendo.cap, oncePerEvent: undefined }),
+  counter("crescendo", "CRESCENDO", "An ability deals, heals and adds 20% more for each Crescendo it holds.", { cap: COUNTER.crescendo.cap, oncePerEvent: undefined }),
   counter("cascade", "CASCADE", "A Cascade for each shatter this fight.", { cap: COUNTER.cascade.cap }),
 ];
 

@@ -9,12 +9,12 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
 
 {
   // The Smith's boosts read the unit that receives the heal or the Shield: the one in the Anvil's seat.
-  const anvil = "Draws far more. Each hit it takes adds a Wrath to the Hammer.", smith = "Its heals and Shields on the Anvil are a third bigger.";
+  const anvil = "Draws far more. Each hit it takes adds a Wrath to the Hammer.", smith = "Its heals and Shields on the Anvil are 33% bigger.";
   const onAnvil: UnitCondT = { has: "hammer_and_anvil_anvil" };
   add(
     formation("Hammer and anvil", "rare", "Every blow the Anvil takes is saved for the Hammer.", [
       { name: "Anvil", text: anvil, stats: [st("aggro", 2)], statuses: ["hammer_and_anvil_anvil"] },
-      { name: "Hammer", text: "Holds the Wrath (its next basic attack deals a fifth more for each Wrath, up to 10, and spends them)." },
+      { name: "Hammer", text: "Holds the Wrath (its next basic attack deals 20% more for each Wrath, up to 10, and spends them)." },
       { name: "Smith", text: smith, statuses: ["hammer_and_anvil_smith"] },
     ]),
     [
@@ -44,7 +44,7 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
   add(
     formation("Pyre line", "rare", "The fire outlives whatever it's burning.", [
       { name: "Keeper", text: "Taunts and is Guarded when each fight starts. Foes that hit it gain a few Burn.", statuses: ["pyre_line_keeper"] },
-      { name: "Stoker", text: "Basic attacks a third faster.", stats: [THIRD_FASTER] },
+      { name: "Stoker", text: "Basic attacks 33% faster.", stats: [THIRD_FASTER] },
       { name: "Torch", text: torch, statuses: ["pyre_line_torch"] },
     ]),
     [
@@ -55,7 +55,7 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
   );
 }
 {
-  const rime = "Whatever Chill its abilities add, they add half again as much.", breaker = "When a foe's Chill shatters, its first-slotted ability is ready.";
+  const rime = "Whatever Chill its abilities add, they add 50% more.", breaker = "When a foe's Chill shatters, its first-slotted ability is ready.";
   add(
     formation("Icefall", "rare", "Two lay frost, each its own way, and every shatter rings the third's great spell.", [
       { name: "Rime", text: rime, statuses: ["icefall_rime"] },
@@ -71,7 +71,7 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
   );
 }
 {
-  const thunder = "Each ability it casts comes round a tenth sooner for each foe it hit.", squall = "Its basic attacks also hit every other foe that holds Shock, for a third as much. Those hits strike nothing further.";
+  const thunder = "Each ability it casts comes round 10% sooner for each foe it hit.", squall = "Its basic attacks also hit every other foe that holds Shock, for 33% as much. Those hits strike nothing further.";
   add(
     formation("Storm front", "rare", "The more foes one action touches, the more it pays.", [
       { name: "Thunderhead", text: thunder, statuses: ["storm_front_thunderhead"] },
@@ -87,7 +87,7 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
   );
 }
 {
-  const lead = "While no foe is Marked, its hits Mark their target. A hit on several foes Marks the first it lands on.", mate = "Its hits on a Marked foe deal half again as much.";
+  const lead = "While no foe is Marked, its hits Mark their target. A hit on several foes Marks the first it lands on.", mate = "Its hits on a Marked foe deal 50% more.";
   add(
     formation("The pack", "rare", "The pack takes them one at a time.", [
       { name: "Lead", text: lead, statuses: ["the_pack_lead"] },
@@ -116,12 +116,12 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
   );
 }
 {
-  const soloist = "Its abilities deal half again as much. Each ability another ally casts takes a third off the cooldowns it has left.";
-  const well = "Draws far more, and Taunts when each fight starts. Whenever the Soloist finishes a cast, the Well gains a Shield: a tenth of the Well's max HP.";
+  const soloist = "Its abilities deal 50% more. Each ability another ally casts takes 33% off the cooldowns it has left.";
+  const well = "Draws far more, and Taunts when each fight starts. Whenever the Soloist finishes a cast, the Well gains a Shield: 10% of the Well's max HP.";
   add(
     formation("The stage", "rare", "Everything the other two cast brings the Soloist's spells round.", [
       { name: "Soloist", text: soloist, statuses: ["the_stage_soloist"] },
-      { name: "Conductor", text: "Its abilities come round a third faster.", stats: [THIRD_SOONER] },
+      { name: "Conductor", text: "Its abilities come round 33% faster.", stats: [THIRD_SOONER] },
       { name: "Well", text: well, stats: [st("aggro", 2)], statuses: ["the_stage_well"] },
     ]),
     [
@@ -133,7 +133,7 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
 }
 {
   // HP lost, not paid: a drawback (a drain fires no hp_paid), so no Shield soaks it and nothing reads it as a price.
-  const bleeder = "Loses a little HP every tick: half a hundredth of its max HP, never below 1 HP. It isn't damage, so no Shield soaks it. Its hits deal half again as much.";
+  const bleeder = "Loses a little HP every tick: 0.5% of its max HP, never below 1 HP. It isn't damage, so no Shield soaks it. Its hits deal 50% more.";
   const drinker = "Lifesteal, high. What its Lifesteal would heal past full becomes a Shield on it.", donor = "Its heals and Shields on the Bleeder are doubled.";
   const onBleeder: UnitCondT = { has: "blood_oath_bleeder" };
   add(
@@ -168,8 +168,8 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
   );
 }
 {
-  const sentinel = "When an ally falls, it Taunts and is Guarded.", chaplain = "An ally it revives comes back Guarded, behind a Shield of a quarter of that ally's max HP.";
-  const watcher = "When an ally falls, it gains a Shield: a quarter of its max HP.";
+  const sentinel = "When an ally falls, it Taunts and is Guarded.", chaplain = "An ally it revives comes back Guarded, behind a Shield of 25% of that ally's max HP.";
+  const watcher = "When an ally falls, it gains a Shield: 25% of its max HP.";
   add(
     formation("Vigil", "rare", "Nobody falls alone.", [
       { name: "Sentinel", text: sentinel, statuses: ["vigil_sentinel"] },
@@ -188,7 +188,7 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
   /** The Wheel's parts, each the next seat's: Wall → Blade → Well → Wall. */
   const PARTS = {
     wall: { name: "WALL", text: "Draws more. Defense up.", stats: [st("aggro", 1), st("defense", 1)], next: "blade" },
-    blade: { name: "BLADE", text: "Basic attacks a fifth faster. Crits more.", stats: [FIFTH_FASTER, critSt(1)], next: "well" },
+    blade: { name: "BLADE", text: "Basic attacks 20% faster. Crits more.", stats: [FIFTH_FASTER, critSt(1)], next: "well" },
     well: { name: "WELL", text: "Regains MP in fights. Heals on it are stronger.", stats: [st("mp_regen", 1), STRONGER_HEALS], next: "wall" },
   } as const;
   /**

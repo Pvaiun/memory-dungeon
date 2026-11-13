@@ -10,7 +10,7 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
 {
   // The Foothills' larger Shields: every ally's Shields on a Foothill are a third bigger, its own included.
   const peak = "While every ally holds a Shield, itself included, each blow it lands, swing or ability, lands a second time: the same damage again on the same foe, at once. Nothing repeats the second landing.";
-  const foothill = "Starts each fight behind a Shield: a fifth of its max HP. Every Shield it gains, that one included, is a third bigger.";
+  const foothill = "Starts each fight behind a Shield: 20% of its max HP. Every Shield it gains, that one included, is 33% bigger.";
   add(
     formation("The mountain", "legendary", "While the whole party's stone holds, the Peak's blows land twice.", [
       { name: "Peak", text: peak, statuses: ["the_mountain_peak"] },
@@ -18,15 +18,15 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
     ], { statuses: ["the_mountain"] }),
     [
       held("the_mountain_peak", "Peak", peak, { reactions: [reactIf(on("hit_lands", { notTags: ["bare"] }), { side: "allies", where: { lacks: "shield" }, atMost: 0 }, { op: "strike", of: "dealt", to: "other" })] }),
-      held("the_mountain_foothill", "Foothill", "Starts each fight behind a Shield: a fifth of its max HP.", { reactions: [atStart(give("shield", "holder", share(0.2, "max_hp")))] }),
-      held("the_mountain", "The mountain", "Its Shields on a Foothill are a third bigger.", { boosts: [{ tag: "shield", pct: against(33, { has: "the_mountain_foothill" }) }] }),
+      held("the_mountain_foothill", "Foothill", "Starts each fight behind a Shield: 20% of its max HP.", { reactions: [atStart(give("shield", "holder", share(0.2, "max_hp")))] }),
+      held("the_mountain", "The mountain", "Its Shields on a Foothill are 33% bigger.", { boosts: [{ tag: "shield", pct: against(33, { has: "the_mountain_foothill" }) }] }),
     ],
     "Landslide 3 ●●● ⚙ detonation (half)",
   );
 }
 {
   // Each ally keeps its own copy of the party's count, fed by every ally's hits (one Cut an event).
-  const party = "The party keeps one count of Cuts (a Cut for each hit it lands, kept for the fight, up to 25), and every ally's hits add to it. Every ally's hits start a fifth softer, and deal 3% more for each Cut.";
+  const party = "The party keeps one count of Cuts (a Cut for each hit it lands, kept for the fight, up to 25), and every ally's hits add to it. Every ally's hits start 20% softer, and deal 3% more for each Cut.";
   add(
     formation("The whetstone", "legendary", "Every hit the party lands sharpens the next.", thrice({ name: "Blade", text: NOTHING }), { text: party, statuses: ["the_whetstone"] }),
     [held("the_whetstone", "The whetstone", party, { reactions: [react(on("hit_lands", { whose: "team" }), give("cuts", "holder", 1))], boosts: hits({ base: -20, scale: [{ ratio: 3, stacks: "cuts", of: "holder" }] }) })],
@@ -109,7 +109,7 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
 }
 {
   const soloist = "Its first-slotted ability has no cooldown: it's cast again whenever there's the MP for it. Its wind-up, its cost and whatever it waits for stay.";
-  const voice = "All MP it would regain in a fight goes to the Soloist instead, and isn't sent on again. Each cast the Soloist finishes gives this seat a Shield: a twentieth of its max HP.";
+  const voice = "All MP it would regain in a fight goes to the Soloist instead, and isn't sent on again. Each cast the Soloist finishes gives this seat a Shield: 5% of its max HP.";
   add(
     formation("The cathedral", "legendary", "Two voices give all their mana to one, and it never stops singing.", [
       { name: "Soloist", text: soloist, statuses: ["the_cathedral_soloist"] },
@@ -127,10 +127,10 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
 }
 {
   // Lifesteal at the medium step: high, on every ally and every swing, besides casting free of MP, put it 20 points over Neutral.
-  const party = "Every ally's abilities cost HP in place of MP: half the share of its max HP that they'd cost of its max MP. No ally casts one that would leave it below a tenth of its max HP. Every ally has Lifesteal.";
+  const party = "Every ally's abilities cost HP in place of MP: 50% of the share of its max HP that they'd cost of its max MP. No ally casts one that would leave it below 10% of its max HP. Every ally has Lifesteal.";
   add(
     formation("The covenant", "legendary", "Life is the party's one currency.", thrice({ name: "Sworn", text: NOTHING }), { text: party, stats: [LIFESTEAL], statuses: ["the_covenant"] }),
-    [held("the_covenant", "The covenant", "Its abilities cost HP in place of MP: half the share, never below a tenth.", { mods: [{ hp: { pct: 50, share: true, floor: 10, instead: true } }] })],
+    [held("the_covenant", "The covenant", "Its abilities cost HP in place of MP: 50% of the share, never below 10%.", { mods: [{ hp: { pct: 50, share: true, floor: 10, instead: true } }] })],
     "Pact 3 ●●●, Barrage ●● ⚙ blood mage (key), brink (half)",
   );
 }

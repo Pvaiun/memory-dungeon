@@ -29,8 +29,8 @@ const cursed = (ratio: number) => phys(curse(ratio));
 abilityUp({
   id: "malison", cls: "hexer",
   power: "40% more damage, and 40% more of every status it adds.",
-  a: { name: "Plague", text: "Curses every foe for three fifths of Malison's damage, scaling from Attack, a fifth more for each different affliction the foe holds (Burn, Chill, Shock, Bleed, Sunder), then a few Burn, a few Shock and a few Bleed; stacks scale from Attack.", serves: "Bonfire ●●, Storm ●●, Cuts ●● ⚙ every colour (key), red rain (half)" },
-  b: { name: "Focused curse", text: "Curses the foe with the highest Attack alone: three times Malison's damage, scaling from Attack, a fifth more for each different affliction it holds (Burn, Chill, Shock, Bleed, Sunder), then three times the Bleed; stacks scale from Attack.", serves: "Hunt ●● ⚙ every colour (half)" },
+  a: { name: "Plague", text: "Curses every foe for 60% of Malison's damage, scaling from Attack, 20% more for each different affliction the foe holds (Burn, Chill, Shock, Bleed, Sunder), then a few Burn, a few Shock and a few Bleed; stacks scale from Attack.", serves: "Bonfire ●●, Storm ●●, Cuts ●● ⚙ every colour (key), red rain (half)" },
+  b: { name: "Focused curse", text: "Curses the foe with the highest Attack alone: three times Malison's damage, scaling from Attack, 20% more for each different affliction it holds (Burn, Chill, Shock, Bleed, Sunder), then three times the Bleed; stacks scale from Attack.", serves: "Hunt ●● ⚙ every colour (half)" },
   form: (v, k) =>
     v === "b"
       ? { target: T.highestAMFoe, do: [cursed(3 * HIT.light * k), apply("bleed", { stacks: stacks("few", "attack", 3 * k) })] } // No Seek: a Taunting foe catches it first.
@@ -46,7 +46,7 @@ abilityUp({
   id: "unmake", cls: "hexer",
   power: "A shorter cooldown.",
   a: { name: "Silence all", text: "Silences every foe in a wind-up and strips their buffs. Waits until a foe is in a wind-up.", builds: [] },
-  b: { name: "Mana burn", text: "Silences the casting foe with the highest Attack and strips its buffs, and drains a fifth of its MP, which the Hexer gains. Waits until a foe is in a wind-up.", builds: ["barrage"] },
+  b: { name: "Mana burn", text: "Silences the casting foe with the highest Attack and strips its buffs, and drains 20% of its MP, which the Hexer gains. Waits until a foe is in a wind-up.", builds: ["barrage"] },
   form: (v, _k, plus) => ({
     ...(plus ? { cooldown: cd("short", "unmake") } : {}),
     ...(v === "a" ? { target: { side: "foes", where: { casting: true }, pick: "all" } as TargetRuleT } : {}), // An all-pick: the Taunt and Hidden rules don't apply.

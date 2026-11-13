@@ -12,11 +12,11 @@ import { abilityUp, apply, cd, helper, kit, passiveUp, r6 } from "./kit.js";
   const song = (k: number): ReactionT[] => [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("might", { stacks: own("few", "attack", k), to: RANDOM }), { op: "mp", amount: share(k), to: RANDOM }] }];
   passiveUp({
     id: "refrain", cls: "bard",
-    power: "A bigger share: 42% of the damage dealt, not 30%, and two fifths more of any Might it gives.",
+    power: "A bigger share: 42% of the damage dealt, not 30%, and 40% more of any Might it gives.",
     a: { name: "Harmony", text: "Each basic attack that lands heals the ally with the lowest share of its HP and gives MP to the ally with the lowest share of its MP, each 30% of the damage dealt.", builds: ["barrage", "pact"],
       plus: "A bigger share: 42% of the damage dealt, not 30%." },
     b: { name: "Battle song", text: "Each basic attack that lands gives a random ally a few Might, and gives a random ally MP, 30% of the damage dealt.", builds: ["landslide", "cuts"],
-      plus: "A bigger share: 42% of the damage dealt, not 30%, and two fifths more Might." },
+      plus: "A bigger share: 42% of the damage dealt, not 30%, and 40% more Might." },
     form: (v, k) => ({ reactions: v === "a" ? harmony(k) : v === "b" ? song(k) : refrain(RANDOM, RANDOM, k) }),
   });
 }
@@ -28,8 +28,8 @@ import { abilityUp, apply, cd, helper, kit, passiveUp, r6 } from "./kit.js";
   const chorus = (k: number): Partial<AbilityT> => ({ do: [apply("might", { stacks: stacks("few", "attack", 3 * k), to: { side: "allies", pick: "highest", by: "swing" } })] });
   abilityUp({
     id: "war_ballad", cls: "bard",
-    power: "Two fifths more Might.",
-    a: { name: "Lament", text: "Might to every ally below half its max HP, twice as many. Waits until an ally is below half.", serves: "Pact 2 ●●● ⚙ brink (half)" },
+    power: "40% more Might.",
+    a: { name: "Lament", text: "Might to every ally below 50% of its max HP, twice as many. Waits until an ally is below 50%.", serves: "Pact 2 ●●● ⚙ brink (half)" },
     b: { name: "Rousing chorus", text: "All its Might goes to the ally with the slowest basic attack: three times as many as War ballad gives; stacks scale from Attack.", serves: "Landslide 2 ●●●, Hunt ●" },
     form: (v, k) => (v === "a" ? lament(2 * k) : v === "b" ? chorus(k) : { do: [might(k)] }),
   });

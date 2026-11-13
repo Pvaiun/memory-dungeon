@@ -58,7 +58,7 @@ offhand("tome", "common", "Hymnal", { stats: [sp("cooldown", "medium")], serves:
   });
 }
 {
-  const name = "Primer of frost", effect = "Each time its holder adds Chill to a foe, it adds a tenth more for each stack of Chill that foe already holds.";
+  const name = "Primer of frost", effect = "Each time its holder adds Chill to a foe, it adds 10% more for each stack of Chill that foe already holds.";
   offhand("tome", "rare", name, {
     effect, stats: [sp("cooldown", "medium"), st("attack", 2)],
     statuses: [own_(name, effect, { boosts: [{ tag: "chill", pct: { scale: [{ ratio: 10, stacks: "chill", of: "target" }] } }] })],
@@ -101,7 +101,7 @@ offhand("tome", "common", "Hymnal", { stats: [sp("cooldown", "medium")], serves:
 }
 {
   // Untyped damage of all its HP and Shield: not a hit. Every fall it causes checks again.
-  const name = "Last page", effect = "When a foe falls, every foe below a tenth of its max HP falls too.";
+  const name = "Last page", effect = "When a foe falls, every foe below 10% of its max HP falls too.";
   offhand("tome", "legendary", name, {
     effect, stats: [sp("cooldown", "high"), st("attack", 1), st("max_mp", 1)],
     statuses: [own_(name, effect, {
@@ -126,7 +126,7 @@ offhand("tome", "common", "Hymnal", { stats: [sp("cooldown", "medium")], serves:
   });
 }
 {
-  const name = "Frozen tome", effect = "Each time a foe's Chill shatters, every ally's first-slotted ability comes half its wait closer.";
+  const name = "Frozen tome", effect = "Each time a foe's Chill shatters, every ally's first-slotted ability comes 50% of its wait closer.";
   offhand("tome", "legendary", name, {
     effect, stats: [sp("cooldown", "medium"), st("attack", 2), sp("cast_speed", "medium")],
     statuses: [own_(name, effect, { reactions: [react(EV.shatter, { op: "cooldown", which: "first", set: { times: 50 }, to: TO.everyAlly })] })],
@@ -156,7 +156,7 @@ offhand("orb", "common", "Ember orb", { stats: [st("attack", 1)], serves: "Bonfi
   });
 }
 {
-  const name = "Meltwater orb", effect = "When a foe's Chill shatters, its holder regains a tenth of its max MP.";
+  const name = "Meltwater orb", effect = "When a foe's Chill shatters, its holder regains 10% of its max MP.";
   offhand("orb", "rare", name, {
     effect, stats: [st("max_mp", 1), st("attack", 1), sp("cooldown", "medium")],
     statuses: [own_(name, effect, { reactions: [react(EV.shatter, { op: "mp", amount: share(0.1, "max_mp"), to: "holder" })] })],
@@ -165,7 +165,7 @@ offhand("orb", "common", "Ember orb", { stats: [st("attack", 1)], serves: "Bonfi
 }
 {
   const name = "Smouldering orb";
-  const effect = "When a burning foe falls, every other foe gains a third of the Burn it held. A fallen foe's fire moves once: if something else in the party moves it too, it's split evenly between them.";
+  const effect = "When a burning foe falls, every other foe gains 33% of the Burn it held. A fallen foe's fire moves once: if something else in the party moves it too, it's split evenly between them.";
   offhand("orb", "rare", name, {
     effect, stats: [st("max_mp", 1), st("attack", 1), sp("cast_speed", "medium")],
     statuses: [own_(name, effect, { reactions: [{ on: on("status_ended", { status: "burn", cause: ["ko"], whose: "foe" }), split: "fire", do: [give("burn", TO.otherFoes("owner"), ofAmount(1 / 3))] }] })],
@@ -182,7 +182,7 @@ offhand("orb", "common", "Ember orb", { stats: [st("attack", 1)], serves: "Bonfi
 }
 {
   const name = "Orb of the rising sun";
-  const effect = "Each time its holder casts an ability, that ability gains a Crescendo as the cast finishes (that ability deals, heals and adds a fifth more for each Crescendo it holds, up to 10). Nothing makes its abilities cost more for the Crescendo they hold.";
+  const effect = "Each time its holder casts an ability, that ability gains a Crescendo as the cast finishes (that ability deals, heals and adds 20% more for each Crescendo it holds, up to 10). Nothing makes its abilities cost more for the Crescendo they hold.";
   offhand("orb", "legendary", name, {
     effect, stats: [st("max_mp", 1), sp("cooldown", "high"), sp("cast_speed", "medium")],
     statuses: [own_(name, effect, { mods: [{ damage: 20, heal: 20, stacks: { pct: 20 }, times: CRESCENDO }] })],
@@ -297,7 +297,7 @@ offhand("vial", "common", "Red tincture", { stats: [sp("lifesteal", "medium")], 
 offhand("vial", "common", "Hemlock phial", { stats: [critStep(1)], serves: "Thousand Cuts and the Hunt." });
 
 {
-  const name = "Crimson dregs", effect = "Its holder's hits on a bleeding foe heal its holder for a fifth of their damage.";
+  const name = "Crimson dregs", effect = "Its holder's hits on a bleeding foe heal its holder for 20% of their damage.";
   offhand("vial", "uncommon", name, {
     effect, stats: [sp("lifesteal", "medium"), st("max_hp", 1)],
     statuses: [own_(name, effect, { reactions: [reactIf(EV.hit, { unit: "other", where: { has: "bleed" } }, { op: "heal", amount: ofAmount(0.2), to: "holder" })] })],
@@ -314,7 +314,7 @@ offhand("vial", "common", "Hemlock phial", { stats: [critStep(1)], serves: "Thou
 }
 {
   // The HP price is a share of the cost as it stands after the half: twice that is the full cost.
-  const name = "Blood vial", effect = "Its holder's abilities cost half their MP, plus HP equal to their full cost. The price never takes it below 1 HP.";
+  const name = "Blood vial", effect = "Its holder's abilities cost 50% of their MP, plus HP equal to their full cost. The price never takes it below 1 HP.";
   offhand("vial", "rare", name, {
     effect, stats: [sp("lifesteal", "medium"), st("max_hp", 2)],
     statuses: [own_(name, effect, { mods: [{ mp: -50, hp: { pct: 200 } }] })],
@@ -326,7 +326,7 @@ offhand("vial", "common", "Hemlock phial", { stats: [critStep(1)], serves: "Thou
   const name = "Venom vial";
   // Each hit's third closes, then a fifth of what's left goes back on: 2/3 × 6/5 = 4/5 stays, so the wound closes a fifth. Fresh
   // Bleed the hit itself lays is in what's left, so the share back stays well under a half (at a half the wound grows without end).
-  const effect = "A foe's Bleed closes only a fifth under its holder's hits, not a third. It still closes a third under everyone else's.";
+  const effect = "A foe's Bleed closes only 20% under its holder's hits, not 33%. It still closes 33% under everyone else's.";
   const back = 0.2;
   offhand("vial", "rare", name, {
     effect, stats: [sp("lifesteal", "medium"), critStep(1), sp("crit_damage", "medium")],
@@ -337,12 +337,12 @@ offhand("vial", "common", "Hemlock phial", { stats: [critStep(1)], serves: "Thou
 {
   // A cap at half as the fight truly starts, lifted at once: what's above half is lost, and isn't damage or a price.
   const name = "Ravening draught", cut = `${id(name)}_cut`, on_ = `${id(name)}_on`;
-  const effect = "Its holder starts every fight at half its max HP, and its Lifesteal is doubled until it's healed to full. The HP it starts without isn't damage, and isn't a price paid.";
+  const effect = "Its holder starts every fight at 50% of its max HP, and its Lifesteal is doubled until it's healed to full. The HP it starts without isn't damage, and isn't a price paid.";
   offhand("vial", "rare", name, {
     effect, stats: [sp("lifesteal", "medium"), st("max_hp", 1), st("attack", 1)],
     statuses: [
       own_(name, effect, { reactions: [atFirstStart(give(cut), lift(cut, "holder", "marker"), give(on_)), reactIf(on("healed"), { side: "self", where: { hpAtLeast: 100 } }, lift(on_))] }),
-      marker(cut, "Ravening", "Starts the fight at half its max HP.", { healCap: 50 }),
+      marker(cut, "Ravening", "Starts the fight at 50% of its max HP.", { healCap: 50 }),
       state(on_, "RAVENING", "Its Lifesteal is doubled until it's healed to full.", { unremovable: true, stats: [{ stat: "lifesteal", flat: share(1, "lifesteal"), live: true }] }),
     ],
     serves: "Pact 2 ●●●, Cuts ● ⚙ brink (key)",
@@ -352,7 +352,7 @@ offhand("vial", "common", "Hemlock phial", { stats: [critStep(1)], serves: "Thou
   // Half its own Lifesteal, healed and past full, given to every other ally as healing that goes no further. At the same amount,
   // one drinker kept a whole party full.
   const name = "Heartsblood";
-  const effect = "Whatever its holder's Lifesteal would heal it for, full or not, every other ally is healed for half as much. Healing given this way isn't passed on again.";
+  const effect = "Whatever its holder's Lifesteal would heal it for, full or not, every other ally is healed for 50% as much. Healing given this way isn't passed on again.";
   const pass = { op: "heal" as const, amount: ofAmount(0.5), final: true as const, to: TO.otherAllies };
   offhand("vial", "legendary", name, {
     effect, stats: [sp("lifesteal", "high"), st("max_hp", 1), st("attack", 1)],
@@ -391,7 +391,7 @@ offhand("trophy", "common", "Geode", { stats: [st("defense", 1)], serves: "Lands
   });
 }
 {
-  const name = "Ogre's tusk", effect = "Its holder's hits on the foe with the highest current HP deal half again as much.";
+  const name = "Ogre's tusk", effect = "Its holder's hits on the foe with the highest current HP deal 50% more.";
   offhand("trophy", "rare", name, {
     effect, stats: [sp("crit_damage", "medium"), st("defense", 1), critStep(1)],
     statuses: [own_(name, effect, { boosts: hits(against(50, { topHp: true })) })],
@@ -400,7 +400,7 @@ offhand("trophy", "common", "Geode", { stats: [st("defense", 1)], serves: "Lands
 }
 {
   const name = "Dragon's tooth";
-  const effect = "A third of the damage of each crit its holder lands lands a second time on the same foe, at once. The second landing takes no new roll to dodge or to crit, and nothing repeats it.";
+  const effect = "33% of the damage of each crit its holder lands lands a second time on the same foe, at once. The second landing takes no new roll to dodge or to crit, and nothing repeats it.";
   offhand("trophy", "rare", name, {
     effect, stats: [sp("crit_damage", "medium"), critStep(1), st("attack", 1)],
     statuses: [own_(name, effect, { reactions: [react(on("hit_lands", { tags: ["crit"], notTags: ["bare"] }), { op: "strike", of: "dealt", share: 100 / 3, to: "other" })] })],
@@ -501,7 +501,7 @@ offhand("cloak", "common", "Traveller's cloak", { stats: [sp("evasion", "medium"
 offhand("cloak", "common", "Swallowtail cloak", { stats: [sp("attack_speed", "medium")], serves: "Thousand Cuts." });
 
 {
-  const name = "Hooded cloak", effect = "Each time its holder dodges a hit, it gains a Shield of a sixth of its Attack.";
+  const name = "Hooded cloak", effect = "Each time its holder dodges a hit, it gains a Shield of 17% of its Attack.";
   offhand("cloak", "uncommon", name, {
     effect, stats: [sp("evasion", "medium"), st("attack", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.dodge, give("shield", "holder", share(HIT.touch, "attack")))] })],
@@ -509,7 +509,7 @@ offhand("cloak", "common", "Swallowtail cloak", { stats: [sp("attack_speed", "me
   });
 }
 {
-  const name = "Feathered cloak", done = `${id(name)}_used`, effect = "The first time each fight its holder drops below half its max HP, it's Hidden.";
+  const name = "Feathered cloak", done = `${id(name)}_used`, effect = "The first time each fight its holder drops below 50% of its max HP, it's Hidden.";
   offhand("cloak", "uncommon", name, {
     effect, stats: [sp("evasion", "medium"), critStep(1)],
     statuses: [own_(name, effect, { reactions: [onceBelow(50, done, give("hidden"))] }), used(done, "FEATHERED CLOAK")],

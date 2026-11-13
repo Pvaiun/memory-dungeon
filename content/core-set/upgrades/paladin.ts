@@ -17,9 +17,9 @@ import { abilityUp, apply, both, cd, helper, kit, passiveUp, phys, r6 } from "./
   const verdict: StatusT["crits"] = [{ when: { debuffs: true }, times: 3 }, { when: { buffs: true, debuffs: false }, times: 3 }];
   passiveUp({
     id: "judgement", cls: "paladin",
-    power: "The bonus is +70%, not half again.",
-    a: { name: "Zeal", text: "Its hits deal half again as much to foes with a buff or a debuff, and its basic attacks add a few Burn to such a foe; stacks scale from Attack.", serves: "Bonfire 1 ●●●" },
-    b: { name: "Verdict", text: "Its hits deal half again as much to foes with a buff or a debuff, and its crit chance is tripled against such a foe.", builds: ["hunt"] },
+    power: "The bonus is +70%, not +50%.",
+    a: { name: "Zeal", text: "Its hits deal 50% more to foes with a buff or a debuff, and its basic attacks add a few Burn to such a foe; stacks scale from Attack.", serves: "Bonfire 1 ●●●" },
+    b: { name: "Verdict", text: "Its hits deal 50% more to foes with a buff or a debuff, and its crit chance is tripled against such a foe.", builds: ["hunt"] },
     form: (v, _k, plus) => ({
       boosts: judged(plus ? 70 : 50),
       ...(v === "a" ? { reactions: zeal } : {}),
@@ -62,9 +62,9 @@ import { abilityUp, apply, both, cd, helper, kit, passiveUp, phys, r6 } from "./
   });
   abilityUp({
     id: "absolve", cls: "paladin",
-    power: "Heals two fifths more; if it raises, the raised ally comes back with two fifths more HP.",
-    a: { name: "Penance", text: "Cleanses and heals both other allies for twice as much, and pays a tenth of each heal in its own HP. Not itself.", builds: ["pact"], plus: "Heals two fifths more." },
-    b: { name: "Absolution", text: "Waits until an ally falls, then revives a random knocked-out ally with a fifth of its HP.", builds: [], plus: "Raises with two fifths more HP." },
+    power: "Heals 40% more; if it raises, the raised ally comes back with 40% more HP.",
+    a: { name: "Penance", text: "Cleanses and heals both other allies for twice as much, and pays 10% of each heal in its own HP. Not itself.", builds: ["pact"], plus: "Heals 40% more." },
+    b: { name: "Absolution", text: "Waits until an ally falls, then revives a random knocked-out ally with 20% of its HP.", builds: [], plus: "Raises with 40% more HP." },
     form: (v, k) => (v === "a" ? penance(0.8 * k) : v === "b" ? absolution(0.2 * k) : absolve(0.4 * k)),
   });
 }
@@ -77,9 +77,9 @@ import { abilityUp, apply, both, cd, helper, kit, passiveUp, phys, r6 } from "./
   });
   abilityUp({
     id: "smite", cls: "paladin",
-    power: "Deals two fifths more damage.",
+    power: "Deals 40% more damage.",
     a: { name: "Hammer of dawn", text: "Damage to the foe with the highest Attack, which is Stunned. No Burn.", builds: ["landslide"] },
-    b: { name: "Pyre of judgement", text: "Damage to every burning foe, half as hard, adding a few Burn to each. Waits until a foe burns.", builds: ["bonfire", "storm"] },
+    b: { name: "Pyre of judgement", text: "Damage to every burning foe, 50% as hard, adding a few Burn to each. Waits until a foe burns.", builds: ["bonfire", "storm"] },
     form: (v, k) =>
       v === "a" ? hammer(0.5 * k)
         : v === "b" ? pyre(0.25 * k)

@@ -30,7 +30,7 @@ import { abilityUp, apply, cd, helper, kit, marker, ofHolder, passiveUp, phys, r
   ];
   passiveUp({
     id: "briar", cls: "bramble_knight",
-    power: "Two fifths more Bleed.",
+    power: "40% more Bleed.",
     a: { name: "Bloodroot", text: "Foes its Thorns wound start to bleed. While a foe bleeds, each action it takes heals the Bramble knight a little.", builds: ["pact", "toll"] },
     b: { name: "Spreading thorns", text: "When its Thorns strike, they strike a second, random foe too, and both start to bleed.", builds: ["storm"] },
     form: (v, k, plus) => ({ reactions: v === "a" ? bloodroot(k) : v === "b" ? spreading(plus ? "briar__bp" : "briar__b", k) : plain(k) }),
@@ -91,8 +91,8 @@ import { abilityUp, apply, cd, helper, kit, marker, ofHolder, passiveUp, phys, r
   helper(marker("rebuke_count", "REBUKE", "Hits taken since its last lash.", { show: "icon", stacking: "intensity" }));
   abilityUp({
     id: "bramble_lash", cls: "bramble_knight",
-    power: "Deals two fifths more damage.",
-    a: { name: "Whipping vines", text: "Lashes every foe with its thorns, for half.", serves: "Toll 2 ●●, Cuts ●● ⚙ red rain (half)" },
+    power: "Deals 40% more damage.",
+    a: { name: "Whipping vines", text: "Lashes every foe with its thorns, for 50%.", serves: "Toll 2 ●●, Cuts ●● ⚙ red rain (half)" },
     b: { name: "Rebuke", text: "Waits until it's been hit five times since its last lash, then lashes a random foe for double.", builds: ["toll"] },
     form: (v, k) => (v === "a" ? vines(2.25 * k) : v === "b" ? rebuke(9 * k) : { do: [lash(4.5 * k)] }),
   });

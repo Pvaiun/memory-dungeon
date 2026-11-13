@@ -54,7 +54,7 @@ weapon("bow", "common", "Short bow", { stats: [sp("attack_speed", "medium")], se
   });
 }
 {
-  const name = "Huntsman's bow", effect = "While no foe is Marked, its basic attacks Mark their target. Its wearer's hits on a Marked foe deal a third more.";
+  const name = "Huntsman's bow", effect = "While no foe is Marked, its basic attacks Mark their target. Its wearer's hits on a Marked foe deal 33% more.";
   weapon("bow", "rare", name, {
     effect, stats: [sp("crit_damage", "medium"), critStep(1), st("attack", 1)],
     statuses: [own_(name, effect, { boosts: hits(against(33, { has: "marked" })), reactions: [reactIf(EV.basic, NO_MARK, give("marked", "other"))] })],
@@ -79,7 +79,7 @@ weapon("bow", "common", "Short bow", { stats: [sp("attack_speed", "medium")], se
 }
 {
   const name = "Executioner's longbow";
-  const effect = "Its basic attacks ignore Taunt, and deal more the less HP their target has: a quarter more below three quarters of its max HP, half again as much below half, three quarters more below a quarter, and double below a tenth.";
+  const effect = "Its basic attacks ignore Taunt, and deal more the less HP their target has: 25% more below 75% of its max HP, 50% more below 50%, 75% more below 25%, and 100% more below 10%.";
   weapon("bow", "legendary", name, {
     effect, stats: [sp("crit_damage", "high"), critStep(1), st("attack", 1)],
     statuses: [own_(name, effect, { seek: "basic", boosts: [{ tag: "basic", pct: { scale: [75, 50, 25, 10].map((hpBelow) => ({ ratio: 25, when: { hpBelow }, of: "target" as const })) } }] })],
@@ -101,7 +101,7 @@ weapon("rune_sword", "common", "Barrow blade", { stats: [st("max_hp", 1)], serve
   });
 }
 {
-  const name = "Sigil blade", effect = "When each fight starts, its wearer gains a Shield of a third of its max MP.";
+  const name = "Sigil blade", effect = "When each fight starts, its wearer gains a Shield of 33% of its max MP.";
   weapon("rune_sword", "uncommon", name, {
     effect, stats: [st("mp_regen", 1), st("max_mp", 1)],
     statuses: [own_(name, effect, { reactions: [atStart(give("shield", "holder", share(1 / 3, "max_mp")))] })],
@@ -109,7 +109,7 @@ weapon("rune_sword", "common", "Barrow blade", { stats: [st("max_hp", 1)], serve
   });
 }
 {
-  const name = "Wellblade", effect = "Each basic attack it lands restores a tenth of its wearer's max MP.";
+  const name = "Wellblade", effect = "Each basic attack it lands restores 10% of its wearer's max MP.";
   weapon("rune_sword", "uncommon", name, {
     effect, stats: [st("mp_regen", 1), sp("cooldown", "medium")],
     statuses: [own_(name, effect, { reactions: [react(EV.basic, { op: "mp", amount: share(0.1, "max_mp"), to: "holder" })] })],
@@ -118,7 +118,7 @@ weapon("rune_sword", "common", "Barrow blade", { stats: [st("max_hp", 1)], serve
 }
 {
   // The shattered foe's cold, halved, to the other foe that holds the most (by draw where none holds any); passed, so a chain dies down.
-  const name = "Winter's chain", effect = "When a foe's Chill shatters, the other foe with the most Chill gains half the Chill the shattered foe held.";
+  const name = "Winter's chain", effect = "When a foe's Chill shatters, the other foe with the most Chill gains 50% of the Chill the shattered foe held.";
   weapon("rune_sword", "rare", name, {
     effect, stats: [st("mp_regen", 1), st("max_hp", 1), sp("cooldown", "medium")],
     statuses: [own_(name, effect, { reactions: [react(EV.shatter, give("chill", { side: "foes", pick: "highest", by: { stacks: "chill" }, exclude: "owner" }, ofAmount(0.5), { passed: true }))] })],
@@ -136,7 +136,7 @@ weapon("rune_sword", "common", "Barrow blade", { stats: [st("max_hp", 1)], serve
 {
   // The latest cast's half-cost is held as a tally beside the doubled swing; a second cast replaces both, and the swing spends them.
   const name = "Spellbinder", on_ = `${id(name)}_on`, mp = `${id(name)}_mp`;
-  const effect = "After each ability its wearer casts, its next basic attack deals double, and when it lands its wearer regains half the MP that ability cost it. A second cast before the swing takes the first's place; it doesn't add to it.";
+  const effect = "After each ability its wearer casts, its next basic attack deals double, and when it lands its wearer regains 50% of the MP that ability cost it. A second cast before the swing takes the first's place; it doesn't add to it.";
   weapon("rune_sword", "rare", name, {
     effect, stats: [st("mp_regen", 1), sp("cooldown", "medium"), st("max_mp", 1)],
     statuses: [
@@ -164,7 +164,7 @@ weapon("rune_sword", "common", "Barrow blade", { stats: [st("max_hp", 1)], serve
 {
   // Cascade is the party's count: each ally keeps its own copy, fed by every shatter.
   const name = "Glacier blade";
-  const effect = "Its party counts Cascades (a Cascade for each shatter this fight, up to 10). Its wearer's abilities deal a fifth more, and add a fifth more Chill and Shock, for each Cascade.";
+  const effect = "Its party counts Cascades (a Cascade for each shatter this fight, up to 10). Its wearer's abilities deal 20% more, and add 20% more Chill and Shock, for each Cascade.";
   weapon("rune_sword", "legendary", name, {
     effect, stats: [st("mp_regen", 1), sp("cooldown", "high"), st("max_hp", 1)],
     statuses: [own_(name, effect, {
@@ -181,7 +181,7 @@ weapon("hammer", "common", "War hammer", { stats: [st("defense", 1)], serves: "L
 weapon("hammer", "common", "Horseman's hammer", { stats: [st("max_hp", 1), st("aggro", 1)], trade: "light", serves: "the Toll (HP, Aggro)" });
 
 {
-  const name = "Warden's hammer", effect = "Its basic attacks deal extra damage equal to a tenth of its wearer's Defense.";
+  const name = "Warden's hammer", effect = "Its basic attacks deal extra damage equal to 10% of its wearer's Defense.";
   weapon("hammer", "uncommon", name, {
     effect, stats: [st("defense", 1)],
     statuses: [own_(name, effect, { adds: [{ on: "basic", amount: share(0.1, "defense") }] })],
@@ -189,7 +189,7 @@ weapon("hammer", "common", "Horseman's hammer", { stats: [st("max_hp", 1), st("a
   });
 }
 {
-  const name = "Mason's hammer", effect = "Each basic attack it lands gives its wearer a Shield of half the damage dealt.";
+  const name = "Mason's hammer", effect = "Each basic attack it lands gives its wearer a Shield of 50% of the damage dealt.";
   weapon("hammer", "uncommon", name, {
     effect, stats: [st("defense", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.basic, give("shield", "holder", ofAmount(0.5)))] })],
@@ -209,7 +209,7 @@ weapon("hammer", "common", "Horseman's hammer", { stats: [st("max_hp", 1), st("a
   });
 }
 {
-  const name = "Grudgebearer", effect = "Each hit its wearer takes gives it a Wrath (its next basic attack deals a fifth more for each Wrath, up to 10, and spends them).";
+  const name = "Grudgebearer", effect = "Each hit its wearer takes gives it a Wrath (its next basic attack deals 20% more for each Wrath, up to 10, and spends them).";
   weapon("hammer", "rare", name, {
     effect, stats: [st("defense", 1), st("aggro", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.struck, give("wrath", "holder", 1))] })],
@@ -217,7 +217,7 @@ weapon("hammer", "common", "Horseman's hammer", { stats: [st("max_hp", 1), st("a
   });
 }
 {
-  const name = "Mountainfall", effect = "Its basic attacks deal extra damage equal to a fifth of its wearer's max HP.";
+  const name = "Mountainfall", effect = "Its basic attacks deal extra damage equal to 20% of its wearer's max HP.";
   const hit = weaponHit("hammer") as Exclude<NumT, number>;
   weapon("hammer", "rare", name, {
     effect, stats: [st("defense", 1), st("max_hp", 1)],
@@ -226,7 +226,7 @@ weapon("hammer", "common", "Horseman's hammer", { stats: [st("max_hp", 1), st("a
   });
 }
 {
-  const name = "Cornerstone hammer", effect = "Its basic attacks deal extra damage equal to half of all the Shield its party holds, its wearer's own included. The Shields stay.";
+  const name = "Cornerstone hammer", effect = "Its basic attacks deal extra damage equal to 50% of all the Shield its party holds, its wearer's own included. The Shields stay.";
   weapon("hammer", "legendary", name, {
     effect, stats: [st("defense", 2), sp("crit_damage", "medium")],
     statuses: [own_(name, effect, { adds: [{ on: "basic", amount: { scale: [{ ratio: 0.5, count: { side: "allies", stacks: "shield" } }] } }] })],
@@ -248,7 +248,7 @@ weapon("mace", "common", "Friar's mace", { stats: [st("max_hp", 1), st("mp_regen
   });
 }
 {
-  const name = "Mender's mace", effect = "Every so often, the ally with the lowest share of max HP is healed for a fifth of its wearer's max HP.";
+  const name = "Mender's mace", effect = "Every so often, the ally with the lowest share of max HP is healed for 20% of its wearer's max HP.";
   weapon("mace", "uncommon", name, {
     effect, stats: [st("max_hp", 2), st("mp_regen", 1)],
     statuses: [own_(name, effect, { pulse: { every: SO_OFTEN, do: [{ op: "heal", amount: share(0.2, "max_hp"), to: TO.lowestAlly }] } })],
@@ -266,14 +266,14 @@ weapon("mace", "common", "Friar's mace", { stats: [st("max_hp", 1), st("mp_regen
 {
   // A tally on the healed ally, half the heal a point (what went past full too), added to its next hit and spent by it.
   const name = "Saint's mace", tally = `${id(name)}_blessing`;
-  const effect = "Each time its wearer heals an ally, that ally's next hit deals extra damage equal to half the heal. Heals that come before that hit add up.";
+  const effect = "Each time its wearer heals an ally, that ally's next hit deals extra damage equal to 50% of the heal. Heals that come before that hit add up.";
   const given = { whose: "team" as const, other: "holder" as const, notTags: ["pulse"] };
   weapon("mace", "rare", name, {
     effect, stats: [st("max_hp", 1), st("mp_regen", 2), sp("cooldown", "medium")],
     statuses: [
       // What lands, not what's cast: healing past full (or past a cap on healing) gives nothing.
       own_(name, effect, { reactions: [react(on("healed", given), give(tally, "owner", ofAmount(0.5)))] }),
-      { id: tally, name: "BLESSED", text: "Its next hit deals extra damage: half the heals it was given.", label: "buff", show: "icon", stacking: "intensity", adds: [{ on: "physical", amount: 1 }], trigger: { on: EV.hit }, drop: "all" },
+      { id: tally, name: "BLESSED", text: "Its next hit deals extra damage: 50% of the heals it was given.", label: "buff", show: "icon", stacking: "intensity", adds: [{ on: "physical", amount: 1 }], trigger: { on: EV.hit }, drop: "all" },
     ],
     serves: "Pact 2 ●●●, Landslide ●●",
   });
@@ -288,7 +288,7 @@ weapon("mace", "common", "Friar's mace", { stats: [st("max_hp", 1), st("mp_regen
 }
 {
   const name = "Martyr's mace";
-  const effect = "Its basic attacks deal more the lower its wearer's HP: half again as much below seven tenths of its max HP, double below half, two and a half times below a third, and triple below a tenth. Below a third of its max HP, each one that lands also heals its wearer for the damage dealt.";
+  const effect = "Its basic attacks deal more the lower its wearer's HP: 50% more below 70% of its max HP, 100% more below 50%, 150% more below 33%, and 200% more below 10%. Below 33% of its max HP, each one that lands also heals its wearer for the damage dealt.";
   weapon("mace", "legendary", name, {
     effect, stats: [st("max_hp", 2), st("defense", 1), st("mp_regen", 2)],
     statuses: [own_(name, effect, {
@@ -314,7 +314,7 @@ weapon("staff", "common", "Rowan staff", { stats: [sp("cast_speed", "medium"), s
 weapon("staff", "common", "Willow staff", { stats: [sp("cast_speed", "medium"), st("mp_regen", 1)], serves: "the healers, and Barrage's well (Cast speed, MP regen)" });
 
 {
-  const name = "Shepherd's staff", effect = "Each ability its wearer casts gives the ally with the least MP half the MP that ability cost it.";
+  const name = "Shepherd's staff", effect = "Each ability its wearer casts gives the ally with the least MP 50% of the MP that ability cost it.";
   weapon("staff", "uncommon", name, {
     effect, stats: [sp("cast_speed", "medium"), sp("cooldown", "medium"), st("mp_regen", 1)],
     statuses: [own_(name, effect, { reactions: [react(on("action_resolve", { kind: "ability", paid: true }), { op: "mp", amount: ofAmount(0.5), to: TO.leastMpAlly })] })],
@@ -322,7 +322,7 @@ weapon("staff", "common", "Willow staff", { stats: [sp("cast_speed", "medium"), 
   });
 }
 {
-  const name = "Canopy staff", effect = "When each fight starts, its wearer and the other ally with the least max HP each gain a Shield of a sixth of its wearer's Attack.";
+  const name = "Canopy staff", effect = "When each fight starts, its wearer and the other ally with the least max HP each gain a Shield of 17% of its wearer's Attack.";
   weapon("staff", "uncommon", name, {
     effect, stats: [sp("cast_speed", "medium"), st("mp_regen", 1), st("max_hp", 1)],
     statuses: [own_(name, effect, { reactions: [atStart(give("shield", "holder", share(1 / 6, "attack")), give("shield", { side: "others", pick: "lowest", by: { stat: "max_hp" } }, share(1 / 6, "attack")))] })],
@@ -330,7 +330,7 @@ weapon("staff", "common", "Willow staff", { stats: [sp("cast_speed", "medium"), 
   });
 }
 {
-  const name = "Vesper staff", effect = "Each ability its wearer casts heals the ally with the lowest share of max HP for a tenth of its wearer's Attack.";
+  const name = "Vesper staff", effect = "Each ability its wearer casts heals the ally with the lowest share of max HP for 10% of its wearer's Attack.";
   weapon("staff", "uncommon", name, {
     effect, stats: [sp("cast_speed", "medium"), st("attack", 1), st("mp_regen", 1)],
     statuses: [own_(name, effect, { reactions: [react(CAST, { op: "heal", amount: share(0.1, "attack"), to: TO.lowestAlly })] })],
@@ -338,7 +338,7 @@ weapon("staff", "common", "Willow staff", { stats: [sp("cast_speed", "medium"), 
   });
 }
 {
-  const name = "Ritual staff", effect = "Its wearer's abilities wind up half again as long, deal half again as much and add half again as many stacks.";
+  const name = "Ritual staff", effect = "Its wearer's abilities wind up 50% longer, deal 50% more and add 50% more stacks.";
   weapon("staff", "rare", name, {
     effect, stats: [sp("cast_speed", "medium"), st("attack", 2), st("max_mp", 1)],
     statuses: [own_(name, effect, { mods: [{ wind: 50, damage: 50, stacks: { pct: 50 } }] })],
@@ -382,7 +382,7 @@ weapon("great_weapon", "common", "Halberd", { stats: [st("attack", 1), st("max_h
   });
 }
 {
-  const name = "Giantsbane", effect = "Its basic attacks deal half again as much to a foe above half its max HP.";
+  const name = "Giantsbane", effect = "Its basic attacks deal 50% more to a foe above 50% of its max HP.";
   weapon("great_weapon", "uncommon", name, {
     effect, stats: [st("attack", 1), st("max_hp", 2)],
     statuses: [own_(name, effect, { boosts: [{ tag: "basic", pct: against(50, { hpAtLeast: 50 }) }] })],
@@ -424,7 +424,7 @@ weapon("great_weapon", "common", "Halberd", { stats: [st("attack", 1), st("max_h
 }
 {
   // Half as often is its shape (Attack speed −100 counts no step).
-  const name = "Worldbreaker", effect = "Its basic attacks come half as often, deal triple, and Stun their target.";
+  const name = "Worldbreaker", effect = "Its basic attacks come 50% less often, deal triple, and Stun their target.";
   weapon("great_weapon", "legendary", name, {
     effect, stats: [{ stat: "attack_speed", flat: -100 }, st("attack", 2), sp("crit_damage", "high"), st("max_hp", 1)],
     statuses: [own_(name, effect, { boosts: [{ tag: "basic", pct: 200 }], reactions: [react(EV.basic, give("stun", "other"))] })],
@@ -434,7 +434,7 @@ weapon("great_weapon", "common", "Halberd", { stats: [st("attack", 1), st("max_h
 {
   const name = "Twinfall";
   // Half again, not double: the second landing is half the first (the held-back lever: half again where the condition holds all fight).
-  const effect = "Each hit its wearer lands, a basic attack's or an ability's, lands a second time a tick later: half the damage again, on the same foe. The second carries none of the first's statuses, and nothing repeats it.";
+  const effect = "Each hit its wearer lands, a basic attack's or an ability's, lands a second time a tick later: 50% of the damage again, on the same foe. The second carries none of the first's statuses, and nothing repeats it.";
   weapon("great_weapon", "legendary", name, {
     effect, stats: [st("attack", 2), st("max_hp", 2), sp("crit_damage", "medium")],
     statuses: [own_(name, effect, { reactions: [react(on("hit_lands", { notTags: ["bare"] }), { op: "strike", of: "dealt", share: 50, after: 1, to: "other" })] })],

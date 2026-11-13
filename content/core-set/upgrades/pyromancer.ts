@@ -11,9 +11,9 @@ import { abilityUp, apply, cd, helper, hitOf, kit, passiveUp, phys } from "./kit
 const stoke = (to: ToT, mult: number): EffectT => apply("burn", { stacks: own("few", "attack", BURN_STACKS * mult), to });
 passiveUp({
   id: "stoke", cls: "pyromancer",
-  power: "Each cast stokes two fifths more Burn.",
+  power: "Each cast stokes 40% more Burn.",
   a: { name: "Kindling", text: "Its basic attacks add a few Burn to their target, in place of its casts; stacks scale from Attack.", serves: "Bonfire 1 ●●● ⚙ lead's colour (half)" },
-  b: { name: "Wildfire", text: "Each ability it casts adds a few Burn to every burning foe, half as much to each; stacks scale from Attack.", builds: ["storm"] },
+  b: { name: "Wildfire", text: "Each ability it casts adds a few Burn to every burning foe, 50% as much to each; stacks scale from Attack.", builds: ["storm"] },
   form: (v, k) => ({
     reactions: [
       v === "a" ? { on: { event: "hit_lands", kind: "basic" }, do: [stoke("other", k)] }
@@ -27,7 +27,7 @@ const fireboltBurn = (mult: number) => [{ status: "burn", stacks: stacks("severa
 abilityUp({
   id: "firebolt", cls: "pyromancer",
   power: "40% more Burn.",
-  a: { name: "Slow burn", text: "Deals half the damage, scaling from Attack, to the foe with the most Burn, and adds twice the Burn; stacks scale from Attack.", builds: ["bonfire"] },
+  a: { name: "Slow burn", text: "Deals 50% of the damage, scaling from Attack, to the foe with the most Burn, and adds twice the Burn; stacks scale from Attack.", builds: ["bonfire"] },
   b: { name: "Flash bolt", text: "A quick bolt: deals damage that scales from Attack to the foe with the most Burn, and adds a few Burn; stacks scale from Attack.", builds: ["barrage", "cuts"] },
   form: (v, k) =>
     v === "a" ? { do: [phys(from("attack", HIT.light / 2), { apply: fireboltBurn(2 * k) })] }

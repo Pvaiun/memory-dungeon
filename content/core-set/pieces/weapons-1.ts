@@ -140,7 +140,7 @@ weapon("fist", "common", "Red talons", { stats: [sp("lifesteal", "medium")], ser
   });
 }
 {
-  const name = "Lamprey claws", effect = "Each extra strike its wearer lands heals it for a tenth of its max HP.";
+  const name = "Lamprey claws", effect = "Each extra strike its wearer lands heals it for 10% of its max HP.";
   weapon("fist", "uncommon", name, {
     effect, stats: [sp("double_strike", "medium"), st("max_hp", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.extra, { op: "heal", amount: share(0.1, "max_hp"), to: "holder" })] })],
@@ -149,19 +149,19 @@ weapon("fist", "common", "Red talons", { stats: [sp("lifesteal", "medium")], ser
 }
 {
   const name = "Gorged claws", on_ = `${id(name)}_on`;
-  const effect = "While its wearer is below half its max HP, its basic attacks come a third faster.";
+  const effect = "While its wearer is below 50% of its max HP, its basic attacks come 33% faster.";
   weapon("fist", "rare", name, {
     effect, stats: [sp("double_strike", "medium"), sp("lifesteal", "medium"), st("max_hp", 1)],
     statuses: [
       own_(name, effect, { reactions: whileHp(on_, 50, true) }),
-      switched(on_, "GORGED", "Its basic attacks come a third faster.", { stats: [{ stat: "attack_speed", flat: 33 }] }),
+      switched(on_, "GORGED", "Its basic attacks come 33% faster.", { stats: [{ stat: "attack_speed", flat: 33 }] }),
     ],
     serves: "Pact 2 ●●●, Cuts ●● ⚙ brink (half)",
   });
 }
 {
   // A twentieth of the fire the foe holds as the hit lands, in fractions of a stack.
-  const name = "Bellows wraps", effect = "Each hit its wearer lands on a burning foe adds Burn to it: a twentieth of what it holds.";
+  const name = "Bellows wraps", effect = "Each hit its wearer lands on a burning foe adds Burn to it: 5% of what it holds.";
   weapon("fist", "rare", name, {
     effect, stats: [sp("double_strike", "medium"), sp("attack_speed", "medium"), sp("evasion", "medium")],
     statuses: [own_(name, effect, { reactions: [reactIf(EV.hit, { unit: "other", where: { has: "burn" } }, give("burn", "other", stacksOf("burn", 0.05, "target")))] })],
@@ -181,7 +181,7 @@ weapon("fist", "common", "Red talons", { stats: [sp("lifesteal", "medium")], ser
 {
   // The leap is a bonus hit on another foe (tagged wide); every wide hit its basic attacks land gives the MP.
   const name = "Forked knuckles";
-  const effect = "Its basic attacks also hit a second, random foe for half, carrying what the swing carries. Each time one of its basic attacks hits a foe other than its target, its wearer regains a twentieth of its max MP.";
+  const effect = "Its basic attacks also hit a second, random foe for 50%, carrying what the swing carries. Each time one of its basic attacks hits a foe other than its target, its wearer regains 5% of its max MP.";
   weapon("fist", "rare", name, {
     effect, stats: [sp("double_strike", "medium"), sp("attack_speed", "medium"), st("max_hp", 1)],
     statuses: [own_(name, effect, {
@@ -193,7 +193,7 @@ weapon("fist", "common", "Red talons", { stats: [sp("lifesteal", "medium")], ser
 }
 {
   const name = "Flurry wraps";
-  const effect = "Its extra strikes can strike again: each one rolls Double strike for one more, at most two more after the first, and each is a fifth weaker than the strike before it.";
+  const effect = "Its extra strikes can strike again: each one rolls Double strike for one more, at most two more after the first, and each is 20% weaker than the strike before it.";
   weapon("fist", "legendary", name, {
     effect, stats: [sp("double_strike", "high"), sp("attack_speed", "medium"), sp("lifesteal", "medium")],
     statuses: [own_(name, effect, { strike: { scale: "double_strike", to: "target", chain: { times: 2, share: 80 } } })],
@@ -234,7 +234,7 @@ weapon("wand", "common", "Hazel wand", { stats: [sp("cooldown", "medium"), st("m
   });
 }
 {
-  const name = "Tithe wand", effect = "Each basic attack it lands gives the ally with the least MP some MP: a tenth of its wearer's Attack.";
+  const name = "Tithe wand", effect = "Each basic attack it lands gives the ally with the least MP some MP: 10% of its wearer's Attack.";
   weapon("wand", "uncommon", name, {
     effect, stats: [sp("cooldown", "medium"), sp("attack_speed", "medium"), st("mp_regen", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.basic, { op: "mp", amount: share(0.1, "attack"), to: TO.leastMpAlly })] })],
@@ -242,7 +242,7 @@ weapon("wand", "common", "Hazel wand", { stats: [sp("cooldown", "medium"), st("m
   });
 }
 {
-  const name = "Chain wand", effect = "Its basic attacks also hit up to two other random foes, each for half, carrying what the swing carries.";
+  const name = "Chain wand", effect = "Its basic attacks also hit up to two other random foes, each for 50%, carrying what the swing carries.";
   weapon("wand", "rare", name, {
     effect, stats: [sp("cooldown", "medium"), sp("attack_speed", "medium"), st("attack", 1), st("mp_regen", 1)],
     statuses: [own_(name, effect, { strike: { to: { side: "foes", pick: "random", count: 2, exclude: "targets" }, share: 50, kind: "bonus", carry: true } })],
@@ -267,7 +267,7 @@ weapon("wand", "common", "Hazel wand", { stats: [sp("cooldown", "medium"), st("m
   });
 }
 {
-  const name = "Baton", effect = "Each basic attack it lands brings its wearer's first-slotted ability round sooner: a fifth of the wait that's left.";
+  const name = "Baton", effect = "Each basic attack it lands brings its wearer's first-slotted ability round sooner: 20% of the wait that's left.";
   weapon("wand", "legendary", name, {
     effect, stats: [sp("cooldown", "medium"), sp("attack_speed", "high"), sp("cast_speed", "medium"), st("mp_regen", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.basic, { op: "cooldown", which: "first", set: { times: 80 }, to: "holder" })] })],
@@ -301,7 +301,7 @@ weapon("sword", "common", "Gilded sword", { stats: [st("max_hp", 1)], serves: "T
   });
 }
 {
-  const name = "Mercy's edge", effect = "Each basic attack it lands heals the ally with the lowest share of max HP for a third of the damage dealt.";
+  const name = "Mercy's edge", effect = "Each basic attack it lands heals the ally with the lowest share of max HP for 33% of the damage dealt.";
   weapon("sword", "uncommon", name, {
     effect, stats: [st("attack", 1), st("max_hp", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.basic, { op: "heal", amount: ofAmount(1 / 3), to: TO.lowestAlly })] })],
@@ -310,7 +310,7 @@ weapon("sword", "common", "Gilded sword", { stats: [st("max_hp", 1)], serves: "T
 }
 {
   const name = "Gravemark";
-  const effect = "Its wearer's hits on a Marked foe deal half again as much. When a Marked foe falls and no foe is left Marked, the foe with the lowest current HP is Marked.";
+  const effect = "Its wearer's hits on a Marked foe deal 50% more. When a Marked foe falls and no foe is left Marked, the foe with the lowest current HP is Marked.";
   weapon("sword", "rare", name, {
     effect, stats: [st("attack", 2), critStep(1)],
     statuses: [own_(name, effect, {
@@ -342,7 +342,7 @@ weapon("sword", "common", "Gilded sword", { stats: [st("max_hp", 1)], serves: "T
 {
   // The price is the swing's own (an HP price of the basic attack); the swing reads what it paid.
   const name = "Bloodletter";
-  const effect = "Each of its basic attacks pays HP: a twentieth of its wearer's max HP. The basic attack deals extra damage equal to four times what it paid. The price never takes its wearer below 1 HP.";
+  const effect = "Each of its basic attacks pays HP: 5% of its wearer's max HP. The basic attack deals extra damage equal to four times what it paid. The price never takes its wearer below 1 HP.";
   const hit = weaponHit("sword") as Exclude<NumT, number>;
   weapon("sword", "rare", name, {
     effect, stats: [st("attack", 1), st("max_hp", 2)],
@@ -352,7 +352,7 @@ weapon("sword", "common", "Gilded sword", { stats: [st("max_hp", 1)], serves: "T
   });
 }
 {
-  const name = "Stormbrand", effect = "Each hit its wearer lands deals extra damage for each Shock the foes hold: half a percent of its wearer's Attack a stack. The Shock stays.";
+  const name = "Stormbrand", effect = "Each hit its wearer lands deals extra damage for each Shock the foes hold: 0.5% of its wearer's Attack a stack. The Shock stays.";
   weapon("sword", "legendary", name, {
     effect, stats: [st("attack", 2), critStep(2)],
     statuses: [own_(name, effect, { adds: [{ on: "physical", amount: { scale: [{ ratio: 0.005, count: { side: "foes", stacks: "shock" }, times: { stat: "attack", of: "holder" } }] } }] })],
@@ -374,7 +374,7 @@ weapon("spear", "common", "Boar spear", { stats: [st("attack", 1)], serves: "Hun
   });
 }
 {
-  const name = "Victor's spear", effect = "When its wearer lands a killing blow, it gains a Shield equal to a quarter of its Attack.";
+  const name = "Victor's spear", effect = "When its wearer lands a killing blow, it gains a Shield equal to 25% of its Attack.";
   weapon("spear", "uncommon", name, {
     effect, stats: [st("aggro", 1), st("attack", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.kill, give("shield", "holder", share(0.25, "attack")))] })],
@@ -391,7 +391,7 @@ weapon("spear", "common", "Boar spear", { stats: [st("attack", 1)], serves: "Hun
 }
 {
   const name = "Hunting spear";
-  const effect = "Each hit its wearer lands on a foe below half its max HP lands twice. The second landing is the same damage again, and is never repeated: not by this, and not by anything else.";
+  const effect = "Each hit its wearer lands on a foe below 50% of its max HP lands twice. The second landing is the same damage again, and is never repeated: not by this, and not by anything else.";
   weapon("spear", "rare", name, {
     effect, stats: [critStep(1), st("attack", 2)],
     statuses: [own_(name, effect, { reactions: [react(on("hit_lands", { notTags: ["bare"], wasBelow: 50 }), { op: "strike", of: "dealt", to: "other" })] })],
@@ -457,7 +457,7 @@ weapon("axe", "common", "Cleaver", { stats: [st("attack", 1)], serves: "Hunt" })
 }
 {
   // Its own Lifesteal again: a heal of the damage at the wearer's Lifesteal, on a foe that was below half as the hit landed.
-  const name = "Hungry axe", effect = "Its wearer's Lifesteal is doubled on hits against a foe below half its max HP.";
+  const name = "Hungry axe", effect = "Its wearer's Lifesteal is doubled on hits against a foe below 50% of its max HP.";
   weapon("axe", "uncommon", name, {
     effect, stats: [sp("lifesteal", "medium")],
     statuses: [own_(name, effect, { reactions: [react(on("hit_lands", { wasBelow: 50 }), { op: "heal", amount: { scale: [{ ratio: 0.01, amount: true, times: { stat: "lifesteal", of: "holder" } }] }, to: "holder" })] })],
@@ -473,7 +473,7 @@ weapon("axe", "common", "Cleaver", { stats: [st("attack", 1)], serves: "Hunt" })
   });
 }
 {
-  const name = "Executioner's axe", effect = "Its wearer's hits on a foe below a quarter of its max HP deal double.";
+  const name = "Executioner's axe", effect = "Its wearer's hits on a foe below 25% of its max HP deal double.";
   weapon("axe", "rare", name, {
     effect, stats: [sp("lifesteal", "medium"), st("attack", 1)],
     statuses: [own_(name, effect, { boosts: hits(against(100, { hpBelow: 25 })) })],
@@ -481,7 +481,7 @@ weapon("axe", "common", "Cleaver", { stats: [st("attack", 1)], serves: "Hunt" })
   });
 }
 {
-  const name = "Thirsting axe", effect = "Each killing blow its wearer lands heals it for a fifth of its max HP.";
+  const name = "Thirsting axe", effect = "Each killing blow its wearer lands heals it for 20% of its max HP.";
   weapon("axe", "rare", name, {
     effect, stats: [sp("lifesteal", "medium"), sp("crit_damage", "medium")],
     statuses: [own_(name, effect, { reactions: [react(EV.kill, { op: "heal", amount: share(0.2, "max_hp"), to: "holder" })] })],
@@ -501,7 +501,7 @@ weapon("axe", "common", "Cleaver", { stats: [st("attack", 1)], serves: "Hunt" })
 {
   const name = "The Red Feast", on_ = `${id(name)}_on`;
   // Half again, not double, on the hits: a Pact party holds its wearer below half all fight (the brink).
-  const effect = "While its wearer is below half its max HP, its hits deal half again as much and its Lifesteal is doubled. When a fight is won, its wearer, if it's standing, is healed back to half its max HP, if it's below that.";
+  const effect = "While its wearer is below 50% of its max HP, its hits deal 50% more and its Lifesteal is doubled. When a fight is won, its wearer, if it's standing, is healed back to 50% of its max HP, if it's below that.";
   weapon("axe", "legendary", name, {
     effect, stats: [sp("lifesteal", "high"), st("max_hp", 1)],
     statuses: [
@@ -511,7 +511,7 @@ weapon("axe", "common", "Cleaver", { stats: [st("attack", 1)], serves: "Hunt" })
           reactIf(on("fight_won"), { side: "self", where: { hpBelow: 50 } }, { op: "heal", amount: { scale: [{ ratio: 0.5, stat: "max_hp", of: "holder" }, { ratio: -1, hp: "current", of: "holder" }] }, to: "holder" }),
         ],
       }),
-      switched(on_, "FEAST", "Its hits deal half again as much and its Lifesteal is doubled.", {
+      switched(on_, "FEAST", "Its hits deal 50% more and its Lifesteal is doubled.", {
         boosts: hits(50), stats: [{ stat: "lifesteal", flat: share(1, "lifesteal"), live: true }],
       }),
     ],
@@ -520,7 +520,7 @@ weapon("axe", "common", "Cleaver", { stats: [st("attack", 1)], serves: "Hunt" })
 }
 {
   // Half as often is its shape (Attack speed −100 counts no step); the boost doubles its basic attacks.
-  const name = "Headsman's axe", effect = "Its basic attacks come half as often and deal double. When its wearer lands a killing blow, its next basic attack comes at once.";
+  const name = "Headsman's axe", effect = "Its basic attacks come 50% less often and deal double. When its wearer lands a killing blow, its next basic attack comes at once.";
   weapon("axe", "legendary", name, {
     effect, stats: [{ stat: "attack_speed", flat: -100 }, sp("lifesteal", "medium"), sp("crit_damage", "high")],
     statuses: [own_(name, effect, { boosts: [{ tag: "basic", pct: 100 }], reactions: [react(EV.kill, swingNow())] })],

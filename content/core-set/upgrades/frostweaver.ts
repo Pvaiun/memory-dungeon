@@ -12,8 +12,8 @@ const RIME = 0.3;
 passiveUp({
   id: "shatterpoint", cls: "frostweaver",
   power: "A shatter adds 40% more Sunder.",
-  a: { name: "Rime shield", text: "When a foe's Chill shatters, the ally with the lowest share of max HP gains a Shield from the Frostweaver's max HP, in place of the Sunder.", serves: "Snap 2 ●●, Toll ●● ⚙ frozen gate (half), detonation (half), brink (half)", plus: "A Shield two fifths bigger." },
-  b: { name: "Splinters", text: "When a foe's Chill shatters, that foe takes several Sunder (stacks scale from Attack), and every other foe gains a third of the Chill it held.", serves: "Snap 2 ●●● ⚙ firecracker (key)" },
+  a: { name: "Rime shield", text: "When a foe's Chill shatters, the ally with the lowest share of max HP gains a Shield from the Frostweaver's max HP, in place of the Sunder.", serves: "Snap 2 ●●, Toll ●● ⚙ frozen gate (half), detonation (half), brink (half)", plus: "A Shield 40% bigger." },
+  b: { name: "Splinters", text: "When a foe's Chill shatters, that foe takes several Sunder (stacks scale from Attack), and every other foe gains 33% of the Chill it held.", serves: "Snap 2 ●●● ⚙ firecracker (key)" },
   form: (v, k) => ({
     reactions: [{
       on: { event: "status_capped", status: "chill", whose: "foe" },

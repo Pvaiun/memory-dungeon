@@ -32,7 +32,7 @@ armor("plate", "common", "Crested plate", { stats: [st("max_hp", 1)], serves: "L
 armor("plate", "common", "Bristled plate", { stats: [sp("thorns", "medium")], serves: "the Toll." });
 
 {
-  const name = "Portcullis", on_ = `${id(name)}_on`, effect = "While its wearer is above half its max HP, it draws far more (Aggro +25).";
+  const name = "Portcullis", on_ = `${id(name)}_on`, effect = "While its wearer is above 50% of its max HP, it draws far more (Aggro +25).";
   armor("plate", "uncommon", name, {
     effect, stats: [sp("thorns", "medium"), st("max_hp", 1)],
     statuses: [own_(name, effect, { reactions: whileHp(on_, 50, false) }), switched(on_, "PORTCULLIS", "Draws far more.", { stats: [{ stat: "aggro", flat: FAR }] })],
@@ -40,7 +40,7 @@ armor("plate", "common", "Bristled plate", { stats: [sp("thorns", "medium")], se
   });
 }
 {
-  const name = "Keystone cuirass", effect = "While its wearer holds a Shield, its hits deal a third more.";
+  const name = "Keystone cuirass", effect = "While its wearer holds a Shield, its hits deal 33% more.";
   armor("plate", "uncommon", name, {
     effect, stats: [st("defense", 1), st("max_hp", 1)],
     statuses: [own_(name, effect, { boosts: hits(whileIt(33, { has: "shield" })) })],
@@ -48,7 +48,7 @@ armor("plate", "common", "Bristled plate", { stats: [sp("thorns", "medium")], se
   });
 }
 {
-  const name = "Holdfast", done = `${id(name)}_used`, effect = "The first time each fight its wearer drops below half its max HP, it's Guarded.";
+  const name = "Holdfast", done = `${id(name)}_used`, effect = "The first time each fight its wearer drops below 50% of its max HP, it's Guarded.";
   armor("plate", "uncommon", name, {
     effect, stats: [st("defense", 2)],
     statuses: [own_(name, effect, { reactions: [onceBelow(50, done, give("guard"))] }), used(done, "HOLDFAST")],
@@ -91,7 +91,7 @@ armor("plate", "common", "Bristled plate", { stats: [sp("thorns", "medium")], se
 {
   // The Spite comes first, so the blow that adds it counts it.
   const name = "Thornheart plate";
-  const effect = "Its wearer gathers Spite (a Spite for each hit it takes, kept for the fight, up to 20). A third of each blow, as it was struck, is sent back to the foe that struck it, and a twentieth more of the blow for each Spite.";
+  const effect = "Its wearer gathers Spite (a Spite for each hit it takes, kept for the fight, up to 20). 33% of each blow, as it was struck, is sent back to the foe that struck it, and 5% more of the blow for each Spite.";
   armor("plate", "legendary", name, {
     effect, stats: [sp("thorns", "high"), st("aggro", 1), st("defense", 1)],
     statuses: [own_(name, effect, {
@@ -125,7 +125,7 @@ armor("plate", "common", "Bristled plate", { stats: [sp("thorns", "medium")], se
 }
 {
   const name = "The anvil";
-  const effect = "Each hit its wearer takes gives a Wrath to the other ally with the slowest basic attack (its next basic attack deals a fifth more for each Wrath, up to 10, and spends them).";
+  const effect = "Each hit its wearer takes gives a Wrath to the other ally with the slowest basic attack (its next basic attack deals 20% more for each Wrath, up to 10, and spends them).";
   armor("plate", "legendary", name, {
     effect, stats: [st("aggro", 2), st("defense", 1), st("max_hp", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.struck, give("wrath", TO.otherSlowestAlly, 1))] })],
@@ -164,7 +164,7 @@ armor("mail", "common", "Thick byrnie", { stats: [st("max_hp", 1)], serves: "Blo
   });
 }
 {
-  const name = "Bloodsworn mail", on_ = `${id(name)}_on`, effect = "While its wearer is below half its max HP, it has 20% Lifesteal on top of its own.";
+  const name = "Bloodsworn mail", on_ = `${id(name)}_on`, effect = "While its wearer is below 50% of its max HP, it has 20% Lifesteal on top of its own.";
   armor("mail", "uncommon", name, {
     effect, stats: [st("max_hp", 1), st("attack", 1)],
     statuses: [own_(name, effect, { reactions: whileHp(on_, 50, true) }), switched(on_, "BLOODSWORN", "20% Lifesteal on top of its own.", { stats: [{ stat: "lifesteal", flat: SPECIAL.lifesteal.high }] })],
@@ -172,7 +172,7 @@ armor("mail", "common", "Thick byrnie", { stats: [st("max_hp", 1)], serves: "Blo
   });
 }
 {
-  const name = "Warded mail", done = `${id(name)}_used`, effect = "The first time each fight its wearer drops below half its max HP, it gains a Shield of a quarter of its max HP.";
+  const name = "Warded mail", done = `${id(name)}_used`, effect = "The first time each fight its wearer drops below 50% of its max HP, it gains a Shield of 25% of its max HP.";
   armor("mail", "uncommon", name, {
     effect, stats: [st("max_hp", 2)],
     statuses: [own_(name, effect, { reactions: [onceBelow(50, done, give("shield", "holder", share(0.25, "max_hp")))] }), used(done, "WARDED")],
@@ -199,13 +199,13 @@ armor("mail", "common", "Thick byrnie", { stats: [st("max_hp", 1)], serves: "Blo
 }
 {
   const name = "Sanguine mail", low = `${id(name)}_low`, high = `${id(name)}_high`;
-  const effect = "While its wearer is below half its max HP, healing it receives is doubled. At half or more, it's halved.";
+  const effect = "While its wearer is below 50% of its max HP, healing it receives is doubled. At 50% or more, it's cut by 50%.";
   armor("mail", "rare", name, {
     effect, stats: [st("max_hp", 2), sp("lifesteal", "medium")],
     statuses: [
       own_(name, effect, { reactions: [...whileHp(low, 50, true), ...whileHp(high, 50, false)] }),
       switched(low, "SANGUINE", "Healing it receives is doubled.", { stats: [{ stat: "healing_received", flat: 100 }] }),
-      switched(high, "SANGUINE", "Healing it receives is halved.", { stats: [{ stat: "healing_received", flat: -50 }] }),
+      switched(high, "SANGUINE", "Healing it receives is cut by 50%.", { stats: [{ stat: "healing_received", flat: -50 }] }),
     ],
     serves: "Pact 2 ●●●, Toll ● ⚙ brink (half)",
   });
@@ -219,7 +219,7 @@ armor("mail", "common", "Thick byrnie", { stats: [st("max_hp", 1)], serves: "Blo
   });
 }
 {
-  const name = "Aegis mail", effect = "Whenever an ally drops below a third of its max HP, that ally gains Aegis.";
+  const name = "Aegis mail", effect = "Whenever an ally drops below 33% of its max HP, that ally gains Aegis.";
   armor("mail", "legendary", name, {
     effect, stats: [st("max_hp", 2), st("defense", 1), sp("lifesteal", "medium")],
     statuses: [own_(name, effect, { reactions: [react(on("hp_low", { whose: "team", line: 33 }), give("aegis", "owner"))] })],
@@ -258,7 +258,7 @@ armor("leather", "common", "Spotter's coat", { stats: [sp("accuracy", "medium")]
   });
 }
 {
-  const name = "Mottled hide", on_ = `${id(name)}_on`, effect = "While its wearer is below half its max HP, it draws far less (Aggro −25).";
+  const name = "Mottled hide", on_ = `${id(name)}_on`, effect = "While its wearer is below 50% of its max HP, it draws far less (Aggro −25).";
   armor("leather", "uncommon", name, {
     effect, stats: [sp("evasion", "medium"), critStep(1)],
     statuses: [own_(name, effect, { reactions: whileHp(on_, 50, true) }), switched(on_, "MOTTLED", "Draws far less.", { stats: [{ stat: "aggro", flat: -FAR }] })],
@@ -321,7 +321,7 @@ armor("leather", "common", "Spotter's coat", { stats: [sp("accuracy", "medium")]
 }
 {
   const name = "Windrunner's garb";
-  const effect = "Each time its wearer dodges a hit, it gains 3 Heat (it acts 5% faster in everything for each Heat it holds, up to 10). Each hit it takes spends half its Heat.";
+  const effect = "Each time its wearer dodges a hit, it gains 3 Heat (it acts 5% faster in everything for each Heat it holds, up to 10). Each hit it takes spends 50% of its Heat.";
   armor("leather", "legendary", name, {
     effect, stats: [sp("evasion", "high"), st("attack", 1), st("aggro", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.dodge, give("heat", "holder", 3)), react(EV.struck, { op: "spend", status: "heat", share: 50, to: "holder" })] })],
@@ -360,7 +360,7 @@ armor("robes", "common", "Hermit's cowl", { stats: [st("aggro", -1)], serves: "e
   });
 }
 {
-  const name = "Banked robe", effect = "Its wearer's abilities add half again as many stacks of Burn, Chill and Shock.";
+  const name = "Banked robe", effect = "Its wearer's abilities add 50% more stacks of Burn, Chill and Shock.";
   armor("robes", "uncommon", name, {
     effect, stats: [st("attack", 1), sp("cast_speed", "medium")],
     statuses: [own_(name, effect, { mods: [{ stacks: { pct: 50, statuses: ["burn", "chill", "shock"] } }] })],
@@ -368,7 +368,7 @@ armor("robes", "common", "Hermit's cowl", { stats: [st("aggro", -1)], serves: "e
   });
 }
 {
-  const name = "Glyphed robe", effect = "Each ability its wearer casts gives it a Shield of a tenth of its max MP.";
+  const name = "Glyphed robe", effect = "Each ability its wearer casts gives it a Shield of 10% of its max MP.";
   armor("robes", "uncommon", name, {
     effect, stats: [st("max_mp", 1), st("aggro", -1)],
     statuses: [own_(name, effect, { reactions: [react(EV.cast, give("shield", "holder", share(0.1, "max_mp")))] })],
@@ -376,7 +376,7 @@ armor("robes", "common", "Hermit's cowl", { stats: [st("aggro", -1)], serves: "e
   });
 }
 {
-  const name = "Acolyte's robe", effect = "Each time another ally casts an ability, its wearer regains a twentieth of its max MP.";
+  const name = "Acolyte's robe", effect = "Each time another ally casts an ability, its wearer regains 5% of its max MP.";
   armor("robes", "uncommon", name, {
     effect, stats: [st("max_mp", 1), st("mp_regen", 1)],
     statuses: [own_(name, effect, { reactions: [react(on("action_resolve", { kind: "ability", whose: "ally" }), { op: "mp", amount: share(0.05, "max_mp"), to: "holder" })] })],
@@ -401,7 +401,7 @@ armor("robes", "common", "Hermit's cowl", { stats: [st("aggro", -1)], serves: "e
   });
 }
 {
-  const name = "Resonant robes", effect = "Each ability its wearer casts comes round a tenth sooner for each foe it hit.";
+  const name = "Resonant robes", effect = "Each ability its wearer casts comes round 10% sooner for each foe it hit.";
   armor("robes", "rare", name, {
     effect, stats: [st("max_mp", 1), st("mp_regen", 1), sp("cast_speed", "medium")],
     statuses: [own_(name, effect, { reactions: [react(EV.cast, { op: "cooldown", which: "event", set: { lessPct: { scale: [{ ratio: 10, count: "hit" }] } }, to: "holder" })] })],
@@ -410,7 +410,7 @@ armor("robes", "common", "Hermit's cowl", { stats: [st("aggro", -1)], serves: "e
 }
 {
   const name = "Flagellant's vestments";
-  const effect = "Its wearer's abilities cost HP in place of MP: half the share of its max HP that they'd cost of its max MP. It won't cast one that would leave it below a tenth of its max HP.";
+  const effect = "Its wearer's abilities cost HP in place of MP: 50% of the share of its max HP that they'd cost of its max MP. It won't cast one that would leave it below 10% of its max HP.";
   armor("robes", "rare", name, {
     effect, stats: [st("max_mp", 2), st("aggro", -1)],
     statuses: [own_(name, effect, { mods: [{ hp: { pct: 50, share: true, floor: 10, instead: true } }] })],
@@ -419,20 +419,20 @@ armor("robes", "common", "Hermit's cowl", { stats: [st("aggro", -1)], serves: "e
 }
 {
   const name = "Glimmer robe", on_ = `${id(name)}_on`;
-  const effect = "Each time an ally gives its wearer MP, the next ability its wearer casts that deals damage deals half again as much.";
+  const effect = "Each time an ally gives its wearer MP, the next ability its wearer casts that deals damage deals 50% more.";
   const next = on("action_resolve", { kind: "ability", does: ["damage"] });
   armor("robes", "rare", name, {
     effect, stats: [st("attack", 1), st("max_mp", 1), st("aggro", -1)],
     statuses: [
       own_(name, effect, { reactions: [react(on("mp_gained", { other: "ally" }), give(on_))] }),
-      oneUse(on_, "GLIMMER", "Its next ability that deals damage deals half again as much.", next, { mods: [{ of: { does: ["damage"] }, damage: 50 }] }),
+      oneUse(on_, "GLIMMER", "Its next ability that deals damage deals 50% more.", next, { mods: [{ of: { does: ["damage"] }, damage: 50 }] }),
     ],
     serves: "Barrage 2 ●● ⚙ mana as armour (half)",
   });
 }
 {
   const name = "Archmage's mantle";
-  const effect = "Its wearer's abilities cost half again as much MP, deal half again as much damage, heal half again as much, and add half again as many stacks.";
+  const effect = "Its wearer's abilities cost 50% more MP, deal 50% more damage, heal 50% more, and add 50% more stacks.";
   armor("robes", "legendary", name, {
     effect, stats: [st("max_mp", 2), st("mp_regen", 1), st("attack", 1)],
     statuses: [own_(name, effect, { mods: [{ mp: 50, damage: 50, heal: 50, stacks: { pct: 50 } }] })],
@@ -440,7 +440,7 @@ armor("robes", "common", "Hermit's cowl", { stats: [st("aggro", -1)], serves: "e
   });
 }
 {
-  const name = "Vestments of return", effect = "While its wearer stands, every ally revived comes back behind a Shield of half that ally's max HP.";
+  const name = "Vestments of return", effect = "While its wearer stands, every ally revived comes back behind a Shield of 50% of that ally's max HP.";
   armor("robes", "legendary", name, {
     effect, stats: [st("max_mp", 2), st("mp_regen", 1), st("aggro", -1)],
     statuses: [own_(name, effect, { reactions: [react(on("revived", { whose: "ally" }), give("shield", "owner", share(STATUS.shield.capShare, "max_hp", "target")))] })],
@@ -448,7 +448,7 @@ armor("robes", "common", "Hermit's cowl", { stats: [st("aggro", -1)], serves: "e
   });
 }
 {
-  const name = "Motley robe", effect = "Its wearer casts its abilities in a random order, whatever order they're slotted in, and each costs half its MP.";
+  const name = "Motley robe", effect = "Its wearer casts its abilities in a random order, whatever order they're slotted in, and each costs 50% of its MP.";
   armor("robes", "legendary", name, {
     effect, stats: [st("attack", 2), sp("cast_speed", "medium"), st("aggro", -1)],
     statuses: [own_(name, effect, { order: "random", mods: [{ mp: -50 }] })],

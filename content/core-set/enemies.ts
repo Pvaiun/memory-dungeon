@@ -58,9 +58,9 @@ const apply = (status: string, extra: object = {}) => ({ op: "apply", status, ..
 export const enemyStatuses: StatusT[] = [
   passive("venom", "Venom", "Its bites leave wounds that bleed.", { reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("bleed", { stacks: FLAT_STACKS.one, to: "other" })] }] }),
   passive("fire_bite", "Fire bite", "Its bites burn.", { reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("burn", { stacks: FLAT_STACKS.one, to: "other" })] }] }),
-  passive("split", "Split", "Below half HP it splits in two.", { reactions: [{ on: { event: "hp_lost" }, do: [{ op: "replace", enemy: "mini_slime", count: 2, to: { side: "self", where: { hpBelow: 50 } } }] }] }),
+  passive("split", "Split", "Below 50% HP it splits in two.", { reactions: [{ on: { event: "hp_lost" }, do: [{ op: "replace", enemy: "mini_slime", count: 2, to: { side: "self", where: { hpBelow: 50 } } }] }] }),
   // The Ghost's challenge: hits print slivers, a status's own damage lands in full.
-  passive("incorporeal", "Incorporeal", "Takes half of every hit; its burns, bleeds and shocks hurt it in full.", { taken: [{ tag: "physical", pct: INCORPOREAL.hits }] }),
+  passive("incorporeal", "Incorporeal", "Takes 50% of every hit; its burns, bleeds and shocks hurt it in full.", { taken: [{ tag: "physical", pct: INCORPOREAL.hits }] }),
   passive("volatile", "Volatile", "Explodes when it dies.", {
     survivesKO: true,
     reactions: [{ on: { event: "ko" }, do: [{ op: "damage", type: "physical", amount: { scale: [{ ratio: ENEMY_HIT.volatile, stat: "attack", of: "holder" }] }, to: T.everyFoe }, apply("burn", { stacks: FLAT_STACKS.few, to: T.everyFoe })] }],
@@ -110,7 +110,7 @@ export const enemyAbilities: AbilityT[] = [
   a("call_drones", "Call drones", "Summons two Drones.", { ...timing("medium", "long"), do: [{ op: "summon", enemy: "drone", count: 2 }] }),
   // Each bolt picks its own foe, so two may land on one.
   a("tempest", "Tempest", "Three lightning bolts at random foes, each with a stack of Shock.", { ...timing("short", "long"), target: { side: "foes", pick: "random" }, do: [1, 2, 3].map(() => ({ op: "damage" as const, type: "physical" as const, amount: fromStat("attack", ENEMY_HIT.tempest), apply: [{ status: "shock", stacks: FLAT_STACKS.one }], to: { side: "foes" as const, pick: "random" as const } })) }),
-  a("rally_soldiers", "Rally", "Summons two Soldiers, each with half a Soldier's HP.", { ...timing("medium", "long"), do: [{ op: "summon", enemy: "soldier", count: 2, hp: -50 }] }),
+  a("rally_soldiers", "Rally", "Summons two Soldiers, each with 50% of a Soldier's HP.", { ...timing("medium", "long"), do: [{ op: "summon", enemy: "soldier", count: 2, hp: -50 }] }),
 ];
 
 // ─── Enemies ─────────────────────────────────────────────────────────────────

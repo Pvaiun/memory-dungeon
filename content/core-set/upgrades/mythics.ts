@@ -21,7 +21,7 @@ const mythic = (m: Parameters<typeof piece>[0], line: string) => {
 
 // Knight: Horn of the keep. A status doesn't know which ability applied it, so any Taunt the Knight loses while another ally casts comes back.
 mythic({ name: "Horn of the keep", slot: "offhand", rarity: "mythic", kind: "horn", mythic: "knight", statuses: ["horn_of_the_keep"],
-    text: "Every hit the Knight takes gives the other ally with the least MP half the hit's damage as MP. When the Knight's Taunt runs out while another ally is in a wind-up, it Taunts again." }, "Barrage 3 ●●●, Toll ●● ⚙ mana as armour (half)");
+    text: "Every hit the Knight takes gives the other ally with the least MP 50% of the hit's damage as MP. When the Knight's Taunt runs out while another ally is in a wind-up, it Taunts again." }, "Barrage 3 ●●●, Toll ●● ⚙ mana as armour (half)");
 helper(pieceStatus("horn_of_the_keep", "Horn of the keep", "Hits taken give an ally MP; a Taunt that runs out during an ally's wind-up comes back.", {
     reactions: [
       { on: { event: "hit_taken" }, do: [{ op: "mp", amount: { scale: [{ ratio: 0.5, amount: true }] }, to: { side: "others", pick: "lowest", by: "mp_share" } }] },
@@ -35,8 +35,8 @@ helper(pieceStatus("horn_of_the_keep", "Horn of the keep", "Hits taken give an a
   const below = { side: "allies" as const, where: { hpBelow: 50 }, pick: "all" as const, exclude: "owner" as const };
   const again = { op: "heal" as const, amount: { scale: [{ ratio: 1, amount: true as const }] }, final: true as const, to: below };
   mythic({ name: "Halo of the saint", slot: "amulet", rarity: "mythic", mythic: "cleric", statuses: ["halo_of_the_saint"],
-      text: "Each heal and each Regen the Cleric's abilities give also lands, whole, on every other ally below half its max HP. What lands this way isn't passed on again." }, "Pact 3 ●●● ⚙ brink (half)");
-  helper(pieceStatus("halo_of_the_saint", "Halo of the saint", "Its abilities' heals and Regens also land on every other ally below half.", {
+      text: "Each heal and each Regen the Cleric's abilities give also lands, whole, on every other ally below 50% of its max HP. What lands this way isn't passed on again." }, "Pact 3 ●●● ⚙ brink (half)");
+  helper(pieceStatus("halo_of_the_saint", "Halo of the saint", "Its abilities' heals and Regens also land on every other ally below 50%.", {
       reactions: [
         { on: { event: "healed", whose: "team", other: "holder", kind: "ability" }, do: [again] },
         { on: { event: "overhealed", whose: "team", other: "holder", kind: "ability" }, do: [again] },
@@ -166,7 +166,7 @@ helper(kit("nights_edge_strike", "NIGHT'S EDGE", "Its next hit deals double dama
   const lay = apply("the_chalice_cup", { to: { side: "others", pick: "all" } });
   mythic({
     name: "The chalice", slot: "offhand", rarity: "mythic", mythic: "vampire",
-    text: "Whenever another ally would pay MP for an ability, the Vampire pays HP instead: half the share of its max HP that the cost is of that ally's max MP. It doesn't pay when that would leave it at a tenth of its max HP or less; the ally pays its own MP then.",
+    text: "Whenever another ally would pay MP for an ability, the Vampire pays HP instead: 50% of the share of its max HP that the cost is of that ally's max MP. It doesn't pay when that would leave it at 10% of its max HP or less; the ally pays its own MP then.",
     statuses: ["the_chalice"],
   }, "Pact 3 ●●●, Barrage ●●● ⚙ blood mage (half), brink (key)");
   helper(pieceStatus("the_chalice", "The chalice", "Its allies' abilities are paid in its HP.", {
@@ -200,7 +200,7 @@ helper(kit("crown_of_embers_aura", "CROWN OF EMBERS", "Its hits add a Burn while
 // the cap). At half, with a cascade, every shatter left a foe halfway to the next.
 mythic({
   name: "Glacier's heart", slot: "armor", rarity: "mythic", mythic: "frostweaver",
-  text: "Whenever a foe's Chill shatters, the Frostweaver puts a quarter of it back: 3 Chill on that foe.",
+  text: "Whenever a foe's Chill shatters, the Frostweaver puts 25% of it back: 3 Chill on that foe.",
   statuses: ["glaciers_heart"],
 }, "Snap 3 ●●● ⚙ firecracker (key)");
 helper(pieceStatus("glaciers_heart", "Glacier's heart", "Whenever a foe's Chill shatters, 3 Chill go back on that foe.", {
@@ -211,11 +211,11 @@ helper(pieceStatus("glaciers_heart", "Glacier's heart", "Whenever a foe's Chill 
 // again. A foe dying with Shock gives every other foe half of it (status_ended, cause ko, its amount).
 mythic({
   name: "Eye of the tempest", slot: "weapon", rarity: "mythic", mythic: "stormcaller",
-  text: "Every hit the Stormcaller lands jumps to one more random foe for half its damage. A jump doesn't jump again. When a foe falls holding Shock, every other foe gains half of it.",
+  text: "Every hit the Stormcaller lands jumps to one more random foe for 50% of its damage. A jump doesn't jump again. When a foe falls holding Shock, every other foe gains 50% of it.",
   weapon: { type: "physical", hands: 1, cooldown: 6.6, amount: ownHit(6.6, "attack") },
   statuses: ["eye_of_the_tempest"],
 }, "Storm 3 ●●●");
-helper(pieceStatus("eye_of_the_tempest", "Eye of the tempest", "Every hit it lands jumps to one more foe for half; a foe that falls with Shock gives every other foe half of it.", {
+helper(pieceStatus("eye_of_the_tempest", "Eye of the tempest", "Every hit it lands jumps to one more foe for 50%; a foe that falls with Shock gives every other foe 50% of it.", {
   reactions: [
     { on: { event: "hit_lands", notTags: ["jump"] }, do: [{ op: "strike", share: 50, of: "hit", tag: "jump", to: { side: "foes", pick: "random", exclude: "other" } }] },
     { on: { event: "status_ended", status: "shock", cause: ["ko"], whose: "foe" }, do: [apply("shock", { stacks: { scale: [{ ratio: 0.5, amount: true }] }, to: { side: "foes", pick: "all", exclude: "owner" } })] },

@@ -27,12 +27,12 @@ import { abilityUp, apply, DRAWN, helper, kit, ofHolder, passiveUp, removeMine }
     ];
   };
   const rite: ReactionT = { on: { event: "ko", whose: "ally" }, do: [apply("rite_of_passage", { to: "holder" })] };
-  helper(kit("rite_of_passage", "RITE OF PASSAGE", "Cooldowns halved.", { duration: 20, stats: [{ stat: "cooldown_reduction", flat: 100 }] }));
+  helper(kit("rite_of_passage", "RITE OF PASSAGE", "Cooldowns cut by 50%.", { duration: 20, stats: [{ stat: "cooldown_reduction", flat: 100 }] }));
   passiveUp({
     id: "last_rites", cls: "cleric",
     power: "The line is at 40% of max HP, not 30%.",
-    a: { name: "Shared rites", text: "While it or any ally is below 30% of max HP, its cooldowns are halved.", serves: "Pact 2 ●●● ⚙ brink (half)" },
-    b: { name: "Rite of passage", text: "Below 30% of its max HP, its cooldowns are halved. When an ally falls, they're halved for 20 ticks too.", builds: [] },
+    a: { name: "Shared rites", text: "While it or any ally is below 30% of max HP, its cooldowns are cut by 50%.", serves: "Pact 2 ●●● ⚙ brink (half)" },
+    b: { name: "Rite of passage", text: "Below 30% of its max HP, its cooldowns are cut by 50%. When an ally falls, they're cut by 50% for 20 ticks too.", builds: [] },
     form: (v, _k, plus) => {
       const line = plus ? 40 : 30;
       return { reactions: v === "a" ? shared(line) : v === "b" ? [...own(line), rite] : own(line) };
@@ -67,7 +67,7 @@ import { abilityUp, apply, DRAWN, helper, kit, ofHolder, passiveUp, removeMine }
   helper(prayer("battle_prayer_plus", 0.49));
   abilityUp({
     id: "cure", cls: "cleric",
-    power: "Heals two fifths more.",
+    power: "Heals 40% more.",
     a: { name: "Triage", text: "Waits until an ally is below 40% of its max HP, then heals it for twice as much, from the Cleric's own max HP.", builds: ["pact"] },
     b: { name: "Battle prayer", text: "Heals the ally with the lowest share of HP. Its next basic attack deals the same amount again as extra damage.", builds: ["pact", "landslide"] },
     form: (v, k, plus) =>
@@ -100,10 +100,10 @@ import { abilityUp, apply, DRAWN, helper, kit, ofHolder, passiveUp, removeMine }
   });
   abilityUp({
     id: "raise", cls: "cleric",
-    power: "The raised ally comes back with two fifths more HP.",
-    a: { name: "Martyr's raise", text: "Pays half its current HP to revive a random knocked-out ally with that much. Costs no MP.", builds: ["pact"] },
-    b: { name: "Ward of life", text: "Waits until an ally is knocked out or below a third of its max HP. Revives a random knocked-out ally with half its HP, and gives the lowest ally below a third a Shield of a third of the Cleric's max HP.", builds: ["toll", "pact"],
-      plus: "The raised ally comes back with two fifths more HP, and the Shield is two fifths bigger." },
+    power: "The raised ally comes back with 40% more HP.",
+    a: { name: "Martyr's raise", text: "Pays 50% of its current HP to revive a random knocked-out ally with that much. Costs no MP.", builds: ["pact"] },
+    b: { name: "Ward of life", text: "Waits until an ally is knocked out or below 33% of its max HP. Revives a random knocked-out ally with 50% of its HP, and gives the lowest ally below 33% a Shield of 33% of the Cleric's max HP.", builds: ["toll", "pact"],
+      plus: "The raised ally comes back with 40% more HP, and the Shield is 40% bigger." },
     form: (v, k) => (v === "a" ? martyr(0.5 * k) : v === "b" ? ward(0.5 * k, k / 3) : { do: [{ op: "revive", hp: raiseHp(0.5 * k) }] }),
   });
 }

@@ -291,7 +291,7 @@ export const ROGUE_EVENTS: RogueEvent[] = [
   {
     id: "wounded_traveller", name: "A Wounded Traveller", text: "Someone lies hurt by the road, a weapon still in hand. They look like they can fight.",
     options: [
-      { id: "take", label: "TAKE THEM IN", text: "They join you, hurt: a third of their HP.", do: [{ op: "recruit", hp: 33 }] },
+      { id: "take", label: "TAKE THEM IN", text: "They join you, hurt: 33% of their HP.", do: [{ op: "recruit", hp: 33 }] },
       { id: "lesson", label: "A LESSON", text: "Patched up, they show yours a few tricks before they go: three members each learn an ability or train one.", do: [{ op: "train", n: 3 }] },
       { id: "rob", label: "TAKE THEIR PURSE", text: "+40 gold.", do: [{ op: "gold", amount: 40 }] },
       { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
@@ -308,7 +308,7 @@ export const ROGUE_EVENTS: RogueEvent[] = [
   {
     id: "gambler", name: "The Gambler", text: "A grinning stranger with a pair of bone dice. \"Double or nothing?\"",
     options: [
-      { id: "bet", label: "BET 40 GOLD", text: "Half the time, win 100 back.", gold: 40, do: [{ op: "chance", pct: 50, then: [{ op: "gold", amount: 100 }], else: [] }] },
+      { id: "bet", label: "BET 40 GOLD", text: "50% of the time, win 100 back.", gold: 40, do: [{ op: "chance", pct: 50, then: [{ op: "gold", amount: 100 }], else: [] }] },
       { id: "leave", label: "WALK AWAY", text: "Nothing happens.", do: [] },
     ],
   },
@@ -352,13 +352,13 @@ export const ROGUE_EVENTS: RogueEvent[] = [
     id: "camp", name: "An Empty Camp", text: "Someone left in a hurry: the fire is still burning, the bedrolls still laid out.",
     options: [
       { id: "camp", label: "MAKE CAMP", text: "A campfire: everyone recovers and the fallen rise, then rest or train.", do: [{ op: "camp" }] },
-      { id: "search", label: "SEARCH THE PACKS", text: "20 gold, and a potion, a tonic or a phoenix feather (with someone down, the feather raises them at half HP).", do: [{ op: "gold", amount: 20 }, { op: "chance", pct: 40, then: [{ op: "supply", id: "potion" }], else: [{ op: "chance", pct: 50, then: [{ op: "supply", id: "tonic" }], else: [{ op: "supply", id: "phoenix" }] }] }] },
+      { id: "search", label: "SEARCH THE PACKS", text: "20 gold, and a potion, a tonic or a phoenix feather (with someone down, the feather raises them at 50% HP).", do: [{ op: "gold", amount: 20 }, { op: "chance", pct: 40, then: [{ op: "supply", id: "potion" }], else: [{ op: "chance", pct: 50, then: [{ op: "supply", id: "tonic" }], else: [{ op: "supply", id: "phoenix" }] }] }] },
     ],
   },
   {
     id: "pilgrims", name: "Pilgrims", text: "A band of pilgrims with a healer among them. \"For a donation…\"",
     options: [
-      { id: "donate", label: "DONATE 40", text: "Everyone recovers 40% of max HP, and one fallen member rises at half HP (with nobody down, the healer gives you a phoenix feather).", gold: 40, do: [{ op: "hp", pct: 40 }, { op: "supply", id: "phoenix" }] },
+      { id: "donate", label: "DONATE 40", text: "Everyone recovers 40% of max HP, and one fallen member rises at 50% HP (with nobody down, the healer gives you a phoenix feather).", gold: 40, do: [{ op: "hp", pct: 40 }, { op: "supply", id: "phoenix" }] },
       { id: "leave", label: "PASS BY", text: "Nothing happens.", do: [] },
     ],
   },
@@ -366,18 +366,18 @@ export const ROGUE_EVENTS: RogueEvent[] = [
   {
     id: "deserter", name: "A Deserter", text: "A soldier slumps against a milestone, still in uniform. \"I'm done with them. Not with fighting.\"",
     options: [
-      { id: "take", label: "TAKE THEM IN", text: "They join you at half HP, with an uncommon piece suited to them.", do: [{ op: "recruit", hp: 50, gear: "uncommon" }] },
+      { id: "take", label: "TAKE THEM IN", text: "They join you at 50% HP, with an uncommon piece suited to them.", do: [{ op: "recruit", hp: 50, gear: "uncommon" }] },
       { id: "lesson", label: "A LESSON", text: "They teach yours their drill and walk on: three members each learn an ability or train one.", do: [{ op: "train", n: 3 }] },
       { id: "turn", label: "TURN THEM IN", text: "+50 gold.", do: [{ op: "gold", amount: 50 }] },
     ],
     variants: [
       { options: [
-        { id: "take", label: "TAKE THEM IN", text: "They join you at half HP, with an uncommon piece suited to them.", do: [{ op: "recruit", hp: 50, gear: "uncommon" }] },
+        { id: "take", label: "TAKE THEM IN", text: "They join you at 50% HP, with an uncommon piece suited to them.", do: [{ op: "recruit", hp: 50, gear: "uncommon" }] },
         { id: "lesson", label: "A LESSON", text: "They teach yours their drill and walk on: three members each learn an ability or train one.", do: [{ op: "train", n: 3 }] },
         { id: "turn", label: "TURN THEM IN", text: "+50 gold.", do: [{ op: "gold", amount: 50 }] },
       ] },
       { text: "An officer, by the look of the blade at their hip, bleeding from a wound they won't explain.", options: [
-        { id: "take", label: "TAKE THEM IN", text: "They join you at a third of their HP, knowing two abilities, with a rare piece suited to them.", do: [{ op: "recruit", hp: 33, known: 2, gear: "rare" }] },
+        { id: "take", label: "TAKE THEM IN", text: "They join you at 33% of their HP, knowing two abilities, with a rare piece suited to them.", do: [{ op: "recruit", hp: 33, known: 2, gear: "rare" }] },
         { id: "lesson", label: "A LESSON", text: "They teach yours an officer's drill and walk on: three members each learn an ability or train one.", do: [{ op: "train", n: 3 }] },
         { id: "blade", label: "TAKE THE BLADE", text: "A rare piece; they limp off.", do: [{ op: "gear", rarity: "rare" }] },
       ] },
@@ -486,7 +486,7 @@ export const ROGUE_EVENTS: RogueEvent[] = [
         { id: "scrap", label: "SELL HIM SCRAP", text: "+40 gold.", do: [{ op: "gold", amount: 40 }] },
       ] },
       { text: "The smith is drunk, cheerful and working for free. \"Give it here. I'll make it sing.\"", options: [
-        { id: "try", label: "LET HIM TRY", text: "A piece of yours becomes one of the next rarity, of its kind (a rare one a legendary). Half the time it cracks and is lost.", do: [{ op: "temper", from: ["common", "uncommon", "rare"], risk: 50 }] },
+        { id: "try", label: "LET HIM TRY", text: "A piece of yours becomes one of the next rarity, of its kind (a rare one a legendary). 50% of the time it cracks and is lost.", do: [{ op: "temper", from: ["common", "uncommon", "rare"], risk: 50 }] },
         { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
       ] },
     ],
@@ -522,7 +522,7 @@ export const ROGUE_EVENTS: RogueEvent[] = [
         { id: "lesson", label: "A LESSON", text: "Three members each learn an ability or train one; he stays by the road.", do: [{ op: "train", n: 3 }] },
       ] },
       { text: "An old soldier with a limp, too slow to march with anyone, too proud to beg.", options: [
-        { id: "take", label: "TAKE HIM IN", text: "He joins you at half HP, knowing two abilities, with an uncommon piece suited to him.", do: [{ op: "recruit", known: 2, hp: 50, gear: "uncommon" }] },
+        { id: "take", label: "TAKE HIM IN", text: "He joins you at 50% HP, knowing two abilities, with an uncommon piece suited to him.", do: [{ op: "recruit", known: 2, hp: 50, gear: "uncommon" }] },
         { id: "lesson", label: "A LESSON", text: "Three members each learn an ability or train one.", do: [{ op: "train", n: 3 }] },
         { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
       ] },
@@ -565,18 +565,18 @@ export const ROGUE_EVENTS: RogueEvent[] = [
   {
     id: "field_hospital", name: "A Field Hospital", text: "Tents, cots, and a surgeon who has seen worse than you.",
     options: [
-      { id: "pay", label: "PAY THE SURGEON", text: "Everyone recovers 40% of max HP, and the fallen rise at half HP.", gold: 50, do: [{ op: "hp", pct: 40 }, { op: "revive", pct: 50 }] },
+      { id: "pay", label: "PAY THE SURGEON", text: "Everyone recovers 40% of max HP, and the fallen rise at 50% HP.", gold: 50, do: [{ op: "hp", pct: 40 }, { op: "revive", pct: 50 }] },
       { id: "medic", label: "HIRE THE MEDIC", text: "One who heals or raises others joins you.", gold: 80, do: [{ op: "recruit", healer: true }] },
       { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
     ],
     variants: [
       { options: [
-        { id: "pay", label: "PAY THE SURGEON", text: "Everyone recovers 40% of max HP, and the fallen rise at half HP.", gold: 50, do: [{ op: "hp", pct: 40 }, { op: "revive", pct: 50 }] },
+        { id: "pay", label: "PAY THE SURGEON", text: "Everyone recovers 40% of max HP, and the fallen rise at 50% HP.", gold: 50, do: [{ op: "hp", pct: 40 }, { op: "revive", pct: 50 }] },
         { id: "medic", label: "HIRE THE MEDIC", text: "One who heals or raises others joins you.", gold: 80, do: [{ op: "recruit", healer: true }] },
         { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
       ] },
       { text: "A hospital overrun with wounded. The surgeon looks up: \"You. Hands. Now.\"", options: [
-        { id: "help", label: "HELP OUT", text: "Everyone loses 15% of max MP. A potion and a phoenix feather from the stores (with someone down, the feather raises them at half HP).", do: [{ op: "mp", pct: -15 }, { op: "supply", id: "potion" }, { op: "supply", id: "phoenix" }] },
+        { id: "help", label: "HELP OUT", text: "Everyone loses 15% of max MP. A potion and a phoenix feather from the stores (with someone down, the feather raises them at 50% HP).", do: [{ op: "mp", pct: -15 }, { op: "supply", id: "potion" }, { op: "supply", id: "phoenix" }] },
         { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
       ] },
     ],
