@@ -746,7 +746,8 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     // One big way on, where the message window was; the rest below.
     let main: HTMLButtonElement;
     const more: HTMLButtonElement[] = [];
-    if (rogue) main = bigButton(won ? "ONWARD" : "THE END", () => rogueOn());
+    // A lost fight with a Destiny Shard held isn't the end yet: the run offers it next.
+    if (rogue) main = bigButton(won ? "ONWARD" : rogue.shards ? "FATE…" : "THE END", () => rogueOn());
     else if (won && !last) (main = bigButton("NEXT FIGHT", () => nextFight(), `${driver.fightNo + 1}/${driver.fightTotal}`)), more.push(button(exitLabel, exit));
     else if (won) (main = bigButton(exitLabel, exit)), more.push(button("AGAIN", () => restart()));
     else (main = bigButton("RETRY", () => restart())), more.push(button(exitLabel, exit));

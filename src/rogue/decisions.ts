@@ -6,7 +6,7 @@ import { canEquip } from "../validate.js";
 import { bench, cfg, type Item, member, note, type Offer, type Pending, r, rogue, type RogueRun, type Slot, SLOT_LIST } from "./state.js";
 import { beginAct, draftPending, reachable, recruit, rollKnown, seatsOf } from "./acts.js";
 import { canRoll, canTake, heldLegendaries, kindOf, offerText, pieceRarity, piecesAt, priced, RARITIES, roomForRecruit, sellPrice, take, trained, trainPrice } from "./offers.js";
-import { bag, itemOf, registerGear, supplyName, wearer } from "./fights.js";
+import { bag, itemOf, registerGear, snapshot, supplyName, useShard, wearer } from "./fights.js";
 import { learn, parseTraining, train, trainingId, trainingsFor, unlearned } from "./training.js";
 import { doOps, enter, nextAct } from "./rooms.js";
 import { gainGold, heal, holdCurrent, maxOf } from "./party.js";
@@ -64,6 +64,8 @@ export function options(c: Content, run: RogueRun): string[] {
       // left to learn. Or gold instead: a level-up late in a run can have one thing left, which is no choice.
       return [...trainingsFor(c, run, p.queue[0]).map(trainingId), ...(cfg(c).levelGold ? ["gold"] : [])];
     case "region": return p.options;
+    case "shard": return ["take"];
+    case "fate": return ["shard", "end"];
     case "over": return [];
   }
 }
@@ -136,6 +138,11 @@ export const trainOptions = (c: Content, run: RogueRun, done: string[]) =>
 
 /** Answers the pending decision. Throws on an option that isn't one. */
 export function choose(c: Content, run: RogueRun, pick: string) {
+  chooseIn(c, run, pick);
+  // A fight's preview just opened (a room, an event, a shard's return): the run as it stands is what a Destiny Shard returns to.
+  if (run.pending.kind === "fight" && !run.pending.begun) run.retry = snapshot(run);
+}
+function chooseIn(c: Content, run: RogueRun, pick: string) {
   const opts = options(c, run);
   if (!opts.includes(pick)) throw new Error(`'${pick}' isn't an option at ${run.pending.kind}: ${opts.join(", ")}`);
   const p = run.pending;
@@ -335,6 +342,19 @@ export function choose(c: Content, run: RogueRun, pick: string) {
       beginAct(c, run, pick, true);
       const queue = run.roster.map((m) => m.cls).filter((cls) => trainingsFor(c, run, cls).length);
       run.pending = queue.length ? { kind: "levelup", queue } : { kind: "map" };
+      return;
+    }
+    case "shard": {
+      run.shards = (run.shards ?? 0) + 1;
+      note(run, "Took a Destiny Shard.");
+      run.pending = p.then;
+      return;
+    }
+    case "fate": {
+      if (pick === "end") return void (delete run.retry, (run.pending = { kind: "over", won: false }));
+      useShard(run);
+      // The run went back to before the fight, its counters too; the shard's use is counted again on top.
+      run.stats.picks[tally] = (run.stats.picks[tally] ?? 0) + 1;
       return;
     }
     default:

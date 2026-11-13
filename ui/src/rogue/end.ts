@@ -1,4 +1,4 @@
-/** The run's end: its summary, its record (SAVE RUN), and a won run's moment. */
+/** The run's end: a Destiny Shard's offer after a lost fight, the run's summary, its record (SAVE RUN), and a won run's moment. */
 import { rogue, type RogueRun } from "../../../src/rogue.js";
 import { button, type Child, h, header, toast, win } from "../dom.js";
 import { c, cls as classOf, shortName } from "../content.js";
@@ -6,9 +6,27 @@ import { section } from "../sheet.js";
 import { current, endRun, meta } from "./state.js";
 import { checkRecord, exportRecord, type RecordCheck } from "../../../src/rogue/record.js";
 import { BUILD } from "../update.js";
-import { actorEl, faceEl } from "../pixel.js";
+import { actorEl, faceEl, shardEl } from "../pixel.js";
 import { sfx } from "../battle/audio.js";
-import { actions, frameEl, go, partyActors, redraw, ROMAN, scene } from "./parts.js";
+import { actions, confirm, frameEl, go, partyActors, pickOrSave, redraw, ROMAN, scene } from "./parts.js";
+
+// ─── A Destiny Shard ───────────────────────────────────────────────────────
+
+/** A lost fight with a shard held: go back to the moment before the fight, at its preview, or end the run. */
+export function fateView(run: RogueRun): Child[] {
+  const p = run.pending;
+  if (p.kind !== "fate") return [];
+  const n = run.shards ?? 0;
+  return [
+    header("THE PARTY FALLS", null),
+    scene(run, "fate", { h: 112, night: true, actors: partyActors(run, 112, "dead", { cx: 135 }) }),
+    win("", h("div", { class: "line bad wrap" }, `FELL TO ${p.fight.toUpperCase()}`),
+      h("div", { class: "line gold" }, `${n} `, shardEl()),
+      h("div", { class: "text small dim wrap" }, "A SHARD GLIMMERS, YEARNING TO TEMPT FATE.")),
+    actions(button("USE A SHARD", () => { pickOrSave(run, "shard"); sfx.win(); if (frameEl) toast(frameEl, "UNWINDING FATE'S THREADS", 2000); }, "hi"),
+      button("END THE RUN", () => confirm("END THE RUN?", `YOUR ${n} DESTINY SHARD${n === 1 ? "" : "S"} GO UNUSED.`, "END", () => pickOrSave(run, "end")))),
+  ];
+}
 
 // ─── The end ───────────────────────────────────────────────────────────────
 

@@ -3,7 +3,7 @@ import { button, type Child, h, header, win } from "../dom.js";
 import { current, lastRun, meta, nextSeed, saveRogue, setHeat, startRun, vitals } from "./state.js";
 import { bossFoes, canManage, leaderKnown, type MapNode, reachable, rogue, type RogueRun } from "../../../src/rogue.js";
 import { c, className, cls as classOf, disp, shortName } from "../content.js";
-import { enemyThumb, faceEl, iconEl } from "../pixel.js";
+import { enemyThumb, faceEl, iconEl, shardEl, shardIcon } from "../pixel.js";
 import { abilityBlock, classHead, classPassive, ENEMY_STATS, enemyStats, section, sizeEl, statGrid } from "../sheet.js";
 import { plainWeapon } from "../../../src/sim/parties.js";
 import { setup } from "../state.js";
@@ -12,7 +12,7 @@ import { useSupply } from "../../../src/rogue/record.js";
 import { sizeParts } from "../describe.js";
 import { enemyDisplayName } from "../art.js";
 import { campView, captiveView, chooseView, eventScreen, levelView, regionView, rewardView, roomView, shopView, trainView } from "./rooms.js";
-import { overView } from "./end.js";
+import { fateView, overView } from "./end.js";
 import { actions, confirm, frameEl, go, held, ICON, KIND_NAME, KIND_TEXT, partyActors, partyStrip, pickOrSave, redraw, ROMAN, scene, standoff, SUPPLY_ICON, SUPPLY_TEXT } from "./parts.js";
 
 // ─── The dispatcher ────────────────────────────────────────────────────────
@@ -25,6 +25,7 @@ export function rogueScreen(): Child[] {
     case "map": return mapView(run);
     case "fight": return fightView(run);
     case "drop": return dropView(run);
+    case "shard": return shardView(run);
     case "spoils": case "boon": case "treasure": case "trophy": return rewardView(run);
     case "captive": return captiveView(run);
     case "shop": return shopView(run);
@@ -35,6 +36,7 @@ export function rogueScreen(): Child[] {
     case "choose": return chooseView(run);
     case "levelup": return levelView(run);
     case "region": return regionView(run);
+    case "fate": return fateView(run);
     case "over": return overView(run);
   }
 }
@@ -127,7 +129,7 @@ function mapView(run: RogueRun): Child[] {
   });
   const picked = mapPick ? run.map.find((n) => n.id === mapPick)! : null;
   return [
-    header(`ACT ${ROMAN[run.act]} · ${reg.name.toUpperCase()}`, () => go("home"), h("span", { class: "dim" }, run.floor ? `F${run.floor}` : "START")),
+    header(`ACT ${ROMAN[run.act]} · ${reg.name.toUpperCase()}`, () => go("home"), h("span", null, shardTag(run), h("span", { class: "dim" }, run.floor ? `F${run.floor}` : "START"))),
     h("div", { class: "line small", onClick: () => go("rboss"), style: "cursor:pointer" }, iconEl(ICON.boss), h("span", { class: "dim" }, "BOSS "), h("span", { class: "gold trunc grow" }, run.boss.name.toUpperCase()), h("span", { class: "dim" }, "LOOK ▶")),
     partyStrip(run),
     scroller,
@@ -174,6 +176,20 @@ function dropView(run: RogueRun): Child[] {
   ];
 }
 
+/** After act I's and act II's bosses: the Destiny Shard on the ground, taken by hand like the spoils. */
+function shardView(run: RogueRun): Child[] {
+  if (run.pending.kind !== "shard") return [];
+  const max = rogue(c).config.shards?.max ?? 0;
+  const actors = [...partyActors(run, 96, "victory", { cx: 100 }), { kind: "loot" as const, x: 200, y: 92, art: shardIcon() }];
+  return [
+    header("DESTINY SHARD", () => go("home")),
+    scene(run, "shard", { h: 96, actors }),
+    win("roffer", h("div", { class: "line" }, shardEl(), h("span", { class: "grow hi" }, " DESTINY SHARD"), h("span", { class: "dim small" }, `${run.shards ?? 0}/${max} HELD`)),
+      h("div", { class: "line dim small wrap" }, "IT RESONATES WITH SOME UNKNOWN POWER")),
+    actions(button("TAKE", () => pickOrSave(run, "take"), "hi")),
+  ];
+}
+
 // ─── A fight in waiting ────────────────────────────────────────────────────
 
 /**
@@ -212,7 +228,7 @@ function fightView(run: RogueRun): Child[] {
   if (p.kind !== "fight") return [];
   const foes = foeLines(p.fight.enemies, p.foes);
   return [
-    header(p.tier === "boss" ? "BOSS" : p.tier === "elite" ? "ELITE" : "FIGHT", () => go("home")),
+    header(p.tier === "boss" ? "BOSS" : p.tier === "elite" ? "ELITE" : "FIGHT", () => go("home"), shardTag(run)),
     standoff(run, p.fight.enemies, `fight:${p.fight.id}`),
     partyStrip(run),
     win("scroll", h("div", { class: "line hi" }, p.fight.name.toUpperCase()), ...foes),
@@ -220,6 +236,9 @@ function fightView(run: RogueRun): Child[] {
     actions(button("FIGHT", () => go("battle", { rogue: true }), "hi"), p.begun ? null : button("PARTY", () => go("rparty"))),
   ];
 }
+
+/** The Destiny Shards held, where a fight is near: a lost fight can spend one to come back to its preview. */
+const shardTag = (run: RogueRun) => (run.shards ? h("span", null, `${run.shards}`, shardEl(), " ") : null);
 
 /** The home menu's line for the rogue mode. */
 export function rogueMenuLine(): string {

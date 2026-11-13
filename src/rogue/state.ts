@@ -82,6 +82,10 @@ export type Pending =
   | { kind: "choose"; what: "learn" | "upgrade" | "temper"; why: string; from?: RarityT[]; risk?: number }
   | { kind: "levelup"; queue: string[] }
   | { kind: "region"; options: string[] }
+  /** A boss's Destiny Shard, to take; `then` follows. */
+  | { kind: "shard"; then: Pending }
+  /** A lost fight with a Destiny Shard held: spend one to go back to the moment before the fight (`retry`), or end the run. */
+  | { kind: "fate"; fight: string }
   | { kind: "over"; won: boolean };
 
 /** One line of what happened, for the run's summary and the playtest's diary. */
@@ -116,6 +120,10 @@ export type RogueRun = {
   supplies: SupplyIdT[];
   gold: number;
   pending: Pending;
+  /** Destiny Shards held (a boss gives one): a lost fight can spend one to return to `retry`. */
+  shards?: number;
+  /** The whole run as the pending fight's preview opened (without itself or the record), kept until the fight ends: a shard returns to it. */
+  retry?: RogueRun;
   uid: number;
   /** Counters for the summary and the simulations. */
   stats: { fights: number; elites: number; bosses: number; gold: number; spent: number; events: number; shops: number; campfires: number; picks: Record<string, number> };

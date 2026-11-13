@@ -1,7 +1,8 @@
 import { readFileSync } from "node:fs";
 import { test } from "vitest";
 import assert from "node:assert/strict";
-import { loadContent, type Content } from "../engine/run.js";
+import { advance, loadContent, type Content } from "../engine/run.js";
+import { combat } from "../engine/combat/rules.js";
 import type { Member as EngineMember } from "../engine/combat/rules.js";
 import { rngFor } from "../engine/rng.js";
 import {
@@ -201,6 +202,7 @@ test("rogue (5i): the boons that open acts II and III offer a mythic for a party
     run.pending = { kind: "fight", node: "boss", tier: "boss", fight: run.boss, foes: {}, seed: 1 };
     winFight(c, run);
     const pend = () => run.pending as RogueRun["pending"];
+    if (pend().kind === "shard") choose(c, run, "take");
     if (pend().kind === "drop") choose(c, run, options(c, run)[0]);
     assert.equal(pend().kind, "boon");
     return pend() as Extract<RogueRun["pending"], { kind: "boon" }>;
@@ -489,6 +491,92 @@ test("rogue: a campfire heals everyone a share and raises the fallen on arrival;
   assert.equal(swap(c, run, a, y), true, "a swap after the pick");
   choose(c, run, "leave");
   assert.equal(run.pending.kind, "map");
+});
+
+test("rogue: a Destiny Shard turns a lost fight back to the moment its preview opened; without one, or declined, the run ends", () => {
+  const c = loadContent(raw);
+  const run = newRogue(c, { seed: 14, leader: "knight" });
+  while (run.pending.kind === "draft") choose(c, run, options(c, run)[0]);
+  run.shards = 2;
+  run.supplies = ["potion"];
+  choose(c, run, reachable(run)[0].id);
+  assert.ok(run.retry, "the preview's opening is kept");
+  const before = structuredClone(run);
+  // At the preview a potion is drunk; then every member is down: a sure wipe.
+  const doom = () => { for (const cls of run.party) (member(run, cls).missHp = 99999), (member(run, cls).ko = true); };
+  run.supplies = [];
+  doom();
+  const lose = () => { const er = startFight(c, run); advance(c, combat, er); endFight(c, run, er); };
+  lose();
+  assert.equal(run.pending.kind, "fate");
+  assert.deepEqual(options(c, run), ["shard", "end"]);
+  choose(c, run, "shard");
+  assert.equal(run.shards, 1);
+  assert.equal(run.pending.kind, "fight");
+  assert.ok(!(run.pending as { begun?: boolean }).begun, "back at the preview, free to change the party");
+  assert.deepEqual(run.supplies, ["potion"], "the potion drunk at the preview is back");
+  const strip = (x: RogueRun) => { const { shards: _a, notes: _b, stats: _c, retry: _d, ...rest } = x; return rest; };
+  assert.deepEqual(strip(run), strip(before), "everything else as the preview opened");
+  assert.ok(run.retry, "a second loss can go back again");
+  doom();
+  lose();
+  choose(c, run, "end");
+  assert.deepEqual(run.pending, { kind: "over", won: false });
+  // A tool playing one fight sees a loss as a loss; whole runs keep the choice.
+  for (const shards of [false, true]) {
+    const r2 = newRogue(c, { seed: 14, leader: "knight" });
+    while (r2.pending.kind === "draft") choose(c, r2, options(c, r2)[0]);
+    r2.shards = 2;
+    choose(c, r2, reachable(r2)[0].id);
+    for (const cls of r2.party) (member(r2, cls).missHp = 99999), (member(r2, cls).ko = true);
+    autoFight(c, r2, { shards });
+    assert.equal(r2.pending.kind, shards ? "fate" : "over");
+  }
+});
+
+test("rogue: act I's and act II's bosses each leave a Destiny Shard to take; act III's ends the run", () => {
+  const c = loadContent(raw);
+  assert.equal(rogue(c).config.shards?.max, 2);
+  for (const act of [1, 2, 3]) {
+    const run = newRogue(c, { seed: 31, leader: "knight" });
+    while (run.pending.kind === "draft") choose(c, run, options(c, run)[0]);
+    choose(c, run, reachable(run)[0].id);
+    const p = run.pending as Extract<RogueRun["pending"], { kind: "fight" }>;
+    (p.fight = { ...run.boss }), (p.tier = "boss");
+    run.act = act;
+    run.shards = act - 1;
+    // A boss at a tenth of its HP and damage, met at full health: a sure win.
+    p.foes = { hp: -90, power: -90 };
+    for (const m of run.roster) (m.missHp = 0), (m.ko = false);
+    autoFight(c, run);
+    assert.equal(run.stats.bosses, 1, `act ${act}: the boss is beaten`);
+    if (act === 3) { assert.deepEqual(run.pending, { kind: "over", won: true }); continue; }
+    assert.equal(run.pending.kind, "shard");
+    assert.deepEqual(options(c, run), ["take"]);
+    choose(c, run, "take");
+    assert.equal(run.shards, act);
+    assert.notEqual(run.pending.kind, "shard");
+  }
+});
+
+test("rogue: the simulated player spends a Destiny Shard and tries the fight prepared another way", () => {
+  const c = loadContent(raw);
+  const run = newRogue(c, { seed: 14, leader: "knight" });
+  const ai = aiPlayer({}, 14);
+  while (run.pending.kind === "draft") choose(c, run, ai.decide(c, run));
+  run.shards = 1;
+  choose(c, run, reachable(run)[0].id);
+  for (const cls of run.party) (member(run, cls).missHp = 99999), (member(run, cls).ko = true);
+  autoFight(c, run, { shards: true });
+  assert.equal(ai.decide(c, run), "shard");
+  choose(c, run, "shard");
+  const setup = () => JSON.stringify({ f: run.formation, p: run.party, o: run.party.map((cls) => member(run, cls).order) });
+  const plain = aiPlayer({}, 14);
+  const r2 = structuredClone(run);
+  plain.prepare(c, r2);
+  ai.prepare(c, run);
+  const other = JSON.stringify({ f: r2.formation, p: r2.party, o: r2.party.map((cls) => member(r2, cls).order) });
+  assert.notEqual(setup(), other, "the retry's preparation differs from the first");
 });
 
 test("rogue (5h): a wipe ends the run, whoever is at camp; after a won fight, those who sat it out regain a share of their MP", () => {

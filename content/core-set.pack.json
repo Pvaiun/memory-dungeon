@@ -46619,6 +46619,9 @@
     ]
    },
    "benchMp": 50,
+   "shards": {
+    "max": 2
+   },
    "fresh": 50,
    "muster": {
     "offers": 2
