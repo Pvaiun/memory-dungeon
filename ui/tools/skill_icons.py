@@ -20,7 +20,7 @@ from collections import deque
 from pathlib import Path
 from PIL import Image
 
-SRC, OUT = Path(sys.argv[1]), Path(sys.argv[2])
+SRC = OUT = None  # set by main(), or by a tool that borrows the drawing below
 
 # Each icon: "<pack>:<number>[:<colour>]". k KURAI, s a status icon, v the skill pack's framed motifs (by their number
 # in its gold row, 41 to 94, or "-" for an icon drawn in its own colours), e and c its loose effect and combat sprites.
@@ -212,19 +212,26 @@ def rim_ramp(aid, key):
     return RAMPS[p[2]] if len(p) == 3 and p[2] in RAMPS else RAMPS[CLASS_RAMP[aid]]
 
 
-(OUT / "abilities").mkdir(parents=True, exist_ok=True); (OUT / "status").mkdir(parents=True, exist_ok=True)
-manifest = json.load(open(OUT / "manifest.json"))
-manifest.setdefault("abilities", {})
-for aid, key in ICONS.items():
-    im, pack, colour = source(key)
-    sym = lift(im, pack, LIFT.get(aid))
-    if colour:
-        sym = by_brightness(sym, RAMPS[colour])
-    icon = tile(sym, rim_ramp(aid, key))
-    if aid in PASSIVES:
-        icon.save(OUT / "status" / f"{aid}.png"); manifest["statuses"][aid] = f"status/{aid}.png"
-    else:
-        icon.resize((32, 32), Image.NEAREST).save(OUT / "abilities" / f"{aid}.png"); manifest["abilities"][aid] = f"abilities/{aid}.png"
-with open(OUT / "manifest.json", "w") as f:
-    json.dump(manifest, f, indent=1)
-print(f"skill icons: {len(ICONS) - len(PASSIVES)} abilities, {len(PASSIVES)} passives")
+def main():
+    global SRC, OUT
+    SRC, OUT = Path(sys.argv[1]), Path(sys.argv[2])
+    (OUT / "abilities").mkdir(parents=True, exist_ok=True); (OUT / "status").mkdir(parents=True, exist_ok=True)
+    manifest = json.load(open(OUT / "manifest.json"))
+    manifest.setdefault("abilities", {})
+    for aid, key in ICONS.items():
+        im, pack, colour = source(key)
+        sym = lift(im, pack, LIFT.get(aid))
+        if colour:
+            sym = by_brightness(sym, RAMPS[colour])
+        icon = tile(sym, rim_ramp(aid, key))
+        if aid in PASSIVES:
+            icon.save(OUT / "status" / f"{aid}.png"); manifest["statuses"][aid] = f"status/{aid}.png"
+        else:
+            icon.resize((32, 32), Image.NEAREST).save(OUT / "abilities" / f"{aid}.png"); manifest["abilities"][aid] = f"abilities/{aid}.png"
+    with open(OUT / "manifest.json", "w") as f:
+        json.dump(manifest, f, indent=1)
+    print(f"skill icons: {len(ICONS) - len(PASSIVES)} abilities, {len(PASSIVES)} passives")
+
+
+if __name__ == "__main__":
+    main()
