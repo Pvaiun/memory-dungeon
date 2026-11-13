@@ -194,7 +194,7 @@ ui/
     update.ts                reloading onto a newer build
     rogue-screens.ts         the rogue screens' public face; lists them
     rogue/
-      parts.ts               the navigation, small parts and scenes the rogue screens share; a pick's answer, and a result the player couldn't see held over its screen until ONWARD
+      parts.ts               the navigation, small parts and scenes the rogue screens share; under an offered piece, the roster's faces beside what they wear in its slot; a pick's answer, and a result the player couldn't see held over its screen until ONWARD
       run.ts                 the dispatcher, the leader, the draft, the map, a boss's Destiny Shard, a fight in waiting
       rooms.ts               spoils, a captive, the shop and training, the campfire, events, choices, Muster and Drill, level up, the next region
       end.ts                 a lost fight's Destiny Shard offer, the run's end, its record, a won run's moment

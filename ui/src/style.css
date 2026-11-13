@@ -177,6 +177,10 @@ button.mid { padding: .625rem .5rem; }
 .ab .head .chip.on { color: var(--hi); border-color: var(--hi); }
 .ab .size.changes { display: flex; flex-wrap: wrap; column-gap: .75rem; }
 .gear-row .who { column-gap: .5rem; row-gap: 0; line-height: 1.25rem; min-height: 1.25rem; }
+/* Under an offered piece: the roster's faces, each beside what it wears in the piece's slot now (the slot's faded icon for nothing). */
+.gear-row .wears { column-gap: .5rem; row-gap: .125rem; margin-top: .25rem; }
+.gear-row .wear-of { display: inline-flex; align-items: center; gap: .125rem; }
+.gear-row .wear-of .slot { display: inline-flex; justify-content: center; align-items: center; min-width: 2rem; height: 2rem; }
 /* step 5i: a formation's seats on an offer, each with what its statuses do under it */
 .seat { margin-top: .25rem; }
 .seat-text { padding-left: 1rem; }
