@@ -1,5 +1,5 @@
 /**
- * The free actions between rooms: gear, formation, seats, ability order, swaps with the camp, dismissing, supplies;
+ * The free actions between rooms: gear, formation, seats, ability order, swaps with the camp, dismissing, junk, supplies;
  * and healing and gold.
  */
 import type { Content } from "../engine/run.js";
@@ -43,6 +43,7 @@ function equipNow(c: Content, run: RogueRun, cls: string, slot: Slot, uid: strin
   // A unit wears one mythic at most; a new one sends the old one to the bag.
   if (g.mythic) for (const s of SLOT_LIST) if (s !== slot && m.gear[s] && c.gear.get(m.gear[s]!)?.mythic) delete m.gear[s];
   m.gear[slot] = uid;
+  delete it.junk;
   settle(c, m);
   return true;
 }
@@ -145,7 +146,18 @@ export function dismiss(c: Content, run: RogueRun, cls: string): boolean {
   note(run, `The ${c.classes.get(cls)!.name} goes home.`);
   return true;
 }
-/** A piece nobody wears can be dropped from the bag any time outside a fight (more loot, and the bag stays readable). */
+/**
+ * A piece in the bag marked as junk, or the mark taken off: junk sits at the bottom of the bag, out of the way, and a shop
+ * sells it all at once. Only the bag's pieces: equipping one takes its mark off.
+ */
+export function junk(run: RogueRun, uid: string, on: boolean): boolean {
+  const it = itemOf(run, uid);
+  if (!it || wearer(run, uid) || !!it.junk === on) return false;
+  if (on) it.junk = true;
+  else delete it.junk;
+  return true;
+}
+/** A piece nobody wears dropped from the bag, any time outside a fight (the interface junks pieces instead; a run's record can hold a drop). */
 export function discard(run: RogueRun, uid: string): boolean {
   if (!betweenRooms(run) || wearer(run, uid)) return false;
   const n = run.items.length;

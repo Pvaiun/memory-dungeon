@@ -2,13 +2,13 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { advance, loadContent } from "../engine/run.js";
 import { combat } from "../engine/combat/rules.js";
-import { member, newRogue, options, type RogueRun } from "../rogue.js";
-import { beginRecord, checkRecord, choose, endFight, recordResume, setOrder, startFight, type RecordEntry } from "./record.js";
+import { bag, member, newRogue, options, type RogueRun } from "../rogue.js";
+import { beginRecord, checkRecord, choose, endFight, junk, recordResume, setOrder, startFight, type RecordEntry } from "./record.js";
 
 const c = loadContent(JSON.parse(readFileSync("content/core-set.pack.json", "utf8")));
 type Recorded = RogueRun & { record: RecordEntry[] };
 
-/** A run played to its end by always taking the first thing offered, with a reload in one fight and an ability order changed. */
+/** A run played to its end by always taking the first thing offered, with a reload in one fight, an ability order changed and pieces junked. */
 function played(seed: number): Recorded {
   const run = newRogue(c, { seed, leader: "knight" }) as Recorded;
   beginRecord(run, "test");
@@ -22,6 +22,7 @@ function played(seed: number): Recorded {
       continue;
     }
     if (run.pending.kind === "map" && member(run, run.leader).order.length > 1) setOrder(run, run.leader, [...member(run, run.leader).order].reverse());
+    if (run.pending.kind === "map") { const it = bag(run).find((x) => !x.junk); if (it) junk(run, it.uid, true); }
     const o = options(c, run);
     choose(c, run, o.find((x) => x !== "skip" && x !== "leave") ?? o[0]);
   }
@@ -37,6 +38,7 @@ describe("a run's record", () => {
     expect(check.verdict, check.text).toBe("good");
     expect(check.fights).toBeGreaterThan(0);
     expect(check.reloads).toBe(1);
+    expect(run.record.some((e) => e.t === "junk")).toBe(true);
   });
   it("finds a step that went missing", () => {
     const r = copy();

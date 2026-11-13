@@ -15,9 +15,10 @@ export const SLOT_LIST: Slot[] = ["weapon", "armor", "offhand", "amulet"];
 
 /**
  * A piece of gear in a run: a piece of the content (`base`) and its rarity, the piece's own (every piece is fixed, with no
- * affixes at any rarity; a plain weapon is common). Its id in the content is `uid`.
+ * affixes at any rarity; a plain weapon is common). Its id in the content is `uid`. `junk`: the player's mark on a piece in
+ * the bag, to sell (it changes nothing in play; equipping the piece takes it off).
  */
-export type Item = { uid: string; base: string; rarity: RarityT };
+export type Item = { uid: string; base: string; rarity: RarityT; junk?: boolean };
 /** A version of an upgrade. */
 export type Version = "a" | "b";
 /** What a member has trained on one ability or its passive: the power step, a version, or both (in either order). */
