@@ -245,6 +245,9 @@ table.sum th { color: var(--dim); }
 .portrait.locked { width: 4.5rem; height: 4.5rem; min-height: 0; align-items: center; border: .125rem dashed var(--dim); border-radius: .25rem; color: var(--dim); font-size: 2rem; line-height: 2rem; }
 .overlay.dialog { justify-content: center; }
 .overlay.dialog > .win { flex: 0 0 auto; }
+/* a room's outcome, held until ONWARD */
+.outcome { display: flex; flex-direction: column; gap: .5rem; max-height: 100%; overflow-y: auto; scrollbar-width: none; animation: pop .32s steps(4) both; }
+.outcome > .actions { margin-top: .25rem; }
 
 /* the rogue's end: windows that pop in, one at a time */
 .overlay.cele { justify-content: center; z-index: 6; background: rgba(0, 0, 0, .75); cursor: pointer; }

@@ -168,7 +168,8 @@ function chooseIn(c: Content, run: RogueRun, pick: string) {
       if (pick !== "skip") {
         const o = p.offers[Number(pick.split(":")[1])];
         take(c, run, o);
-        note(run, `Took ${offerText(c, run, o)}.`);
+        // A sealed piece is found, not taken: what it is shows only now.
+        note(run, `${o.kind === "gear" && o.sealed ? "Found" : "Took"} ${offerText(c, run, o)}.`);
       }
       if (p.kind === "boon") return nextAct(c, run);
       run.pending = p.then ?? { kind: "map" };
