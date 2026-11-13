@@ -35,7 +35,7 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
 
 {
   const name = "Tinder charm";
-  const effect = "Its wearer's basic attacks add a few stacks (from Attack) to whichever of Burn, Chill, Shock or Bleed their target holds the most stacks of. If two are level, one of them at random. On a foe that holds none of the four, they add nothing.";
+  const effect = "Basic attacks add a few (from Attack) of whichever of Burn, Chill, Shock or Bleed the target holds most.";
   amulet("uncommon", name, {
     effect, stats: [st("attack", 1), st("max_hp", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.basic, { op: "one", of: ["burn", "chill", "shock", "bleed"].map((status) => ({ status, stacks: own("few", "attack") })), pick: "most", to: "other" })] })],
@@ -43,7 +43,7 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
   });
 }
 {
-  const name = "Challenger's token", effect = "Its wearer Taunts when each fight starts.";
+  const name = "Challenger's token", effect = "At fight start: Taunts.";
   amulet("uncommon", name, {
     effect, stats: [st("defense", 1), st("aggro", 1)],
     statuses: [own_(name, effect, { reactions: [atStart(give("taunt"))] })],
@@ -51,7 +51,7 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
   });
 }
 {
-  const name = "Carapace charm", effect = "Its wearer starts every fight behind a Shield of 15% of its max HP.";
+  const name = "Carapace charm", effect = "At fight start: a Shield of 15% of max HP.";
   amulet("uncommon", name, {
     effect, stats: [st("max_hp", 1), st("defense", 1)],
     statuses: [own_(name, effect, { reactions: [atStart(give("shield", "holder", share(0.15, "max_hp")))] })],
@@ -59,7 +59,7 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
   });
 }
 {
-  const name = "Hare's foot", effect = "Its wearer starts every fight Hasted.";
+  const name = "Hare's foot", effect = "At fight start: Hasted.";
   amulet("uncommon", name, {
     effect, stats: [sp("attack_speed", "medium"), st("max_hp", 1)],
     statuses: [own_(name, effect, { reactions: [atStart(give("haste"))] })],
@@ -68,7 +68,7 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
 }
 {
   // Half as often is its shape (Attack speed −100 counts no step).
-  const name = "Millstone", effect = "Its wearer's basic attacks come half as often and deal two and a quarter times as much.";
+  const name = "Millstone", effect = "Basic attacks come half as often and deal ×2.25 damage.";
   amulet("uncommon", name, {
     effect, stats: [st("attack", 1), st("defense", 1), { stat: "attack_speed", flat: -100 }],
     statuses: [own_(name, effect, { boosts: [{ tag: "basic", pct: 125 }] })],
@@ -77,7 +77,7 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
 }
 {
   // Twice as often is its shape (Attack speed +100 counts no step).
-  const name = "Hummingbird charm", effect = "Its wearer's basic attacks come half again as often and deal two thirds as much.";
+  const name = "Hummingbird charm", effect = "Basic attacks come 50% more often and deal 33% less.";
   amulet("uncommon", name, {
     // Even for the swing, but every rider and every Bleed a hit pays comes half again as often (at twice, they doubled).
     effect, stats: [sp("double_strike", "medium"), sp("evasion", "medium"), { stat: "attack_speed", flat: 50 }],
@@ -88,13 +88,13 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
 {
   // A look every tick: under half its MP, and no Clarity from the charm for a short while, it gains one and the wait begins.
   const name = "Clear-headed charm", wait = `${id(name)}_wait`;
-  const effect = "While its wearer is below half its MP, it gains Clarity every so often, the first at once.";
+  const effect = "Below half MP: Clarity every so often, starting at once.";
   const ready = { side: "self" as const, where: { mpBelow: 50, lacks: wait } };
   amulet("uncommon", name, {
     effect, stats: [st("max_mp", 1), st("aggro", -1)],
     statuses: [
       own_(name, effect, { reactions: [reactIf(on("fight_start"), ready, give("clarity"), give(wait))], pulse: { every: 1, if: ready, do: [give("clarity"), give(wait)] } }),
-      marker(wait, "Clear-headed", "Its next Clarity comes once this wait is over.", { stacking: "fizzle", duration: SO_OFTEN }),
+      marker(wait, "Clear-headed", "Next Clarity when this ends.", { stacking: "fizzle", duration: SO_OFTEN }),
     ],
     serves: "Barrage 1 ●● ⚙ mana as armour (half) ◆ free-cast",
   });
@@ -105,7 +105,7 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
 {
   // A Shield emptied by a foe's damage ends (cause stacks) with its peak as the amount and that foe as its other unit.
   const name = "Shatterstone charm";
-  const effect = "When a foe breaks its wearer's Shield, twice the most that Shield held is sent back to that foe. A Shield worn through by a status's damage sends nothing back.";
+  const effect = "When a foe breaks its Shield: sends back double the most it held.";
   amulet("rare", name, {
     effect, stats: [st("max_hp", 1), st("defense", 1), st("aggro", 1)],
     statuses: [own_(name, effect, { reactions: [react(on("status_ended", { status: "shield", cause: ["stacks"], other: "foe" }), { op: "damage", type: "none", amount: ofAmount(2), to: "other" })] })],
@@ -113,7 +113,7 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
   });
 }
 {
-  const name = "Bounty charm", effect = "When its wearer lands a killing blow, its ability with the longest cooldown left is ready at once. The ability that landed the blow counts.";
+  const name = "Bounty charm", effect = "On a kill: its ability with the most cooldown left is ready, the killing one included.";
   amulet("rare", name, {
     effect, stats: [st("attack", 1), critStep(1), st("max_mp", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.kill, { op: "cooldown", which: "longest", set: "ready", to: "holder" })] })],
@@ -121,7 +121,7 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
   });
 }
 {
-  const name = "Echo charm", effect = "Its wearer's extra strikes carry what the swing carries.";
+  const name = "Echo charm", effect = "Extra strikes carry the swing's effects.";
   amulet("rare", name, {
     effect, stats: [sp("double_strike", "medium"), st("attack", 1), sp("evasion", "medium")],
     statuses: [own_(name, effect, { echo: true })],
@@ -130,7 +130,7 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
 }
 {
   // Half the wait, not ready at once: with a shatter every few ticks, at once it fired its first ability on every shatter.
-  const name = "Floe charm", effect = "When a foe's Chill shatters, its wearer's first-slotted ability comes half its wait closer.";
+  const name = "Floe charm", effect = "On a shatter: halves its first-slotted ability's wait.";
   amulet("rare", name, {
     effect, stats: [sp("cast_speed", "medium"), st("max_mp", 1), st("max_hp", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.shatter, { op: "cooldown", which: "first", set: { times: 50 }, to: "holder" })] })],
@@ -138,7 +138,7 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
   });
 }
 {
-  const name = "Lightning-glass", effect = "Its wearer's abilities deal 4% more for each Shock on their target. The Shock stays.";
+  const name = "Lightning-glass", effect = "Abilities deal +4% per Shock on the target. The Shock stays.";
   amulet("rare", name, {
     effect, stats: [st("attack", 1), sp("cooldown", "medium"), st("max_mp", 1)],
     statuses: [own_(name, effect, { boosts: [{ tag: "ability", pct: stacksOf("shock", 4, "target") }] })],
@@ -148,7 +148,7 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
 {
   // The cap takes what's above half as the status lands, and at the cap the unit reads as under it (the engine's).
   const name = "Halved heart";
-  const effect = "Its wearer starts every fight at half its max HP: anything above half is lost as the fight starts, and it isn't a price paid. It can't be healed above half; healing past that counts as healing past full. At half it counts as below half its max HP. Its wearer's hits deal half again as much.";
+  const effect = "Starts each fight at half HP and can't be healed above it (the rest is overhealing). Counts as below half. Hits deal +50%.";
   amulet("rare", name, {
     effect, stats: [sp("lifesteal", "medium"), st("max_hp", 1), st("defense", 1)],
     statuses: [own_(name, effect, { healCap: 50, boosts: hits(50) })],
@@ -157,7 +157,7 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
 }
 {
   const name = "Crescendo charm";
-  const effect = "Each time its wearer finishes casting an ability, that ability gains a Crescendo (that ability deals, heals and adds a fifth more for each Crescendo it holds, up to 10), kept for the fight. An ability costs two fifths more for each Crescendo it holds, in whatever it's paid in. A cast that costs nothing still gains one.";
+  const effect = "Each cast gives that ability a Crescendo: +20% damage, healing and stacks, and +40% cost, per Crescendo (up to 10).";
   amulet("rare", name, {
     effect, stats: [st("max_mp", 1), st("mp_regen", 1), sp("cooldown", "medium")],
     statuses: [own_(name, effect, { mods: [{ damage: 20, heal: 20, stacks: { pct: 20 }, mp: 40, times: CRESCENDO }] })],
@@ -167,7 +167,7 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
 {
   // The fallen foe's fire, held as a tally on the wearer (not Burn), laid on the first foe its next hit lands on.
   const name = "Ember heart", held = `${id(name)}_held`;
-  const effect = "When a burning foe falls, all its Burn passes to the next foe its wearer hits. Until then the charm keeps it, shown as a number on its wearer: it isn't Burn on the wearer, and it doesn't burn down. A fallen foe's fire moves once: if something else in the party moves it too, it's split evenly between them.";
+  const effect = "When a burning foe falls: keeps all its Burn for the next foe it hits.";
   amulet("rare", name, {
     effect, stats: [st("attack", 1), sp("attack_speed", "medium"), st("max_hp", 1)],
     statuses: [
@@ -177,13 +177,13 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
           reactIf(EV.hit, { side: "self", where: { has: held } }, give("burn", "other", stacksOf(held), { rider: false }), lift(held, "holder", "marker")),
         ],
       }),
-      marker(held, "EMBER", "A fallen foe's fire, for the next foe it hits.", { show: "icon", stacking: "intensity" }),
+      marker(held, "EMBER", "Burn for the next foe it hits.", { show: "icon", stacking: "intensity" }),
     ],
     serves: "Bonfire 2 ●●●, Hunt ●● ⚙ fuse (key)",
   });
 }
 {
-  const name = "Hunter's mark", effect = "While no foe is Marked, its wearer Marks the foe with the lowest current HP.";
+  const name = "Hunter's mark", effect = "While no foe is Marked: Marks the foe with the least HP.";
   amulet("rare", name, {
     effect, stats: [critStep(1), sp("crit_damage", "medium"), st("attack", 1)],
     statuses: [own_(name, effect, {
@@ -193,7 +193,7 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
   });
 }
 {
-  const name = "Shroud charm", effect = "Whenever an ally drops below a third of its max HP, that ally is Hidden.";
+  const name = "Shroud charm", effect = "An ally that drops below 33% HP is Hidden.";
   amulet("rare", name, {
     effect, stats: [sp("evasion", "medium"), st("aggro", -1), st("max_hp", 1)],
     statuses: [own_(name, effect, { reactions: [react(on("hp_low", { whose: "team", line: 33 }), give("hidden", "owner"))] })],
@@ -206,7 +206,7 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
 {
   // Chill its wearer lays on one foe (not an area's), copied to every other foe; a copy is never copied again.
   const name = "Heart of winter";
-  const effect = "Whenever its wearer adds Chill to one foe, every other foe gains as many stacks. What already adds Chill to every foe is unchanged. The Chill it adds isn't added again.";
+  const effect = "When it adds Chill to one foe, every other foe gains as much.";
   amulet("legendary", name, {
     effect, stats: [st("attack", 1), sp("attack_speed", "medium"), sp("cooldown", "medium"), st("max_hp", 1)],
     statuses: [own_(name, effect, {
@@ -216,7 +216,7 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
   });
 }
 {
-  const name = "Second dawn", effect = "Each time a foe falls, the start-of-fight effects of every ally's gear and seat happen again, once for each fall.";
+  const name = "Second dawn", effect = "When a foe falls: every ally's gear and seat start-of-fight effects happen again.";
   amulet("legendary", name, {
     effect, stats: [st("attack", 1), critStep(1), st("max_hp", 1), st("defense", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.fall, { op: "restart", to: TO.everyAlly })] })],
@@ -225,7 +225,7 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
 }
 {
   const name = "Downhill charm";
-  const effect = "What its wearer's killing blows have left over is split evenly among the other foes, as a hit on each. It carries once: a share that fells a foe carries no further.";
+  const effect = "On a kill: the blow's leftover damage splits evenly among the other foes, as hits.";
   amulet("legendary", name, {
     effect, stats: [st("attack", 2), critStep(1), sp("crit_damage", "medium")],
     statuses: [own_(name, effect, { reactions: [{ on: on("ko", { whose: "foe", other: "holder", tags: ["physical"], notTags: ["bare"] }), split: "over", do: [{ op: "strike", of: "over", split: true, to: TO.everyFoe }] }] })],
@@ -234,7 +234,7 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
 }
 {
   const name = "Twin-knot";
-  const effect = "Whenever its wearer gives itself a status, the other ally with the lowest share of max HP gains it too, with as many stacks. A state its wearer holds only while something is true of it (while it's below half its max HP, while it holds a Shield) isn't given, and isn't shared. What's shared isn't shared again.";
+  const effect = "When it gives itself a status, the lowest other ally gains it too, same stacks. A state held only while something is true isn't shared.";
   amulet("legendary", name, {
     effect, stats: [sp("cooldown", "medium"), st("attack", 1), st("max_hp", 1), st("defense", 1)],
     statuses: [own_(name, effect, { reactions: [react(on("status_gained", { other: "holder", repeat: false }), { op: "share", to: TO.otherLowestAlly })] })],
@@ -244,7 +244,7 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
 {
   // Every debuff it holds rides its next hit that lands onto the foe hit; Doom stays.
   const name = "Scapegoat charm";
-  const effect = "When its wearer is given a debuff, its next hit that lands gives that debuff, with all the stacks it holds then, to its target, and the wearer is rid of it. It lands on the foe as a fresh one, at its own length. Doom can't be passed on.";
+  const effect = "Each hit it lands moves its debuffs, all stacks, onto the target. Never Doom.";
   amulet("legendary", name, {
     effect, stats: [st("aggro", 1), sp("attack_speed", "medium"), st("max_hp", 1), st("defense", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.hit, { op: "pass", label: "debuff", except: ["doom"], to: "other" })] })],
@@ -253,7 +253,7 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
 }
 {
   const name = "Burning heart";
-  const effect = "Every 10 ticks, its wearer sets itself alight: a few Burn on itself, a set number that reads no stat. While it holds any Burn, its wearer's hits deal half again as much.";
+  const effect = "Every 10 ticks: a few Burn on itself (no stat). While it burns: hits deal +50%.";
   amulet("legendary", name, {
     effect, stats: [sp("lifesteal", "high"), st("max_hp", 1), st("attack", 1)],
     statuses: [own_(name, effect, { pulse: { every: 10, do: [give("burn", "holder", FLAT_STACKS.few)] }, boosts: hits(whileIt(50, { has: "burn" })) })],
@@ -264,7 +264,7 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
   // A fallen unit can't gain a status, so its fall schedules its own return unless the marker is there; the marker is set
   // when it stands again by its own hand. As every revive, it comes back with its actions on full cooldown.
   const name = "Phoenix ember", done = `${id(name)}_used`;
-  const effect = "Once a fight, when its wearer falls, it stands up 4 ticks later with a third of its max HP, Hidden, and with every ability on its full cooldown. If no ally is standing when it falls, the fight is lost before it rises.";
+  const effect = "Once a fight: rises 4 ticks after falling, at 33% HP, Hidden, abilities on full cooldown. A wipe is still lost.";
   amulet("legendary", name, {
     effect, stats: [st("max_hp", 1), st("defense", 1), sp("evasion", "medium"), st("mp_regen", 1)],
     statuses: [
@@ -282,7 +282,7 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
 }
 {
   // Cooldown −16.7 is its shape (cooldowns ×1.2, a fifth longer), counting no step.
-  const name = "Ready stance", effect = "Its wearer's abilities start every fight at least half charged. Its cooldowns are a fifth longer.";
+  const name = "Ready stance", effect = "Abilities start each fight at least half charged. Cooldowns 20% longer.";
   amulet("legendary", name, {
     effect, stats: [st("attack", 1), critStep(1), st("max_mp", 1), sp("evasion", "medium"), { stat: "cooldown_reduction", flat: -16.7 }],
     statuses: [own_(name, effect, { reactions: [atStart({ op: "cooldown", which: "abilities", set: { atMost: 50 }, to: "holder" })] })],
@@ -292,7 +292,7 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
 {
   // The chance set after every stat; hits −50%, and the crit multiplier doubled, so a crit lands at its usual size.
   const name = "Gambler's coin";
-  const effect = "Its wearer's crit chance is about half. Its wearer's hits that don't crit deal half; its crits deal what a crit always does. Hits that always crit still do, and a chance another card sets on some hits wins over the coin's.";
+  const effect = "Crit chance is 50%. Hits that don't crit deal half; crits deal as usual.";
   amulet("legendary", name, {
     effect, stats: [sp("crit_damage", "medium"), st("attack", 1), st("max_hp", 1), st("max_mp", 1)],
     statuses: [own_(name, effect, { set: [{ stat: "crit_chance", value: 50 }], boosts: hits(-50), stats: [{ stat: "crit_multiplier", flat: share(1, "crit_multiplier") }] })],
@@ -301,7 +301,7 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
 }
 {
   const name = "Turncoat charm";
-  const effect = "Its wearer's Attack and Defense are swapped, as they stand on its sheet with its gear and its seat counted. Statuses change them as usual after that: a Guard still raises its Defense.";
+  const effect = "Attack and Defense swap, gear and seat counted. Statuses apply after.";
   amulet("legendary", name, {
     effect, stats: [st("max_hp", 2), critStep(1), sp("evasion", "medium")],
     statuses: [own_(name, effect, { swap: ["attack", "defense"] })],
