@@ -15170,7 +15170,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks ignore Taunt and have +5% Crit chance; each crit readies the next.",
+   "text": "Basic attacks ignore Taunt and have +5% Crit chance; a crit makes the next basic attack ready at once.",
    "seek": "basic",
    "crits": [
     {
@@ -15227,7 +15227,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks ignore Taunt and have +5% Crit chance; each crit readies the next. +9% Crit chance, not +5%.",
+   "text": "Basic attacks ignore Taunt and have +5% Crit chance; a crit makes the next basic attack ready at once. +9% Crit chance, not +5%.",
    "seek": "basic",
    "crits": [
     {
@@ -33397,7 +33397,7 @@
    },
    "b": {
     "name": "Quick draw",
-    "text": "Basic attacks ignore Taunt and have +5% Crit chance; each crit readies the next."
+    "text": "Basic attacks ignore Taunt and have +5% Crit chance; a crit makes the next basic attack ready at once."
    }
   },
   {
