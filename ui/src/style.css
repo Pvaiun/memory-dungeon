@@ -227,7 +227,6 @@ button.mid { padding: .625rem .5rem; }
 .ctl button { padding: .75rem .25rem; min-width: 3rem; text-align: center; flex: 1 1 auto; }
 .ctl button.speed { min-width: 4rem; }
 .ctl .tick { flex: 0 0 auto; padding: 0 .25rem; }
-.inspect > .bar { margin: 0 0 .25rem; }
 .inspect .st { display: flex; align-items: flex-start; gap: .5rem; min-height: 2rem; margin: .25rem 0; }
 .inspect .st .sticon { margin-top: .125rem; }
 /* a fight's end and the campfire: the way on in the message window's place, the rest below */

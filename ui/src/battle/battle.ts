@@ -655,7 +655,6 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
       sh ? h("span", { class: "buff" }, `SHIELD ${disp(sh)}`) : null,
       isParty || designer ? h("span", { class: "mp" }, `MP ${disp(u.mp)}`) : null,
     ));
-    if (!u.ko) body.append(bar(u.hp / u.stats.max_hp, "hp", sh / u.stats.max_hp));
     if (casting) body.append(h("div", { class: "line hi" }, `CASTING ${castName}`, h("span", { class: "dim r" }, `${Math.max(0, Math.ceil((u.cast!.end - vt) / SUBTICKS))}T`)));
     // Markers are bookkeeping, hidden as hidden statuses are; designer view lists them.
     const sts = u.statuses.filter((s) => shownAsIcon(s.id, designer));
