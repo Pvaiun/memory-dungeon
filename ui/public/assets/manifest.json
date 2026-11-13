@@ -1970,5 +1970,6 @@
   "rune_sword": "basic/rune_sword.png",
   "fist": "basic/fist.png",
   "bite": "basic/bite.png"
- }
+ },
+ "shard": "shard.png"
 }

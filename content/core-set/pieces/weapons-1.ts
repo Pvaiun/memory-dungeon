@@ -79,7 +79,7 @@ weapon("dagger", "common", "Keen dirk", { stats: [critStep(1)], serves: "Hunt, C
 }
 {
   const name = "Ambush knife";
-  const effect = "Hits on a foe that hasn't acted yet crit exactly 80% of the time.";
+  const effect = "Hits on a foe that hasn't acted yet crit 80% of the time.";
   weapon("dagger", "rare", name, {
     effect, stats: [critStep(2), sp("crit_damage", "medium")],
     statuses: [own_(name, effect, { crits: [{ when: { acted: false }, set: 80 }] })],
@@ -234,7 +234,7 @@ weapon("wand", "common", "Hazel wand", { stats: [sp("cooldown", "medium"), st("m
   });
 }
 {
-  const name = "Tithe wand", effect = "Basic attacks give the ally with the least MP 10% of Attack as MP.";
+  const name = "Tithe wand", effect = "Basic attacks give the ally with the lowest MP% 10% of Attack as MP.";
   weapon("wand", "uncommon", name, {
     effect, stats: [sp("cooldown", "medium"), sp("attack_speed", "medium"), st("mp_regen", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.basic, { op: "mp", amount: share(0.1, "attack"), to: TO.leastMpAlly })] })],
@@ -301,7 +301,7 @@ weapon("sword", "common", "Gilded sword", { stats: [st("max_hp", 1)], serves: "T
   });
 }
 {
-  const name = "Mercy's edge", effect = "Basic attacks heal the lowest ally for 33% of the damage.";
+  const name = "Mercy's edge", effect = "Basic attacks heal the ally with the lowest HP% for 33% of the damage.";
   weapon("sword", "uncommon", name, {
     effect, stats: [st("attack", 1), st("max_hp", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.basic, { op: "heal", amount: ofAmount(1 / 3), to: TO.lowestAlly })] })],

@@ -9,6 +9,10 @@ import { countAt, count, own, piece, pieceStatus, serves, share, stacksOf, swing
 import { T } from "../classes.js";
 import { apply, both, helper, kit, marker, mythics, ofHolder, removeMine, served, tidy } from "./kit.js";
 
+/*
+ * A mythic weapon belongs to a kind its class wears, for how it's shown (its icon, how it's held, its swing's look); its
+ * own speed, swing and hands stand over the kind's.
+ */
 /** A mythic weapon's hit at its own speed: a full, even swing, sized by its interval as every kind's is (scale.ts swingAt). */
 const ownHit = (cooldown: number, stat: string): NumT => swingAt(cooldown, "full", "even", stat);
 const mythic = (m: Parameters<typeof piece>[0], line: string) => {
@@ -21,8 +25,8 @@ const mythic = (m: Parameters<typeof piece>[0], line: string) => {
 
 // Knight: Horn of the keep. A status doesn't know which ability applied it, so any Taunt the Knight loses while another ally casts comes back.
 mythic({ name: "Horn of the keep", slot: "offhand", rarity: "mythic", kind: "horn", mythic: "knight", statuses: ["horn_of_the_keep"],
-    text: "When hit: the other ally with the least MP gains half the damage as MP. A Taunt that ends during an ally's wind-up comes back." }, "Barrage 3 ●●●, Toll ●● ⚙ mana as armour (half)");
-helper(pieceStatus("horn_of_the_keep", "Horn of the keep", "When hit: the other ally with the least MP gains half the damage as MP. A Taunt that ends during an ally's wind-up comes back.", {
+    text: "When hit: the other ally with the lowest MP% gains half the damage as MP. A Taunt that ends during an ally's wind-up comes back." }, "Barrage 3 ●●●, Toll ●● ⚙ mana as armour (half)");
+helper(pieceStatus("horn_of_the_keep", "Horn of the keep", "When hit: the other ally with the lowest MP% gains half the damage as MP. A Taunt that ends during an ally's wind-up comes back.", {
     reactions: [
       { on: { event: "hit_taken" }, do: [{ op: "mp", amount: { scale: [{ ratio: 0.5, amount: true }] }, to: { side: "others", pick: "lowest", by: "mp_share" } }] },
       { on: { event: "status_ended", status: "taunt", cause: ["expired"] }, if: { side: "others", where: { casting: true } }, do: [apply("taunt", { to: "holder" })] },
@@ -89,9 +93,9 @@ helper(pieceStatus("writ_of_judgement", "Writ of judgement", "When Condemn Marks
 {
   const counted = { event: "hit_lands" as const, notTags: ["stormspear"] };
   mythic({ name: "Stormspear", slot: "weapon", rarity: "mythic", mythic: "valkyrie", statuses: ["stormspear"],
-      text: "Every 4th hit calls a blow on the foe with the most Shock, ignoring Taunt. The Shock stays.",
-      weapon: { type: "physical", hands: 1, cooldown: KIND_SPEED.spear, amount: weaponHit("spear") } }, "Storm 3 ●●●, Hunt ● ⚙ held charge (key)");
-  helper(pieceStatus("stormspear", "Stormspear", "Every 4th hit calls a blow on the foe with the most Shock, ignoring Taunt. The Shock stays.", {
+      text: "Every 4th hit calls a blow on the foe with the most Shock, ignoring Taunt.",
+      weapon: { kind: "spear", type: "physical", hands: 1, cooldown: KIND_SPEED.spear, amount: weaponHit("spear") } }, "Storm 3 ●●●, Hunt ● ⚙ held charge (key)");
+  helper(pieceStatus("stormspear", "Stormspear", "Every 4th hit calls a blow on the foe with the most Shock, ignoring Taunt.", {
     reactions: [
       { on: counted, if: { side: "self", where: countAt("stormspear_count", 3) }, do: [{
         op: "strike", tag: "stormspear", seek: true, to: { side: "foes", pick: "highest", by: { stacks: "shock" } },
@@ -122,7 +126,7 @@ const WITCH_SWINGS = 3;
 mythic({
   name: "The witch-blade", slot: "weapon", rarity: "mythic", mythic: "hexer",
   text: "After each ability, its next 3 basic attacks hit every foe with a debuff.",
-  weapon: { type: "physical", hands: 1, cooldown: 5.8, amount: ownHit(5.8, "attack") },
+  weapon: { kind: "sword", type: "physical", hands: 1, cooldown: 5.8, amount: ownHit(5.8, "attack") },
   statuses: ["the_witch_blade"],
 }, "Snap 3 ●●●, Bonfire ●●, Storm ●● ⚙ every colour (half), red rain (half)");
 helper(pieceStatus("the_witch_blade", "The witch-blade", "After each ability, its next 3 basic attacks hit every foe with a debuff.", {
@@ -138,11 +142,11 @@ helper(kit("the_witch_blade_swings", "THE WITCH-BLADE", "Basic attacks hit every
 // Monk: Ember palms. Every hit it lands deals more for each Burn on the foe hit, added before boosts; the Burn stays.
 mythic({
   name: "Ember palms", slot: "weapon", rarity: "mythic", mythic: "monk",
-  text: "Hits deal a little extra for each Burn on the target. The Burn stays.",
-  weapon: { type: "physical", hands: 1, cooldown: 6.0, amount: ownHit(6.0, "attack") },
+  text: "Hits deal extra damage for each Burn on the target.",
+  weapon: { kind: "fist", type: "physical", hands: 1, cooldown: 6.0, amount: ownHit(6.0, "attack") },
   statuses: ["ember_palms"],
 }, "Bonfire 3 ●●●, Cuts ●●");
-helper(pieceStatus("ember_palms", "Ember palms", "Hits deal a little extra for each Burn on the target. The Burn stays.", {
+helper(pieceStatus("ember_palms", "Ember palms", "Hits deal extra damage for each Burn on the target.", {
   adds: [{ on: "physical", amount: stacksOf("burn", 25, "target") }],
 }));
 
@@ -212,7 +216,7 @@ helper(pieceStatus("glaciers_heart", "Glacier's heart", `When a foe's Chill shat
 mythic({
   name: "Eye of the tempest", slot: "weapon", rarity: "mythic", mythic: "stormcaller",
   text: "Every hit also jumps to a random foe for half. When a foe falls holding Shock, every other foe gains half of it.",
-  weapon: { type: "physical", hands: 1, cooldown: 6.6, amount: ownHit(6.6, "attack") },
+  weapon: { kind: "rune_sword", type: "physical", hands: 1, cooldown: 6.6, amount: ownHit(6.6, "attack") },
   statuses: ["eye_of_the_tempest"],
 }, "Storm 3 ●●●");
 helper(pieceStatus("eye_of_the_tempest", "Eye of the tempest", "Every hit also jumps to a random foe for half. When a foe falls holding Shock, every other foe gains half of it.", {

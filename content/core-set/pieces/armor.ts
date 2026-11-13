@@ -35,7 +35,7 @@ armor("plate", "common", "Bristled plate", { stats: [sp("thorns", "medium")], se
   const name = "Portcullis", on_ = `${id(name)}_on`, effect = "Above half HP: Aggro +25.";
   armor("plate", "uncommon", name, {
     effect, stats: [sp("thorns", "medium"), st("max_hp", 1)],
-    statuses: [own_(name, effect, { reactions: whileHp(on_, 50, false) }), switched(on_, "PORTCULLIS", "Draws far more.", { stats: [{ stat: "aggro", flat: FAR }] })],
+    statuses: [own_(name, effect, { reactions: whileHp(on_, 50, false) }), switched(on_, "PORTCULLIS", `Aggro +${FAR}.`, { stats: [{ stat: "aggro", flat: FAR }] })],
     serves: "Toll 1 ●●, Bonfire ●, Storm ● ⚙ frozen gate (half), mirror (half), reckoning (half) ◆ draw",
   });
 }
@@ -261,7 +261,7 @@ armor("leather", "common", "Spotter's coat", { stats: [sp("accuracy", "medium")]
   const name = "Mottled hide", on_ = `${id(name)}_on`, effect = "Below half HP: Aggro −25.";
   armor("leather", "uncommon", name, {
     effect, stats: [sp("evasion", "medium"), critStep(1)],
-    statuses: [own_(name, effect, { reactions: whileHp(on_, 50, true) }), switched(on_, "MOTTLED", "Draws far less.", { stats: [{ stat: "aggro", flat: -FAR }] })],
+    statuses: [own_(name, effect, { reactions: whileHp(on_, 50, true) }), switched(on_, "MOTTLED", `Aggro −${FAR}.`, { stats: [{ stat: "aggro", flat: -FAR }] })],
     serves: "net, Pact ●",
   });
 }

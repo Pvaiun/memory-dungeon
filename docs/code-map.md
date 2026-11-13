@@ -66,11 +66,11 @@ src/
   rogue.ts                   the rogue mode's public face; lists its parts
   rogue/                     the rogue mode: a run as data, moved on one decision at a time
     state.ts                 the run's data (RogueRun, Member, Offer, Pending), shared helpers, the meta
-    fights.ts                the run's items as content, the party a fight takes, starting and ending a fight, knobs, foes
+    fights.ts                the run's items as content, the party a fight takes, starting and ending a fight, a boss's Destiny Shard, a shard's return, knobs, foes
     acts.ts                  a new run (leader, draft, known abilities); each act's map and rooms
     offers.ts                the stock and every offer: gear, mythics, tomes, recruits, formations, supplies, prices, the shop
     training.ts              learning abilities; power steps and versions
-    party.ts                 free actions between rooms: gear, formation, seats, order, swaps, supplies
+    party.ts                 free actions between rooms: gear, formation, seats, order, swaps, supplies, junk
     decisions.ts             what the pending decision offers, and choose()
     rooms.ts                 entering a room, a campfire, the next region, an event's effects
     record.ts                a run's record for balancing: every choice and free action (interface runs only)
@@ -97,7 +97,7 @@ src/
     content.ts               content with patches (variants), and single fights as one-stage dungeons
     parties.ts               parties: building and listing them, plain weapons, what fits a slot
     kits.ts                  sensible kits from the pack by class profile, seating, ability order
-    rogue-ai.ts              the simulated rogue player, with dials
+    rogue-ai.ts              the simulated rogue player, with dials; it spends Destiny Shards and retries a fight prepared at random
     study.ts                 a study: the data file that says what to run
     combat.ts                a study's combat level: many parties against dungeons and fights
     measure.ts               probes watching each fight's HP, MP and pace
@@ -185,20 +185,20 @@ ui/
     mode.ts                  free play or the rogue mode, saved
     screens.ts               the menus and free play's screens; go() switches screens
     sheet.ts                 unit sheets: a class or an enemy, its stats, abilities and gear
-    describe.ts              plain-language descriptions of abilities, effects and statuses; the sizes cards show, an ability's and the stacks a piece or a passive lays
+    describe.ts              plain-language descriptions of abilities, effects and statuses; the sizes cards show, an ability's and the stacks a piece or a passive lays; a status's own numbers, a stack's worth
     bestiary.ts              the bestiary's record: enemies met and looked at
     dom.ts                   DOM helpers: h(), windows, rows, buttons, the back gesture
     art.ts                   art tables: which sprite, icon or look shows what
     effects.ts               the effects tables: which VFX strip each action, status and event plays; the designer's sizes; the catalogue
-    pixel.ts                 graphics: the pixel scale, sprites, icons, the font, effects enlarged by Scale2x and Scale3x
+    pixel.ts                 graphics: the pixel scale, sprites, icons (the Destiny Shard's among them), the font, effects enlarged by Scale2x and Scale3x
     update.ts                reloading onto a newer build
     rogue-screens.ts         the rogue screens' public face; lists them
     rogue/
-      parts.ts               the navigation, small parts and scenes the rogue screens share
-      run.ts                 the dispatcher, the leader, the draft, the map, a fight in waiting
+      parts.ts               the navigation, small parts and scenes the rogue screens share; a pick's answer, and a room's outcome held over its screen until ONWARD
+      run.ts                 the dispatcher, the leader, the draft, the map, a boss's Destiny Shard, a fight in waiting
       rooms.ts               spoils, a captive, the shop and training, the campfire, events, choices, Muster and Drill, level up, the next region
-      end.ts                 the run's end, its record, a won run's moment
-      party.ts               managing the party: seats, a unit's sheet and order, its gear
+      end.ts                 a lost fight's Destiny Shard offer, the run's end, its record, a won run's moment
+      party.ts               managing the party: seats, the bag and its junk, a piece put on from the bag, a unit's sheet and order, its gear
       state.ts               the run and the rogue meta, saved
     battle/
       battle.ts              the battle screen: the field, messages, the party, controls, a fight's end
@@ -206,11 +206,13 @@ ui/
       effects.ts             plays the effects in step with the story: missiles, blows that follow, statuses that land with them
       tuner.ts               the FX SIZES screen: a sample fight where each look plays again and again, sized by the designer
       narrate.ts             turns the log into messages
+      tally.ts               a fight's numbers from its log: each unit's damage dealt and taken, healing, actions and statuses laid, and what each status did for the side it served
+      recap.ts               the fight's recap, opened from the summary at a fight's end: each member's numbers on one scale, its actions on a tap, and what each status did
       scene.ts               the field, backdrops, the campfire, the menus' stages and party strip; drawing the effects
       audio.ts               sound effects and music
   tools/
     assets.py                builds ui/public/assets/ from the director's art packs (all but the skill and status icons)
-    weapons-fitted/          weapon sheets resized to fit the hand, used in place of the pack's own of the same name
+    weapons-fitted/          weapon sheets used in place of the pack's own of the same name (resized, redrawn or moved)
     gear_icons.py            builds the gear icons (gear.png): every piece but the weapons, from the gear icon pack and icons drawn in its style
     skill_icons.py           builds the classes' ability and passive icons, the basic attacks' by weapon kind and every status's, from the director's picks in three packs, all on one tile
 tests/                       the pack's own tests

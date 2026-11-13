@@ -204,7 +204,7 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
     } as StatusT;
   };
   add(
-    formation("The wheel", "rare", "Every so often, each unit takes the next seat's part.", [
+    formation("The wheel", "rare", `Every ${SO_OFTEN} ticks (the first at ${COOLDOWN.short / 2}), each unit takes the next seat's part.`, [
       { name: "Wall", text: PARTS.wall.text, statuses: ["the_wheel_wall_opening"] },
       { name: "Blade", text: PARTS.blade.text, statuses: ["the_wheel_blade_opening"] },
       { name: "Well", text: PARTS.well.text, statuses: ["the_wheel_well_opening"] },

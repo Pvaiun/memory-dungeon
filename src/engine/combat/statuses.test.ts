@@ -31,6 +31,23 @@ test("apply: a status takes effect as soon as its item resolves: a dagger's thre
   assert.equal(a.has("T", "armor_break")[0].stacks, 3000, "three applications from one action count as three");
 });
 
+test("apply: under one stack, an application to a unit that doesn't hold the status waits there, adding up and doing nothing, and lands with the one that makes a stack", () => {
+  const frost = debuff("frost", { stacking: "intensity", pulse: { every: 1, do: [{ op: "damage", type: "none", amount: 1 }] } });
+  const a = arena({ party: [{ name: "A", weapon: rapid({ amount: 1, apply: [{ status: "frost", stacks: 0.4 }] }) }], enemies: [BAG], statuses: [frost] });
+  const swings = () => a.hits("Bag").filter((e) => e.part !== "pulse").length;
+  const held = () => a.has("Bag", "frost").reduce((s, x) => s + x.stacks, 0) / 1000;
+  let t = 0;
+  while (swings() < 2) a.to(++t);
+  assert.equal(held(), 0, "two swings: 0.8 waits");
+  assert.equal(a.entries("status", (e) => e.status === "frost").length, 0, "nothing shows");
+  assert.equal(a.hits("Bag").length, 2, "and nothing pulses");
+  while (swings() < 3) a.to(++t);
+  near(held(), 1.2);
+  assert.equal(a.entries("status", (e) => e.status === "frost").length, 1, "the third lands all three at once");
+  while (swings() < 4) a.to(++t);
+  near(held(), 1.6, 0.001);
+});
+
 test("apply: a status attached to a hit applies even when the hit deals nothing (BLOCKED), and never when it's evaded", () => {
   const mark = debuff("mark", { stats: [{ stat: "aggro", flat: 1 }] });
   const a = arena({ party: [{ name: "A", stats: { accuracy: -100 }, weapon: rapid({ amount: 1, apply: [{ status: "mark" }] }) }], enemies: [{ name: "T", stats: { max_hp: 1e6, defense: 8, evasion: 50 } }], statuses: [mark] }).to(400);

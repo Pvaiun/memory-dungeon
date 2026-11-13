@@ -79,13 +79,13 @@ export function checkUpgrades(pack: Pack, ix: Index, w: Walker, r: Report) {
 export function checkGear(pack: Pack, ix: Index, w: Walker, r: Report, c: Combat) {
   pack.gear.forEach((g, i) => {
     const p = `gear[${i}]`;
-    // A mythic fits one class whatever its kind, so it may have none (a mythic weapon states its own speed, type and hands).
+    // A mythic fits one class whatever its kind; a mythic weapon still belongs to one, and its own speed, type and hands stand over the kind's.
     if (g.mythic) w.ref("classes", g.mythic, `${p}.mythic`, "class");
     // A piece's rarity is mythic exactly when it names its class.
     if (g.rarity && (g.rarity === "mythic") !== !!g.mythic) r.error("gear.rarity", `${p}.rarity`, g.mythic ? `a mythic piece's rarity is mythic` : `only a piece that names its class with 'mythic' is mythic`);
     if (g.slot === "weapon") {
       if (!g.weapon) r.error("gear.weapon", p, `a weapon sets the basic attack: give it 'weapon'`);
-      else if (!g.weapon.kind && !g.mythic) r.error("gear.weapon", `${p}.weapon`, `a weapon piece belongs to a kind`);
+      else if (!g.weapon.kind) r.error("gear.weapon", `${p}.weapon`, `a weapon piece belongs to a kind`);
     } else if (g.weapon) r.error("gear.weapon", `${p}.weapon`, `only the weapon slot sets a basic attack`);
     if (g.slot === "armor") {
       if (g.armor) w.ref("armorTypes", g.armor, `${p}.armor`, "armor type");

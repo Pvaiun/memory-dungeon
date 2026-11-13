@@ -2,7 +2,7 @@
  * What every rogue screen shares: the navigation screens.ts hands over, small parts (item rows, an offer's body, the
  * party strip, a confirm), and the scenes: each moment of the run drawn in its region.
  */
-import { bar, button, type Child, h, toast, win } from "../dom.js";
+import { bar, button, type Child, h, nav, toast, win } from "../dom.js";
 import type { RogueNodeKindT } from "../../../src/schema.js";
 import { type Cell, type Pose } from "../art.js";
 import { bagRoom, bench, formationRarity, type Item, itemGear, member, type Offer, parseTraining, rogue, type RogueRun, seatsOf, wearer } from "../../../src/rogue.js";
@@ -66,13 +66,19 @@ const rosterOrder = (run: RogueRun) => [...run.party, ...bench(run)];
  * default), the line of who can wear it, the roster first; never what it's for, which would spoil the discovery. The
  * stacks it lays are shown for its wearer, else the first of the roster who can wear it.
  */
-export function itemRow(run: RogueRun, it: Item, onClick?: () => void, opts: { arrow?: boolean; stats?: Record<string, number> | null; right?: HTMLElement | null; who?: boolean } = {}): HTMLElement {
+export function itemRow(run: RogueRun, it: Item, onClick?: () => void, opts: { arrow?: boolean; stats?: Record<string, number> | null; right?: HTMLElement | null; who?: boolean; brief?: boolean } = {}): HTMLElement {
   const g = c.gear.get(it.uid) ?? itemGear(c, it);
   const by = wearer(run, it.uid) ?? rosterOrder(run).find((cls) => canEquip(classOf(cls), g));
-  const r = gearRow(g, g.slot, opts.stats ?? (by ? fighter(run, by).stats : null), onClick, opts.arrow ?? false, opts.who === false ? undefined : rosterOrder(run));
+  const r = gearRow(g, g.slot, opts.stats ?? (by ? fighter(run, by).stats : null), onClick, opts.arrow ?? false, opts.who === false || opts.brief ? undefined : rosterOrder(run), opts.brief);
   const w = wearer(run, it.uid);
   const right = "right" in opts ? opts.right : w ? h("span", { class: "tag" }, shortName(w)) : null;
   if (right) r.querySelector(".grow .line")?.append(right);
+  return r;
+}
+/** A piece marked junk: greyed, one short card (its name and codes), with `right` beside the name. */
+export function junkRow(run: RogueRun, it: Item, onClick?: () => void, right: HTMLElement | null = null): HTMLElement {
+  const r = itemRow(run, it, onClick, { right, brief: true });
+  r.classList.add("junk");
   return r;
 }
 /** A training's button: LEARN an ability, TRAIN a power step or a version. */
@@ -98,7 +104,7 @@ export function offerBody(run: RogueRun, o: Offer): Child[] {
     const rar = known.length >= 3 ? "legendary" : known.length === 2 ? "rare" : "common";
     // A tap on the face opens the class with what this one knows.
     const face = h("span", { style: "cursor:pointer", onClick: (e?: Event) => { e?.stopPropagation(); go("rclass", { cls: o.cls, known }); } }, faceEl(o.cls));
-    return [h("div", { class: "line" }, face, h("div", { class: "grow" }, h("div", { class: RARITY_CLASS[rar] || "hi" }, `RECRUIT: ${k.name.toUpperCase()}`), h("div", { class: "text dim small wrap" }, role(o.cls)))),
+    return [h("div", { class: "line" }, face, h("div", { class: "grow" }, h("div", { class: RARITY_CLASS[rar] ?? "hi" }, `RECRUIT: ${k.name.toUpperCase()}`), h("div", { class: "text dim small wrap" }, role(o.cls)))),
       h("div", { class: "line small wrap" }, h("span", { class: "dim" }, `KNOWS ${known.length}/3: `), known.map((a) => c.abilities.get(a)!.name.toUpperCase()).join(", ")),
       o.item ? itemRow(run, o.item, undefined, { right: h("span", { class: "dim small" }, "CARRIES"), who: false }) : null,
       run.party.length >= 3 ? h("div", { class: "line small dim" }, "JOINS AT CAMP") : null];
@@ -107,7 +113,7 @@ export function offerBody(run: RogueRun, o: Offer): Child[] {
     // A formation's rarity in the gear's colours (common, rare, legendary), and what each seat does.
     const f = c.formations.get(o.id)!;
     const rar = formationRarity(c, o.id);
-    return [h("div", { class: "line wrap" }, h("span", { class: RARITY_CLASS[rar] || "hi" }, `${rar === "legendary" ? "★" : ""}FORMATION: ${f.name.toUpperCase()}`), rar !== "common" ? h("span", { class: `small r ${RARITY_CLASS[rar]}` }, rar.toUpperCase()) : null), h("div", { class: "text dim small wrap" }, f.text), ...seatLines(f)];
+    return [h("div", { class: "line wrap" }, h("span", { class: RARITY_CLASS[rar] ?? "hi" }, `${rar === "legendary" ? "★" : ""}FORMATION: ${f.name.toUpperCase()}`), rar !== "common" ? h("span", { class: `small r ${RARITY_CLASS[rar]}` }, rar.toUpperCase()) : null), h("div", { class: "text dim small wrap" }, f.text), ...seatLines(f)];
   }
   if (o.kind === "seat") return [h("div", { class: "line" }, iconEl(ICON.campfire), h("span", { class: "grow hi" }, "A SEAT AT CAMP")), h("div", { class: "line dim small wrap" }, `ROOM FOR ONE MORE IN THE ROSTER · ${seatsOf(c, run)} → ${seatsOf(c, run) + 1} AT CAMP`)];
   return [h("div", { class: "line" }, iconEl(SUPPLY_ICON[o.id]), h("span", { class: "grow" }, o.id.toUpperCase())), h("div", { class: "line dim small" }, SUPPLY_TEXT[o.id])];
@@ -175,15 +181,33 @@ export function partyStrip(run: RogueRun, tap = true): HTMLElement {
     h("div", { class: "line small" }, gold(run.gold), h("span", { class: "dim" }, ` · `, iconEl(SUPPLY_ICON.potion), `${held(run, "potion")}/${rogue(c).config.bag.potion} `, iconEl(SUPPLY_ICON.tonic), `${held(run, "tonic")}/${rogue(c).config.bag.tonic}`, held(run, "phoenix") ? h("span", null, " ", iconEl(SUPPLY_ICON.phoenix), `${held(run, "phoenix")}`) : null), camp.length ? h("span", { class: "dim r" }, `CAMP: ${camp.map(shortName).join(", ")}`) : null));
 }
 
+/**
+ * Answers the run's decision, saves it and redraws. What the pick did is said once, so an event's gain isn't silent. A
+ * room's outcome that moves the run on (a chest, an event, a recruit, a sealed piece) holds the screen it was chosen on
+ * until the player has read it and goes on. A pick made knowing what it does (the map, the draft, a training) or one that
+ * keeps its screen (a sale, a rest) says it in a toast.
+ */
 export function pickOrSave(run: RogueRun, pick: string) {
-  const before = run.notes.length;
+  const was = run.pending, before = run.notes.length;
+  const bases = new Map(run.items.map((it) => [it.uid, it.base]));
   choose(c, run, pick);
   saveRogue();
   sfx.tap();
-  redraw();
-  // What the pick did, said once, so an event's gain isn't silent.
   const news = run.notes.slice(before).map((n) => n.text).filter((t) => !/^(Took|Bought|Act )/.test(t));
+  const knowing = ["map", "draft", "train", "levelup", "fate"].includes(was.kind) || (was.kind === "choose" && was.what !== "temper");
+  if (news.length && frameEl && run.pending !== was && !knowing) return outcome(run, news, run.items.filter((it) => bases.get(it.uid) !== it.base && c.gear.get(it.base)?.source !== "starter"));
+  redraw();
   if (news.length && frameEl) toast(frameEl, news.join(" "), 2600);
+}
+/** What a room came to, over its screen: each line of news and the card of each piece it brought or changed (not a recruit's plain weapon); ONWARD goes on. */
+function outcome(run: RogueRun, news: string[], pieces: Item[]) {
+  const onward = () => { box.remove(); nav.overlay = null; redraw(); };
+  const box = h("div", { class: "overlay dialog" }, win("outcome",
+    ...news.map((t) => h("div", { class: "line wrap hi" }, t)),
+    ...pieces.map((it) => itemRow(run, it, undefined, { who: false })),
+    actions(button("ONWARD", onward, "hi"))));
+  frameEl!.append(box);
+  nav.overlay = onward;
 }
 
 /** A question over the screen, with a yes and a cancel. */

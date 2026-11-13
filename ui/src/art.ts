@@ -38,6 +38,8 @@ export type Manifest = {
   /** Gear icons, 16×16 at art size in a 16-column sheet: a cell per piece that isn't a weapon, by id, and per "kind:<kind>" and "slot:<slot>". */
   gearSheet?: string;
   gear?: Record<string, number>;
+  /** The Destiny Shard's icon, 16×16 at art size (the director's own). */
+  shard?: string;
 };
 
 export let manifest: Manifest;
@@ -56,7 +58,7 @@ export async function loadArt(): Promise<void> {
   const files = [
     ...Object.values(manifest.classes), ...Object.values(manifest.enemies).map((e) => e.file), ...Object.values(manifest.vfx).map((v) => v.file), manifest.iconset,
     ...Object.values(manifest.statuses), ...Object.values(manifest.abilities), ...Object.values(manifest.basic), ...Object.values(manifest.weapons), ...Object.values(manifest.faces), ...Object.values(manifest.backdrops),
-    ...(manifest.campfire ? [manifest.campfire.file] : []), ...(manifest.chest ? [manifest.chest.file] : []), ...(manifest.gearSheet ? [manifest.gearSheet] : []),
+    ...(manifest.campfire ? [manifest.campfire.file] : []), ...(manifest.chest ? [manifest.chest.file] : []), ...(manifest.gearSheet ? [manifest.gearSheet] : []), ...(manifest.shard ? [manifest.shard] : []),
   ];
   await Promise.all(files.map(load));
 }
@@ -157,11 +159,8 @@ export function basicIconKind(ref: string, enemy?: string): string {
     return look && THEMES.has(look) ? "wand" : "fist";
   }
   if (ref === "unarmed") return "fist";
-  const g = c.gear.get(ref) ?? c.gear.get(baseGearId(ref));
-  return g?.weapon?.kind ?? MYTHIC_KIND[g?.id ?? ""] ?? "fist";
+  return (c.gear.get(ref) ?? c.gear.get(baseGearId(ref)))?.weapon?.kind ?? "fist";
 }
-/** The mythic weapons have no kind of their own; their icon is the kind their art draws. */
-const MYTHIC_KIND: Record<string, string> = { stormspear: "spear", the_witch_blade: "sword", ember_palms: "fist", eye_of_the_tempest: "wand" };
 /** A basic attack's look, from its weapon's ref (a gear id, "enemy:<id>" or "unarmed"), or a foe's own. */
 export function weaponLook(ref: string, enemy?: string): string {
   if (enemy && ENEMY_LOOK[enemy]) return ENEMY_LOOK[enemy];

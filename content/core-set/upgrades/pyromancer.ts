@@ -59,8 +59,8 @@ abilityUp({
   id: "pyre", cls: "pyromancer",
   power: "+40% damage.",
   shown: true,
-  a: { name: "Funeral pyre", text: "Burns down every foe, each harder for its Burn. The Burn stays.", builds: ["storm"] },
-  b: { name: "High pyre", text: "Waits for a foe with 20+ Burn, then burns down the foe with the most. The Burn stays.", serves: "Bonfire 2 ●●●, Barrage ●" },
+  a: { name: "Funeral pyre", text: "Burns down every foe, each harder for its Burn.", builds: ["storm"] },
+  b: { name: "High pyre", text: "Waits for a foe with 20+ Burn, then burns down the foe with the most.", serves: "Bonfire 2 ●●●, Barrage ●" },
   form: (v, k) =>
     v === "a" ? { target: T.everyFoe, do: [phys(pyreHit(0.5, k))] }
       : v === "b" ? { if: { side: "foes", where: { stacks: { status: "burn", atLeast: HIGH_PYRE.waits } } }, target: T.mostFoe("burn"), do: [phys({ scale: [{ ratio: HIT.heavy * k, stat: "attack" }, { ratio: HIGH_PYRE.perStack * k, stacks: "burn", of: "target" }] })] }

@@ -88,7 +88,7 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
 {
   // A look every tick: under half its MP, and no Clarity from the charm for a short while, it gains one and the wait begins.
   const name = "Clear-headed charm", wait = `${id(name)}_wait`;
-  const effect = "Below half MP: Clarity every so often, starting at once.";
+  const effect = `Below half MP: Clarity every ${SO_OFTEN} ticks, starting at once.`;
   const ready = { side: "self" as const, where: { mpBelow: 50, lacks: wait } };
   amulet("uncommon", name, {
     effect, stats: [st("max_mp", 1), st("aggro", -1)],
@@ -138,7 +138,7 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
   });
 }
 {
-  const name = "Lightning-glass", effect = "Abilities deal +4% per Shock on the target. The Shock stays.";
+  const name = "Lightning-glass", effect = "Abilities deal +4% per Shock on the target.";
   amulet("rare", name, {
     effect, stats: [st("attack", 1), sp("cooldown", "medium"), st("max_mp", 1)],
     statuses: [own_(name, effect, { boosts: [{ tag: "ability", pct: stacksOf("shock", 4, "target") }] })],
@@ -225,7 +225,7 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
 }
 {
   const name = "Downhill charm";
-  const effect = "On a kill: the blow's leftover damage splits evenly among the other foes, as hits.";
+  const effect = "On a kill: the blow's leftover damage splits evenly among the other foes.";
   amulet("legendary", name, {
     effect, stats: [st("attack", 2), critStep(1), sp("crit_damage", "medium")],
     statuses: [own_(name, effect, { reactions: [{ on: on("ko", { whose: "foe", other: "holder", tags: ["physical"], notTags: ["bare"] }), split: "over", do: [{ op: "strike", of: "over", split: true, to: TO.everyFoe }] }] })],
@@ -234,7 +234,7 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
 }
 {
   const name = "Twin-knot";
-  const effect = "When it gives itself a status, the lowest other ally gains it too.";
+  const effect = "When it gives itself a status, the other ally with the lowest HP% gains it too.";
   amulet("legendary", name, {
     effect, stats: [sp("cooldown", "medium"), st("attack", 1), st("max_hp", 1), st("defense", 1)],
     statuses: [own_(name, effect, { reactions: [react(on("status_gained", { other: "holder", repeat: false }), { op: "share", to: TO.otherLowestAlly })] })],
@@ -264,7 +264,7 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
   // A fallen unit can't gain a status, so its fall schedules its own return unless the marker is there; the marker is set
   // when it stands again by its own hand. As every revive, it comes back with its actions on full cooldown.
   const name = "Phoenix ember", done = `${id(name)}_used`;
-  const effect = "Once a fight: rises 4 ticks after falling, at 33% HP and Hidden. A wipe is still lost.";
+  const effect = "Once a fight: rises 4 ticks after falling, at 33% HP and Hidden.";
   amulet("legendary", name, {
     effect, stats: [st("max_hp", 1), st("defense", 1), sp("evasion", "medium"), st("mp_regen", 1)],
     statuses: [
@@ -292,7 +292,7 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
 {
   // The chance set after every stat; hits −50%, and the crit multiplier doubled, so a crit lands at its usual size.
   const name = "Gambler's coin";
-  const effect = "Crit chance is 50%. Hits that don't crit deal half; crits deal as usual.";
+  const effect = "Crit chance is 50%. Hits that don't crit deal half.";
   amulet("legendary", name, {
     effect, stats: [sp("crit_damage", "medium"), st("attack", 1), st("max_hp", 1), st("max_mp", 1)],
     statuses: [own_(name, effect, { set: [{ stat: "crit_chance", value: 50 }], boosts: hits(-50), stats: [{ stat: "crit_multiplier", flat: share(1, "crit_multiplier") }] })],

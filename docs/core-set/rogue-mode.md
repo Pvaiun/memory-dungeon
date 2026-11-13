@@ -23,7 +23,7 @@ The rules are `src/rogue.ts`, pure and deterministic: a run is plain data (`Rogu
 - **The roster:** a party of three (`party`) and seats at camp, the bench: two in act I, three in act II, four in act III (`benchByAct`), each new act bringing its seat.
 - **Recruits mostly come one at a time:** a recruit is there to take or turn down (a captive or a stranger can teach a lesson instead), and a boon can offer one recruit beside a piece and a formation. Two events offer a pick among recruits: Mercenaries (one of three; in its veterans' version, one of two who know all three abilities) and the Prisoner Convoy (one of three prisoners, each with a piece from the sack). Otherwise the start's draft is the only pick.
 - **A recruit** joins with its class's plain weapon at full HP and MP (unless its offer says less), into the party if a seat is free, else to camp. Offers come with a full roster too: the player sends someone at camp home first (never the leader; their gear stays in the bag). An offer never repeats a class in the roster, and a class that could wear a bagged legendary nobody can wear is three times as likely.
-- **Between rooms**, a fight's preview included, everything is free: swap a party member with one at camp, step one back or fill an empty seat, reorder seats, change formation, move gear, set each member's ability order (leaving some out), use supplies, drop a piece, send someone home. Nothing can be done during a fight.
+- **Between rooms**, a fight's preview included, everything is free: swap a party member with one at camp, step one back or fill an empty seat, reorder seats, change formation, move gear, set each member's ability order (leaving some out), use supplies, mark a piece in the bag as junk or take the mark off, send someone home. Nothing can be done during a fight.
 
 ## What carries between fights
 
@@ -43,7 +43,7 @@ Every win pays gold by tier (`gold.fight`, `gold.elite`, `gold.boss`, plus `gold
 
 **Elite.** A hard fight from the elite pool. A pick of three legendary pieces, the first for someone in the party (`spoils.elite`), then a pick of two formations.
 
-**Boss.** Act III's ends the run, won. Acts I and II's pay a supply, then the **boon** (`boon`): a pick of three from a legendary piece (a mythic in its place in the boons that open the acts in `boon.mythic`), a formation of rare or better, and a recruit. Then the fork, the restore, and the **level-up**: each member takes one training, or `levelGold` gold.
+**Boss.** Act III's ends the run, won. Acts I and II's leave a Destiny Shard to take (below; none while the run holds `shards.max`), then a supply, then the **boon** (`boon`): a pick of three from a legendary piece (a mythic in its place in the boons that open the acts in `boon.mythic`), a formation of rare or better, and a recruit. Then the fork, the restore, and the **level-up**: each member takes one training, or `levelGold` gold.
 
 **After any other won fight**, in order:
 1. **A supply:** a potion or a tonic, a choice of one (`drops`); a kind with a full slot isn't offered.
@@ -54,7 +54,7 @@ Every win pays gold by tier (`gold.fight`, `gold.elite`, `gold.boss`, plus `gold
 
 **Campfire.** On arrival the whole roster recovers a share and the fallen rise (`campfire.auto`). Then one pick of two: **REST**, everyone healing again (`campfire.hp`, `campfire.mp`), or **TRAIN**, three members training once each (`campfire.train`). At `campfire.stranger` % of campfires a stranger asks to join: take them in or take a lesson, without using the pick.
 
-**Shop.** Pieces by rarity (`shop.gear`, legendaries by act in `shop.legendaryByAct`), recruits, formations and all three supplies, at `prices`. Training as often as gold allows (`prices.learn`, `prices.upgrade`), each one a visit dearer by `prices.trainStep`. Any bagged piece sells for `prices.sell` % of its price. The shop's pieces are only for classes in the roster.
+**Shop.** Pieces by rarity (`shop.gear`, legendaries by act in `shop.legendaryByAct`), recruits, formations and all three supplies, at `prices`. Training as often as gold allows (`prices.learn`, `prices.upgrade`), each one a visit dearer by `prices.trainStep`. Any bagged piece sells for `prices.sell` % of its price, and everything marked junk sells at once. The shop's pieces are only for classes in the roster.
 
 **Chest.** Every room on floor 7: gold (`treasure.gold`) and a piece (`treasure.rarity`), or, `treasure.cage` % of the time, a recruit with a piece suited to it.
 
@@ -68,7 +68,7 @@ Every win pays gold by tier (`gold.fight`, `gold.elite`, `gold.boss`, plus `gold
 - **An offered piece** rolls its slot (`slots`), then a class: one in the roster, one in the party for an aimed offer, or, for spoils, chests and events, one not in the roster `spoils.offRoster` % of the time, so a piece can make a run want a class. Then a kind that class wears there, and a piece of that kind at the offer's rarity, or the nearest rarity that has one. No piece twice in a pick; no legendary the run holds while others are left.
 - **Mythics** come only from the boons that open acts II and III, one for a class in the party (else at camp) whose mythic the run doesn't hold. A unit wears one at most.
 - **Tempering** (events) turns a piece into one of the next rarity of its slot and kind that its wearer can wear; a risky smith can crack it instead.
-- **The bag** is the run's, unlimited. Taking a piece another member wears gives them yours if it fits.
+- **The bag** is the run's, unlimited. Taking a piece another member wears gives them yours if it fits. Tapped, a piece in the bag shows everyone in the roster who could wear it, with what they wear in its slot now, and puts it on in one tap. **Junk** is the player's mark on a piece in the bag: it goes to the bottom, greyed, out of the way, until it's sold or unmarked; putting it on takes the mark off. It changes nothing in play.
 
 ### Formations
 
@@ -92,8 +92,9 @@ A run starts with Neutral. Formations are common, rare or legendary (`content/co
 
 ## The end of a run
 
-- **Any lost fight ends it.** No retry, no reserves: a wipe is a wipe.
-- **Beating act III's boss wins it.** A won run adds every class in its final party (the three seated) to the classes a run can start with, and, played at the highest heat open, opens the next (`finish`). Every run adds to the record: runs, wins, furthest act and floor.
+- **Any lost fight ends it,** unless a Destiny Shard is spent. A wipe ends the run even with members at camp.
+- **Destiny Shards** let a run try a fight again with a different preparation. Act I's and act II's bosses each leave one, taken by hand like the spoils, and a run holds up to `shards.max`. When a fight is lost with a shard held, the player can spend one: the run goes back to exactly where it stood as the fight's preview opened. Everything returns as it was then: HP, MP, knockouts, cooldowns, gold, gear, seats, the supplies used at the preview, the same foes. Only the shard is gone. The same fight with the same party and choices plays the same way, so a second try has to change something. The player can also decline and end the run. The simulated player always spends a shard and prepares the fight again differently, for now at random (`shake` in `src/sim/rogue-ai.ts`); a tool that plays single fights (`autoFight` without `shards`) counts a loss as a loss.
+- **Beating act III's boss wins it.** A won run adds one class to the classes a run can start with: the player picks it from the final party (the three seated), among those they don't own yet (`unlockable`), and, played at the highest heat open, opens the next (`finish`). Every run adds to the record: runs, wins, furthest act and floor.
 
 ## Dice and saves
 

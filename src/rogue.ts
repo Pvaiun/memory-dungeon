@@ -20,11 +20,11 @@
  *   rooms.ts      entering a room, a campfire, the next region, an event's effects
  * A run's record, for balancing, is rogue/record.ts.
  */
-export { ROGUE_VERSION, type Slot, SLOT_LIST, type Item, type Version, type Trained, type Member, type MapNode, type Offer, type ShopSlot, type FightTier, type FightSpec, type Pending, type Note, type RogueRun, migrate, type RogueMeta, freshMeta, rogue, member, bench, finish } from "./rogue/state.js";
-export { registerGear, itemGear, itemOf, wearer, bag, partyOf, FIGHT_DUNGEON, fightDungeon, startFight, carryIn, endFight, carried, bagRoom, supplyName, autoFight, knobFoes, refFloors, easyTo, knobFor, fightFor, foesFor, bossFoes } from "./rogue/fights.js";
+export { ROGUE_VERSION, type Slot, SLOT_LIST, type Item, type Version, type Trained, type Member, type MapNode, type Offer, type ShopSlot, type FightTier, type FightSpec, type Pending, type Note, type RogueRun, migrate, type RogueMeta, freshMeta, rogue, member, bench, finish, unlockable } from "./rogue/state.js";
+export { registerGear, itemGear, itemOf, wearer, bag, partyOf, FIGHT_DUNGEON, fightDungeon, startFight, carryIn, endFight, useShard, carried, bagRoom, supplyName, autoFight, knobFoes, refFloors, easyTo, knobFor, fightFor, foesFor, bossFoes } from "./rogue/fights.js";
 export { rollKnown, recruitKnown, seatsOf, plainWeapon, newItem, recruit, type NewRun, leaderKnown, newRogue, heals, makeMap, actRoll, reachable } from "./rogue/acts.js";
 export { pieceRarity, kindOf, kindsFor, stockOf, canRoll, usable, rollItem, rollMythic, formationRarity, priceOf, trainPrice, sellPrice, take, canTake, offerText } from "./rogue/offers.js";
 export { type Training, trainingId, parseTraining, upgradeOf, passiveOf, formOf, unlearned, trainable, trainingsFor, trainingText, learn, train } from "./rogue/training.js";
-export { equip, twoHanded, maxOf, setFormation, seat, setOrder, swap, dismiss, discard, useSupply, canManage } from "./rogue/party.js";
+export { equip, twoHanded, maxOf, setFormation, seat, setOrder, swap, dismiss, junk, discard, useSupply, canManage } from "./rogue/party.js";
 export { options, whyNot, temperInto, learnOptions, improveOptions, eventOf, eventView, trainOptions, choose } from "./rogue/decisions.js";
 export { arriveCamp } from "./rogue/rooms.js";

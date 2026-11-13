@@ -1,13 +1,14 @@
 import { readFileSync } from "node:fs";
 import { test } from "vitest";
 import assert from "node:assert/strict";
-import { loadContent, type Content } from "../engine/run.js";
+import { advance, loadContent, type Content } from "../engine/run.js";
+import { combat } from "../engine/combat/rules.js";
 import type { Member as EngineMember } from "../engine/combat/rules.js";
 import { rngFor } from "../engine/rng.js";
 import {
-  autoFight, bench, choose, discard, dismiss, endFight, equip, eventView, finish, formationRarity, freshMeta, heals, improveOptions, itemGear, kindOf, leaderKnown, learn, makeMap, maxOf, member,
+  autoFight, bench, choose, discard, dismiss, endFight, equip, eventView, finish, unlockable, formationRarity, freshMeta, heals, improveOptions, itemGear, kindOf, leaderKnown, learn, makeMap, maxOf, member,
   newItem, newRogue, options, parseTraining, partyOf, priceOf, reachable, recruit, recruitKnown, rogue, rollItem, seatsOf, startFight, stockOf, swap, temperInto, train, trainingsFor,
-  trainOptions, usable, whyNot, wearer, type RogueRun,
+  trainOptions, usable, whyNot, wearer, junk, sellPrice, type RogueRun,
 } from "../rogue.js";
 import { aiPlayer, playRogue } from "../sim/rogue-ai.js";
 import { canEquip, checkParty } from "../validate.js";
@@ -201,6 +202,7 @@ test("rogue (5i): the boons that open acts II and III offer a mythic for a party
     run.pending = { kind: "fight", node: "boss", tier: "boss", fight: run.boss, foes: {}, seed: 1 };
     winFight(c, run);
     const pend = () => run.pending as RogueRun["pending"];
+    if (pend().kind === "shard") choose(c, run, "take");
     if (pend().kind === "drop") choose(c, run, options(c, run)[0]);
     assert.equal(pend().kind, "boon");
     return pend() as Extract<RogueRun["pending"], { kind: "boon" }>;
@@ -351,7 +353,7 @@ test("rogue (5i): a formation's rarity is its own", () => {
   assert.equal(formationRarity(c, run.formations.at(-1)!), "legendary");
 });
 
-test("rogue (5h): starting units know one rolled ability; a recruit knows what it's given; fresh abilities start half charged; a won run adds its party to the leaders", () => {
+test("rogue (5h): starting units know one rolled ability; a recruit knows what it's given; fresh abilities start half charged; a won run adds the one class picked from its party to the leaders", () => {
   const c = loadContent(raw);
   const run: RogueRun = newRogue(c, { seed: 3, leader: "cleric" });
   assert.equal(member(run, "cleric").known.length, 1, "the leader knows one ability");
@@ -364,11 +366,12 @@ test("rogue (5h): starting units know one rolled ability; a recruit knows what i
   learn(c, run, "pyromancer", "firebolt");
   assert.ok(Math.abs(member(run, "pyromancer").cooldowns!.firebolt - (c.abilities.get("firebolt")!.cooldown * (100 - fresh)) / 100) < 0.01, "an ability just learned is half charged");
   const meta = freshMeta();
-  run.party = ["cleric", "pyromancer"];
+  run.party = ["cleric", "pyromancer", "monk"];
   run.pending = { kind: "over", won: true };
-  const r = finish(meta, run);
+  assert.deepEqual(unlockable(meta, run), ["pyromancer", "monk"], "an owned class isn't offered");
+  const r = finish(meta, run, "pyromancer");
   assert.deepEqual(r.unlocked, ["pyromancer"]);
-  assert.ok(meta.owned.includes("pyromancer"));
+  assert.ok(meta.owned.includes("pyromancer") && !meta.owned.includes("monk"), "only the pick joins the leaders");
   assert.equal(meta.maxHeat, 1);
 });
 
@@ -491,6 +494,92 @@ test("rogue: a campfire heals everyone a share and raises the fallen on arrival;
   assert.equal(run.pending.kind, "map");
 });
 
+test("rogue: a Destiny Shard turns a lost fight back to the moment its preview opened; without one, or declined, the run ends", () => {
+  const c = loadContent(raw);
+  const run = newRogue(c, { seed: 14, leader: "knight" });
+  while (run.pending.kind === "draft") choose(c, run, options(c, run)[0]);
+  run.shards = 2;
+  run.supplies = ["potion"];
+  choose(c, run, reachable(run)[0].id);
+  assert.ok(run.retry, "the preview's opening is kept");
+  const before = structuredClone(run);
+  // At the preview a potion is drunk; then every member is down: a sure wipe.
+  const doom = () => { for (const cls of run.party) (member(run, cls).missHp = 99999), (member(run, cls).ko = true); };
+  run.supplies = [];
+  doom();
+  const lose = () => { const er = startFight(c, run); advance(c, combat, er); endFight(c, run, er); };
+  lose();
+  assert.equal(run.pending.kind, "fate");
+  assert.deepEqual(options(c, run), ["shard", "end"]);
+  choose(c, run, "shard");
+  assert.equal(run.shards, 1);
+  assert.equal(run.pending.kind, "fight");
+  assert.ok(!(run.pending as { begun?: boolean }).begun, "back at the preview, free to change the party");
+  assert.deepEqual(run.supplies, ["potion"], "the potion drunk at the preview is back");
+  const strip = (x: RogueRun) => { const { shards: _a, notes: _b, stats: _c, retry: _d, ...rest } = x; return rest; };
+  assert.deepEqual(strip(run), strip(before), "everything else as the preview opened");
+  assert.ok(run.retry, "a second loss can go back again");
+  doom();
+  lose();
+  choose(c, run, "end");
+  assert.deepEqual(run.pending, { kind: "over", won: false });
+  // A tool playing one fight sees a loss as a loss; whole runs keep the choice.
+  for (const shards of [false, true]) {
+    const r2 = newRogue(c, { seed: 14, leader: "knight" });
+    while (r2.pending.kind === "draft") choose(c, r2, options(c, r2)[0]);
+    r2.shards = 2;
+    choose(c, r2, reachable(r2)[0].id);
+    for (const cls of r2.party) (member(r2, cls).missHp = 99999), (member(r2, cls).ko = true);
+    autoFight(c, r2, { shards });
+    assert.equal(r2.pending.kind, shards ? "fate" : "over");
+  }
+});
+
+test("rogue: act I's and act II's bosses each leave a Destiny Shard to take; act III's ends the run", () => {
+  const c = loadContent(raw);
+  assert.equal(rogue(c).config.shards?.max, 2);
+  for (const act of [1, 2, 3]) {
+    const run = newRogue(c, { seed: 31, leader: "knight" });
+    while (run.pending.kind === "draft") choose(c, run, options(c, run)[0]);
+    choose(c, run, reachable(run)[0].id);
+    const p = run.pending as Extract<RogueRun["pending"], { kind: "fight" }>;
+    (p.fight = { ...run.boss }), (p.tier = "boss");
+    run.act = act;
+    run.shards = act - 1;
+    // A boss at a tenth of its HP and damage, met at full health: a sure win.
+    p.foes = { hp: -90, power: -90 };
+    for (const m of run.roster) (m.missHp = 0), (m.ko = false);
+    autoFight(c, run);
+    assert.equal(run.stats.bosses, 1, `act ${act}: the boss is beaten`);
+    if (act === 3) { assert.deepEqual(run.pending, { kind: "over", won: true }); continue; }
+    assert.equal(run.pending.kind, "shard");
+    assert.deepEqual(options(c, run), ["take"]);
+    choose(c, run, "take");
+    assert.equal(run.shards, act);
+    assert.notEqual(run.pending.kind, "shard");
+  }
+});
+
+test("rogue: the simulated player spends a Destiny Shard and tries the fight prepared another way", () => {
+  const c = loadContent(raw);
+  const run = newRogue(c, { seed: 14, leader: "knight" });
+  const ai = aiPlayer({}, 14);
+  while (run.pending.kind === "draft") choose(c, run, ai.decide(c, run));
+  run.shards = 1;
+  choose(c, run, reachable(run)[0].id);
+  for (const cls of run.party) (member(run, cls).missHp = 99999), (member(run, cls).ko = true);
+  autoFight(c, run, { shards: true });
+  assert.equal(ai.decide(c, run), "shard");
+  choose(c, run, "shard");
+  const setup = () => JSON.stringify({ f: run.formation, p: run.party, o: run.party.map((cls) => member(run, cls).order) });
+  const plain = aiPlayer({}, 14);
+  const r2 = structuredClone(run);
+  plain.prepare(c, r2);
+  ai.prepare(c, run);
+  const other = JSON.stringify({ f: r2.formation, p: r2.party, o: r2.party.map((cls) => member(r2, cls).order) });
+  assert.notEqual(setup(), other, "the retry's preparation differs from the first");
+});
+
 test("rogue (5h): a wipe ends the run, whoever is at camp; after a won fight, those who sat it out regain a share of their MP", () => {
   const c = loadContent(raw);
   for (const boss of [false, true]) {
@@ -578,6 +667,36 @@ test("rogue (5h): the Muster, the Drill ground and training; a seat at camp; eve
   }
   assert.equal(supplies, 0, "no supplies in a fight's spoils");
   assert.ok(gear > 0 && off > 0 && off < gear, `some gear off the roster (${off} of ${gear})`);
+});
+
+test("rogue: a piece in the bag can be marked junk and unmarked; putting it on takes the mark off; a shop sells all the junk at once", () => {
+  const c = withLoot();
+  const run = newRogue(c, { seed: 7, leader: "knight" });
+  while (run.pending.kind === "draft") choose(c, run, options(c, run)[0]);
+  run.pending = { kind: "map" };
+  const a = newItem(run, "fx_heart", "common"), b = newItem(run, "fx_amulet_rare_1", "rare"), kept = newItem(run, "fx_amulet_common_1", "common");
+  run.items.push(a, b, kept);
+  // Only a piece in the bag; a worn one, or one already marked, can't be.
+  assert.equal(junk(run, member(run, "knight").gear.weapon!, true), false);
+  assert.equal(junk(run, a.uid, true), true);
+  assert.equal(junk(run, a.uid, true), false);
+  assert.equal(junk(run, a.uid, false), true);
+  assert.equal(a.junk, undefined);
+  // Put on, it's junk no more.
+  junk(run, a.uid, true);
+  assert.ok(equip(c, run, "knight", "amulet", a.uid));
+  assert.equal(a.junk, undefined);
+  assert.ok(equip(c, run, "knight", "amulet", null));
+  // The shop offers SELL ALL JUNK only with junk in the bag, and it sells the junk and nothing else.
+  run.pending = { kind: "shop", stock: [], learn: false, upgrade: false };
+  assert.ok(!options(c, run).includes("sell-junk"));
+  junk(run, a.uid, true);
+  junk(run, b.uid, true);
+  const gold = run.gold;
+  choose(c, run, "sell-junk");
+  assert.equal(run.gold, gold + sellPrice(c, a) + sellPrice(c, b));
+  assert.ok(!run.items.includes(a) && !run.items.includes(b) && run.items.includes(kept));
+  assert.ok(!options(c, run).includes("sell-junk"));
 });
 
 test("rogue: gear changes max HP, not current HP: a +HP piece doesn't heal, and taking it off caps HP at the new max", () => {

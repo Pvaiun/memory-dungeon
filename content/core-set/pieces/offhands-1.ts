@@ -40,7 +40,7 @@ offhand("kite_shield", "common", "Blazoned kite", { stats: [st("aggro", 1)], ser
   });
 }
 {
-  const name = "Sheltering kite", effect = "At fight start: Guards itself and the other lowest-Defense ally.";
+  const name = "Sheltering kite", effect = "At fight start: Guards itself and the other ally with the least Defense.";
   offhand("kite_shield", "uncommon", name, {
     effect, stats: [st("defense", 1), st("max_hp", 1)],
     statuses: [own_(name, effect, { reactions: [atStart(give("guard"), give("guard", { side: "others", pick: "lowest", by: { stat: "defense" } }))] })],
@@ -96,7 +96,7 @@ offhand("round_shield", "common", "Linden shield", { stats: [st("max_hp", 1)], s
 offhand("round_shield", "common", "Bronze buckler", { stats: [st("defense", 1)], serves: "the Toll and Landslide: Defense, beside the other common's HP." });
 
 {
-  const name = "Comrade's targe", effect = "Every so often: Shield on the lowest ally (20% of max HP).";
+  const name = "Comrade's targe", effect = `Every ${SO_OFTEN} ticks (the first at ${SO_OFTEN / 2}): Shield on the ally with the lowest HP% (20% of max HP).`;
   const b = beatHalfway(id(name), name, [give("shield", TO.lowestAlly, share(0.2, "max_hp"))]);
   offhand("round_shield", "uncommon", name, {
     effect, stats: [st("max_hp", 1), st("defense", 1)],
@@ -123,7 +123,7 @@ offhand("round_shield", "common", "Bronze buckler", { stats: [st("defense", 1)],
 {
   // The wait runs from the last rebuild; a Shield broken inside it stays broken.
   const name = "Second skin", wait = `${id(name)}_wait`;
-  const effect = "When its Shield breaks: a new one at 50% of its peak, at most every so often.";
+  const effect = `When its Shield breaks: a new one at 50% of its peak, at most once every ${SO_OFTEN} ticks.`;
   offhand("round_shield", "rare", name, {
     effect, stats: [st("max_hp", 2), st("attack", 1)],
     statuses: [
@@ -219,7 +219,7 @@ offhand("horn", "common", "Ivory horn", { stats: [st("mp_regen", 1)], serves: "B
   });
 }
 {
-  const name = "War horn", effect = `At fight start: ${FLAT_STACKS.many} Might on the slowest-swinging ally.`;
+  const name = "War horn", effect = `At fight start: ${FLAT_STACKS.many} Might on the ally with the slowest basic attack.`;
   offhand("horn", "rare", name, {
     effect, stats: [st("aggro", 1), st("attack", 1), st("defense", 1)],
     statuses: [own_(name, effect, { reactions: [atStart(give("might", TO.slowestAlly, FLAT_STACKS.many))] })],
@@ -340,7 +340,7 @@ offhand("relic", "common", "Litany beads", { stats: [sp("cast_speed", "medium")]
   });
 }
 {
-  const name = "Charnel icon", effect = `When a foe falls: heals the lowest ally (${pct(HIT.light)}% of Attack).`;
+  const name = "Charnel icon", effect = `When a foe falls: heals the ally with the lowest HP% (${pct(HIT.light)}% of Attack).`;
   offhand("relic", "uncommon", name, {
     effect, stats: [st("mp_regen", 1), st("max_hp", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.fall, { op: "heal", amount: share(HIT.light, "attack"), to: TO.lowestAlly })] })],
@@ -383,7 +383,7 @@ offhand("relic", "common", "Litany beads", { stats: [sp("cast_speed", "medium")]
   });
 }
 {
-  const name = "Bloodstone reliquary", effect = "When an ally pays HP, the lowest other ally heals as much.";
+  const name = "Bloodstone reliquary", effect = "When an ally pays HP, the other ally with the lowest HP% heals as much.";
   offhand("relic", "legendary", name, {
     effect, stats: [st("mp_regen", 2), st("max_hp", 2)],
     statuses: [own_(name, effect, { reactions: [react(on("hp_paid", { whose: "team" }), { op: "heal", amount: ofAmount(1), to: { side: "allies", pick: "lowest", by: "hp_share", exclude: "owner" } })] })],
