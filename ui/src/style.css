@@ -180,6 +180,9 @@ button.mid { padding: .625rem .5rem; }
 /* step 5i: a formation's seats on an offer, each with what its statuses do under it */
 .seat { margin-top: .25rem; }
 .seat-text { padding-left: 1rem; }
+.seat-block { cursor: pointer; }
+.seat-block > .section { margin-top: .75rem; border-top: .125rem solid var(--win2); padding-top: .375rem; }
+.seat-more > :first-child { margin-top: .375rem; }
 .ab .cost { text-transform: uppercase; white-space: nowrap; line-height: 1.25rem; }
 .ab .body { color: var(--dim); text-transform: none; white-space: normal; overflow-wrap: anywhere; line-height: 1.25rem; padding-left: 2.25rem; margin-top: .125rem; }
 

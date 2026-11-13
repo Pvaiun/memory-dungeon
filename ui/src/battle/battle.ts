@@ -19,7 +19,7 @@ import { bar, button, clear, h, nav, win, type Child } from "../dom.js";
 import { nextSeed, party as partyLoadout, save, setup, SPEEDS } from "../state.js";
 import { dealsDamage, heldParts, isSpell, statusNumbers, statusText } from "../describe.js";
 import { actionIconEl, actionIconOf, drawDigits, enemyThumb, OUTLINE, statusEl } from "../pixel.js";
-import { classHead, classSheet, enemySheet, portraitEl, sizeEl } from "../sheet.js";
+import { classHead, classSheet, enemySheet, portraitEl, seatSection, type Sitter, sizeEl } from "../sheet.js";
 import type { Member } from "../../../src/engine/combat/rules.js";
 import { Driver, type Ev } from "./driver.js";
 import { isCount, Narrator, type Beat, type Line, type Tone } from "./narrate.js";
@@ -677,8 +677,15 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     if (isParty) {
       const member = { ...u, abilities: u.acts.filter((a) => a.id !== "basic").map((a) => a.id) } as unknown as Member;
       const pu = driver.input.party.units.find((x) => x.class === u.ref);
+      // Its seat, what the formation does for the party, and on a tap who sits in the other seats.
+      const f = c.formations.get(driver.input.party.formation);
+      const sitter = (seat: string): Sitter | null => {
+        const o = driver.input.party.units.find((x) => x.position === seat);
+        return o ? { name: shortName(o.class), ko: !!driver.units().find((x) => x.side === "party" && x.ref === o.class)?.ko } : null;
+      };
+      const seat = f && pu ? seatSection(f, pu.position, sitter) : undefined;
       // A trained passive plays as its form (PartyUnit.passive).
-      body.append(...(classSheet(u.ref, designer, member, pu?.gear ?? {}, pu?.passive).filter(Boolean) as Node[]));
+      body.append(...(classSheet(u.ref, designer, member, pu?.gear ?? {}, pu?.passive, seat).filter(Boolean) as Node[]));
     } else {
       body.append(...(enemySheet(c.enemies.get(u.ref)!, designer, u.stats, u.stats.power ?? 0).filter(Boolean) as Node[]));
     }
