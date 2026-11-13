@@ -3,7 +3,7 @@ import type { Content } from "../engine/run.js";
 import { int, next, type Rng, shuffle } from "../engine/rng.js";
 import type { EventOpT } from "../schema.js";
 import { bench, between, cfg, type FightTier, member, note, type Offer, type Pending, r, rogue, type RogueRun } from "./state.js";
-import { easyTo, fightSpec } from "./fights.js";
+import { easyTo, fightSpec, supplyName } from "./fights.js";
 import { offerText, rollFormation, rollFormations, rollItem, rollRarity, rollRecruit, rollRecruits, roomForRecruit, shopStock, SUPPLIES, take } from "./offers.js";
 import { gainGold, heal, maxOf } from "./party.js";
 import { heals, recruit } from "./acts.js";
@@ -91,6 +91,7 @@ export function arriveCamp(c: Content, run: RogueRun, key: string) {
   const stranger = next(rng) * 100 < (k.stranger ?? 0) ? rollRecruit(c, run, rng) : null;
   run.pending = { kind: "campfire", resting: bench(run), ...(stranger ? { stranger } : {}) };
 }
+const signed = (n: number) => `${n > 0 ? "+" : ""}${n}`;
 /** An event option's effects, in order. A fight, a camp or a choice ends the list there and waits on it. */
 export function doOps(c: Content, run: RogueRun, ops: readonly EventOpT[], rng: Rng) {
   const party = () => run.party.map((cls) => member(run, cls));
@@ -105,11 +106,13 @@ export function doOps(c: Content, run: RogueRun, ops: readonly EventOpT[], rng: 
         const who = op.one ? [party().filter((m) => !m.ko)[0]].filter(Boolean) : party();
         if (op.pct >= 0) heal(c, run, who, op.pct, 0);
         else for (const m of who) if (!m.ko) m.missHp = Math.min(maxOf(c, run, m.cls, "max_hp") - 1, m.missHp + Math.floor((maxOf(c, run, m.cls, "max_hp") * -op.pct) / 100));
+        if (who.length) note(run, `${op.one ? `The ${c.classes.get(who[0].cls)!.name}` : "Everyone"} ${signed(op.pct)}% HP.`);
         break;
       }
       case "mp":
         if (op.pct >= 0) heal(c, run, party(), 0, op.pct);
         else for (const m of party()) m.missMp = Math.min(maxOf(c, run, m.cls, "max_mp"), m.missMp + Math.floor((maxOf(c, run, m.cls, "max_mp") * -op.pct) / 100));
+        note(run, `Everyone ${signed(op.pct)}% MP.`);
         break;
       case "revive":
         for (const m of run.roster.filter((x) => x.ko)) (m.ko = false), (m.missHp = Math.floor((maxOf(c, run, m.cls, "max_hp") * (100 - op.pct)) / 100)), note(run, `The ${c.classes.get(m.cls)!.name} is back on their feet.`);
@@ -165,7 +168,8 @@ export function doOps(c: Content, run: RogueRun, ops: readonly EventOpT[], rng: 
           const m = run.roster.find((x) => x.ko)!;
           m.ko = false;
           m.missHp = Math.floor(maxOf(c, run, m.cls, "max_hp") / 2);
-        } else take(c, run, { kind: "supply", id: op.id });
+          note(run, `A phoenix feather: the ${c.classes.get(m.cls)!.name} is back on their feet.`);
+        } else note(run, take(c, run, { kind: "supply", id: op.id }) ? `Found ${supplyName(op.id)}.` : `Found ${supplyName(op.id)}, but the bag is full.`);
         break;
       }
       case "learn": if (learnOptions(c, run).length) return void (run.pending = { kind: "choose", what: "learn", why: "event" }); break;

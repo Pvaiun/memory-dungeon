@@ -2,7 +2,7 @@
  * What every rogue screen shares: the navigation screens.ts hands over, small parts (item rows, an offer's body, the
  * party strip, a confirm), and the scenes: each moment of the run drawn in its region.
  */
-import { bar, button, type Child, h, toast, win } from "../dom.js";
+import { bar, button, type Child, h, nav, toast, win } from "../dom.js";
 import type { RogueNodeKindT } from "../../../src/schema.js";
 import { type Cell, type Pose } from "../art.js";
 import { bagRoom, bench, formationRarity, type Item, itemGear, member, type Offer, parseTraining, rogue, type RogueRun, seatsOf, wearer } from "../../../src/rogue.js";
@@ -181,15 +181,33 @@ export function partyStrip(run: RogueRun, tap = true): HTMLElement {
     h("div", { class: "line small" }, gold(run.gold), h("span", { class: "dim" }, ` · `, iconEl(SUPPLY_ICON.potion), `${held(run, "potion")}/${rogue(c).config.bag.potion} `, iconEl(SUPPLY_ICON.tonic), `${held(run, "tonic")}/${rogue(c).config.bag.tonic}`, held(run, "phoenix") ? h("span", null, " ", iconEl(SUPPLY_ICON.phoenix), `${held(run, "phoenix")}`) : null), camp.length ? h("span", { class: "dim r" }, `CAMP: ${camp.map(shortName).join(", ")}`) : null));
 }
 
+/**
+ * Answers the run's decision, saves it and redraws. What the pick did is said once, so an event's gain isn't silent. A
+ * room's outcome that moves the run on (a chest, an event, a recruit, a sealed piece) holds the screen it was chosen on
+ * until the player has read it and goes on. A pick made knowing what it does (the map, the draft, a training) or one that
+ * keeps its screen (a sale, a rest) says it in a toast.
+ */
 export function pickOrSave(run: RogueRun, pick: string) {
-  const before = run.notes.length;
+  const was = run.pending, before = run.notes.length;
+  const bases = new Map(run.items.map((it) => [it.uid, it.base]));
   choose(c, run, pick);
   saveRogue();
   sfx.tap();
-  redraw();
-  // What the pick did, said once, so an event's gain isn't silent.
   const news = run.notes.slice(before).map((n) => n.text).filter((t) => !/^(Took|Bought|Act )/.test(t));
+  const knowing = ["map", "draft", "train", "levelup", "fate"].includes(was.kind) || (was.kind === "choose" && was.what !== "temper");
+  if (news.length && frameEl && run.pending !== was && !knowing) return outcome(run, news, run.items.filter((it) => bases.get(it.uid) !== it.base && c.gear.get(it.base)?.source !== "starter"));
+  redraw();
   if (news.length && frameEl) toast(frameEl, news.join(" "), 2600);
+}
+/** What a room came to, over its screen: each line of news and the card of each piece it brought or changed (not a recruit's plain weapon); ONWARD goes on. */
+function outcome(run: RogueRun, news: string[], pieces: Item[]) {
+  const onward = () => { box.remove(); nav.overlay = null; redraw(); };
+  const box = h("div", { class: "overlay dialog" }, win("outcome",
+    ...news.map((t) => h("div", { class: "line wrap hi" }, t)),
+    ...pieces.map((it) => itemRow(run, it, undefined, { who: false })),
+    actions(button("ONWARD", onward, "hi"))));
+  frameEl!.append(box);
+  nav.overlay = onward;
 }
 
 /** A question over the screen, with a yes and a cancel. */
