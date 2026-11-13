@@ -35,6 +35,8 @@ export const ROGUE_CONFIG: RogueConfigT = {
   recruits: { offers: 2, known: [[70, 30, 0], [35, 45, 20], [15, 45, 40]] },
   /** After each won fight, those who sat it out regain this share of max MP (flat, like a tonic; no gear touches it). */
   benchMp: 50,
+  /** Destiny Shards: act I's and act II's bosses give one each, held up to `max`; a lost fight can spend one to go back to its preview. */
+  shards: { max: 2 },
   /** A fresh ability (a starting unit's, a recruit's, one just learned) starts with this share of its cooldown already run. */
   fresh: 50,
   /**

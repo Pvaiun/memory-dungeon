@@ -64,11 +64,31 @@ export function startFight(c: Content, run: RogueRun, opts: { log?: boolean } = 
   if (p.kind !== "fight") throw new Error("no fight is pending");
   registerGear(c, run);
   fightDungeon(c, p);
+  // The run as the fight begins, for a Destiny Shard to return to; a reload in the fight keeps the first.
+  if (!p.begun) run.retry = snapshot(run);
   // From here the party is set: leaving and coming back replays this fight as it starts, the same way.
   p.begun = true;
   const er = newRun(c, combat, { dungeon: FIGHT_DUNGEON, party: partyOf(c, run), seed: p.seed }, { checked: true, log: opts.log });
   carryIn(run, er);
   return er;
+}
+/** The whole run as it stands, without the snapshot it may hold or the interface's record (`src/rogue/record.ts`). */
+function snapshot(run: RogueRun): RogueRun {
+  const { retry: _, record: __, ...rest } = run as RogueRun & { record?: unknown };
+  return structuredClone(rest);
+}
+/**
+ * Spends a Destiny Shard after a lost fight: the run goes back to exactly where it stood as the fight began, at the fight's
+ * preview, with one shard fewer. The interface's record, if any, carries on.
+ */
+export function useShard(run: RogueRun) {
+  const back = run.retry;
+  if (run.pending.kind !== "fate" || !back || !run.shards) throw new Error("no Destiny Shard to use");
+  const fell = run.pending.fight;
+  for (const k of Object.keys(run)) if (k !== "record") delete (run as Record<string, unknown>)[k];
+  Object.assign(run, structuredClone(back));
+  run.shards = (back.shards ?? 1) - 1;
+  note(run, `Fell to ${fell}, and a Destiny Shard turned time back.`);
 }
 /** Sets an engine run's party to the roster's HP, MP, knockouts and cooldowns (each under its ability's trained form). */
 export function carryIn(run: RogueRun, er: Run) {
@@ -97,11 +117,13 @@ export function endFight(c: Content, run: RogueRun, er: Run) {
   run.stats.fights++;
   if (p.tier === "elite") run.stats.elites++;
   if (!won) {
-    // A wipe ends the run, even with members at camp.
+    // A wipe ends the run, even with members at camp, unless a Destiny Shard is spent to go back to the fight's preview.
     note(run, `Fell to ${p.fight.name}.`);
-    run.pending = { kind: "over", won: false };
+    run.pending = run.shards && run.retry ? { kind: "fate", fight: p.fight.name } : { kind: "over", won: false };
+    if (run.pending.kind === "over") delete run.retry;
     return;
   }
+  delete run.retry;
   // Those who sat the fight out regain a flat share of their max MP (from the max they last fought
   // with, so MP gear put on at camp adds nothing), like a tonic; no gear touches it.
   const benchMp = cfg(c).benchMp ?? 0;
@@ -119,6 +141,8 @@ export function endFight(c: Content, run: RogueRun, er: Run) {
       run.pending = { kind: "over", won: true };
       return;
     }
+    // Every boss but the last gives a Destiny Shard, up to the most a run holds.
+    if ((run.shards ?? 0) < (cfg(c).shards?.max ?? 0)) (run.shards = (run.shards ?? 0) + 1), note(run, "Won a Destiny Shard.");
     run.pending = offerDrop(c, run, { kind: "boon", offers: boonOffers(c, run) });
     return;
   }
@@ -178,11 +202,15 @@ function captiveFor(c: Content, run: RogueRun, enemies: string[], node: string):
   if (o) run.captiveAt = run.stats.fights;
   return o;
 }
-/** Plays the pending fight at once (the simulations), and carries the result back. */
+/**
+ * Plays the pending fight at once (the simulations), and carries the result back. The simulations play without Destiny
+ * Shards: a lost fight ends the run, so what they measure is the game without a second try.
+ */
 export function autoFight(c: Content, run: RogueRun): Run {
   const er = startFight(c, run);
   advance(c, combat, er);
   endFight(c, run, er);
+  if (run.pending.kind === "fate") (run.pending = { kind: "over", won: false }), delete run.retry;
   return er;
 }
 

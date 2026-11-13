@@ -159,7 +159,7 @@
         "abilityRecovery": {
           "type": "number",
           "minimum": 0,
-          "description": "An ability's recovery unless it states one: about a sword's."
+          "description": "An ability's recovery unless it states one."
         },
         "armorRatio": {
           "type": "number",
@@ -3961,6 +3961,21 @@
               "minimum": 0,
               "maximum": 100
             },
+            "shards": {
+              "description": "Destiny Shards: every boss but the last act's gives one, up to `max` held; a lost fight can spend one to return to the moment before it began.",
+              "type": "object",
+              "properties": {
+                "max": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                }
+              },
+              "required": [
+                "max"
+              ],
+              "additionalProperties": false
+            },
             "fresh": {
               "description": "Share of its cooldown already run for a fresh ability: a starting unit's, a recruit's, one just learned.",
               "type": "number",
@@ -4976,6 +4991,10 @@
                   },
                   "early": {
                     "description": "The climb a floor below a pool's reference floor (default `step`).",
+                    "type": "number"
+                  },
+                  "eliteEarly": {
+                    "description": "The elites' climb a floor below their reference floor (default `early`).",
                     "type": "number"
                   },
                   "elite": {
@@ -7028,6 +7047,12 @@
               "description": "Default 1.",
               "type": "integer",
               "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "hp": {
+              "description": "The summoned units' own max HP, +% (default 0); the fight's change to every foe applies on top.",
+              "type": "integer",
+              "minimum": -90,
               "maximum": 9007199254740991
             }
           },

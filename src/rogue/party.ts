@@ -175,7 +175,7 @@ export function useSupply(c: Content, run: RogueRun, id: SupplyIdT, target?: str
   return true;
 }
 /** Between rooms, and before a fight has begun (its foes are shown, so the party can be prepared for them). */
-const betweenRooms = (run: RogueRun) => !["over", "draft"].includes(run.pending.kind) && !(run.pending.kind === "fight" && run.pending.begun);
+const betweenRooms = (run: RogueRun) => !["over", "draft", "fate"].includes(run.pending.kind) && !(run.pending.kind === "fight" && run.pending.begun);
 export const canManage = betweenRooms;
 
 /**

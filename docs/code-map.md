@@ -66,7 +66,7 @@ src/
   rogue.ts                   the rogue mode's public face; lists its parts
   rogue/                     the rogue mode: a run as data, moved on one decision at a time
     state.ts                 the run's data (RogueRun, Member, Offer, Pending), shared helpers, the meta
-    fights.ts                the run's items as content, the party a fight takes, starting and ending a fight, knobs, foes
+    fights.ts                the run's items as content, the party a fight takes, starting and ending a fight, a Destiny Shard's return, knobs, foes
     acts.ts                  a new run (leader, draft, known abilities); each act's map and rooms
     offers.ts                the stock and every offer: gear, mythics, tomes, recruits, formations, supplies, prices, the shop
     training.ts              learning abilities; power steps and versions
@@ -197,7 +197,7 @@ ui/
       parts.ts               the navigation, small parts and scenes the rogue screens share
       run.ts                 the dispatcher, the leader, the draft, the map, a fight in waiting
       rooms.ts               spoils, a captive, the shop and training, the campfire, events, choices, Muster and Drill, level up, the next region
-      end.ts                 the run's end, its record, a won run's moment
+      end.ts                 a lost fight's Destiny Shard offer, the run's end, its record, a won run's moment
       party.ts               managing the party: seats, a unit's sheet and order, its gear
       state.ts               the run and the rogue meta, saved
     battle/

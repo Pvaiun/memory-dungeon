@@ -6,7 +6,7 @@ import { canEquip } from "../validate.js";
 import { bench, cfg, type Item, member, note, type Offer, type Pending, r, rogue, type RogueRun, type Slot, SLOT_LIST } from "./state.js";
 import { beginAct, draftPending, reachable, recruit, rollKnown, seatsOf } from "./acts.js";
 import { canRoll, canTake, heldLegendaries, kindOf, offerText, pieceRarity, piecesAt, priced, RARITIES, roomForRecruit, sellPrice, take, trained, trainPrice } from "./offers.js";
-import { bag, itemOf, registerGear, supplyName, wearer } from "./fights.js";
+import { bag, itemOf, registerGear, supplyName, useShard, wearer } from "./fights.js";
 import { learn, parseTraining, train, trainingId, trainingsFor, unlearned } from "./training.js";
 import { doOps, enter, nextAct } from "./rooms.js";
 import { gainGold, heal, holdCurrent, maxOf } from "./party.js";
@@ -64,6 +64,7 @@ export function options(c: Content, run: RogueRun): string[] {
       // left to learn. Or gold instead: a level-up late in a run can have one thing left, which is no choice.
       return [...trainingsFor(c, run, p.queue[0]).map(trainingId), ...(cfg(c).levelGold ? ["gold"] : [])];
     case "region": return p.options;
+    case "fate": return ["shard", "end"];
     case "over": return [];
   }
 }
@@ -335,6 +336,13 @@ export function choose(c: Content, run: RogueRun, pick: string) {
       beginAct(c, run, pick, true);
       const queue = run.roster.map((m) => m.cls).filter((cls) => trainingsFor(c, run, cls).length);
       run.pending = queue.length ? { kind: "levelup", queue } : { kind: "map" };
+      return;
+    }
+    case "fate": {
+      if (pick === "end") return void (delete run.retry, (run.pending = { kind: "over", won: false }));
+      useShard(run);
+      // The run went back to before the fight, its counters too; the shard's use is counted again on top.
+      run.stats.picks[tally] = (run.stats.picks[tally] ?? 0) + 1;
       return;
     }
     default:

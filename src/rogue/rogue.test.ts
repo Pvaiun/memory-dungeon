@@ -1,7 +1,8 @@
 import { readFileSync } from "node:fs";
 import { test } from "vitest";
 import assert from "node:assert/strict";
-import { loadContent, type Content } from "../engine/run.js";
+import { advance, loadContent, type Content } from "../engine/run.js";
+import { combat } from "../engine/combat/rules.js";
 import type { Member as EngineMember } from "../engine/combat/rules.js";
 import { rngFor } from "../engine/rng.js";
 import {
@@ -489,6 +490,61 @@ test("rogue: a campfire heals everyone a share and raises the fallen on arrival;
   assert.equal(swap(c, run, a, y), true, "a swap after the pick");
   choose(c, run, "leave");
   assert.equal(run.pending.kind, "map");
+});
+
+test("rogue: a Destiny Shard turns a lost fight back to the moment before it, at its preview; without one, or declined, the run ends", () => {
+  const c = loadContent(raw);
+  const run = newRogue(c, { seed: 14, leader: "knight" });
+  while (run.pending.kind === "draft") choose(c, run, options(c, run)[0]);
+  choose(c, run, reachable(run)[0].id);
+  // Every member down before the fight: a sure wipe. Two shards held.
+  for (const cls of run.party) (member(run, cls).missHp = 99999), (member(run, cls).ko = true);
+  run.shards = 2;
+  const before = structuredClone(run);
+  const lose = () => { const er = startFight(c, run); advance(c, combat, er); endFight(c, run, er); };
+  lose();
+  assert.equal(run.pending.kind, "fate");
+  assert.deepEqual(options(c, run), ["shard", "end"]);
+  choose(c, run, "shard");
+  assert.equal(run.shards, 1);
+  assert.equal(run.pending.kind, "fight");
+  assert.ok(!(run.pending as { begun?: boolean }).begun, "back at the preview, free to change the party");
+  const { shards: _a, notes: _b, stats: _c, ...now } = run;
+  const { shards: _d, notes: _e, stats: _f, ...then } = before;
+  assert.deepEqual(now, then, "everything else as it was before the fight");
+  assert.equal(run.stats.fights, before.stats.fights);
+  lose();
+  choose(c, run, "end");
+  assert.deepEqual(run.pending, { kind: "over", won: false });
+  // The simulations play without shards: a lost autoFight ends the run.
+  const r2 = newRogue(c, { seed: 14, leader: "knight" });
+  while (r2.pending.kind === "draft") choose(c, r2, options(c, r2)[0]);
+  choose(c, r2, reachable(r2)[0].id);
+  for (const cls of r2.party) (member(r2, cls).missHp = 99999), (member(r2, cls).ko = true);
+  r2.shards = 2;
+  autoFight(c, r2);
+  assert.equal(r2.pending.kind, "over");
+});
+
+test("rogue: act I's and act II's bosses each give a Destiny Shard, up to the most a run holds; act III's ends the run", () => {
+  const c = loadContent(raw);
+  const max = rogue(c).config.shards?.max ?? 0;
+  assert.equal(max, 2);
+  for (const act of [1, 2, 3]) {
+    const run = newRogue(c, { seed: 31, leader: "knight" });
+    while (run.pending.kind === "draft") choose(c, run, options(c, run)[0]);
+    choose(c, run, reachable(run)[0].id);
+    const p = run.pending as Extract<RogueRun["pending"], { kind: "fight" }>;
+    (p.fight = { ...run.boss }), (p.tier = "boss");
+    run.act = act;
+    run.shards = act - 1;
+    // A boss at a tenth of its HP and damage, met at full health: a sure win.
+    p.foes = { hp: -90, power: -90 };
+    for (const m of run.roster) (m.missHp = 0), (m.ko = false);
+    autoFight(c, run);
+    assert.equal(run.stats.bosses, 1, `act ${act}: the boss is beaten`);
+    assert.equal(run.shards, act < 3 ? act : 2, `act ${act}`);
+  }
 });
 
 test("rogue (5h): a wipe ends the run, whoever is at camp; after a won fight, those who sat it out regain a share of their MP", () => {

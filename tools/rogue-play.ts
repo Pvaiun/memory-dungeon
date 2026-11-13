@@ -138,7 +138,7 @@ function header(run: RogueRun): string[] {
   const reg = rogue(c).regions.find((r) => r.id === run.region)!;
   return [
     `Act ${ROMAN[run.act]} of 3: ${reg.name}. ${reg.text} Boss at the top: ${run.boss.name}. ${run.floor > rogue(c).config.map.floors ? "At the boss." : run.floor === 0 ? `At the foot of the map: ${rogue(c).config.map.floors} floors, then the boss.` : `Floor ${run.floor} of ${rogue(c).config.map.floors}, the boss above.`}`,
-    `Gold ${run.gold}. Supplies: ${run.supplies.join(", ") || "none"} (the bag holds ${rogue(c).config.bag.potion} potions, ${rogue(c).config.bag.tonic} tonics and ${rogue(c).config.bag.phoenix} phoenix feathers). Formation: ${c.formations.get(run.formation)!.name}. Formations owned: ${run.formations.join(", ")}.`,
+    `Gold ${run.gold}. Destiny Shards: ${run.shards ?? 0} (a lost fight can spend one to go back to its preview). Supplies: ${run.supplies.join(", ") || "none"} (the bag holds ${rogue(c).config.bag.potion} potions, ${rogue(c).config.bag.tonic} tonics and ${rogue(c).config.bag.phoenix} phoenix feathers). Formation: ${c.formations.get(run.formation)!.name}. Formations owned: ${run.formations.join(", ")}.`,
     `Party: ${run.party.map((cls) => `${cls} (${vit(run, cls)})`).join("; ")}.${bench(run).length ? ` At camp: ${bench(run).map((cls) => `${cls} (${vit(run, cls)})`).join("; ")}.` : ""}`,
     `Roster: ${run.roster.length} of ${rogue(c).config.party + seatsOf(c, run)} (${seatsOf(c, run)} seats at camp). Swap anyone in or out any time outside a fight (swap <out> <in>); those at camp regain ${rogue(c).config.benchMp ?? 0}% of their MP after each won fight they sit out; nobody regains MP in a fight unless gear or a skill gives it.`,
     ...(run.pending.kind !== "over" && run.party.length < rogue(c).config.party && bench(run).some((x) => !member(run, x).ko) ? [`A seat is empty: someone standing at camp can fill it now (swap <at camp>).`] : []),
@@ -262,6 +262,11 @@ function look(run: RogueRun): string {
         const power = bossFoes(c, run, { act: run.act + 1, region: id }).power ?? 0;
         out.push(`  pick ${id}: ${r.name}. ${r.text} Its boss: ${boss.name}: ${[...new Set(boss.enemies)].map((e) => bestiary(e, power)).join(" ")}`);
       }
+      break;
+    case "fate":
+      out.push(`THE PARTY FELL to ${p.fight}. You hold ${run.shards} Destiny Shard${run.shards === 1 ? "" : "s"}.`);
+      out.push("  pick shard: spend one to go back to the moment before the fight, at its preview, everything as it was then; change what you like and fight again (the same party and choices play the same fight the same way).");
+      out.push("  pick end: the run ends here.");
       break;
     case "over":
       out.push(p.won ? "THE RUN IS WON." : `THE RUN IS OVER: lost in act ${ROMAN[run.act]}, floor ${run.floor}.`);

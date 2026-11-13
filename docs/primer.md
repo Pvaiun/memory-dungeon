@@ -14,7 +14,7 @@ The least you need to know to work on the game. Read it first, then open a detai
 - **A rogue run** is three acts, each a map of 12 floors on Slay the Spire's structure. The rooms are fights, elites, events, shops, chests and campfires, with a boss at the top, shown from the start.
   - **The party** is three units around a leader, with a bench at camp that grows from two seats to four.
   - **What carries:** HP, MP, knockouts and ability cooldowns carry from fight to fight; statuses don't.
-  - **Losing:** any lost fight ends the run.
+  - **Losing:** a lost fight ends the run, unless the player spends a Destiny Shard (act I's and act II's bosses give one each) to go back to the fight's preview with everything as it was, and prepare again.
   - **Rewards:** wins pay gear, formations, recruits, training, supplies and gold.
   - *Core set: the rogue mode* has the details.
 

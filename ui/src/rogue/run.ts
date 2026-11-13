@@ -12,7 +12,7 @@ import { useSupply } from "../../../src/rogue/record.js";
 import { sizeParts } from "../describe.js";
 import { enemyDisplayName } from "../art.js";
 import { campView, captiveView, chooseView, eventScreen, levelView, regionView, rewardView, roomView, shopView, trainView } from "./rooms.js";
-import { overView } from "./end.js";
+import { fateView, overView } from "./end.js";
 import { actions, confirm, frameEl, go, held, ICON, KIND_NAME, KIND_TEXT, partyActors, partyStrip, pickOrSave, redraw, ROMAN, scene, standoff, SUPPLY_ICON, SUPPLY_TEXT } from "./parts.js";
 
 // ─── The dispatcher ────────────────────────────────────────────────────────
@@ -35,6 +35,7 @@ export function rogueScreen(): Child[] {
     case "choose": return chooseView(run);
     case "levelup": return levelView(run);
     case "region": return regionView(run);
+    case "fate": return fateView(run);
     case "over": return overView(run);
   }
 }
@@ -127,7 +128,7 @@ function mapView(run: RogueRun): Child[] {
   });
   const picked = mapPick ? run.map.find((n) => n.id === mapPick)! : null;
   return [
-    header(`ACT ${ROMAN[run.act]} · ${reg.name.toUpperCase()}`, () => go("home"), h("span", { class: "dim" }, run.floor ? `F${run.floor}` : "START")),
+    header(`ACT ${ROMAN[run.act]} · ${reg.name.toUpperCase()}`, () => go("home"), h("span", null, shardTag(run), h("span", { class: "dim" }, run.floor ? `F${run.floor}` : "START"))),
     h("div", { class: "line small", onClick: () => go("rboss"), style: "cursor:pointer" }, iconEl(ICON.boss), h("span", { class: "dim" }, "BOSS "), h("span", { class: "gold trunc grow" }, run.boss.name.toUpperCase()), h("span", { class: "dim" }, "LOOK ▶")),
     partyStrip(run),
     scroller,
@@ -212,7 +213,7 @@ function fightView(run: RogueRun): Child[] {
   if (p.kind !== "fight") return [];
   const foes = foeLines(p.fight.enemies, p.foes);
   return [
-    header(p.tier === "boss" ? "BOSS" : p.tier === "elite" ? "ELITE" : "FIGHT", () => go("home")),
+    header(p.tier === "boss" ? "BOSS" : p.tier === "elite" ? "ELITE" : "FIGHT", () => go("home"), shardTag(run)),
     standoff(run, p.fight.enemies, `fight:${p.fight.id}`),
     partyStrip(run),
     win("scroll", h("div", { class: "line hi" }, p.fight.name.toUpperCase()), ...foes),
@@ -220,6 +221,9 @@ function fightView(run: RogueRun): Child[] {
     actions(button("FIGHT", () => go("battle", { rogue: true }), "hi"), p.begun ? null : button("PARTY", () => go("rparty"))),
   ];
 }
+
+/** The Destiny Shards held, where a fight is near: a lost fight can spend one to come back to its preview. */
+const shardTag = (run: RogueRun) => (run.shards ? h("span", { class: "gold" }, `${run.shards} SHARD${run.shards > 1 ? "S" : ""} `) : null);
 
 /** The home menu's line for the rogue mode. */
 export function rogueMenuLine(): string {

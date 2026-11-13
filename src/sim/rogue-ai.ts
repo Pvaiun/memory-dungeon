@@ -344,6 +344,8 @@ export function aiPlayer(dials: Partial<Dials> = {}, seed = 1): Player {
       }
       case "levelup": { const t = opts.filter((o) => o !== "gold"); return t.length ? pickTraining(c, run, t) : opts[0]; }
       case "region": return opts[0];
+      // The simulated player plays without Destiny Shards, as the simulations measure the game without a second try.
+      case "fate": return "end";
       default: return opts[0];
     }
   }
