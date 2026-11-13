@@ -9,24 +9,24 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
 
 {
   // The Foothills' larger Shields: every ally's Shields on a Foothill are a third bigger, its own included.
-  const peak = "While every ally holds a Shield, itself included, each blow it lands, swing or ability, lands a second time: the same damage again on the same foe, at once. Nothing repeats the second landing.";
-  const foothill = "Starts each fight behind a Shield: a fifth of its max HP. Every Shield it gains, that one included, is a third bigger.";
+  const peak = "While every ally holds a Shield, each hit lands twice.";
+  const foothill = "At fight start: a Shield of 20% of its max HP. Shields on it are 33% bigger.";
   add(
-    formation("The mountain", "legendary", "While the whole party's stone holds, the Peak's blows land twice.", [
+    formation("The mountain", "legendary", "A peak that stands on the party's stone.", [
       { name: "Peak", text: peak, statuses: ["the_mountain_peak"] },
       ...twice({ name: "Foothill", text: foothill, statuses: ["the_mountain_foothill"] }),
     ], { statuses: ["the_mountain"] }),
     [
       held("the_mountain_peak", "Peak", peak, { reactions: [reactIf(on("hit_lands", { notTags: ["bare"] }), { side: "allies", where: { lacks: "shield" }, atMost: 0 }, { op: "strike", of: "dealt", to: "other" })] }),
-      held("the_mountain_foothill", "Foothill", "Starts each fight behind a Shield: a fifth of its max HP.", { reactions: [atStart(give("shield", "holder", share(0.2, "max_hp")))] }),
-      held("the_mountain", "The mountain", "Its Shields on a Foothill are a third bigger.", { boosts: [{ tag: "shield", pct: against(33, { has: "the_mountain_foothill" }) }] }),
+      held("the_mountain_foothill", "Foothill", foothill, { reactions: [atStart(give("shield", "holder", share(0.2, "max_hp")))] }),
+      held("the_mountain", "The mountain", "Its Shields on a Foothill are 33% bigger.", { boosts: [{ tag: "shield", pct: against(33, { has: "the_mountain_foothill" }) }] }),
     ],
     "Landslide 3 ●●● ⚙ detonation (half)",
   );
 }
 {
   // Each ally keeps its own copy of the party's count, fed by every ally's hits (one Cut an event).
-  const party = "The party keeps one count of Cuts (a Cut for each hit it lands, kept for the fight, up to 25), and every ally's hits add to it. Every ally's hits start a fifth softer, and deal 3% more for each Cut.";
+  const party = "Every ally's hits add to one count of Cuts (up to 25). Hits deal −20%, then +3% per Cut.";
   add(
     formation("The whetstone", "legendary", "Every hit the party lands sharpens the next.", thrice({ name: "Blade", text: NOTHING }), { text: party, statuses: ["the_whetstone"] }),
     [held("the_whetstone", "The whetstone", party, { reactions: [react(on("hit_lands", { whose: "team" }), give("cuts", "holder", 1))], boosts: hits({ base: -20, scale: [{ ratio: 3, stacks: "cuts", of: "holder" }] }) })],
@@ -34,22 +34,22 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
   );
 }
 {
-  const party = "While any foe burns, every ally gains a Heat every 4 ticks (each acts 5% faster in everything for each Heat, up to 10, for the rest of the fight). Whenever an ally is Stunned or Silenced, the foe with the most Burn gains many Burn.";
+  const party = "While a foe burns, every ally gains a Heat every 4 ticks (5% faster each, up to 10). When an ally is Stunned or Silenced, the foe with the most Burn gains many Burn.";
   const stoke = (status: string) => react(on("status_gained", { status, whose: "team" }), give("burn", TO.mostFoe("burn"), FLAT_STACKS.many));
   add(
-    formation("The forge", "legendary", "The longer the fire is kept, the faster the party feeds it.", thrice({ name: "Forgehand", text: NOTHING }), { text: party, statuses: ["the_forge", "the_forge_bellows"] }),
+    formation("The forge", "legendary", "A kept fire quickens the party.", thrice({ name: "Forgehand", text: NOTHING }), { text: party, statuses: ["the_forge", "the_forge_bellows"] }),
     [
-      held("the_forge", "The forge", "While any foe burns, a Heat every 4 ticks.", { pulse: { every: FEW_TICKS, if: { side: "foes", where: { has: "burn" } }, do: [give("heat", "holder", 1)] } }),
-      held("the_forge_bellows", "The forge's bellows", "Whenever an ally is Stunned or Silenced, the foe with the most Burn gains many Burn.", { party: true, reactions: [stoke("stun"), stoke("silence")] }),
+      held("the_forge", "The forge", "While a foe burns: a Heat every 4 ticks.", { pulse: { every: FEW_TICKS, if: { side: "foes", where: { has: "burn" } }, do: [give("heat", "holder", 1)] } }),
+      held("the_forge_bellows", "The forge's bellows", "When an ally is Stunned or Silenced, the foe with the most Burn gains many Burn.", { party: true, reactions: [stoke("stun"), stoke("silence")] }),
     ],
     "Bonfire 3 ●●●",
   );
 }
 {
   // Held once by the side: the cold reads the Cascades before this shatter's, then every ally counts it. Passed, so a chain dies down.
-  const party = "When a foe's Chill shatters, every other foe gains a Chill, and one more for every two Cascades the party held before it (a Cascade for each shatter this fight, up to 10).";
+  const party = "On a shatter: every other foe gains a Chill, +1 per 2 Cascades (one per shatter, up to 10).";
   add(
-    formation("The long winter", "legendary", "Every shatter sends its cold down the line, and each sends more than the last.", thrice({ name: "Winterer", text: NOTHING }), { text: party, statuses: ["the_long_winter"] }),
+    formation("The long winter", "legendary", "Each shatter sends more cold down the line.", thrice({ name: "Winterer", text: NOTHING }), { text: party, statuses: ["the_long_winter"] }),
     [held("the_long_winter", "The long winter", party, {
       party: true,
       reactions: [
@@ -61,7 +61,7 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
   );
 }
 {
-  const bolt = "Its abilities deal 3% more for each Shock the foes hold. The Shock stays.", party = "Every ally's basic attacks add a few Shock, for the whole fight.";
+  const bolt = "Abilities deal +3% per Shock the foes hold.", party = "Every ally's basic attacks add a few Shock.";
   add(
     formation("Eye of the storm", "legendary", "The storm doesn't lift.", [
       { name: "Bolt", text: bolt, statuses: ["eye_of_the_storm_bolt"] },
@@ -76,7 +76,7 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
 }
 {
   // Held once by the side: the Mark stands on the lowest foe, and the volley is called at the start and at each Marked foe's fall.
-  const party = "While no foe is Marked, the foe with the lowest current HP is Marked. When each fight starts, and whenever a Marked foe falls, every ally's next basic attack comes at once. A swing already called gains nothing from a second call.";
+  const party = "Marks the foe with the least HP when none is Marked. At fight start and when a Marked foe falls, every ally's next basic attack comes at once.";
   const mark = give("marked", TO.lowestHpFoe), volley = { op: "cooldown" as const, which: "basic" as const, set: "ready" as const, to: TO.everyAlly };
   add(
     formation("Open season", "legendary", "Every kill calls the party's weapons down again.", thrice({ name: "Hunter", text: NOTHING }), { text: party, statuses: ["open_season"] }),
@@ -93,8 +93,8 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
   );
 }
 {
-  const wall = "Taunts all fight: its Taunt is laid again each time it runs out. Holds Spite (a Spite for each hit it takes, kept for the fight, up to 20).";
-  const reaper = "Its hits deal 4% more for each Spite the Wall holds.";
+  const wall = "Taunts all fight. Gains a Spite each time it's hit (up to 20).";
+  const reaper = "Hits deal +4% per Spite on the Wall.";
   add(
     formation("The palisade", "legendary", "One is struck, two profit, more with every blow.", [
       { name: "Wall", text: wall, statuses: ["the_palisade_wall"] },
@@ -108,10 +108,10 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
   );
 }
 {
-  const soloist = "Its first-slotted ability has no cooldown: it's cast again whenever there's the MP for it. Its wind-up, its cost and whatever it waits for stay.";
-  const voice = "All MP it would regain in a fight goes to the Soloist instead, and isn't sent on again. Each cast the Soloist finishes gives this seat a Shield: a twentieth of its max HP.";
+  const soloist = "Its first-slotted ability has no cooldown.";
+  const voice = "MP it would regain goes to the Soloist instead. When the Soloist casts: a Shield of 5% of its max HP.";
   add(
-    formation("The cathedral", "legendary", "Two voices give all their mana to one, and it never stops singing.", [
+    formation("The cathedral", "legendary", "Two give their mana; one never stops singing.", [
       { name: "Soloist", text: soloist, statuses: ["the_cathedral_soloist"] },
       ...twice({ name: "Voice", text: voice, statuses: ["the_cathedral_voice"] }),
     ]),
@@ -127,18 +127,18 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
 }
 {
   // Lifesteal at the medium step: high, on every ally and every swing, besides casting free of MP, put it 20 points over Neutral.
-  const party = "Every ally's abilities cost HP in place of MP: half the share of its max HP that they'd cost of its max MP. No ally casts one that would leave it below a tenth of its max HP. Every ally has Lifesteal.";
+  const party = "Every ally's abilities cost HP, not MP, and none casts below 10% HP. Every ally has Lifesteal.";
   add(
     formation("The covenant", "legendary", "Life is the party's one currency.", thrice({ name: "Sworn", text: NOTHING }), { text: party, stats: [LIFESTEAL], statuses: ["the_covenant"] }),
-    [held("the_covenant", "The covenant", "Its abilities cost HP in place of MP: half the share, never below a tenth.", { mods: [{ hp: { pct: 50, share: true, floor: 10, instead: true } }] })],
+    [held("the_covenant", "The covenant", "Its abilities cost HP, not MP; it never casts below 10% HP.", { mods: [{ hp: { pct: 50, share: true, floor: 10, instead: true } }] })],
     "Pact 3 ●●●, Barrage ●● ⚙ blood mage (key), brink (half)",
   );
 }
 {
   // What one Twin gives itself, shared with the other (a copy, so it isn't shared back).
-  const twin = "Whatever status it gives itself, the other Twin gains too, in the same stacks: a status laid on it at a moment (a Taunt, a Haste, a Shield, a counter a card gives), not a state it holds while something is true of it. A status passed on this way isn't passed on again.";
+  const twin = "Statuses it gives itself, the other Twin gains too.";
   add(
-    formation("Twins", "legendary", "Two are bound; what one gives itself, the other has too.", [
+    formation("Twins", "legendary", "Two are bound as one.", [
       ...twice({ name: "Twin", text: twin, statuses: ["twins_twin"] }),
       { name: "Odd one out", text: "Attack up two steps.", stats: [st("attack", 2)] },
     ]),
