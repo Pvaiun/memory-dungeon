@@ -3,7 +3,7 @@
  * again and again on the units it's for. A party's skill plays on a plain foe and the boss together, a foe's on a party
  * member, a status on both sides, so each size shows on a small target and a big one.
  *
- * AUTO leaves the size to the field (it picks by the unit, scene.ts); 1×, 2× or 3× fixes it for all of the look's
+ * AUTO leaves the size to the field (it picks by the unit, scene.ts); 1×, 1.5×, 2× or 3× fixes it for all of the look's
  * effects. Choices are kept on this device and used in every fight at once (effects.ts). EXPORT downloads them, to be
  * committed as everyone's; RESET forgets this device's.
  */
@@ -18,7 +18,7 @@ import type { Scene } from "./scene.js";
 
 /** The fight the screen stands in: a plain foe and a boss (two Bandits and the Ogre Chief). */
 export const TUNER_FIGHT = "old_road~ogre_chief";
-const SIZES = [0, 1, 2, 3] as const;
+const SIZES = [0, 1, 1.5, 2, 3] as const;
 /** The quiet between two plays of a look, in ms. */
 const REST = 450;
 

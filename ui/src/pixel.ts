@@ -319,10 +319,11 @@ export function enemyThumb(ref: string, size = 24, shadowed = false): HTMLCanvas
 /*
  * An effect drawn bigger is enlarged here by Scale2x and Scale3x (the EPX family, 4× as Scale2x twice), not by
  * stretching: they round a shape's stair-steps as they enlarge it, so a big fire keeps pixels the size of the sprites'
- * instead of showing blocks. Each frame is scaled on its own, cached by strip and scale.
+ * instead of showing blocks. 1.5× is Scale3x halved, each 2×2 block its commonest colour: still one screen pixel a
+ * pixel, the art's pixels one or two wide. Each frame is scaled on its own, cached by strip and scale.
  */
 const scaledFx = new Map<string, HTMLCanvasElement>();
-/** A strip at `scale` times its art (1 to 4), frames side by side. */
+/** A strip at `scale` times its art (1, 1.5, 2, 3 or 4), frames side by side. */
 export function vfxSprite(strip: string, scale = 1): HTMLCanvasElement {
   const base = spriteOf(manifest.vfx[strip]?.file ?? "", 1, { align: false, threshold: 0.3 });
   const def = manifest.vfx[strip];
@@ -334,20 +335,42 @@ export function vfxSprite(strip: string, scale = 1): HTMLCanvasElement {
   // Every fully clear pixel is the same clear pixel, so the scalers see one background.
   const px = new Uint32Array(src.data.buffer).slice();
   for (let i = 0; i < px.length; i++) if (src.data[i * 4 + 3] === 0) px[i] = 0;
-  cv = cv2d(base.width * scale, base.height * scale);
-  const out = cv.getContext("2d")!.createImageData(cv.width, cv.height);
-  const dst = new Uint32Array(out.data.buffer);
+  const frames: Px[] = [];
   for (let f = 0; f < def.frames; f++) {
     let frame: Px = { w: def.w, h: def.h, px: Uint32Array.from({ length: def.w * def.h }, (_, i) => px[Math.floor(i / def.w) * base.width + f * def.w + (i % def.w)]) };
-    if (scale === 3) frame = scale3x(frame);
+    if (scale === 1.5) frame = halve(scale3x(frame));
+    else if (scale === 3) frame = scale3x(frame);
     else for (let k = 1; k < scale; k *= 2) frame = scale2x(frame);
-    for (let y = 0; y < frame.h; y++) for (let x = 0; x < frame.w; x++) dst[y * cv.width + f * frame.w + x] = frame.px[y * frame.w + x];
+    frames.push(frame);
   }
+  const fw = frames[0].w;
+  cv = cv2d(fw * def.frames, frames[0].h);
+  const out = cv.getContext("2d")!.createImageData(cv.width, cv.height);
+  const dst = new Uint32Array(out.data.buffer);
+  frames.forEach((frame, f) => {
+    for (let y = 0; y < frame.h; y++) for (let x = 0; x < frame.w; x++) dst[y * cv!.width + f * fw + x] = frame.px[y * frame.w + x];
+  });
   cv.getContext("2d")!.putImageData(out, 0, 0);
   scaledFx.set(key, cv);
   return cv;
 }
 type Px = { w: number; h: number; px: Uint32Array };
+/** Halves a frame: each 2×2 block becomes its commonest colour, a shape's over the clear around it when they tie. */
+function halve(s: Px): Px {
+  const w = Math.ceil(s.w / 2), h = Math.ceil(s.h / 2);
+  const o = new Uint32Array(w * h);
+  const at = (x: number, y: number) => (x < s.w && y < s.h ? s.px[y * s.w + x] : 0);
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const q = [at(2 * x, 2 * y), at(2 * x + 1, 2 * y), at(2 * x, 2 * y + 1), at(2 * x + 1, 2 * y + 1)];
+    let best = q[0], most = 0;
+    for (const v of q) {
+      const n = q.filter((u) => u === v).length;
+      if (n > most || (n === most && best === 0 && v !== 0)) (best = v), (most = n);
+    }
+    o[y * w + x] = best;
+  }
+  return { w, h, px: o };
+}
 /** Scale2x (AdvMAME2x): each pixel becomes four, taking an edge neighbour's colour where two edges meet at a corner. */
 function scale2x(s: Px): Px {
   const { w, h, px } = s;
