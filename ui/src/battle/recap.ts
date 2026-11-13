@@ -51,7 +51,7 @@ export function recapBody(a: RecapArgs): HTMLElement {
 
   function unitBlock(u: CUnit, t: UnitTally): HTMLElement {
     const fallen = t.down !== null || u.ko;
-    const state = t.down !== null ? h("span", { class: "bad" }, `DOWN T${t.down}`) : u.ko ? h("span", { class: "bad" }, "KO") : h("span", { class: "dim" }, "HP ", h("span", { class: "ink" }, `${disp(u.hp)}`));
+    const state = t.down !== null ? h("span", { class: "bad" }, `DOWN T${t.down}`) : u.ko ? h("span", { class: "bad" }, "KO") : null;
     const chev = h("span", { class: "hi" }, "▶");
     const line = (label: string, n: number, color: string, cls = "") =>
       h("div", { class: "rc-meter" }, h("span", { class: "lbl" }, label), meter(n, color), h("span", { class: `val ${n > 0 ? cls : "dim"}` }, `${disp(n)}`));
