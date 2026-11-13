@@ -243,9 +243,9 @@ export const twoHanded = (gear: Record<string, string | undefined>) => !!gear.we
 /**
  * A piece of gear as a card: its sprite or icon (glowing in its rarity's colour), its name (★ legendary or mythic, in the
  * rarity's colour), then its rarity and kind with a weapon's hit and speed and the stat codes; with `who`, the line of who
- * can wear it, the roster first; then what it does, in the content's words, and the stacks it lays as numbers for
- * `stats` (the unit in view; with none, the first class that can wear it). A block made by the caller in place of the
- * line of who can wear it goes last, under what the piece does. `brief` stops at the codes (junk in a list).
+ * can wear it, the roster first (or the caller's own line in its place); then what it does, in the content's words, and
+ * the stacks it lays as numbers for `stats` (the unit in view; with none, the first class that can wear it). `brief`
+ * stops at the codes (junk in a list).
  */
 export function gearRow(g: GearT | null, slot: string, stats: Stats | null, onClick?: () => void, arrow = true, who?: readonly string[] | HTMLElement, brief = false): HTMLElement {
   const slotName = h("span", { class: "dim" }, slot.toUpperCase());
@@ -261,10 +261,9 @@ export function gearRow(g: GearT | null, slot: string, stats: Stats | null, onCl
     h("div", { class: "grow" },
       h("div", { class: "line wrap name" }, h("span", { class: tone }, `${starred(g) ? "★" : ""}${g.name.toUpperCase()}`)),
       h("div", { class: "line wrap small codes" }, rare ? h("span", { class: `nowrap ${tone}` }, rare.toUpperCase()) : null, h("span", { class: "nowrap" }, kindName(g).toUpperCase()), ...(g.weapon ? weaponCode(g, stats) : []), ...codeSpans(g.stats)),
-      who && !(who instanceof HTMLElement) ? wearersLine(g, who) : null,
+      who instanceof HTMLElement ? who : who ? wearersLine(g, who) : null,
       effect ? h("div", { class: `text small wrap ${tone === "gold" || tone === "mythic" ? tone : "ink"} effect` }, effect) : null,
       size,
-      who instanceof HTMLElement ? who : null,
     ),
     onClick && arrow ? h("span", { class: "dim go" }, "▶") : null,
   );

@@ -5,14 +5,14 @@
 import { bar, button, type Child, h, nav, toast, win } from "../dom.js";
 import type { GearT, RogueNodeKindT } from "../../../src/schema.js";
 import { type Cell, type Pose } from "../art.js";
-import { bagRoom, bench, formationRarity, type Item, itemGear, member, type Offer, parseTraining, rogue, type RogueRun, seatsOf, type Slot, SLOT_LIST, wearer } from "../../../src/rogue.js";
+import { bagRoom, bench, formationRarity, type Item, itemGear, member, type Offer, parseTraining, rogue, type RogueRun, seatsOf, type Slot, wearer } from "../../../src/rogue.js";
 import { c, cls as classOf, shortName } from "../content.js";
-import { abilityBlock, gearRow, pieceTone, RARITY_TONE, role, seatLines, twoHanded, weaponParts, wearersLine } from "../sheet.js";
-import { actionIcon16, faceEl, gearIconEl, gearIconOf, iconEl, iconOf, weaponEl, weaponIcon } from "../pixel.js";
+import { abilityBlock, gearRow, RARITY_TONE, role, seatLines, twoHanded, wearersLine } from "../sheet.js";
+import { actionIcon16, canvasEl, faceEl, gearIconEl, gearIconOf, iconEl, iconOf, weaponIcon } from "../pixel.js";
 import { foesOnStage, partyInLine, partyOnStage, type StageActor, stageEl, type StageOpts, themeOf } from "../battle/scene.js";
 import { abilityTag } from "../describe.js";
 import { fighter, saveRogue, vitals } from "./state.js";
-import { canEquip, handsOf } from "../../../src/validate.js";
+import { canEquip } from "../../../src/validate.js";
 import { choose } from "../../../src/rogue/record.js";
 import { sfx } from "../battle/audio.js";
 
@@ -64,7 +64,7 @@ const rosterOrder = (run: RogueRun) => [...run.party, ...bench(run)];
 /**
  * A run's item as a gear card (its rarity, kind and numbers, `gearRow`), with who wears it at the right. With `who` (the
  * default), the line of who can wear it, the roster first; never what it's for, which would spoil the discovery; `fits`,
- * an offer's block of who in the party could wear it (`fitsBlock`), in its place. The stacks it lays are shown for its
+ * an offer's line of who in the roster could wear it (`fitsLine`), in its place. The stacks it lays are shown for its
  * wearer, else the first of the roster who can wear it.
  */
 export function itemRow(run: RogueRun, it: Item, onClick?: () => void, opts: { arrow?: boolean; stats?: Record<string, number> | null; right?: HTMLElement | null; who?: boolean; brief?: boolean; fits?: HTMLElement } = {}): HTMLElement {
@@ -82,62 +82,48 @@ export function junkRow(run: RogueRun, it: Item, onClick?: () => void, right: HT
   r.classList.add("junk");
   return r;
 }
-/** What else goes to the bag when `cls` puts on `g`: the offhand under a new two-handed weapon, another mythic. */
-export function comesOff(run: RogueRun, cls: string, g: GearT): string[] {
-  const m = member(run, cls);
-  return [
-    ...(g.slot === "weapon" && handsOf(c.pack, g) === 2 && m.gear.offhand ? [m.gear.offhand] : []),
-    ...(g.mythic ? SLOT_LIST.filter((s) => s !== g.slot && m.gear[s] && c.gear.get(m.gear[s]!)?.mythic).map((s) => m.gear[s]!) : []),
-  ];
-}
 /**
- * Who in the party could wear an offered piece, a line each, so a pick needs no trip to the party screen: the member's
- * face and what it wears in that slot now (the piece's icon and name in its rarity's colour, with a weapon's damage per
- * tick for that member; NOTHING; or LOCKED under a two-handed weapon), and anything else that would come off. With `put`,
- * each has a button that puts the piece on (EQUIP, or SWAP over a piece). Then who else could: those at camp, then the
- * classes not in the roster, dim. With nobody in the party, the plain FITS line.
+ * Who in the roster could wear an offered piece, in one line (the party first, then camp): each one's face with what it
+ * wears in that slot now, the piece's icon in its rarity's glow, a dashed empty box, or 2H for an offhand under a
+ * two-handed weapon. Then the names of the classes off the roster who could, dim. With nobody in the roster, the plain FITS line.
  */
-export function fitsBlock(run: RogueRun, g: GearT, put?: (cls: string) => void): HTMLElement {
+export function fitsLine(run: RogueRun, g: GearT): HTMLElement {
   const slot = g.slot as Slot;
   const all = c.pack.classes.filter((k) => canEquip(k, g)).map((k) => k.id);
-  const party = run.party.filter((cls) => all.includes(cls));
-  if (!party.length) return wearersLine(g, rosterOrder(run));
-  const rows = party.flatMap((cls) => {
+  const mine = rosterOrder(run).filter((cls) => all.includes(cls));
+  if (!mine.length) return wearersLine(g, rosterOrder(run));
+  const everyone = !g.mythic && all.length === c.pack.classes.length;
+  const rest = everyone ? [] : all.filter((cls) => !mine.includes(cls));
+  const wears = mine.map((cls) => {
     const m = member(run, cls);
-    const locked = slot === "offhand" && twoHanded(m.gear);
     const now = m.gear[slot] ? c.gear.get(m.gear[slot]!) : undefined;
     const glow = now?.rarity && now.rarity !== "common" ? ` glow-${now.rarity}` : "";
-    const what: Child[] = locked ? [h("span", { class: "grow dim" }, "LOCKED: TWO HANDS")]
-      : !now ? [h("span", { class: "grow good" }, "NOTHING")]
-      : [h("span", { class: `art${glow}` }, (now.slot === "weapon" ? weaponEl(now.id, 0.5) : null) ?? gearIconEl(now)),
-        h("span", { class: `trunc ${pieceTone(now)}` }, now.name.toUpperCase()),
-        now.weapon ? h("span", { class: "dim" }, `${weaponParts(now.weapon, fighter(run, cls).stats, now.id).perTick ?? ""}/T`) : null,
-        h("span", { class: "grow" })];
-    const off = locked ? [] : comesOff(run, cls, g).map((uid) => (c.gear.get(uid)?.name ?? uid).toUpperCase());
-    return [
-      h("div", { class: "now" }, faceEl(cls, 0.75), ...what, put && !locked ? button(now ? "SWAP" : "EQUIP", (e) => { e.stopPropagation(); put(cls); }, "sm hi") : null),
-      off.length ? h("div", { class: "line small dim wrap" }, `${off.join(", ")} TO THE BAG TOO`) : null,
-    ];
+    const what = slot === "offhand" && twoHanded(m.gear) ? h("span", { class: "slot dim" }, "2H")
+      : now ? h("span", { class: `slot art${glow}` }, (now.slot === "weapon" ? smallWeapon(now.id) : null) ?? gearIconEl(now))
+      : h("span", { class: "slot empty" });
+    return h("span", { class: "wears" }, faceEl(cls, 0.75), what);
   });
-  const camp = bench(run).filter((cls) => all.includes(cls)), rest = all.filter((cls) => !run.roster.some((x) => x.cls === cls));
-  const also = !g.mythic && all.length === c.pack.classes.length ? [h("span", { class: "dim" }, "FITS EVERYONE")]
-    : camp.length || rest.length ? [h("span", { class: "dim" }, "ALSO FITS"), camp.length ? h("span", null, `${camp.map(shortName).join(", ")} AT CAMP`) : null, camp.length && rest.length ? h("span", { class: "dim" }, "·") : null, rest.length ? h("span", { class: "dim" }, rest.map(shortName).join(", ")) : null]
-    : [];
-  return h("div", { class: "fits" }, ...rows, also.length ? h("div", { class: "line wrap small who" }, ...also) : null);
+  return h("div", { class: "line wrap small who fits" }, h("span", { class: "dim" }, everyone ? "FITS EVERYONE" : "FITS"), ...wears,
+    rest.length ? h("span", { class: "dim" }, rest.map(shortName).join(", ")) : null);
+}
+/** A weapon's icon made to sit beside a face: at most 3.5 by 2.5 rem, never enlarged. */
+function smallWeapon(id: string): HTMLCanvasElement | null {
+  const cv = weaponIcon(id);
+  return cv ? canvasEl(cv, Math.min(1, 28 / cv.width, 20 / cv.height), "weapon") : null;
 }
 /** A training's button: LEARN an ability, TRAIN a power step or a version. */
 export const trainWord = (opt: string) => (parseTraining(opt)?.verb === "learn" ? "LEARN" : "TRAIN");
-/** An offer as a card's body; a piece shows who in the party could wear it, and with `put` a button to put it on each. */
-export function offerBody(run: RogueRun, o: Offer, put?: (cls: string) => void): Child[] {
+/** An offer as a card's body; a piece shows who in the roster could wear it and what they wear there now. */
+export function offerBody(run: RogueRun, o: Offer): Child[] {
   // A sealed piece shows only its slot; a bundle, its piece and its supply.
   if (o.kind === "gear" && o.sealed) {
     const g = c.gear.get(o.item.uid) ?? itemGear(c, o.item);
     return [h("div", { class: "line" }, iconEl(ICON.treasure), h("span", { class: "grow hi" }, `SEALED ${g.slot.toUpperCase()}`)), h("div", { class: "line small dim wrap" }, "RARE OR BETTER · SHOWN WHEN TAKEN")];
   }
   if (o.kind === "bundle") {
-    return [h("div", { class: "line hi" }, "A BUNDLE"), itemRow(run, o.item, undefined, { right: null, fits: fitsBlock(run, c.gear.get(o.item.uid) ?? itemGear(c, o.item), put) }), h("div", { class: "line small" }, iconEl(SUPPLY_ICON[o.supply]), h("span", null, ` AND A ${o.supply.toUpperCase()}`), bagRoom(c, run, o.supply) ? null : h("span", { class: "dim" }, " (BAG FULL)"))];
+    return [h("div", { class: "line hi" }, "A BUNDLE"), itemRow(run, o.item, undefined, { right: null, fits: fitsLine(run, c.gear.get(o.item.uid) ?? itemGear(c, o.item)) }), h("div", { class: "line small" }, iconEl(SUPPLY_ICON[o.supply]), h("span", null, ` AND A ${o.supply.toUpperCase()}`), bagRoom(c, run, o.supply) ? null : h("span", { class: "dim" }, " (BAG FULL)"))];
   }
-  if (o.kind === "gear") return [itemRow(run, o.item, undefined, { right: null, fits: fitsBlock(run, c.gear.get(o.item.uid) ?? itemGear(c, o.item), put) })];
+  if (o.kind === "gear") return [itemRow(run, o.item, undefined, { right: null, fits: fitsLine(run, c.gear.get(o.item.uid) ?? itemGear(c, o.item)) })];
   if (o.kind === "tome") {
     return [h("div", { class: "line" }, faceEl(o.cls), h("span", { class: "grow hi" }, `TOME: ${shortName(o.cls)} LEARNS`)), abilityBlock(c.abilities.get(o.ability)!, null)];
   }
@@ -229,26 +215,19 @@ export function partyStrip(run: RogueRun, tap = true): HTMLElement {
  * Answers the run's decision, saves it and redraws. What the pick did is said once, so an event's gain isn't silent. A
  * room's outcome that moves the run on (a chest, an event, a recruit, a sealed piece) holds the screen it was chosen on
  * until the player has read it and goes on. A pick made knowing what it does (the map, the draft, a training) or one that
- * keeps its screen (a sale, a rest) says it in a toast. `then` acts right after the pick (a piece taken is put on) and
- * says what it did in a toast.
+ * keeps its screen (a sale, a rest) says it in a toast.
  */
-export function pickOrSave(run: RogueRun, pick: string, then?: () => string | null) {
+export function pickOrSave(run: RogueRun, pick: string) {
   const was = run.pending, before = run.notes.length;
   const bases = new Map(run.items.map((it) => [it.uid, it.base]));
   choose(c, run, pick);
-  const said = then?.() ?? null;
   saveRogue();
   sfx.tap();
   const news = run.notes.slice(before).map((n) => n.text).filter((t) => !/^(Took|Bought|Act )/.test(t));
   const knowing = ["map", "draft", "train", "levelup", "fate"].includes(was.kind) || (was.kind === "choose" && was.what !== "temper");
-  if (news.length && frameEl && run.pending !== was && !knowing) {
-    outcome(run, news, run.items.filter((it) => bases.get(it.uid) !== it.base && c.gear.get(it.base)?.source !== "starter"));
-    if (said) toast(frameEl, said, 2600);
-    return;
-  }
+  if (news.length && frameEl && run.pending !== was && !knowing) return outcome(run, news, run.items.filter((it) => bases.get(it.uid) !== it.base && c.gear.get(it.base)?.source !== "starter"));
   redraw();
-  const say = [...news, ...(said ? [said] : [])];
-  if (say.length && frameEl) toast(frameEl, say.join(" "), 2600);
+  if (news.length && frameEl) toast(frameEl, news.join(" "), 2600);
 }
 /** What a room came to, over its screen: each line of news and the card of each piece it brought or changed (not a recruit's plain weapon); ONWARD goes on. */
 function outcome(run: RogueRun, news: string[], pieces: Item[]) {

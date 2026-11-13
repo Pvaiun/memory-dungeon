@@ -1,7 +1,7 @@
 /** Managing the party outside a fight: seats and the camp, the bag and its junk, a piece put on from the bag, a unit's sheet and ability order, its gear. */
 import { bar, button, type Child, h, header, nav, toast, win } from "../dom.js";
 import { current, fighter, saveRogue, vitals } from "./state.js";
-import { bag, bench, canManage, formationRarity, formOf, type Item, itemGear, itemOf, member, passiveOf, rogue, type RogueRun, seatsOf, type Slot, wearer } from "../../../src/rogue.js";
+import { bag, bench, canManage, formationRarity, formOf, type Item, itemGear, itemOf, member, passiveOf, rogue, type RogueRun, seatsOf, type Slot, SLOT_LIST, wearer } from "../../../src/rogue.js";
 import { c, cls as classOf, disp, shortName } from "../content.js";
 import { dismiss, equip, junk, seat, setFormation, setOrder, swap } from "../../../src/rogue/record.js";
 import { abilityBlock, aggShares, basicLine, canUse, classHead, classPassive, gearRow, type GearSlot, lockedRow, seatCodes, seatNotes, section, SLOTS, specialLines, statGrid, twoHanded } from "../sheet.js";
@@ -9,9 +9,9 @@ import { faceEl } from "../pixel.js";
 import { setup } from "../state.js";
 import { weaponOf } from "../../../src/engine/combat/fight.js";
 import { plainWeapon } from "../../../src/sim/parties.js";
-import { canEquip } from "../../../src/validate.js";
+import { canEquip, handsOf } from "../../../src/validate.js";
 import { rogueScreen, supplyRow } from "./run.js";
-import { comesOff, confirm, frameEl, go, itemRow, junkRow, RARITY_CLASS, ROMAN } from "./parts.js";
+import { confirm, frameEl, go, itemRow, junkRow, RARITY_CLASS, ROMAN } from "./parts.js";
 
 // ─── Managing the party ────────────────────────────────────────────────────
 
@@ -97,7 +97,10 @@ function wearPopup(run: RogueRun, it: Item) {
     const m = member(run, cls);
     const locked = slot === "offhand" && twoHanded(m.gear);
     const now = m.gear[slot] ? itemOf(run, m.gear[slot]!) : undefined;
-    const off = comesOff(run, cls, g);
+    const off = [
+      ...(slot === "weapon" && handsOf(c.pack, g) === 2 && m.gear.offhand ? [m.gear.offhand] : []),
+      ...(g.mythic ? SLOT_LIST.filter((s) => s !== slot && m.gear[s] && c.gear.get(m.gear[s]!)?.mythic).map((s) => m.gear[s]!) : []),
+    ];
     const put = () => {
       close();
       if (equip(c, run, cls, slot, it.uid)) { saveRogue(); go("rparty", undefined, true); toast(frame, `${shortName(cls)} WEARS ${g.name.toUpperCase()}`); }
