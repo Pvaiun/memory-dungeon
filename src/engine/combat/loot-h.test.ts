@@ -322,12 +322,13 @@ test("damp: stacks passed on to a unit that has capped lately are halved for eac
   assert.equal(stacks(a, "A", "chill"), 4.5);
   cast("fill", 4);
   cast("pass", 5);
-  assert.equal(stacks(a, "A", "chill"), 0, "twice: a quarter of three is under one stack, and no status starts under one");
+  assert.equal(stacks(a, "A", "chill"), 0, "twice: a quarter of three is under one stack, and waits");
   cast("plain", 6);
+  assert.equal(stacks(a, "A", "chill"), 3.75, "what waited lands with the next");
   cast("pass", 7);
-  assert.equal(stacks(a, "A", "chill"), 3.75, "a fraction on top of what it holds");
+  assert.equal(stacks(a, "A", "chill"), 4.5, "a fraction on top of what it holds");
   cast("pass", 30);
-  assert.equal(stacks(a, "A", "chill"), 6.75, "the chain is over: nothing is cut");
+  assert.equal(stacks(a, "A", "chill"), 7.5, "the chain is over: nothing is cut");
 });
 
 test("spend takes whole stacks, pass hands the actor's debuffs on as fresh ones, share copies a status laid at a moment (and never a copy)", () => {

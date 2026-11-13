@@ -16,7 +16,7 @@ import { abilityUp, apply, cd, helper, kit, marker, ofHolder, passiveUp, phys, r
   /** Bloodroot: a debuff that knows its source; each action its holder takes heals the Bramble knight 1.5% of its max HP, until the Bleed ends. */
   const bloodroot = (k: number) => THORNS.map((s) => bleedOn(s, k, [apply("bloodroot", { to: "other" })]));
   helper({
-    id: "bloodroot", name: "BLOODROOT", text: "Each action it takes heals the one whose thorns rooted it.", label: "debuff", show: "icon", stacking: "refresh", perSource: { endsWithSource: true },
+    id: "bloodroot", name: "BLOODROOT", text: "Each action it takes heals whoever rooted it.", label: "debuff", show: "icon", stacking: "refresh", perSource: { endsWithSource: true },
     reactions: [
       { on: { event: "action_resolve" }, actor: "source", do: [{ op: "heal", amount: { scale: [{ ratio: 0.015, stat: "max_hp", of: "source" }] }, to: "source" }] },
       { on: { event: "status_ended", status: "bleed" }, do: [{ op: "remove", label: "debuff", status: "bloodroot", to: "holder" }] },
@@ -30,9 +30,9 @@ import { abilityUp, apply, cd, helper, kit, marker, ofHolder, passiveUp, phys, r
   ];
   passiveUp({
     id: "briar", cls: "bramble_knight",
-    power: "Two fifths more Bleed.",
-    a: { name: "Bloodroot", text: "Foes its Thorns wound start to bleed. While a foe bleeds, each action it takes heals the Bramble knight a little.", builds: ["pact", "toll"] },
-    b: { name: "Spreading thorns", text: "When its Thorns strike, they strike a second, random foe too, and both start to bleed.", builds: ["storm"] },
+    power: "+40% Bleed.",
+    a: { name: "Bloodroot", text: "Its Thorns add Bleed. While that Bleed lasts, the foe heals it 1.5% of max HP each time it acts.", builds: ["pact", "toll"] },
+    b: { name: "Spreading thorns", text: "Its Thorns also strike a second random foe; both gain Bleed.", builds: ["storm"] },
     form: (v, k, plus) => ({ reactions: v === "a" ? bloodroot(k) : v === "b" ? spreading(plus ? "briar__bp" : "briar__b", k) : plain(k) }),
   });
 }
@@ -51,8 +51,8 @@ import { abilityUp, apply, cd, helper, kit, marker, ofHolder, passiveUp, phys, r
   const grove: Partial<AbilityT> = { cooldown: cd("long", "thicket"), mp: 325, target: T.everyAlly, do: [apply("guard")] };
   abilityUp({
     id: "thicket", cls: "bramble_knight",
-    power: "Comes round sooner.",
-    a: { name: "Overgrowth", text: "Taunts itself twice over, and doubles its Thorns while the Taunts last. No Guard.", serves: "Toll 2 ●●● ⚙ goad (half)" },
+    power: "Shorter cooldown.", shown: true,
+    a: { name: "Overgrowth", text: "Taunts twice in a row, with Thorns doubled throughout. No Guard.", serves: "Toll 2 ●●● ⚙ goad (half)" },
     b: { name: "Grove", text: "Guards every ally. No Taunt.", builds: ["landslide", "bonfire", "storm"] },
     form: (v, _k, plus) =>
       v === "a" ? { ...overgrowth, ...(plus ? { cooldown: cd("long", "thicket") } : {}) }
@@ -68,8 +68,8 @@ import { abilityUp, apply, cd, helper, kit, marker, ofHolder, passiveUp, phys, r
   const blossom: Partial<AbilityT> = { cooldown: cd("long", "regrowth"), mp: 500, target: T.everyAlly, do: [apply("regen")] };
   abilityUp({
     id: "regrowth", cls: "bramble_knight",
-    power: "Costs less MP.",
-    a: { name: "Deep roots", text: "Regen on itself, and Thorns up while it heals.", builds: ["toll"] },
+    power: "Costs less MP.", shown: true,
+    a: { name: "Deep roots", text: "Regen on itself, and Thorns up while it lasts.", builds: ["toll"] },
     b: { name: "Blossom", text: "Regen on every ally.", builds: ["pact", "storm"] },
     form: (v, _k, plus) =>
       v === "a" ? { ...deepRoots, ...(plus ? { mp: 200 } : {}) }
@@ -91,9 +91,9 @@ import { abilityUp, apply, cd, helper, kit, marker, ofHolder, passiveUp, phys, r
   helper(marker("rebuke_count", "REBUKE", "Hits taken since its last lash.", { show: "icon", stacking: "intensity" }));
   abilityUp({
     id: "bramble_lash", cls: "bramble_knight",
-    power: "Deals two fifths more damage.",
-    a: { name: "Whipping vines", text: "Lashes every foe with its thorns, for half.", serves: "Toll 2 ●●, Cuts ●● ⚙ red rain (half)" },
-    b: { name: "Rebuke", text: "Waits until it's been hit five times since its last lash, then lashes a random foe for double.", builds: ["toll"] },
+    power: "+40% damage.", shown: true,
+    a: { name: "Whipping vines", text: "Lashes every foe with its Thorns.", serves: "Toll 2 ●●, Cuts ●● ⚙ red rain (half)" },
+    b: { name: "Rebuke", text: "After 5 hits taken since its last lash, lashes a random foe.", builds: ["toll"] },
     form: (v, k) => (v === "a" ? vines(2.25 * k) : v === "b" ? rebuke(9 * k) : { do: [lash(4.5 * k)] }),
   });
 }

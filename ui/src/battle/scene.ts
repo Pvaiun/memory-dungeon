@@ -617,7 +617,7 @@ export class Scene {
       }
       // Enlarged by Scale2x and Scale3x (pixel.ts), drawn one to one.
       const img = vfxSprite(f.strip, f.scale);
-      const w = def.w * f.scale, h = def.h * f.scale;
+      const w = img.width / def.frames, h = img.height;
       ctx.save();
       ctx.translate(Math.round(x), Math.round(y));
       if (f.flip) ctx.scale(-1, 1);

@@ -185,7 +185,7 @@ ui/
     mode.ts                  free play or the rogue mode, saved
     screens.ts               the menus and free play's screens; go() switches screens
     sheet.ts                 unit sheets: a class or an enemy, its stats, abilities and gear
-    describe.ts              plain-language descriptions of abilities, effects and statuses
+    describe.ts              plain-language descriptions of abilities, effects and statuses; the sizes cards show, an ability's and the stacks a piece or a passive lays
     bestiary.ts              the bestiary's record: enemies met and looked at
     dom.ts                   DOM helpers: h(), windows, rows, buttons, the back gesture
     art.ts                   art tables: which sprite, icon or look shows what
@@ -209,9 +209,10 @@ ui/
       scene.ts               the field, backdrops, the campfire, the menus' stages and party strip; drawing the effects
       audio.ts               sound effects and music
   tools/
-    assets.py                builds ui/public/assets/ from the director's art packs
+    assets.py                builds ui/public/assets/ from the director's art packs (all but the skill and status icons)
     weapons-fitted/          weapon sheets used in place of the pack's own of the same name (resized, redrawn or moved)
     gear_icons.py            builds the gear icons (gear.png): every piece but the weapons, from the gear icon pack and icons drawn in its style
+    skill_icons.py           builds the classes' ability and passive icons, the basic attacks' by weapon kind and every status's, from the director's picks in three packs, all on one tile
 tests/                       the pack's own tests
   content.test.ts            the committed pack matches its sources; the tools' party files are valid; every weapon has its strip in the interface's art
   json-schema.test.ts        the exported JSON schema accepts and rejects what the zod schema does

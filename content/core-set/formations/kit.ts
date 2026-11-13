@@ -66,7 +66,7 @@ export function formation(name: string, rarity: NonNullable<FormationT["rarity"]
 }
 export const twice = (s: Seat): Seat[] => [s, s];
 export const thrice = (s: Seat): Seat[] => [s, s, s];
-export const NOTHING = "Nothing of its own.";
+export const NOTHING = "Nothing.";
 
 export const formations_: FormationT[] = [];
 export const effects_: StatusT[] = [];
@@ -82,7 +82,7 @@ export function add(f: FormationT, statuses: StatusT[], line: string) {
 // ─── Neutral: the starter ────────────────────────────────────────────────────
 
 export const neutral: FormationT = {
-  id: "neutral", name: "Neutral", text: "Three slots that do nothing.", rarity: "common", source: "starter",
+  id: "neutral", name: "Neutral", text: "Three empty seats.", rarity: "common", source: "starter",
   positions: [
     { id: "a", name: "Left", layout: { line: "front", column: 0 } },
     { id: "b", name: "Centre", layout: { line: "middle", column: 1 } },

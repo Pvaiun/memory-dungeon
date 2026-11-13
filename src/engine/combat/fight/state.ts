@@ -60,6 +60,11 @@ export type CUnit = Unit & {
   hitBy?: string;
   /** For a status with `damp`: how many times it has capped lately, and until when that counts. */
   capped?: Record<string, { n: number; until: number }>;
+  /**
+   * Stacks of an Intensity status it doesn't hold, in thousandths, from applications under one stack: they wait here, add up
+   * and never fade, and land with the application that brings them to one. Keyed by status, and by applier for a per-source one.
+   */
+  pending?: Record<string, number>;
 };
 
 /**

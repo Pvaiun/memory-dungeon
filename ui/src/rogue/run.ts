@@ -57,7 +57,7 @@ function startView(): Child[] {
     h("div", { class: "line hi" }, "CHOOSE YOUR LEADER"),
     win("roster", h("div", { class: "grid" }, ...owned.map((id) => h("div", { class: `cell${leaderPick === id ? " cur" : ""}`, onClick: () => { leaderPick = id; redraw(); } }, h("div", { class: "portrait" }, faceEl(id)), h("span", { class: "trunc", style: "max-width:100%" }, shortName(id)), h("span", { class: "trunc small dim", style: "max-width:100%" }, c.abilities.get(knows(id)[0])!.name.toUpperCase()))),
       ...(owned.length < c.pack.classes.length ? [h("div", { class: "cell static dim" }, h("div", { class: "portrait locked" }, "?"), h("span", null, `${c.pack.classes.length - owned.length} MORE`))] : []))),
-    win("", classHead(leaderPick, undefined, plainWeapon(c, leaderPick)), section("STARTS WITH"), ...knows(leaderPick).map((a) => abilityBlock(c.abilities.get(a)!, classOf(leaderPick!).stats, setup.settings.designer))),
+    win("", classHead(leaderPick, undefined, plainWeapon(c, leaderPick)), section("STARTS WITH"), ...knows(leaderPick).map((a) => abilityBlock(c.abilities.get(a)!, classOf(leaderPick!).stats))),
     heatRow,
     actions(button("SET OUT", () => { startRun(leaderPick!, m.heat); sfx.win(); redraw(); }, "hi"), button("CLASSES", () => go("classes"))),
   ];
@@ -78,8 +78,8 @@ function draftView(run: RogueRun): Child[] {
     partyStrip(run, false),
     h("div", { class: "cards" }, ...p.offers.map((id) => h("div", { class: `win card${draftPick === id ? " cur" : ""}`, onClick: () => { draftPick = id; redraw(); } },
       h("div", { class: "portrait" }, faceEl(id)), h("div", { class: "name" }, shortName(id)), h("div", { class: "codes small" }, knows(id).map((a) => c.abilities.get(a)!.name).join(", "))))),
-    win("scroll", classHead(draftPick, undefined, plainWeapon(c, draftPick)), section("PASSIVE"), ...classPassive(draftPick), section("STARTS WITH"), ...knows(draftPick).map((a) => abilityBlock(c.abilities.get(a)!, classOf(draftPick!).stats, setup.settings.designer)),
-      section("LEARNS LATER"), ...c.classes.get(draftPick)!.abilities.filter((a) => !knows(draftPick!).includes(a)).map((a) => abilityBlock(c.abilities.get(a)!, classOf(draftPick!).stats, false)),
+    win("scroll", classHead(draftPick, undefined, plainWeapon(c, draftPick)), section("PASSIVE"), ...classPassive(draftPick), section("STARTS WITH"), ...knows(draftPick).map((a) => abilityBlock(c.abilities.get(a)!, classOf(draftPick!).stats)),
+      section("LEARNS LATER"), ...c.classes.get(draftPick)!.abilities.filter((a) => !knows(draftPick!).includes(a)).map((a) => abilityBlock(c.abilities.get(a)!, classOf(draftPick!).stats)),
     ),
     actions(button(`TAKE ${shortName(draftPick)}`, () => pickOrSave(run, draftPick!), "hi")),
   ];

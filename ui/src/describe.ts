@@ -214,32 +214,77 @@ export function scalesOf(n: NumT | undefined, stacks = false): Scale[] {
 const short = (v: number) => (v >= 10 ? String(Math.round(v)) : String(Math.round(v * 10) / 10));
 
 /** One part of an ability's size: a number, what it is (a damage type, a heal, a status), and what it grows with. */
-export type SizePart = { value?: string; word: string; tone?: string; scales: Scale[]; chance?: number };
+export type SizePart = { value?: string; word: string; tone?: string; scales: Scale[]; chance?: number; or?: boolean };
+
+/** Stacks a unit adds, as a sheet shows them: rounded, never past the status's cap. */
+function stackCount(n: NumT | undefined, id: string, stats: Stats): string {
+  const v = n === undefined ? 1 : evalNum(n, stats).value;
+  const cap = status(id).cap;
+  const r = v >= 10 ? Math.round(v) : Math.round(v * 10) / 10;
+  return String(typeof cap === "number" && r > cap ? cap : r);
+}
+/** One status an action or a card lays: a Shield's points, a stacking status's count, or just its name. */
+function statusPart(id: string, n: NumT | undefined, stats: Stats, chance?: number): SizePart {
+  const d = status(id);
+  if (id === "shield") return { value: String(disp(evalNum(n ?? 0, stats).value)), word: "SHIELD", tone: "sh", scales: scalesOf(n), chance };
+  return { value: d.stacking === "intensity" ? stackCount(n, id, stats) : undefined, word: d.name.toUpperCase(), tone: d.label === "buff" ? "buff" : "debuff", scales: d.stacking === "intensity" ? scalesOf(n, true) : [], chance };
+}
+/** Stacks that grow with a stat of the unit that holds the card (or laid it, with `source`), so a number for this unit means something. */
+const scaledStacks = (n: NumT | undefined, source: boolean): n is Exclude<NumT, number> =>
+  typeof n === "object" && n.scale.length > 0 && n.scale.every((t) => !!t.stat && !t.when && !t.times && (!t.of || t.of === "self" || t.of === "holder" || (source && t.of === "source")));
+/**
+ * The stacks a card's statuses lay that grow with a stat, as numbers for one unit ("3.6 CHILL (ATK)"): what a piece, a
+ * passive or a state gives, which its words leave to this line. It follows a state the card lays to what that state lays;
+ * a flat count is the card's own words, and a counter's stack is its bracket's. `source`: the unit is the one that laid them.
+ */
+export function heldParts(ids: readonly string[], stats: Stats, source = false, seen = new Set<string>()): SizePart[] {
+  const out: SizePart[] = [];
+  for (const id of ids) {
+    if (seen.has(id)) continue;
+    seen.add(id);
+    const d = c.statuses.get(id);
+    if (!d) continue;
+    const lays = (id: string, n: NumT | undefined) => {
+      if (status(id).stacking === "intensity" && id !== "shield") { if (scaledStacks(n, source)) out.push(statusPart(id, n, stats)); }
+      else if (id !== "shield") out.push(...heldParts([id], stats, source, seen));
+    };
+    // What its holder's abilities add (an ability change's statuses).
+    for (const m of d.mods ?? []) for (const ap of m.apply ?? []) lays(ap.status, ap.stacks);
+    for (const e of [...(d.reactions ?? []).flatMap((r) => r.do), ...(d.trigger?.do ?? []), ...(d.pulse?.do ?? [])]) {
+      if (e.op === "apply") lays(e.status, e.stacks);
+      // One status of several, at random or the one the target holds most: the statuses joined by "/".
+      else if (e.op === "one" && e.of.length && e.of.every((o) => scaledStacks(o.stacks, source))) {
+        const all = e.of.map((o) => statusPart(o.status, o.stacks, stats));
+        // The same count for each reads once, first; the stat once, last.
+        const same = all.every((p) => p.value === all[0].value);
+        out.push(...all.map((p, i) => ({ ...p, value: same && i ? undefined : p.value, scales: i === all.length - 1 ? p.scales : [], or: i > 0 })));
+      }
+      // A blow the card calls, sized by its holder's stats (a strike with its weapon has no amount of its own), and what it adds.
+      else if ((e.op === "strike" || e.op === "damage") && typeof e.amount === "object" && e.amount.scale.some((t) => t.stat && (!t.of || t.of === "self" || t.of === "holder")) && e.amount.scale.every((t) => (t.stat && (!t.of || t.of === "self" || t.of === "holder")) || (t.stacks && !t.when))) {
+        out.push({ value: disp(evalNum(e.amount, stats).value).toString(), word: TYPE_WORD.physical, tone: TYPE_TONE.physical, scales: scalesOf(e.amount) });
+        for (const ap of e.apply ?? []) lays(ap.status, ap.stacks);
+      }
+    }
+  }
+  // The same stacks laid by two reactions (a swing and an extra strike) read once.
+  return out.filter((p, i) => p.or || out.findIndex((q) => !q.or && q.word === p.word && q.value === p.value) === i);
+}
 /**
  * An ability's size for one unit, in parts: what each hit deals and its kind, a heal, a shield, the stacks it adds,
- * and the stats each grows with. Slay the Spire prints a card's numbers; this also shows what to gear for.
+ * and the stats each grows with, and what a state it lays adds. Slay the Spire prints a card's numbers; this also shows
+ * what to gear for.
  */
 export function sizeParts(a: AbilityT, stats: Stats, dmgMult = 1): SizePart[] {
   const out: SizePart[] = [];
-  const count = (n: NumT | undefined, id: string) => {
-    const v = n === undefined ? 1 : evalNum(n, stats).value;
-    const cap = status(id).cap;
-    const r = v >= 10 ? Math.round(v) : Math.round(v * 10) / 10;
-    return String(typeof cap === "number" && r > cap ? cap : r);
-  };
-  const statusPart = (id: string, n: NumT | undefined, chance?: number): SizePart => {
-    const d = status(id);
-    if (id === "shield") return { value: String(disp(evalNum(n ?? 0, stats).value)), word: "SHIELD", tone: "sh", scales: scalesOf(n), chance };
-    return { value: d.stacking === "intensity" ? count(n, id) : undefined, word: d.name.toUpperCase(), tone: d.label === "buff" ? "buff" : "debuff", scales: d.stacking === "intensity" ? scalesOf(n, true) : [], chance };
-  };
   for (const e of a.do) {
     if (e.op === "damage") {
       const value = evalNum(e.amount, stats).value * dmgMult;
       out.push({ value: `${e.hits && e.hits > 1 ? `${e.hits}×` : ""}${disp(value)}`, word: TYPE_WORD[e.type], tone: TYPE_TONE[e.type], scales: scalesOf(e.amount) });
-      for (const ap of e.apply ?? []) out.push(statusPart(ap.status, ap.stacks, ap.chance !== undefined && ap.chance < 100 ? ap.chance : undefined));
+      for (const ap of e.apply ?? []) out.push(statusPart(ap.status, ap.stacks, stats, ap.chance !== undefined && ap.chance < 100 ? ap.chance : undefined));
     } else if (e.op === "heal") out.push({ value: String(disp(evalNum(e.amount, stats).value)), word: "HEAL", tone: "good", scales: scalesOf(e.amount) });
     else if (e.op === "mp") out.push({ value: String(disp(evalNum(e.amount, stats).value)), word: "MP", tone: "mp", scales: scalesOf(e.amount) });
-    else if (e.op === "apply" && (e.status === "shield" || status(e.status).stacking === "intensity")) out.push(statusPart(e.status, e.stacks));
+    else if (e.op === "apply" && (e.status === "shield" || status(e.status).stacking === "intensity")) out.push(statusPart(e.status, e.stacks, stats));
+    else if (e.op === "apply") out.push(...heldParts([e.status], stats, true));
   }
   return out;
 }
