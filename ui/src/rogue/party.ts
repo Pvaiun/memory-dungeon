@@ -120,9 +120,7 @@ function wearPopup(run: RogueRun, it: Item) {
       section("PUT IT ON"),
       ...(rows.length ? rows : [h("div", { class: "line dim small" }, "NOBODY IN THE ROSTER CAN")]),
     ),
-    h("div", { class: "btns even" },
-      button(it.junk ? "UNJUNK" : "JUNK", () => { close(); junk(run, it.uid, !it.junk); saveRogue(); go("rparty", undefined, true); }),
-      button("CLOSE", close)),
+    h("div", { class: "btns even" }, button("CLOSE", close)),
   );
   frame.append(box);
   nav.overlay = close;
