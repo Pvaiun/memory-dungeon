@@ -312,6 +312,13 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
         scene.number(String(ev.target), `+${disp(ev.amount as number)}`, { color: "#6fb4ff", sub: "MP" });
         fx.mp(String(ev.target), ev.part);
         break;
+      case "pay": {
+        // HP paid as a price (an ability's, a piece's, a drain's): the bar drops, and a price's number shows in red, under HP.
+        if (typeof ev.hp === "number") scene.told(String(ev.unit), ev.hp);
+        const n = disp(ev.amount as number);
+        if (!ev.drain && n > 0) scene.number(String(ev.unit), `-${n}`, { color: "#ff7b6b", sub: "HP", subColor: "#ff7b6b" });
+        break;
+      }
       case "heal": {
         if (typeof ev.hp === "number") scene.told(String(ev.target), ev.hp);
         const amount = ev.amount as number;

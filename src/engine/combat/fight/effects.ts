@@ -271,7 +271,7 @@ export function pay(w: W, t: CUnit, amount: number, drain = false): number {
   const v = Math.min(Math.floor(amount), t.hp - 1);
   if (v <= 0 || t.ko) return 0;
   t.hp -= v;
-  w.log?.({ t: "pay", vis: "player", at: w.f.now, unit: t.id, amount: v, hp: t.hp });
+  w.log?.({ t: "pay", vis: "player", at: w.f.now, unit: t.id, amount: v, hp: t.hp, ...(drain ? { drain: true } : {}) });
   if (!drain) fire(w, ev("hp_paid", t, null, { amount: v }));
   hpMoved(w, t);
   return v;
