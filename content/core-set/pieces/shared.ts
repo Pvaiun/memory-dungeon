@@ -27,18 +27,18 @@ export const COUNTER = {
 } as const;
 
 export const counters: StatusT[] = [
-  counter("cuts", "CUTS", "A Cut for each hit landed, kept for the fight.", { cap: COUNTER.cuts.cap }),
-  counter("heat", "HEAT", "Acts 5% faster in everything for each Heat.", {
+  counter("cuts", "CUTS", "One per hit landed.", { cap: COUNTER.cuts.cap }),
+  counter("heat", "HEAT", `${COUNTER.heat.speed}% faster in everything per Heat.`, {
     stats: ["attack_speed", "cooldown_reduction", "cast_time_reduction"].map((stat) => ({ stat, flat: COUNTER.heat.speed })), cap: COUNTER.heat.cap,
   }),
-  counter("spite", "SPITE", "A Spite for each hit taken, kept for the fight.", { cap: COUNTER.spite.cap }),
+  counter("spite", "SPITE", "One per hit taken.", { cap: COUNTER.spite.cap }),
   // Spent by the swing it boosts: the drop comes with the basic attack's action_resolve, after its hits have read the stacks.
-  counter("wrath", "WRATH", "Its next basic attack deals a fifth more for each Wrath, and spends them.", {
+  counter("wrath", "WRATH", `Next basic attack deals +${COUNTER.wrath.pct}% per Wrath, and spends them.`, {
     boosts: [{ tag: "basic", pct: COUNTER.wrath.pct }], cap: COUNTER.wrath.cap, trigger: { on: { event: "action_resolve", kind: "basic" } }, drop: "all",
   }),
   // The engine keeps the count ability by ability (an ability change's `times: casts`) and shows the highest here.
-  counter("crescendo", "CRESCENDO", "An ability deals, heals and adds a fifth more for each Crescendo it holds.", { cap: COUNTER.crescendo.cap, oncePerEvent: undefined }),
-  counter("cascade", "CASCADE", "A Cascade for each shatter this fight.", { cap: COUNTER.cascade.cap }),
+  counter("crescendo", "CRESCENDO", `An ability does +${COUNTER.crescendo.pct}% for each earlier cast of it this fight.`, { cap: COUNTER.crescendo.cap, oncePerEvent: undefined }),
+  counter("cascade", "CASCADE", "One per shatter this fight.", { cap: COUNTER.cascade.cap }),
 ];
 
 /** What an ability change that counts Crescendo reads: a fifth more for each of the ability's own casts, shown as the status. */
@@ -51,8 +51,8 @@ export const CRESCENDO = { casts: true as const, cap: COUNTER.crescendo.cap, sho
  */
 export const OVERHEAL = { own: "overheal_own", given: "overheal_given" } as const;
 const order: StatusT[] = [
-  { id: OVERHEAL.own, name: "Keeps its overhealing", text: "Healing it receives past full is its own piece's.", label: "marker", show: "sheet", stacking: "refresh" },
-  { id: OVERHEAL.given, name: "Keeps the overhealing it gives", text: "Healing it gives past full is its own piece's.", label: "marker", show: "sheet", stacking: "refresh" },
+  { id: OVERHEAL.own, name: "Keeps its overhealing", text: "Its overhealing goes to its own piece.", label: "marker", show: "sheet", stacking: "refresh" },
+  { id: OVERHEAL.given, name: "Keeps the overhealing it gives", text: "Overhealing it gives goes to its own piece.", label: "marker", show: "sheet", stacking: "refresh" },
 ];
 
 /** Marked is the vocabulary's (a class applies it: the Paladin's Condemn); the pieces and formations reach it here. */

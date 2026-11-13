@@ -12,9 +12,9 @@ import { abilityUp, apply, cd, helper, hitOf, kit, passiveUp, phys, POWER, r6 } 
   const quickDraw: Partial<StatusT> = { reactions: [{ on: { event: "hit_lands", tags: ["crit"] }, do: [{ op: "cooldown", which: "basic", set: "ready", to: "holder" }] }] };
   passiveUp({
     id: "hunters_eye", cls: "ranger",
-    power: "Its basic attacks crit more often still: three steps, not two.",
-    a: { name: "Quarry", text: "Basic attacks ignore Taunt, crit more often, and go to the foe with the lowest share of max HP.", serves: "Hunt 1 ●●●" },
-    b: { name: "Quick draw", text: "Basic attacks ignore Taunt and crit more often. Each crit makes its next basic attack come at once.", serves: "Cuts 2 ●●●, Hunt ●● ⚙ emptied quiver (key)" },
+    power: `+${crit(KIT.hunterCrit + 1)}% Crit chance, not +${crit(KIT.hunterCrit)}%.`,
+    a: { name: "Quarry", text: `Basic attacks ignore Taunt, have +${crit(KIT.hunterCrit)}% Crit chance, and aim at the most wounded foe.`, serves: "Hunt 1 ●●●" },
+    b: { name: "Quick draw", text: `Basic attacks ignore Taunt and have +${crit(KIT.hunterCrit)}% Crit chance; each crit readies the next.`, serves: "Cuts 2 ●●●, Hunt ●● ⚙ emptied quiver (key)" },
     form: (v, _k, plus) => ({ seek: "basic", ...crits(plus ? KIT.hunterCrit + 1 : KIT.hunterCrit), ...(v === "a" ? quarry : v === "b" ? quickDraw : {}) }),
   });
 }
@@ -26,9 +26,9 @@ import { abilityUp, apply, cd, helper, hitOf, kit, passiveUp, phys, POWER, r6 } 
   const volley = (k: number): Partial<AbilityT> => ({ target: T.everyFoe, cooldown: cd("short", "barbed_arrow"), mp: 325, do: [phys(hitOf("attack", "light"), { apply: [{ status: "bleed", stacks: stacks("few", "attack", k) }] })] });
   abilityUp({
     id: "barbed_arrow", cls: "ranger",
-    power: "Adds two fifths more Bleed.",
-    a: { name: "Deep barbs", text: "A barbed arrow at the foe with the most Bleed, adding many.", builds: ["hunt", "cuts"] },
-    b: { name: "Barbed volley", text: "An arrow at every foe: each deals light damage that scales from Attack and adds a few Bleed; stacks scale from Attack.", serves: "Cuts 2 ●●●, Hunt ● ⚙ red rain (half), emptied quiver (half)" },
+    power: "+40% Bleed.", shown: true,
+    a: { name: "Deep barbs", text: "An arrow at the foe with the most Bleed, adding Bleed.", builds: ["hunt", "cuts"] },
+    b: { name: "Barbed volley", text: "An arrow at every foe, each adding Bleed.", serves: "Cuts 2 ●●●, Hunt ● ⚙ red rain (half), emptied quiver (half)" },
     form: (v, k) => (v === "a" ? deep(k) : v === "b" ? volley(k) : { do: [arrow("several", k)] }),
   });
 }
@@ -39,9 +39,9 @@ import { abilityUp, apply, cd, helper, hitOf, kit, passiveUp, phys, POWER, r6 } 
   const hail = (k: number): Partial<AbilityT> => ({ do: [phys(from("attack", 0.29)), apply("chill", { stacks: stacks("few", "attack", 0.5 * k), to: T.everyFoe })] });
   abilityUp({
     id: "frost_arrow", cls: "ranger",
-    power: "Adds two fifths more Chill; if it adds none, it deals two fifths more damage.",
-    a: { name: "Pinning arrow", text: "A quick arrow at the foe with the highest Attack, which is Slowed. No Chill.", builds: [], plus: "Deals two fifths more damage." },
-    b: { name: "Hail", text: "A quick arrow at the foe with the most Chill, and a few Chill on every foe; stacks scale from Attack.", serves: "Snap 1 ●●● ⚙ firecracker (half)", plus: "Adds two fifths more Chill." },
+    power: "+40% Chill, or damage without Chill.", shown: true,
+    a: { name: "Pinning arrow", text: "An arrow at the foe with the most Attack, Slowing it. No Chill.", builds: [] },
+    b: { name: "Hail", text: "An arrow at the foe with the most Chill; Chill on every foe.", serves: "Snap 1 ●●● ⚙ firecracker (half)" },
     form: (v, k) =>
       v === "a" ? pinning(0.29 * k)
         : v === "b" ? hail(k)
@@ -62,9 +62,9 @@ import { abilityUp, apply, cd, helper, hitOf, kit, passiveUp, phys, POWER, r6 } 
   });
   abilityUp({
     id: "rending_arrow", cls: "ranger",
-    power: "Adds two fifths more Sunder; if it adds none, it deals two fifths more damage.",
-    a: { name: "Armor breaker", text: "An arrow at the foe with the most Defense, adding several Sunder.", builds: ["cuts", "landslide"], plus: "Adds two fifths more Sunder." },
-    b: { name: "Gutting arrow", text: "An arrow at the foe with the lowest HP. Half again as much below half its HP, double below a quarter. No Sunder.", builds: ["hunt"], plus: "Deals two fifths more damage." },
+    power: "+40% Sunder, or damage without Sunder.", shown: true,
+    a: { name: "Armor breaker", text: "An arrow at the foe with the most Defense, adding Sunder.", builds: ["cuts", "landslide"] },
+    b: { name: "Gutting arrow", text: "An arrow at the foe with the least HP: +50% below half HP, double below a quarter.", builds: ["hunt"] },
     form: (v, k) => (v === "a" ? breaker(k) : v === "b" ? gutting(k) : { do: [phys(from("attack", 0.5), { apply: [{ status: "sunder", stacks: stacks("few", "attack", k) }] })] }),
   });
 }

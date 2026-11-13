@@ -28,9 +28,11 @@ import { field, fightSeed, fightsById, play, type FightSpec } from "./build-test
 
 /** Each tier's target by act: the easy pool's, a regular fight's and an elite's mean cost; a boss's win rate. */
 export const TARGETS = {
-  easy: [0.12, 0.13, 0.14],
-  normal: [0.2, 0.22, 0.24],
-  elite: [0.35, 0.36, 0.38],
+  // Where the fights stand, on the director's word: what the build parties paid once the recoveries were short, kept, not
+  // pulled back up to a fifth and a third (that made the simulated player's act I road end 38% of runs).
+  easy: [0.09, 0.1, 0.11],
+  normal: [0.14, 0.17, 0.19],
+  elite: [0.26, 0.3, 0.33],
   bosses: [0.7, 0.7, 0.7],
 };
 type Pool = keyof typeof TARGETS;

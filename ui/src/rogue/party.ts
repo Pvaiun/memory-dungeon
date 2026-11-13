@@ -4,7 +4,7 @@ import { current, fighter, saveRogue, vitals } from "./state.js";
 import { bench, canManage, formationRarity, formOf, type Item, itemGear, itemOf, member, passiveOf, rogue, seatsOf, wearer } from "../../../src/rogue.js";
 import { c, cls as classOf, disp, shortName } from "../content.js";
 import { discard, dismiss, equip, seat, setFormation, setOrder, swap } from "../../../src/rogue/record.js";
-import { abilityBlock, aggShares, basicLine, canUse, classHead, classPassive, formationNote, gearRow, type GearSlot, lockedRow, seatCodes, seatNotes, section, SLOTS, specialLines, statGrid, twoHanded } from "../sheet.js";
+import { abilityBlock, aggShares, basicLine, canUse, classHead, classPassive, gearRow, type GearSlot, lockedRow, seatCodes, seatNotes, section, SLOTS, specialLines, statGrid, twoHanded } from "../sheet.js";
 import { faceEl } from "../pixel.js";
 import { setup } from "../state.js";
 import { weaponOf } from "../../../src/engine/combat/fight.js";
@@ -52,7 +52,7 @@ export function rpartyScreen(): Child[] {
   return [
     header("PARTY", () => { seatPick = null; go("rogue"); }, `ACT ${ROMAN[run.act]}`),
     // The formation's name in its rarity's colour; what its seats' own statuses do, under its text.
-    win("", h("div", { class: "line" }, prev, h("span", { class: `grow center ${RARITY_CLASS[formationRarity(c, run.formation)] || "hi"}` }, f.name), nxt), h("div", { class: "text dim small wrap" }, f.text, formationNote(f), seatNotes(f) ? ` ${seatNotes(f)}` : "")),
+    win("", h("div", { class: "line" }, prev, h("span", { class: `grow center ${RARITY_CLASS[formationRarity(c, run.formation)] || "hi"}` }, f.name), nxt), h("div", { class: "text dim small wrap" }, f.text, seatNotes(f) ? ` ${seatNotes(f)}` : "")),
     h("div", { class: "cards" }, ...cards),
     supplyRow(run, () => go("rparty", undefined, true)),
     win("scroll",
@@ -113,7 +113,7 @@ export function runitScreen(arg?: unknown): Child[] {
     win("scroll",
       section("PASSIVE"),
       // A trained passive shows as its form.
-      ...classPassive(cls, setup.settings.designer, passiveOf(c, cls) ? formOf(m, passiveOf(c, cls)!) : undefined),
+      ...classPassive(cls, passiveOf(c, cls) ? formOf(m, passiveOf(c, cls)!) : undefined, fm.stats),
       section("GEAR"),
       // Four slots; under a two-handed weapon the offhand reads locked.
       ...SLOTS.map((s) => {
@@ -126,12 +126,12 @@ export function runitScreen(arg?: unknown): Child[] {
       }),
       canUse(cls),
       section("ABILITIES", manage && orderPick !== null ? h("span", { class: "hi" }, "SWAP · SAME: LEAVE OUT") : null),
-      ...m.order.map((a, i) => abilityBlock(formAb(a), fm.stats, setup.settings.designer, { n: i + 1, onN: () => onN(i), cur: orderPick === i, target: orderPick !== null })),
+      ...m.order.map((a, i) => abilityBlock(formAb(a), fm.stats, { n: i + 1, onN: () => onN(i), cur: orderPick === i, target: orderPick !== null })),
       basicLine(weaponOf(c, fm.weapon), fm.stats, { ref: fm.weapon }),
       out.length ? section("LEFT OUT") : null,
-      ...out.map((a) => { const el = abilityBlock(formAb(a), fm.stats, setup.settings.designer); el.classList.add("dimmed"); el.addEventListener("click", () => bringBack(a)); return el; }),
+      ...out.map((a) => { const el = abilityBlock(formAb(a), fm.stats); el.classList.add("dimmed"); el.addEventListener("click", () => bringBack(a)); return el; }),
       locked.length ? section("NOT LEARNED YET") : null,
-      ...locked.map((a) => { const el = abilityBlock(c.abilities.get(a)!, fm.stats, false); el.classList.add("dimmed"); return el; }),
+      ...locked.map((a) => { const el = abilityBlock(c.abilities.get(a)!, fm.stats); el.classList.add("dimmed"); return el; }),
     ),
   ];
 }
@@ -144,8 +144,8 @@ export function rclassScreen(arg?: unknown): Child[] {
   const later = c.classes.get(cls)!.abilities.filter((a) => !known.includes(a));
   return [
     header(k.name, () => go("rogue")),
-    win("scroll", classHead(cls, undefined, plainWeapon(c, cls)), section("PASSIVE"), ...classPassive(cls), section("KNOWS"), ...known.map((a) => abilityBlock(c.abilities.get(a)!, k.stats, setup.settings.designer)),
-      later.length ? section("LEARNS LATER") : null, ...later.map((a) => { const el = abilityBlock(c.abilities.get(a)!, k.stats, false); el.classList.add("dimmed"); return el; })),
+    win("scroll", classHead(cls, undefined, plainWeapon(c, cls)), section("PASSIVE"), ...classPassive(cls), section("KNOWS"), ...known.map((a) => abilityBlock(c.abilities.get(a)!, k.stats)),
+      later.length ? section("LEARNS LATER") : null, ...later.map((a) => { const el = abilityBlock(c.abilities.get(a)!, k.stats); el.classList.add("dimmed"); return el; })),
   ];
 }
 

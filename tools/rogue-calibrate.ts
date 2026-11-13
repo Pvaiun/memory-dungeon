@@ -32,9 +32,10 @@ import type { RogueFightT } from "../src/schema.js";
 
 /** What each tier should cost, by act: a regular fight or elite, in points of party HP %; a boss, the share of fights it wins. */
 export const TARGETS = {
-  easy: [12, 13, 16],
-  normal: [18, 19, 23],
-  elite: [25, 26, 30],
+  // Scaled to where the fights stand, on the director's word (the build parties' costs once the recoveries were short).
+  easy: [10, 10, 13],
+  normal: [14, 15, 18],
+  elite: [20, 21, 24],
   /**
    * A boss's wins against parties as they arrive, in percent: a first win should be an achievement, about 20% of the
    * simulated player's runs at heat 0, with most of the difficulty on the bosses.

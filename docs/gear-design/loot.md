@@ -118,6 +118,19 @@ Commons are written from a rule per kind, not designed one by one: they lean on 
 | Cloak | Evasion | Attack, Crit chance, Attack speed, Defense |
 | Amulet | (everyone) | one each for a stat a road starts from: HP, Defense, Attack, Crit chance, MP regen, Evasion, Lifesteal, Thorns, Double strike, Cooldown |
 
+## Writing cards
+
+Every card the player reads (an ability, a passive, an upgrade, a piece, a mythic, a formation, a seat, a status) says what happens once, in the fewest words a new player can follow. Words only where a player would otherwise misread the fight.
+- **Never repeat the screen.** An ability's card shows its MP, cooldown and wind-up in its head, and a size line under the text: each hit's damage, heals, Shields, MP given and stacks of a stacking status, with the stats each scales from. Its text never says a cost, a timing, a damage word (light, heavy) or a stack word, or what anything scales from; it says the action, its target, its condition, and the statuses that show no number (Stun, Guard, Taunt, Haste, Clarity and the like). A training card shows the changes in MP, cooldown, wind-up and size, so a version never mentions them. A piece's stats and swing, and a seat's stat changes, show as values, so their cards say only the effect.
+- **No stack words on a card.** "A few", "several" and "many" are the documents' words, never a card's. A stacking status that grows with a stat shows as a number for the unit in view, with its stat, under the card's text: a piece, a passive and its versions, a state an ability lays, a status tapped in a fight (`heldParts` in `ui/src/describe.ts`; with no unit in view, a piece's first wearer). The text only names the status. A flat count (a seat's, a formation's, a foe's) prints its number, written from `FLAT_STACKS`. Any other amount on a card is a share of a stat it names ("5% of max HP").
+- **No subject.** A card is read on its holder: it says "hits on", not "its wearer's hits on". It names a unit only when it isn't the holder.
+- **The trigger first:** "On a kill:", "On a crit:", "When hit:", "At fight start:", "Below half HP:", "While Taunting:".
+- **Numbers, not fractions in words:** +50%, not "half again as much"; 5% of max HP, not "a twentieth". "Double" stays.
+- **One phrase for each target:** the lowest ally (the lowest share of max HP), the foe with the least HP (current HP), the foe with the most of a status or a stat, the ally with the least MP, the ally with the most Aggro, the most wounded foe (the lowest share of max HP), a random foe, every foe, a fallen ally. "Ignores Taunt" is Seek; "attacks at once" is a next basic attack called at once. "Effects included" is carrying what the swing carries.
+- **The rules below hold without being printed.** A card leaves out what this page already rules (chains end, a redirect is final, a price never takes its payer below 1 HP, Stun holds a wind-up), and keeps only a clause that changes what the player would predict.
+- **A cost stays in words** ("pays", "costs", "less", "down", "no"): the piece check reads them.
+- **A power step's card** is its change in a few words. One that only moves numbers the ability's card shows (cost, cooldown, wind-up, damage, stacks) is marked `shown` in `upgrades/`, so it isn't added to the trained ability's card.
+
 ## Words the cards lean on
 
 - **Marked** takes the party's basic attacks and its abilities aimed at a random foe (*Core set: rules and vocabulary*). A piece or a seat Marks only while no foe is Marked, so gear never adds a second Mark.
@@ -158,7 +171,7 @@ Commons are written from a rule per kind, not designed one by one: they lean on 
 - **The last drink:** The Red Feast heals its wearer up to half its HP when a fight is won.
 - **Chains end.** A repeat isn't repeated: what a piece lands, casts, copies, passes on or carries a second time is never repeated again unless its card says it runs on (Overrun, and Flurry wraps up to its count). A redirect is final: a hit taken for an ally, and a Shield, MP or healing sent on, isn't sent on again. A fallen foe's fire moves once: where two pieces or seats move the same Burn, it's split evenly between them. A chain of shatters dies down by Chill's own rule.
 - **Healing past full goes one place:** the healed unit's own piece first (Red stone mail), then the healer's (Phylactery), then the formation's (Shared cup).
-- **Crit:** a card that sets a chance on some hits wins over Gambler's coin; Bloodscent knife and The king's head stop at 80%.
+- **Crit:** a card that sets a chance on some hits wins over Gambler's coin; Bloodscent knife stops at 60% and The king's head at 80%.
 - **Kept:** extra strikes that chain (Flurry wraps); a hit taken for an ally (Oathbound shield); effects after a won fight, before statuses end; Taunt ends Hidden.
 - **Added for the engines,** each one rule on a card: a foe's swing called early; retaliation sized by the blow as it was struck; damage carried past a kill; damage taken from MP; an ability cast by a count of swings; start-of-fight effects that happen again; a status passed on by its holder; an ability brought back by the foes it hit; a swing that carries another unit's riders; a gift to oneself shared with an ally.
 - **What no piece does:** grant an ability; resize a status or apply it for less or more than its own length; send a hit past Evasion or Defense; want a fall; give the party an enemy-only status; read a number the player can't see.
@@ -167,7 +180,7 @@ Commons are written from a rule per kind, not designed one by one: they lean on 
 
 Rules that hold for every piece, version and mythic. None of them is about balance.
 - **Every uncommon carries an effect.** A special stat alone is a common's step.
-- **Every piece carries its kind's budget of steps** at its rarity, a rare's or legendary's beside its effect; a piece that steps along the swing trade says so on its card ("a heavier swing"). A stat that shapes a swing (half as often, twice as often) counts no step.
+- **Every piece carries its kind's budget of steps** at its rarity, a rare's or legendary's beside its effect; a piece may step along the swing trade, which its swing's values show. A stat that shapes a swing (half as often, twice as often) counts no step.
 - **Mythics carry no stat steps** unless the line's shape needs one.
 - **A revive** brings its ally back with every ability on full cooldown, whoever revives, unless the Valkyrie's Einherjar version or a piece says otherwise.
 - **Paying HP** means losing that much HP at once. It isn't damage, so no Shield soaks it and nothing reacts to it, and it can't take the payer below 1 HP.
@@ -184,7 +197,7 @@ A formation is a shape: three seats and, if it wants, rules of its own. It gives
 - **Seats can depend on who sits there:** a class, a kind of weapon or armor, a kind of ability, or what another seat is doing.
 - **Party effects:** always, on a condition or on a trigger; a stat, a status, or a rule that changes how the party fights. A formation can have several, or none.
 - **It can give something up:** a drawback, a seat that costs, a rule that cuts both ways.
-- **The words.** Every effect is phrased so the player knows what will happen, at whatever length that takes.
+- **The words.** Every effect is phrased so the player knows what will happen, as briefly as that takes (Writing cards).
 
 **By rarity.** Commons lean on the roles builds share and plain party effects. Rares are lopsided and read who sits where. Legendaries change how the party fights. There are no mythic formations.
 

@@ -132,7 +132,7 @@ export const ROGUE_CONFIG: RogueConfigT = {
     // three floors under the reference floor 7, where the rosters at act I's middle (two abilities, two legendaries) set them.
     // Act I's mob, elite and boss offsets are a hand cut, not yet checked by simulation.
     // eliteEarly: the elites' own climb below their reference floor 8, gentler, so the elites of floors 5 and 6 are a real fight.
-    // step: act I climbs 10 a floor above the reference (mob 10 lower to meet it at floor 8, early 36 to keep floors 4 to 6
+    // step: act I climbs 10 a floor above the reference (mob 10 lower to meet it at floor 8, early to keep floors 4 to 6
     // where the climb measure put them), so its fights keep rising toward the boss as the party grows.
     { mob: -35, step: 10, early: 36, eliteEarly: 20, elite: -25, boss: -15 },
     { mob: 0, step: 4.5, elite: 0, boss: 0 },
