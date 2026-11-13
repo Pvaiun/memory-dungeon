@@ -16,6 +16,7 @@ import { fxSize, type Fx, type Missile } from "../effects.js";
 import { actorSpan, backdropImage, drawActor, drawCampfire, drawChest, drawEnemy, drawStatus, drawText, enemyK, enemySprite, FRAME_W, OUTLINE, STATUS_ICON, statusIconOf, vfxSprite } from "../pixel.js";
 import type { Driver } from "./driver.js";
 import type { BarShow } from "../state.js";
+import { shieldSpan } from "../dom.js";
 
 export const W = FRAME_W, H = 228;
 
@@ -520,10 +521,11 @@ export class Scene {
           ctx.fillRect(bx, by, bw, 2);
           ctx.fillStyle = hpColor(hp);
           ctx.fillRect(bx, by, Math.round(bw * hp), 2);
-          const sh = Math.min(1 - hp, v.shieldShown / max);
-          if (sh > 0.005) {
+          const sh = shieldSpan(hp, v.shieldShown / max);
+          if (sh.width > 0.005) {
             ctx.fillStyle = "#a8e8ff";
-            ctx.fillRect(bx + Math.round(bw * hp), by, Math.max(1, Math.round(bw * sh)), 2);
+            const sw = Math.max(1, Math.round(bw * sh.width));
+            ctx.fillRect(bx + Math.min(bw - sw, Math.round(bw * sh.left)), by, sw, 2);
           }
         }
         if (mpOn) {

@@ -15,7 +15,7 @@ import type { CUnit } from "../../../src/engine/combat/fight.js";
 import { weaponOf } from "../../../src/engine/combat/fight.js";
 import { c, className, disp, fightName, runName, shortName, shownAsIcon } from "../content.js";
 import { damageLook, enemyName, statusStyle, type Pose } from "../art.js";
-import { bar, button, clear, h, nav, win, type Child } from "../dom.js";
+import { bar, button, clear, h, nav, shieldSpan, win, type Child } from "../dom.js";
 import { nextSeed, party as partyLoadout, save, setup, SPEEDS } from "../state.js";
 import { dealsDamage, heldParts, isSpell, statusNumbers, statusText } from "../describe.js";
 import { actionIconEl, actionIconOf, drawDigits, enemyThumb, OUTLINE, statusEl } from "../pixel.js";
@@ -548,8 +548,9 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
         let shEl = r.hp.querySelector("i.sh") as HTMLElement | null;
         if (sh > 0) {
           if (!shEl) r.hp.append((shEl = h("i", { class: "sh" })));
-          shEl.style.left = `${share * 100}%`;
-          shEl.style.width = `${Math.min(1 - share, sh / max) * 100}%`;
+          const span = shieldSpan(Math.min(1, share), sh / max);
+          shEl.style.left = `${span.left * 100}%`;
+          shEl.style.width = `${span.width * 100}%`;
         } else shEl?.remove();
         r.hpNum.textContent = ko ? "KO" : `${disp(hpNow)}`;
         (r.mp.firstElementChild as HTMLElement).style.width = `${Math.max(0, u.mp / Math.max(1, u.stats.max_mp)) * 100}%`;

@@ -95,6 +95,15 @@ export function header(title: Child, onBack: (() => void) | null, right?: Child)
 /** A window box. */
 export const win = (cls: string, ...children: Child[]) => h("div", { class: `win${cls ? ` ${cls}` : ""}` }, ...children);
 
+/**
+ * Where a Shield's segment sits on an HP bar, as shares of the bar: after the HP when both fit, else the bar's last
+ * stretch, over the end of the HP, so a Shield on a unit at full HP still shows.
+ */
+export function shieldSpan(hp: number, shield: number): { left: number; width: number } {
+  const width = Math.max(0, Math.min(1, shield));
+  return { left: Math.max(0, Math.min(hp, 1 - width)), width };
+}
+
 /** An HP bar: green, yellow below 50%, red below 25%; a light segment for a shield. */
 export function bar(share: number, kind: "hp" | "mp" = "hp", shieldShare = 0, thin = false): HTMLElement {
   const fill = h("i");
@@ -104,8 +113,9 @@ export function bar(share: number, kind: "hp" | "mp" = "hp", shieldShare = 0, th
   const el = h("div", { class: `bar${kind === "mp" ? " mp" : ""}${thin ? " thin" : ""}` }, fill);
   if (shieldShare > 0) {
     const sh = h("i", { class: "sh" });
-    sh.style.left = `${s * 100}%`;
-    sh.style.width = `${Math.min(1 - s, shieldShare) * 100}%`;
+    const span = shieldSpan(s, shieldShare);
+    sh.style.left = `${span.left * 100}%`;
+    sh.style.width = `${span.width * 100}%`;
     el.append(sh);
   }
   return el;
