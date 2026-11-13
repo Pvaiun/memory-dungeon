@@ -352,7 +352,7 @@ The four slots and who wears what. What each rarity carries, and the rules for p
 | Cloak | Evasion | Valkyrie, Monk, Ranger |
 
 - **Rarity:** common, uncommon, rare, legendary and mythic. A **mythic** fits one class, in any slot and whatever its kind (a mythic weapon can have its own speed, swing and hands), and a unit wears one at most.
-- **What gear carries.** The stats every unit has, the ten special stats (the speed stats included), and effects. Stat steps are +1 or +2 (`STEP`, `HP_STEP`, `AGGRO_STEP`, `MP_REGEN_STEP`), with no half-steps. Special stats on gear are medium, or high on a legendary, never low. Every piece carries stats at every rarity: a weapon its kind's budget, every other slot the standard one (`KIND_BUDGET`), a rare's or legendary's step beside its effect. A stat that matches a weapon's scaling stat counts twice, since it raises the weapon's own damage too.
+- **What gear carries.** The stats every unit has, the ten special stats (the speed stats included), and effects. Stat steps are +1 or +2 (`STEP`, `HP_STEP`, `AGGRO_STEP`, `MP_REGEN_STEP`), with no half-steps. Special stats on gear are medium, or high on a legendary or a mythic, never low. Every piece carries stats at every rarity: a weapon its kind's budget, every other slot the standard one (`KIND_BUDGET`), a rare's, legendary's or mythic's steps beside its effect; a mythic carries a legendary's. A stat that matches a weapon's scaling stat counts twice, since it raises the weapon's own damage too.
 
 ## Formations
 
