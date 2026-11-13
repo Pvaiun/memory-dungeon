@@ -29,10 +29,10 @@
   }
  },
  "ruleset": {
-  "basicRecovery": 0.25,
+  "basicRecovery": 0.1,
   "armorFloor": 25,
   "abilityCast": 3,
-  "abilityRecovery": 2,
+  "abilityRecovery": 1,
   "armorRatio": 0.12,
   "armorK": 0.25,
   "taken": {
@@ -45361,7 +45361,7 @@
     "kind": "great_weapon",
     "amount": 1600,
     "cooldown": 18.8,
-    "recovery": 3.2
+    "recovery": 1.2800000000000002
    },
    "abilities": [
     "flatten"
@@ -46002,7 +46002,7 @@
     "kind": "great_weapon",
     "amount": 1600,
     "cooldown": 18.8,
-    "recovery": 3.2
+    "recovery": 1.2800000000000002
    },
    "abilities": [
     "flatten"
@@ -47055,7 +47055,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 79
+      "knob": 84
      },
      {
       "id": "packmaster",
@@ -47067,7 +47067,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 83
+      "knob": 87
      },
      {
       "id": "chiefs_return",
@@ -47076,7 +47076,7 @@
        "ogre_chief",
        "ogre"
       ],
-      "knob": 49
+      "knob": 52
      }
     ]
    },
@@ -47085,8 +47085,8 @@
     "name": "The Crypt",
     "act": 2,
     "knob": {
-     "mob": -28,
-     "elite": -24,
+     "mob": -43,
+     "elite": -26,
      "boss": 0
     },
     "text": "Armored bones, bats you can't hit, ghosts that blows pass through, and Death with a bell.",
@@ -47231,7 +47231,7 @@
        "bat",
        "bat"
       ],
-      "knob": 148
+      "knob": 161
      },
      {
       "id": "reapers_court",
@@ -47241,7 +47241,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 129
+      "knob": 137
      }
     ]
    },
@@ -47250,8 +47250,8 @@
     "name": "The Fire Mine",
     "act": 2,
     "knob": {
-     "mob": 40,
-     "elite": 24,
+     "mob": 57,
+     "elite": 31,
      "boss": 0
     },
     "text": "Everything here burns, and the lord of the furnace casts a fire that ends parties.",
@@ -47408,7 +47408,7 @@
       "enemies": [
        "fire_giant"
       ],
-      "knob": 147
+      "knob": 143
      },
      {
       "id": "giants_forge",
@@ -47418,7 +47418,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 118
+      "knob": 106
      },
      {
       "id": "giants_wrath",
@@ -47428,7 +47428,7 @@
        "fire_imp",
        "fire_imp"
       ],
-      "knob": 96
+      "knob": 101
      }
     ]
    },
@@ -47437,8 +47437,8 @@
     "name": "The Ice Pass",
     "act": 2,
     "knob": {
-     "mob": -12,
-     "elite": 0,
+     "mob": -16,
+     "elite": -1,
      "boss": 0
     },
     "text": "Every fight asks what kind of hit you make, and a Titan of ice waits at the top.",
@@ -47582,7 +47582,7 @@
       "enemies": [
        "ice_titan"
       ],
-      "knob": 207
+      "knob": 211
      },
      {
       "id": "glacier_king",
@@ -47592,7 +47592,7 @@
        "snow_wolf",
        "snow_wolf"
       ],
-      "knob": 174
+      "knob": 188
      }
     ]
    },
@@ -47601,8 +47601,8 @@
     "name": "The Storm Tower",
     "act": 3,
     "knob": {
-     "mob": 27,
-     "elite": 18,
+     "mob": 35,
+     "elite": 21,
      "boss": 0
     },
     "text": "Clouds of sparks, leeches that drink mana, and a queen behind a wall of drones.",
@@ -47752,7 +47752,7 @@
        "drone",
        "drone"
       ],
-      "knob": 341
+      "knob": 360
      },
      {
       "id": "hive_queen",
@@ -47764,7 +47764,7 @@
        "drone",
        "drone"
       ],
-      "knob": 295
+      "knob": 300
      }
     ]
    },
@@ -47773,8 +47773,8 @@
     "name": "The Deep Crypt",
     "act": 3,
     "knob": {
-     "mob": -25,
-     "elite": -2,
+     "mob": -38,
+     "elite": 2,
      "boss": 0
     },
     "text": "Beneath the Crypt, something takes every voice. Power that isn't an ability is the key.",
@@ -47914,7 +47914,7 @@
       "enemies": [
        "silent_one"
       ],
-      "knob": 261
+      "knob": 262
      },
      {
       "id": "silent_court",
@@ -47924,7 +47924,7 @@
        "bone_priest",
        "bone_priest"
       ],
-      "knob": 198
+      "knob": 195
      }
     ]
    },
@@ -47933,8 +47933,8 @@
     "name": "The Tower Top",
     "act": 3,
     "knob": {
-     "mob": 4,
-     "elite": -14,
+     "mob": 8,
+     "elite": -22,
      "boss": 0
     },
     "text": "Above the storm: the queen's drones, the king's soldiers, and the king who rages when they fall.",
@@ -48087,7 +48087,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 215
+      "knob": 222
      }
     ]
    }

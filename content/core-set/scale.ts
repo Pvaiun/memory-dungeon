@@ -63,9 +63,14 @@ export function jitter(cooldown: number, id: string): number {
 export const STUN_COOLDOWN: keyof typeof COOLDOWN = "medium";
 export const WINDUP = { quick: 1, normal: 3, long: 6, very_long: 8 } as const;
 export const RULES = {
-  basicRecovery: 0.25,
+  /**
+   * The recoveries, the moment after an action when the unit can start nothing else: a basic attack's a tenth of its weapon's
+   * base cooldown, an ability's a tick. Short, so an action that comes ready just after another goes almost at once and the
+   * battle screen's action pips don't sit full while nothing happens; the fight's pace is the cooldowns'.
+   */
+  basicRecovery: 0.1,
   abilityCast: WINDUP.normal,
-  abilityRecovery: 2,
+  abilityRecovery: 1,
   /**
    * Each action starts a fight between min and max charged, by its own roll, so nothing lines up on the first ticks. A party
    * unit's abilities instead carry their cooldowns between fights, and `slots` takes a flat head start off that by the slot
