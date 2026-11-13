@@ -500,7 +500,8 @@ WEAPON_IDS = {
 # Sheets resized to fit the hand, used in place of the pack's own of the same name: the haloed axes drawn bigger than
 # their wearer, made smaller. They keep the pack's format, so one redrawn in the pack only needs its file here deleted.
 FITTED = Path(__file__).parent / "weapons-fitted"
-# Drawn for gear lists only, never in a hand (the fists are the sprite's own): the fist weapons, and the mythic that is one.
+# Drawn for gear lists only, never in a hand (the fists are the sprite's own): the fist weapons, and the mythic that is
+# one (the pack files the mythics under a kind of their own).
 UNHELD_KINDS = {"Fist weapons"}
 UNHELD = {"ember_palms"}
 

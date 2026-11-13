@@ -43335,6 +43335,7 @@
    ],
    "mythic": "valkyrie",
    "weapon": {
+    "kind": "spear",
     "amount": {
      "base": 441,
      "scale": [
@@ -43376,6 +43377,7 @@
    ],
    "mythic": "hexer",
    "weapon": {
+    "kind": "sword",
     "amount": {
      "base": 272,
      "scale": [
@@ -43403,6 +43405,7 @@
    ],
    "mythic": "monk",
    "weapon": {
+    "kind": "fist",
     "amount": {
      "base": 281,
      "scale": [
@@ -43482,6 +43485,7 @@
    ],
    "mythic": "stormcaller",
    "weapon": {
+    "kind": "rune_sword",
     "amount": {
      "base": 309,
      "scale": [
