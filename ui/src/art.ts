@@ -251,13 +251,9 @@ export const STATUS_STYLE: Record<string, { color: string; light?: string }> = {
 };
 /**
  * Damage a status deals shows the look of the damage it is, not of the status that dealt it: a status with an icon its
- * own, else the one its damage reads as (a piece or version whose blow is Thorns' or Bleed's), else none.
+ * own, else Thorns' for a piece or version whose card says its Thorns strike, else none. Nothing else borrows a look.
  */
-const DAMAGE_AS: Record<string, string> = {
-  briar__b: "thorns", briar__bp: "thorns", heartwood_mail: "thorns", thorn_hedge_barb: "thorns",
-  mirror_shield: "thorns", hoplon: "thorns", thornheart_plate: "thorns", shatterstone_charm: "thorns",
-  reprisal_hauberk_mark: "thorns", the_last_wall: "thorns", lacerate__b: "bleed", lacerate__bp: "bleed",
-};
+const DAMAGE_AS: Record<string, string> = { briar__b: "thorns", briar__bp: "thorns", heartwood_mail: "thorns" };
 export function damageLook(src: string): string | undefined {
   if (manifest.statuses[src]) return src;
   const as = DAMAGE_AS[src];
