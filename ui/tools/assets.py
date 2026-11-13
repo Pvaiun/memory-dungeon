@@ -497,6 +497,10 @@ WEAPON_IDS = {
     "rune_sword": "plain_rune_sword", "great_weapon": "plain_great_weapon", "hammer": "plain_hammer", "mace": "plain_mace",
     "wand": "plain_wand", "staff": "plain_staff", "fist_weapons": "plain_fist",
 }
+# Sheets resized to fit the hand, used in place of the pack's own of the same name: the haloed axes drawn bigger than
+# their wearer made smaller, the two-handers drawn smaller than a one-handed hammer given a longer haft. They keep the
+# pack's format, so one redrawn in the pack only needs its file here deleted.
+FITTED = Path(__file__).parent / "weapons-fitted"
 # Drawn for gear lists only, never in a hand (the fists are the sprite's own): the fist weapons, and the mythic that is one.
 UNHELD_KINDS = {"Fist weapons"}
 UNHELD = {"ember_palms"}
@@ -509,14 +513,16 @@ if WEAPON_ART:
     manifest["weapons"], manifest["weaponsUnheld"] = {}, []
     for name, entry in pack.items():
         gid = WEAPON_IDS.get(name, name)
-        im = mode_downscale(Image.open(WEAPON_ART / entry["sheet"]), 3)
+        sheet = WEAPON_ART / entry["sheet"]
+        fitted = FITTED / sheet.name
+        im = mode_downscale(Image.open(fitted if fitted.exists() else sheet), 3)
         assert im.size == (144, 32), f"{name}: {im.size}, not three frames of 48×32"
         im.save(OUT / "weapons" / f"{gid}.png")
         manifest["weapons"][gid] = f"weapons/{gid}.png"
         if entry["kind"] in UNHELD_KINDS or gid in UNHELD:
             manifest["weaponsUnheld"].append(f"weapons/{gid}.png")
     manifest["weaponFrame"] = [48, 32]
-    print(f"weapons: {len(pack)} strips ({len(manifest['weaponsUnheld'])} for gear lists only)")
+    print(f"weapons: {len(pack)} strips ({len(manifest['weaponsUnheld'])} for gear lists only, {len(list(FITTED.glob('*.png')))} resized to fit)")
 else:
     print("weapons: pack not found, kept")
 
