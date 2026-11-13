@@ -244,7 +244,7 @@ function party(): Child[] {
     header("PARTY", () => go("home"), `${setup.party.length}/3`),
     win("",
       // The formation's name in its rarity's colour (the gear's), and what its seats' own statuses do.
-      h("div", { class: "line" }, prev, h("span", { class: `grow center ${RARITY_TONE[f.rarity ?? "common"] || "hi"}`, onClick: () => go("formation") }, f.name), next),
+      h("div", { class: "line" }, prev, h("span", { class: `grow center ${RARITY_TONE[f.rarity ?? "common"] ?? "hi"}`, onClick: () => go("formation") }, f.name), next),
       h("div", { class: "text dim small wrap" }, f.text, seatNotes(f) ? ` ${seatNotes(f)}` : ""),
     ),
     h("div", { class: "cards" }, ...cards),
