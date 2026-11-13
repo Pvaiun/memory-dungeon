@@ -64,7 +64,7 @@ weapon("bow", "common", "Short bow", { stats: [sp("attack_speed", "medium")], se
 {
   // A count of basic attacks made (a dodged one included); the third looses the volley, read as it resolves, before it counts.
   const name = "Volley bow", n = `${id(name)}_count`;
-  const effect = "Every 3rd basic attack also looses an arrow at every other foe, at the swing's size, effects included.";
+  const effect = "Every 3rd basic attack also hits every other foe, effects included.";
   weapon("bow", "rare", name, {
     effect, stats: [sp("crit_damage", "medium"), sp("attack_speed", "medium"), st("attack", 1)],
     statuses: [
@@ -300,7 +300,7 @@ weapon("mace", "common", "Friar's mace", { stats: [st("max_hp", 1), st("mp_regen
 }
 {
   const name = "Noonday mace";
-  const effect = "Basic attacks on a burning foe give every ally a Heat (5% faster in everything per Heat, up to 10).";
+  const effect = "Basic attacks on a burning foe give every ally a Heat (5% faster each, up to 10).";
   weapon("mace", "legendary", name, {
     effect, stats: [st("max_hp", 2), st("defense", 2), sp("cooldown", "medium")],
     statuses: [own_(name, effect, { reactions: [reactIf(EV.basic, { unit: "other", where: { has: "burn" } }, give("heat", TO.everyAlly, 1, { rider: false }))] })],
@@ -322,7 +322,7 @@ weapon("staff", "common", "Willow staff", { stats: [sp("cast_speed", "medium"), 
   });
 }
 {
-  const name = "Canopy staff", effect = "At fight start: it and the other ally with the least max HP gain a Shield of 17% of its Attack.";
+  const name = "Canopy staff", effect = "At fight start: Shields itself and the other ally with the least max HP (17% of Attack).";
   weapon("staff", "uncommon", name, {
     effect, stats: [sp("cast_speed", "medium"), st("mp_regen", 1), st("max_hp", 1)],
     statuses: [own_(name, effect, { reactions: [atStart(give("shield", "holder", share(1 / 6, "attack")), give("shield", { side: "others", pick: "lowest", by: { stat: "max_hp" } }, share(1 / 6, "attack")))] })],
@@ -360,7 +360,7 @@ weapon("staff", "common", "Willow staff", { stats: [sp("cast_speed", "medium"), 
 }
 {
   const name = "Staff of echoes";
-  const effect = "Abilities are cast twice: the second at once with no wind-up, aimed anew, costing MP again (no MP, no second).";
+  const effect = "Abilities are cast twice, the second at once and aimed anew. Each cast pays its MP.";
   weapon("staff", "legendary", name, {
     effect, stats: [sp("cast_speed", "high"), st("max_mp", 2), sp("cooldown", "medium")],
     statuses: [own_(name, effect, { reactions: [react(on("action_resolve", { kind: "ability", repeat: false }), { op: "recast", paid: true })] })],

@@ -166,10 +166,10 @@ helper(kit("nights_edge_strike", "NIGHT'S EDGE", "Next hit deals double.", {
   const lay = apply("the_chalice_cup", { to: { side: "others", pick: "all" } });
   mythic({
     name: "The chalice", slot: "offhand", rarity: "mythic", mythic: "vampire",
-    text: "Other allies pay for abilities with its HP instead of their MP, unless that would leave it at 10% HP or less.",
+    text: "Other allies cast with its HP instead of their MP, while it stays above 10% HP.",
     statuses: ["the_chalice"],
   }, "Pact 3 ●●●, Barrage ●●● ⚙ blood mage (half), brink (key)");
-  helper(pieceStatus("the_chalice", "The chalice", "Other allies pay for abilities with its HP instead of their MP, unless that would leave it at 10% HP or less.", {
+  helper(pieceStatus("the_chalice", "The chalice", "Other allies cast with its HP instead of their MP, while it stays above 10% HP.", {
     reactions: [{ on: { event: "fight_start" }, do: [lay] }, { on: { event: "revived" }, do: [lay] }, { on: { event: "revived", whose: "ally" }, do: [apply("the_chalice_cup", { to: "owner" })] }],
   }));
   helper(kit("the_chalice_cup", "THE CHALICE", "Its abilities are paid in the Vampire's HP.", {

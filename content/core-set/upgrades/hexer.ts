@@ -10,7 +10,7 @@ import { abilityUp, apply, cd, COLD_HEX, helper, marker, passiveUp, phys } from 
 passiveUp({
   id: "cold_hex", cls: "hexer",
   power: "+40% stacks.",
-  a: { name: "Hex of flames", text: "Basic attacks add a few Burn (from Attack).", serves: "Bonfire 1 ●●● ⚙ lead's colour (half)" },
+  a: { name: "Hex of flames", text: "Basic attacks add a few Burn (from Attack), not Chill.", serves: "Bonfire 1 ●●● ⚙ lead's colour (half)" },
   b: { name: "Withering hex", text: "Basic attacks Weaken their target instead of adding Chill.", builds: ["toll"], plus: "" },
   form: (v, k) => ({
     reactions: [{

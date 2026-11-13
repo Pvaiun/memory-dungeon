@@ -17,6 +17,8 @@ function offhand(kind: string, rarity: Rarity, name: string, o: { effect?: strin
   S.add(piece({ name, kind, slot: "offhand", rarity, effect: o.effect, stats: o.stats, statuses: [...statuses.filter((s) => s.id === id(name)).map((s) => s.id), ...(o.also ?? [])] }), statuses, o.serves);
 }
 const id = (name: string) => name.toLowerCase().replace(/['’]/g, "").replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "");
+/** A share as a card prints it: 0.17 is 17. */
+const pct = (r: number) => Math.round(r * 100);
 /** The piece's own status: on the sheet, under the piece's id, saying what the card says. */
 const own_ = (name: string, text: string, body: Partial<StatusT>) => pieceStatus(id(name), name, text, body);
 /** A status a piece lays on others: on the sheet, unremovable, refreshed. */
@@ -30,7 +32,7 @@ offhand("kite_shield", "common", "Pavise", { stats: [st("defense", 1)], serves: 
 offhand("kite_shield", "common", "Blazoned kite", { stats: [st("aggro", 1)], serves: "the Toll: the draw is its first stat." });
 
 {
-  const name = "Emberguard", effect = "Foes that hit its holder gain a few Burn (from its holder's Defense).";
+  const name = "Emberguard", effect = "Attackers gain a few Burn (from Defense).";
   offhand("kite_shield", "uncommon", name, {
     effect, stats: [st("defense", 1), st("aggro", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.struck, give("burn", "other", own("few", "defense")))] })],
@@ -38,7 +40,7 @@ offhand("kite_shield", "common", "Blazoned kite", { stats: [st("aggro", 1)], ser
   });
 }
 {
-  const name = "Sheltering kite", effect = "When each fight starts, its holder and the other ally with the least Defense are Guarded.";
+  const name = "Sheltering kite", effect = "At fight start: Guards itself and the other lowest-Defense ally.";
   offhand("kite_shield", "uncommon", name, {
     effect, stats: [st("defense", 1), st("max_hp", 1)],
     statuses: [own_(name, effect, { reactions: [atStart(give("guard"), give("guard", { side: "others", pick: "lowest", by: { stat: "defense" } }))] })],
@@ -46,7 +48,7 @@ offhand("kite_shield", "common", "Blazoned kite", { stats: [st("aggro", 1)], ser
   });
 }
 {
-  const name = "Bossed kite", effect = "Each hit of its holder's abilities deals extra damage equal to a sixth of its Defense.";
+  const name = "Bossed kite", effect = `Ability hits deal extra damage: ${pct(HIT.touch)}% of Defense.`;
   offhand("kite_shield", "uncommon", name, {
     effect, stats: [st("defense", 2)],
     statuses: [own_(name, effect, { adds: [{ on: "ability", amount: share(HIT.touch, "defense") }] })],
@@ -55,7 +57,7 @@ offhand("kite_shield", "common", "Blazoned kite", { stats: [st("aggro", 1)], ser
 }
 {
   // A Shield emptied by a foe's damage ends (cause stacks) naming that foe as its other.
-  const name = "Rubble shield", effect = "When its holder's Shield breaks, the foe whose blow broke it is Stunned.";
+  const name = "Rubble shield", effect = "When its Shield breaks: Stuns the breaker.";
   offhand("kite_shield", "rare", name, {
     effect, stats: [st("defense", 1), st("max_hp", 1), st("aggro", 1)],
     statuses: [own_(name, effect, { reactions: [react(on("status_ended", { status: "shield", cause: ["stacks"], other: "foe" }), give("stun", "other"))] })],
@@ -63,7 +65,7 @@ offhand("kite_shield", "common", "Blazoned kite", { stats: [st("aggro", 1)], ser
   });
 }
 {
-  const name = "Mirror shield", effect = "Each foe that hits its holder is sent back half of the blow as it was struck: before Defense, Guard, an Aegis and Shields took theirs.";
+  const name = "Mirror shield", effect = "When hit: sends back 50% of the blow, before anything blocked it.";
   offhand("kite_shield", "rare", name, {
     effect, stats: [st("defense", 1), st("aggro", 1), sp("thorns", "medium")],
     statuses: [own_(name, effect, { reactions: [react(EV.struck, { op: "damage", type: "none", amount: { scale: [{ ratio: 0.5, event: "raw" }] }, to: "other" })] })],
@@ -72,7 +74,7 @@ offhand("kite_shield", "common", "Blazoned kite", { stats: [st("aggro", 1)], ser
 }
 {
   const name = "Monolith shield";
-  const effect = "Its holder's abilities that deal damage take twice as long to come round, and their hits land twice as hard. What they apply is unchanged.";
+  const effect = "Damaging abilities come round half as often and hit twice as hard.";
   offhand("kite_shield", "rare", name, {
     effect, stats: [st("defense", 2), st("max_hp", 1)],
     statuses: [own_(name, effect, { mods: [{ of: { does: ["damage"] }, cooldown: 100, damage: 100 }] })],
@@ -80,7 +82,7 @@ offhand("kite_shield", "common", "Blazoned kite", { stats: [st("aggro", 1)], ser
   });
 }
 {
-  const name = "Oathbound shield", effect = "When a hit would deal an ally more than a quarter of its max HP, its holder takes the hit instead. A hit taken this way isn't passed on again.";
+  const name = "Oathbound shield", effect = "Any hit over 25% of an ally's max HP hits it instead.";
   offhand("kite_shield", "legendary", name, {
     effect, stats: [st("defense", 2), st("max_hp", 1), sp("thorns", "medium")],
     statuses: [own_(name, effect, { cover: { share: 25 } })],
@@ -94,7 +96,7 @@ offhand("round_shield", "common", "Linden shield", { stats: [st("max_hp", 1)], s
 offhand("round_shield", "common", "Bronze buckler", { stats: [st("defense", 1)], serves: "the Toll and Landslide: Defense, beside the other common's HP." });
 
 {
-  const name = "Comrade's targe", effect = "Every so often, the ally with the lowest share of max HP gains a Shield of a fifth of its holder's max HP.";
+  const name = "Comrade's targe", effect = "Every so often: Shield on the lowest ally (20% of max HP).";
   const b = beatHalfway(id(name), name, [give("shield", TO.lowestAlly, share(0.2, "max_hp"))]);
   offhand("round_shield", "uncommon", name, {
     effect, stats: [st("max_hp", 1), st("defense", 1)],
@@ -103,7 +105,7 @@ offhand("round_shield", "common", "Bronze buckler", { stats: [st("defense", 1)],
   });
 }
 {
-  const name = "Hunter's buckler", effect = "When its holder lands a killing blow, its holder is Hasted.";
+  const name = "Hunter's buckler", effect = "On a kill: gains Haste.";
   offhand("round_shield", "uncommon", name, {
     effect, stats: [st("max_hp", 1), st("attack", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.kill, give("haste"))] })],
@@ -111,28 +113,28 @@ offhand("round_shield", "common", "Bronze buckler", { stats: [st("defense", 1)],
   });
 }
 {
-  const name = "Spiked targe", on_ = `${id(name)}_on`, effect = "While its holder is Guarded, it has Thorns, high, on top of its own.";
+  const name = "Spiked targe", on_ = `${id(name)}_on`, effect = "While Guarded: Thorns up (high).";
   offhand("round_shield", "uncommon", name, {
     effect, stats: [st("max_hp", 1), st("aggro", 1)],
-    statuses: [own_(name, effect, { reactions: whileHolding(on_, "guard") }), state(on_, "SPIKED", "Thorns, high, on top of its own.", { unremovable: true, stats: [{ stat: "thorns", flat: SPECIAL.thorns.high }] })],
+    statuses: [own_(name, effect, { reactions: whileHolding(on_, "guard") }), state(on_, "SPIKED", "Thorns up (high).", { unremovable: true, stats: [{ stat: "thorns", flat: SPECIAL.thorns.high }] })],
     serves: "Toll 1 ●● ⚙ goad (half)",
   });
 }
 {
   // The wait runs from the last rebuild; a Shield broken inside it stays broken.
   const name = "Second skin", wait = `${id(name)}_wait`;
-  const effect = "When its holder's Shield breaks, half of the most it held is rebuilt at once, as a new Shield. This can happen every so often. The rebuilt Shield can break and be rebuilt in its turn.";
+  const effect = "When its Shield breaks: a new one at 50% of its peak, at most every so often.";
   offhand("round_shield", "rare", name, {
     effect, stats: [st("max_hp", 2), st("attack", 1)],
     statuses: [
       own_(name, effect, { reactions: [reactIf(on("status_ended", { status: "shield", cause: ["stacks"] }), { side: "self", where: { lacks: wait } }, give("shield", "holder", ofAmount(0.5)), give(wait))] }),
-      marker(wait, "Second skin (waiting)", "Its next rebuild comes once this wait is over.", { stacking: "fizzle", duration: SO_OFTEN }),
+      marker(wait, "Second skin (waiting)", "Rebuild waiting.", { stacking: "fizzle", duration: SO_OFTEN }),
     ],
     serves: "Landslide ●●, Cuts ●●, Toll ● ⚙ detonation (key), riposte (half)",
   });
 }
 {
-  const name = "Hoplon", effect = "While its holder holds a Shield or an Aegis, each foe that hits it is sent back whatever the Shield soaked and the Aegis blocked of the blow.";
+  const name = "Hoplon", effect = "When hit: sends back what its Shield soaked and its Aegis blocked.";
   offhand("round_shield", "rare", name, {
     effect, stats: [st("max_hp", 2), st("aggro", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.struck, { op: "damage", type: "none", amount: { scale: [{ ratio: 1, event: "stopped" }] }, to: "other" })] })],
@@ -142,13 +144,13 @@ offhand("round_shield", "common", "Bronze buckler", { stats: [st("defense", 1)],
 {
   // A `lower` test: the aura goes to allies with less Defense than the holder as the fight starts and on a revive; it ends with the holder.
   const name = "Tower shield", aura = `${id(name)}_aura`;
-  const effect = "While its holder stands, allies with less Defense than it take a fifth less damage. Its holder deals a fifth less.";
+  const effect = "While it stands, allies with less Defense take 20% less damage. It deals 20% less.";
   const lay = give(aura, { side: "others", where: { lower: { stat: "defense" } }, pick: "all" });
   offhand("round_shield", "rare", name, {
     effect, stats: [st("max_hp", 2), st("defense", 1)],
     statuses: [
       own_(name, effect, { boosts: [{ tag: "physical", pct: -20 }], reactions: [atStart(lay), react(on("revived"), lay), react(on("revived", { whose: "ally" }), lay)] }),
-      given(aura, "TOWER", "Takes a fifth less damage while the Tower shield's holder stands.", { perSource: { endsWithSource: true }, taken: [{ pct: -20 }] }),
+      given(aura, "TOWER", "Takes 20% less damage while the Tower shield's holder stands.", { perSource: { endsWithSource: true }, taken: [{ pct: -20 }] }),
     ],
     serves: "Barrage ●●, Bonfire ●●, Toll ●",
   });
@@ -156,7 +158,7 @@ offhand("round_shield", "common", "Bronze buckler", { stats: [st("defense", 1)],
 {
   // The fallen ally by rule (a revive's rule asks for ko); the Shield follows on the revive it gave, once.
   const name = "Shield of the chosen", spent = `${id(name)}_used`, shielded = `${id(name)}_shielded`;
-  const effect = "Once a fight, when another ally falls, its holder raises it at once with a tenth of its max HP, behind a Shield of a third of its holder's max HP.";
+  const effect = "Once a fight: raises a falling ally at 10% HP behind a Shield (33% of max HP).";
   offhand("round_shield", "legendary", name, {
     effect, stats: [st("max_hp", 2), st("aggro", 1), st("attack", 1)],
     statuses: [
@@ -175,12 +177,12 @@ offhand("round_shield", "common", "Bronze buckler", { stats: [st("defense", 1)],
 {
   // A per-source status on every other ally sends each Shield it would gain to the holder; what's sent isn't sent on.
   const name = "Lodestone shield", pull = `${id(name)}_pull`;
-  const effect = "Every Shield another ally would gain goes to its holder instead. A Shield sent on this way isn't sent on again.";
+  const effect = "Every Shield another ally would gain goes to it instead.";
   offhand("round_shield", "legendary", name, {
     effect, stats: [st("max_hp", 2), st("aggro", 1), st("defense", 1)],
     statuses: [
       own_(name, effect, { reactions: [atStart(give(pull, TO.otherAllies)), react(on("revived", { whose: "ally" }), give(pull, "owner"))] }),
-      given(pull, "LODESTONE", "Every Shield it would gain goes to the Lodestone shield's holder.", { perSource: { endsWithSource: true }, divert: { what: "shield", to: "source" } }),
+      given(pull, "LODESTONE", "Its Shields go to the Lodestone shield's holder.", { perSource: { endsWithSource: true }, divert: { what: "shield", to: "source" } }),
     ],
     serves: "exotic, Landslide ●● ⚙ detonation (half)",
   });
@@ -193,7 +195,7 @@ offhand("horn", "common", "Ivory horn", { stats: [st("mp_regen", 1)], serves: "B
 
 {
   const name = "Reveille";
-  const effect = "When each fight starts, the ally with the highest Attack has its ability with the longest cooldown ready at once: its slowest ability, by its whole cooldown.";
+  const effect = "At fight start: readies the slowest ability of the ally with the most Attack.";
   offhand("horn", "uncommon", name, {
     effect, stats: [st("aggro", 1), st("mp_regen", 1)],
     statuses: [own_(name, effect, { reactions: [atStart({ op: "cooldown", which: "slowest", set: "ready", to: { side: "allies", pick: "highest", by: { stats: ["attack"] } } })] })],
@@ -201,7 +203,7 @@ offhand("horn", "common", "Ivory horn", { stats: [st("mp_regen", 1)], serves: "B
   });
 }
 {
-  const name = "Bull's horn", rung = `${id(name)}_used`, effect = "The first time in a fight that a foe falls, every ally is Hasted.";
+  const name = "Bull's horn", rung = `${id(name)}_used`, effect = "First foe to fall: Haste on every ally.";
   offhand("horn", "uncommon", name, {
     effect, stats: [st("aggro", 1), st("attack", 1)],
     statuses: [own_(name, effect, { reactions: [reactIf(EV.fall, { side: "self", where: { lacks: rung } }, give("haste", TO.everyAlly), give(rung))] }), used(rung, "BULL'S HORN")],
@@ -209,7 +211,7 @@ offhand("horn", "common", "Ivory horn", { stats: [st("mp_regen", 1)], serves: "B
   });
 }
 {
-  const name = "Watch horn", effect = "Whenever an ally drops below half its max HP, its holder Taunts.";
+  const name = "Watch horn", effect = "Taunts when an ally drops below half HP.";
   offhand("horn", "uncommon", name, {
     effect, stats: [st("aggro", 1), st("max_hp", 1)],
     statuses: [own_(name, effect, { reactions: [react(on("hp_low", { whose: "team", line: 50 }), give("taunt"))] })],
@@ -217,7 +219,7 @@ offhand("horn", "common", "Ivory horn", { stats: [st("mp_regen", 1)], serves: "B
   });
 }
 {
-  const name = "War horn", effect = "When each fight starts, the ally with the slowest basic attack gains many Might.";
+  const name = "War horn", effect = "At fight start: many Might on the slowest-swinging ally.";
   offhand("horn", "rare", name, {
     effect, stats: [st("aggro", 1), st("attack", 1), st("defense", 1)],
     statuses: [own_(name, effect, { reactions: [atStart(give("might", TO.slowestAlly, FLAT_STACKS.many))] })],
@@ -225,7 +227,7 @@ offhand("horn", "common", "Ivory horn", { stats: [st("mp_regen", 1)], serves: "B
   });
 }
 {
-  const name = "Hunting horn", effect = "When a Marked foe falls, every ally's next basic attack comes at once.";
+  const name = "Hunting horn", effect = "When a Marked foe falls: every ally attacks at once.";
   offhand("horn", "rare", name, {
     effect, stats: [st("aggro", 1), st("attack", 1), st("max_hp", 1)],
     statuses: [own_(name, effect, { reactions: [react(on("status_ended", { status: "marked", cause: ["ko"], whose: "foe" }), swingNow(TO.everyAlly))] })],
@@ -235,7 +237,7 @@ offhand("horn", "common", "Ivory horn", { stats: [st("mp_regen", 1)], serves: "B
 {
   // The holder's full cooldowns are the opening's drawback: never made to happen again.
   const name = "Horn of the charge";
-  const effect = "When each fight starts, every ally is Hasted and its first action comes at once. Its holder starts every fight with every ability on cooldown.";
+  const effect = "At fight start: every ally gains Haste and attacks at once. Its own abilities start on cooldown.";
   offhand("horn", "legendary", name, {
     effect, stats: [st("aggro", 2), st("max_hp", 1), st("defense", 1)],
     statuses: [own_(name, effect, { reactions: [atStart(give("haste", TO.everyAlly), swingNow(TO.everyAlly)), atFirstStart({ op: "cooldown", which: "abilities", set: "full", to: "holder" })] })],
@@ -249,7 +251,7 @@ offhand("totem", "common", "Blackthorn stake", { stats: [sp("thorns", "medium")]
 offhand("totem", "common", "Hawthorn fetish", { stats: [st("attack", 1)], serves: "the Storm: Attack sets its Shock." });
 
 {
-  const name = "Spinebark pole", thorns = `${id(name)}_thorns`, effect = "When each fight starts, the ally with the highest Aggro gains Thorns, medium, for the fight.";
+  const name = "Spinebark pole", thorns = `${id(name)}_thorns`, effect = "At fight start: the ally with the most Aggro gains Thorns.";
   offhand("totem", "uncommon", name, {
     effect, stats: [sp("thorns", "medium"), st("defense", 1)],
     statuses: [own_(name, effect, { reactions: [atStart(give(thorns, TO.topAggroAlly))] }), given(thorns, "SPINEBARK", "Thorns up for the fight.", { survivesKO: true, stats: [{ stat: "thorns", flat: SPECIAL.thorns.medium }] })],
@@ -257,7 +259,7 @@ offhand("totem", "common", "Hawthorn fetish", { stats: [st("attack", 1)], serves
   });
 }
 {
-  const name = "Stormglass totem", effect = "When each fight starts, every foe gains a few Shock (from its holder's Attack).";
+  const name = "Stormglass totem", effect = "At fight start: a few Shock on every foe (from Attack).";
   offhand("totem", "uncommon", name, {
     effect, stats: [sp("thorns", "medium"), st("attack", 1)],
     statuses: [own_(name, effect, { reactions: [atStart(give("shock", TO.everyFoe, own("few", "attack", SHOCK_STACKS)))] })],
@@ -265,7 +267,7 @@ offhand("totem", "common", "Hawthorn fetish", { stats: [st("attack", 1)], serves
   });
 }
 {
-  const name = "Bear fetish", effect = "Whenever an ally drops below half its max HP, that ally is Guarded.";
+  const name = "Bear fetish", effect = "Guards any ally that drops below half HP.";
   offhand("totem", "uncommon", name, {
     effect, stats: [sp("thorns", "medium"), st("max_hp", 1)],
     statuses: [own_(name, effect, { reactions: [react(on("hp_low", { whose: "team", line: 50 }), give("guard", "owner"))] })],
@@ -273,7 +275,7 @@ offhand("totem", "common", "Hawthorn fetish", { stats: [st("attack", 1)], serves
   });
 }
 {
-  const name = "Nettle totem", effect = "Foes that hit its holder gain a few Bleed (from its holder's Defense).";
+  const name = "Nettle totem", effect = "Attackers gain a few Bleed (from Defense).";
   offhand("totem", "rare", name, {
     effect, stats: [sp("thorns", "medium"), st("defense", 1), st("aggro", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.struck, give("bleed", "other", own("few", "defense")))] })],
@@ -281,7 +283,7 @@ offhand("totem", "common", "Hawthorn fetish", { stats: [st("attack", 1)], serves
   });
 }
 {
-  const name = "Spite totem", effect = "Its holder gathers Spite (a Spite for each hit it takes, kept for the fight, up to 20). Each Spite adds 15 to its Thorns.";
+  const name = "Spite totem", effect = `Each hit taken adds a Spite (up to ${COUNTER.spite.cap}). +${COUNTER.spite.thorns} Thorns per Spite.`;
   offhand("totem", "rare", name, {
     effect, stats: [sp("thorns", "medium"), st("aggro", 2)],
     statuses: [own_(name, effect, { reactions: [react(EV.struck, give("spite", "holder", 1))], stats: [{ stat: "thorns", flat: stacksOf("spite", COUNTER.spite.thorns), live: true }] })],
@@ -289,7 +291,7 @@ offhand("totem", "common", "Hawthorn fetish", { stats: [st("attack", 1)], serves
   });
 }
 {
-  const name = "Thunderhead totem", effect = "Each hit its holder takes adds a Shock to every foe.";
+  const name = "Thunderhead totem", effect = "When hit: a Shock on every foe.";
   offhand("totem", "rare", name, {
     effect, stats: [sp("thorns", "medium"), st("aggro", 1), st("max_hp", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.struck, give("shock", TO.everyFoe, FLAT_STACKS.one))] })],
@@ -297,7 +299,7 @@ offhand("totem", "common", "Hawthorn fetish", { stats: [st("attack", 1)], serves
   });
 }
 {
-  const name = "Goading totem", effect = "Each time its holder Taunts, every foe's next basic attack comes at once.";
+  const name = "Goading totem", effect = "When it Taunts: every foe attacks at once.";
   offhand("totem", "rare", name, {
     effect, stats: [sp("thorns", "medium"), st("defense", 1), st("max_hp", 1)],
     statuses: [own_(name, effect, { reactions: [react(on("status_gained", { status: "taunt" }), swingNow(TO.everyFoe))] })],
@@ -307,7 +309,7 @@ offhand("totem", "common", "Hawthorn fetish", { stats: [st("attack", 1)], serves
 {
   // An aura on every ally while the holder stands: the Shields each gives are a third larger. A broken Shield gives its holder Might.
   const name = "Earthmother totem", aura = `${id(name)}_aura`;
-  const effect = "While its holder stands, every Shield an ally gains is a third larger. When an ally's Shield breaks, that ally gains many Might.";
+  const effect = "While it stands, allies' Shields are 33% bigger. A broken Shield gives its ally many Might.";
   const lay = give(aura, TO.everyAlly);
   offhand("totem", "legendary", name, {
     effect, stats: [sp("thorns", "high"), st("max_hp", 1), st("defense", 1)],
@@ -318,7 +320,7 @@ offhand("totem", "common", "Hawthorn fetish", { stats: [st("attack", 1)], serves
           react(on("status_ended", { status: "shield", cause: ["stacks"], whose: "team" }), give("might", "owner", FLAT_STACKS.many)),
         ],
       }),
-      given(aura, "EARTHMOTHER", "The Shields it gives are a third larger while the Earthmother totem's holder stands.", { perSource: { endsWithSource: true }, boosts: [{ tag: "shield", pct: 33 }] }),
+      given(aura, "EARTHMOTHER", "Shields it gives are 33% larger while the Earthmother totem's holder stands.", { perSource: { endsWithSource: true }, boosts: [{ tag: "shield", pct: 33 }] }),
     ],
     serves: "Landslide 3 ●●●, Pact ● ⚙ detonation (half)",
   });
@@ -330,7 +332,7 @@ offhand("relic", "common", "Shrine token", { stats: [st("mp_regen", 1)], serves:
 offhand("relic", "common", "Litany beads", { stats: [sp("cast_speed", "medium")], serves: "Barrage: the font's casts land sooner." });
 
 {
-  const name = "Holy water", effect = "Each time one of its holder's abilities heals an ally, it also lifts one debuff from that ally.";
+  const name = "Holy water", effect = "Ability heals also lift a debuff.";
   offhand("relic", "uncommon", name, {
     effect, stats: [st("mp_regen", 1), st("attack", 1)],
     statuses: [own_(name, effect, { reactions: [react(healGiven({ kind: "ability" }), { op: "remove", label: "debuff", count: 1, to: "owner" })] })],
@@ -338,7 +340,7 @@ offhand("relic", "common", "Litany beads", { stats: [sp("cast_speed", "medium")]
   });
 }
 {
-  const name = "Charnel icon", effect = "Each time a foe falls, the ally with the lowest share of max HP is healed for three tenths of its holder's Attack.";
+  const name = "Charnel icon", effect = `When a foe falls: heals the lowest ally (${pct(HIT.light)}% of Attack).`;
   offhand("relic", "uncommon", name, {
     effect, stats: [st("mp_regen", 1), st("max_hp", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.fall, { op: "heal", amount: share(HIT.light, "attack"), to: TO.lowestAlly })] })],
@@ -346,7 +348,7 @@ offhand("relic", "common", "Litany beads", { stats: [sp("cast_speed", "medium")]
   });
 }
 {
-  const name = "Font relic", effect = "Each time one of its holder's abilities heals an ally, it also gives that ally MP: a fifth of that ally's max MP.";
+  const name = "Font relic", effect = "Ability heals also restore 20% of the target's max MP.";
   offhand("relic", "uncommon", name, {
     effect, stats: [st("mp_regen", 1), sp("cast_speed", "medium")],
     statuses: [own_(name, effect, { reactions: [react(healGiven({ kind: "ability", notTags: ["pulse"] }), { op: "mp", amount: share(0.2, "max_mp", "target"), to: "owner" })] })],
@@ -355,7 +357,7 @@ offhand("relic", "common", "Litany beads", { stats: [sp("cast_speed", "medium")]
 }
 {
   // Second in the order of healing past full: the healer's piece, where the healed unit's own doesn't take it.
-  const name = "Phylactery", effect = "The part of its holder's heals, and of its Regen's pulses, that would go past full becomes a Shield on the healed ally.";
+  const name = "Phylactery", effect = "Its healing past full, Regen included, becomes a Shield.";
   offhand("relic", "rare", name, {
     effect, stats: [st("mp_regen", 1), st("max_hp", 1), st("attack", 1)],
     statuses: [own_(name, effect, { reactions: [reactIf(on("overhealed", { whose: "team", other: "holder" }), { unit: "owner", where: { lacks: OVERHEAL.own } }, give("shield", "owner", ofAmount(1)))] })],
@@ -364,7 +366,7 @@ offhand("relic", "common", "Litany beads", { stats: [sp("cast_speed", "medium")]
   });
 }
 {
-  const name = "Accuser's relic", effect = "While no foe is Marked, each heal its holder gives Marks the foe that last hit the healed ally.";
+  const name = "Accuser's relic", effect = "Its heals Mark the healed ally's last attacker.";
   offhand("relic", "rare", name, {
     effect, stats: [st("mp_regen", 1), st("attack", 1), st("defense", 1)],
     statuses: [own_(name, effect, { reactions: [reactIf(healGiven({ notTags: ["pulse"] }), NO_MARK, give("marked", "assailant"))] })],
@@ -373,7 +375,7 @@ offhand("relic", "common", "Litany beads", { stats: [sp("cast_speed", "medium")]
 }
 {
   const name = "Heart of the saint";
-  const effect = "Its holder's abilities that heal cost HP in place of MP: half the share of its max HP that they'd cost of its max MP. Their heals are twice as big. The price never takes it below 1 HP.";
+  const effect = "Healing abilities cost HP instead of MP, and heal twice as much.";
   offhand("relic", "legendary", name, {
     effect, stats: [st("mp_regen", 1), st("max_hp", 2), st("attack", 1)],
     statuses: [own_(name, effect, { mods: [{ of: { does: ["heal"] }, hp: { pct: 50, share: true, instead: true }, heal: 100 }] })],
@@ -381,7 +383,7 @@ offhand("relic", "common", "Litany beads", { stats: [sp("cast_speed", "medium")]
   });
 }
 {
-  const name = "Bloodstone reliquary", effect = "Each time an ally pays HP, the ally with the lowest share of max HP, the payer aside, is healed for as much.";
+  const name = "Bloodstone reliquary", effect = "When an ally pays HP, the lowest other ally heals as much.";
   offhand("relic", "legendary", name, {
     effect, stats: [st("mp_regen", 2), st("max_hp", 2)],
     statuses: [own_(name, effect, { reactions: [react(on("hp_paid", { whose: "team" }), { op: "heal", amount: ofAmount(1), to: { side: "allies", pick: "lowest", by: "hp_share", exclude: "owner" } })] })],
@@ -395,7 +397,7 @@ offhand("lantern", "common", "Bullseye lantern", { stats: [sp("cast_speed", "med
 offhand("lantern", "common", "Hooded lantern", { stats: [st("max_mp", 1)], serves: "Barrage: MP is its first stat." });
 
 {
-  const name = "Pitch lantern", effect = "When each fight starts, every foe gains several Burn (from its holder's Attack).";
+  const name = "Pitch lantern", effect = "At fight start: several Burn on every foe (from Attack).";
   offhand("lantern", "uncommon", name, {
     effect, stats: [sp("cast_speed", "medium"), st("attack", 1)],
     statuses: [own_(name, effect, { reactions: [atStart(give("burn", TO.everyFoe, own("several", "attack")))] })],
@@ -403,7 +405,7 @@ offhand("lantern", "common", "Hooded lantern", { stats: [st("max_mp", 1)], serve
   });
 }
 {
-  const name = "Dazzling lantern", effect = "When each fight starts, the two foes with the highest Attack are Weakened.";
+  const name = "Dazzling lantern", effect = "At fight start: Weakens the two foes with the most Attack.";
   offhand("lantern", "uncommon", name, {
     effect, stats: [sp("cast_speed", "medium"), st("max_hp", 1)],
     statuses: [own_(name, effect, { reactions: [atStart(give("weaken", { side: "foes", pick: "highest", by: { stats: ["attack"] }, count: 2 }))] })],
@@ -413,7 +415,7 @@ offhand("lantern", "common", "Hooded lantern", { stats: [st("max_mp", 1)], serve
 {
   // A fallen foe's fire moves once: every piece and seat that moves it shares it.
   const name = "Wick";
-  const effect = "When a burning foe falls, all its Burn passes to the foe with the most Burn. A fallen foe's fire moves once: if something else in the party moves it too, it's split evenly between them.";
+  const effect = "When a burning foe falls: its Burn passes to the foe with the most Burn.";
   offhand("lantern", "rare", name, {
     effect, stats: [sp("cast_speed", "medium"), st("attack", 1), st("max_mp", 1)],
     statuses: [own_(name, effect, { reactions: [{ on: on("status_ended", { status: "burn", cause: ["ko"], whose: "foe" }), split: "fire", do: [give("burn", TO.mostFoe("burn"), ofAmount())] }] })],
@@ -421,7 +423,7 @@ offhand("lantern", "common", "Hooded lantern", { stats: [st("max_mp", 1)], serve
   });
 }
 {
-  const name = "Shuttered lantern", effect = "While its holder is winding up an ability, it takes half damage.";
+  const name = "Shuttered lantern", effect = "Takes half damage while winding up.";
   offhand("lantern", "rare", name, {
     effect, stats: [sp("cooldown", "medium"), st("max_mp", 1), st("max_hp", 1)],
     statuses: [own_(name, effect, { taken: [{ pct: { scale: [{ ratio: -50, when: { casting: true }, of: "holder" }] } }] })],
@@ -429,7 +431,7 @@ offhand("lantern", "common", "Hooded lantern", { stats: [st("max_mp", 1)], serve
   });
 }
 {
-  const name = "Everflame lantern", effect = "Every 3 ticks, the foe with the most Burn gains Burn: a tenth of what it holds.";
+  const name = "Everflame lantern", effect = "Every 3 ticks: +10% Burn on the foe with the most.";
   offhand("lantern", "legendary", name, {
     effect, stats: [sp("cast_speed", "high"), st("attack", 2)],
     statuses: [own_(name, effect, { pulse: { every: 3, if: { side: "foes", where: { has: "burn" } }, do: [give("burn", TO.mostFoe("burn"), stacksOf("burn", 0.1, "target"))] } })],
@@ -437,7 +439,7 @@ offhand("lantern", "common", "Hooded lantern", { stats: [st("max_mp", 1)], serve
   });
 }
 {
-  const name = "Lamp of vigil", effect = "After each won fight, one fallen ally stands up with a quarter of its max HP, if its holder is standing.";
+  const name = "Lamp of vigil", effect = "After a won fight, if standing: raises a fallen ally at 25% HP.";
   offhand("lantern", "legendary", name, {
     effect, stats: [sp("cast_speed", "high"), st("max_hp", 1), st("max_mp", 1)],
     statuses: [own_(name, effect, { reactions: [reactIf(on("fight_won"), { side: "self", where: { ko: false } }, { op: "revive", hp: share(0.25, "max_hp", "target"), to: { side: "allies", where: { ko: true }, pick: "random" } })] })],

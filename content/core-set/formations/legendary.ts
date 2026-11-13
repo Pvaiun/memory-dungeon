@@ -76,10 +76,10 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
 }
 {
   // Held once by the side: the Mark stands on the lowest foe, and the volley is called at the start and at each Marked foe's fall.
-  const party = "Marks the foe with the least HP when none is Marked. At fight start and when a Marked foe falls, every ally's next basic attack comes at once.";
+  const party = "A foe is always Marked: the one with the least HP. At fight start and when a Marked foe falls, every ally attacks at once.";
   const mark = give("marked", TO.lowestHpFoe), volley = { op: "cooldown" as const, which: "basic" as const, set: "ready" as const, to: TO.everyAlly };
   add(
-    formation("Open season", "legendary", "Every kill calls the party's weapons down again.", thrice({ name: "Hunter", text: NOTHING }), { text: party, statuses: ["open_season"] }),
+    formation("Open season", "legendary", "Every kill calls the weapons down again.", thrice({ name: "Hunter", text: NOTHING }), { text: party, statuses: ["open_season"] }),
     [held("open_season", "Open season", party, {
       party: true,
       reactions: [
@@ -109,7 +109,7 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
 }
 {
   const soloist = "Its first-slotted ability has no cooldown.";
-  const voice = "MP it would regain goes to the Soloist instead. When the Soloist casts: a Shield of 5% of its max HP.";
+  const voice = "MP it gains goes to the Soloist. When the Soloist casts: a Shield of 5% of its max HP.";
   add(
     formation("The cathedral", "legendary", "Two give their mana; one never stops singing.", [
       { name: "Soloist", text: soloist, statuses: ["the_cathedral_soloist"] },

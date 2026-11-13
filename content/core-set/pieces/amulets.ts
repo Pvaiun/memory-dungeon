@@ -148,7 +148,7 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
 {
   // The cap takes what's above half as the status lands, and at the cap the unit reads as under it (the engine's).
   const name = "Halved heart";
-  const effect = "Starts each fight at half HP and can't be healed above it (the rest is overhealing). Counts as below half. Hits deal +50%.";
+  const effect = "Starts each fight at half HP and can't be healed above it. Counts as below half. Hits deal +50%.";
   amulet("rare", name, {
     effect, stats: [sp("lifesteal", "medium"), st("max_hp", 1), st("defense", 1)],
     statuses: [own_(name, effect, { healCap: 50, boosts: hits(50) })],
@@ -234,7 +234,7 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
 }
 {
   const name = "Twin-knot";
-  const effect = "When it gives itself a status, the lowest other ally gains it too, same stacks. A state held only while something is true isn't shared.";
+  const effect = "When it gives itself a status, the lowest other ally gains it too.";
   amulet("legendary", name, {
     effect, stats: [sp("cooldown", "medium"), st("attack", 1), st("max_hp", 1), st("defense", 1)],
     statuses: [own_(name, effect, { reactions: [react(on("status_gained", { other: "holder", repeat: false }), { op: "share", to: TO.otherLowestAlly })] })],
@@ -264,7 +264,7 @@ amulet("common", "Tidestone", { stats: [sp("cooldown", "medium")], serves: "Barr
   // A fallen unit can't gain a status, so its fall schedules its own return unless the marker is there; the marker is set
   // when it stands again by its own hand. As every revive, it comes back with its actions on full cooldown.
   const name = "Phoenix ember", done = `${id(name)}_used`;
-  const effect = "Once a fight: rises 4 ticks after falling, at 33% HP, Hidden, abilities on full cooldown. A wipe is still lost.";
+  const effect = "Once a fight: rises 4 ticks after falling, at 33% HP and Hidden. A wipe is still lost.";
   amulet("legendary", name, {
     effect, stats: [st("max_hp", 1), st("defense", 1), sp("evasion", "medium"), st("mp_regen", 1)],
     statuses: [
