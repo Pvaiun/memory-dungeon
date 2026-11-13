@@ -52,7 +52,7 @@ export function rpartyScreen(): Child[] {
   return [
     header("PARTY", () => { seatPick = null; go("rogue"); }, `ACT ${ROMAN[run.act]}`),
     // The formation's name in its rarity's colour; what its seats' own statuses do, under its text.
-    win("", h("div", { class: "line" }, prev, h("span", { class: `grow center ${RARITY_CLASS[formationRarity(c, run.formation)] || "hi"}` }, f.name), nxt), h("div", { class: "text dim small wrap" }, f.text, seatNotes(f) ? ` ${seatNotes(f)}` : "")),
+    win("", h("div", { class: "line" }, prev, h("span", { class: `grow center ${RARITY_CLASS[formationRarity(c, run.formation)] ?? "hi"}` }, f.name), nxt), h("div", { class: "text dim small wrap" }, f.text, seatNotes(f) ? ` ${seatNotes(f)}` : "")),
     h("div", { class: "cards" }, ...cards),
     supplyRow(run, () => go("rparty", undefined, true)),
     win("scroll",
