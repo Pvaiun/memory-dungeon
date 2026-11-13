@@ -193,8 +193,8 @@ const REGIONS: RogueRegion[] = [
   },
   {
     id: "crypt", name: "The Crypt", act: 2, knob: { mob: 0, elite: 0, boss: 0 },
-    text: "Armored bones, bats you can't hit, ghosts that blows pass through, and Death with a bell.",
-    easy: [f("bone_pile", "Bone Pile", [3, "skeleton"]), f("bat_roost", "Bat Roost", [4, "bat"]), f("wailing", "The Wailing", [2, "ghost"])],
+    text: "Armored bones, wyrms you can't hit, ghosts your blows pass through, and Death with a bell.",
+    easy: [f("bone_pile", "Bone Pile", [3, "skeleton"]), f("bat_roost", "Wyrm Roost", [4, "bat"]), f("wailing", "The Wailing", [2, "ghost"])],
     normal: [
       f("bone_yard", "Bone Yard", [4, "skeleton"]), f("dark_hall", "Dark Hall", [1, "skeleton"], [1, "ghost"], [2, "bat"]), f("curse_room", "Curse Room", [1, "witch"], [2, "skeleton"]),
       f("haunted_hall", "Haunted Hall", [2, "ghost"], [2, "skeleton"]), f("bone_wall", "Bone Wall", [5, "skeleton"]), f("dead_watch", "The Dead Watch", [2, "skeleton"], [1, "witch"], [1, "ghost"]),

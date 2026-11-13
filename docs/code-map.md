@@ -194,8 +194,8 @@ ui/
     update.ts                reloading onto a newer build
     rogue-screens.ts         the rogue screens' public face; lists them
     rogue/
-      parts.ts               the navigation, small parts and scenes the rogue screens share; a pick's answer, and a result the player couldn't see held over its screen until ONWARD
-      run.ts                 the dispatcher, the leader, the draft, the map, a boss's Destiny Shard, a fight in waiting
+      parts.ts               the navigation, small parts and scenes the rogue screens share (the standoff, whose foes open on a tap); a pick's answer, and a result the player couldn't see held over its screen until ONWARD
+      run.ts                 the dispatcher, the leader, the draft, the map, a boss's Destiny Shard, a fight in waiting: its foes by likeness, name and line, each opening its whole sheet
       rooms.ts               spoils, a captive, the shop and training, the campfire, events, choices, Muster and Drill, level up, the next region
       end.ts                 a lost fight's Destiny Shard offer, the run's end, its record, a won run's moment
       party.ts               managing the party: seats, the bag and its junk, a piece put on from the bag, a unit's sheet and order, its gear
@@ -208,7 +208,7 @@ ui/
       narrate.ts             turns the log into messages
       tally.ts               a fight's numbers from its log: each unit's damage dealt and taken, healing, actions and statuses laid, and what each status did for the side it served
       recap.ts               the fight's recap, opened from the summary at a fight's end: each member's numbers on one scale, its actions on a tap, and what each status did
-      scene.ts               the field, backdrops, the campfire, the menus' stages and party strip; drawing the effects
+      scene.ts               the field, backdrops, the campfire, the menus' stages and party strip, and which foe stands at a point of a stage; drawing the effects
       audio.ts               sound effects and music
   tools/
     assets.py                builds ui/public/assets/ from the director's art packs (all but the skill and status icons)

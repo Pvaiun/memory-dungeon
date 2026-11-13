@@ -9,7 +9,7 @@ import { bagRoom, bench, eventView, formationRarity, type Item, itemGear, member
 import { c, cls as classOf, shortName } from "../content.js";
 import { abilityBlock, gearRow, RARITY_TONE, role, seatLines } from "../sheet.js";
 import { actionIcon16, faceEl, gearIconOf, iconEl, iconOf, weaponIcon } from "../pixel.js";
-import { foesOnStage, partyInLine, partyOnStage, type StageActor, stageEl, type StageOpts, themeOf } from "../battle/scene.js";
+import { foeAt, foesOnStage, partyInLine, partyOnStage, type StageActor, stageEl, type StageOpts, themeOf, W } from "../battle/scene.js";
 import { abilityTag } from "../describe.js";
 import { fighter, saveRogue, vitals } from "./state.js";
 import { canEquip } from "../../../src/validate.js";
@@ -163,7 +163,22 @@ const GOLD_SACK: Cell = [23, 11];
 const FORMATION_ICON: Cell = [23, 6];
 
 /** The party facing a fight's foes, as the battle will stand them. */
-export const standoff = (run: RogueRun, enemies: string[], key: string, theme?: string, h = 136) => scene(run, key, { theme, h, actors: [...partyActors(run, h), ...foesOnStage(enemies, h)] });
+/** The party facing a fight's foes; with `onFoe`, tapping a foe on the field opens it (its sheet). */
+export function standoff(run: RogueRun, enemies: string[], key: string, o: { theme?: string; h?: number; onFoe?: (ref: string) => void } = {}): HTMLCanvasElement {
+  const ht = o.h ?? 136;
+  const actors = [...partyActors(run, ht), ...foesOnStage(enemies, ht)];
+  const cv = scene(run, key, { theme: o.theme, h: ht, actors });
+  const onFoe = o.onFoe;
+  if (onFoe) {
+    cv.classList.add("tap");
+    cv.addEventListener("click", (e) => {
+      const r = cv.getBoundingClientRect();
+      const ref = foeAt(actors, ((e.clientX - r.left) / r.width) * W, ((e.clientY - r.top) / r.height) * ht);
+      if (ref) onFoe(ref);
+    });
+  }
+  return cv;
+}
 
 /** The party at a glance: faces, HP and MP bars, KO; tap for the party screen. */
 export function partyStrip(run: RogueRun, tap = true): HTMLElement {

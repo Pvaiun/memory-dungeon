@@ -189,6 +189,12 @@ button.mid { padding: .625rem .5rem; }
 /* the bestiary: an enemy's likeness */
 .beast-art { display: flex; justify-content: center; align-items: flex-end; padding: .5rem 0; min-height: 6rem; }
 .row.beast { min-height: 3.75rem; }
+/* a fight's foes in its preview: likeness, name and line; a tap opens the sheet */
+.foe-row { display: flex; align-items: center; gap: .5rem; padding: .25rem; border-radius: .25rem; cursor: pointer; }
+.foe-row:active { background: var(--sel); }
+.foe-row + .foe-row { margin-top: .25rem; }
+.foe-icon { flex: 0 0 7.25rem; height: 7.25rem; display: flex; align-items: center; justify-content: center; }
+canvas.strip.tap { cursor: pointer; }
 
 /* battle */
 .win.msg { min-height: 7.25rem; flex: 0 0 auto; position: relative; cursor: pointer; padding: .5rem .75rem .5rem; }

@@ -37,6 +37,12 @@ const line = (hp: number, mp: number, regen: number, atk: number, def: number, c
 });
 /** Every enemy carries at least this much Defense, so small hits and big hits mean something against everyone; the floor is minimal. */
 const ARMOR_FLOOR = { minion: pts(1), elite: pts(2), boss: pts(3) } as const;
+/*
+ * An enemy's `text` is its line: flavour, a few words the fight's preview shows under its name, that say what it does
+ * through what it is, never as a rule (docs/core-set/enemies.md). It's written for the name the screen shows: the art
+ * shows a few under another (`ENEMY` in ui/tools/assets.py: the Archer as the Centaur Archer, the Shieldman as the
+ * Shield Knight, the Bat as the Night Wyrm, the Mummy as the Crypt Guard).
+ */
 const enemy = (id: string, name: string, text: string, rank: EnemyT["rank"], stats: Record<string, number>, weapon: WeaponT, o: { abilities?: string[]; statuses?: string[]; note?: string } = {}): EnemyT => ({
   // Every foe carries at least its rank's Defense.
   id, name, text, rank,
@@ -117,9 +123,9 @@ export const enemyAbilities: AbilityT[] = [
 
 const wolf = enemy("wolf", "Wolf", "Hunts in packs.", "minion", line(2, 0, 0, 2, 0, 2, 2), flurry("dagger", "weak"));
 const bandit = enemy("bandit", "Bandit", "A common road thug.", "minion", line(4, 0, 0, 3, 1, 2, 3), basic("sword"));
-const archer = enemy("archer", "Archer", "Hits hard, falls fast.", "minion", line(2, 0, 0, 7, 0, 4, 2), basic("bow", "heavy"), { abilities: ["take_aim"] });
+const archer = enemy("archer", "Archer", "Half horse, all bow: its arrows hit hard, its hide is thin.", "minion", line(2, 0, 0, 7, 0, 4, 2), basic("bow", "heavy"), { abilities: ["take_aim"] });
 const snake = enemy("snake", "Snake", "Its bite leaves a bleeding wound.", "minion", line(2, 0, 0, 2, 0, 2, 1), basic("dagger", "weak"), { statuses: ["venom"] });
-const shieldman = enemy("shieldman", "Shieldman", "Hides behind a big shield.", "elite", line(10, 3, 2, 2, 5, 1, 4), basic("sword"), { abilities: ["shield_up", "shield_slam"] });
+const shieldman = enemy("shieldman", "Shieldman", "Plants a big shield and dares you to hit anything else.", "elite", line(10, 3, 2, 2, 5, 1, 4), basic("sword"), { abilities: ["shield_up", "shield_slam"] });
 /**
  * The Ogre's (and the Troll's) slow swing: the great weapon's cooldown plus a long wind-up's ticks, with the recovery after it held
  * at the great weapon's, so Flatten waits no longer after a swing. No basic attack winds up: a wind-up reads as an ability, and
@@ -130,32 +136,32 @@ const ogre = enemy("ogre", "Ogre", "Big, slow, and swings a tree.", "elite", lin
 const ogreChief = enemy("ogre_chief", "Ogre Chief", "The biggest ogre, with the biggest club.", "boss", line(60, 4, 2, 12, 3, 2, 4), basic("great_weapon", "heavy"), { abilities: ["crush"] });
 
 const skeleton = enemy("skeleton", "Skeleton", "Old bones in heavy armor.", "minion", line(3, 0, 0, 3, 8, 2, 3), basic("sword", "normal", { cooldown: SPEED.slow }), { abilities: ["brace"] });
-const bat = enemy("bat", "Bat", "Fast, and hard to hit.", "minion", { ...line(2, 0, 0, 2, 0, 2, 2), evasion: SPECIAL.evasion.high }, basic("dagger", "weak"));
+const bat = enemy("bat", "Bat", "A winged wyrm of the crypt's dark: blades find only air.", "minion", { ...line(2, 0, 0, 2, 0, 2, 2), evasion: SPECIAL.evasion.high }, basic("dagger", "weak"));
 const ghost = enemy("ghost", "Ghost", "Blows pass right through it.", "minion", line(6, 0, 0, 3, 0, 2, 2), touch("medium"), { statuses: ["incorporeal"] });
-const bonePriest = enemy("bone_priest", "Bone Priest", "Heals the other dead.", "minion", line(3, 6, 3, 7, 1, 2, 1), touch("medium", CASTER_TOUCH), { abilities: ["mend"] });
-const witch = enemy("witch", "Witch", "Curses the whole party.", "minion", line(3, 5, 3, 4, 0, 2, 2), touch("medium", CASTER_TOUCH), { abilities: ["curse"] });
+const bonePriest = enemy("bone_priest", "Bone Priest", "Mends the other dead as fast as you break them.", "minion", line(3, 6, 3, 7, 1, 2, 1), touch("medium", CASTER_TOUCH), { abilities: ["mend"] });
+const witch = enemy("witch", "Witch", "Her curse saps every arm and slows every step.", "minion", line(3, 5, 3, 4, 0, 2, 2), touch("medium", CASTER_TOUCH), { abilities: ["curse"] });
 const lich = enemy("lich", "Lich", "A dead wizard with one big spell.", "minion", line(2, 6, 2, 7, 0, 2, 2), touch("medium", CASTER_TOUCH), { abilities: ["soulfire", "dark_ward"] });
 const ghoul = enemy("ghoul", "Ghoul", "Ghouls dig each other back up.", "minion", line(8, 3, 2, 4, 1, 2, 3), basic("sword"), { abilities: ["dig_up"] });
 const reaper = enemy("reaper", "Reaper", "Death, with a scythe and a bell.", "boss", line(85, 8, 3, 9, 4, 2, 4), basic("sword", "heavy"), { abilities: ["death_bell", "reap"] });
-const wraith = enemy("wraith", "Wraith", "Steals voices.", "minion", line(4, 5, 3, 5, 0, 2, 2), touch("medium", CASTER_TOUCH), { abilities: ["mute"] });
+const wraith = enemy("wraith", "Wraith", "Steals the voice of whoever hits hardest.", "minion", line(4, 5, 3, 5, 0, 2, 2), touch("medium", CASTER_TOUCH), { abilities: ["mute"] });
 const silentOne = enemy("silent_one", "Silent One", "Its silence falls on everyone.", "boss", line(90, 10, 3, 11, 5, 2, 4), basic("sword", "massive"), { abilities: ["quiet", "tolling"] }); // The silence is the lock, the sword the threat.
 
 const hellhound = enemy("hellhound", "Hellhound", "A fire dog; its bite burns.", "minion", line(3, 0, 0, 3, 0, 2, 2), flurry("dagger", "weak"), { statuses: ["fire_bite"] });
 const lavaSlime = enemy("lava_slime", "Lava Slime", "Cut it in half and you get two.", "elite", line(14, 0, 0, 4, 1, 2, 3), touch("slow"), { statuses: ["split"] });
 const miniSlime = enemy("mini_slime", "Mini Slime", "Half a slime, still hungry.", "minion", line(7, 0, 0, 3, 1, 2, 3), touch("slow"));
-const bombBug = enemy("bomb_bug", "Bomb Bug", "Explodes when it dies.", "minion", line(6, 0, 0, 5, 3, 2, 2), touch("medium"), { statuses: ["volatile"] });
+const bombBug = enemy("bomb_bug", "Bomb Bug", "Swollen with fire. When it dies, it bursts over everyone.", "minion", line(6, 0, 0, 5, 3, 2, 2), touch("medium"), { statuses: ["volatile"] });
 const fireImp = enemy("fire_imp", "Fire Imp", "Cheers its friends on.", "minion", line(3, 5, 3, 3, 1, 2, 1), touch("medium", CASTER_TOUCH), { abilities: ["cheer"] });
-const fireGiant = enemy("fire_giant", "Fire Giant", "Lord of the furnace.", "boss", line(95, 10, 3, 14, 5, 2, 4), basic("staff", "heavy"), { abilities: ["brand", "kindle", "inferno"] });
+const fireGiant = enemy("fire_giant", "Fire Giant", "Lord of the furnace: he stokes his fire, then the room burns.", "boss", line(95, 10, 3, 14, 5, 2, 4), basic("staff", "heavy"), { abilities: ["brand", "kindle", "inferno"] });
 
 const iceSpirit = enemy("ice_spirit", "Ice Spirit", "Living ice: its touch chills.", "minion", line(5, 0, 0, 4, 1, 2, 2), touch("medium", CASTER_TOUCH), { statuses: ["rime"] });
 const iceGolem = enemy("ice_golem", "Ice Golem", "Every hit thickens its ice.", "elite", line(14, 0, 0, 5, 2, 2, 3), basic("great_weapon", "heavy"), { abilities: ["brace"], statuses: ["ice_crust_passive"] });
-const iceTitan = enemy("ice_titan", "Ice Titan", "A walking glacier.", "boss", { ...line(110, 6, 2, 14, 6, 2, 4), "immune:dispel": 1 }, basic("great_weapon", "massive"), { abilities: ["hailstorm"], statuses: ["frozen_core"] });
+const iceTitan = enemy("ice_titan", "Ice Titan", "A walking glacier. Chip away its ice and it cracks open.", "boss", { ...line(110, 6, 2, 14, 6, 2, 4), "immune:dispel": 1 }, basic("great_weapon", "massive"), { abilities: ["hailstorm"], statuses: ["frozen_core"] });
 
 const wisp = enemy("wisp", "Wisp", "A tiny spark with a temper.", "minion", line(1, 0, 0, 2, 0, 2, 1), basic("wand", CASTER_TOUCH), { statuses: ["static"] });
-const leech = enemy("leech", "Leech", "Drinks mana.", "minion", { ...line(3, 0, 0, 3, 1, 2, 2), siphon: SPECIAL.siphon.high }, basic("dagger"));
-const stormQueen = enemy("storm_queen", "Storm Queen", "Queen of the storm drones.", "boss", line(85, 10, 4, 13, 3, 2, 4), touch("medium"), { abilities: ["call_drones", "tempest"] });
+const leech = enemy("leech", "Leech", "Latches on and drinks the mana out of you.", "minion", { ...line(3, 0, 0, 3, 1, 2, 2), siphon: SPECIAL.siphon.high }, basic("dagger"));
+const stormQueen = enemy("storm_queen", "Storm Queen", "Calls her drones to her side, and lightning down on you.", "boss", line(85, 10, 4, 13, 3, 2, 4), touch("medium"), { abilities: ["call_drones", "tempest"] });
 const drone = enemy("drone", "Drone", "The queen's drone: it buzzes in front of her.", "minion", line(2, 2, 2, 2, 0, 2, 3), basic("wand", CASTER_TOUCH), { abilities: ["shield_up"] });
-const stormKing = enemy("storm_king", "Storm King", "The Storm Queen's mate. Hurt his soldiers and he gets angry.", "boss", line(100, 10, 4, 13, 4, 2, 4), touch("slow", "massive"), { abilities: ["rally_soldiers"], statuses: ["vengeance"] });
+const stormKing = enemy("storm_king", "Storm King", "The Storm Queen's mate. Every soldier you fell makes him angrier.", "boss", line(100, 10, 4, 13, 4, 2, 4), touch("slow", "massive"), { abilities: ["rally_soldiers"], statuses: ["vengeance"] });
 const soldier = enemy("soldier", "Soldier", "The king's soldier: it stands in front of him.", "minion", line(9, 2, 2, 2, 2, 2, 3), basic("wand", "weak"), { abilities: ["shield_up"] });
 
 export const enemies: EnemyT[] = [
@@ -165,7 +171,7 @@ export const enemies: EnemyT[] = [
   iceSpirit, iceGolem, iceTitan,
   wisp, leech, stormQueen, drone, stormKing, soldier,
   reskin(wolf, "snow_wolf", "Snow Wolf", "Hunts in packs, in the snow."),
-  reskin(ogre, "troll", "Troll", "Big, slow, and swings a tree, under the ground."),
-  reskin(shieldman, "mummy", "Mummy", "Hides behind a big, old shield."),
-  reskin(ghost, "ice_ghost", "Ice Ghost", "Blows pass right through it, cold as it is."),
+  reskin(ogre, "troll", "Troll", "The ogre's cave cousin: big, slow, and swings a tree."),
+  reskin(shieldman, "mummy", "Mummy", "Dead for ages, and still holding the line behind its shield."),
+  reskin(ghost, "ice_ghost", "Ice Ghost", "A ghost of the frozen pass: blows go right through it."),
 ];

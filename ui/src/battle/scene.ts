@@ -854,6 +854,19 @@ export function foesOnStage(enemies: string[], h: number): StageActor[] {
   });
 }
 
+/** The foe drawn at a point of a stage (stage pixels), the front one where two overlap, with a little room round each for a finger. */
+export function foeAt(actors: StageActor[], x: number, y: number): string | null {
+  const PAD = 4;
+  let hit: { ref: string; y: number } | null = null;
+  for (const a of actors) {
+    if (a.kind !== "foe") continue;
+    const s = enemySprite(a.ref, a.k);
+    const inside = Math.abs(x - a.x) <= s.width / 2 + PAD && y <= a.y + PAD && y >= a.y - s.height - PAD;
+    if (inside && (!hit || a.y >= hit.y)) hit = { ref: a.ref, y: a.y };
+  }
+  return hit?.ref ?? null;
+}
+
 /** A stage on a canvas, animated while it's on screen. */
 export class Stage {
   private timer = 0;

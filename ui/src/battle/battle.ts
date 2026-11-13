@@ -687,7 +687,7 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
       // A trained passive plays as its form (PartyUnit.passive).
       body.append(...(classSheet(u.ref, designer, member, pu?.gear ?? {}, pu?.passive, seat).filter(Boolean) as Node[]));
     } else {
-      body.append(...(enemySheet(c.enemies.get(u.ref)!, designer, u.stats, u.stats.power ?? 0).filter(Boolean) as Node[]));
+      body.append(...(enemySheet(c.enemies.get(u.ref)!, designer, { stats: u.stats, power: u.stats.power ?? 0, hpAbove: true }).filter(Boolean) as Node[]));
     }
     openOverlay(nameOf(u.id), body, resume, u.side === "party" ? null : h("span", { class: rankTone(u.ref) }, rankWord(u.ref)));
   }
