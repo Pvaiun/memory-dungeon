@@ -143,6 +143,51 @@ export function seatNotes(f: FormationT): string {
   }
   return out.join(" ");
 }
+/** What a seat does in words: its statuses' words; a seat with neither statuses nor stat changes says its own line (Hammer and anvil's Hammer, a seat that does nothing). */
+export function seatWords(p: Seat): string[] {
+  if (p.statuses?.length) return p.statuses.map((s) => c.statuses.get(s)?.text ?? "");
+  return !p.stats?.length && p.text ? [p.text] : [];
+}
+/** A formation's card text in its two parts: its line, and what it does for the whole party (the content joins them with "The party:"). */
+export function formationParts(f: FormationT): { line: string; party: string | null } {
+  const [line, party] = f.text.split(" The party: ");
+  return { line, party: party ?? null };
+}
+/** Who sits in a seat, for a fight's sheet: a short name, and whether it's down. */
+export type Sitter = { name: string; ko: boolean };
+/**
+ * A party member's seat, for its sheet in a fight: the seat's name, its stat changes and what it does, and what the
+ * formation does for the whole party. A tap unfolds the rest of the formation: its line, and its other seats with who sits in each.
+ */
+export function seatSection(f: FormationT, seatId: string, sitter: (seatId: string) => Sitter | null): Child[] {
+  const mine = f.positions.find((p) => p.id === seatId);
+  if (!mine) return [];
+  const { line, party } = formationParts(f);
+  const seatEl = (p: Seat, who?: Sitter | null) => {
+    const codes = codeSpans(p.stats), words = seatWords(p);
+    return h("div", { class: "seat" },
+      h("div", { class: "line wrap small" },
+        h("span", { class: "nowrap hi" }, p.name.toUpperCase(), who !== undefined ? h("span", { class: who?.ko ? "bad" : "dim" }, ` · ${who ? `${who.name}${who.ko ? " KO" : ""}` : "EMPTY"}`) : null),
+        ...(codes.length || words.length ? codes : [h("span", { class: "dim" }, "no change")])),
+      ...words.map((t) => h("div", { class: "text dim small wrap seat-text" }, t)));
+  };
+  const chev = h("span", { class: "hi" }, "▶");
+  const more = h("div", { class: "seat-more" },
+    h("div", { class: "text dim small wrap" }, line),
+    ...f.positions.filter((p) => p !== mine).map((p) => seatEl(p, sitter(p.id))));
+  more.style.display = "none";
+  const block = h("div", { class: "seat-block" },
+    h("div", { class: "section" }, "SEAT", h("span", { class: "grow" }), h("span", { class: RARITY_TONE[f.rarity ?? "common"] || "ink" }, f.name.toUpperCase()), chev),
+    seatEl(mine),
+    party ? h("div", { class: "text small wrap" }, h("span", { class: "hi" }, "THE PARTY: "), h("span", { class: "dim" }, party)) : null,
+    more);
+  block.addEventListener("click", () => {
+    const open = more.style.display === "none";
+    more.style.display = open ? "" : "none";
+    chev.textContent = open ? "▼" : "▶";
+  });
+  return [block];
+}
 
 // ─── Amounts and timings ───
 
@@ -340,11 +385,13 @@ export const canUse = (id: string) => {
 };
 
 /** Everything about a class, with its current build, read-only: for a fight's inspect window. */
-export function classSheet(id: string, designer: boolean, member: Member = memberFor(id), gear: Record<string, string> = gearFor(id), passive?: string): Child[] {
+export function classSheet(id: string, designer: boolean, member: Member = memberFor(id), gear: Record<string, string> = gearFor(id), passive?: string, seat?: Child[]): Child[] {
   const k = cls(id);
   const out: Child[] = [statGrid(member.stats, k.stats, designer)];
   const sp = specialLines(member.stats);
   if (sp.length) out.push(h("div", { class: "text up small wrap" }, ...sp.flatMap((s, i) => (i ? [" · ", s] : [s]))));
+  // A fight's sheet: the unit's seat (seatSection), one of the sources of the grid's changes, beside its passive and gear.
+  if (seat) out.push(...seat);
   out.push(section("PASSIVE"), ...classPassive(id, passive, member.stats));
   out.push(section("GEAR"));
   for (const slot of SLOTS) out.push(slot === "offhand" && twoHanded(gear) ? lockedRow(slot) : gearRow(gear[slot] ? c.gear.get(gear[slot]) ?? null : null, slot, member.stats, undefined, false));
