@@ -64,9 +64,8 @@ export function rpartyScreen(): Child[] {
           : picked ? button(`IN FOR ${shortName(picked)}`, (e?: Event) => { e?.stopPropagation(); into(cls); }, "sm hi")
           : run.party.length < rogue(c).config.party ? button("TAKE A SEAT", (e?: Event) => { e?.stopPropagation(); swap(c, run, cls, null); saveRogue(); go("rparty", undefined, true); }, "sm hi")
           : null;
-        // MP reads first: it's what the bench is for.
         return h("div", { class: `member${picked ? " target" : ""}`, onClick: () => (picked ? into(cls) : go("runit", cls)) }, faceEl(cls),
-          h("div", { class: "stats" }, h("div", { class: "name" }, shortName(cls)), v.maxMp ? bar(v.mp / v.maxMp, "mp") : null, v.ko ? h("div", { class: "bad" }, "KO") : bar(v.hp / v.maxHp)),
+          h("div", { class: "stats" }, h("div", { class: "name" }, shortName(cls)), v.ko ? h("div", { class: "bad" }, "KO") : bar(v.hp / v.maxHp), v.maxMp ? bar(v.mp / v.maxMp, "mp") : null),
           stand ?? h("div", { class: "small dim" }, v.maxMp ? h("span", { class: "mp" }, `${disp(v.mp)}/${disp(v.maxMp)}`) : `${disp(v.hp)}/${disp(v.maxHp)}`));
       }),
       section("BAG", `${run.items.filter((it) => !wearer(run, it.uid)).length} PIECES`),
