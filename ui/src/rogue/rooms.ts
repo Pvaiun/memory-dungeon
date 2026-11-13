@@ -2,7 +2,7 @@
  * The rooms and what they offer: spoils, a boss's boon and a chest, a captive, the shop and its training, the campfire,
  * events, choices (learn, upgrade, temper), the Muster and the Drill ground, a level-up, the next region.
  */
-import { actRoll, bagRoom, bossFoes, eventView as eventOfRun, formOf, improveOptions, type Item, itemOf, learnOptions, member, type Member, options, parseTraining, passiveOf, rogue, type RogueRun, seatsOf, sellPrice, type Trained, type Training, trainingId, trainOptions, trainPrice, upgradeOf, wearer } from "../../../src/rogue.js";
+import { actRoll, bagRoom, bossFoes, eventView as eventOfRun, formOf, improveOptions, type Item, itemGear, itemOf, learnOptions, member, type Member, type Offer, options, parseTraining, passiveOf, rogue, type RogueRun, seatsOf, sellPrice, type Slot, type Trained, type Training, trainingId, trainOptions, trainPrice, upgradeOf, wearer } from "../../../src/rogue.js";
 import { button, type Child, h, header, win } from "../dom.js";
 import { c, disp, shortName } from "../content.js";
 import { faceEl, iconEl } from "../pixel.js";
@@ -12,7 +12,8 @@ import { setup } from "../state.js";
 import { abilityInfo, heldParts, sizeParts, sizeText, type Stats } from "../describe.js";
 import type { AbilityT } from "../../../src/schema.js";
 import { campEl, themeOf } from "../battle/scene.js";
-import { actions, choice, go, gold, ICON, itemRow, junkRow, lootActors, offerBody, partyActors, partyStrip, pickOrSave, redraw, ROMAN, scene, standoff, trainWord } from "./parts.js";
+import { actions, choice, comesOff, go, gold, ICON, itemRow, junkRow, lootActors, offerBody, partyActors, partyStrip, pickOrSave, redraw, ROMAN, scene, standoff, trainWord } from "./parts.js";
+import { equip } from "../../../src/rogue/record.js";
 import { foeLines } from "./run.js";
 
 // ─── Spoils, the boss's boon, a chest ──────────────────────────────────────
@@ -28,9 +29,23 @@ export function rewardView(run: RogueRun): Child[] {
   const title = p.kind === "boon" ? "THE BOSS FALLS" : p.kind === "treasure" ? "A CHEST" : p.kind === "trophy" ? "ELITE: A FORMATION" : p.tier === "elite" ? "ELITE: A LEGENDARY" : "SPOILS";
   const goldLine = p.kind === "spoils" ? h("div", { class: "line" }, gold(p.gold), h("span", { class: "dim" }, " FOUND")) : p.kind === "treasure" ? h("div", { class: "line" }, gold(p.gold), h("span", { class: "dim" }, " INSIDE")) : null;
   const trophy = p.kind === "spoils" && p.trophy ? win("", h("div", { class: "line gold" }, "TROPHY"), ...offerBody(run, { kind: "gear", item: p.trophy })) : null;
+  // A piece can be taken and put on at once: the card picked (a chest's one card) has a button by each in the party who could wear it.
+  const putOn = (i: number, o: Offer) => (cls: string) => {
+    if (o.kind !== "gear" && o.kind !== "bundle") return;
+    rewardPick = null;
+    pickOrSave(run, takeId(i), () => {
+      const g = c.gear.get(o.item.uid) ?? itemGear(c, o.item);
+      const slot = g.slot as Slot;
+      const was = member(run, cls).gear[slot];
+      const off = [...(was ? [was] : []), ...comesOff(run, cls, g)].map((uid) => (c.gear.get(uid)?.name ?? uid).toUpperCase());
+      if (!equip(c, run, cls, slot, o.item.uid)) return null;
+      return `${shortName(cls)} WEARS ${g.name.toUpperCase()}${off.length ? `. ${off.join(", ")} TO THE BAG` : ""}`;
+    });
+  };
   const cards = offers.map((o, i) => {
     const ok = opts.includes(takeId(i));
-    return win(`roffer${rewardPick === i ? " cur" : ""}${ok ? "" : " dimmed"}`, ...offerBody(run, o), ok ? null : h("div", { class: "line small bad" }, "CAN'T TAKE IT NOW"));
+    const put = ok && (p.kind === "treasure" || rewardPick === i) ? putOn(i, o) : undefined;
+    return win(`roffer${rewardPick === i ? " cur" : ""}${ok ? "" : " dimmed"}`, ...offerBody(run, o, put), ok ? null : h("div", { class: "line small bad" }, "CAN'T TAKE IT NOW"));
   });
   cards.forEach((el, i) => el.addEventListener("click", () => { rewardPick = i; redraw(); }));
   const skip = p.kind === "treasure" ? "leave" : "skip";

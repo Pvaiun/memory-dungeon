@@ -177,6 +177,11 @@ button.mid { padding: .625rem .5rem; }
 .ab .head .chip.on { color: var(--hi); border-color: var(--hi); }
 .ab .size.changes { display: flex; flex-wrap: wrap; column-gap: .75rem; }
 .gear-row .who { column-gap: .5rem; row-gap: 0; line-height: 1.25rem; min-height: 1.25rem; }
+/* An offer's block of who in the party could wear it: a line each, the face and what it wears in that slot now. */
+.gear-row .fits { display: flex; flex-direction: column; gap: .125rem; margin-top: .25rem; }
+.gear-row .fits .now { display: flex; align-items: center; gap: .375rem; min-height: 1.75rem; line-height: 1.25rem; text-transform: uppercase; white-space: nowrap; }
+.gear-row .fits .now .art { display: inline-flex; justify-content: center; align-items: center; flex: 0 0 auto; min-width: 2rem; }
+.gear-row .fits .now .grow { min-width: 0; }
 /* step 5i: a formation's seats on an offer, each with what its statuses do under it */
 .seat { margin-top: .25rem; }
 .seat-text { padding-left: 1rem; }
