@@ -94,7 +94,7 @@ A run starts with Neutral. Formations are common, rare or legendary (`content/co
 
 - **Any lost fight ends it,** unless a Destiny Shard is spent. A wipe ends the run even with members at camp.
 - **Destiny Shards** let a run try a fight again with a different preparation. Act I's and act II's bosses each leave one, taken by hand like the spoils, and a run holds up to `shards.max`. When a fight is lost with a shard held, the player can spend one: the run goes back to exactly where it stood as the fight's preview opened. Everything returns as it was then: HP, MP, knockouts, cooldowns, gold, gear, seats, the supplies used at the preview, the same foes. Only the shard is gone. The same fight with the same party and choices plays the same way, so a second try has to change something. The player can also decline and end the run. The simulated player always spends a shard and prepares the fight again differently, for now at random (`shake` in `src/sim/rogue-ai.ts`); a tool that plays single fights (`autoFight` without `shards`) counts a loss as a loss.
-- **Beating act III's boss wins it.** A won run adds every class in its final party (the three seated) to the classes a run can start with, and, played at the highest heat open, opens the next (`finish`). Every run adds to the record: runs, wins, furthest act and floor.
+- **Beating act III's boss wins it.** A won run adds one class to the classes a run can start with: the player picks it from the final party (the three seated), among those they don't own yet (`unlockable`), and, played at the highest heat open, opens the next (`finish`). Every run adds to the record: runs, wins, furthest act and floor.
 
 ## Dice and saves
 
