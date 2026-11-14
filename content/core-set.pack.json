@@ -6161,9 +6161,9 @@
    ]
   },
   {
-   "id": "broadhead_bow",
-   "name": "Broadhead bow",
-   "text": "On a crit: adds Bleed.",
+   "id": "whistling_bow",
+   "name": "Whistling bow",
+   "text": "On a crit: Weakens the target.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -6179,66 +6179,21 @@
      "do": [
       {
        "op": "apply",
-       "status": "bleed",
-       "to": "other",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.00138,
-          "stat": "attack",
-          "of": "holder"
-         }
-        ]
-       }
+       "status": "weaken",
+       "to": "other"
       }
      ]
     }
    ]
   },
   {
-   "id": "opening_shot",
-   "name": "Opening shot",
-   "text": "At fight start: first basic attack comes at once and always crits.",
+   "id": "patient_bow",
+   "name": "Patient bow",
+   "text": "Basic attacks come 30% less often and always crit.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "reactions": [
-    {
-     "on": {
-      "event": "fight_start"
-     },
-     "do": [
-      {
-       "op": "cooldown",
-       "which": "basic",
-       "set": "ready",
-       "to": "holder"
-      },
-      {
-       "op": "apply",
-       "status": "opening_shot_on",
-       "to": "holder"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "id": "opening_shot_on",
-   "name": "OPENING SHOT",
-   "text": "Next basic attack always crits.",
-   "label": "buff",
-   "show": "icon",
-   "stacking": "intensity",
-   "cap": 1,
-   "trigger": {
-    "on": {
-     "event": "action_resolve",
-     "kind": "basic"
-    }
-   },
-   "drop": "all",
    "crits": [
     {
      "tag": "basic",
@@ -6329,60 +6284,30 @@
   {
    "id": "volley_bow",
    "name": "Volley bow",
-   "text": "Every 3rd basic attack also hits every other foe, effects included.",
+   "text": "When an ally's basic attack lands: next basic attack comes 1 tick sooner.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "strike": {
-    "to": {
-     "side": "foes",
-     "pick": "all",
-     "exclude": "targets"
-    },
-    "kind": "bonus",
-    "carry": true,
-    "when": {
-     "stacks": {
-      "status": "volley_bow_count",
-      "atLeast": 2
-     }
-    },
-    "tag": "volley"
-   },
    "reactions": [
     {
      "on": {
-      "event": "action_resolve",
+      "event": "hit_lands",
+      "whose": "ally",
       "kind": "basic"
      },
      "do": [
       {
-       "op": "apply",
-       "status": "volley_bow_count",
-       "to": "holder",
-       "stacks": 1
+       "op": "cooldown",
+       "which": "basic",
+       "set": {
+        "less": 1
+       },
+       "to": "holder"
       }
      ]
     }
    ]
-  },
-  {
-   "id": "volley_bow_count",
-   "name": "VOLLEY",
-   "text": "Every 3rd basic attack is a volley.",
-   "label": "buff",
-   "show": "icon",
-   "stacking": "intensity",
-   "unremovable": true,
-   "cap": 3,
-   "trigger": {
-    "on": {
-     "event": "status_capped",
-     "status": "volley_bow_count"
-    }
-   },
-   "drop": "all"
   },
   {
    "id": "executioners_longbow",
@@ -6432,9 +6357,9 @@
    ]
   },
   {
-   "id": "sleet_blade",
-   "name": "Sleet blade",
-   "text": "Basic attacks add Chill.",
+   "id": "hindering_blade",
+   "name": "Hindering blade",
+   "text": "Basic attacks on a foe winding up Slow it.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -6445,20 +6370,17 @@
       "event": "hit_lands",
       "kind": "basic"
      },
+     "if": {
+      "unit": "other",
+      "where": {
+       "casting": true
+      }
+     },
      "do": [
       {
        "op": "apply",
-       "status": "chill",
-       "to": "other",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.00026,
-          "stat": "attack",
-          "of": "holder"
-         }
-        ]
-       }
+       "status": "slow",
+       "to": "other"
       }
      ]
     }
@@ -6467,32 +6389,24 @@
   {
    "id": "sigil_blade",
    "name": "Sigil blade",
-   "text": "At fight start: gains a Shield of 33% of max MP.",
+   "text": "Defense up by 10% of max MP.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "reactions": [
+   "stats": [
     {
-     "on": {
-      "event": "fight_start"
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "shield",
-       "to": "holder",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.3333333333333333,
-          "stat": "max_mp",
-          "of": "holder"
-         }
-        ]
+     "stat": "defense",
+     "flat": {
+      "scale": [
+       {
+        "ratio": 0.1,
+        "stat": "max_mp",
+        "of": "holder"
        }
-      }
-     ]
+      ]
+     },
+     "live": true
     }
    ]
   },
@@ -6570,47 +6484,80 @@
    ]
   },
   {
-   "id": "frostward_blade",
-   "name": "Frostward blade",
-   "text": "Foes that hit the ally with the most Aggro gain Chill.",
+   "id": "wardblade",
+   "name": "Wardblade",
+   "text": "While another ally Taunts: hits on foes that hit that ally deal +40%.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
+   "boosts": [
+    {
+     "tag": "physical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 40,
+        "when": {
+         "has": "wardblade_mark"
+        },
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ],
    "reactions": [
     {
      "on": {
       "event": "hit_taken",
-      "whose": "team"
+      "whose": "ally"
      },
      "if": {
       "unit": "owner",
       "where": {
-       "top": {
-        "stats": [
-         "aggro"
-        ]
+       "kind": {
+        "kind": "stat",
+        "tag": "forced"
        }
       }
      },
      "do": [
       {
        "op": "apply",
-       "status": "chill",
-       "to": "other",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.00026,
-          "stat": "attack",
-          "of": "holder"
-         }
-        ]
+       "status": "wardblade_mark",
+       "to": "other"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "status_ended",
+      "status": "taunt",
+      "whose": "ally"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "marker",
+       "status": "wardblade_mark",
+       "to": {
+        "side": "foes",
+        "pick": "all"
        }
       }
      ]
     }
    ]
+  },
+  {
+   "id": "wardblade_mark",
+   "name": "Struck the Taunter",
+   "text": "It hit an ally while that ally Taunted: the Wardblade's hits on it deal +40%.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "refresh",
+   "duration": 20
   },
   {
    "id": "spellbinder",
@@ -6748,48 +6695,33 @@
    ]
   },
   {
-   "id": "glacier_blade",
-   "name": "Glacier blade",
-   "text": "Each shatter gives every ally a Cascade (up to 10). Abilities deal +20% and add +20% Chill and Shock per Cascade.",
+   "id": "midnight_blade",
+   "name": "Midnight blade",
+   "text": "Every 22 ticks: its abilities are ready, but so are every foe's.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "mods": [
-    {
-     "damage": 20,
-     "stacks": {
-      "pct": 20,
-      "statuses": [
-       "chill",
-       "shock"
-      ]
+   "pulse": {
+    "every": 22,
+    "do": [
+     {
+      "op": "cooldown",
+      "which": "abilities",
+      "set": "ready",
+      "to": "holder"
      },
-     "times": {
-      "stacks": "cascade"
-     }
-    }
-   ],
-   "reactions": [
-    {
-     "on": {
-      "event": "status_capped",
-      "status": "chill",
-      "whose": "foe"
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "cascade",
-       "to": {
-        "side": "allies",
-        "pick": "all"
-       },
-       "stacks": 1
+     {
+      "op": "cooldown",
+      "which": "abilities",
+      "set": "ready",
+      "to": {
+       "side": "foes",
+       "pick": "all"
       }
-     ]
-    }
-   ]
+     }
+    ]
+   }
   },
   {
    "id": "wardens_hammer",
@@ -6817,7 +6749,7 @@
   {
    "id": "masons_hammer",
    "name": "Mason's hammer",
-   "text": "Basic attacks give it a Shield of half the damage dealt.",
+   "text": "Basic attacks Guard the ally with the lowest HP%.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -6831,15 +6763,11 @@
      "do": [
       {
        "op": "apply",
-       "status": "shield",
-       "to": "holder",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.5,
-          "amount": true
-         }
-        ]
+       "status": "guard",
+       "to": {
+        "side": "allies",
+        "pick": "lowest",
+        "by": "hp_share"
        }
       }
      ]
@@ -7026,7 +6954,7 @@
   {
    "id": "penitents_mace",
    "name": "Penitent's mace",
-   "text": "When hit: heals the ally with the lowest HP% for 2% of the wearer's max HP.",
+   "text": "Heals it gives also Guard the healed ally.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -7034,25 +6962,18 @@
    "reactions": [
     {
      "on": {
-      "event": "hit_taken"
+      "event": "healed",
+      "whose": "team",
+      "other": "holder",
+      "notTags": [
+       "pulse"
+      ]
      },
      "do": [
       {
-       "op": "heal",
-       "amount": {
-        "scale": [
-         {
-          "ratio": 0.02,
-          "stat": "max_hp",
-          "of": "holder"
-         }
-        ]
-       },
-       "to": {
-        "side": "allies",
-        "pick": "lowest",
-        "by": "hp_share"
-       }
+       "op": "apply",
+       "status": "guard",
+       "to": "owner"
       }
      ]
     }
@@ -7220,37 +7141,48 @@
   {
    "id": "noonday_mace",
    "name": "Noonday mace",
-   "text": "Basic attacks on a burning foe give every ally a Heat (5% faster each, up to 10).",
+   "text": "Every 22 ticks: every ally heals 10% of its max HP, but so does every foe.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "reactions": [
-    {
-     "on": {
-      "event": "hit_lands",
-      "kind": "basic"
-     },
-     "if": {
-      "unit": "other",
-      "where": {
-       "has": "burn"
+   "pulse": {
+    "every": 22,
+    "do": [
+     {
+      "op": "heal",
+      "amount": {
+       "scale": [
+        {
+         "ratio": 0.1,
+         "stat": "max_hp",
+         "of": "target"
+        }
+       ]
+      },
+      "to": {
+       "side": "allies",
+       "pick": "all"
       }
      },
-     "do": [
-      {
-       "op": "apply",
-       "status": "heat",
-       "to": {
-        "side": "allies",
-        "pick": "all"
-       },
-       "stacks": 1,
-       "rider": false
+     {
+      "op": "heal",
+      "amount": {
+       "scale": [
+        {
+         "ratio": 0.1,
+         "stat": "max_hp",
+         "of": "target"
+        }
+       ]
+      },
+      "to": {
+       "side": "foes",
+       "pick": "all"
       }
-     ]
-    }
-   ]
+     }
+    ]
+   }
   },
   {
    "id": "shepherds_staff",
@@ -7289,9 +7221,9 @@
    ]
   },
   {
-   "id": "canopy_staff",
-   "name": "Canopy staff",
-   "text": "At fight start: Shields itself and the other ally with the least max HP (17% of Attack).",
+   "id": "sparring_staff",
+   "name": "Sparring staff",
+   "text": "Basic attacks also tap the other ally with the most max HP for 5% of the damage, and give it Might.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -7299,29 +7231,35 @@
    "reactions": [
     {
      "on": {
-      "event": "fight_start"
+      "event": "hit_lands",
+      "kind": "basic"
      },
      "do": [
       {
-       "op": "apply",
-       "status": "shield",
-       "to": "holder",
-       "stacks": {
+       "op": "damage",
+       "type": "none",
+       "amount": {
         "scale": [
          {
-          "ratio": 0.16666666666666666,
-          "stat": "attack",
-          "of": "holder"
+          "ratio": 0.05,
+          "amount": true
          }
         ]
+       },
+       "to": {
+        "side": "others",
+        "pick": "highest",
+        "by": {
+         "stat": "max_hp"
+        }
        }
       },
       {
        "op": "apply",
-       "status": "shield",
+       "status": "might",
        "to": {
         "side": "others",
-        "pick": "lowest",
+        "pick": "highest",
         "by": {
          "stat": "max_hp"
         }
@@ -7329,12 +7267,13 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.16666666666666666,
+          "ratio": 0.0007,
           "stat": "attack",
           "of": "holder"
          }
         ]
-       }
+       },
+       "rider": false
       }
      ]
     }
@@ -7475,34 +7414,15 @@
   {
    "id": "roaring_greataxe",
    "name": "Roaring greataxe",
-   "text": "At fight start: gains Might.",
+   "text": "Basic attacks don't spend Might.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "reactions": [
-    {
-     "on": {
-      "event": "fight_start"
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "might",
-       "to": "holder",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.0023,
-          "stat": "attack",
-          "of": "holder"
-         }
-        ]
-       }
-      }
-     ]
-    }
-   ]
+   "spare": {
+    "status": "might",
+    "kind": "basic"
+   }
   },
   {
    "id": "giantsbane",
@@ -7532,31 +7452,22 @@
   {
    "id": "harvest_scythe",
    "name": "Harvest scythe",
-   "text": "On a kill: next basic attack comes at once.",
+   "text": "Basic attacks also hit every other foe below 25% HP.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "reactions": [
-    {
-     "on": {
-      "event": "ko",
-      "whose": "foe",
-      "other": "holder",
-      "tags": [
-       "physical"
-      ]
+   "strike": {
+    "to": {
+     "side": "foes",
+     "pick": "all",
+     "where": {
+      "hpBelow": 25
      },
-     "do": [
-      {
-       "op": "cooldown",
-       "which": "basic",
-       "set": "ready",
-       "to": "holder"
-      }
-     ]
-    }
-   ]
+     "exclude": "targets"
+    },
+    "kind": "bonus"
+   }
   },
   {
    "id": "icebreaker",
@@ -7618,25 +7529,67 @@
   {
    "id": "thunderhead_maul",
    "name": "Thunderhead maul",
-   "text": "Basic attacks deal +5% per Shock on the target.",
+   "text": "Hits on a foe that has acted since the wearer's last basic attack deal +40%.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
    "boosts": [
     {
-     "tag": "basic",
+     "tag": "physical",
      "pct": {
       "scale": [
        {
-        "ratio": 5,
-        "stacks": "shock",
+        "ratio": 40,
+        "when": {
+         "has": "thunderhead_maul_acted"
+        },
         "of": "target"
        }
       ]
      }
     }
+   ],
+   "reactions": [
+    {
+     "on": {
+      "event": "action_resolve",
+      "whose": "foe"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "thunderhead_maul_acted",
+       "to": "owner"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "action_resolve",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "marker",
+       "status": "thunderhead_maul_acted",
+       "to": {
+        "side": "foes",
+        "pick": "all"
+       }
+      }
+     ]
+    }
    ]
+  },
+  {
+   "id": "thunderhead_maul_acted",
+   "name": "Acted",
+   "text": "It has acted since the Thunderhead maul's last swing: the maul's hits on it deal +40%.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "refresh"
   },
   {
    "id": "worldbreaker",
@@ -36200,8 +36153,8 @@
    "rarity": "legendary"
   },
   {
-   "id": "war_bow",
-   "name": "War bow",
+   "id": "bodkin_bow",
+   "name": "Bodkin bow",
    "text": "Nothing beyond its stats.",
    "slot": "weapon",
    "tier": "ordinary",
@@ -36227,51 +36180,55 @@
    "rarity": "common"
   },
   {
-   "id": "short_bow",
-   "name": "Short bow",
+   "id": "iron_backed_bow",
+   "name": "Iron-backed bow",
    "text": "Nothing beyond its stats.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
-     "stat": "attack_speed",
-     "flat": 15
-    }
-   ],
-   "weapon": {
-    "kind": "bow",
-    "amount": {
-     "base": 297,
-     "scale": [
-      {
-       "ratio": 0.17325,
-       "stat": "attack"
-      }
-     ]
-    }
-   },
-   "rarity": "common"
-  },
-  {
-   "id": "broadhead_bow",
-   "name": "Broadhead bow",
-   "text": "On a crit: adds Bleed.",
-   "slot": "weapon",
-   "tier": "ordinary",
-   "source": "drop",
-   "stats": [
-    {
-     "stat": "crit_multiplier",
-     "flat": 25
+     "stat": "defense",
+     "flat": 2000
     },
+    {
+     "stat": "cooldown_reduction",
+     "flat": -15
+    }
+   ],
+   "weapon": {
+    "kind": "bow",
+    "amount": {
+     "base": 297,
+     "scale": [
+      {
+       "ratio": 0.17325,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "common"
+  },
+  {
+   "id": "whistling_bow",
+   "name": "Whistling bow",
+   "text": "On a crit: Weakens the target.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
     {
      "stat": "crit_chance",
      "flat": 3
+    },
+    {
+     "stat": "evasion",
+     "flat": 12
     }
    ],
    "statuses": [
-    "broadhead_bow"
+    "whistling_bow"
    ],
    "weapon": {
     "kind": "bow",
@@ -36288,24 +36245,28 @@
    "rarity": "uncommon"
   },
   {
-   "id": "opening_shot",
-   "name": "Opening shot",
-   "text": "At fight start: first basic attack comes at once and always crits.",
+   "id": "patient_bow",
+   "name": "Patient bow",
+   "text": "Basic attacks come 30% less often and always crit.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
-     "stat": "crit_multiplier",
-     "flat": 25
+     "stat": "attack_speed",
+     "flat": -43
     },
     {
-     "stat": "attack",
+     "stat": "defense",
      "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
-    "opening_shot"
+    "patient_bow"
    ],
    "weapon": {
     "kind": "bow",
@@ -36330,12 +36291,12 @@
    "source": "drop",
    "stats": [
     {
-     "stat": "crit_multiplier",
-     "flat": 25
-    },
-    {
      "stat": "attack_speed",
      "flat": 15
+    },
+    {
+     "stat": "mp_regen",
+     "flat": 3000
     }
    ],
    "statuses": [
@@ -36364,16 +36325,16 @@
    "source": "drop",
    "stats": [
     {
-     "stat": "crit_multiplier",
-     "flat": 25
-    },
-    {
-     "stat": "crit_chance",
-     "flat": 3
-    },
-    {
      "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "accuracy",
+     "flat": 20
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -36396,22 +36357,22 @@
   {
    "id": "volley_bow",
    "name": "Volley bow",
-   "text": "Every 3rd basic attack also hits every other foe, effects included.",
+   "text": "When an ally's basic attack lands: next basic attack comes 1 tick sooner.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
-     "stat": "crit_multiplier",
-     "flat": 25
+     "stat": "crit_chance",
+     "flat": 3
     },
     {
-     "stat": "attack_speed",
+     "stat": "cooldown_reduction",
      "flat": 15
     },
     {
-     "stat": "attack",
-     "flat": 1000
+     "stat": "aggro",
+     "flat": -10
     }
    ],
    "statuses": [
@@ -36440,16 +36401,12 @@
    "source": "unlock",
    "stats": [
     {
+     "stat": "accuracy",
+     "flat": 35
+    },
+    {
      "stat": "crit_multiplier",
-     "flat": 50
-    },
-    {
-     "stat": "crit_chance",
-     "flat": 3
-    },
-    {
-     "stat": "attack",
-     "flat": 1000
+     "flat": 25
     }
    ],
    "statuses": [
@@ -36478,70 +36435,78 @@
    "source": "drop",
    "stats": [
     {
-     "stat": "mp_regen",
-     "flat": 3000
-    }
-   ],
-   "weapon": {
-    "kind": "rune_sword",
-    "amount": {
-     "base": 702,
-     "scale": [
-      {
-       "ratio": 0.075234,
-       "stat": "attack"
-      }
-     ]
-    }
-   },
-   "rarity": "common"
-  },
-  {
-   "id": "barrow_blade",
-   "name": "Barrow blade",
-   "text": "Nothing beyond its stats.",
-   "slot": "weapon",
-   "tier": "ordinary",
-   "source": "drop",
-   "stats": [
-    {
-     "stat": "max_hp",
-     "flat": 500
-    }
-   ],
-   "weapon": {
-    "kind": "rune_sword",
-    "amount": {
-     "base": 702,
-     "scale": [
-      {
-       "ratio": 0.075234,
-       "stat": "attack"
-      }
-     ]
-    }
-   },
-   "rarity": "common"
-  },
-  {
-   "id": "sleet_blade",
-   "name": "Sleet blade",
-   "text": "Basic attacks add Chill.",
-   "slot": "weapon",
-   "tier": "ordinary",
-   "source": "drop",
-   "stats": [
-    {
-     "stat": "mp_regen",
-     "flat": 3000
+     "stat": "max_mp",
+     "flat": 1000
     },
     {
      "stat": "max_hp",
      "flat": 500
     }
    ],
+   "weapon": {
+    "kind": "rune_sword",
+    "amount": {
+     "base": 702,
+     "scale": [
+      {
+       "ratio": 0.075234,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "common"
+  },
+  {
+   "id": "honed_runeblade",
+   "name": "Honed runeblade",
+   "text": "Nothing beyond its stats.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "crit_chance",
+     "flat": 5
+    },
+    {
+     "stat": "attack_speed",
+     "flat": -15
+    }
+   ],
+   "weapon": {
+    "kind": "rune_sword",
+    "amount": {
+     "base": 702,
+     "scale": [
+      {
+       "ratio": 0.075234,
+       "stat": "attack"
+      }
+     ]
+    }
+   },
+   "rarity": "common"
+  },
+  {
+   "id": "hindering_blade",
+   "name": "Hindering blade",
+   "text": "Basic attacks on a foe winding up Slow it.",
+   "slot": "weapon",
+   "tier": "ordinary",
+   "source": "drop",
+   "stats": [
+    {
+     "stat": "defense",
+     "flat": 1000
+    },
+    {
+     "stat": "cooldown_reduction",
+     "flat": 15
+    }
+   ],
    "statuses": [
-    "sleet_blade"
+    "hindering_blade"
    ],
    "weapon": {
     "kind": "rune_sword",
@@ -36560,17 +36525,17 @@
   {
    "id": "sigil_blade",
    "name": "Sigil blade",
-   "text": "At fight start: gains a Shield of 33% of max MP.",
+   "text": "Defense up by 10% of max MP.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
-     "stat": "mp_regen",
-     "flat": 3000
+     "stat": "max_mp",
+     "flat": 1000
     },
     {
-     "stat": "max_mp",
+     "stat": "attack",
      "flat": 1000
     },
     {
@@ -36608,8 +36573,8 @@
      "flat": 3000
     },
     {
-     "stat": "cooldown_reduction",
-     "flat": 15
+     "stat": "crit_chance",
+     "flat": 3
     }
    ],
    "statuses": [
@@ -36642,12 +36607,12 @@
      "flat": 3000
     },
     {
-     "stat": "max_hp",
-     "flat": 500
+     "stat": "defense",
+     "flat": 1000
     },
     {
-     "stat": "cooldown_reduction",
-     "flat": 15
+     "stat": "evasion",
+     "flat": 12
     }
    ],
    "statuses": [
@@ -36668,24 +36633,28 @@
    "rarity": "rare"
   },
   {
-   "id": "frostward_blade",
-   "name": "Frostward blade",
-   "text": "Foes that hit the ally with the most Aggro gain Chill.",
+   "id": "wardblade",
+   "name": "Wardblade",
+   "text": "While another ally Taunts: hits on foes that hit that ally deal +40%.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
-     "stat": "mp_regen",
-     "flat": 3000
+     "stat": "max_hp",
+     "flat": 500
     },
     {
-     "stat": "max_hp",
+     "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
     }
    ],
    "statuses": [
-    "frostward_blade"
+    "wardblade"
    ],
    "weapon": {
     "kind": "rune_sword",
@@ -36710,20 +36679,16 @@
    "source": "drop",
    "stats": [
     {
-     "stat": "mp_regen",
-     "flat": 3000
-    },
-    {
      "stat": "cooldown_reduction",
      "flat": 15
     },
     {
-     "stat": "max_mp",
+     "stat": "attack",
      "flat": 1000
     },
     {
-     "stat": "max_hp",
-     "flat": 500
+     "stat": "accuracy",
+     "flat": 20
     }
    ],
    "statuses": [
@@ -36752,16 +36717,16 @@
    "source": "unlock",
    "stats": [
     {
-     "stat": "mp_regen",
-     "flat": 6000
-    },
-    {
      "stat": "max_mp",
      "flat": 1000
     },
     {
-     "stat": "cooldown_reduction",
+     "stat": "cast_time_reduction",
      "flat": 15
+    },
+    {
+     "stat": "defense",
+     "flat": 1000
     },
     {
      "stat": "max_hp",
@@ -36786,28 +36751,24 @@
    "rarity": "legendary"
   },
   {
-   "id": "glacier_blade",
-   "name": "Glacier blade",
-   "text": "Each shatter gives every ally a Cascade (up to 10). Abilities deal +20% and add +20% Chill and Shock per Cascade.",
+   "id": "midnight_blade",
+   "name": "Midnight blade",
+   "text": "Every 22 ticks: its abilities are ready, but so are every foe's.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
    "stats": [
     {
-     "stat": "mp_regen",
-     "flat": 3000
+     "stat": "evasion",
+     "flat": 20
     },
     {
-     "stat": "cooldown_reduction",
-     "flat": 30
-    },
-    {
-     "stat": "max_hp",
-     "flat": 500
+     "stat": "siphon",
+     "flat": 10
     }
    ],
    "statuses": [
-    "glacier_blade"
+    "midnight_blade"
    ],
    "weapon": {
     "kind": "rune_sword",
@@ -36824,16 +36785,16 @@
    "rarity": "legendary"
   },
   {
-   "id": "war_hammer",
-   "name": "War hammer",
+   "id": "spiked_hammer",
+   "name": "Spiked hammer",
    "text": "Nothing beyond its stats.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
-     "stat": "defense",
-     "flat": 1000
+     "stat": "thorns",
+     "flat": 150
     }
    ],
    "weapon": {
@@ -36851,29 +36812,29 @@
    "rarity": "common"
   },
   {
-   "id": "horsemans_hammer",
-   "name": "Horseman's hammer",
+   "id": "votive_hammer",
+   "name": "Votive hammer",
    "text": "Nothing beyond its stats.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
-     "stat": "max_hp",
-     "flat": 500
+     "stat": "mp_regen",
+     "flat": 6000
     },
     {
-     "stat": "aggro",
-     "flat": 10
+     "stat": "crit_chance",
+     "flat": -3
     }
    ],
    "weapon": {
     "kind": "hammer",
     "amount": {
-     "base": 781,
+     "base": 937,
      "scale": [
       {
-       "ratio": 0.083672,
+       "ratio": 0.100406,
        "stat": "attack"
       }
      ]
@@ -36890,8 +36851,8 @@
    "source": "drop",
    "stats": [
     {
-     "stat": "defense",
-     "flat": 1000
+     "stat": "crit_chance",
+     "flat": 3
     }
    ],
    "statuses": [
@@ -36914,14 +36875,14 @@
   {
    "id": "masons_hammer",
    "name": "Mason's hammer",
-   "text": "Basic attacks give it a Shield of half the damage dealt.",
+   "text": "Basic attacks Guard the ally with the lowest HP%.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
-     "stat": "defense",
-     "flat": 1000
+     "stat": "cooldown_reduction",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -36950,12 +36911,12 @@
    "source": "drop",
    "stats": [
     {
-     "stat": "defense",
-     "flat": 1000
-    },
-    {
      "stat": "max_hp",
      "flat": 500
+    },
+    {
+     "stat": "accuracy",
+     "flat": 20
     }
    ],
    "statuses": [
@@ -36984,12 +36945,12 @@
    "source": "drop",
    "stats": [
     {
-     "stat": "defense",
-     "flat": 1000
-    },
-    {
      "stat": "aggro",
      "flat": 10
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -37022,8 +36983,8 @@
      "flat": 1000
     },
     {
-     "stat": "max_hp",
-     "flat": 500
+     "stat": "double_strike",
+     "flat": 25
     }
    ],
    "weapon": {
@@ -37054,12 +37015,12 @@
    "source": "unlock",
    "stats": [
     {
-     "stat": "defense",
-     "flat": 2000
+     "stat": "max_hp",
+     "flat": 500
     },
     {
-     "stat": "crit_multiplier",
-     "flat": 25
+     "stat": "mp_regen",
+     "flat": 3000
     }
    ],
    "statuses": [
@@ -37088,12 +37049,12 @@
    "source": "drop",
    "stats": [
     {
-     "stat": "max_hp",
-     "flat": 500
+     "stat": "crit_chance",
+     "flat": 3
     },
     {
-     "stat": "defense",
-     "flat": 1000
+     "stat": "thorns",
+     "flat": 150
     }
    ],
    "weapon": {
@@ -37111,20 +37072,16 @@
    "rarity": "common"
   },
   {
-   "id": "friars_mace",
-   "name": "Friar's mace",
+   "id": "flanged_mace",
+   "name": "Flanged mace",
    "text": "Nothing beyond its stats.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
-     "stat": "max_hp",
-     "flat": 500
-    },
-    {
-     "stat": "mp_regen",
-     "flat": 3000
+     "stat": "attack",
+     "flat": 2000
     }
    ],
    "weapon": {
@@ -37151,11 +37108,15 @@
    "stats": [
     {
      "stat": "max_hp",
+     "flat": 500
+    },
+    {
+     "stat": "attack",
      "flat": 1000
     },
     {
-     "stat": "defense",
-     "flat": 1000
+     "stat": "cast_time_reduction",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -37184,12 +37145,16 @@
    "source": "drop",
    "stats": [
     {
-     "stat": "max_hp",
-     "flat": 1000
-    },
-    {
      "stat": "mp_regen",
      "flat": 3000
+    },
+    {
+     "stat": "aggro",
+     "flat": -10
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
     }
    ],
    "statuses": [
@@ -37212,22 +37177,22 @@
   {
    "id": "penitents_mace",
    "name": "Penitent's mace",
-   "text": "When hit: heals the ally with the lowest HP% for 2% of the wearer's max HP.",
+   "text": "Heals it gives also Guard the healed ally.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
-     "stat": "max_hp",
-     "flat": 500
-    },
-    {
-     "stat": "defense",
-     "flat": 1000
-    },
-    {
      "stat": "thorns",
      "flat": 150
+    },
+    {
+     "stat": "aggro",
+     "flat": 10
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -37256,16 +37221,20 @@
    "source": "drop",
    "stats": [
     {
-     "stat": "max_hp",
-     "flat": 500
-    },
-    {
      "stat": "mp_regen",
-     "flat": 6000
+     "flat": 3000
     },
     {
      "stat": "cooldown_reduction",
      "flat": 15
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
     }
    ],
    "statuses": [
@@ -37298,12 +37267,16 @@
      "flat": 1000
     },
     {
-     "stat": "defense",
+     "stat": "max_mp",
      "flat": 1000
     },
     {
-     "stat": "mp_regen",
-     "flat": 3000
+     "stat": "cast_time_reduction",
+     "flat": 15
+    },
+    {
+     "stat": "aggro",
+     "flat": -10
     }
    ],
    "statuses": [
@@ -37333,15 +37306,27 @@
    "stats": [
     {
      "stat": "max_hp",
+     "flat": 500
+    },
+    {
+     "stat": "thorns",
+     "flat": 150
+    },
+    {
+     "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "attack_speed",
+     "flat": 15
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
     },
     {
      "stat": "defense",
-     "flat": 1000
-    },
-    {
-     "stat": "mp_regen",
-     "flat": 6000
+     "flat": -1000
     }
    ],
    "statuses": [
@@ -37364,22 +37349,22 @@
   {
    "id": "noonday_mace",
    "name": "Noonday mace",
-   "text": "Basic attacks on a burning foe give every ally a Heat (5% faster each, up to 10).",
+   "text": "Every 22 ticks: every ally heals 10% of its max HP, but so does every foe.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
    "stats": [
     {
      "stat": "max_hp",
-     "flat": 1000
+     "flat": 500
     },
     {
      "stat": "defense",
-     "flat": 2000
+     "flat": 1000
     },
     {
-     "stat": "cooldown_reduction",
-     "flat": 15
+     "stat": "crit_multiplier",
+     "flat": 50
     }
    ],
    "statuses": [
@@ -37400,16 +37385,16 @@
    "rarity": "legendary"
   },
   {
-   "id": "rowan_staff",
-   "name": "Rowan staff",
+   "id": "beacon_staff",
+   "name": "Beacon staff",
    "text": "Nothing beyond its stats.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
-     "stat": "cast_time_reduction",
-     "flat": 15
+     "stat": "aggro",
+     "flat": 10
     },
     {
      "stat": "cooldown_reduction",
@@ -37431,20 +37416,16 @@
    "rarity": "common"
   },
   {
-   "id": "willow_staff",
-   "name": "Willow staff",
+   "id": "ringed_staff",
+   "name": "Ringed staff",
    "text": "Nothing beyond its stats.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
-     "stat": "cast_time_reduction",
-     "flat": 15
-    },
-    {
-     "stat": "mp_regen",
-     "flat": 3000
+     "stat": "aggro",
+     "flat": 20
     }
    ],
    "weapon": {
@@ -37470,16 +37451,16 @@
    "source": "drop",
    "stats": [
     {
-     "stat": "cast_time_reduction",
-     "flat": 15
-    },
-    {
      "stat": "cooldown_reduction",
      "flat": 15
     },
     {
-     "stat": "mp_regen",
-     "flat": 3000
+     "stat": "aggro",
+     "flat": 10
+    },
+    {
+     "stat": "defense",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -37500,20 +37481,20 @@
    "rarity": "uncommon"
   },
   {
-   "id": "canopy_staff",
-   "name": "Canopy staff",
-   "text": "At fight start: Shields itself and the other ally with the least max HP (17% of Attack).",
+   "id": "sparring_staff",
+   "name": "Sparring staff",
+   "text": "Basic attacks also tap the other ally with the most max HP for 5% of the damage, and give it Might.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
-     "stat": "cast_time_reduction",
-     "flat": 15
+     "stat": "evasion",
+     "flat": 12
     },
     {
-     "stat": "mp_regen",
-     "flat": 3000
+     "stat": "attack",
+     "flat": 1000
     },
     {
      "stat": "max_hp",
@@ -37521,7 +37502,7 @@
     }
    ],
    "statuses": [
-    "canopy_staff"
+    "sparring_staff"
    ],
    "weapon": {
     "kind": "staff",
@@ -37546,16 +37527,16 @@
    "source": "drop",
    "stats": [
     {
-     "stat": "cast_time_reduction",
-     "flat": 15
-    },
-    {
-     "stat": "attack",
-     "flat": 1000
-    },
-    {
      "stat": "mp_regen",
      "flat": 3000
+    },
+    {
+     "stat": "aggro",
+     "flat": -10
+    },
+    {
+     "stat": "evasion",
+     "flat": 12
     }
    ],
    "statuses": [
@@ -37592,12 +37573,8 @@
      "flat": 2000
     },
     {
-     "stat": "max_mp",
+     "stat": "defense",
      "flat": 1000
-    },
-    {
-     "stat": "max_hp",
-     "flat": 500
     }
    ],
    "statuses": [
@@ -37626,20 +37603,20 @@
    "source": "drop",
    "stats": [
     {
-     "stat": "cast_time_reduction",
-     "flat": 15
-    },
-    {
-     "stat": "cooldown_reduction",
-     "flat": 15
-    },
-    {
      "stat": "max_mp",
      "flat": 1000
     },
     {
      "stat": "mp_regen",
      "flat": 3000
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
     },
     {
      "stat": "max_hp",
@@ -37672,20 +37649,20 @@
    "source": "unlock",
    "stats": [
     {
+     "stat": "crit_multiplier",
+     "flat": 50
+    },
+    {
      "stat": "cast_time_reduction",
-     "flat": 30
-    },
-    {
-     "stat": "max_mp",
-     "flat": 2000
-    },
-    {
-     "stat": "cooldown_reduction",
      "flat": 15
     },
     {
-     "stat": "max_hp",
+     "stat": "max_mp",
      "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -37706,25 +37683,29 @@
    "rarity": "legendary"
   },
   {
-   "id": "bardiche",
-   "name": "Bardiche",
+   "id": "clarion_glaive",
+   "name": "Clarion glaive",
    "text": "Nothing beyond its stats.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
-     "stat": "attack",
-     "flat": 1000
+     "stat": "aggro",
+     "flat": 10
+    },
+    {
+     "stat": "cast_time_reduction",
+     "flat": 15
     }
    ],
    "weapon": {
     "kind": "great_weapon",
     "amount": {
-     "base": 864,
+     "base": 720,
      "scale": [
       {
-       "ratio": 0.216,
+       "ratio": 0.18,
        "stat": "attack"
       }
      ]
@@ -37733,20 +37714,16 @@
    "rarity": "common"
   },
   {
-   "id": "halberd",
-   "name": "Halberd",
+   "id": "guardsmans_halberd",
+   "name": "Guardsman's halberd",
    "text": "Nothing beyond its stats.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
-     "stat": "attack",
-     "flat": 1000
-    },
-    {
-     "stat": "max_hp",
-     "flat": 500
+     "stat": "defense",
+     "flat": 2000
     }
    ],
    "weapon": {
@@ -37766,7 +37743,7 @@
   {
    "id": "roaring_greataxe",
    "name": "Roaring greataxe",
-   "text": "At fight start: gains Might.",
+   "text": "Basic attacks don't spend Might.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -37776,12 +37753,12 @@
      "flat": 1000
     },
     {
-     "stat": "max_hp",
-     "flat": 500
+     "stat": "defense",
+     "flat": 1000
     },
     {
-     "stat": "crit_multiplier",
-     "flat": 25
+     "stat": "mp_regen",
+     "flat": 3000
     }
    ],
    "statuses": [
@@ -37810,12 +37787,16 @@
    "source": "drop",
    "stats": [
     {
-     "stat": "attack",
+     "stat": "max_hp",
+     "flat": 500
+    },
+    {
+     "stat": "defense",
      "flat": 1000
     },
     {
-     "stat": "max_hp",
-     "flat": 1000
+     "stat": "crit_chance",
+     "flat": 3
     }
    ],
    "statuses": [
@@ -37838,18 +37819,22 @@
   {
    "id": "harvest_scythe",
    "name": "Harvest scythe",
-   "text": "On a kill: next basic attack comes at once.",
+   "text": "Basic attacks also hit every other foe below 25% HP.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
-     "stat": "attack",
-     "flat": 2000
+     "stat": "lifesteal",
+     "flat": 10
     },
     {
-     "stat": "crit_multiplier",
-     "flat": 25
+     "stat": "attack_speed",
+     "flat": 15
+    },
+    {
+     "stat": "defense",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -37879,15 +37864,19 @@
    "stats": [
     {
      "stat": "attack",
-     "flat": 2000
-    },
-    {
-     "stat": "max_hp",
-     "flat": 500
+     "flat": 1000
     },
     {
      "stat": "crit_multiplier",
      "flat": 25
+    },
+    {
+     "stat": "defense",
+     "flat": 1000
+    },
+    {
+     "stat": "mp_regen",
+     "flat": 3000
     }
    ],
    "statuses": [
@@ -37917,11 +37906,15 @@
    "stats": [
     {
      "stat": "attack",
-     "flat": 2000
+     "flat": 1000
     },
     {
-     "stat": "crit_multiplier",
-     "flat": 25
+     "stat": "crit_chance",
+     "flat": 3
+    },
+    {
+     "stat": "accuracy",
+     "flat": 20
     }
    ],
    "statuses": [
@@ -37944,26 +37937,26 @@
   {
    "id": "thunderhead_maul",
    "name": "Thunderhead maul",
-   "text": "Basic attacks deal +5% per Shock on the target.",
+   "text": "Hits on a foe that has acted since the wearer's last basic attack deal +40%.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
-     "stat": "attack",
+     "stat": "aggro",
+     "flat": 10
+    },
+    {
+     "stat": "thorns",
+     "flat": 150
+    },
+    {
+     "stat": "defense",
      "flat": 1000
     },
     {
-     "stat": "max_hp",
-     "flat": 500
-    },
-    {
-     "stat": "crit_multiplier",
-     "flat": 25
-    },
-    {
-     "stat": "aggro",
-     "flat": 10
+     "stat": "mp_regen",
+     "flat": 3000
     }
    ],
    "statuses": [
@@ -37996,16 +37989,16 @@
      "flat": -100
     },
     {
-     "stat": "attack",
-     "flat": 2000
-    },
-    {
      "stat": "crit_multiplier",
      "flat": 50
     },
     {
-     "stat": "max_hp",
-     "flat": 500
+     "stat": "defense",
+     "flat": 1000
+    },
+    {
+     "stat": "accuracy",
+     "flat": 20
     }
    ],
    "statuses": [
@@ -38035,15 +38028,19 @@
    "stats": [
     {
      "stat": "attack",
-     "flat": 2000
-    },
-    {
-     "stat": "max_hp",
      "flat": 1000
     },
     {
-     "stat": "crit_multiplier",
-     "flat": 25
+     "stat": "max_hp",
+     "flat": 500
+    },
+    {
+     "stat": "evasion",
+     "flat": 12
+    },
+    {
+     "stat": "cooldown_reduction",
+     "flat": 15
     }
    ],
    "statuses": [
