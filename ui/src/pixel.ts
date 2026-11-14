@@ -310,16 +310,15 @@ export function drawEnemy(ctx: CanvasRenderingContext2D, ref: string, k: number,
 }
 export const enemyEl = (ref: string, k = 3, scale = 1) => canvasEl(enemySprite(ref, k), scale);
 /**
- * A likeness for lists and sheets: the sprite, trimmed and outlined, at the largest size that fits `size` (outline
- * included). The art's own pixels (a third of the committed sheets, the pack's 1×) wherever they fit, so a foe's icon
- * is drawn as on the field; only a sprite bigger than `size` is shrunk further.
+ * A likeness for lists and sheets, drawn as on the field (`enemySprite`), at the largest size that fits `size` plus
+ * an outline's two pixels. The art's own pixels (a third of the committed sheets, the pack's 1×) wherever they fit,
+ * with the art's own dark edge and nothing added; only a sprite shrunk further, which loses that edge, gets an outline.
  */
 export function enemyThumb(ref: string, size = 24, shadowed = false): HTMLCanvasElement {
   const art = manifest.enemies[ref];
-  const of = (k: number) => spriteOf(art?.file ?? "", k, { align: k === 3, outline: true, trim: true });
   let k = 3;
-  while (art && k < 16 && Math.max(of(k).width, of(k).height) > size + 2) k++;
-  const s = of(k);
+  while (art && k < 16 && Math.max(enemySprite(ref, k).width, enemySprite(ref, k).height) > size + 2) k++;
+  const s = enemySprite(ref, k);
   // Not met yet: only its shape, as a Pokédex shows it.
   return canvasEl(shadowed ? silhouette(s, "#3a4260") : s, 1, "thumb");
 }
