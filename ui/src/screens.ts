@@ -9,6 +9,7 @@ import { enemyDisplayName } from "./art.js";
 import { button, h, header, nav, row, settleBack, win, type Child } from "./dom.js";
 import { abilitiesFor, applyHeadStart, BAR_SHOWS, FX_SPEEDS, gearFor, HEAD_STARTS, HIT_PAUSES, SPEEDS, reset, save, setup } from "./state.js";
 import { onRogue, setMode } from "./mode.js";
+import { FILTER_NAMES, FILTERS, setFilter } from "./filter.js";
 import { anyNewEnemy, known, look, metCount, newEnemy } from "./bestiary.js";
 import { aggShares, abilityBlock, basicLine, canUse, classHead, classPassive, enemySheet, gearRow, lockedRow, memberFor, portraitEl, RARITY_TONE, role, seatCodes, seatNotes, section, SLOTS, specialLines, statGrid, twoHanded, type GearSlot } from "./sheet.js";
 import { enemyEl, enemyThumb } from "./pixel.js";
@@ -405,6 +406,7 @@ function settings(): Child[] {
     win("list scroll",
       row([h("span", { class: "grow" }, "MODE"), h("span", { class: onRogue() ? "hi" : "" }, onRogue() ? "ROGUE" : "FREE PLAY")], () => { setMode(onRogue() ? "free" : "rogue"); refresh(); }, { cursor: false }),
       row([h("span", { class: "grow" }, "THEME"), h("span", null, s.theme.toUpperCase())], () => { s.theme = s.theme === "night" ? "day" : "night"; setTheme(s.theme); save(); refresh(); }, { cursor: false }),
+      cycle("FILTER", FILTER_NAMES, s.filter, (v) => FILTERS[v].label, (v) => { s.filter = v; setFilter(v); }),
       cycle("SPEED", [...SPEEDS], s.speed, (v) => `${v}×`, (v) => (s.speed = v)),
       cycle("HIT PAUSE", HIT_PAUSES, s.hitPause as (typeof HIT_PAUSES)[number], (v) => `${Math.round(v * 100)}%`, (v) => (s.hitPause = v)),
       toggle("SOUND", "sound"),
@@ -422,7 +424,7 @@ function settings(): Child[] {
       s.designer && s.seedLock ? seedRow() : null,
       onRogue() && rogueRun() ? row([h("span", { class: "grow" }, "GIVE UP THE RUN")], () => ask("GIVE UP THE RUN?", "", "GIVE UP", () => { abandonRun(); go("home"); }), { cursor: false }) : null,
       onRogue() ? row([h("span", { class: "grow" }, "RESET ROGUE")], () => ask("RESET THE ROGUE MODE?", "", "RESET", () => { resetRogue(); go("home"); }), { cursor: false }) : null,
-      row([h("span", { class: "grow bad" }, "RESET ALL")], () => ask("RESET ALL?", "", "RESET", () => { reset(); setTheme(setup.settings.theme); setNumberScale(setup.settings.numbers); go("home"); }), { cursor: false }),
+      row([h("span", { class: "grow bad" }, "RESET ALL")], () => ask("RESET ALL?", "", "RESET", () => { reset(); setTheme(setup.settings.theme); setFilter(setup.settings.filter); setNumberScale(setup.settings.numbers); go("home"); }), { cursor: false }),
     ),
   ];
 }

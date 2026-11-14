@@ -185,6 +185,7 @@ ui/
     content.ts               the pack as the interface shows it: names, single fights, the number scale
     state.ts                 free play's setup and the settings, saved
     mode.ts                  free play or the rogue mode, saved
+    filter.ts                Settings → FILTER: the colour filters over the whole screen (green, grey, sepia, invert and the rest)
     screens.ts               the menus and free play's screens; go() switches screens
     sheet.ts                 unit sheets: a class or an enemy, its stats, abilities and gear; a party member's seat in a fight, unfolding to the whole formation
     describe.ts              plain-language descriptions of abilities, effects and statuses; the sizes cards show, an ability's and the stacks a piece or a passive lays; a status's own numbers, a stack's worth
