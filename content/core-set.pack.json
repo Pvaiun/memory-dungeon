@@ -10366,34 +10366,37 @@
    ]
   },
   {
-   "id": "emberguard",
-   "name": "Emberguard",
-   "text": "Attackers gain Burn.",
+   "id": "salted_kite",
+   "name": "Salted kite",
+   "text": "Takes half damage from statuses.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "reactions": [
+   "taken": [
     {
-     "on": {
-      "event": "hit_taken"
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "burn",
-       "to": "other",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.000175,
-          "stat": "defense",
-          "of": "holder"
-         }
-        ]
-       }
-      }
-     ]
+     "tag": "burn",
+     "pct": -50
+    },
+    {
+     "tag": "chill",
+     "pct": -50
+    },
+    {
+     "tag": "shock",
+     "pct": -50
+    },
+    {
+     "tag": "bleed",
+     "pct": -50
+    },
+    {
+     "tag": "doom",
+     "pct": -50
+    },
+    {
+     "tag": "thorns",
+     "pct": -50
     }
    ]
   },
@@ -10455,9 +10458,9 @@
    ]
   },
   {
-   "id": "rubble_shield",
-   "name": "Rubble shield",
-   "text": "When its Shield breaks: Stuns the breaker.",
+   "id": "pavise_of_the_line",
+   "name": "Pavise of the line",
+   "text": "While every ally holds a shield (kite or round): every ally has +1 Defense.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -10465,20 +10468,97 @@
    "reactions": [
     {
      "on": {
-      "event": "status_ended",
-      "status": "shield",
-      "cause": [
-       "stacks"
-      ],
-      "other": "foe"
+      "event": "fight_start"
+     },
+     "if": {
+      "side": "allies",
+      "where": {
+       "offhandNot": [
+        "kite_shield",
+        "round_shield"
+       ]
+      },
+      "atMost": 0
      },
      "do": [
       {
        "op": "apply",
-       "status": "stun",
-       "to": "other"
+       "status": "pavise_of_the_line_aura",
+       "to": {
+        "side": "allies",
+        "pick": "all"
+       }
       }
      ]
+    },
+    {
+     "on": {
+      "event": "revived"
+     },
+     "if": {
+      "side": "allies",
+      "where": {
+       "offhandNot": [
+        "kite_shield",
+        "round_shield"
+       ]
+      },
+      "atMost": 0
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "pavise_of_the_line_aura",
+       "to": {
+        "side": "allies",
+        "pick": "all"
+       }
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived",
+      "whose": "ally"
+     },
+     "if": {
+      "side": "allies",
+      "where": {
+       "offhandNot": [
+        "kite_shield",
+        "round_shield"
+       ]
+      },
+      "atMost": 0
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "pavise_of_the_line_aura",
+       "to": {
+        "side": "allies",
+        "pick": "all"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "pavise_of_the_line_aura",
+   "name": "PAVISE",
+   "text": "+1 Defense while the Pavise of the line's holder stands.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "perSource": {
+    "endsWithSource": true
+   },
+   "stats": [
+    {
+     "stat": "defense",
+     "flat": 1000
     }
    ]
   },
@@ -10516,7 +10596,7 @@
   {
    "id": "monolith_shield",
    "name": "Monolith shield",
-   "text": "Damaging abilities come round half as often and hit twice as hard.",
+   "text": "Damaging abilities come round half as often and deal double.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -10655,83 +10735,37 @@
    }
   },
   {
-   "id": "hunters_buckler",
-   "name": "Hunter's buckler",
-   "text": "On a kill: gains Haste.",
+   "id": "steadfast_buckler",
+   "name": "Steadfast buckler",
+   "text": "Hits on it can't crit.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "reactions": [
-    {
-     "on": {
-      "event": "ko",
-      "whose": "foe",
-      "other": "holder",
-      "tags": [
-       "physical"
-      ]
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "haste",
-       "to": "holder"
-      }
-     ]
-    }
-   ]
+   "critsTaken": "never"
   },
   {
    "id": "spiked_targe",
    "name": "Spiked targe",
-   "text": "While Guarded: Thorns up (high).",
+   "text": "While Guarded: basic attacks deal +30%.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "reactions": [
+   "boosts": [
     {
-     "on": {
-      "event": "status_gained",
-      "status": "guard"
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "spiked_targe_on",
-       "to": "holder"
-      }
-     ]
-    },
-    {
-     "on": {
-      "event": "status_ended",
-      "status": "guard"
-     },
-     "do": [
-      {
-       "op": "remove",
-       "label": "buff",
-       "status": "spiked_targe_on",
-       "to": "holder"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "id": "spiked_targe_on",
-   "name": "SPIKED",
-   "text": "Thorns up (high).",
-   "label": "buff",
-   "show": "icon",
-   "stacking": "fizzle",
-   "unremovable": true,
-   "stats": [
-    {
-     "stat": "thorns",
-     "flat": 300
+     "tag": "basic",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 30,
+        "when": {
+         "has": "guard"
+        },
+        "of": "holder"
+       }
+      ]
+     }
     }
    ]
   },
@@ -10793,31 +10827,25 @@
   {
    "id": "hoplon",
    "name": "Hoplon",
-   "text": "When hit: sends back what its Shield soaked and its Aegis blocked.",
+   "text": "While it holds Aegis: basic attacks deal double.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "reactions": [
+   "boosts": [
     {
-     "on": {
-      "event": "hit_taken"
-     },
-     "do": [
-      {
-       "op": "damage",
-       "type": "none",
-       "amount": {
-        "scale": [
-         {
-          "ratio": 1,
-          "event": "stopped"
-         }
-        ]
-       },
-       "to": "other"
-      }
-     ]
+     "tag": "basic",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 100,
+        "when": {
+         "has": "aegis"
+        },
+        "of": "holder"
+       }
+      ]
+     }
     }
    ]
   },
@@ -11021,56 +11049,14 @@
   {
    "id": "lodestone_shield",
    "name": "Lodestone shield",
-   "text": "Every Shield another ally would gain goes to it instead.",
+   "text": "Area hits on the party land on it alone, once for each ally they'd have struck.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "reactions": [
-    {
-     "on": {
-      "event": "fight_start"
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "lodestone_shield_pull",
-       "to": {
-        "side": "others",
-        "pick": "all"
-       }
-      }
-     ]
-    },
-    {
-     "on": {
-      "event": "revived",
-      "whose": "ally"
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "lodestone_shield_pull",
-       "to": "owner"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "id": "lodestone_shield_pull",
-   "name": "LODESTONE",
-   "text": "Its Shields go to the Lodestone shield's holder.",
-   "label": "buff",
-   "show": "sheet",
-   "stacking": "refresh",
-   "unremovable": true,
-   "perSource": {
-    "endsWithSource": true
-   },
-   "divert": {
-    "what": "shield",
-    "to": "source"
+   "cover": {
+    "share": 0,
+    "tag": "area"
    }
   },
   {
@@ -11108,49 +11094,26 @@
   {
    "id": "bulls_horn",
    "name": "Bull's horn",
-   "text": "First foe to fall: Haste on every ally.",
+   "text": "Every 22 ticks: the ally with the slowest basic attack attacks at once.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "reactions": [
-    {
-     "on": {
-      "event": "ko",
-      "whose": "foe"
-     },
-     "if": {
-      "side": "self",
-      "where": {
-       "lacks": "bulls_horn_used"
+   "pulse": {
+    "every": 22,
+    "do": [
+     {
+      "op": "cooldown",
+      "which": "basic",
+      "set": "ready",
+      "to": {
+       "side": "allies",
+       "pick": "highest",
+       "by": "swing"
       }
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "haste",
-       "to": {
-        "side": "allies",
-        "pick": "all"
-       }
-      },
-      {
-       "op": "apply",
-       "status": "bulls_horn_used",
-       "to": "holder"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "id": "bulls_horn_used",
-   "name": "BULL'S HORN",
-   "text": "Spent for this fight.",
-   "label": "marker",
-   "show": "sheet",
-   "stacking": "fizzle",
-   "survivesKO": true
+     }
+    ]
+   }
   },
   {
    "id": "watch_horn",
@@ -11238,6 +11201,32 @@
    ]
   },
   {
+   "id": "alarum",
+   "name": "Alarum",
+   "text": "When a foe hits another ally below half HP: Fixates that foe.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_taken",
+      "whose": "ally",
+      "other": "foe",
+      "wasBelow": 50
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "fixated",
+       "to": "other"
+      }
+     ]
+    }
+   ]
+  },
+  {
    "id": "horn_of_the_charge",
    "name": "Horn of the charge",
    "text": "At fight start: every ally gains Haste and attacks at once. Its own abilities start on cooldown.",
@@ -11287,54 +11276,34 @@
    ]
   },
   {
-   "id": "spinebark_pole",
-   "name": "Spinebark pole",
-   "text": "At fight start: the ally with the most Aggro gains Thorns.",
+   "id": "pin_fetish",
+   "name": "Pin-fetish",
+   "text": "Hits on a Weakened foe deal +30%.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "reactions": [
+   "boosts": [
     {
-     "on": {
-      "event": "fight_start"
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "spinebark_pole_thorns",
-       "to": {
-        "side": "allies",
-        "pick": "highest",
-        "by": {
-         "stat": "aggro"
-        }
+     "tag": "physical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 30,
+        "when": {
+         "has": "weaken"
+        },
+        "of": "target"
        }
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "id": "spinebark_pole_thorns",
-   "name": "SPINEBARK",
-   "text": "Thorns up for the fight.",
-   "label": "buff",
-   "show": "sheet",
-   "stacking": "refresh",
-   "unremovable": true,
-   "survivesKO": true,
-   "stats": [
-    {
-     "stat": "thorns",
-     "flat": 150
+      ]
+     }
     }
    ]
   },
   {
    "id": "stormglass_totem",
    "name": "Stormglass totem",
-   "text": "At fight start: Shock on every foe.",
+   "text": "Each ability it casts takes 1 tick off the wait left on every ally's basic attack.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -11342,24 +11311,19 @@
    "reactions": [
     {
      "on": {
-      "event": "fight_start"
+      "event": "action_resolve",
+      "kind": "ability"
      },
      "do": [
       {
-       "op": "apply",
-       "status": "shock",
-       "to": {
-        "side": "foes",
-        "pick": "all"
+       "op": "cooldown",
+       "which": "basic",
+       "set": {
+        "less": 1
        },
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.0010499999999999997,
-          "stat": "attack",
-          "of": "holder"
-         }
-        ]
+       "to": {
+        "side": "allies",
+        "pick": "all"
        }
       }
      ]
@@ -11424,9 +11388,9 @@
    ]
   },
   {
-   "id": "spite_totem",
-   "name": "Spite totem",
-   "text": "Each hit taken adds a Spite (up to 20). +15 Thorns per Spite.",
+   "id": "effigy_of_exchange",
+   "name": "Effigy of exchange",
+   "text": "Once a fight, when it drops below 33% HP: trades HP% with the foe with the most HP.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -11434,58 +11398,66 @@
    "reactions": [
     {
      "on": {
-      "event": "hit_taken"
+      "event": "hp_low",
+      "line": 33
+     },
+     "if": {
+      "side": "self",
+      "where": {
+       "lacks": "effigy_of_exchange_used"
+      }
      },
      "do": [
       {
+       "op": "trade",
+       "to": {
+        "side": "foes",
+        "pick": "highest",
+        "by": "hp"
+       }
+      },
+      {
        "op": "apply",
-       "status": "spite",
-       "to": "holder",
-       "stacks": 1
+       "status": "effigy_of_exchange_used",
+       "to": "holder"
       }
      ]
-    }
-   ],
-   "stats": [
-    {
-     "stat": "thorns",
-     "flat": {
-      "scale": [
-       {
-        "ratio": 15,
-        "stacks": "spite",
-        "of": "holder"
-       }
-      ]
-     },
-     "live": true
     }
    ]
   },
   {
+   "id": "effigy_of_exchange_used",
+   "name": "EFFIGY OF EXCHANGE",
+   "text": "Spent for this fight.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "fizzle",
+   "survivesKO": true
+  },
+  {
    "id": "thunderhead_totem",
    "name": "Thunderhead totem",
-   "text": "When hit: a Shock on every foe.",
+   "text": "While it wields a hammer: basic attacks come 25% faster.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "reactions": [
+   "stats": [
     {
-     "on": {
-      "event": "hit_taken"
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "shock",
-       "to": {
-        "side": "foes",
-        "pick": "all"
-       },
-       "stacks": 1
-      }
-     ]
+     "stat": "attack_speed",
+     "flat": {
+      "scale": [
+       {
+        "ratio": 25,
+        "when": {
+         "weapon": [
+          "hammer"
+         ]
+        },
+        "of": "holder"
+       }
+      ]
+     }
     }
    ]
   },
@@ -11640,7 +11612,7 @@
   {
    "id": "charnel_icon",
    "name": "Charnel icon",
-   "text": "When a foe falls: heals the ally with the lowest HP% (29% of Attack).",
+   "text": "Heals it gives, Lifesteal included, also Haste the healed ally.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -11648,26 +11620,18 @@
    "reactions": [
     {
      "on": {
-      "event": "ko",
-      "whose": "foe"
+      "event": "healed",
+      "whose": "team",
+      "other": "holder",
+      "notTags": [
+       "pulse"
+      ]
      },
      "do": [
       {
-       "op": "heal",
-       "amount": {
-        "scale": [
-         {
-          "ratio": 0.29,
-          "stat": "attack",
-          "of": "holder"
-         }
-        ]
-       },
-       "to": {
-        "side": "allies",
-        "pick": "lowest",
-        "by": "hp_share"
-       }
+       "op": "apply",
+       "status": "haste",
+       "to": "owner"
       }
      ]
     }
@@ -11713,7 +11677,7 @@
   {
    "id": "phylactery",
    "name": "Phylactery",
-   "text": "Its healing past full, Regen included, becomes a Shield.",
+   "text": "Its healing past full, Regen included, is kept, and given to the next ally who drops below half HP.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -11734,20 +11698,63 @@
      "do": [
       {
        "op": "apply",
-       "status": "shield",
-       "to": "owner",
+       "status": "phylactery_store",
+       "to": "holder",
        "stacks": {
         "scale": [
          {
-          "ratio": 1,
+          "ratio": 0.001,
           "amount": true
          }
         ]
        }
       }
      ]
+    },
+    {
+     "on": {
+      "event": "hp_low",
+      "whose": "team",
+      "line": 50
+     },
+     "if": {
+      "side": "self",
+      "where": {
+       "has": "phylactery_store"
+      }
+     },
+     "do": [
+      {
+       "op": "heal",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 1000,
+          "stacks": "phylactery_store",
+          "of": "holder"
+         }
+        ]
+       },
+       "final": true,
+       "to": "owner"
+      },
+      {
+       "op": "remove",
+       "label": "marker",
+       "status": "phylactery_store",
+       "to": "holder"
+      }
+     ]
     }
    ]
+  },
+  {
+   "id": "phylactery_store",
+   "name": "PHYLACTERY",
+   "text": "Healing kept for the next ally who drops below half HP.",
+   "label": "marker",
+   "show": "icon",
+   "stacking": "intensity"
   },
   {
    "id": "accusers_relic",
@@ -11787,7 +11794,7 @@
   {
    "id": "heart_of_the_saint",
    "name": "Heart of the saint",
-   "text": "Healing abilities cost HP instead of MP, and heal twice as much.",
+   "text": "Healing abilities cost HP instead of MP, and heal double.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -11845,37 +11852,27 @@
    ]
   },
   {
-   "id": "pitch_lantern",
-   "name": "Pitch lantern",
-   "text": "At fight start: Burn on every foe.",
+   "id": "seekers_lantern",
+   "name": "Seeker's lantern",
+   "text": "Abilities deal +30% to the foe with the most debuffs.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "reactions": [
+   "boosts": [
     {
-     "on": {
-      "event": "fight_start"
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "burn",
-       "to": {
-        "side": "foes",
-        "pick": "all"
-       },
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.000325,
-          "stat": "attack",
-          "of": "holder"
-         }
-        ]
+     "tag": "ability",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 30,
+        "when": {
+         "mostDebuffs": true
+        },
+        "of": "target"
        }
-      }
-     ]
+      ]
+     }
     }
    ]
   },
@@ -11981,39 +11978,301 @@
   {
    "id": "everflame_lantern",
    "name": "Everflame lantern",
-   "text": "Every 3 ticks: +10% Burn on the foe with the most.",
+   "text": "Every 22 ticks: every stacking status on every unit, foe or ally, gains a stack.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
    "pulse": {
-    "every": 3,
-    "if": {
-     "side": "foes",
-     "where": {
-      "has": "burn"
-     }
-    },
+    "every": 22,
     "do": [
      {
       "op": "apply",
       "status": "burn",
       "to": {
        "side": "foes",
-       "pick": "highest",
-       "by": {
-        "stacks": "burn"
+       "pick": "all",
+       "where": {
+        "has": "burn"
        }
       },
-      "stacks": {
-       "scale": [
-        {
-         "ratio": 0.1,
-         "stacks": "burn",
-         "of": "target"
-        }
-       ]
-      }
+      "stacks": 1
+     },
+     {
+      "op": "apply",
+      "status": "burn",
+      "to": {
+       "side": "allies",
+       "pick": "all",
+       "where": {
+        "has": "burn"
+       }
+      },
+      "stacks": 1
+     },
+     {
+      "op": "apply",
+      "status": "chill",
+      "to": {
+       "side": "foes",
+       "pick": "all",
+       "where": {
+        "has": "chill"
+       }
+      },
+      "stacks": 1
+     },
+     {
+      "op": "apply",
+      "status": "chill",
+      "to": {
+       "side": "allies",
+       "pick": "all",
+       "where": {
+        "has": "chill"
+       }
+      },
+      "stacks": 1
+     },
+     {
+      "op": "apply",
+      "status": "shock",
+      "to": {
+       "side": "foes",
+       "pick": "all",
+       "where": {
+        "has": "shock"
+       }
+      },
+      "stacks": 1
+     },
+     {
+      "op": "apply",
+      "status": "shock",
+      "to": {
+       "side": "allies",
+       "pick": "all",
+       "where": {
+        "has": "shock"
+       }
+      },
+      "stacks": 1
+     },
+     {
+      "op": "apply",
+      "status": "bleed",
+      "to": {
+       "side": "foes",
+       "pick": "all",
+       "where": {
+        "has": "bleed"
+       }
+      },
+      "stacks": 1
+     },
+     {
+      "op": "apply",
+      "status": "bleed",
+      "to": {
+       "side": "allies",
+       "pick": "all",
+       "where": {
+        "has": "bleed"
+       }
+      },
+      "stacks": 1
+     },
+     {
+      "op": "apply",
+      "status": "sunder",
+      "to": {
+       "side": "foes",
+       "pick": "all",
+       "where": {
+        "has": "sunder"
+       }
+      },
+      "stacks": 1
+     },
+     {
+      "op": "apply",
+      "status": "sunder",
+      "to": {
+       "side": "allies",
+       "pick": "all",
+       "where": {
+        "has": "sunder"
+       }
+      },
+      "stacks": 1
+     },
+     {
+      "op": "apply",
+      "status": "might",
+      "to": {
+       "side": "foes",
+       "pick": "all",
+       "where": {
+        "has": "might"
+       }
+      },
+      "stacks": 1
+     },
+     {
+      "op": "apply",
+      "status": "might",
+      "to": {
+       "side": "allies",
+       "pick": "all",
+       "where": {
+        "has": "might"
+       }
+      },
+      "stacks": 1
+     },
+     {
+      "op": "apply",
+      "status": "ice_crust",
+      "to": {
+       "side": "foes",
+       "pick": "all",
+       "where": {
+        "has": "ice_crust"
+       }
+      },
+      "stacks": 1
+     },
+     {
+      "op": "apply",
+      "status": "ice_crust",
+      "to": {
+       "side": "allies",
+       "pick": "all",
+       "where": {
+        "has": "ice_crust"
+       }
+      },
+      "stacks": 1
+     },
+     {
+      "op": "apply",
+      "status": "bulwark",
+      "to": {
+       "side": "foes",
+       "pick": "all",
+       "where": {
+        "has": "bulwark"
+       }
+      },
+      "stacks": 1
+     },
+     {
+      "op": "apply",
+      "status": "bulwark",
+      "to": {
+       "side": "allies",
+       "pick": "all",
+       "where": {
+        "has": "bulwark"
+       }
+      },
+      "stacks": 1
+     },
+     {
+      "op": "apply",
+      "status": "edge",
+      "to": {
+       "side": "foes",
+       "pick": "all",
+       "where": {
+        "has": "edge"
+       }
+      },
+      "stacks": 1
+     },
+     {
+      "op": "apply",
+      "status": "edge",
+      "to": {
+       "side": "allies",
+       "pick": "all",
+       "where": {
+        "has": "edge"
+       }
+      },
+      "stacks": 1
+     },
+     {
+      "op": "apply",
+      "status": "heat",
+      "to": {
+       "side": "foes",
+       "pick": "all",
+       "where": {
+        "has": "heat"
+       }
+      },
+      "stacks": 1
+     },
+     {
+      "op": "apply",
+      "status": "heat",
+      "to": {
+       "side": "allies",
+       "pick": "all",
+       "where": {
+        "has": "heat"
+       }
+      },
+      "stacks": 1
+     },
+     {
+      "op": "apply",
+      "status": "spite",
+      "to": {
+       "side": "foes",
+       "pick": "all",
+       "where": {
+        "has": "spite"
+       }
+      },
+      "stacks": 1
+     },
+     {
+      "op": "apply",
+      "status": "spite",
+      "to": {
+       "side": "allies",
+       "pick": "all",
+       "where": {
+        "has": "spite"
+       }
+      },
+      "stacks": 1
+     },
+     {
+      "op": "apply",
+      "status": "wrath",
+      "to": {
+       "side": "foes",
+       "pick": "all",
+       "where": {
+        "has": "wrath"
+       }
+      },
+      "stacks": 1
+     },
+     {
+      "op": "apply",
+      "status": "wrath",
+      "to": {
+       "side": "allies",
+       "pick": "all",
+       "where": {
+        "has": "wrath"
+       }
+      },
+      "stacks": 1
      }
     ]
    }
@@ -39955,8 +40214,8 @@
    "rarity": "legendary"
   },
   {
-   "id": "pavise",
-   "name": "Pavise",
+   "id": "bladed_kite",
+   "name": "Bladed kite",
    "text": "Nothing beyond its stats.",
    "slot": "offhand",
    "tier": "ordinary",
@@ -39964,48 +40223,60 @@
    "offhand": "kite_shield",
    "stats": [
     {
-     "stat": "defense",
-     "flat": 1000
-    }
-   ],
-   "rarity": "common"
-  },
-  {
-   "id": "blazoned_kite",
-   "name": "Blazoned kite",
-   "text": "Nothing beyond its stats.",
-   "slot": "offhand",
-   "tier": "ordinary",
-   "source": "drop",
-   "offhand": "kite_shield",
-   "stats": [
-    {
-     "stat": "aggro",
-     "flat": 10
-    }
-   ],
-   "rarity": "common"
-  },
-  {
-   "id": "emberguard",
-   "name": "Emberguard",
-   "text": "Attackers gain Burn.",
-   "slot": "offhand",
-   "tier": "ordinary",
-   "source": "drop",
-   "offhand": "kite_shield",
-   "stats": [
-    {
-     "stat": "defense",
-     "flat": 1000
+     "stat": "attack",
+     "flat": 2000
     },
     {
-     "stat": "aggro",
-     "flat": 10
+     "stat": "cooldown_reduction",
+     "flat": -15
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "chaplains_kite",
+   "name": "Chaplain's kite",
+   "text": "Nothing beyond its stats.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "kite_shield",
+   "stats": [
+    {
+     "stat": "cooldown_reduction",
+     "flat": 15
+    },
+    {
+     "stat": "mp_regen",
+     "flat": 3000
+    },
+    {
+     "stat": "crit_chance",
+     "flat": -3
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "salted_kite",
+   "name": "Salted kite",
+   "text": "Takes half damage from statuses.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "kite_shield",
+   "stats": [
+    {
+     "stat": "max_hp",
+     "flat": 500
+    },
+    {
+     "stat": "mp_regen",
+     "flat": 3000
     }
    ],
    "statuses": [
-    "emberguard"
+    "salted_kite"
    ],
    "rarity": "uncommon"
   },
@@ -40023,8 +40294,8 @@
      "flat": 1000
     },
     {
-     "stat": "max_hp",
-     "flat": 500
+     "stat": "cast_time_reduction",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -40042,8 +40313,12 @@
    "offhand": "kite_shield",
    "stats": [
     {
-     "stat": "defense",
-     "flat": 2000
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
     }
    ],
    "statuses": [
@@ -40052,29 +40327,29 @@
    "rarity": "uncommon"
   },
   {
-   "id": "rubble_shield",
-   "name": "Rubble shield",
-   "text": "When its Shield breaks: Stuns the breaker.",
+   "id": "pavise_of_the_line",
+   "name": "Pavise of the line",
+   "text": "While every ally holds a shield (kite or round): every ally has +1 Defense.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
    "offhand": "kite_shield",
    "stats": [
     {
-     "stat": "defense",
-     "flat": 1000
-    },
-    {
      "stat": "max_hp",
      "flat": 500
     },
     {
-     "stat": "aggro",
-     "flat": 10
+     "stat": "accuracy",
+     "flat": 20
+    },
+    {
+     "stat": "cooldown_reduction",
+     "flat": 15
     }
    ],
    "statuses": [
-    "rubble_shield"
+    "pavise_of_the_line"
    ],
    "rarity": "rare"
   },
@@ -40092,12 +40367,12 @@
      "flat": 1000
     },
     {
-     "stat": "aggro",
-     "flat": 10
+     "stat": "evasion",
+     "flat": 12
     },
     {
-     "stat": "thorns",
-     "flat": 150
+     "stat": "siphon",
+     "flat": 10
     }
    ],
    "statuses": [
@@ -40108,15 +40383,23 @@
   {
    "id": "monolith_shield",
    "name": "Monolith shield",
-   "text": "Damaging abilities come round half as often and hit twice as hard.",
+   "text": "Damaging abilities come round half as often and deal double.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
    "offhand": "kite_shield",
    "stats": [
     {
-     "stat": "defense",
-     "flat": 2000
+     "stat": "thorns",
+     "flat": 150
+    },
+    {
+     "stat": "crit_multiplier",
+     "flat": 25
+    },
+    {
+     "stat": "max_mp",
+     "flat": 1000
     },
     {
      "stat": "max_hp",
@@ -40138,16 +40421,12 @@
    "offhand": "kite_shield",
    "stats": [
     {
-     "stat": "defense",
-     "flat": 2000
+     "stat": "aggro",
+     "flat": 10
     },
     {
-     "stat": "max_hp",
-     "flat": 500
-    },
-    {
-     "stat": "thorns",
-     "flat": 150
+     "stat": "cooldown_reduction",
+     "flat": 30
     }
    ],
    "statuses": [
@@ -40156,8 +40435,8 @@
    "rarity": "legendary"
   },
   {
-   "id": "linden_shield",
-   "name": "Linden shield",
+   "id": "weighted_shield",
+   "name": "Weighted shield",
    "text": "Nothing beyond its stats.",
    "slot": "offhand",
    "tier": "ordinary",
@@ -40165,15 +40444,19 @@
    "offhand": "round_shield",
    "stats": [
     {
-     "stat": "max_hp",
-     "flat": 500
+     "stat": "attack",
+     "flat": 2000
+    },
+    {
+     "stat": "attack_speed",
+     "flat": -15
     }
    ],
    "rarity": "common"
   },
   {
-   "id": "bronze_buckler",
-   "name": "Bronze buckler",
+   "id": "burnished_buckler",
+   "name": "Burnished buckler",
    "text": "Nothing beyond its stats.",
    "slot": "offhand",
    "tier": "ordinary",
@@ -40181,8 +40464,16 @@
    "offhand": "round_shield",
    "stats": [
     {
-     "stat": "defense",
-     "flat": 1000
+     "stat": "cast_time_reduction",
+     "flat": 15
+    },
+    {
+     "stat": "crit_multiplier",
+     "flat": 25
+    },
+    {
+     "stat": "cooldown_reduction",
+     "flat": -15
     }
    ],
    "rarity": "common"
@@ -40201,8 +40492,8 @@
      "flat": 500
     },
     {
-     "stat": "defense",
-     "flat": 1000
+     "stat": "cooldown_reduction",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -40211,44 +40502,44 @@
    "rarity": "uncommon"
   },
   {
-   "id": "hunters_buckler",
-   "name": "Hunter's buckler",
-   "text": "On a kill: gains Haste.",
+   "id": "steadfast_buckler",
+   "name": "Steadfast buckler",
+   "text": "Hits on it can't crit.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
    "offhand": "round_shield",
    "stats": [
     {
-     "stat": "max_hp",
-     "flat": 500
+     "stat": "defense",
+     "flat": 1000
     },
     {
-     "stat": "attack",
-     "flat": 1000
+     "stat": "accuracy",
+     "flat": 20
     }
    ],
    "statuses": [
-    "hunters_buckler"
+    "steadfast_buckler"
    ],
    "rarity": "uncommon"
   },
   {
    "id": "spiked_targe",
    "name": "Spiked targe",
-   "text": "While Guarded: Thorns up (high).",
+   "text": "While Guarded: basic attacks deal +30%.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
    "offhand": "round_shield",
    "stats": [
     {
-     "stat": "max_hp",
-     "flat": 500
+     "stat": "attack",
+     "flat": 1000
     },
     {
-     "stat": "aggro",
-     "flat": 10
+     "stat": "attack_speed",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -40266,12 +40557,16 @@
    "offhand": "round_shield",
    "stats": [
     {
-     "stat": "max_hp",
+     "stat": "defense",
      "flat": 1000
     },
     {
-     "stat": "attack",
-     "flat": 1000
+     "stat": "lifesteal",
+     "flat": 10
+    },
+    {
+     "stat": "cast_time_reduction",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -40282,7 +40577,7 @@
   {
    "id": "hoplon",
    "name": "Hoplon",
-   "text": "When hit: sends back what its Shield soaked and its Aegis blocked.",
+   "text": "While it holds Aegis: basic attacks deal double.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -40290,11 +40585,15 @@
    "stats": [
     {
      "stat": "max_hp",
-     "flat": 1000
+     "flat": 500
     },
     {
-     "stat": "aggro",
-     "flat": 10
+     "stat": "double_strike",
+     "flat": 25
+    },
+    {
+     "stat": "mp_regen",
+     "flat": 3000
     }
    ],
    "statuses": [
@@ -40316,8 +40615,16 @@
      "flat": 1000
     },
     {
-     "stat": "defense",
-     "flat": 1000
+     "stat": "mp_regen",
+     "flat": 3000
+    },
+    {
+     "stat": "siphon",
+     "flat": 10
+    },
+    {
+     "stat": "attack_speed",
+     "flat": -15
     }
    ],
    "statuses": [
@@ -40335,16 +40642,16 @@
    "offhand": "round_shield",
    "stats": [
     {
+     "stat": "max_mp",
+     "flat": 1000
+    },
+    {
+     "stat": "evasion",
+     "flat": 20
+    },
+    {
      "stat": "max_hp",
-     "flat": 1000
-    },
-    {
-     "stat": "aggro",
-     "flat": 10
-    },
-    {
-     "stat": "attack",
-     "flat": 1000
+     "flat": 500
     }
    ],
    "statuses": [
@@ -40355,23 +40662,19 @@
   {
    "id": "lodestone_shield",
    "name": "Lodestone shield",
-   "text": "Every Shield another ally would gain goes to it instead.",
+   "text": "Area hits on the party land on it alone, once for each ally they'd have struck.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
    "offhand": "round_shield",
    "stats": [
     {
-     "stat": "max_hp",
-     "flat": 1000
-    },
-    {
-     "stat": "aggro",
-     "flat": 10
-    },
-    {
      "stat": "defense",
      "flat": 1000
+    },
+    {
+     "stat": "siphon",
+     "flat": 20
     }
    ],
    "statuses": [
@@ -40380,8 +40683,8 @@
    "rarity": "legendary"
   },
   {
-   "id": "rams_horn",
-   "name": "Ram's horn",
+   "id": "shrill_horn",
+   "name": "Shrill horn",
    "text": "Nothing beyond its stats.",
    "slot": "offhand",
    "tier": "ordinary",
@@ -40389,15 +40692,19 @@
    "offhand": "horn",
    "stats": [
     {
-     "stat": "aggro",
-     "flat": 10
+     "stat": "crit_chance",
+     "flat": 5
+    },
+    {
+     "stat": "attack",
+     "flat": -1000
     }
    ],
    "rarity": "common"
   },
   {
-   "id": "ivory_horn",
-   "name": "Ivory horn",
+   "id": "drinking_horn",
+   "name": "Drinking horn",
    "text": "Nothing beyond its stats.",
    "slot": "offhand",
    "tier": "ordinary",
@@ -40405,8 +40712,16 @@
    "offhand": "horn",
    "stats": [
     {
-     "stat": "mp_regen",
-     "flat": 3000
+     "stat": "attack_speed",
+     "flat": 15
+    },
+    {
+     "stat": "siphon",
+     "flat": 10
+    },
+    {
+     "stat": "crit_chance",
+     "flat": -3
     }
    ],
    "rarity": "common"
@@ -40421,12 +40736,12 @@
    "offhand": "horn",
    "stats": [
     {
-     "stat": "aggro",
-     "flat": 10
+     "stat": "max_hp",
+     "flat": 500
     },
     {
-     "stat": "mp_regen",
-     "flat": 3000
+     "stat": "cast_time_reduction",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -40437,19 +40752,19 @@
   {
    "id": "bulls_horn",
    "name": "Bull's horn",
-   "text": "First foe to fall: Haste on every ally.",
+   "text": "Every 22 ticks: the ally with the slowest basic attack attacks at once.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
    "offhand": "horn",
    "stats": [
     {
-     "stat": "aggro",
-     "flat": 10
+     "stat": "defense",
+     "flat": 1000
     },
     {
-     "stat": "attack",
-     "flat": 1000
+     "stat": "crit_multiplier",
+     "flat": 25
     }
    ],
    "statuses": [
@@ -40467,12 +40782,12 @@
    "offhand": "horn",
    "stats": [
     {
-     "stat": "aggro",
-     "flat": 10
+     "stat": "mp_regen",
+     "flat": 3000
     },
     {
-     "stat": "max_hp",
-     "flat": 500
+     "stat": "accuracy",
+     "flat": 20
     }
    ],
    "statuses": [
@@ -40490,16 +40805,16 @@
    "offhand": "horn",
    "stats": [
     {
-     "stat": "aggro",
-     "flat": 10
-    },
-    {
      "stat": "attack",
      "flat": 1000
     },
     {
-     "stat": "defense",
-     "flat": 1000
+     "stat": "double_strike",
+     "flat": 25
+    },
+    {
+     "stat": "evasion",
+     "flat": 12
     }
    ],
    "statuses": [
@@ -40517,11 +40832,42 @@
    "offhand": "horn",
    "stats": [
     {
-     "stat": "aggro",
-     "flat": 10
+     "stat": "max_hp",
+     "flat": 500
     },
     {
+     "stat": "attack_speed",
+     "flat": 15
+    },
+    {
+     "stat": "cooldown_reduction",
+     "flat": 15
+    }
+   ],
+   "statuses": [
+    "hunting_horn"
+   ],
+   "rarity": "rare"
+  },
+  {
+   "id": "alarum",
+   "name": "Alarum",
+   "text": "When a foe hits another ally below half HP: Fixates that foe.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "horn",
+   "stats": [
+    {
      "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "evasion",
+     "flat": 12
+    },
+    {
+     "stat": "max_mp",
      "flat": 1000
     },
     {
@@ -40530,7 +40876,7 @@
     }
    ],
    "statuses": [
-    "hunting_horn"
+    "alarum"
    ],
    "rarity": "rare"
   },
@@ -40544,16 +40890,12 @@
    "offhand": "horn",
    "stats": [
     {
-     "stat": "aggro",
-     "flat": 20
-    },
-    {
      "stat": "max_hp",
      "flat": 500
     },
     {
-     "stat": "defense",
-     "flat": 1000
+     "stat": "thorns",
+     "flat": 300
     }
    ],
    "statuses": [
@@ -40562,76 +40904,92 @@
    "rarity": "legendary"
   },
   {
-   "id": "blackthorn_stake",
-   "name": "Blackthorn stake",
+   "id": "ironwood_post",
+   "name": "Ironwood post",
    "text": "Nothing beyond its stats.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
    "offhand": "totem",
    "stats": [
-    {
-     "stat": "thorns",
-     "flat": 150
-    }
-   ],
-   "rarity": "common"
-  },
-  {
-   "id": "hawthorn_fetish",
-   "name": "Hawthorn fetish",
-   "text": "Nothing beyond its stats.",
-   "slot": "offhand",
-   "tier": "ordinary",
-   "source": "drop",
-   "offhand": "totem",
-   "stats": [
-    {
-     "stat": "attack",
-     "flat": 1000
-    }
-   ],
-   "rarity": "common"
-  },
-  {
-   "id": "spinebark_pole",
-   "name": "Spinebark pole",
-   "text": "At fight start: the ally with the most Aggro gains Thorns.",
-   "slot": "offhand",
-   "tier": "ordinary",
-   "source": "drop",
-   "offhand": "totem",
-   "stats": [
-    {
-     "stat": "thorns",
-     "flat": 150
-    },
     {
      "stat": "defense",
+     "flat": 2000
+    },
+    {
+     "stat": "crit_chance",
+     "flat": -3
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "twin_fang_fetish",
+   "name": "Twin-fang fetish",
+   "text": "Nothing beyond its stats.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "totem",
+   "stats": [
+    {
+     "stat": "double_strike",
+     "flat": 25
+    },
+    {
+     "stat": "lifesteal",
+     "flat": 10
+    },
+    {
+     "stat": "cooldown_reduction",
+     "flat": -15
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "pin_fetish",
+   "name": "Pin-fetish",
+   "text": "Hits on a Weakened foe deal +30%.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "totem",
+   "stats": [
+    {
+     "stat": "crit_chance",
+     "flat": 3
+    },
+    {
+     "stat": "max_mp",
      "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
-    "spinebark_pole"
+    "pin_fetish"
    ],
    "rarity": "uncommon"
   },
   {
    "id": "stormglass_totem",
    "name": "Stormglass totem",
-   "text": "At fight start: Shock on every foe.",
+   "text": "Each ability it casts takes 1 tick off the wait left on every ally's basic attack.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
    "offhand": "totem",
    "stats": [
     {
-     "stat": "thorns",
-     "flat": 150
+     "stat": "defense",
+     "flat": 1000
     },
     {
-     "stat": "attack",
-     "flat": 1000
+     "stat": "siphon",
+     "flat": 10
     }
    ],
    "statuses": [
@@ -40649,12 +41007,12 @@
    "offhand": "totem",
    "stats": [
     {
-     "stat": "thorns",
-     "flat": 150
+     "stat": "attack",
+     "flat": 1000
     },
     {
-     "stat": "max_hp",
-     "flat": 500
+     "stat": "lifesteal",
+     "flat": 10
     }
    ],
    "statuses": [
@@ -40672,16 +41030,16 @@
    "offhand": "totem",
    "stats": [
     {
-     "stat": "thorns",
-     "flat": 150
+     "stat": "max_hp",
+     "flat": 500
     },
     {
-     "stat": "defense",
-     "flat": 1000
+     "stat": "crit_chance",
+     "flat": 3
     },
     {
-     "stat": "aggro",
-     "flat": 10
+     "stat": "mp_regen",
+     "flat": 3000
     }
    ],
    "statuses": [
@@ -40690,48 +41048,60 @@
    "rarity": "rare"
   },
   {
-   "id": "spite_totem",
-   "name": "Spite totem",
-   "text": "Each hit taken adds a Spite (up to 20). +15 Thorns per Spite.",
+   "id": "effigy_of_exchange",
+   "name": "Effigy of exchange",
+   "text": "Once a fight, when it drops below 33% HP: trades HP% with the foe with the most HP.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
    "offhand": "totem",
    "stats": [
     {
-     "stat": "thorns",
-     "flat": 150
+     "stat": "max_hp",
+     "flat": -500
     },
     {
-     "stat": "aggro",
-     "flat": 20
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "evasion",
+     "flat": 12
+    },
+    {
+     "stat": "cooldown_reduction",
+     "flat": 15
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
     }
    ],
    "statuses": [
-    "spite_totem"
+    "effigy_of_exchange"
    ],
    "rarity": "rare"
   },
   {
    "id": "thunderhead_totem",
    "name": "Thunderhead totem",
-   "text": "When hit: a Shock on every foe.",
+   "text": "While it wields a hammer: basic attacks come 25% faster.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
    "offhand": "totem",
    "stats": [
     {
-     "stat": "thorns",
-     "flat": 150
+     "stat": "defense",
+     "flat": 1000
     },
     {
-     "stat": "aggro",
-     "flat": 10
+     "stat": "crit_multiplier",
+     "flat": 25
     },
     {
-     "stat": "max_hp",
-     "flat": 500
+     "stat": "cast_time_reduction",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -40749,16 +41119,16 @@
    "offhand": "totem",
    "stats": [
     {
-     "stat": "thorns",
-     "flat": 150
-    },
-    {
-     "stat": "defense",
-     "flat": 1000
-    },
-    {
      "stat": "max_hp",
      "flat": 500
+    },
+    {
+     "stat": "double_strike",
+     "flat": 25
+    },
+    {
+     "stat": "cooldown_reduction",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -40776,16 +41146,12 @@
    "offhand": "totem",
    "stats": [
     {
-     "stat": "thorns",
-     "flat": 300
-    },
-    {
      "stat": "max_hp",
      "flat": 500
     },
     {
-     "stat": "defense",
-     "flat": 1000
+     "stat": "mp_regen",
+     "flat": 6000
     }
    ],
    "statuses": [
@@ -40794,24 +41160,8 @@
    "rarity": "legendary"
   },
   {
-   "id": "shrine_token",
-   "name": "Shrine token",
-   "text": "Nothing beyond its stats.",
-   "slot": "offhand",
-   "tier": "ordinary",
-   "source": "drop",
-   "offhand": "relic",
-   "stats": [
-    {
-     "stat": "mp_regen",
-     "flat": 3000
-    }
-   ],
-   "rarity": "common"
-  },
-  {
-   "id": "litany_beads",
-   "name": "Litany beads",
+   "id": "saints_tongue",
+   "name": "Saint's tongue",
    "text": "Nothing beyond its stats.",
    "slot": "offhand",
    "tier": "ordinary",
@@ -40826,6 +41176,30 @@
    "rarity": "common"
   },
   {
+   "id": "all_seeing_eye",
+   "name": "All-seeing eye",
+   "text": "Nothing beyond its stats.",
+   "slot": "offhand",
+   "tier": "ordinary",
+   "source": "drop",
+   "offhand": "relic",
+   "stats": [
+    {
+     "stat": "accuracy",
+     "flat": 20
+    },
+    {
+     "stat": "aggro",
+     "flat": 10
+    },
+    {
+     "stat": "crit_chance",
+     "flat": -3
+    }
+   ],
+   "rarity": "common"
+  },
+  {
    "id": "holy_water",
    "name": "Holy water",
    "text": "Ability heals also lift a debuff.",
@@ -40835,12 +41209,12 @@
    "offhand": "relic",
    "stats": [
     {
-     "stat": "mp_regen",
-     "flat": 3000
+     "stat": "defense",
+     "flat": 1000
     },
     {
-     "stat": "attack",
-     "flat": 1000
+     "stat": "evasion",
+     "flat": 12
     }
    ],
    "statuses": [
@@ -40851,7 +41225,7 @@
   {
    "id": "charnel_icon",
    "name": "Charnel icon",
-   "text": "When a foe falls: heals the ally with the lowest HP% (29% of Attack).",
+   "text": "Heals it gives, Lifesteal included, also Haste the healed ally.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -40862,8 +41236,8 @@
      "flat": 3000
     },
     {
-     "stat": "max_hp",
-     "flat": 500
+     "stat": "crit_chance",
+     "flat": 3
     }
    ],
    "statuses": [
@@ -40881,12 +41255,12 @@
    "offhand": "relic",
    "stats": [
     {
-     "stat": "mp_regen",
-     "flat": 3000
+     "stat": "max_hp",
+     "flat": 500
     },
     {
-     "stat": "cast_time_reduction",
-     "flat": 15
+     "stat": "double_strike",
+     "flat": 25
     }
    ],
    "statuses": [
@@ -40897,23 +41271,27 @@
   {
    "id": "phylactery",
    "name": "Phylactery",
-   "text": "Its healing past full, Regen included, becomes a Shield.",
+   "text": "Its healing past full, Regen included, is kept, and given to the next ally who drops below half HP.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
    "offhand": "relic",
    "stats": [
     {
-     "stat": "mp_regen",
-     "flat": 3000
+     "stat": "defense",
+     "flat": 1000
+    },
+    {
+     "stat": "siphon",
+     "flat": 10
+    },
+    {
+     "stat": "max_mp",
+     "flat": 1000
     },
     {
      "stat": "max_hp",
      "flat": 500
-    },
-    {
-     "stat": "attack",
-     "flat": 1000
     }
    ],
    "statuses": [
@@ -40932,16 +41310,16 @@
    "offhand": "relic",
    "stats": [
     {
-     "stat": "mp_regen",
-     "flat": 3000
-    },
-    {
      "stat": "attack",
      "flat": 1000
     },
     {
-     "stat": "defense",
-     "flat": 1000
+     "stat": "accuracy",
+     "flat": 20
+    },
+    {
+     "stat": "cooldown_reduction",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -40952,23 +41330,19 @@
   {
    "id": "heart_of_the_saint",
    "name": "Heart of the saint",
-   "text": "Healing abilities cost HP instead of MP, and heal twice as much.",
+   "text": "Healing abilities cost HP instead of MP, and heal double.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
    "offhand": "relic",
    "stats": [
     {
-     "stat": "mp_regen",
-     "flat": 3000
-    },
-    {
-     "stat": "max_hp",
+     "stat": "defense",
      "flat": 1000
     },
     {
-     "stat": "attack",
-     "flat": 1000
+     "stat": "crit_multiplier",
+     "flat": 50
     }
    ],
    "statuses": [
@@ -40986,12 +41360,16 @@
    "offhand": "relic",
    "stats": [
     {
-     "stat": "mp_regen",
-     "flat": 6000
+     "stat": "max_mp",
+     "flat": 1000
+    },
+    {
+     "stat": "attack_speed",
+     "flat": 30
     },
     {
      "stat": "max_hp",
-     "flat": 1000
+     "flat": 500
     }
    ],
    "statuses": [
@@ -41000,8 +41378,8 @@
    "rarity": "legendary"
   },
   {
-   "id": "bullseye_lantern",
-   "name": "Bullseye lantern",
+   "id": "revolving_lantern",
+   "name": "Revolving lantern",
    "text": "Nothing beyond its stats.",
    "slot": "offhand",
    "tier": "ordinary",
@@ -41009,7 +41387,7 @@
    "offhand": "lantern",
    "stats": [
     {
-     "stat": "cast_time_reduction",
+     "stat": "cooldown_reduction",
      "flat": 15
     }
    ],
@@ -41025,36 +41403,48 @@
    "offhand": "lantern",
    "stats": [
     {
-     "stat": "max_mp",
-     "flat": 1000
+     "stat": "evasion",
+     "flat": 12
     },
     {
-     "stat": "max_hp",
-     "flat": 500
+     "stat": "mp_regen",
+     "flat": 3000
+    },
+    {
+     "stat": "crit_chance",
+     "flat": -3
     }
    ],
    "rarity": "common"
   },
   {
-   "id": "pitch_lantern",
-   "name": "Pitch lantern",
-   "text": "At fight start: Burn on every foe.",
+   "id": "seekers_lantern",
+   "name": "Seeker's lantern",
+   "text": "Abilities deal +30% to the foe with the most debuffs.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
    "offhand": "lantern",
    "stats": [
     {
-     "stat": "cast_time_reduction",
-     "flat": 15
-    },
-    {
      "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "accuracy",
+     "flat": 20
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
+    },
+    {
+     "stat": "defense",
+     "flat": -1000
     }
    ],
    "statuses": [
-    "pitch_lantern"
+    "seekers_lantern"
    ],
    "rarity": "uncommon"
   },
@@ -41072,8 +41462,8 @@
      "flat": 15
     },
     {
-     "stat": "max_hp",
-     "flat": 500
+     "stat": "evasion",
+     "flat": 12
     }
    ],
    "statuses": [
@@ -41091,20 +41481,16 @@
    "offhand": "lantern",
    "stats": [
     {
-     "stat": "cast_time_reduction",
-     "flat": 15
-    },
-    {
      "stat": "attack",
      "flat": 1000
     },
     {
-     "stat": "max_mp",
-     "flat": 1000
+     "stat": "mp_regen",
+     "flat": 3000
     },
     {
-     "stat": "max_hp",
-     "flat": 500
+     "stat": "defense",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -41122,16 +41508,20 @@
    "offhand": "lantern",
    "stats": [
     {
-     "stat": "cooldown_reduction",
-     "flat": 15
-    },
-    {
      "stat": "max_mp",
      "flat": 1000
     },
     {
-     "stat": "max_hp",
+     "stat": "defense",
      "flat": 1000
+    },
+    {
+     "stat": "aggro",
+     "flat": -10
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -41142,19 +41532,19 @@
   {
    "id": "everflame_lantern",
    "name": "Everflame lantern",
-   "text": "Every 3 ticks: +10% Burn on the foe with the most.",
+   "text": "Every 22 ticks: every stacking status on every unit, foe or ally, gains a stack.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
    "offhand": "lantern",
    "stats": [
     {
-     "stat": "cast_time_reduction",
-     "flat": 30
+     "stat": "mp_regen",
+     "flat": 3000
     },
     {
-     "stat": "attack",
-     "flat": 2000
+     "stat": "double_strike",
+     "flat": 40
     }
    ],
    "statuses": [
@@ -41172,16 +41562,12 @@
    "offhand": "lantern",
    "stats": [
     {
-     "stat": "cast_time_reduction",
-     "flat": 30
-    },
-    {
      "stat": "max_hp",
-     "flat": 1000
+     "flat": 500
     },
     {
-     "stat": "max_mp",
-     "flat": 1000
+     "stat": "accuracy",
+     "flat": 35
     }
    ],
    "statuses": [
