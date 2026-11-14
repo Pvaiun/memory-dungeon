@@ -22,8 +22,6 @@ export const COUNTER = {
   wrath: { pct: 20, cap: 10 },
   /** One more cast of the same ability this fight: that ability deals, heals and adds this much more for each. */
   crescendo: { pct: 20, cap: 10 },
-  /** A shatter, anyone's. Nothing by itself. */
-  cascade: { cap: 10 },
 } as const;
 
 export const counters: StatusT[] = [
@@ -38,7 +36,6 @@ export const counters: StatusT[] = [
   }),
   // The engine keeps the count ability by ability (an ability change's `times: casts`) and shows the highest here.
   counter("crescendo", "CRESCENDO", `An ability does +${COUNTER.crescendo.pct}% for each earlier cast of it this fight.`, { cap: COUNTER.crescendo.cap, oncePerEvent: undefined }),
-  counter("cascade", "CASCADE", "One per shatter this fight.", { cap: COUNTER.cascade.cap }),
 ];
 
 /** What an ability change that counts Crescendo reads: a fifth more for each of the ability's own casts, shown as the status. */

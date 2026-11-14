@@ -114,13 +114,13 @@ function pick(c: ClassDefT, slot: Slot, build: BuildId, rung: Rung, used: Set<st
 type Role = "wall" | "heal" | "cast" | "hit" | "any";
 const ANY: Role[] = ["any", "any", "any"];
 const SEAT_ROLES: Record<string, Role[]> = {
-  neutral: ANY, heavy_line: ["hit", "wall", "any"], spur: ["hit", "hit", "hit"], hearth: ["wall", "hit", "any"], hoarfrost_line: ["hit", "hit", "any"],
-  squall_line: ["hit", "hit", "wall"], hunting_party: ["hit", "hit", "wall"], thorn_hedge: ["wall", "heal", "hit"], wellspring: ["cast", "any", "wall"],
-  shared_cup: ["hit", "hit", "heal"], shieldwall: ["wall", "any", "any"], the_standard: ["hit", "any", "any"], first_light: ANY, skirmish_line: ANY,
-  hammer_and_anvil: ["wall", "hit", "heal"], bloodied_ground: ["hit", "hit", "hit"], pyre_line: ["wall", "hit", "cast"], icefall: ["cast", "hit", "cast"],
-  storm_front: ["cast", "hit", "wall"], the_pack: ["hit", "hit", "hit"], toll_gate: ["wall", "hit", "hit"], the_stage: ["cast", "any", "wall"],
-  blood_oath: ["hit", "hit", "heal"], decoy: ["wall", "any", "any"], vigil: ["wall", "heal", "any"], the_wheel: ANY, the_mountain: ["hit", "wall", "any"],
-  the_whetstone: ANY, the_forge: ANY, the_long_winter: ANY, eye_of_the_storm: ["cast", "any", "any"], open_season: ANY, the_palisade: ["wall", "hit", "hit"],
+  neutral: ANY, heavy_line: ["hit", "wall", "any"], spur: ["hit", "hit", "hit"], hearth: ["wall", "hit", "any"], crossfire: ["hit", "hit", "wall"],
+  squall_line: ["hit", "hit", "wall"], wedge: ["wall", "hit", "hit"], the_shepherd: ["wall", "hit", "hit"], wellspring: ["cast", "any", "wall"],
+  shared_cup: ["any", "any", "heal"], shieldwall: ["wall", "any", "any"], the_standard: ["hit", "any", "any"], first_light: ANY, skirmish_line: ANY,
+  hammer_and_anvil: ["wall", "hit", "heal"], bloodied_ground: ["hit", "hit", "hit"], relay: ["hit", "hit", "wall"], icefall: ["cast", "hit", "cast"],
+  seesaw: ["cast", "cast", "wall"], the_pack: ["hit", "hit", "hit"], glass_and_stone: ["hit", "wall", "wall"], the_stage: ["cast", "any", "wall"],
+  lifeline: ["wall", "heal", "hit"], decoy: ["wall", "any", "any"], vigil: ["wall", "heal", "any"], the_wheel: ANY, the_mountain: ["hit", "wall", "any"],
+  the_whetstone: ANY, tidal: ANY, the_still_hour: ["cast", "cast", "cast"], the_hundred_hands: ["hit", "hit", "hit"], vanguard_and_rear: ["wall", "wall", "cast"], bannerman: ["any", "hit", "hit"],
   the_cathedral: ["cast", "any", "any"], the_covenant: ANY, twins: ["any", "any", "hit"],
 };
 /** How well each class fits a role (none named: 0). */

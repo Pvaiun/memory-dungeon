@@ -1926,7 +1926,7 @@
   {
    "id": "heavy_line_loader",
    "name": "Loader",
-   "text": "At fight start: the Hammer gains 7 Might.",
+   "text": "Each cast gives the Hammer 2 Might.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -1934,7 +1934,8 @@
    "reactions": [
     {
      "on": {
-      "event": "fight_start"
+      "event": "action_resolve",
+      "kind": "ability"
      },
      "do": [
       {
@@ -1944,7 +1945,7 @@
         "side": "allies",
         "seat": "hammer"
        },
-       "stacks": 7
+       "stacks": 2
       }
      ]
     }
@@ -2032,34 +2033,9 @@
    ]
   },
   {
-   "id": "hoarfrost_line_frost",
-   "name": "Frost",
-   "text": "Basic attacks add a Chill.",
-   "label": "buff",
-   "show": "sheet",
-   "stacking": "refresh",
-   "unremovable": true,
-   "reactions": [
-    {
-     "on": {
-      "event": "hit_lands",
-      "kind": "basic"
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "chill",
-       "to": "other",
-       "stacks": 1
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "id": "hoarfrost_line_breaker",
-   "name": "Breaker",
-   "text": "Basic attacks go to a Stunned foe first. Hits on Stunned foes deal double.",
+   "id": "crossfire_archer_a",
+   "name": "Archer",
+   "text": "Basic attacks go to the foe the other Archer last hit, and deal +20% to it.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2068,28 +2044,121 @@
     "rule": {
      "side": "foes",
      "where": {
-      "has": "stun"
-     },
-     "pick": "random"
-    },
-    "first": true
+      "has": "crossfire_mark_b"
+     }
+    }
    },
    "boosts": [
     {
-     "tag": "physical",
+     "tag": "basic",
      "pct": {
       "scale": [
        {
-        "ratio": 100,
+        "ratio": 20,
         "when": {
-         "has": "stun"
+         "has": "crossfire_mark_b"
         },
         "of": "target"
        }
       ]
      }
     }
+   ],
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "marker",
+       "status": "crossfire_mark_a",
+       "to": {
+        "side": "foes",
+        "pick": "all"
+       }
+      },
+      {
+       "op": "apply",
+       "status": "crossfire_mark_a",
+       "to": "other"
+      }
+     ]
+    }
    ]
+  },
+  {
+   "id": "crossfire_archer_b",
+   "name": "Archer",
+   "text": "Basic attacks go to the foe the other Archer last hit, and deal +20% to it.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "aim": {
+    "rule": {
+     "side": "foes",
+     "where": {
+      "has": "crossfire_mark_a"
+     }
+    }
+   },
+   "boosts": [
+    {
+     "tag": "basic",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 20,
+        "when": {
+         "has": "crossfire_mark_a"
+        },
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ],
+   "reactions": [
+    {
+     "on": {
+      "event": "hit_lands"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "marker",
+       "status": "crossfire_mark_b",
+       "to": {
+        "side": "foes",
+        "pick": "all"
+       }
+      },
+      {
+       "op": "apply",
+       "status": "crossfire_mark_b",
+       "to": "other"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "crossfire_mark_a",
+   "name": "Crossfire",
+   "text": "The first Archer's last target.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "refresh"
+  },
+  {
+   "id": "crossfire_mark_b",
+   "name": "Crossfire",
+   "text": "The second Archer's last target.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "refresh"
   },
   {
    "id": "squall_line_squall",
@@ -2132,9 +2201,9 @@
    }
   },
   {
-   "id": "hunting_party_marker",
-   "name": "Marker",
-   "text": "Basic attacks Mark their target, if no foe is Marked.",
+   "id": "wedge_point",
+   "name": "Point",
+   "text": "Marks the foe it last hit for the Flanks.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2142,20 +2211,21 @@
    "reactions": [
     {
      "on": {
-      "event": "hit_lands",
-      "kind": "basic"
-     },
-     "if": {
-      "side": "foes",
-      "where": {
-       "has": "marked"
-      },
-      "atMost": 0
+      "event": "hit_lands"
      },
      "do": [
+      {
+       "op": "remove",
+       "label": "marker",
+       "status": "wedge_mark",
+       "to": {
+        "side": "foes",
+        "pick": "all"
+       }
+      },
       {
        "op": "apply",
-       "status": "marked",
+       "status": "wedge_mark",
        "to": "other"
       }
      ]
@@ -2163,84 +2233,50 @@
    ]
   },
   {
-   "id": "hunting_party_chaser",
-   "name": "Chaser",
-   "text": "Everything it does ignores Taunt.",
+   "id": "wedge_flank",
+   "name": "Flank",
+   "text": "Basic attacks on the foe the Point last hit deal +30%.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "seek": "all"
-  },
-  {
-   "id": "thorn_hedge_warden",
-   "name": "Warden",
-   "text": "When the Anchor is hit, it heals 3% of the Warden's max HP.",
-   "label": "buff",
-   "show": "sheet",
-   "stacking": "refresh",
-   "unremovable": true,
-   "reactions": [
+   "boosts": [
     {
-     "on": {
-      "event": "hit_taken",
-      "whose": "team",
-      "seat": "anchor"
-     },
-     "do": [
-      {
-       "op": "heal",
-       "amount": {
-        "scale": [
-         {
-          "ratio": 0.03,
-          "stat": "max_hp",
-          "of": "holder"
-         }
-        ]
-       },
-       "to": {
-        "side": "allies",
-        "seat": "anchor"
+     "tag": "basic",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 30,
+        "when": {
+         "has": "wedge_mark"
+        },
+        "of": "target"
        }
-      }
-     ]
+      ]
+     }
     }
    ]
   },
   {
-   "id": "thorn_hedge_barb",
-   "name": "Barb",
-   "text": "A foe that hits the Anchor takes 5% of the Barb's Attack.",
+   "id": "wedge_mark",
+   "name": "Wedge",
+   "text": "The Point's last target.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "refresh"
+  },
+  {
+   "id": "the_shepherd_shepherd",
+   "name": "Shepherd",
+   "text": "Takes the hits meant for the ally with the lowest HP%.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "reactions": [
-    {
-     "on": {
-      "event": "hit_taken",
-      "whose": "team",
-      "seat": "anchor"
-     },
-     "do": [
-      {
-       "op": "damage",
-       "type": "none",
-       "amount": {
-        "scale": [
-         {
-          "ratio": 0.05,
-          "stat": "attack",
-          "of": "holder"
-         }
-        ]
-       },
-       "to": "other"
-      }
-     ]
-    }
-   ]
+   "cover": {
+    "share": 0,
+    "lowest": true
+   }
   },
   {
    "id": "wellspring_soloist",
@@ -2437,7 +2473,7 @@
   {
    "id": "skirmish_line",
    "name": "Skirmish line",
-   "text": "An ally that dodges gains a Shield of 10% of its max HP.",
+   "text": "An ally that dodges: its next basic attack comes at once.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2449,18 +2485,10 @@
      },
      "do": [
       {
-       "op": "apply",
-       "status": "shield",
-       "to": "holder",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.1,
-          "stat": "max_hp",
-          "of": "holder"
-         }
-        ]
-       }
+       "op": "cooldown",
+       "which": "basic",
+       "set": "ready",
+       "to": "holder"
       }
      ]
     }
@@ -2597,9 +2625,9 @@
    ]
   },
   {
-   "id": "pyre_line_keeper",
-   "name": "Keeper",
-   "text": "At fight start: Taunts and is Guarded. Foes that hit it gain 2 Burn.",
+   "id": "relay_runner",
+   "name": "Runner",
+   "text": "Every 3rd basic attack it lands: the Second's next basic attack comes at once.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2607,76 +2635,62 @@
    "reactions": [
     {
      "on": {
-      "event": "fight_start"
+      "event": "hit_lands",
+      "kind": "basic"
+     },
+     "if": {
+      "side": "self",
+      "where": {
+       "stacks": {
+        "status": "relay_count",
+        "atLeast": 2
+       }
+      }
      },
      "do": [
       {
-       "op": "apply",
-       "status": "taunt",
-       "to": "holder"
-      },
-      {
-       "op": "apply",
-       "status": "guard",
-       "to": "holder"
+       "op": "cooldown",
+       "which": "basic",
+       "set": "ready",
+       "to": {
+        "side": "allies",
+        "seat": "second"
+       }
       }
      ]
     },
     {
      "on": {
-      "event": "hit_taken"
+      "event": "hit_lands",
+      "kind": "basic"
      },
      "do": [
       {
        "op": "apply",
-       "status": "burn",
-       "to": "other",
-       "stacks": 2
+       "status": "relay_count",
+       "to": "holder",
+       "stacks": 1
       }
      ]
     }
    ]
   },
   {
-   "id": "pyre_line_torch",
-   "name": "Torch",
-   "text": "When a burning foe falls, its Burn passes to the foe with the most HP.",
+   "id": "relay_count",
+   "name": "RELAY",
+   "text": "Every 3rd basic attack it lands brings the Second's.",
    "label": "buff",
-   "show": "sheet",
-   "stacking": "refresh",
+   "show": "icon",
+   "stacking": "intensity",
    "unremovable": true,
-   "reactions": [
-    {
-     "on": {
-      "event": "status_ended",
-      "status": "burn",
-      "cause": [
-       "ko"
-      ],
-      "whose": "foe"
-     },
-     "split": "fire",
-     "do": [
-      {
-       "op": "apply",
-       "status": "burn",
-       "to": {
-        "side": "foes",
-        "pick": "highest",
-        "by": "hp"
-       },
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 1,
-          "amount": true
-         }
-        ]
-       }
-      }
-     ]
+   "cap": 3,
+   "trigger": {
+    "on": {
+     "event": "status_capped",
+     "status": "relay_count"
     }
-   ]
+   },
+   "drop": "all"
   },
   {
    "id": "icefall_rime",
@@ -2749,9 +2763,9 @@
    ]
   },
   {
-   "id": "storm_front_thunderhead",
-   "name": "Thunderhead",
-   "text": "Each cast: its cooldown is 10% shorter per foe it hit.",
+   "id": "seesaw_end_a",
+   "name": "End",
+   "text": "When it uses an ability, the other End's ability nearest to ready is ready.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2760,53 +2774,27 @@
     {
      "on": {
       "event": "action_resolve",
-      "kind": "ability"
+      "kind": "ability",
+      "counted": true
      },
      "do": [
       {
        "op": "cooldown",
-       "which": "event",
-       "set": {
-        "lessPct": {
-         "scale": [
-          {
-           "ratio": 10,
-           "count": "hit"
-          }
-         ]
-        }
-       },
-       "to": "holder"
+       "which": "soonest",
+       "set": "ready",
+       "to": {
+        "side": "allies",
+        "seat": "end_b"
+       }
       }
      ]
     }
    ]
   },
   {
-   "id": "storm_front_squall",
-   "name": "Squall",
-   "text": "Basic attacks also hit every other foe with Shock, for 33%.",
-   "label": "buff",
-   "show": "sheet",
-   "stacking": "refresh",
-   "unremovable": true,
-   "strike": {
-    "to": {
-     "side": "foes",
-     "pick": "all",
-     "where": {
-      "has": "shock"
-     },
-     "exclude": "targets"
-    },
-    "share": 33.333333333333336,
-    "kind": "bonus"
-   }
-  },
-  {
-   "id": "storm_front_rod",
-   "name": "Rod",
-   "text": "Foes that hit it gain 2 Shock.",
+   "id": "seesaw_end_b",
+   "name": "End",
+   "text": "When it uses an ability, the other End's ability nearest to ready is ready.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2814,14 +2802,19 @@
    "reactions": [
     {
      "on": {
-      "event": "hit_taken"
+      "event": "action_resolve",
+      "kind": "ability",
+      "counted": true
      },
      "do": [
       {
-       "op": "apply",
-       "status": "shock",
-       "to": "other",
-       "stacks": 2
+       "op": "cooldown",
+       "which": "soonest",
+       "set": "ready",
+       "to": {
+        "side": "allies",
+        "seat": "end_a"
+       }
       }
      ]
     }
@@ -2883,50 +2876,22 @@
    ]
   },
   {
-   "id": "toll_gate_gate",
-   "name": "Gate",
-   "text": "At fight start: Guarded.",
+   "id": "glass_and_stone_glass",
+   "name": "Glass",
+   "text": "Deals and takes double.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "reactions": [
+   "boosts": [
     {
-     "on": {
-      "event": "fight_start"
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "guard",
-       "to": "holder"
-      }
-     ]
+     "tag": "physical",
+     "pct": 100
     }
-   ]
-  },
-  {
-   "id": "toll_gate_collector",
-   "name": "Collector",
-   "text": "A foe that hits the Gate gains the statuses this unit's basic attacks add every swing.",
-   "label": "buff",
-   "show": "sheet",
-   "stacking": "refresh",
-   "unremovable": true,
-   "reactions": [
+   ],
+   "taken": [
     {
-     "on": {
-      "event": "hit_taken",
-      "whose": "team",
-      "seat": "gate"
-     },
-     "do": [
-      {
-       "op": "riders",
-       "plain": true,
-       "to": "other"
-      }
-     ]
+     "pct": 100
     }
    ]
   },
@@ -2966,7 +2931,7 @@
   {
    "id": "the_stage_well",
    "name": "Well",
-   "text": "At fight start: Taunts. When the Soloist casts, gains a Shield of 10% of its max HP.",
+   "text": "At fight start: Taunts. When the Soloist starts a cast: Guarded.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2986,7 +2951,7 @@
     },
     {
      "on": {
-      "event": "action_resolve",
+      "event": "action_start",
       "kind": "ability",
       "whose": "team",
       "seat": "soloist"
@@ -2994,60 +2959,31 @@
      "do": [
       {
        "op": "apply",
-       "status": "shield",
-       "to": "holder",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.1,
-          "stat": "max_hp",
-          "of": "holder"
-         }
-        ]
-       }
+       "status": "guard",
+       "to": "holder"
       }
      ]
     }
    ]
   },
   {
-   "id": "blood_oath_bleeder",
-   "name": "Bleeder",
-   "text": "Hits deal +50%. Loses 0.5% of max HP every tick, past any Shield.",
+   "id": "lifeline_anchor",
+   "name": "Anchor",
+   "text": "Takes 33% less: the Lifeline takes it instead.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "pulse": {
-    "every": 1,
-    "do": [
-     {
-      "op": "pay",
-      "hp": {
-       "scale": [
-        {
-         "ratio": 0.005,
-         "stat": "max_hp",
-         "of": "holder"
-        }
-       ]
-      },
-      "drain": true,
-      "to": "holder"
-     }
-    ]
-   },
-   "boosts": [
+   "taken": [
     {
-     "tag": "physical",
-     "pct": 50
+     "pct": -33
     }
    ]
   },
   {
-   "id": "blood_oath_drinker",
-   "name": "Drinker",
-   "text": "Lifesteal past full becomes a Shield.",
+   "id": "lifeline_lifeline",
+   "name": "Lifeline",
+   "text": "Takes a third of the damage the Anchor takes.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -3055,71 +2991,25 @@
    "reactions": [
     {
      "on": {
-      "event": "overhealed",
-      "status": "lifesteal"
+      "event": "damage_taken",
+      "whose": "team",
+      "seat": "anchor"
      },
-     "if": [
-      {
-       "unit": "owner",
-       "where": {
-        "lacks": "overheal_own"
-       }
-      }
-     ],
      "do": [
       {
-       "op": "apply",
-       "status": "shield",
-       "to": "holder",
-       "stacks": {
+       "op": "damage",
+       "type": "none",
+       "amount": {
         "scale": [
          {
-          "ratio": 1,
+          "ratio": 0.5,
           "amount": true
          }
         ]
-       }
+       },
+       "to": "holder"
       }
      ]
-    }
-   ]
-  },
-  {
-   "id": "blood_oath_donor",
-   "name": "Donor",
-   "text": "Its heals and Shields on the Bleeder are doubled.",
-   "label": "buff",
-   "show": "sheet",
-   "stacking": "refresh",
-   "unremovable": true,
-   "boosts": [
-    {
-     "tag": "healing",
-     "pct": {
-      "scale": [
-       {
-        "ratio": 100,
-        "when": {
-         "has": "blood_oath_bleeder"
-        },
-        "of": "target"
-       }
-      ]
-     }
-    },
-    {
-     "tag": "shield",
-     "pct": {
-      "scale": [
-       {
-        "ratio": 100,
-        "when": {
-         "has": "blood_oath_bleeder"
-        },
-        "of": "target"
-       }
-      ]
-     }
     }
    ]
   },
@@ -3647,295 +3537,9 @@
    ]
   },
   {
-   "id": "the_forge",
-   "name": "The forge",
-   "text": "While a foe burns: a Heat every 4 ticks.",
-   "label": "buff",
-   "show": "sheet",
-   "stacking": "refresh",
-   "unremovable": true,
-   "pulse": {
-    "every": 4,
-    "if": {
-     "side": "foes",
-     "where": {
-      "has": "burn"
-     }
-    },
-    "do": [
-     {
-      "op": "apply",
-      "status": "heat",
-      "to": "holder",
-      "stacks": 1
-     }
-    ]
-   }
-  },
-  {
-   "id": "the_forge_bellows",
-   "name": "The forge's bellows",
-   "text": "When an ally is Stunned or Silenced, the foe with the most Burn gains 7 Burn.",
-   "label": "buff",
-   "show": "sheet",
-   "stacking": "refresh",
-   "unremovable": true,
-   "party": true,
-   "reactions": [
-    {
-     "on": {
-      "event": "status_gained",
-      "status": "stun",
-      "whose": "team"
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "burn",
-       "to": {
-        "side": "foes",
-        "pick": "highest",
-        "by": {
-         "stacks": "burn"
-        }
-       },
-       "stacks": 7
-      }
-     ]
-    },
-    {
-     "on": {
-      "event": "status_gained",
-      "status": "silence",
-      "whose": "team"
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "burn",
-       "to": {
-        "side": "foes",
-        "pick": "highest",
-        "by": {
-         "stacks": "burn"
-        }
-       },
-       "stacks": 7
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "id": "the_long_winter",
-   "name": "The long winter",
-   "text": "On a shatter: every other foe gains a Chill, +1 per 2 Cascades (one per shatter, up to 10).",
-   "label": "buff",
-   "show": "sheet",
-   "stacking": "refresh",
-   "unremovable": true,
-   "party": true,
-   "reactions": [
-    {
-     "on": {
-      "event": "status_capped",
-      "status": "chill",
-      "whose": "foe"
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "chill",
-       "to": {
-        "side": "foes",
-        "pick": "all",
-        "exclude": "owner"
-       },
-       "stacks": {
-        "base": 1,
-        "scale": [
-         {
-          "ratio": 0.5,
-          "stacks": "cascade",
-          "of": "holder"
-         }
-        ]
-       },
-       "passed": true
-      }
-     ]
-    },
-    {
-     "on": {
-      "event": "status_capped",
-      "status": "chill",
-      "whose": "foe"
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "cascade",
-       "to": {
-        "side": "allies",
-        "pick": "all"
-       },
-       "stacks": 1
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "id": "eye_of_the_storm_bolt",
-   "name": "Bolt",
-   "text": "Abilities deal +3% per Shock the foes hold.",
-   "label": "buff",
-   "show": "sheet",
-   "stacking": "refresh",
-   "unremovable": true,
-   "boosts": [
-    {
-     "tag": "ability",
-     "pct": {
-      "scale": [
-       {
-        "ratio": 3,
-        "count": {
-         "side": "foes",
-         "stacks": "shock"
-        }
-       }
-      ]
-     }
-    }
-   ]
-  },
-  {
-   "id": "eye_of_the_storm",
-   "name": "Eye of the storm",
-   "text": "Every ally's basic attacks add 2 Shock.",
-   "label": "buff",
-   "show": "sheet",
-   "stacking": "refresh",
-   "unremovable": true,
-   "reactions": [
-    {
-     "on": {
-      "event": "hit_lands",
-      "kind": "basic"
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "shock",
-       "to": "other",
-       "stacks": 2
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "id": "open_season",
-   "name": "Open season",
-   "text": "A foe is always Marked: the one with the least HP. At fight start and when a Marked foe falls, every ally attacks at once.",
-   "label": "buff",
-   "show": "sheet",
-   "stacking": "refresh",
-   "unremovable": true,
-   "party": true,
-   "reactions": [
-    {
-     "on": {
-      "event": "status_ended",
-      "status": "marked",
-      "cause": [
-       "ko"
-      ],
-      "whose": "foe"
-     },
-     "do": [
-      {
-       "op": "cooldown",
-       "which": "basic",
-       "set": "ready",
-       "to": {
-        "side": "allies",
-        "pick": "all"
-       }
-      }
-     ]
-    },
-    {
-     "on": {
-      "event": "fight_start"
-     },
-     "if": {
-      "side": "foes",
-      "where": {
-       "has": "marked"
-      },
-      "atMost": 0
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "marked",
-       "to": {
-        "side": "foes",
-        "pick": "lowest",
-        "by": "hp"
-       }
-      }
-     ]
-    },
-    {
-     "on": {
-      "event": "status_ended",
-      "status": "marked",
-      "whose": "foe"
-     },
-     "if": {
-      "side": "foes",
-      "where": {
-       "has": "marked"
-      },
-      "atMost": 0
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "marked",
-       "to": {
-        "side": "foes",
-        "pick": "lowest",
-        "by": "hp"
-       }
-      }
-     ]
-    },
-    {
-     "on": {
-      "event": "fight_start"
-     },
-     "do": [
-      {
-       "op": "cooldown",
-       "which": "basic",
-       "set": "ready",
-       "to": {
-        "side": "allies",
-        "pick": "all"
-       }
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "id": "the_palisade_wall",
-   "name": "Wall",
-   "text": "Taunts all fight. Gains a Spite each time it's hit (up to 20).",
+   "id": "tidal",
+   "name": "Tidal",
+   "text": "Every 22 ticks the party turns. Surge: every ally Hasted, hits +20%. Ebb: every ally Guarded, 30% slower.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -3948,75 +3552,291 @@
      "do": [
       {
        "op": "apply",
-       "status": "taunt",
+       "status": "tidal_surge",
        "to": "holder"
-      }
-     ]
-    },
-    {
-     "on": {
-      "event": "status_ended",
-      "status": "taunt",
-      "cause": [
-       "expired",
-       "removed"
-      ]
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "taunt",
-       "to": "holder"
-      }
-     ]
-    },
-    {
-     "on": {
-      "event": "revived"
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "taunt",
-       "to": "holder"
-      }
-     ]
-    },
-    {
-     "on": {
-      "event": "hit_taken"
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "spite",
-       "to": "holder",
-       "stacks": 1
       }
      ]
     }
    ]
   },
   {
-   "id": "the_palisade_reaper",
-   "name": "Reaper",
-   "text": "Hits deal +4% per Spite on the Wall.",
+   "id": "tidal_surge",
+   "name": "SURGE",
+   "text": "Hits +20%.",
    "label": "buff",
-   "show": "sheet",
+   "show": "icon",
    "stacking": "refresh",
    "unremovable": true,
+   "duration": 22,
    "boosts": [
     {
      "tag": "physical",
-     "pct": {
+     "pct": 20
+    }
+   ],
+   "reactions": [
+    {
+     "on": {
+      "event": "status_gained",
+      "status": "tidal_surge"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "haste",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "status_ended",
+      "status": "tidal_surge",
+      "cause": [
+       "expired"
+      ]
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "tidal_ebb",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "tidal_ebb",
+   "name": "EBB",
+   "text": "30% slower.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "refresh",
+   "unremovable": true,
+   "duration": 22,
+   "stats": [
+    {
+     "stat": "attack_speed",
+     "flat": -30
+    },
+    {
+     "stat": "cooldown_reduction",
+     "flat": -30
+    },
+    {
+     "stat": "cast_time_reduction",
+     "flat": -30
+    }
+   ],
+   "reactions": [
+    {
+     "on": {
+      "event": "status_gained",
+      "status": "tidal_ebb"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "guard",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "status_ended",
+      "status": "tidal_ebb",
+      "cause": [
+       "expired"
+      ]
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "tidal_surge",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "the_still_hour",
+   "name": "The still hour",
+   "text": "Makes no basic attack.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "lockout": {
+    "covers": "basic"
+   }
+  },
+  {
+   "id": "the_hundred_hands",
+   "name": "The hundred hands",
+   "text": "Basic attacks deal 45% of the damage.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "boosts": [
+    {
+     "tag": "basic",
+     "pct": -55
+    }
+   ]
+  },
+  {
+   "id": "vanguard_and_rear_vanguard",
+   "name": "Vanguard",
+   "text": "Marks a Vanguard's seat, for the Rear.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true
+  },
+  {
+   "id": "vanguard_and_rear_rear",
+   "name": "Rear",
+   "text": "Can't be picked while both Vanguards stand.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "if": {
+      "side": "allies",
+      "where": {
+       "has": "vanguard_and_rear_vanguard"
+      },
+      "atLeast": 2
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "vanguard_and_rear_unseen",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "ko",
+      "whose": "ally",
+      "seat": "vanguard_a"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "vanguard_and_rear_unseen",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "ko",
+      "whose": "ally",
+      "seat": "vanguard_b"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "buff",
+       "status": "vanguard_and_rear_unseen",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived",
+      "whose": "ally"
+     },
+     "if": {
+      "side": "allies",
+      "where": {
+       "has": "vanguard_and_rear_vanguard"
+      },
+      "atLeast": 2
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "vanguard_and_rear_unseen",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "vanguard_and_rear_unseen",
+   "name": "UNSEEN",
+   "text": "Can't be picked.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "fizzle",
+   "stats": [
+    {
+     "stat": "forbidden",
+     "flat": 1
+    }
+   ]
+  },
+  {
+   "id": "bannerman_banner",
+   "name": "Banner",
+   "text": "Never acts.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "lockout": {
+    "covers": "all"
+   }
+  },
+  {
+   "id": "bannerman_bearer",
+   "name": "Bearer",
+   "text": "Gains the Banner's Attack and Defense.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "stats": [
+    {
+     "stat": "attack",
+     "flat": {
       "scale": [
        {
-        "ratio": 4,
-        "stacks": "spite",
-        "seat": "wall"
+        "ratio": 1,
+        "stat": "attack",
+        "seat": "banner"
        }
       ]
-     }
+     },
+     "live": true
+    },
+    {
+     "stat": "defense",
+     "flat": {
+      "scale": [
+       {
+        "ratio": 1,
+        "stat": "defense",
+        "seat": "banner"
+       }
+      ]
+     },
+     "live": true
     }
    ]
   },
@@ -4034,48 +3854,6 @@
       "first": true
      },
      "cooldown": -100
-    }
-   ]
-  },
-  {
-   "id": "the_cathedral_voice",
-   "name": "Voice",
-   "text": "MP it gains goes to the Soloist. When the Soloist casts: a Shield of 5% of its max HP.",
-   "label": "buff",
-   "show": "sheet",
-   "stacking": "refresh",
-   "unremovable": true,
-   "divert": {
-    "what": "mp",
-    "to": {
-     "side": "allies",
-     "seat": "soloist"
-    }
-   },
-   "reactions": [
-    {
-     "on": {
-      "event": "action_resolve",
-      "kind": "ability",
-      "whose": "team",
-      "seat": "soloist"
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "shield",
-       "to": "holder",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.05,
-          "stat": "max_hp",
-          "of": "holder"
-         }
-        ]
-       }
-      }
-     ]
     }
    ]
   },
@@ -4483,17 +4261,6 @@
    "show": "icon",
    "stacking": "intensity",
    "unremovable": true,
-   "cap": 10
-  },
-  {
-   "id": "cascade",
-   "name": "CASCADE",
-   "text": "One per shatter this fight.",
-   "label": "buff",
-   "show": "icon",
-   "stacking": "intensity",
-   "unremovable": true,
-   "oncePerEvent": true,
    "cap": 10
   },
   {
@@ -44281,7 +44048,7 @@
     {
      "id": "loader",
      "name": "Loader",
-     "text": "At fight start: the Hammer gains 7 Might.",
+     "text": "Each cast gives the Hammer 2 Might.",
      "layout": {
       "line": "back",
       "column": 2
@@ -44398,46 +44165,49 @@
    ]
   },
   {
-   "id": "hoarfrost_line",
-   "name": "Hoarfrost line",
-   "text": "Two lay frost; the third breaks what freezes.",
+   "id": "crossfire",
+   "name": "Crossfire",
+   "text": "Two shoot where the other just struck; one draws the eye.",
    "rarity": "common",
    "source": "unlock",
    "positions": [
     {
-     "id": "frost_a",
-     "name": "Frost",
-     "text": "Basic attacks add a Chill.",
+     "id": "archer_a",
+     "name": "Archer",
+     "text": "Basic attacks go to the foe the other Archer last hit, and deal +20% to it.",
      "layout": {
       "line": "front",
       "column": 0
      },
      "statuses": [
-      "hoarfrost_line_frost"
+      "crossfire_archer_a"
      ]
     },
     {
-     "id": "frost_b",
-     "name": "Frost",
-     "text": "Basic attacks add a Chill.",
+     "id": "archer_b",
+     "name": "Archer",
+     "text": "Basic attacks go to the foe the other Archer last hit, and deal +20% to it.",
      "layout": {
       "line": "middle",
       "column": 1
      },
      "statuses": [
-      "hoarfrost_line_frost"
+      "crossfire_archer_b"
      ]
     },
     {
-     "id": "breaker",
-     "name": "Breaker",
-     "text": "Basic attacks go to a Stunned foe first. Hits on Stunned foes deal double.",
+     "id": "spotter",
+     "name": "Spotter",
+     "text": "Draws far more.",
      "layout": {
       "line": "back",
       "column": 2
      },
-     "statuses": [
-      "hoarfrost_line_breaker"
+     "stats": [
+      {
+       "stat": "aggro",
+       "flat": 25
+      }
      ]
     }
    ]
@@ -44495,105 +44265,109 @@
    ]
   },
   {
-   "id": "hunting_party",
-   "name": "Hunting party",
-   "text": "One marks, one chases, one holds the line.",
+   "id": "wedge",
+   "name": "Wedge",
+   "text": "One drives in; two follow where it struck.",
    "rarity": "common",
    "source": "unlock",
    "positions": [
     {
-     "id": "marker",
-     "name": "Marker",
-     "text": "Basic attacks Mark their target, if no foe is Marked.",
+     "id": "point",
+     "name": "Point",
+     "text": "Draws far more.",
      "layout": {
       "line": "front",
       "column": 0
-     },
-     "statuses": [
-      "hunting_party_marker"
-     ]
-    },
-    {
-     "id": "chaser",
-     "name": "Chaser",
-     "text": "Everything it does ignores Taunt.",
-     "layout": {
-      "line": "middle",
-      "column": 1
-     },
-     "statuses": [
-      "hunting_party_chaser"
-     ]
-    },
-    {
-     "id": "warden",
-     "name": "Warden",
-     "text": "Draws far more. Defense up.",
-     "layout": {
-      "line": "back",
-      "column": 2
      },
      "stats": [
       {
        "stat": "aggro",
        "flat": 25
-      },
-      {
-       "stat": "defense",
-       "flat": 1250
       }
+     ],
+     "statuses": [
+      "wedge_point"
+     ]
+    },
+    {
+     "id": "flank_a",
+     "name": "Flank",
+     "text": "Basic attacks on the foe the Point last hit deal +30%.",
+     "layout": {
+      "line": "middle",
+      "column": 1
+     },
+     "statuses": [
+      "wedge_flank"
+     ]
+    },
+    {
+     "id": "flank_b",
+     "name": "Flank",
+     "text": "Basic attacks on the foe the Point last hit deal +30%.",
+     "layout": {
+      "line": "back",
+      "column": 2
+     },
+     "statuses": [
+      "wedge_flank"
      ]
     }
    ]
   },
   {
-   "id": "thorn_hedge",
-   "name": "Thorn hedge",
-   "text": "A thorned wall, and two who make it cost.",
+   "id": "the_shepherd",
+   "name": "The shepherd",
+   "text": "One stands over whoever is hurt most.",
    "rarity": "common",
    "source": "unlock",
    "positions": [
     {
-     "id": "anchor",
-     "name": "Anchor",
-     "text": "Draws far more. Thorns.",
+     "id": "shepherd",
+     "name": "Shepherd",
+     "text": "Takes the hits meant for the ally with the lowest HP%. Defense up.",
      "layout": {
       "line": "front",
       "column": 0
      },
      "stats": [
       {
-       "stat": "aggro",
-       "flat": 25
-      },
-      {
-       "stat": "thorns",
-       "flat": 150
+       "stat": "defense",
+       "flat": 1250
       }
+     ],
+     "statuses": [
+      "the_shepherd_shepherd"
      ]
     },
     {
-     "id": "warden",
-     "name": "Warden",
-     "text": "When the Anchor is hit, it heals 3% of the Warden's max HP.",
+     "id": "flock_a",
+     "name": "Flock",
+     "text": "Attack up.",
      "layout": {
       "line": "middle",
       "column": 1
      },
-     "statuses": [
-      "thorn_hedge_warden"
+     "stats": [
+      {
+       "stat": "attack",
+       "flat": 1250
+      }
      ]
     },
     {
-     "id": "barb",
-     "name": "Barb",
-     "text": "A foe that hits the Anchor takes 5% of the Barb's Attack.",
+     "id": "flock_b",
+     "name": "Flock",
+     "text": "Attack up.",
      "layout": {
       "line": "back",
       "column": 2
      },
-     "statuses": [
-      "thorn_hedge_barb"
+     "stats": [
+      {
+       "stat": "attack",
+       "flat": 1250
+      }
      ]
     }
    ]
@@ -44667,32 +44441,32 @@
    "source": "unlock",
    "positions": [
     {
-     "id": "drinker_a",
-     "name": "Drinker",
-     "text": "Lifesteal.",
+     "id": "cup_a",
+     "name": "Cup",
+     "text": "Heals on it are 20% bigger.",
      "layout": {
       "line": "front",
       "column": 0
      },
      "stats": [
       {
-       "stat": "lifesteal",
-       "flat": 10
+       "stat": "healing_received",
+       "flat": 20
       }
      ]
     },
     {
-     "id": "drinker_b",
-     "name": "Drinker",
-     "text": "Lifesteal.",
+     "id": "cup_b",
+     "name": "Cup",
+     "text": "Heals on it are 20% bigger.",
      "layout": {
       "line": "middle",
       "column": 1
      },
      "stats": [
       {
-       "stat": "lifesteal",
-       "flat": 10
+       "stat": "healing_received",
+       "flat": 20
       }
      ]
     },
@@ -44855,7 +44629,7 @@
   {
    "id": "skirmish_line",
    "name": "Skirmish line",
-   "text": "Three who'd rather not be hit. The party: An ally that dodges gains a Shield of 10% of its max HP.",
+   "text": "Three who'd rather not be hit. The party: An ally that dodges: its next basic attack comes at once.",
    "rarity": "common",
    "source": "unlock",
    "positions": [
@@ -45015,49 +44789,52 @@
    ]
   },
   {
-   "id": "pyre_line",
-   "name": "Pyre line",
-   "text": "The fire outlives whatever it's burning.",
+   "id": "relay",
+   "name": "Relay",
+   "text": "One runs, one follows the run, one holds the ground.",
    "rarity": "rare",
    "source": "unlock",
    "positions": [
     {
-     "id": "keeper",
-     "name": "Keeper",
-     "text": "At fight start: Taunts and is Guarded. Foes that hit it gain 2 Burn.",
+     "id": "runner",
+     "name": "Runner",
+     "text": "Basic attacks 30% faster. Every 3rd basic attack it lands: the Second's next basic attack comes at once.",
      "layout": {
       "line": "front",
       "column": 0
      },
-     "statuses": [
-      "pyre_line_keeper"
-     ]
-    },
-    {
-     "id": "stoker",
-     "name": "Stoker",
-     "text": "Basic attacks 33% faster.",
-     "layout": {
-      "line": "middle",
-      "column": 1
-     },
      "stats": [
       {
        "stat": "attack_speed",
-       "flat": 33
+       "flat": 30
       }
+     ],
+     "statuses": [
+      "relay_runner"
      ]
     },
     {
-     "id": "torch",
-     "name": "Torch",
-     "text": "When a burning foe falls, its Burn passes to the foe with the most HP.",
+     "id": "second",
+     "name": "Second",
+     "text": "Nothing.",
+     "layout": {
+      "line": "middle",
+      "column": 1
+     }
+    },
+    {
+     "id": "anchor",
+     "name": "Anchor",
+     "text": "Draws far more.",
      "layout": {
       "line": "back",
       "column": 2
      },
-     "statuses": [
-      "pyre_line_torch"
+     "stats": [
+      {
+       "stat": "aggro",
+       "flat": 25
+      }
      ]
     }
    ]
@@ -45108,40 +44885,40 @@
    ]
   },
   {
-   "id": "storm_front",
-   "name": "Storm front",
-   "text": "The wider the blow, the more it pays.",
+   "id": "seesaw",
+   "name": "Seesaw",
+   "text": "Each end's spell lifts the other's.",
    "rarity": "rare",
    "source": "unlock",
    "positions": [
     {
-     "id": "thunderhead",
-     "name": "Thunderhead",
-     "text": "Each cast: its cooldown is 10% shorter per foe it hit.",
+     "id": "end_a",
+     "name": "End",
+     "text": "When it uses an ability, the other End's ability nearest to ready is ready.",
      "layout": {
       "line": "front",
       "column": 0
      },
      "statuses": [
-      "storm_front_thunderhead"
+      "seesaw_end_a"
      ]
     },
     {
-     "id": "squall",
-     "name": "Squall",
-     "text": "Basic attacks also hit every other foe with Shock, for 33%.",
+     "id": "end_b",
+     "name": "End",
+     "text": "When it uses an ability, the other End's ability nearest to ready is ready.",
      "layout": {
       "line": "middle",
       "column": 1
      },
      "statuses": [
-      "storm_front_squall"
+      "seesaw_end_b"
      ]
     },
     {
-     "id": "rod",
-     "name": "Rod",
-     "text": "Draws far more. Foes that hit it gain 2 Shock.",
+     "id": "pivot",
+     "name": "Pivot",
+     "text": "Draws more.",
      "layout": {
       "line": "back",
       "column": 2
@@ -45149,11 +44926,8 @@
      "stats": [
       {
        "stat": "aggro",
-       "flat": 25
+       "flat": 13
       }
-     ],
-     "statuses": [
-      "storm_front_rod"
      ]
     }
    ]
@@ -45204,16 +44978,16 @@
    ]
   },
   {
-   "id": "toll_gate",
-   "name": "Toll gate",
-   "text": "Whoever strikes the Gate pays the toll.",
+   "id": "glass_and_stone",
+   "name": "Glass and stone",
+   "text": "One strikes like glass; two stand like stone.",
    "rarity": "rare",
    "source": "unlock",
    "positions": [
     {
-     "id": "gate",
-     "name": "Gate",
-     "text": "Draws far more. At fight start: Guarded.",
+     "id": "glass",
+     "name": "Glass",
+     "text": "Deals and takes double. Draws less.",
      "layout": {
       "line": "front",
       "column": 0
@@ -45221,35 +44995,41 @@
      "stats": [
       {
        "stat": "aggro",
-       "flat": 25
+       "flat": -13
       }
      ],
      "statuses": [
-      "toll_gate_gate"
+      "glass_and_stone_glass"
      ]
     },
     {
-     "id": "collector_a",
-     "name": "Collector",
-     "text": "A foe that hits the Gate gains the statuses this unit's basic attacks add every swing.",
+     "id": "stone_a",
+     "name": "Stone",
+     "text": "Draws far more.",
      "layout": {
       "line": "middle",
       "column": 1
      },
-     "statuses": [
-      "toll_gate_collector"
+     "stats": [
+      {
+       "stat": "aggro",
+       "flat": 25
+      }
      ]
     },
     {
-     "id": "collector_b",
-     "name": "Collector",
-     "text": "A foe that hits the Gate gains the statuses this unit's basic attacks add every swing.",
+     "id": "stone_b",
+     "name": "Stone",
+     "text": "Draws far more.",
      "layout": {
       "line": "back",
       "column": 2
      },
-     "statuses": [
-      "toll_gate_collector"
+     "stats": [
+      {
+       "stat": "aggro",
+       "flat": 25
+      }
      ]
     }
    ]
@@ -45291,7 +45071,7 @@
     {
      "id": "well",
      "name": "Well",
-     "text": "Draws far more. At fight start: Taunts. When the Soloist casts, gains a Shield of 10% of its max HP.",
+     "text": "Draws far more. At fight start: Taunts. When the Soloist starts a cast: Guarded.",
      "layout": {
       "line": "back",
       "column": 2
@@ -45309,52 +45089,55 @@
    ]
   },
   {
-   "id": "blood_oath",
-   "name": "Blood oath",
-   "text": "One bleeds for power, one drinks, one mends.",
+   "id": "lifeline",
+   "name": "Lifeline",
+   "text": "One is struck; one bears part of every blow; one is free.",
    "rarity": "rare",
    "source": "unlock",
    "positions": [
     {
-     "id": "bleeder",
-     "name": "Bleeder",
-     "text": "Hits deal +50%. Loses 0.5% of max HP every tick, past any Shield.",
+     "id": "anchor",
+     "name": "Anchor",
+     "text": "Draws far more. Takes 33% less: the Lifeline takes it instead.",
      "layout": {
       "line": "front",
       "column": 0
      },
+     "stats": [
+      {
+       "stat": "aggro",
+       "flat": 25
+      }
+     ],
      "statuses": [
-      "blood_oath_bleeder"
+      "lifeline_anchor"
      ]
     },
     {
-     "id": "drinker",
-     "name": "Drinker",
-     "text": "Lifesteal, high. Lifesteal past full becomes a Shield.",
+     "id": "lifeline",
+     "name": "Lifeline",
+     "text": "Takes a third of the damage the Anchor takes.",
      "layout": {
       "line": "middle",
       "column": 1
      },
-     "stats": [
-      {
-       "stat": "lifesteal",
-       "flat": 20
-      }
-     ],
      "statuses": [
-      "blood_oath_drinker"
+      "lifeline_lifeline"
      ]
     },
     {
-     "id": "donor",
-     "name": "Donor",
-     "text": "Its heals and Shields on the Bleeder are doubled.",
+     "id": "free",
+     "name": "Free",
+     "text": "Attack up two steps.",
      "layout": {
       "line": "back",
       "column": 2
      },
-     "statuses": [
-      "blood_oath_donor"
+     "stats": [
+      {
+       "stat": "attack",
+       "flat": 2500
+      }
      ]
     }
    ]
@@ -45582,15 +45365,15 @@
    ]
   },
   {
-   "id": "the_forge",
-   "name": "The forge",
-   "text": "A kept fire quickens the party. The party: While a foe burns, every ally gains a Heat every 4 ticks (5% faster each, up to 10). When an ally is Stunned or Silenced, the foe with the most Burn gains 7 Burn.",
+   "id": "tidal",
+   "name": "Tidal",
+   "text": "The party rises and falls together. The party: Every 22 ticks the party turns. Surge: every ally Hasted, hits +20%. Ebb: every ally Guarded, 30% slower.",
    "rarity": "legendary",
    "source": "unlock",
    "positions": [
     {
-     "id": "forgehand_a",
-     "name": "Forgehand",
+     "id": "wave_a",
+     "name": "Wave",
      "text": "Nothing.",
      "layout": {
       "line": "front",
@@ -45598,8 +45381,8 @@
      }
     },
     {
-     "id": "forgehand_b",
-     "name": "Forgehand",
+     "id": "wave_b",
+     "name": "Wave",
      "text": "Nothing.",
      "layout": {
       "line": "middle",
@@ -45607,8 +45390,8 @@
      }
     },
     {
-     "id": "forgehand_c",
-     "name": "Forgehand",
+     "id": "wave_c",
+     "name": "Wave",
      "text": "Nothing.",
      "layout": {
       "line": "back",
@@ -45617,20 +45400,19 @@
     }
    ],
    "statuses": [
-    "the_forge",
-    "the_forge_bellows"
+    "tidal"
    ]
   },
   {
-   "id": "the_long_winter",
-   "name": "The long winter",
-   "text": "Each shatter sends more cold down the line. The party: On a shatter: every other foe gains a Chill, +1 per 2 Cascades (one per shatter, up to 10).",
+   "id": "the_still_hour",
+   "name": "The still hour",
+   "text": "Nobody swings; every spell comes round. The party: No ally makes a basic attack. Abilities come round 40% faster.",
    "rarity": "legendary",
    "source": "unlock",
    "positions": [
     {
-     "id": "winterer_a",
-     "name": "Winterer",
+     "id": "watcher_a",
+     "name": "Watcher",
      "text": "Nothing.",
      "layout": {
       "line": "front",
@@ -45638,8 +45420,8 @@
      }
     },
     {
-     "id": "winterer_b",
-     "name": "Winterer",
+     "id": "watcher_b",
+     "name": "Watcher",
      "text": "Nothing.",
      "layout": {
       "line": "middle",
@@ -45647,8 +45429,8 @@
      }
     },
     {
-     "id": "winterer_c",
-     "name": "Winterer",
+     "id": "watcher_c",
+     "name": "Watcher",
      "text": "Nothing.",
      "layout": {
       "line": "back",
@@ -45656,132 +45438,189 @@
      }
     }
    ],
+   "stats": [
+    {
+     "stat": "cooldown_reduction",
+     "flat": 40
+    }
+   ],
    "statuses": [
-    "the_long_winter"
+    "the_still_hour"
    ]
   },
   {
-   "id": "eye_of_the_storm",
-   "name": "Eye of the storm",
-   "text": "The storm doesn't lift. The party: Every ally's basic attacks add 2 Shock.",
+   "id": "the_hundred_hands",
+   "name": "The hundred hands",
+   "text": "A blur of small blows. The party: Every ally's basic attacks come twice as often, for 45% of the damage.",
    "rarity": "legendary",
    "source": "unlock",
    "positions": [
     {
-     "id": "bolt",
-     "name": "Bolt",
-     "text": "Abilities deal +3% per Shock the foes hold.",
+     "id": "hand_a",
+     "name": "Hand",
+     "text": "Nothing.",
+     "layout": {
+      "line": "front",
+      "column": 0
+     }
+    },
+    {
+     "id": "hand_b",
+     "name": "Hand",
+     "text": "Nothing.",
+     "layout": {
+      "line": "middle",
+      "column": 1
+     }
+    },
+    {
+     "id": "hand_c",
+     "name": "Hand",
+     "text": "Nothing.",
+     "layout": {
+      "line": "back",
+      "column": 2
+     }
+    }
+   ],
+   "stats": [
+    {
+     "stat": "attack_speed",
+     "flat": 100
+    }
+   ],
+   "statuses": [
+    "the_hundred_hands"
+   ]
+  },
+  {
+   "id": "vanguard_and_rear",
+   "name": "Vanguard and rear",
+   "text": "Two in front, quick and loud; one unseen behind them.",
+   "rarity": "legendary",
+   "source": "unlock",
+   "positions": [
+    {
+     "id": "vanguard_a",
+     "name": "Vanguard",
+     "text": "Draws far more. Acts 25% faster.",
      "layout": {
       "line": "front",
       "column": 0
      },
+     "stats": [
+      {
+       "stat": "aggro",
+       "flat": 25
+      },
+      {
+       "stat": "attack_speed",
+       "flat": 25
+      },
+      {
+       "stat": "cooldown_reduction",
+       "flat": 25
+      },
+      {
+       "stat": "cast_time_reduction",
+       "flat": 25
+      }
+     ],
      "statuses": [
-      "eye_of_the_storm_bolt"
+      "vanguard_and_rear_vanguard"
      ]
     },
     {
-     "id": "squall_a",
-     "name": "Squall",
-     "text": "Nothing.",
+     "id": "vanguard_b",
+     "name": "Vanguard",
+     "text": "Draws far more. Acts 25% faster.",
      "layout": {
       "line": "middle",
       "column": 1
-     }
+     },
+     "stats": [
+      {
+       "stat": "aggro",
+       "flat": 25
+      },
+      {
+       "stat": "attack_speed",
+       "flat": 25
+      },
+      {
+       "stat": "cooldown_reduction",
+       "flat": 25
+      },
+      {
+       "stat": "cast_time_reduction",
+       "flat": 25
+      }
+     ],
+     "statuses": [
+      "vanguard_and_rear_vanguard"
+     ]
     },
     {
-     "id": "squall_b",
-     "name": "Squall",
-     "text": "Nothing.",
+     "id": "rear",
+     "name": "Rear",
+     "text": "Abilities come round 50% faster. Can't be picked while both Vanguards stand.",
      "layout": {
       "line": "back",
       "column": 2
-     }
+     },
+     "stats": [
+      {
+       "stat": "cooldown_reduction",
+       "flat": 50
+      }
+     ],
+     "statuses": [
+      "vanguard_and_rear_rear"
+     ]
     }
-   ],
-   "statuses": [
-    "eye_of_the_storm"
    ]
   },
   {
-   "id": "open_season",
-   "name": "Open season",
-   "text": "Every kill calls the weapons down again. The party: A foe is always Marked: the one with the least HP. At fight start and when a Marked foe falls, every ally attacks at once.",
+   "id": "bannerman",
+   "name": "Bannerman",
+   "text": "One carries the colours; the others fight under them.",
    "rarity": "legendary",
    "source": "unlock",
    "positions": [
     {
-     "id": "hunter_a",
-     "name": "Hunter",
-     "text": "Nothing.",
-     "layout": {
-      "line": "front",
-      "column": 0
-     }
-    },
-    {
-     "id": "hunter_b",
-     "name": "Hunter",
-     "text": "Nothing.",
-     "layout": {
-      "line": "middle",
-      "column": 1
-     }
-    },
-    {
-     "id": "hunter_c",
-     "name": "Hunter",
-     "text": "Nothing.",
-     "layout": {
-      "line": "back",
-      "column": 2
-     }
-    }
-   ],
-   "statuses": [
-    "open_season"
-   ]
-  },
-  {
-   "id": "the_palisade",
-   "name": "The palisade",
-   "text": "One is struck, two profit, more with every blow.",
-   "rarity": "legendary",
-   "source": "unlock",
-   "positions": [
-    {
-     "id": "wall",
-     "name": "Wall",
-     "text": "Taunts all fight. Gains a Spite each time it's hit (up to 20).",
+     "id": "banner",
+     "name": "Banner",
+     "text": "Never acts.",
      "layout": {
       "line": "front",
       "column": 0
      },
      "statuses": [
-      "the_palisade_wall"
+      "bannerman_banner"
      ]
     },
     {
-     "id": "reaper_a",
-     "name": "Reaper",
-     "text": "Hits deal +4% per Spite on the Wall.",
+     "id": "bearer_a",
+     "name": "Bearer",
+     "text": "Gains the Banner's Attack and Defense.",
      "layout": {
       "line": "middle",
       "column": 1
      },
      "statuses": [
-      "the_palisade_reaper"
+      "bannerman_bearer"
      ]
     },
     {
-     "id": "reaper_b",
-     "name": "Reaper",
-     "text": "Hits deal +4% per Spite on the Wall.",
+     "id": "bearer_b",
+     "name": "Bearer",
+     "text": "Gains the Banner's Attack and Defense.",
      "layout": {
       "line": "back",
       "column": 2
      },
      "statuses": [
-      "the_palisade_reaper"
+      "bannerman_bearer"
      ]
     }
    ]
@@ -45808,25 +45647,31 @@
     {
      "id": "voice_a",
      "name": "Voice",
-     "text": "MP it gains goes to the Soloist. When the Soloist casts: a Shield of 5% of its max HP.",
+     "text": "Draws more.",
      "layout": {
       "line": "middle",
       "column": 1
      },
-     "statuses": [
-      "the_cathedral_voice"
+     "stats": [
+      {
+       "stat": "aggro",
+       "flat": 13
+      }
      ]
     },
     {
      "id": "voice_b",
      "name": "Voice",
-     "text": "MP it gains goes to the Soloist. When the Soloist casts: a Shield of 5% of its max HP.",
+     "text": "Draws more.",
      "layout": {
       "line": "back",
       "column": 2
      },
-     "statuses": [
-      "the_cathedral_voice"
+     "stats": [
+      {
+       "stat": "aggro",
+       "flat": 13
+      }
      ]
     }
    ]
