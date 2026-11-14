@@ -1,6 +1,6 @@
 /** The rare formations. Each adds itself to kit.ts's lists. */
 import type { StatusT, UnitCondT } from "../../../src/schema.js";
-import { EV, FEW_TICKS, NO_MARK, SO_OFTEN, TAUNTS_ALL_FIGHT, TO, against, atStart, give, hits, ofAmount, on, react, reactIf, share } from "../pieces/kit.js";
+import { EV, FEW_TICKS, NO_MARK, SO_OFTEN, TAUNTS_ALL_FIGHT, TO, against, atStart, count, countAt, give, hits, ofAmount, on, react, reactIf, share, swingNow } from "../pieces/kit.js";
 import { OVERHEAL } from "../pieces/shared.js";
 import { COOLDOWN, FLAT_STACKS } from "../scale.js";
 import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTEAL_HIGH, NOTHING, STRONGER_HEALS, THIRD_FASTER, THIRD_SOONER, THORNS, add, critSt, formation, held, st, thrice, twice } from "./kit.js";
@@ -40,18 +40,21 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
   );
 }
 {
-  const torch = "When a burning foe falls, its Burn passes to the foe with the most HP.";
+  // The Runner's landed swings counted to three; the third brings the Second's next basic attack at once.
+  const runner = "Basic attacks 30% faster. Every 3rd basic attack it lands: the Second's next basic attack comes at once.";
   add(
-    formation("Pyre line", "rare", "The fire outlives whatever it's burning.", [
-      { name: "Keeper", text: `At fight start: Taunts and is Guarded. Foes that hit it gain ${FLAT_STACKS.few} Burn.`, statuses: ["pyre_line_keeper"] },
-      { name: "Stoker", text: "Basic attacks 33% faster.", stats: [THIRD_FASTER] },
-      { name: "Torch", text: torch, statuses: ["pyre_line_torch"] },
+    formation("Relay", "rare", "One runs, one follows the run, one holds the ground.", [
+      { name: "Runner", text: runner, stats: [{ stat: "attack_speed", flat: 30 }], statuses: ["relay_runner"] },
+      { name: "Second", text: NOTHING },
+      { name: "Anchor", text: "Draws far more.", stats: [st("aggro", 2)] },
     ]),
     [
-      held("pyre_line_keeper", "Keeper", `At fight start: Taunts and is Guarded. Foes that hit it gain ${FLAT_STACKS.few} Burn.`, { reactions: [atStart(give("taunt"), give("guard")), react(EV.struck, give("burn", "other", FLAT_STACKS.few))] }),
-      held("pyre_line_torch", "Torch", torch, { reactions: [{ on: on("status_ended", { status: "burn", cause: ["ko"], whose: "foe" }), split: "fire", do: [give("burn", { side: "foes", pick: "highest", by: "hp" }, ofAmount())] }] }),
+      held("relay_runner", "Runner", "Every 3rd basic attack it lands: the Second's next basic attack comes at once.", {
+        reactions: [reactIf(EV.basic, { side: "self", where: countAt("relay_count", 2) }, swingNow(TO.seat("second"))), react(EV.basic, give("relay_count", "holder", 1))],
+      }),
+      count("relay_count", "RELAY", "Every 3rd basic attack it lands brings the Second's.", 3),
     ],
-    "Bonfire 2 ●●●, Hunt ●● ⚙ fuse (key)",
+    "Cuts 2 ●●, Landslide ● ◆ speed, the heavy swing",
   );
 }
 {
@@ -71,19 +74,19 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
   );
 }
 {
-  const thunder = "Each cast: its cooldown is 10% shorter per foe it hit.", squall = "Basic attacks also hit every other foe with Shock, for 33%.";
+  // Each End, casting, readies the other End's ability nearest to ready (a counted cast, not a free repeat).
+  const end = "When it uses an ability, the other End's ability nearest to ready is ready.";
+  const endOf = (me: "a" | "b") => held(`seesaw_end_${me}`, "End", end, {
+    reactions: [react(on("action_resolve", { kind: "ability", counted: true }), { op: "cooldown", which: "soonest", set: "ready", to: TO.seat(`end_${me === "a" ? "b" : "a"}`) })],
+  });
   add(
-    formation("Storm front", "rare", "The wider the blow, the more it pays.", [
-      { name: "Thunderhead", text: thunder, statuses: ["storm_front_thunderhead"] },
-      { name: "Squall", text: squall, statuses: ["storm_front_squall"] },
-      { name: "Rod", text: `Draws far more. Foes that hit it gain ${FLAT_STACKS.few} Shock.`, stats: [st("aggro", 2)], statuses: ["storm_front_rod"] },
+    formation("Seesaw", "rare", "Each end's spell lifts the other's.", [
+      { name: "End", text: end, statuses: ["seesaw_end_a"] },
+      { name: "End", text: end, statuses: ["seesaw_end_b"] },
+      { name: "Pivot", text: "Draws more.", stats: [st("aggro", 1)] },
     ]),
-    [
-      held("storm_front_thunderhead", "Thunderhead", thunder, { reactions: [react(EV.cast, { op: "cooldown", which: "event", set: { lessPct: { scale: [{ ratio: 10, count: "hit" }] } }, to: "holder" })] }),
-      held("storm_front_squall", "Squall", squall, { strike: { to: { side: "foes", pick: "all", where: { has: "shock" }, exclude: "targets" }, share: 100 / 3, kind: "bonus" } }),
-      held("storm_front_rod", "Rod", `Foes that hit it gain ${FLAT_STACKS.few} Shock.`, { reactions: [react(EV.struck, give("shock", "other", FLAT_STACKS.few))] }),
-    ],
-    "Storm 2 ●●●, Barrage ●●, Toll ●● ⚙ resonance (key), red rain (half), goad (half)",
+    [endOf("a"), endOf("b")],
+    "Barrage 2 ●●, Storm ● ◆ tempo",
   );
 }
 {
@@ -101,23 +104,19 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
   );
 }
 {
-  // Each Collector lays what its swing carries on the foe that hit the Gate (two from one source add it once: the engine's).
-  const collector = "A foe that hits the Gate gains the statuses this unit's basic attacks add every swing.";
+  const glass = "Deals and takes double. Draws less.";
   add(
-    formation("Toll gate", "rare", "Whoever strikes the Gate pays the toll.", [
-      { name: "Gate", text: "Draws far more. At fight start: Guarded.", stats: [st("aggro", 2)], statuses: ["toll_gate_gate"] },
-      ...twice({ name: "Collector", text: collector, statuses: ["toll_gate_collector"] }),
+    formation("Glass and stone", "rare", "One strikes like glass; two stand like stone.", [
+      { name: "Glass", text: glass, stats: [st("aggro", -1)], statuses: ["glass_and_stone_glass"] },
+      ...twice({ name: "Stone", text: "Draws far more.", stats: [st("aggro", 2)] }),
     ]),
-    [
-      held("toll_gate_gate", "Gate", "At fight start: Guarded.", { reactions: [atStart(give("guard"))] }),
-      held("toll_gate_collector", "Collector", collector, { reactions: [react(on("hit_taken", { whose: "team", seat: "gate" }), { op: "riders", plain: true, to: "other" })] }),
-    ],
-    "Toll 2 ●●●, Snap ●●, Storm ●●, Cuts ●●, Bonfire ● ⚙ frozen gate (key), goad (half), red rain (half)",
+    [held("glass_and_stone_glass", "Glass", "Deals and takes double.", { boosts: hits(100), taken: [{ pct: 100 }] })],
+    "Toll 2 ●●, Hunt ●● ◆ draw, the glass",
   );
 }
 {
   const soloist = "Abilities deal +50%. Each cast by another ally takes 33% off its cooldowns.";
-  const well = "At fight start: Taunts. When the Soloist casts, gains a Shield of 10% of its max HP.";
+  const well = "At fight start: Taunts. When the Soloist starts a cast: Guarded.";
   add(
     formation("The stage", "rare", "The others' casts bring the Soloist's spells round.", [
       { name: "Soloist", text: soloist, statuses: ["the_stage_soloist"] },
@@ -126,30 +125,25 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
     ]),
     [
       held("the_stage_soloist", "Soloist", soloist, { mods: [{ damage: 50 }], reactions: [react(on("action_resolve", { kind: "ability", whose: "ally" }), { op: "cooldown", which: "abilities", set: { times: 67 }, to: "holder" })] }),
-      held("the_stage_well", "Well", well, { reactions: [atStart(give("taunt")), react(on("action_resolve", { kind: "ability", whose: "team", seat: "soloist" }), give("shield", "holder", share(0.1, "max_hp")))] }),
+      held("the_stage_well", "Well", well, { reactions: [atStart(give("taunt")), react(on("action_start", { kind: "ability", whose: "team", seat: "soloist" }), give("guard", "holder"))] }),
     ],
     "Barrage 2 ●●●, Toll ●",
   );
 }
 {
-  // HP lost, not paid: a drawback (a drain fires no hp_paid), so no Shield soaks it and nothing reads it as a price.
-  const bleeder = "Hits deal +50%. Loses 0.5% of max HP every tick, past any Shield.";
-  const drinker = "Lifesteal past full becomes a Shield.", donor = "Its heals and Shields on the Bleeder are doubled.";
-  const onBleeder: UnitCondT = { has: "blood_oath_bleeder" };
+  // The Anchor takes a third less; the Lifeline takes that third, as damage of no type from itself (half of what the Anchor took).
+  const anchor = "Draws far more. Takes 33% less: the Lifeline takes it instead.", lifeline = "Takes a third of the damage the Anchor takes.";
   add(
-    formation("Blood oath", "rare", "One bleeds for power, one drinks, one mends.", [
-      { name: "Bleeder", text: bleeder, statuses: ["blood_oath_bleeder"] },
-      { name: "Drinker", text: `Lifesteal, high. ${drinker}`, stats: [LIFESTEAL_HIGH], statuses: ["blood_oath_drinker"] },
-      { name: "Donor", text: donor, statuses: ["blood_oath_donor"] },
+    formation("Lifeline", "rare", "One is struck; one bears part of every blow; one is free.", [
+      { name: "Anchor", text: anchor, stats: [st("aggro", 2)], statuses: ["lifeline_anchor"] },
+      { name: "Lifeline", text: lifeline, statuses: ["lifeline_lifeline"] },
+      { name: "Free", text: "Attack up two steps.", stats: [st("attack", 2)] },
     ]),
     [
-      held("blood_oath_bleeder", "Bleeder", bleeder, { pulse: { every: 1, do: [{ op: "pay", hp: share(0.005, "max_hp"), drain: true, to: "holder" }] }, boosts: hits(50) }),
-      held("blood_oath_drinker", "Drinker", drinker, {
-        reactions: [reactIf(on("overhealed", { status: "lifesteal" }), [{ unit: "owner", where: { lacks: OVERHEAL.own } }], give("shield", "holder", ofAmount(1)))],
-      }),
-      held("blood_oath_donor", "Donor", donor, { boosts: [{ tag: "healing", pct: against(100, onBleeder) }, { tag: "shield", pct: against(100, onBleeder) }] }),
+      held("lifeline_anchor", "Anchor", "Takes 33% less: the Lifeline takes it instead.", { taken: [{ pct: -33 }] }),
+      held("lifeline_lifeline", "Lifeline", lifeline, { reactions: [react(on("damage_taken", { whose: "team", seat: "anchor" }), { op: "damage", type: "none", amount: ofAmount(0.5), to: "holder" })] }),
     ],
-    "Pact 2 ●●●, Landslide ● ⚙ brink (key), red stone (key)",
+    "Toll 2 ●●, Pact ●● ◆ the anchor, the net",
   );
 }
 {

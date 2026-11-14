@@ -23,13 +23,13 @@ export { type BuildId, type Rung, type Act, type Slot, type Training, type Gear,
 
 const LANDSLIDE: [string, string, string] = ["heavy_line", "hammer_and_anvil", "the_mountain"];
 const CUTS: [string, string, string] = ["spur", "bloodied_ground", "the_whetstone"];
-const BONFIRE: [string, string, string] = ["hearth", "pyre_line", "the_forge"];
-const SNAP: [string, string, string] = ["hoarfrost_line", "icefall", "the_long_winter"];
-const STORM: [string, string, string] = ["squall_line", "storm_front", "eye_of_the_storm"];
-const HUNT: [string, string, string] = ["hunting_party", "the_pack", "open_season"];
-const TOLL: [string, string, string] = ["thorn_hedge", "toll_gate", "the_palisade"];
+const BONFIRE: [string, string, string] = ["hearth", "relay", "tidal"];
+const SNAP: [string, string, string] = ["crossfire", "icefall", "the_still_hour"];
+const STORM: [string, string, string] = ["squall_line", "seesaw", "the_hundred_hands"];
+const HUNT: [string, string, string] = ["wedge", "the_pack", "vanguard_and_rear"];
+const TOLL: [string, string, string] = ["the_shepherd", "glass_and_stone", "bannerman"];
 const BARRAGE: [string, string, string] = ["wellspring", "the_stage", "the_cathedral"];
-const PACT: [string, string, string] = ["shared_cup", "blood_oath", "the_covenant"];
+const PACT: [string, string, string] = ["shared_cup", "lifeline", "the_covenant"];
 
 /** Each build's formation at each rung: its common, rare and legendary formation (the rogue's calibration rosters use them by act too). */
 export const FORMS: Record<BuildId, [string, string, string]> = {

@@ -6,17 +6,22 @@ The loot is made from the nine builds. Every piece, formation, upgrade and mythi
 
 ## Rarity
 
-Rarity is specificity, not size: how far a piece bends the game. A rare can be bigger than a legendary for the build it serves. Power by act comes from the offers (later acts roll more rares and legendaries), never from per-act versions of a piece.
+Rarity is specificity, not size: how far a piece bends the game, and above rare how strange it is. A rare can be bigger than a legendary for the build it serves. Later acts roll more rares and legendaries, so act III is stranger, not stronger; there are no per-act versions of a piece.
 
 | Rarity | What it is | Stats | Effect |
 | --- | --- | --- | --- |
-| **Common** | Fills a slot and carries a build's first stats. | One step as the standard, two on a rich kind (`KIND_BUDGET`). A special stat at medium is a step, at high two. | None. |
-| **Uncommon** | A build's first rung: a simple effect most runs find. | Two steps as the standard, one on a lean kind, three on a rich one. | One simple, general effect on a thread (a rider, a start-of-fight status, a reaction), with no condition on a class, sized so it's seen the first time it fires. Each one helps two to four builds a little. |
-| **Rare** | A build's second rung: specific, often conditional. | Three steps as the standard, two on a lean kind, four on a rich one, beside the effect. | One designed effect, worth a lot to one or two builds and little elsewhere. |
-| **Legendary** | A build's far end, or an exotic: it bends a rule. | Four steps as the standard, three on a lean kind, five on a rich one, beside the effect. With the mythic, the only rarity where a special stat is high. | A rule change, a new trigger or a payoff that grows. Strong where it fits; where it's strong in many places, it gives something up. |
-| **Mythic** | Rewrites one class, past any one ability. | A legendary's, beside the effect. | One per class (see Mythics). |
+| **Common** | Fills a slot with a stat line of its own. | One step as the standard, two on a rich kind (`KIND_BUDGET`). A special stat at medium is a step, at high two. | None. |
+| **Uncommon** | A simple effect most runs find. | Two steps as the standard, one on a lean kind, three on a rich one. | One simple effect (a rider, a start-of-fight status, a reaction, a condition on the party), sized so it's seen when it fires. |
+| **Rare** | Specific: often conditional, sometimes exotic. | Three steps as the standard, two on a lean kind, four on a rich one, beside the effect. | One designed effect, worth a lot somewhere and little elsewhere. |
+| **Legendary** | Strange: it bends a rule, often an exotic. | A rare's, beside the effect. With the mythic, the only rarity where a special stat is high. | A rule change, a new trigger or a payoff that grows. Strong where it fits; where it's strong in many places, it gives something up. |
+| **Mythic** | Spiky: its class's trunk taken to an extreme. | A rare's, beside the effect. | One per class (see Mythics). |
 
-Every piece carries stats at every rarity, each rarity up to the legendary carries a step more than the last, and higher rarity is generally better: a rare, legendary or mythic carries its steps beside its effect, not instead of it. A weapon kind's budget word moves the ladder a step down or up (*Core set: rules and vocabulary*, Weapons); armor, offhands and amulets take the standard ladder. A piece's stats lean to its kind's profile, the signature first. The content checks every piece against its budget as the pack is built. The stats are shown as values beside the piece's name; the card's words are its swing trade and its effect, never its stats.
+Every piece carries stats at every rarity: a rare a step more than an uncommon, an uncommon more than a common (on most kinds), and a legendary or a mythic a rare's. Above rare, rarity is strangeness, not power: a legendary is often more exotic than a rare, never strictly better. A rare, legendary or mythic carries its steps beside its effect, not instead of it. A weapon kind's budget word moves the ladder a step down or up (*Core set: rules and vocabulary*, Weapons); armor, offhands and amulets take the standard ladder. **A step down:** a piece may carry one stat a step below nothing for one step more elsewhere, as the swing trade does; one at most, and on a stat its wearers would miss. The content checks every piece against its budget as the pack is built (all the misses at once; `LOOT_LAX=1` builds anyway, for a pass under way). The stats are shown as values beside the piece's name; the card's words are its swing trade and its effect, never its stats.
+
+**The loot's three shapes,** among rares and legendaries; they overlap:
+- **Exotic:** belongs to no build; powerful and strange alone, worth seeing for itself, and a run may build around it. Its Serves line is `exotic`, naming no build. About a quarter.
+- **Conditional:** weak until a set-up the party makes (a pairing of units, a seat, a stat, another piece, a class's own kit), strong when it's there, and worth its stats while it isn't. Never a situation only the foes supply: in play, pieces that waited on what the foes did were never taken. A piece can be conditional through its stats alone. Its Serves line says `conditional`. About a third.
+- **On a deeper thread:** a build's piece that doesn't name its keyword (its status, or the Shield for Landslide). About a third of a build's pieces name it; the rest spread across its threads (*Gear design: the builds*). Where two or three builds share a thread, the thread is the door between them; a door is never a card that names two keywords.
 
 - **No random affixes,** at any rarity: every piece is fixed. Tempering turns a piece into one of the next rarity, in the same kind, that fits the same wearer.
 - **No piece says what it's for.** Which builds, rungs and engines an item serves is the designer's: its Serves line, gathered as `SERVED` (`content/core-set/pieces/index.ts`), never on a card. Offers aren't aimed by it yet: the first playtest rolls them without it.
@@ -83,9 +88,11 @@ The first values a new piece is written in. They aren't limits: no balancing rul
 
 ## Commons and uncommons by kind
 
-Commons are written from a rule per kind, not designed one by one: they lean on the kind's signature stat and its common stats, the kind's profile (*Core set: rules and vocabulary*, Weapons and Gear), and carry nothing beyond their stats. Uncommons carry a road's first step, a thread rather than a piece: a status on a swing, a start-of-fight status, a reaction, sized to be seen the first time it fires. Every wearer of a kind reads its signature stat, so a kind's pieces suit each of its two or three wearers.
+**Every piece's stats are its own,** chosen for what the piece is, never from the build its effect serves: there's no on-brand or off-brand. Each kind keeps a **leaning** (its stats below), and a piece of the kind carries at most half its steps on it; the rest are whatever that piece would carry. A piece's stats and its effect may pull different ways, and a kind's pieces don't all pull one way, so a class's gear doesn't reinforce its own lane.
 
-| Kind | Signature | Commons lean |
+**Commons** are written by a rule, since one or two steps can't be a story: each common draws its own stat line from the whole stat list (a single step, or a pair with a step down; a pair on a rich kind), at most one stat from its kind's leaning, and no two commons in the stock carry the same line. Their names say what they are, and they carry nothing beyond their stats. **Uncommons** carry a simple effect, sized to be seen when it fires.
+
+| Kind | Leaning | And |
 | --- | --- | --- |
 | Dagger | Crit chance | Attack speed, Evasion, Crit damage, Attack |
 | Fist weapons | Double strike | Attack speed, Lifesteal, Evasion |
@@ -116,7 +123,7 @@ Commons are written from a rule per kind, not designed one by one: they lean on 
 | Trophy | Crit damage | Crit chance, Attack, Accuracy, Defense |
 | Bell | Attack speed | Attack, Evasion, Double strike, MP regen |
 | Cloak | Evasion | Attack, Crit chance, Attack speed, Defense |
-| Amulet | (everyone) | one each for a stat a road starts from: HP, Defense, Attack, Crit chance, MP regen, Evasion, Lifesteal, Thorns, Double strike, Cooldown |
+| Amulet | (everyone) | no leaning: every amulet's stats are its own |
 
 ## Writing cards
 
@@ -135,14 +142,14 @@ Every card the player reads (an ability, a passive, an upgrade, a piece, a mythi
 ## Words the cards lean on
 
 - **Marked** takes the party's basic attacks and its abilities aimed at a random foe (*Core set: rules and vocabulary*). A piece or a seat Marks only while no foe is Marked, so gear never adds a second Mark.
-- **Affliction:** Burn, Chill, Shock, Bleed and Sunder, the debuffs that build in stacks. The Hexer's Malison does a fifth more for each different one a foe holds.
-- **Six counters,** each a status of its own with one meaning, shown as an icon with a number and kept for the fight unless its card spends it, each capped (`pieces/shared.ts`). One event adds one stack to a holder, however many of its cards count it. The card says what a stack is worth, in a bracket.
-  - **Cuts:** hits landed (The whetstone keeps one count for the party).
+- **Affliction:** Burn, Chill, Shock, Bleed and Sunder, the debuffs that build in stacks. A card that reaches every status road at once says "affliction" ("a random affliction", "each affliction the foe holds"), never two of the five. The Hexer's Malison does a fifth more for each different one a foe holds.
+- **Bewildered, Brittle, Fixated, Owed:** the pass's four statuses (*Core set: rules and vocabulary*): a foe's next swing on its own side, the next hit taken a crit, a foe's picks held on one unit, and hits on a unit that wait and land at once.
+- **Five counters,** each a status of its own with one meaning, shown as an icon with a number and kept for the fight unless its card spends it, each capped (`pieces/shared.ts`). One event adds one stack to a holder, however many of its cards count it. The card says what a stack is worth, in a bracket.
+  - **Edge:** hits landed (Thousandth cut; The whetstone keeps one count for the party).
   - **Heat:** given by a card on its trigger; each stack is speed in everything.
   - **Spite:** hits taken.
   - **Wrath:** hits taken by the unit the card names; its holder's next basic attack deals more for each, and spends them.
   - **Crescendo:** one more cast of the same ability this fight, counted ability by ability; that ability deals, heals and adds more for each.
-  - **Cascade:** shatters, anyone's; the party's count.
 - **A hit** is damage from a basic attack or an ability. Damage sent back, Thorns and a status's own damage aren't hits, and a foe felled by them isn't anyone's killing blow.
 - **An extra strike** is Double strike's second strike. A leap, a ring, a volley's arrow and Arc's second hit are extra hits with names of their own, and nothing that waits on extra strikes or basic attacks hears them.
 - **"Strikes with its weapon":** a hit of its basic attack's size out of turn, in whatever shape its basic attacks have, carrying what the swing carries. It isn't a basic attack.
@@ -181,8 +188,8 @@ Every card the player reads (an ability, a passive, an upgrade, a piece, a mythi
 
 Rules that hold for every piece, version and mythic. None of them is about balance.
 - **Every uncommon carries an effect.** A special stat alone is a common's step.
-- **Every piece carries its kind's budget of steps** at its rarity, a rare's or legendary's beside its effect; a piece may step along the swing trade, which its swing's values show. A stat that shapes a swing (half as often, twice as often) counts no step.
-- **A mythic carries a legendary's steps,** checked as any piece's are, its stats leaning to its kind's or armor's profile, the signature first, and to what its class and its effect read.
+- **Every piece carries its kind's budget of steps** at its rarity, a rare's beside its effect at rare, legendary and mythic; a piece may step along the swing trade, which its swing's values show, and may give one stat up a step for one more elsewhere. A stat that shapes a swing (half as often, twice as often) counts no step.
+- **A mythic carries a rare's steps,** checked as any piece's are, its stats chosen for it.
 - **A revive** brings its ally back with every ability on full cooldown, whoever revives, unless the Valkyrie's Einherjar version or a piece says otherwise.
 - **Paying HP** means losing that much HP at once. It isn't damage, so no Shield soaks it and nothing reacts to it, and it can't take the payer below 1 HP.
 - **Each status or counter is defined once,** for every piece that uses it (the counters in `pieces/shared.ts`; Marked in the vocabulary).
@@ -190,7 +197,10 @@ Rules that hold for every piece, version and mythic. None of them is about balan
 
 ## Formations
 
-A formation is a shape: three seats and, if it wants, rules of its own. It gives a squad an identity. It joins the web of builds through seat roles that many builds share (*Gear design: the builds*, The web), and through an identity of its own, which is what makes it more than a sum of seats. Neutral is the start, and there are 35 more: 13 common, 12 rare and 10 legendary. Every road has one at each rarity; four commons are shared ground, and four more carry an engine, the net or an exotic. No build needs one.
+A formation is a shape and a rhythm: three seats and, if it wants, rules of its own: who is struck, who acts often, who hits hard, who waits, and what the party trades for it. It joins the web of builds through seat roles that many builds share (*Gear design: the builds*, The web), and through an identity of its own, which is what makes it more than a sum of seats. Neutral is the start, and there are 35 more: 13 common, 12 rare and 10 legendary. No build needs one.
+- **Nine are themed to one build's keyword,** one a road, kept as they were with no price added: Hearth (Bonfire), Squall line (the Storm), Wellspring (Barrage), Bloodied ground (Thousand Cuts), Icefall (Cold Snap), The pack (the Hunt), Hammer and anvil (the Toll and Landslide), The mountain (Landslide), The covenant (Blood Pact; its price in HP is its identity).
+- **The other 26 are shapes** any party can read and has to work out. What keeps a keyword formation from being the only pick is the shapes around it, as strong in their own way: each has a seat or a rule that changes a fight as much as a keyword formation's best seat. A shape carries a cost only where the cost is its identity (the Glass that takes double, the Banner that never acts).
+- **No formation makes a build strong the moment it's seated,** and a one-build formation is never fixed by adding another build's keyword: a formation with several keywords is worse than one with one.
 
 **What a formation may be.** A range, not a menu: any formation takes what its shape needs.
 - **What a seat can change** about the unit in it: stats and special stats; statuses, at the start or on a trigger; how the unit acts (what it aims at, how fast it acts, what it waits for); what its hits carry; how it reacts. A seat can also do nothing.
@@ -207,30 +217,32 @@ A formation is a shape: three seats and, if it wants, rules of its own. It gives
 Every ability and passive has three upgrades: a **power step** and two **versions** (A and B), 64 abilities and passives in all.
 - **The power step** is plain, more of the same: two fifths more of an amount or stacks, one cooldown word shorter, or one rung down the MP ladder.
 - **The versions** are designed for that ability, with no formula across abilities. What matters is how the two differ, and either can change whom the ability aims at and when it fires, not only its numbers. A version stands on its own against the base, and the power step lands on whichever version is taken. No version copies a piece: where a version and a piece share a thread, they do it differently.
+- **Reorienting versions:** about two of each class's three abilities have a version that points the ability at another job (one of the class's other identities, or a direction it doesn't have yet), not another flavour of its own. They needn't turn the same way, and the kit still reads as the class's own: a trunk and three identities, each with at least two versions.
+- **No passive holds its class to one lane:** a passive that works only inside one lane (its own Shield, its Burn, its shatters, being struck, its crits into Bleed, itself below half, its Shock) has a version that works outside it.
 - **Training.** The power step and a version are two separate trainings, in either order. A fully trained class is eight trainings, plus learning the abilities it didn't start with, and no run trains everyone fully. A training opportunity offers three choices. Where a run's training happens is in *Core set: the rogue mode*.
 
 ## Mythics
 
-One per class, shown in crimson and offered in the boss boons that open acts II and III. Each fits one class, in the slot named, and reaches past any one ability. Each carries a legendary's stats beside its effect, so it's never a downgrade for the stats it replaces. It pulls toward the class's roads, and a unit wears one at most. A mythic is found and can be taken off; an upgrade is trained and changes one ability or the passive. None repeats a piece or a version. What each one does is its card text, in `upgrades/mythics.ts`.
+One per class, shown in crimson and offered in the boss boons that open acts II and III. Each fits one class, in the slot named, and reaches past any one ability. **Each is spiky:** it takes one thing on its class's trunk, what every build of the class does, to an extreme that changes how the fight plays, never only a bigger number and never a job the class's builds can't support. Some pay a cost, only where the cost is the identity (the wall that can't be mended, the glass dagger that is perfect until it's touched). A mythic comes from a boss and a run can't aim for it, so it should be good for the unit that gets it; the kiss-and-curse turns belong to the versions, which a player chooses. Each carries a rare's stats beside its effect, chosen for it. A unit wears one at most. A mythic is found and can be taken off; an upgrade is trained and changes one ability or the passive. None repeats a piece or a version. What each one does is its card text, in `upgrades/mythics.ts`.
 
-| Class | Mythic | Slot | Pulls toward |
+| Class | Mythic | Slot | The spike, and its cost |
 | --- | --- | --- | --- |
-| Knight | Horn of the keep | offhand (horn) | Barrage, the Toll |
-| Cleric | Halo of the saint | amulet | Blood Pact |
-| Ranger | Huntmaster's quiver | armor (leather) | the Hunt |
-| Bramble knight | Heartwood mail | armor (mail) | the Toll, Thousand Cuts |
-| Hoplite | The last wall | offhand (round shield) | the Toll, Landslide |
-| Paladin | Writ of judgement | offhand (relic) | the Hunt, Bonfire, Landslide |
-| Valkyrie | Stormspear | weapon (a spear's swing) | the Storm, the Hunt |
-| Bard | Metronome | offhand (bell) | Thousand Cuts, Barrage, the Storm |
-| Hexer | The witch-blade | weapon | Cold Snap, Bonfire, the Storm |
-| Monk | Ember palms | weapon | Bonfire, Thousand Cuts |
-| Assassin | Night's edge | armor | the Hunt |
-| Vampire | The chalice | offhand | Blood Pact, Barrage |
-| Pyromancer | Crown of embers | amulet | Bonfire |
-| Frostweaver | Glacier's heart | armor | Cold Snap |
-| Stormcaller | Eye of the tempest | weapon | the Storm |
-| Geomancer | Mountain's crown | amulet | Landslide |
+| Knight | Banner of the last keep | armor (plate) | max HP doubled; healing on it halved |
+| Cleric | The saint's last breath | amulet | Last rites all fight; never healed above 30% HP |
+| Ranger | The long watch | armor (leather) | basic attacks stay on one foe until it falls, each harder; no cost |
+| Bramble knight | Heart of the briar | armor (plate) | its Thorns on every foe when hit; no cost |
+| Hoplite | The last shove | offhand (round shield) | Othismos twice as often, no wind-up; basic attacks half as often again |
+| Paladin | Scales of the judge | amulet | Judgement triple; half on a foe with neither buff nor debuff |
+| Valkyrie | Valhalla's spear | weapon (spear) | each Gale spear readies Skyfall; no cost |
+| Bard | The grand chord | offhand (bell) | its three songs cast as one, when the slowest is ready |
+| Hexer | The witch's cauldron | offhand (tome) | Malison ready on each new affliction; its mana is the brake |
+| Monk | Thousand-palm wraps | weapon (fist) | every basic attack strikes twice; no cost |
+| Assassin | The unseen blade | armor (leather) | every hit crits until it's first hit |
+| Vampire | The crimson crown | amulet | healing past full raises max HP; no cost |
+| Pyromancer | The pyre-heart | amulet | Pyre doubles its target's Burn; no cost |
+| Frostweaver | Heart of the deep winter | armor (robes) | each shatter readies a free Frost lance; the Chill to rebuild is the brake |
+| Stormcaller | Eye of the gale | weapon (fist) | Thunderstorm lasts all fight; no cost |
+| Geomancer | Bedrock heart | amulet | every hit crits while its Shield holds; no cost |
 
 ## Levers held back for balance
 

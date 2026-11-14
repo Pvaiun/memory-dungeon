@@ -148,28 +148,28 @@ Damage resolves in this order:
 
 ### Weapons
 
-Twelve kinds, each a speed, hands and three words: a swing, a scaling and a budget (`KIND_WORDS` in `scale.ts`). Every class uses two kinds, at most three classes use a kind, two classes share at most one kind, and every class has a one-handed kind. There's no melee or ranged: the kinds are there for different speeds, different swings and the fantasy. Each kind's interval is in `KIND_SPEED`: fast is under 7.5 ticks, slow over 10.5.
+Twelve kinds, each a speed, hands and three words: a swing, a scaling and a budget (`KIND_WORDS` in `scale.ts`). Every class uses three kinds, at least one of them one-handed, and a kind has three to five wearers. There's no melee or ranged: the kinds are there for different speeds, different swings and the fantasy. Each kind's interval is in `KIND_SPEED`: fast is under 7.5 ticks, slow over 10.5.
 
 - **Swing:** how hard the kind hits per tick at the reference Attack: light, full or heavy (`SWING_POWER`). A swing's size per blow follows its interval, so a fast kind hits for less per blow and a slow one for more.
-- **Scaling:** what share of that swing is the wearer's Attack: base-heavy, even or Attack-heavy (`SWING_SCALING`). A base-heavy swing works for any wearer; an Attack-heavy one turns the wearer's own Attack into damage and rewards stacking it. Attack is never the signature of an Attack-heavy kind, so the Attack a sword or great weapon carries feeds the wearer's abilities rather than cancelling against its own swing.
+- **Scaling:** what share of that swing is the wearer's Attack: base-heavy, even or Attack-heavy (`SWING_SCALING`). A base-heavy swing works for any wearer; an Attack-heavy one turns the wearer's own Attack into damage and rewards stacking it. Attack is never the leaning of an Attack-heavy kind, so the Attack a sword or great weapon carries feeds the wearer's abilities rather than cancelling against its own swing.
 - **Budget:** how many stat steps the kind's pieces carry at each rarity: lean, standard or rich (`KIND_BUDGET`). A kind pays for its swing in budget or the other way round; a two-hander takes both sides, being worth a weapon and an offhand.
-- **Signature and commons.** Each kind has a signature stat every wearer reads, and a few common stats its pieces lean to; a piece of a kind is relevant to every class that can wear it.
+- **Leaning.** Each kind has a leaning: a few stats its commons draw on (*Gear design: the loot*, Commons and uncommons by kind). Every other piece's stats are its own, at most half of them on the leaning, so a kind's pieces don't all pull one way.
 - **Within a kind,** the words are the default. A piece may step along the trade (a heavy piece swings harder for a step fewer, a light one lighter for a step more: `SWING_TRADE`), take another scaling, or swing from another stat (the Heartsplitter's max HP), and its card says so. Rarity buys stats and effects, never the swing. Every piece carries stats at every rarity.
 
-| Weapon | Speed | Hands | Swing | Scaling | Budget | Signature | Classes |
+| Weapon | Speed | Hands | Swing | Scaling | Budget | Leaning | Classes |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Dagger | Fast | One | Light | Attack-heavy | Standard | Crit chance | Ranger, Assassin |
+| Dagger | Fast | One | Light | Attack-heavy | Standard | Crit chance | Ranger, Assassin, Bard, Hexer |
 | Fist weapons (knuckles, claws, cestus) | Fast | One | Light | Even | Standard | Double strike | Monk, Vampire, Stormcaller |
-| Wand | Fast | One | Light | Base-heavy | Rich | Cooldown | Bard, Hexer, Pyromancer |
-| Sword | Medium | One | Full | Even | Standard | Attack | Knight, Hexer, Valkyrie |
-| Spear | Medium | One | Full | Even | Standard | Aggro | Hoplite, Valkyrie, Monk |
-| Axe | Medium | One | Heavy | Attack-heavy | Lean | Lifesteal | Vampire, Assassin |
-| Bow | Medium | Two | Heavy | Attack-heavy | Standard | Crit damage | Ranger, Bard |
-| Rune sword | Slow | One | Full | Base-heavy | Standard | MP regen | Frostweaver, Stormcaller |
-| Hammer | Slow | One | Heavy | Base-heavy | Lean | Defense | Knight, Bramble knight, Geomancer |
-| Mace | Slow | One | Light | Base-heavy | Rich | HP | Cleric, Paladin, Bramble knight |
-| Staff | Slow | Two | Light | Base-heavy | Rich | Cast speed | Cleric, Pyromancer, Frostweaver |
-| Great weapon (greataxe, maul, pike, scythe) | Slow | Two | Heavy | Even | Rich | Attack | Hoplite, Paladin, Geomancer |
+| Wand | Fast | One | Light | Base-heavy | Rich | Cooldown | Cleric, Bard, Hexer, Pyromancer |
+| Sword | Medium | One | Full | Even | Standard | Attack | Knight, Hoplite, Paladin, Valkyrie, Hexer |
+| Spear | Medium | One | Full | Even | Standard | Aggro | Knight, Hoplite, Valkyrie, Monk, Frostweaver |
+| Axe | Medium | One | Heavy | Attack-heavy | Lean | Lifesteal | Ranger, Assassin, Vampire, Geomancer |
+| Bow | Medium | Two | Heavy | Attack-heavy | Standard | Crit damage | Ranger, Bard, Assassin |
+| Rune sword | Slow | One | Full | Base-heavy | Standard | MP regen | Valkyrie, Vampire, Frostweaver, Stormcaller |
+| Hammer | Slow | One | Heavy | Base-heavy | Lean | Defense | Knight, Bramble knight, Stormcaller, Geomancer |
+| Mace | Slow | One | Light | Base-heavy | Rich | HP | Cleric, Bramble knight, Paladin, Pyromancer |
+| Staff | Slow | Two | Light | Base-heavy | Rich | Cast speed | Cleric, Monk, Pyromancer, Frostweaver |
+| Great weapon (greataxe, maul, pike, scythe) | Slow | Two | Heavy | Even | Rich | Attack | Bramble knight, Hoplite, Paladin, Geomancer |
 
 The axe and the hammer are the great weapon's one-handed cousins. A second kind changes basic attacks: a Knight's hammer hits like a falling hill without the Attack the Knight lacks, and its sword grows with the Attack it carries. Passives that work on basic attacks keep working. The interface shows a weapon's damage per tick for its holder beside its speed and scaling, so two kinds' swings compare.
 
@@ -231,11 +231,11 @@ The Fundamental pieces were chosen for how they interact: pieces that answer, un
 
 ## Vocabulary: statuses
 
-The vocabulary is 22 statuses, 10 special stats and 6 effects. The pieces add six counters (*Gear design: the loot*).
+The vocabulary is 26 statuses, 10 special stats and 6 effects. The pieces add five counters (*Gear design: the loot*).
 
 | Kind | Fundamental | Specialist | Enemy-only | Total |
 | --- | --- | --- | --- | --- |
-| Statuses | 10 | 10 | 2 | 22 |
+| Statuses | 10 | 14 | 2 | 26 |
 | Special stats | 1 | 9 | 0 | 10 |
 | Effects | 3 | 3 | 0 | 6 |
 
@@ -263,15 +263,21 @@ Ten staples make the Fundamental base, each useful from a single application. Th
 | Rot | Specialist | Receives less healing; Shields are unaffected. Refresh. |
 | Clarity | Specialist | Regen for mana: restores a share of its holder's max MP on a pulse, for a set time. Refresh. Cast on oneself or an ally. |
 | Aegis | Specialist | Blocks the next damage above a set share of max HP, from any source, then ends. Checked after mitigation, before Shields. Fizzle. Small hits pass; one big one doesn't. |
+| Bewildered | Specialist | A debuff on a foe: its next basic attack strikes a random unit of its own side, then it ends (alone, it strikes a foe as usual). It stops nothing it doesn't show. |
+| Brittle | Specialist | A debuff: the next hit its holder takes is a crit, then it ends. A crit the party sets up. |
+| Fixated | Specialist | A debuff on a foe: its basic attacks, and its abilities aimed at a random foe, pick the unit that fixated it while that unit can be picked, for a set time (`STATUS.fixated`); a Taunt still forces the pick. A Taunt on one foe. Refresh. |
+| Owed | Specialist | A marker on a unit whose piece owes its hits: the damage of each hit, after Defense, waits on the icon, adding up, and lands all at once a set time after the first (`OWED`), as damage of no type that a Shield present then soaks. |
 | Doom | Enemy-only | A visible countdown; at zero its holder takes untyped damage of a large share of its max HP, so a unit at full HP survives it and a hurt one doesn't. Fizzle. Cleanse removes it; Shield and Aegis soak it. |
 | Bulwark | Enemy-only | Starts with a stack count, and every hit its holder takes removes one. At zero its holder is Stunned and takes double damage for a while, then Bulwark refills. |
 
-**Buffs and debuffs.** Every status is either a buff or a debuff. Cleanse removes debuffs, Dispel removes buffs, and "with a buff" or "with a debuff" in a target phrase means these lists. Hidden is a buff, but it can't be removed. Taunt and Bulwark are ordinary buffs that Dispel can remove.
+**Buffs and debuffs.** Every status but Owed is either a buff or a debuff. Cleanse removes debuffs, Dispel removes buffs, and "with a buff" or "with a debuff" in a target phrase means these lists. Hidden is a buff, but it can't be removed. Taunt and Bulwark are ordinary buffs that Dispel can remove.
 
 | Kind | Statuses |
 | --- | --- |
 | Buff | Regen, Shield, Might, Guard, Haste, Taunt, Hidden, Clarity, Aegis, Bulwark |
-| Debuff | Bleed, Weaken, Stun, Slow, Burn, Chill, Shock, Marked, Sunder, Silence, Rot, Doom |
+| Debuff | Bleed, Weaken, Stun, Slow, Burn, Chill, Shock, Marked, Sunder, Silence, Rot, Doom, Bewildered, Brittle, Fixated |
+
+Owed is a marker, neither: nothing lifts it but its coming due. **An affliction** is one of the five debuffs that stack on a foe: Burn, Chill, Shock, Bleed and Sunder. A card that reaches every status road at once says "affliction", never two of the five.
 
 ## Vocabulary: special stats and effects
 
@@ -330,29 +336,29 @@ Built up and kept up: Burn and Bleed for damage, Chill for control (its once-app
 The four slots and who wears what. What each rarity carries, and the rules for pieces, formations, upgrades and mythics, are in *Gear design: the loot*; the philosophy behind them, in *Gear design: philosophy*.
 
 - **Slots.** Each unit wears a weapon, armor, an offhand and an amulet. Gear is fixed, never generated, and any number of units can wear copies of the same piece. A class arrives with the plain weapon of its first one-handed kind, and its other slots start empty. Slots have no job: any kind of effect can sit in any slot, and only weapons carry behaviour of their own (a speed, a swing and hands).
-- **Who wears what.** A class wears only its own kinds: two weapon kinds, one or two armor types (Plate, Mail, Leather, Robes) and two of the thirteen offhand kinds. Amulets fit everyone. Weapon and offhand kinds follow the same rules: two or three wearers a kind, two kinds a class, two classes share at most one kind of a slot, and every class has a one-handed weapon kind, so it can always hold an offhand. Every wearer of a kind reads its signature stat, so every piece of a kind is relevant to every class that can wear it. Armor types stay loot groups by weight. A kind's name says who can hold it, not what its pieces do. *Core set: classes* gives each class's kinds; `npx tsx tools/gear-slots.ts` checks the rules.
+- **Who wears what.** A class wears only its own kinds: three weapon kinds, one or two armor types (Plate, Mail, Leather, Robes; two for twelve classes of sixteen) and three of the thirteen offhand kinds, picked by its fantasy and identities. Amulets fit everyone. Weapon and offhand kinds follow the same rules: three to five wearers a kind, three kinds a class, and every class has a one-handed weapon kind, so it can always hold an offhand. With that much overlap, a class's loot is partly its own. Armor types stay loot groups by weight. A kind's name says who can hold it, not what its pieces do. *Core set: classes* gives each class's kinds; `npx tsx tools/gear-slots.ts` checks the rules.
 - **Two-handers.** The bow, the great weapon and the staff take both hands, so the offhand stays empty under one: a unit can't hold both, and in the rogue mode a two-hander going on sends the offhand to the bag. A two-hander's pieces are meant to be worth a weapon and an offhand.
 - **Weapons.** A weapon's kind sets its speed, its swing, scaling and budget words and its hands, as in the weapon table; recovery is the same for every weapon. Each weapon has a damage, a scaling ratio and a scaling stat: usually Attack, another stat on a few pieces. Damage is per hit and relative within the kind: a fast kind hits for less per swing, a slow kind for more. Weapon damage feeds basic attacks only; abilities scale as written.
 - **Offhand kinds.** An offhand has no swing, so a kind is its stat profile, its flavour and who shares it.
 
-| Offhand | Signature | Classes |
+| Offhand | Leaning | Classes |
 | --- | --- | --- |
-| Kite shield | Defense | Knight, Paladin, Geomancer |
+| Kite shield | Defense | Knight, Paladin, Geomancer, Frostweaver |
 | Round shield | HP | Hoplite, Bramble knight, Valkyrie |
-| Horn | Aggro | Knight, Hoplite |
-| Totem | Thorns | Bramble knight, Stormcaller |
-| Relic | MP regen | Cleric, Paladin |
-| Lantern | Cast speed | Cleric, Pyromancer |
+| Horn | Aggro | Knight, Hoplite, Ranger, Valkyrie |
+| Totem | Thorns | Bramble knight, Stormcaller, Hexer, Pyromancer |
+| Relic | MP regen | Cleric, Paladin, Monk, Vampire |
+| Lantern | Cast speed | Cleric, Pyromancer, Paladin |
 | Tome | Cooldown | Bard, Hexer, Frostweaver |
-| Orb | MP | Pyromancer, Frostweaver |
-| Idol | Siphon | Hexer, Vampire |
-| Vial | Lifesteal | Vampire, Assassin |
-| Trophy | Crit damage | Ranger, Assassin, Geomancer |
+| Orb | MP | Pyromancer, Frostweaver, Stormcaller |
+| Idol | Siphon | Hexer, Vampire, Bramble knight, Geomancer |
+| Vial | Lifesteal | Vampire, Assassin, Cleric, Bard |
+| Trophy | Crit damage | Knight, Ranger, Assassin, Geomancer |
 | Bell | Attack speed | Bard, Monk, Stormcaller |
-| Cloak | Evasion | Valkyrie, Monk, Ranger |
+| Cloak | Evasion | Valkyrie, Monk, Ranger, Hoplite, Assassin |
 
 - **Rarity:** common, uncommon, rare, legendary and mythic. A **mythic** fits one class, in any slot and whatever its kind (a mythic weapon can have its own speed, swing and hands), and a unit wears one at most.
-- **What gear carries.** The stats every unit has, the ten special stats (the speed stats included), and effects. Stat steps are +1 or +2 (`STEP`, `HP_STEP`, `AGGRO_STEP`, `MP_REGEN_STEP`), with no half-steps. Special stats on gear are medium, or high on a legendary or a mythic, never low. Every piece carries stats at every rarity: a weapon its kind's budget, every other slot the standard one (`KIND_BUDGET`), a rare's, legendary's or mythic's steps beside its effect; a mythic carries a legendary's. A stat that matches a weapon's scaling stat counts twice, since it raises the weapon's own damage too.
+- **What gear carries.** The stats every unit has, the ten special stats (the speed stats included), and effects. Stat steps are +1 or +2 (`STEP`, `HP_STEP`, `AGGRO_STEP`, `MP_REGEN_STEP`), with no half-steps; a piece may carry one stat a step down (−1) for one step more elsewhere. Special stats on gear are medium, or high on a legendary or a mythic, never low. Every piece carries stats at every rarity: a weapon its kind's budget, every other slot the standard one (`KIND_BUDGET`), a rare's, legendary's or mythic's steps beside its effect; a legendary and a mythic carry a rare's. A piece's stats are its own, not its kind's. A stat that matches a weapon's scaling stat counts twice, since it raises the weapon's own damage too.
 
 ## Formations
 

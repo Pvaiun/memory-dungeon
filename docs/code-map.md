@@ -136,6 +136,7 @@ tools/                       the Node command lines; each header says how to run
   piece-check.ts             does every item do what its card says?
   gear-slots.ts              the gear slots' counts: who wears which kinds
   loot-list.ts               today's loot as one line per item: its cards, and the builds it was tagged for
+  loot-count.ts              the loot's shapes counted, one measure for a pass's before and after: repeated effect shapes, exotics, conditional pieces, keyword share per build, keyword formations; and pairs of pieces one class can wear together whose cards share a sentence
   smoke.ts                   npm run smoke: the documents' own test trios
   dungeon.ts                 npm run dungeon: print one run
   study.ts                   npm run study: run a combat study
@@ -161,8 +162,8 @@ content/
     pack.ts                  assembles the pack
     build.ts                 npm run content: validates and writes the pack
     pieces/                  the 322 pieces, in six shares
-      kit.ts                 the helpers pieces, formations and upgrades are written with; the swing trade, the budget check, the plain card of a piece that is only its stats, and the Serves line's reader
-      shared.ts              statuses several files use: the six counters and the order of healing past full (Marked is the vocabulary's)
+      kit.ts                 the helpers pieces, formations and upgrades are written with; the swing trade, the step down, the budget check (every miss gathered), the plain card of a piece that is only its stats, and the Serves line's reader
+      shared.ts              statuses several files use: the five counters, the afflictions, and the order of healing past full (Marked is the vocabulary's)
       weapons-1.ts           dagger, fist weapons, wand, sword, spear and axe: 60 pieces
       weapons-2.ts           bow, rune sword, hammer, mace, staff and great weapon: 53 pieces
       armor.ts               plate, mail, leather and robes: 55 pieces

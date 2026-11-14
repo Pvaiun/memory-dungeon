@@ -41,26 +41,21 @@ abilityUp({
       },
 });
 
-/** Mana burn: the share of the foe's MP it drains, which the Hexer gains (a marker on the foe pays its source, as a number read `of: target` can't reach the caster). */
-const MANA_BURN = 0.2;
+/** Rebind: the curse-breaker: waits for an ally to be Stunned or Silenced, lifts both from it, and Hastes it. */
+const BOUND = ["stun", "silence"];
+const rebind = { if: { side: "allies" as const, where: { hasAny: BOUND } }, target: { side: "allies", where: { hasAny: BOUND } } as TargetRuleT, do: [...BOUND.map((status) => ({ op: "remove", label: "debuff", status }) as EffectT), apply("haste")] };
 abilityUp({
   id: "unmake", cls: "hexer",
   power: "Shorter cooldown.",
   shown: true,
   a: { name: "Silence all", text: "Waits for a foe to cast, then Silences every casting foe and strips their buffs.", builds: [] },
-  b: { name: "Mana burn", text: "Waits for a foe to cast, then Silences it, strips its buffs and takes 20% of its max MP as MP.", builds: ["barrage"] },
+  b: { name: "Rebind", text: "Waits for an ally to be Stunned or Silenced, then frees it and Hastes it.", serves: "Toll 2 ●●, Barrage ● ◆ the net" },
   form: (v, _k, plus) => ({
     ...(plus ? { cooldown: cd("short", "unmake") } : {}),
     ...(v === "a" ? { target: { side: "foes", where: { casting: true }, pick: "all" } as TargetRuleT } : {}), // An all-pick: the Taunt and Hidden rules don't apply.
-    ...(v === "b"
-      ? { do: [{ op: "mp", amount: { scale: [{ ratio: -MANA_BURN, stat: "max_mp", of: "target" }] } } as EffectT, apply("mana_burn"), apply("silence"), { op: "remove", label: "buff" } as EffectT] }
-      : {}),
+    ...(v === "b" ? rebind : {}),
   }),
 });
-helper(marker("mana_burn", "MANA BURN", "Its MP goes to the Hexer that burned it.", {
-  perSource: {}, duration: 1,
-  reactions: [{ on: { event: "status_gained", status: "mana_burn" }, actor: "source", do: [{ op: "mp", amount: { scale: [{ ratio: MANA_BURN, stat: "max_mp", of: "holder" }] }, to: "source" }] }],
-}));
 
 abilityUp({
   id: "enfeeble", cls: "hexer",

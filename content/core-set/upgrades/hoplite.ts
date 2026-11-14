@@ -30,15 +30,16 @@ import { abilityUp, apply, cd, helper, kit, passiveUp, phys, r6, removeMine } fr
    * rule in one target rule: `ifNone: any` drops the `lacks`, and the Aegis would fizzle on the anchor that already holds one.
    */
   const anchor: Partial<AbilityT> = { target: { side: "allies", where: { lacks: "aegis" }, pick: "highest", by: { stat: "aggro" } } };
-  const wall: Partial<AbilityT> = { cooldown: cd("very_long", "aspis"), mp: 750, target: { side: "allies", where: { lacks: "aegis" }, pick: "all" } };
+  /** Hold the gap: the bodyguard becomes the anchor: Aegis on itself, and a Taunt. */
+  const gap: Partial<AbilityT> = { target: "self", do: [apply("aegis"), apply("taunt")] };
   abilityUp({
     id: "aspis", cls: "hoplite",
     power: "Shorter cooldown.", shown: true,
     a: { name: "Watch the anchor", text: "Aegis on the ally with the most Aggro that lacks one.", serves: "Toll 2 ●●● ⚙ mirror (half)" },
-    b: { name: "Shield wall", text: "Aegis on every ally.", builds: ["bonfire", "storm"] },
+    b: { name: "Hold the gap", text: "Aegis on itself, and Taunts.", serves: "Toll 2 ●●●, Landslide ● ◆ draw, the anchor" },
     form: (v, _k, plus) =>
       v === "a" ? { ...anchor, ...(plus ? { cooldown: cd("medium", "aspis") } : {}) }
-        : v === "b" ? { ...wall, ...(plus ? { cooldown: cd("long", "aspis") } : {}) }
+        : v === "b" ? { ...gap, ...(plus ? { cooldown: cd("medium", "aspis") } : {}) }
           : { cooldown: cd("medium", "aspis") },
   });
 }
