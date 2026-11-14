@@ -7,8 +7,9 @@
  * - **Gear:** each member, slot by slot, wears the piece of a kind its class wears that's worth most to the build, at the
  *   rung's rarities (rung 1: commons and uncommons; rung 2: rares too; rung 3: legendaries too), never a piece a partner
  *   already wears; ties go to the rarer piece, then the id. A piece that draws the foes (its threads say draw, or its stats
- *   carry Aggro) goes only to a class that can stand in front, and not when it sits in a cast or heal seat. A slot with nothing worth anything to the build holds a common of
- *   the class's first kind. A two-handed weapon leaves the offhand empty.
+ *   carry Aggro) goes only to a class that can stand in front, and not when it sits in a cast or heal seat; a piece a good
+ *   player wouldn't hang on that member (`MISFIT`) is passed over. A slot with nothing worth anything to the build holds a
+ *   common of the class's first kind. A two-handed weapon leaves the offhand empty.
  * - **Mythics:** at rung 3, the members whose class's mythic is worth most to this build of all the builds (at most two, the
  *   more worth first) wear it in its slot.
  * - **Versions:** none at rung 1; at rung 2, on each ability and the passive, the version worth more to the build, where one
@@ -99,9 +100,19 @@ const TWO_HANDED = new Set(weaponKinds.filter((k) => k.hands === 2).map((k) => k
  */
 const draws = (g: GearT) => !!SERVED[g.id]?.threads.includes("draw") || (g.stats ?? []).some((s) => s.stat === "aggro" && (s.flat ?? 0) > 0);
 
-function pick(c: ClassDefT, slot: Slot, build: BuildId, rung: Rung, used: Set<string>, front: boolean): GearT {
+/**
+ * Where a good player wouldn't hang a piece, whatever the tags say: the few placements the fight reads found self-defeating.
+ * Halved heart (half HP all fight, no healing past it) on the healer, a caster's seat or a frail class; Blood vial (an HP price
+ * on top) beside Flagellant's vestments, which already pay every cost in HP.
+ */
+const MISFIT: Record<string, (c: ClassDefT, role: Role, worn: Partial<Gear>) => boolean> = {
+  halved_heart: (c, role) => role === "heal" || role === "cast" || (FIT[c.id]?.heal ?? 0) >= 3 || (c.stats?.max_hp ?? 0) <= 3000,
+  blood_vial: (_c, _role, worn) => worn.armor === "flagellants_vestments",
+};
+
+function pick(c: ClassDefT, slot: Slot, build: BuildId, rung: Rung, used: Set<string>, front: boolean, role: Role, worn: Partial<Gear>): GearT {
   const kinds = kindsFor(c, slot);
-  const fits = pieceGear.filter((g) => g.slot === slot && (!kinds || kinds.includes(kindOf(g)!)) && RANK[rarityOf(g)] <= rung && !used.has(g.id) && (front || !draws(g)));
+  const fits = pieceGear.filter((g) => g.slot === slot && (!kinds || kinds.includes(kindOf(g)!)) && RANK[rarityOf(g)] <= rung && !used.has(g.id) && (front || !draws(g)) && !MISFIT[g.id]?.(c, role, worn));
   const scored = fits.map((g) => ({ g, w: worth(g.id, build) })).sort((x, y) => y.w - x.w || RANK[rarityOf(y.g)] - RANK[rarityOf(x.g)] || x.g.id.localeCompare(y.g.id));
   if (scored[0]?.w) return scored[0].g;
   // Nothing for the build: a common of the class's first kind (any amulet for the amulet slot).
@@ -120,7 +131,7 @@ const SEAT_ROLES: Record<string, Role[]> = {
   hammer_and_anvil: ["wall", "hit", "heal"], bloodied_ground: ["hit", "hit", "hit"], relay: ["hit", "hit", "wall"], icefall: ["cast", "hit", "cast"],
   seesaw: ["cast", "cast", "wall"], the_pack: ["hit", "hit", "hit"], glass_and_stone: ["hit", "wall", "wall"], the_stage: ["cast", "any", "wall"],
   lifeline: ["wall", "heal", "hit"], decoy: ["wall", "any", "any"], vigil: ["wall", "heal", "any"], the_wheel: ANY, the_mountain: ["hit", "wall", "any"],
-  the_whetstone: ANY, tidal: ANY, the_still_hour: ["cast", "cast", "cast"], the_hundred_hands: ["hit", "hit", "hit"], vanguard_and_rear: ["wall", "wall", "cast"], bannerman: ["any", "hit", "hit"],
+  the_whetstone: ANY, tidal: ANY, the_still_hour: ["cast", "cast", "cast"], the_hundred_hands: ["hit", "hit", "hit"], vanguard_and_rear: ["wall", "wall", "cast"], bannerman: ["wall", "hit", "hit"],
   the_cathedral: ["cast", "any", "any"], the_covenant: ANY, twins: ["any", "any", "hit"],
 };
 /** How well each class fits a role (none named: 0). */
@@ -186,7 +197,7 @@ function member(cls: string, seat: string, build: BuildId, rung: Rung, used: Set
     if (slot === "offhand" && gear.weapon && TWO_HANDED.has(pieceGear.find((g) => g.id === gear.weapon)?.weapon?.kind ?? "")) continue;
     if (mythic && mythic.slot === slot) { gear[slot] = mythic.id; continue; }
     // In front: a class that can stand there (a wall, or the Monk's, the Valkyrie's and the Vampire's dance), not seated to cast or heal.
-    const g = pick(c, slot, build, rung, used, (FIT[cls]?.wall ?? 0) >= 1 && role !== "cast" && role !== "heal");
+    const g = pick(c, slot, build, rung, used, (FIT[cls]?.wall ?? 0) >= 1 && role !== "cast" && role !== "heal", role, gear);
     used.add(g.id);
     gear[slot] = g.id;
   }
@@ -197,11 +208,12 @@ function member(cls: string, seat: string, build: BuildId, rung: Rung, used: Set
       if (a || b) trained.push({ ability: u.id, power: rung === 3, version: a >= b ? "a" : "b" });
     }
   }
-  // A Soloist slots what deals damage first (a good player's order: The cathedral frees the first slot's cooldown, and the
-  // first ready ability is the one cast); everyone else keeps the kit's order.
+  // A Soloist, or a unit whose Bell of the hour casts its first-slotted ability, slots what deals damage first (a good
+  // player's order: the first slot is the one freed, and the first ready ability is the one cast); everyone else keeps the kit's order.
   const known = knownOf(cls, build, known_);
   const deals = (id: string) => (kitAbilities.find((a) => a.id === id)?.do ?? []).some((op) => op.op === "damage");
-  const abilities = seat.startsWith("soloist") ? [...known.filter(deals), ...known.filter((a) => !deals(a))] : known;
+  const first = seat.startsWith("soloist") || Object.values(gear).includes("bell_of_the_hour");
+  const abilities = first ? [...known.filter(deals), ...known.filter((a) => !deals(a))] : known;
   return { cls, seat, abilities, trained, gear: gear as Gear };
 }
 

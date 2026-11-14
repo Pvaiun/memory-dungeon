@@ -3671,7 +3671,12 @@
    "unremovable": true,
    "lockout": {
     "covers": "basic"
-   }
+   },
+   "mods": [
+    {
+     "mp": -40
+    }
+   ]
   },
   {
    "id": "the_hundred_hands",
@@ -3843,7 +3848,7 @@
   {
    "id": "the_cathedral_soloist",
    "name": "Soloist",
-   "text": "Its first-slotted ability has no cooldown.",
+   "text": "Its first-slotted ability's cooldown is 75% shorter.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -3853,7 +3858,7 @@
      "of": {
       "first": true
      },
-     "cooldown": -100
+     "cooldown": -75
     }
    ]
   },
@@ -45635,7 +45640,7 @@
     {
      "id": "soloist",
      "name": "Soloist",
-     "text": "Its first-slotted ability has no cooldown.",
+     "text": "Its first-slotted ability's cooldown is 75% shorter.",
      "layout": {
       "line": "front",
       "column": 0

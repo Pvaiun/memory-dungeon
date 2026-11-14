@@ -53,7 +53,7 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
   const party = "No ally makes a basic attack. Abilities come round 40% faster.";
   add(
     formation("The still hour", "legendary", "Nobody swings; every spell comes round.", thrice({ name: "Watcher", text: NOTHING }), { text: party, stats: [{ stat: "cooldown_reduction", flat: 40 }], statuses: ["the_still_hour"] }),
-    [held("the_still_hour", "The still hour", "Makes no basic attack.", { lockout: { covers: "basic" } })],
+    [held("the_still_hour", "The still hour", "Makes no basic attack.", { lockout: { covers: "basic" }, mods: [{ mp: -40 }] })],
     "Barrage 3 ●●, Snap ● ◆ the spell's beat",
   );
 }
@@ -100,15 +100,16 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
       ...twice({ name: "Bearer", text: bearer, statuses: ["bannerman_bearer"] }),
     ]),
     [
-      held("bannerman_banner", "Banner", banner, { lockout: { covers: "all" } }),
+      held("bannerman_banner", "Banner", "Never acts.", { lockout: { covers: "all" } }),
       held("bannerman_bearer", "Bearer", bearer, { stats: [seatStat("attack"), seatStat("defense")] }),
     ],
     "exotic ◆ the trade",
   );
 }
 {
-  // The Soloist's own mana is the brake.
-  const soloist = "Its first-slotted ability has no cooldown.";
+  // The Soloist's own mana is the brake. A cooldown cut short, not gone: with none, a cast every tick or two fed a Crescendo
+  // to its cap in a few ticks, and Siphon on the swollen hits paid the mana back (fights over in 9 ticks).
+  const soloist = "Its first-slotted ability's cooldown is 75% shorter.";
   const voice = "Draws more.";
   add(
     formation("The cathedral", "legendary", "Two give their mana; one never stops singing.", [
@@ -116,7 +117,7 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
       ...twice({ name: "Voice", text: voice, stats: [st("aggro", 1)] }),
     ]),
     [
-      held("the_cathedral_soloist", "Soloist", soloist, { mods: [{ of: { first: true }, cooldown: -100 }] }),
+      held("the_cathedral_soloist", "Soloist", soloist, { mods: [{ of: { first: true }, cooldown: -75 }] }),
     ],
     "Barrage 3 ●●● ⚙ crescendo (half)",
   );
