@@ -323,55 +323,55 @@ const p = (status: string, name: string) => ({ name, text: passives.find((s) => 
 
 export const classes: ClassDefT[] = [
   cls("knight", "Knight", "Protector. Starts every fight behind its own Shield, Guards the ally with the lowest HP%, calls every foe onto itself while an ally regains its mana, and bashes a foe with the weight of its own body.", {
-    source: "starter", stats: stat(5, 2, 2, 2, 4, 1, 5), weapons: ["sword", "hammer"], armor: ["plate"], offhands: ["kite_shield", "horn"], passive: p("vanguard", "Vanguard"),
+    source: "starter", stats: stat(5, 2, 2, 2, 4, 1, 5), weapons: ["sword", "hammer", "spear"], armor: ["plate"], offhands: ["kite_shield", "horn", "trophy"], passive: p("vanguard", "Vanguard"),
   }),
   cls("cleric", "Cleric", "Healer. Heals the ally with the lowest HP% with quick, small heals, lifts a curse and wraps the ally in Regen, raises the fallen, and prays twice as fast when its own life is in danger.", {
-    source: "starter", stats: stat(2, 5, 4, 3, 2, 1, 1), weapons: ["mace", "staff"], armor: ["robes"], offhands: ["relic", "lantern"], passive: p("last_rites", "Last rites"),
+    source: "starter", stats: stat(2, 5, 4, 3, 2, 1, 1), weapons: ["mace", "staff", "wand"], armor: ["robes", "mail"], offhands: ["relic", "lantern", "vial"], passive: p("last_rites", "Last rites"),
   }),
   cls("ranger", "Ranger", "The marksman. Looses barbed, cold and rending arrows at whatever stands in front, while its plain arrows fly past any guard, crit for a living and open the wounds.", {
-    source: "starter", stats: { ...stat(3, 3, 3, 4, 2, 4, 2), ...special("accuracy", "medium"), ...special("evasion", "medium") }, weapons: ["bow", "dagger"], armor: ["leather"], offhands: ["trophy", "cloak"], passive: p("hunters_eye", "Hunter's eye"),
+    source: "starter", stats: { ...stat(3, 3, 3, 4, 2, 4, 2), ...special("accuracy", "medium"), ...special("evasion", "medium") }, weapons: ["bow", "dagger", "axe"], armor: ["leather"], offhands: ["trophy", "cloak", "horn"], passive: p("hunters_eye", "Hunter's eye"),
   }),
   cls("bramble_knight", "Bramble knight", "Thorns tank. Draws every foe onto its thorns, where each attacker is left bleeding for the party's blows, gives Regen to the ally with the lowest HP%, and lashes out with the thorns themselves.", {
-    stats: { ...stat(5, 2, 2, 2, 3, 1, 5), ...special("thorns", "high") }, weapons: ["hammer", "mace"], armor: ["plate", "mail"], offhands: ["totem", "round_shield"], passive: p("briar", "Briar"),
+    stats: { ...stat(5, 2, 2, 2, 3, 1, 5), ...special("thorns", "high") }, weapons: ["hammer", "mace", "great_weapon"], armor: ["plate", "mail"], offhands: ["totem", "round_shield", "idol"], passive: p("briar", "Briar"),
   }),
   cls("hoplite", "Hoplite", "The bruiser. Slow double swings, a thrust that opens one foe up, a shove with the whole shield that sunders every foe, and an Aegis on the ally about to take the killing blow. Very tanky and hits hard; nothing it does draws fire.", {
-    stats: stat(4, 2, 2, 5, 5, 2, 3), weapons: ["spear", "great_weapon"], armor: ["plate"], offhands: ["round_shield", "horn"], passive: p("phalanx", "Phalanx"),
+    stats: stat(4, 2, 2, 5, 5, 2, 3), weapons: ["spear", "great_weapon", "sword"], armor: ["plate", "leather"], offhands: ["round_shield", "horn", "cloak"], passive: p("phalanx", "Phalanx"),
   }),
   cls("paladin", "Paladin", "The judge: helper of the righteous, killer of the wicked. Its hits land half again as hard on any foe that holds a buff or a debuff; it condemns one foe and the whole party strikes it; it lifts curses and heals; and it brings down a slow, heavy, burning Smite.", {
-    stats: { ...stat(4, 3, 3, 4, 4, 2, 3) }, weapons: ["mace", "great_weapon"], armor: ["mail", "plate"], offhands: ["kite_shield", "relic"], passive: p("judgement", "Judgement"),
+    stats: { ...stat(4, 3, 3, 4, 4, 2, 3) }, weapons: ["mace", "great_weapon", "sword"], armor: ["mail", "plate"], offhands: ["kite_shield", "relic", "lantern"], passive: p("judgement", "Judgement"),
   }),
   cls("valkyrie", "Valkyrie", "The shieldmaiden: a quick, survivable damage dealer, not a tank. Her spear builds her Shield as it strikes, three quick hits reach past any guard and shock what they hit, a heavy blow from above hits harder for each Shock, and she chooses the slain: one ability mends the ally with the lowest HP% or raises a fallen one.", {
-    stats: { ...stat(3, 3, 3, 4, 3, 3, 2), ...special("cooldown", "medium") }, weapons: ["spear", "sword"], armor: ["mail", "leather"], offhands: ["round_shield", "cloak"], passive: p("shieldmaiden", "Shieldmaiden"),
+    stats: { ...stat(3, 3, 3, 4, 3, 3, 2), ...special("cooldown", "medium") }, weapons: ["spear", "sword", "rune_sword"], armor: ["mail", "leather"], offhands: ["round_shield", "cloak", "horn"], passive: p("shieldmaiden", "Shieldmaiden"),
   }),
   cls("bard", "Bard", "Party tempo. A caster at the back whose every basic attack heals an ally and gives another MP, with a ballad that steadies the party, an allegro that quickens it, and an encore that makes an ally's next spell sound twice.", {
-    stats: { ...stat(3, 4, 3, 3, 2, 2, 1), ...special("cooldown", "medium") }, weapons: ["bow", "wand"], armor: ["leather", "robes"], offhands: ["tome", "bell"], passive: p("refrain", "Refrain"),
+    stats: { ...stat(3, 4, 3, 3, 2, 2, 1), ...special("cooldown", "medium") }, weapons: ["bow", "wand", "dagger"], armor: ["leather", "robes"], offhands: ["tome", "bell", "vial"], passive: p("refrain", "Refrain"),
   }),
   cls("hexer", "Hexer", "The spellblade. A blade that carries curses: its swing chills, its curses deepen every affliction a foe already holds, it weakens and sunders the foe with the most Attack, and it silences a foe mid-cast and strips its buffs.", {
-    stats: { ...stat(3, 4, 3, 4, 2, 2, 1), ...special("siphon", "medium") }, weapons: ["wand", "sword"], armor: ["mail"], offhands: ["tome", "idol"], passive: p("cold_hex", "Cold hex"),
+    stats: { ...stat(3, 4, 3, 4, 2, 2, 1), ...special("siphon", "medium") }, weapons: ["wand", "sword", "dagger"], armor: ["mail", "robes"], offhands: ["tome", "idol", "totem"], passive: p("cold_hex", "Cold hex"),
   }),
   cls("monk", "Monk", "Sunders with a blur of blows. Every blow adds Sunder, Flow keeps it fast, burning fists pile onto the foe with the most Burn, and a pressure point Stuns the foe with the most Attack.", {
-    stats: { ...stat(3, 2, 3, 4, 1, 2, 2), ...special("evasion", "high"), ...special("double_strike", "medium") }, weapons: ["fist", "spear"], armor: ["leather"], offhands: ["bell", "cloak"],
+    stats: { ...stat(3, 2, 3, 4, 1, 2, 2), ...special("evasion", "high"), ...special("double_strike", "medium") }, weapons: ["fist", "spear", "staff"], armor: ["leather", "robes"], offhands: ["bell", "cloak", "relic"],
     passive: p("iron_palm", "Iron palm"),
   }),
   cls("assassin", "Assassin", "Burst killer. Slips out of sight, picks off the foe with the least HP past any Taunt, leaves every crit a bleeding wound, and silences the back line.", {
-    stats: { ...stat(2, 3, 3, 5, 1, 5, 1), ...special("crit_damage", "high"), ...special("evasion", "medium") }, weapons: ["dagger", "axe"], armor: ["leather"], offhands: ["vial", "trophy"],
+    stats: { ...stat(2, 3, 3, 5, 1, 5, 1), ...special("crit_damage", "high"), ...special("evasion", "medium") }, weapons: ["dagger", "axe", "bow"], armor: ["leather"], offhands: ["vial", "trophy", "cloak"],
     passive: p("lacerate", "Lacerate"),
   }),
   cls("vampire", "Vampire", "Drains to outlast. Feeds on everything it hits: the harder it hits, the more it heals, its prey is left weakened, and it bleeds its own life into an ally's wounds and mana.", {
-    stats: { ...stat(3.5, 2, 2, 4, 2, 2, 3), lifesteal: VAMPIRE_LIFESTEAL }, weapons: ["fist", "axe"], armor: ["mail"], offhands: ["vial", "idol"],
+    stats: { ...stat(3.5, 2, 2, 4, 2, 2, 3), lifesteal: VAMPIRE_LIFESTEAL }, weapons: ["fist", "axe", "rune_sword"], armor: ["mail", "plate"], offhands: ["vial", "idol", "relic"],
     passive: p("bloodlust", "Bloodlust"),
   }),
   cls("pyromancer", "Pyromancer", "The glass cannon of long casts. Every spell it casts stokes the fire on the foe with the most Burn, bolts pile more onto it, a fireball spreads it, and a pyre lands.", {
-    stats: { ...stat(2, 5, 2, 5, 1, 2, 1), ...special("cast_speed", "medium") }, weapons: ["staff", "wand"], armor: ["robes"], offhands: ["lantern", "orb"], passive: p("stoke", "Stoke"),
+    stats: { ...stat(2, 5, 2, 5, 1, 2, 1), ...special("cast_speed", "medium") }, weapons: ["staff", "wand", "mace"], armor: ["robes"], offhands: ["lantern", "orb", "totem"], passive: p("stoke", "Stoke"),
   }),
   cls("frostweaver", "Frostweaver", "The ice wall: a chunky supporting mage, and the Chill applier. It lays Chill on the field and on the foe with the most Chill until the Chill itself shatters, leaves the shattered foe sundered, and keeps an ally's mana flowing while the frost builds.", {
-    stats: { ...stat(3, 4, 3, 3, 3, 2, 2) }, weapons: ["staff", "rune_sword"], armor: ["robes", "mail"], offhands: ["tome", "orb"], passive: p("shatterpoint", "Shatterpoint"),
+    stats: { ...stat(3, 4, 3, 3, 3, 2, 2) }, weapons: ["staff", "rune_sword", "spear"], armor: ["robes", "mail"], offhands: ["tome", "orb", "kite_shield"], passive: p("shatterpoint", "Shatterpoint"),
   }),
   cls("stormcaller", "Stormcaller", "The striker among the mages. Each swing arcs to a second foe, lightning chains, a storm puts Shock on every ally's swings, and it charges itself to swing faster.", {
-    stats: { ...stat(2, 3, 3, 4, 1, 2, 1), ...special("attack_speed", "medium") }, weapons: ["fist", "rune_sword"], armor: ["robes", "leather"], offhands: ["totem", "bell"], passive: p("arc", "Arc"),
+    stats: { ...stat(2, 3, 3, 4, 1, 2, 1), ...special("attack_speed", "medium") }, weapons: ["fist", "rune_sword", "hammer"], armor: ["robes", "leather"], offhands: ["totem", "bell", "orb"], passive: p("arc", "Arc"),
   }),
   cls("geomancer", "Geomancer", "Hits hardest behind stone. Wraps itself and an ally in stone; while its own Shield holds, its rocks crit far more often and far harder, and a tremor Stuns a foe.", {
-    stats: { ...stat(3, 3, 3, 3, 5, 4, 3), ...special("crit_damage", "high") }, weapons: ["hammer", "great_weapon"], armor: ["plate"], offhands: ["kite_shield", "trophy"], passive: p("bedrock", "Bedrock"),
+    stats: { ...stat(3, 3, 3, 3, 5, 4, 3), ...special("crit_damage", "high") }, weapons: ["hammer", "great_weapon", "axe"], armor: ["plate", "robes"], offhands: ["kite_shield", "trophy", "idol"], passive: p("bedrock", "Bedrock"),
   }),
 ];
 /**

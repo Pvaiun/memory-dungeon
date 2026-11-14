@@ -145,8 +145,9 @@ test("rogue (5i): an offer picks a slot first (weapons and offhands 30%, armor 2
     if (!usable(c, run, it.base)) off++;
   }
   for (const s of ["weapon", "armor", "offhand", "amulet"] as const) assert.ok(Math.abs(slots[s] / n - w[s] / total) < 0.04, `${s}: ${slots[s]} of ${n}`);
-  // An open offer (spoils, chests) is for a class off the roster a third of the time (an amulet still fits the roster).
-  assert.ok(off / n > 0.1 && off / n < 0.4, `${off} of ${n} off the roster`);
+  // An open offer (spoils, chests) is for a class off the roster a third of the time; with up to five wearers a kind, and an
+  // amulet fitting everyone, most of those pieces still fit someone in the roster.
+  assert.ok(off / n > 0.04 && off / n < 0.4, `${off} of ${n} off the roster`);
   // Otherwise for someone in the roster; an elite's aimed offer for someone in the party; a cage's for its recruit.
   for (let i = 0; i < 300; i++) {
     assert.ok(usable(c, run, rollItem(c, run, rng, "common")!.base));

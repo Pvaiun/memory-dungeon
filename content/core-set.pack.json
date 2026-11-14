@@ -20962,14 +20962,16 @@
    },
    "weapons": [
     "sword",
-    "hammer"
+    "hammer",
+    "spear"
    ],
    "armor": [
     "plate"
    ],
    "offhands": [
     "kite_shield",
-    "horn"
+    "horn",
+    "trophy"
    ],
    "passive": {
     "name": "Vanguard",
@@ -21000,14 +21002,17 @@
    },
    "weapons": [
     "mace",
-    "staff"
+    "staff",
+    "wand"
    ],
    "armor": [
-    "robes"
+    "robes",
+    "mail"
    ],
    "offhands": [
     "relic",
-    "lantern"
+    "lantern",
+    "vial"
    ],
    "passive": {
     "name": "Last rites",
@@ -21040,14 +21045,16 @@
    },
    "weapons": [
     "bow",
-    "dagger"
+    "dagger",
+    "axe"
    ],
    "armor": [
     "leather"
    ],
    "offhands": [
     "trophy",
-    "cloak"
+    "cloak",
+    "horn"
    ],
    "passive": {
     "name": "Hunter's eye",
@@ -21079,7 +21086,8 @@
    },
    "weapons": [
     "hammer",
-    "mace"
+    "mace",
+    "great_weapon"
    ],
    "armor": [
     "plate",
@@ -21087,7 +21095,8 @@
    ],
    "offhands": [
     "totem",
-    "round_shield"
+    "round_shield",
+    "idol"
    ],
    "passive": {
     "name": "Briar",
@@ -21118,14 +21127,17 @@
    },
    "weapons": [
     "spear",
-    "great_weapon"
+    "great_weapon",
+    "sword"
    ],
    "armor": [
-    "plate"
+    "plate",
+    "leather"
    ],
    "offhands": [
     "round_shield",
-    "horn"
+    "horn",
+    "cloak"
    ],
    "passive": {
     "name": "Phalanx",
@@ -21156,7 +21168,8 @@
    },
    "weapons": [
     "mace",
-    "great_weapon"
+    "great_weapon",
+    "sword"
    ],
    "armor": [
     "mail",
@@ -21164,7 +21177,8 @@
    ],
    "offhands": [
     "kite_shield",
-    "relic"
+    "relic",
+    "lantern"
    ],
    "passive": {
     "name": "Judgement",
@@ -21196,7 +21210,8 @@
    },
    "weapons": [
     "spear",
-    "sword"
+    "sword",
+    "rune_sword"
    ],
    "armor": [
     "mail",
@@ -21204,7 +21219,8 @@
    ],
    "offhands": [
     "round_shield",
-    "cloak"
+    "cloak",
+    "horn"
    ],
    "passive": {
     "name": "Shieldmaiden",
@@ -21236,7 +21252,8 @@
    },
    "weapons": [
     "bow",
-    "wand"
+    "wand",
+    "dagger"
    ],
    "armor": [
     "leather",
@@ -21244,7 +21261,8 @@
    ],
    "offhands": [
     "tome",
-    "bell"
+    "bell",
+    "vial"
    ],
    "passive": {
     "name": "Refrain",
@@ -21276,14 +21294,17 @@
    },
    "weapons": [
     "wand",
-    "sword"
+    "sword",
+    "dagger"
    ],
    "armor": [
-    "mail"
+    "mail",
+    "robes"
    ],
    "offhands": [
     "tome",
-    "idol"
+    "idol",
+    "totem"
    ],
    "passive": {
     "name": "Cold hex",
@@ -21316,14 +21337,17 @@
    },
    "weapons": [
     "fist",
-    "spear"
+    "spear",
+    "staff"
    ],
    "armor": [
-    "leather"
+    "leather",
+    "robes"
    ],
    "offhands": [
     "bell",
-    "cloak"
+    "cloak",
+    "relic"
    ],
    "passive": {
     "name": "Iron palm",
@@ -21356,14 +21380,16 @@
    },
    "weapons": [
     "dagger",
-    "axe"
+    "axe",
+    "bow"
    ],
    "armor": [
     "leather"
    ],
    "offhands": [
     "vial",
-    "trophy"
+    "trophy",
+    "cloak"
    ],
    "passive": {
     "name": "Lacerate",
@@ -21395,14 +21421,17 @@
    },
    "weapons": [
     "fist",
-    "axe"
+    "axe",
+    "rune_sword"
    ],
    "armor": [
-    "mail"
+    "mail",
+    "plate"
    ],
    "offhands": [
     "vial",
-    "idol"
+    "idol",
+    "relic"
    ],
    "passive": {
     "name": "Bloodlust",
@@ -21434,14 +21463,16 @@
    },
    "weapons": [
     "staff",
-    "wand"
+    "wand",
+    "mace"
    ],
    "armor": [
     "robes"
    ],
    "offhands": [
     "lantern",
-    "orb"
+    "orb",
+    "totem"
    ],
    "passive": {
     "name": "Stoke",
@@ -21472,7 +21503,8 @@
    },
    "weapons": [
     "staff",
-    "rune_sword"
+    "rune_sword",
+    "spear"
    ],
    "armor": [
     "robes",
@@ -21480,7 +21512,8 @@
    ],
    "offhands": [
     "tome",
-    "orb"
+    "orb",
+    "kite_shield"
    ],
    "passive": {
     "name": "Shatterpoint",
@@ -21512,7 +21545,8 @@
    },
    "weapons": [
     "fist",
-    "rune_sword"
+    "rune_sword",
+    "hammer"
    ],
    "armor": [
     "robes",
@@ -21520,7 +21554,8 @@
    ],
    "offhands": [
     "totem",
-    "bell"
+    "bell",
+    "orb"
    ],
    "passive": {
     "name": "Arc",
@@ -21552,14 +21587,17 @@
    },
    "weapons": [
     "hammer",
-    "great_weapon"
+    "great_weapon",
+    "axe"
    ],
    "armor": [
-    "plate"
+    "plate",
+    "robes"
    ],
    "offhands": [
     "kite_shield",
-    "trophy"
+    "trophy",
+    "idol"
    ],
    "passive": {
     "name": "Bedrock",
