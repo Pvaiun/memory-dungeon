@@ -42,7 +42,7 @@ import { abilityUp, apply, cd, helper, hitOf, kit, passiveUp, phys, POWER, r6 } 
     id: "frost_arrow", cls: "ranger",
     power: "+40% Chill, or damage without Chill.", shown: true,
     a: { name: "Lure", text: "An arrow at the foe with the most Attack; it's Fixated on the Ranger. No Chill.", serves: "Toll 2 ●●, Hunt ● ◆ draw, the second anchor" },
-    b: { name: "Hail", text: "An arrow at the foe with the most Chill; Chill on every foe.", serves: "Snap 1 ●●● ⚙ firecracker (half)" },
+    b: { name: "Hail", text: "An arrow at the foe with the most Chill; Chill on every foe.", serves: "Snap 1 ●●● ◆ the pack game" },
     form: (v, k) =>
       v === "a" ? lure(0.29 * k)
         : v === "b" ? hail(k)

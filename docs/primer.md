@@ -50,28 +50,28 @@ The least you need to know to work on the game. Read it first, then open a detai
   - **Area** hits everyone.
 
   An ability can name its own target with a fixed phrase ("the ally with the lowest share of max HP").
-- **Statuses.** Everything that happens on an event or a timer is a status (22 of them), and there are 10 special stats (the three speed stats among them) and 6 effects. A status does the same thing whoever applies it: the applier sets only how many stacks it adds. Its length is its own, with one exception: bosses resist repeated Stun, Silence and Slow. The families:
+- **Statuses.** Everything that happens on an event or a timer is a status (26 of them), and there are 10 special stats (the three speed stats among them) and 6 effects. A status does the same thing whoever applies it: the applier sets only how many stacks it adds. Its length is its own, with one exception: bosses resist repeated Stun, Silence and Slow. The families:
   - **The staples:** Regen, Shield, Might, Weaken, Guard, Stun, Slow, Haste, Taunt, Bleed.
-  - **Built up over a fight, and draining away:** Burn, Chill (it shatters at its cap), Shock, Sunder.
-  - **The rest:** Marked, Silence, Hidden, Rot, Clarity, Aegis, and Doom and Bulwark, which only enemies use.
+  - **Built up over a fight, and draining away:** Burn, Chill (it shatters at its cap), Shock, Sunder. With Bleed, these five are the **afflictions**.
+  - **The rest:** Marked, Silence, Hidden, Rot, Clarity, Aegis, Bewildered (a foe's next swing on its own side), Brittle (the next hit taken crits), Fixated (a foe's picks held on one unit), Owed (hits that wait and land at once), and Doom and Bulwark, which only enemies use.
 - **Tiers** say how widely a piece appears. A Fundamental is in many classes and the first fights, and a Specialist in a few. Nothing is locked to one class: what one class uses today can appear on other classes, gear and formations. Doom and Bulwark are a tier of their own, enemy-only.
 
 ## Gear, formations and training
 
 - **Gear has four slots:** weapon, armor, offhand and amulet. Slots have no job, and only weapons carry behaviour of their own.
   - **Weapons:** twelve kinds, each a speed, one or two hands and three words: how hard it swings per tick, how much of that is the wearer's Attack, and how many stats its pieces carry. A kind pays for a heavy swing in stats, or the other way round. The kind sets the unit's basic attack, and the interface shows its damage per tick. A two-hander (bow, great weapon, staff) leaves the offhand empty.
-  - **Who wears what:** each class wears two weapon kinds, one or two of the four armor types and two of the thirteen offhand kinds. At most three classes share a kind, two classes share at most one kind of a slot, and every wearer reads the kind's signature stat. The amulet fits everyone.
-- **Rarity is specificity.**
+  - **Who wears what:** each class wears three weapon kinds (one at least one-handed), one or two of the four armor types and three of the thirteen offhand kinds, picked by its fantasy. A kind has three to five wearers, so a class's loot is partly its own. The amulet fits everyone.
+- **Rarity is specificity,** and above rare strangeness, not power.
   - **Common:** stats.
-  - **Uncommon:** a small, general effect.
-  - **Rare:** an effect designed for one or two builds.
-  - **Legendary:** bends a rule.
-  - **Mythic:** rewrites one class. Each class has one, and a unit wears one at most.
+  - **Uncommon:** a simple effect.
+  - **Rare:** a designed effect, often conditional on a set-up the party makes, sometimes exotic (no build's).
+  - **Legendary:** bends a rule; often exotic. It carries a rare's stats.
+  - **Mythic:** takes one thing its class does to an extreme. Each class has one, and a unit wears one at most.
 
-  Every piece carries stats at every rarity. There are 322 pieces, 16 mythics and a plain weapon of each kind. Every piece is fixed, with no random affixes. A card says what the piece does and who can wear it, never what it's for.
-- **A formation** is three seats and maybe a party effect. A seat changes the stats of whoever sits in it, or gives it statuses. There's no battlefield geometry: Aggro on the seats is what makes a front line. A run starts with Neutral (three empty seats), and there are 32 more: common, rare and legendary.
+  Every piece carries stats at every rarity, and each piece's stats are its own, not its kind's. There are 324 pieces, 16 mythics and a plain weapon of each kind. Every piece is fixed, with no random affixes. A card says what the piece does and who can wear it, never what it's for, and nothing shows a player which build to make.
+- **A formation** is three seats and maybe a party effect: a shape and a rhythm (who is struck, who acts often, who hits hard, who waits). A seat changes the stats of whoever sits in it, or gives it statuses. There's no battlefield geometry: Aggro on the seats is what makes a front line. A run starts with Neutral (three empty seats), and there are 35 more: common, rare and legendary.
 - **Training** is learning an ability, or taking an ability's or passive's power step, or one of its two versions (A or B). Every ability and passive has a power step and two versions: 64 upgrades in all.
-- **Builds.** A build is a way to play you can watch: someone watching can tell which build is playing and what it's waiting for. There are nine, as roads, with doors where a run drifts from one to the next, and engines: small synergies designed in advance for a player to find (*Gear design: the builds*). The gear, formations and upgrades are designed from them. The gear design isn't finished: its philosophy is in `docs/gear-design/`.
+- **Builds.** A build is a way to play you can watch: someone watching can tell which build is playing and what it's waiting for. There are nine, as roads, with doors where a run drifts from one to the next, and engines: small synergies designed in advance for a player to find (*Gear design: the builds*). Builds are found, not picked: only about a third of a build's pieces name its keyword, and the rest sit on its other threads. The gear design isn't finished: its philosophy is in `docs/gear-design/`.
   - **Landslide:** two load, one strikes: a long quiet, then one huge blow.
   - **Thousand Cuts:** a wound opened, then cashed by a dense stream of small hits.
   - **Bonfire:** a fire that dies unless the party keeps feeding it.

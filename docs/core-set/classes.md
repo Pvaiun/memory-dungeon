@@ -4,9 +4,9 @@ The 16 classes: what each one is for, and what each passive and ability does. Th
 
 ## The frame
 
-**A class has a trunk and three identities.** The trunk is its base kit, what every build of it does. Its identities are the ways a run can build it, each a way to play you can watch, and each has a payoff inside the kit (in the base or a version), a weapon kind whose signature stat leans to it, and loot that serves it. The design never picks one identity over another.
+**A class has a trunk and three identities.** The trunk is its base kit, what every build of it does. Its identities are the ways a run can build it, each a way to play you can watch, and each has a payoff inside the kit (in the base or a version) and loot that leans to it. The design never picks one identity over another.
 
-**The stack.** Kit first: the trunk and the versions. Gear kinds next: a kind's signature stat says which way a piece pushes its wearer, so a class's two weapon kinds and two offhand kinds are its directions, and its armor leans the same ways. Stat line last: a template of strengths and weaknesses that gear stretches far. Every wearer of a kind reads the kind's signature stat, in its base kit, a version, or the survival of a body built for it.
+**The stack.** Kit first: the trunk and the versions. Gear kinds next: a class's three weapon kinds and three offhand kinds, and its one or two armor types, are picked by its fantasy and its identities, and a kind may have up to about five wearers. A piece's stats are its own, so a kind is a set of wearers, a swing and a leaning its commons draw on, not a direction every piece pushes. Stat line last: a template of strengths and weaknesses that gear stretches far.
 
 ## The classes
 
@@ -14,22 +14,22 @@ The Knight, Cleric and Ranger are the starters: a party that clears Fundamental 
 
 | Class | Role | Weapons | Offhands | Armor |
 | --- | --- | --- | --- | --- |
-| Knight (starter) | Protector | sword, hammer | kite shield, horn | Plate |
-| Cleric (starter) | Healer | mace, staff | relic, lantern | Robes |
-| Ranger (starter) | The marksman | bow, dagger | trophy, cloak | Leather |
-| Bramble knight | Thorns tank | hammer, mace | totem, round shield | Plate, Mail |
-| Hoplite | The bruiser | spear, great weapon | round shield, horn | Plate |
-| Paladin | The judge | mace, great weapon | kite shield, relic | Mail, Plate |
-| Valkyrie | The shieldmaiden | spear, sword | round shield, cloak | Mail, Leather |
-| Bard | Party tempo | bow, wand | tome, bell | Leather, Robes |
-| Hexer | The spellblade | wand, sword | tome, idol | Mail |
-| Monk | Sunders with a blur of blows | fist weapons, spear | bell, cloak | Leather |
-| Assassin | Burst killer | dagger, axe | vial, trophy | Leather |
-| Vampire | Drains to outlast | fist weapons, axe | vial, idol | Mail |
-| Pyromancer | The glass cannon of long casts | staff, wand | lantern, orb | Robes |
-| Frostweaver | The ice wall | staff, rune sword | tome, orb | Robes, Mail |
-| Stormcaller | The striker among the mages | fist weapons, rune sword | totem, bell | Robes, Leather |
-| Geomancer | Hits hardest behind stone | hammer, great weapon | kite shield, trophy | Plate |
+| Knight (starter) | Protector | sword, hammer, spear | kite shield, horn, trophy | Plate |
+| Cleric (starter) | Healer | mace, staff, wand | relic, lantern, vial | Robes, Mail |
+| Ranger (starter) | The marksman | bow, dagger, axe | trophy, cloak, horn | Leather |
+| Bramble knight | Thorns tank | hammer, mace, great weapon | totem, round shield, idol | Plate, Mail |
+| Hoplite | The bruiser | spear, great weapon, sword | round shield, horn, cloak | Plate, Leather |
+| Paladin | The judge | mace, great weapon, sword | kite shield, relic, lantern | Mail, Plate |
+| Valkyrie | The shieldmaiden | spear, sword, rune sword | round shield, cloak, horn | Mail, Leather |
+| Bard | Party tempo | bow, wand, dagger | tome, bell, vial | Leather, Robes |
+| Hexer | The spellblade | wand, sword, dagger | tome, idol, totem | Mail, Robes |
+| Monk | Sunders with a blur of blows | fist weapons, spear, staff | bell, cloak, relic | Leather, Robes |
+| Assassin | Burst killer | dagger, axe, bow | vial, trophy, cloak | Leather |
+| Vampire | Drains to outlast | fist weapons, axe, rune sword | vial, idol, relic | Mail, Plate |
+| Pyromancer | The glass cannon of long casts | staff, wand, mace | lantern, orb, totem | Robes |
+| Frostweaver | The ice wall | staff, rune sword, spear | tome, orb, kite shield | Robes, Mail |
+| Stormcaller | The striker among the mages | fist weapons, rune sword, hammer | totem, bell, orb | Robes, Leather |
+| Geomancer | Hits hardest behind stone | hammer, great weapon, axe | kite shield, trophy, idol | Plate, Robes |
 
 A class arrives with the plain weapon of its first one-handed kind, so it starts with a hand free for an offhand (the Ranger with a dagger, not a bow). Every kind's swing, scaling and budget words are under Weapons in *Core set: rules and vocabulary*.
 
@@ -41,7 +41,7 @@ A class arrives with the plain weapon of its first one-handed kind, so it starts
 - **Gear.** Each class below lists its weapon kinds (it arrives with the plain weapon of the first), its armor types and its offhand kinds; any amulet fits. The rules are under Gear in *Core set: rules and vocabulary*.
 - **Timing and MP.** Every ability has a cooldown word, a wind-up word and an MP cost, all in `classes.ts`. The word follows the job: abilities that repeat (stack applicators, top-up heals) are quick, a self-buff's cooldown is longer than the buff lasts, the big nukes are long and the revives very long. Casters' spells cost several times the walls' and fighters' skills, so casters run short of MP and wear MP gear, and walls rarely do.
 - **Damage and stacks.** Every ability that deals damage says what it scales from. Every ability that adds a stacking status says how many stacks (a few, several or many) and which stat sets the number. Statuses that don't stack have one fixed size.
-- **Identities.** Each class lists its identities with the versions that make them (named as in `upgrades/`); a version in bold **reads** a kind's signature stat that nothing else in the kit does.
+- **Identities.** Each class lists its identities with the versions that make them (named as in `upgrades/`); a version in bold **reads** a stat that nothing else in the kit does.
 - **Tests.** Each class ends with a test: one fight against a challenge it should answer, traced through its kit.
 
 ## Starting classes
@@ -89,7 +89,7 @@ The starters cover every Fundamental challenge between them: a wall, a healer an
 - **Frost arrow.** Deals light damage that scales from Attack to the foe with the most Chill, and adds a few Chill; stacks scale from Attack. A second source of Chill, so the Frostweaver and the Hexer reach a shatter sooner.
 - **Rending arrow.** Deals damage that scales from Attack to the foe with the most Sunder, and adds a few Sunder; stacks scale from Attack.
 
-**Identities.** The marksman (dagger, trophy): Quarry, Gutting arrow. The skirmisher (dagger, cloak): **Quick draw** (each crit makes its next basic attack come at once), Barbed volley (a light arrow at every foe, each adding a few Bleed). The trapper (bow): Pinning arrow, Hail (a quick arrow, and a few Chill on every foe), Armor breaker, Deep barbs.
+**Identities.** The marksman (dagger, trophy): Quarry, Gutting arrow. The skirmisher (dagger, cloak): **Quick draw** (each crit makes its next basic attack come at once), Barbed volley (a light arrow at every foe, each adding a few Bleed). The trapper (bow, horn): Lure (an arrow that Fixates the foe with the most Attack on the Ranger: a second anchor beside a wall), Hail (a quick arrow, and a few Chill on every foe), Armor breaker, Deep barbs.
 
 *Test, Shield wall:* its arrows have no Seek, so they go to the Taunting, Guarded foe, which gets Bleed, Chill and Sunder, and the Sunder raises the damage it takes, offsetting some of its Guard. Its basic attacks ignore Taunt and land, often critting, on the fragile dealers behind. Against a lone boss, everything stacks on one target.
 
@@ -108,7 +108,7 @@ Six classes that win through the party: a tank that punishes, a bruiser that hel
 - **Regrowth.** Applies Regen to the ally with the lowest share of max HP.
 - **Bramble lash.** Deals damage that scales from Thorns to a random foe.
 
-**Identities.** The anchor (hammer, Plate, totem): **Bloodroot** (HP), Overgrowth, Deep roots, Rebuke. The field of thorns (either kind, totem): Spreading thorns, Whipping vines. The grove-keeper (mace, round shield, Mail): Grove, Blossom. Its two kinds are both slow one-handers; the hammer's heavy blow against the mace's stats is the choice.
+**Identities.** The anchor (hammer, Plate, totem): **Bloodroot** (HP), Overgrowth, Deep roots, Thornshield (no lash: the other ally with the lowest HP% gains Thorns equal to the knight's own, so another unit becomes the anchor). The field of thorns (great weapon, idol): Scything briar (its own hits add the Bleed, in place of its Thorns), Whipping vines. The grove-keeper (mace, round shield, Mail): Grove, Blossom.
 
 *Test, Swarm:* Thicket pulls all eight foes onto the knight. Each basic attack costs its attacker Thorns and leaves it bleeding for the party's next hits, Thicket's Guard blunts the many small hits, and Regrowth mends the knight. Against a Brute it does worse: one big swing triggers Thorns once.
 
@@ -123,7 +123,7 @@ Six classes that win through the party: a tank that punishes, a bruiser that hel
 - **Othismos.** The shove: deals damage that scales from Defense to every foe, and adds a few Sunder to each; stacks scale from Defense. A medium cooldown and a long wind-up.
 - **Spear thrust.** Deals damage that scales from Attack to a random foe, and adds a few Sunder; stacks scale from Attack.
 
-**Identities.** The bruiser (great weapon, Plate): Opening thrust, **Shieldbearer** (Defense), Breach (the shove on one foe, the most Defense, for triple), Skewer. The phalanx (spear, round shield): Locked shields (the shove, and the Hoplite and the lowest ally are Guarded), Shield wall. The bodyguard (spear, round shield): Watch the anchor, Disarm (the thrust at the foe with the highest Attack, which is Weakened; no Sunder). No Taunt anywhere in the kit.
+**Identities.** The bruiser (great weapon, Plate): Opening thrust, **Shieldbearer** (Defense), Breach (the shove on one foe, the most Defense, for triple), Skewer. The phalanx (spear, round shield): Locked shields (the shove, and the Hoplite and the lowest ally are Guarded), Hold the gap (Aegis on itself, and it Taunts: the bodyguard turned anchor). The bodyguard (spear or sword, round shield, cloak, Leather): Watch the anchor, Disarm (the thrust at the foe with the highest Attack, which is Weakened; no Sunder). No Taunt in the base kit; Hold the gap is the one.
 
 *Test, Tank buster:* the huge swing lands on whoever the boss picked. Aspis puts Aegis on the lowest ally, which isn't always the target; when it is, the blow is blocked outright. Paired with the Knight it's reliable: the boss hits the Knight, the Knight becomes the lowest, and the Knight holds the Aegis. Between swings, its slow, double-damage basic attacks get through Defense that stops smaller hits, and Othismos and Spear thrust leave the boss taking more from every hit.
 
@@ -138,7 +138,7 @@ Six classes that win through the party: a tank that punishes, a bruiser that hel
 - **Absolve.** Cleanses and heals itself and the other ally with the lowest share of max HP; the heal scales from Attack. Waits until an ally is below max HP.
 - **Smite.** Deals heavy damage that scales from Attack to the foe with the highest Attack, and adds several Burn; stacks scale from Attack. A long wind-up.
 
-**Identities.** The judge (great weapon, Mail): Swift justice (Marks the foe with the lowest share of max HP, then the volley; a foe that falls holding the Mark makes Condemn ready again), **Verdict** (its crit chance is tripled against a judged foe: Crit chance), Hammer of dawn, Pyre of judgement. The healer (mace, relic): Absolution, **Penance** (HP). The champion of the line (mace, kite shield, Plate): Challenge (Marks the foe with the highest Attack and the Paladin Taunts; no volley), Zeal (its basic attacks add a few Burn to a judged foe), Penance.
+**Identities.** The judge (great weapon, Mail): Swift justice (Marks the foe with the lowest share of max HP, then the volley; a foe that falls holding the Mark makes Condemn ready again), **Verdict** (its crit chance is tripled against a judged foe: Crit chance), Pyre of judgement. The healer (mace, relic, lantern): Absolution, **Penance** (HP), Dawn's call (no blow: Cleanses every ally and gives each Might, the judge as support). The champion of the line (mace, kite shield, Plate): Challenge (Marks the foe with the highest Attack and the Paladin Taunts; no volley), Zeal (its basic attacks add a few Burn to a judged foe), Penance.
 
 *Test, Buffer:* the Fire Imp's Cheer buffs its strongest ally, and every hit on it lands half again as hard; Condemn Marks the most dangerous foe and the party's swings pile onto it. Against a Nuker, Smite's long wind-up is its weakness: a fast fight may end before it lands.
 
@@ -153,7 +153,7 @@ Six classes that win through the party: a tank that punishes, a bruiser that hel
 - **Choosing.** Chooses one ally: a fallen one first, raised with a tenth of its HP; else the ally with the lowest share of max HP, healed for an amount that scales from Attack (`KIT.choosing`, under the Cleric's Cure). One target, one outcome a cast. Waits until an ally is below 80% of its max HP or down. A medium cooldown: slightly worse at healing than a healer, and it revives.
 - **Skyfall.** A heavy blow from above on the foe with the most Shock; the damage scales from Attack and rises with each Shock stack on that foe (`KIT.skyfallPerShock`). Gale spear stacks the Shock, Skyfall cashes it: the storm spear's beat.
 
-**Identities.** The storm spear (spear, Leather, cloak): Spear of the hunt, Valkyrie's descent (Skyfall past any guard on the lowest foe, double below a quarter), Chooser of the slain (no Shield; a fifth more to foes below half). The shield-sister (sword, Mail, round shield): Shield-sister (the Shield goes to the lowest ally), **Over the fallen** (waits until an ally is below 30% or down, heals for double or raises, and the Valkyrie Taunts and is Guarded: Aggro), Gale storm. The thunderhead (spear): Gale storm, Thunderclap (Skyfall on every shocked foe, half as hard). The reviver is a build a run can go for, not the class: Einherjar (an ally Choosing raises comes back with every action ready) and Over the fallen.
+**Identities.** The storm spear (spear, Leather, cloak, horn): Valkyrie's descent (Skyfall past any guard on the lowest foe, double below a quarter), Chooser of the slain (no Shield; a fifth more to foes below half). The shield-sister (sword, Mail, round shield): Shield-sister (the Shield goes to the lowest ally), **Over the fallen** (waits until an ally is below 30% or down, heals for double or raises, and the Valkyrie Taunts and is Guarded: Aggro), Gale storm. The thunderhead (spear, rune sword): Gale storm, Thunderclap (Skyfall on every shocked foe, half as hard). The spellbreaker (rune sword): Shieldbreaker (three quick hits on the foe with the most buffs, each lifting one; no Shock). The reviver is a build a run can go for, not the class: Einherjar (an ally Choosing raises comes back with every action ready) and Over the fallen.
 
 *Test, Executioner:* Doom knocks out the Ranger. Choosing brings it back at once with a tenth of its HP, and keeps the rest of the party topped up between its spears. With no Cleanse or Aegis beside her, Doom lands every time: the Valkyrie undoes it rather than stopping it. Her own Shield, built from every spear, is what keeps her standing through the fight.
 
@@ -168,7 +168,7 @@ Six classes that win through the party: a tank that punishes, a bruiser that hel
 - **Allegro.** Applies Haste to every ally.
 - **Encore.** The other ally with the highest Attack casts its next ability twice; the second cast is free. A medium cooldown.
 
-**Identities.** The conductor (wand, tome, Robes): Rubato (Haste on every ally, and each ally's ability nearest to ready is ready at once), Rousing chorus (all its Might, three times as many, on the ally with the slowest basic attack), Reprise (in place of the repeat, that ally's ability with the longest cooldown left is ready at once). The troubadour (wand, tome): Harmony, Lament, Reprise. The skald (bow, or the wand with the bell; Leather): Battle song, Accelerando, Cadenza (no Encore for an ally: the Bard's own next three basic attacks come at once).
+**Identities.** The conductor (wand, tome, Robes): Rubato (Haste on every ally, and each ally's ability nearest to ready is ready at once), Rousing chorus (all its Might, three times as many, on the ally with the slowest basic attack), Reprise (in place of the repeat, that ally's ability with the longest cooldown left is ready at once). The troubadour (wand, tome): Harmony, Lament, Reprise. The skald (bow, dagger, or the wand with the bell; Leather): Battle song, Dirge (Slows every foe in place of Hasting the party: tempo taken from the foes), Cadenza (no Encore for an ally: the Bard's own next three basic attacks come at once).
 
 *Test, Curser:* the Curser Weakens and Slows the party. War ballad's Might, every few ticks on every ally, and Allegro's Haste outweigh both, and Refrain mends the chip damage. It lifts neither debuff, so a Cleric's Renew still helps. Encore makes the party's best spell land twice.
 
@@ -183,7 +183,7 @@ Six classes that win through the party: a tank that punishes, a bruiser that hel
 - **Unmake.** Applies Silence to the casting foe with the highest Attack and strips its buffs. Waits until a foe is in a wind-up; a buff alone doesn't draw it.
 - **Enfeeble.** Applies Weaken and adds a few Sunder to the foe with the highest Attack; stacks scale from Attack.
 
-**Identities.** The spellbreaker (sword, idol): Silence all, Mana burn (Silences the casting foe and drains a fifth of its MP, which the Hexer gains), Focused curse. The curser (sword, Mail): Wither, Withering hex (its basic attacks Weaken in place of Chill), Culmination. The elemental blade (wand, tome): Hex of flames, Plague (a lighter curse on every foe, then a few Burn, Shock and Bleed), Focused curse (three times the curse and the Bleed, on the foe with the highest Attack alone).
+**Identities.** The spellbreaker (sword, idol): Silence all, Rebind (waits for an ally to be Stunned or Silenced, frees it and Hastes it: a curse-breaker for the party), Focused curse. The curser (sword, Mail): Wither, Withering hex (its basic attacks Weaken in place of Chill), Culmination. The elemental blade (wand, tome): Hex of flames, Plague (a lighter curse on every foe, then a few Burn, Shock and Bleed), Focused curse (three times the curse and the Bleed, on the foe with the highest Attack alone).
 
 *Test, Buffer:* Unmake waits for the Buffer's wind-up, silences it and strips what it has already given. Malison's curse grows with every affliction the party has laid on the Buffer's allies. Enfeeble's Weaken and Sunder go to the foe with the highest Attack, which may be the Buffer's guard rather than the Buffer.
 
@@ -217,7 +217,7 @@ Three damage dealers, each beating Defense its own way: the Monk with Sunder, th
 - **Backstab.** Has Seek. Deals heavy damage that scales from Crit chance to the foe with the lowest current HP.
 - **Garrote.** Has Seek. Deals damage that scales from Attack to a random foe that isn't Taunting, and applies Silence.
 
-**Identities.** The ambusher (dagger, trophy): Opening wound, Shadow step, From the shadows. The hunter (dagger or axe): Rupture (its crits deal extra damage for each Bleed the foe holds, and the Bleed stays), Coup de grâce, Smoke screen. The drinker (axe, vial): **Bleed them dry** (Seek, Rot and many Bleed on a random foe that isn't Taunting, and the Assassin's Lifesteal is doubled for a while; no Silence: Lifesteal), Choke.
+**Identities.** The ambusher (dagger, trophy): Opening wound, Shadow step, From the shadows. The hunter (dagger, axe or bow): Bloodless (its crits heal it for a fifth of the damage, in place of Bleed), Coup de grâce, Smoke screen. The drinker (axe, vial): **Bleed them dry** (Seek, Rot and many Bleed on a random foe that isn't Taunting, and the Assassin's Lifesteal is doubled for a while; no Silence: Lifesteal), Choke.
 
 *Test, Stalker:* the Stalker hunts the lowest-HP unit, usually the Assassin. Once Vanish is up, the Assassin is out of reach, and its crits leave Bleed for the party's hits to open. Until then it's exposed, so it wants a Shield or an Area ally beside it.
 
@@ -232,7 +232,7 @@ Three damage dealers, each beating Defense its own way: the Monk with Sunder, th
 - **Blood gift.** Spends a fifth of its max HP to heal the other ally with the lowest share of max HP for as much, and gives it Clarity. Waits until another ally is below 80% of its max HP and the Vampire itself is at 35% of its max HP or more, so the price never kills it.
 - **Frenzy.** Adds several Might to itself; stacks scale from Attack.
 
-**Identities.** The drinker (fist weapons for more hits, the axe for the drinking): Shared feast, Undying thirst, Feeding frenzy. The blood-well (idol): Drain the well, Blood for mana, Lifeblood. The frenzy (fist weapons, vial): Savage drain (three quick hits from max HP, a third each, each drinking; the foe is Weakened), Bloodthirst (while it holds Might, its basic attacks come a third faster), Feeding frenzy.
+**Identities.** The drinker (fist weapons for more hits, the axe for the drinking; Plate for the dark lord): Shared feast, Shepherd's thirst (Lifesteal doubled while any ally is below half HP, not only itself), Feeding frenzy. The blood-well (idol): Drain the well, Blood for mana, Lifeblood. The frenzy (fist weapons, vial): Savage drain (three quick hits from max HP, a third each, each drinking; the foe is Weakened), Bloodthirst (while it holds Might, its basic attacks come a third faster), Feeding frenzy.
 
 *Test, Regenerator:* the Vampire out-heals the boss by hitting it. Blood drain's share of max HP and every basic attack feed its Lifesteal, Frenzy raises both, and Blood gift turns the surplus into an ally's HP and mana. Against Anti-heal it falters: Rot cuts its own Lifesteal, and Blood gift's price is still paid.
 
@@ -251,7 +251,7 @@ Four mages, and they share no template: fire is the long cast, ice the wall that
 - **Fireball.** Deals damage that scales from Attack to every foe, and adds a few Burn to each; stacks scale from Attack.
 - **Pyre.** Deals heavy damage to the foe with the most Burn; the damage scales from Attack and rises with each Burn stack on that foe. With Fireball, its dearest ability.
 
-**Identities.** The ritualist (staff, lantern): Slow burn, Conflagration (many Burn on each foe, with a very long wind-up: Cast speed pays), High pyre (waits for a foe holding a deep fire, then a heavy blow that cashes each stack). The kindler (wand, orb): Kindling (its basic attacks add a few Burn, in place of its casts), Flash bolt, Flashfire. The conflagration (staff or wand, orb): Wildfire (each cast adds Burn to every burning foe, half as much each), Funeral pyre.
+**Identities.** The ritualist (staff, lantern): Slow burn, Conflagration (many Burn on each foe, with a very long wind-up: Cast speed pays), High pyre (waits for a foe holding a deep fire, then a heavy blow that cashes each stack). The kindler (wand, mace, orb): Kindling (its basic attacks add a few Burn, in place of its casts), Ember of haste (each cast Hastes the ally with the fastest basic attack, in place of Burn). The conflagration (staff or wand, orb, totem): Funeral pyre. The smoke and the light (lantern): Searing light (waits for a cast, then Silences the casting foe with the most Attack; no Burn), Smoke (every foe hit and Weakened; no Burn).
 
 *Test, Two states:* in both phases its hits do little, against very high Defense or Incorporeal, but Burn, untyped, still lands and ticks in full. With a Monk or Hexer adding Burn too, it stays high through both phases.
 
@@ -266,7 +266,7 @@ Four mages, and they share no template: fire is the long cast, ice the wall that
 - **Blizzard.** Deals damage that scales from Attack to every foe, and adds a few Chill to each; stacks scale from Attack.
 - **Stillness.** Applies Clarity to the ally with the least MP among those under half their max MP (with nobody under half, the ally with the least), and adds a few Chill to every foe; stacks scale from Attack.
 
-**Identities.** The ice wall (rune sword, Mail, orb): **Rime shield** (when a foe shatters, the lowest ally gains a Shield from the Frostweaver's max HP, in place of the Sunder: HP), Frost armor (Guards every ally; while the Guard lasts, a foe that hits one gains a few Chill), Deep calm. The disabler (rune sword, tome): Ice spear (past any guard at the foe with the highest Attack, several Chill), Frozen moment. The shatter killer (staff): Splinters (a shatter passes a third of its cold to every other foe), Icicles, Avalanche.
+**Identities.** The ice wall (rune sword, Mail, orb): **Rime shield** (when a foe shatters, the lowest ally gains a Shield from the Frostweaver's max HP, in place of the Sunder: HP), Frost armor (Guards every ally; while the Guard lasts, a foe that hits one gains a few Chill), Deep calm. The disabler (rune sword, tome): Ice spear (past any guard at the foe with the highest Attack, several Chill), Frozen moment. The shatter killer (staff, spear): Icicles, Avalanche, Rime edge (its basic attacks add Sunder, and a shatter adds none: the ramp without the shatter).
 
 *Test, Skirmisher:* Blizzard, Frost lance and Stillness build Chill on the fast foes, slowing them, until it shatters for damage and a Stun, and Shatterpoint leaves the foe sundered for the party. Its own basic attacks add no Chill, but Chill thaws slowly, so it builds between casts. With a Hexer or Ranger adding Chill too, the shatters come sooner.
 
@@ -281,7 +281,7 @@ Four mages, and they share no template: fire is the long cast, ice the wall that
 - **Thunderstorm.** For a while (`KIT.storm`), every ally's basic attacks add a few Shock; stacks scale from the Stormcaller's Attack. The party's storm, not a nuke.
 - **Static charge.** Its basic attacks come faster for a while (`KIT.staticCharge`): Attack speed, not Haste.
 
-**Identities.** The tempest (rune sword, Robes): Forked arc, Recharge, Overcharge (while the charge lasts, its next three abilities cost no MP). The storm fist (fist weapons, Leather, bell): Static grip, Ball lightning, Storm's eye (the party's swings' Shock goes to the foe with the most Shock, three times as much). The lightning rod (either kind, totem): Static field (every foe that hits an ally gains a few Shock while the storm lasts), Storm shield.
+**Identities.** The tempest (rune sword, Robes): Forked arc, Recharge, Overcharge (while the charge lasts, its next three abilities cost no MP). The storm fist (fist weapons, hammer, Leather, bell): Grounded arc (the second foe still struck, and both gain Sunder in place of Shock), Ball lightning, Storm's eye (the party's swings' Shock goes to the foe with the most Shock, three times as much). The lightning rod (either kind, totem): Static field (every foe that hits an ally gains a few Shock while the storm lasts), Storm shield.
 
 *Test, Swarm:* Arc and Chain lightning Shock all eight foes, Thunderstorm puts Shock on every ally's swings too, and every time a foe acts, Shock hurts it. Against a lone Nuker it's weak: one slow caster barely sets off Shock, and Arc has no second foe.
 
@@ -296,7 +296,7 @@ Four mages, and they share no template: fire is the long cast, ice the wall that
 - **Rockfall.** Deals heavy damage that scales from Defense to a random foe, on a medium cooldown: big, rarer rocks.
 - **Tremor.** Deals damage that scales from Defense to a random foe, and applies Stun.
 
-**Identities.** The landslide (great weapon): Faultline, Boulder, Fissure, Rampart. The quake (hammer, trophy): Stunning crits, Aftershock. The stone warden (hammer, kite shield): Stone skin, Rock shelter (the ally with the lowest share of HP gains a Shield as large as the damage Rockfall dealt).
+**Identities.** The landslide (great weapon, axe): Boulder, Groundswell (no blow and no Stun: every ally's next basic attack comes at once), Rampart. The quake (hammer, trophy): Stunning crits, Aftershock. The bare rock (Robes, idol): Bare rock (Crit damage +50% while it holds no Shield: its passive outside the stone). The stone warden (hammer, kite shield): Stone skin, Rock shelter (the ally with the lowest share of HP gains a Shield as large as the damage Rockfall dealt).
 
 *Test, Hit counter:* the boss strikes back every few hits it takes. The Geomancer lands few hits, but while its Shield holds they crit often and hard, so the counter rarely fires. A Shield breaks once hits use up its pool, so the Geomancer crits most while a Knight keeps foes off it. Area damage or a Stalker turns its crits off.
 
@@ -327,7 +327,7 @@ Every piece of the vocabulary is used by a class or an enemy (`classes.ts`, `ene
 - **Built-up statuses on basic attacks.** Each has a basic-attack source: Chill (Hexer), Shock (Stormcaller, and the party under its Thunderstorm) and Sunder (Monk). Burn is stoked by the Pyromancer's casts, and its Kindling version puts it back on swings.
 - **Effects that reach every ally:** Thunderstorm, War ballad, Allegro and Frost armor. Othismos, Malison, Blizzard and Stillness reach every foe; Condemn brings every ally's swing onto one foe.
 - **Scaling from a stat other than Attack,** the obvious target for gear: Shield bash (max HP), Bramble lash (Thorns), Othismos (Defense, its Sunder too), Backstab (Crit chance), Blood drain and Blood gift (max HP), Rockfall and Tremor (Defense), the Shield amounts of Vanguard (max HP), Earthen shell (Defense) and Shieldmaiden (the damage dealt), and the versions Triage, Ward of life and Rime shield (max HP).
-- **Who reads what.** Every signature stat of every weapon and offhand kind is read by every wearer: Attack by nearly every hit and stack; HP by the Knight, Vampire, Cleric, Paladin, Bramble knight, Valkyrie, Frostweaver and the walls' survival; Defense by the Geomancer, Bramble knight, Hoplite, Knight and the walls; Crit chance by the Assassin, Geomancer, Ranger and Paladin; Crit damage by the Assassin, Geomancer, Ranger and Bard; Double strike by the Monk, Stormcaller and Vampire; Attack speed by the basic-attack riders (Hexer, Stormcaller, Ranger, Bard, Monk, Paladin, Valkyrie, Vampire, Pyromancer's Kindling); Cast speed by the Pyromancer, Frostweaver, Cleric, Paladin, Geomancer and Hoplite; Cooldown by the Bard, Valkyrie, Hexer, Pyromancer and Cleric; Aggro by the walls, the Valkyrie, Monk and Hoplite; Lifesteal by the Vampire and Assassin; MP regen by the Frostweaver, Stormcaller, Cleric and Paladin; MP by the Pyromancer and Frostweaver; Thorns by the Bramble knight, Stormcaller and Knight; Evasion by the Monk, Assassin, Valkyrie, Ranger and the Stormcaller's leather; Siphon by the Hexer and Vampire. The thinnest reads are the Knight's and Geomancer's Attack (the swing), the Vampire's Siphon and the Ranger's Evasion.
+- **Who reads what.** A piece's stats are its own, so one may suit some of its kind's wearers more than others: a choice, not a mistake. The kits read: Attack by nearly every hit and stack; HP by the Knight, Vampire, Cleric, Paladin, Bramble knight, Valkyrie, Frostweaver and the walls' survival; Defense by the Geomancer, Bramble knight, Hoplite, Knight and the walls; Crit chance by the Assassin, Geomancer, Ranger and Paladin; Crit damage by the Assassin, Geomancer, Ranger and Bard; Double strike by the Monk, Stormcaller and Vampire; Attack speed by the basic-attack riders (Hexer, Stormcaller, Ranger, Bard, Monk, Paladin, Valkyrie, Vampire, Pyromancer's Kindling); Cast speed by the Pyromancer, Frostweaver, Cleric, Paladin, Geomancer and Hoplite; Cooldown by the Bard, Valkyrie, Hexer, Pyromancer and Cleric; Aggro by the walls, the Valkyrie, Monk and Hoplite; Lifesteal by the Vampire and Assassin; MP regen by the Frostweaver, Stormcaller, Cleric and Paladin; MP by the Pyromancer and Frostweaver; Thorns by the Bramble knight, Stormcaller and Knight; Evasion by the Monk, Assassin, Valkyrie, Ranger and the Stormcaller's leather; Siphon by the Hexer and Vampire. The thinnest reads are the Knight's and Geomancer's Attack (the swing), the Vampire's Siphon and the Ranger's Evasion.
 - **Answers to defences.** Sunder (Monk, Ranger, Hoplite) raises the damage a foe takes from every hit, Crit damage (Assassin, Ranger, Geomancer) beats high Defense, Accuracy (Ranger) beats high Evasion, and a status's own damage meets neither Defense nor Evasion.
 
 ## To watch in simulation

@@ -25,15 +25,16 @@ The loot is made from these nine: each item's designer tags (`SERVED`, from its 
 **A wall is not every build's start,** and neither is a front seat: a wall at the start of every build would make every run feel the same. Staying alive without one isn't the builds' to solve, and not the knobs' either: a party without a wall loses far more of act I's regular fights than one with, at any knob, and the director will fix that by other means (`docs/rules.md`).
 
 **What every build answers:**
-- **Through a run:** its three rungs as the sign, the build and the far end. Each says what the player sees, what the step is and what it pays if the run goes no further.
+- **Through a run:** its three rungs as the first step, the build and the far end. Each says what the player sees, what the step is and what it pays if the run goes no further. A first step doesn't have to point the way (`docs/rules.md`: builds are found, not picked); it has to be seen when it fires.
 - **Stays alive:** what the build itself brings to keeping the party standing.
 - **Packs and bosses:** it has a game for both, and says which is its worse fight. Bosses and pairs of elites are where most runs ended in play.
 - **Asks of the game:** kit or rule changes.
 
 **What every build asks of the loot,** so it isn't repeated nine times:
-- **A first step that's seen the first time it fires.** In play a few Might, a tenth off a cost and a cooldown a few ticks closer were never seen to happen.
+- **An effect big enough to be seen when it fires.** In play a few Might, a tenth off a cost and a cooldown a few ticks closer were never seen to happen.
 - **A first step that doesn't cost the party its safety.** In act I a careful party takes defence first, and it's right to.
-- **A formation about one thing:** three seats that all serve what the build does. The one formation that made three units one build in play was that.
+- **Pieces on every thread, not one.** Only about a third of a build's pieces name its keyword; the rest sit on its other threads (each build's *Threads*), and a thread two builds share is a door between them. Builds may be much less clearly signposted if that makes them deeper.
+- **Formations it can work out.** Nine formations are a road's own keyword shape; most are shapes a build has to find its use for (*Gear design: the loot*, Formations).
 
 ## The rhythm space
 
@@ -49,7 +50,7 @@ The loot is made from these nine: each item's designer tags (`SERVED`, from its 
 | **Barrage** | two serve one caster | in salvos from one unit | a cliff when the mana or the caster stops | each salvo | MP, more than any other |
 | **Blood Pact** | one pays, one drinks, one gives | high and steady | swings and rights itself | many, medium | HP, in place of MP |
 
-**Four of the nine are a status's road.** A status is the sign a player can read on floor one, and play showed it carries a run. What keeps the four from being one build in four colours is that each status is set off by a different clock:
+**Four of the nine are a status's road.** Their status comes mostly from the kits; the loot spreads their pieces across the roads' other threads (tempo, spread, aim, readers), so a run finds its fire or its frost as much as it picks it. What keeps the four from being one build in four colours is that each status is set off by a different clock:
 
 | Road | Its status | The clock |
 | --- | --- | --- |
@@ -80,7 +81,7 @@ The loot is made from these nine: each item's designer tags (`SERVED`, from its 
 - **Routes:** Geomancer, Knight, Hoplite · Geomancer, Paladin, Bard · no earth: Knight, Hoplite, Bard.
 - **Seats it likes:** a hammer whose actions come less often and land bigger; an anvil that wears the stone and draws the blows; a loader that gives the hammer what the party has to give (stone, Might).
 - **Through a run:**
-  1. *The sign.* One unit whose heavy thing already out-sizes everything round it: rocks that crit from behind a Shield, a double swing, a bash from max HP. The sign is the number, and that Defense or HP on a piece makes it bigger: here the careful pick and the build's pick are the same piece. The step is the first piece that says so on its card, heavier and rarer.
+  1. *The first step.* One unit whose heavy thing already out-sizes everything round it: rocks that crit from behind a Shield, a double swing, a bash from max HP. The sign is the number, and that Defense or HP on a piece makes it bigger: here the careful pick and the build's pick are the same piece. The step is the first piece that says so on its card, heavier and rarer.
   2. *The build.* A loading crew: Might aimed at the hammer, the target opened first, stone on everyone, the blow aimed at something worth it. Elites lose a large share at a time, and a boss takes a handful of blows.
   3. *The far end.* The stone loads the blow. Every blow the hammer lands reads the stone the whole party holds and leaves it, so what keeps the party standing is also the size of the blow. The blow lands twice. The shield detonation pays when stone breaks; this pays while it holds.
 - **Stays alive:** stone on everyone: Shields, Guard and an Aegis across three heavy bodies. Fights run long, so the stone has to be rebuilt, and that's where its MP goes.
@@ -89,7 +90,7 @@ The loot is made from these nine: each item's designer tags (`SERVED`, from its 
   - **Pieces:** heavier and rarer, for swings and for abilities; Might for one unit, not three; damage from Defense, max HP and the Shield pool; a Shield's breaking as a blow, and a blow that reads the whole party's stone. Every Landslide piece promises a blow on its card: the ones that promised stone alone were worn as plain defence, by everyone.
   - **Formations:** hammer, anvil, loader; formations that trade the party's speed for size.
   - **Upgrades:** slower and heavier versions; versions that aim the blow.
-- **Asks of the game:** none. Its miss was the loot's signposting, not the kits.
+- **Asks of the game:** none.
 
 ### Thousand Cuts
 
@@ -106,7 +107,7 @@ The loot is made from these nine: each item's designer tags (`SERVED`, from its 
 - **Routes:** Vampire, Assassin, Monk · behind briars: Bramble knight, Assassin, Ranger · Valkyrie, Ranger, Vampire.
 - **Seats it likes:** an opener whose crits come more often; two blades that act more often and hit smaller.
 - **Through a run:**
-  1. *The sign.* A unit that opens wounds (four base kits do): the party's hits on that foe print twice. Early units mostly swing, so the step is anything that makes more hits: the faster of a class's two weapon kinds, a second strike. It's worth taking on any unit.
+  1. *The first step.* A unit that opens wounds (four base kits do): the party's hits on that foe print twice. Early units mostly swing, so the step is anything that makes more hits: the fastest of a class's weapon kinds, a second strike. It's worth taking on any unit.
   2. *The build.* An opener and two who pour, a pacer's Haste, and units kept standing by their own hits. Armored foes stop being walls: Bleed goes past Defense, and the hits only have to land.
   3. *The far end.* The count: every hit landed this fight makes the next worth more, and extra strikes chain.
 - **Stays alive:** by hitting. Each hit drinks, builds a Shield or mends an ally. The dodge alone didn't hold in play.
@@ -131,7 +132,7 @@ The loot is made from these nine: each item's designer tags (`SERVED`, from its 
 - **Routes:** Knight, Pyromancer, Monk · Paladin, Hexer, Pyromancer · no mage: Paladin, Monk, Hexer.
 - **Seats it likes:** a keeper that holds the early danger; a stoker that acts more often; a torch whose fire reaches every foe that's already burning.
 - **Through a run:**
-  1. *The sign.* One unit that leaves Burn: three base kits do, and a version or a piece puts it on a swing. The fire stands as high as it's fed, and it gets through Defense where hits don't. The step is a second feeder, and because the fire dies so fast the step shows at once: the number stands twice as high. It sits on a weapon or a version, so it takes nothing from the party's safety.
+  1. *The first step.* One unit that leaves Burn: three base kits do, and a version or a piece puts it on a swing. The fire stands as high as it's fed, and it gets through Defense where hits don't. The step is a second feeder, and because the fire dies so fast the step shows at once: the number stands twice as high. It sits on a weapon or a version, so it takes nothing from the party's safety.
   2. *The build.* Three feeders on one pile, some steady and some in bursts, a keeper who feeds too, and a reader that waits for the height. Elites and bosses burn for more than the party hits for.
   3. *The far end.* Heat: the party feeds faster the longer the fight runs, and the fire holds through what used to put it out.
 - **Stays alive:** a keeper who holds the early fight and feeds the fire. A feeder stopped is the fire sagging, so the keeper guards the tempo as well as the HP.
@@ -156,9 +157,9 @@ The loot is made from these nine: each item's designer tags (`SERVED`, from its 
 - **Routes:** Frostweaver, Hexer, Ranger · a Knight in frost: Knight, Frostweaver, Monk · no Frostweaver: Hexer, Ranger, Geomancer.
 - **Seats it likes:** two frost seats that act often and carry Chill; a breaker that hits a frozen foe hardest.
 - **Through a run:**
-  1. *The sign.* One Chill source (three base kits have one): the foes slow as the counter climbs, and one shatters. The step is a second source. Every stack also slows a foe, so it's never a pick against the party's safety.
+  1. *The first step.* One Chill source (three base kits have one): the foes slow as the counter climbs, and one shatters. The step is a second source. Every stack also slows a foe, so it's never a pick against the party's safety.
   2. *The build.* Sources enough that the same foe shatters again in the same fight, and a breaker for each one. The second shatter is the line between the sign and the build. It comes from the Chill counts, which *Core set: classes* already makes the balance pass's first job, and from what the build finds.
-  3. *The far end.* The cascade. A shatter's cold runs on to the next foe, and each shatter in a run sends on more than the one before it, so a cold enough field falls in one long string. The firecracker string is its first taste: one piece, a shatter or two more a fight. The cascade needs the whole field cold.
+  3. *The far end.* A shatter's cold runs on to the next foe (Winter's chain), and what the party lays on one foe lands on the rest (Heart of the many), so a cold enough field falls in one long string: Cold Snap's pack game, a thread now, not an engine. It needs the whole field cold.
 - **Stays alive:** the cold: a chilled field acts less, and every shatter is a Stun.
 - **Packs and bosses:** spread over a pack, the cold slows everything and the shatters come together, like a string of firecrackers. Piled on a boss, it's a slow all fight and a burst on a beat; a boss shrugs off the Stuns after the first few, not the slow or the burst. It fears fights too short to reach the cap.
 - **Needs:**
@@ -180,7 +181,7 @@ The loot is made from these nine: each item's designer tags (`SERVED`, from its 
 - **Routes:** Hoplite, Stormcaller, Valkyrie · Knight, Stormcaller, Monk · no Stormcaller: Valkyrie, Hexer, Bard.
 - **Seats it likes:** two squalls whose strikes spread; a rod that holds the field's attention.
 - **Through a run:**
-  1. *The sign.* A unit whose strikes spread and shock: fast foes take damage every time they swing, and the foe behind the front line is charged without being aimed at. The step is charge from a second unit.
+  1. *The first step.* A unit whose strikes spread and shock: fast foes take damage every time they swing, and the foe behind the front line is charged without being aimed at. The step is charge from a second unit.
   2. *The build.* The whole field charged all fight, the storm on everyone's swings, and a blow that reads the charge. Packs burn themselves down, and the back row pays for its own work.
   3. *The far end.* A storm that doesn't lift, and a blow that reads the charge on everything charged.
 - **Stays alive:** Shock lands hardest on whatever is acting most, which is what's hurting the party most. It punishes a foe for acting and doesn't stop it, so in a pack the danger stays high until late.
@@ -206,7 +207,7 @@ The loot is made from these nine: each item's designer tags (`SERVED`, from its 
 - **Routes:** a judge who calls the target: Paladin, Assassin, Stormcaller · no Assassin: Hoplite, Valkyrie, Ranger · Assassin, Ranger, Valkyrie.
 - **Seats it likes:** a marker whose pick sets the target; a chaser with reach; a warden that holds what's left.
 - **Through a run:**
-  1. *The sign.* A unit that picks its prey (the lowest, the back row, past a guard): the dangerous foe dies first, or never acts. The step is a kill or a first strike that pays something seen on the very next hit.
+  1. *The first step.* A unit that picks its prey (the lowest, the back row, past a guard): the dangerous foe dies first, or never acts. The step is a kill or a first strike that pays something seen on the very next hit.
   2. *The build.* A Mark the whole party follows, hunters whose abilities aim where the Mark sits, and a kill that pays. Mixed groups fall in a drumbeat that speeds up.
   3. *The far end.* An opening that clears the weak, and executes that carry the boss.
 - **Stays alive:** kill order: the most dangerous foe dies first, and the dead don't hit. Against a lone boss kill order buys nothing.
@@ -231,7 +232,7 @@ The loot is made from these nine: each item's designer tags (`SERVED`, from its 
 - **Routes:** Bramble knight, Cleric, Stormcaller · Knight, Hexer, Hoplite · the dancer: Monk, Valkyrie, Bard.
 - **Seats it likes:** an anchor that draws and returns; a warden that keeps it standing; a free seat that finishes what the anchor started.
 - **Through a run:**
-  1. *The sign.* On floor one, from the kit: a Bramble knight, or a Knight that Taunts in thorns. Packs die on it. There's nothing to find, which is why it was in most parties.
+  1. *The first step.* On floor one, from the kit: a Bramble knight, or a Knight that Taunts in thorns. Packs die on it. There's nothing to find, which is why it was in most parties.
   2. *The build.* The other two join the toll: blows on the anchor set off what they've laid (the attacker bleeds, sparks, slows, weakens), and the anchor has a keeper. Swarms die on the wall while the third seat does something else.
   3. *The far end.* The mirror grown. Retaliation sized by the blow as it was struck, and growing with every blow the anchor has lived through this fight. A boss's slow swings feed it, and it needs the keeper as much as the wall. The mirror is its first taste.
 - **Stays alive:** it is the tank. Its risk is the one play showed: when the anchor falls, the rest fall behind it. So the keeper is part of the build, not an extra.
@@ -257,7 +258,7 @@ The loot is made from these nine: each item's designer tags (`SERVED`, from its 
 - **Routes:** Knight, Bard, Pyromancer · Frostweaver, Bard, Stormcaller · no Bard: Cleric, Vampire, Geomancer.
 - **Seats it likes:** a soloist whose abilities come faster; a conductor who gives it tempo; a well that gives it mana.
 - **Through a run:**
-  1. *The sign.* A caster with one spell worth repeating, and anyone who gives mana. The sign is the caster not swinging its staff. Every caster party feels the shortage, so the step (mana in fights, however it comes) is one it wants anyway.
+  1. *The first step.* A caster with one spell worth repeating, and anyone who gives mana. The sign is the caster not swinging its staff. Every caster party feels the shortage, so the step (mana in fights, however it comes) is one it wants anyway.
   2. *The build.* A conductor: the spell twice, or ready again; Cooldown and Cast speed on the soloist. The spell lands several times in a fight where it used to land once.
   3. *The far end.* A cast that pays for the next, and mana as damage.
 - **Stays alive:** the soloist draws little, and its danger is a cliff, not a slope. A well that also holds the foes' attention is worth most (the Knight's Taunt and Clarity are one ability), and mana as armour is the soloist's own, found (*Engines*).
@@ -283,7 +284,7 @@ The loot is made from these nine: each item's designer tags (`SERVED`, from its 
 - **Routes:** Vampire, Valkyrie, Cleric · Vampire, Bard, Hoplite · no Vampire: Assassin, Paladin, Monk.
 - **Seats it likes:** a bleeder that pays HP for power; a drinker that feeds on hits; a donor that passes life on.
 - **Through a run:**
-  1. *The sign.* A drinker: the Vampire, or Lifesteal on anything that hits hard. A unit that heals itself by hitting, and potions saved. It's taken as sustain, which is right: sustain is the build's floor.
+  1. *The first step.* A drinker: the Vampire, or Lifesteal on anything that hits hard. A unit that heals itself by hitting, and potions saved. It's taken as sustain, which is right: sustain is the build's floor.
   2. *The build.* The price: abilities and pieces paid in HP that buy what mana can't, power below half for the payer and from its allies, and a net over whoever is low. Fights where the mana never runs out.
   3. *The far end.* Life as the party's one currency: strongest at the brink, and full when the fight ends.
 - **Stays alive:** drink and nets. The lower it is the more it drinks; the healers quicken at the brink; a Shield or an Aegis takes the blow that would finish a low unit. It's the riskiest way to live in the set, on purpose.
@@ -319,7 +320,7 @@ The loot is made from these nine: each item's designer tags (`SERVED`, from its 
 
 ### The set
 
-Twenty-seven more, for twenty-eight, and four that the kits and the mythics already make (*Already in the game*, below).
+Thirty-one more, for thirty-two, and three that the kits and the mythics already make (*Already in the game*, below).
 
 **The test each one passed.** It's a test for being worth finding, not a mould: the engines share no shape.
 - **Each part earns its slot alone,** for a plain reason. A happy accident needs its parts to be in the party already.
@@ -456,11 +457,6 @@ Twenty-seven more, for twenty-eight, and four that the kits and the mythics alre
 - **What the player sees:** SHATTER, and the great spell's name right under it, every time.
 - **Enough to see it:** the piece beside one Frostweaver. The frost becomes another unit's clock, so a long cooldown stops mattering, and the foe that just shattered is stunned and sundered when the blow arrives.
 
-**The firecracker string.** *Cold Snap.*
-- **What combines:** a piece that sends a shattered foe's cold on to the others, or leaves some of it where it was: never Chill itself · a field already cold: Blizzard, Stillness, the Ranger's Hail.
-- **What the player sees:** one foe bursts and the burst runs down the line, each one a Stun. On a lone foe the second shatter comes in half the time of the first.
-- **Enough to see it:** the piece and one wide source of cold. It's the second shatter play never saw.
-
 #### Who gets picked, and who's healed, turns them over
 
 **The brink.** *Blood Pact, with Landslide's stone and the Toll's keepers.*
@@ -490,50 +486,82 @@ Twenty-seven more, for twenty-eight, and four that the kits and the mythics alre
 - **What the player sees:** the Monk is bitten by a hellhound and catches fire, and from then on everything it touches burns. In the Ice Pass the same unit spreads frost. A Cleanse puts it out.
 - **Enough to see it:** the piece on a fast unit, in a region whose foes afflict. The healer's Cleanse turns against it, and that's part of the joke.
 
+#### New in the creative-builds pass
+
+Found in the pass's own pieces, each two parts, each told in one sentence.
+
+**The shield party.** *Landslide, the Toll.*
+- **What combines:** a weapon that hits harder for each ally holding a shield (Phalanx pike) · a shield that raises every ally's Defense while every ally holds one (Pavise of the line) · the new kinds' shields: the Frostweaver's kite shield, the Valkyrie's and the Bramble knight's round shields.
+- **What the player sees:** three shields up, and everyone's Defense and hits climb together.
+- **Enough to see it:** three shield-holders and either piece. A party with no wall in front finds its wall in its offhands.
+
+**The borrowed hand.** *Barrage, Landslide.*
+- **What combines:** a tome whose wearer's abilities read the Attack of the ally with the most (Borrowed hand) · a support whose abilities scale from Attack: the Bard's War ballad and songs, the Hexer's curses · a mage with the party's most Attack.
+- **What the player sees:** the Bard's Might lands as if a Pyromancer had cast it.
+- **Enough to see it:** the tome on a Bard or a Hexer beside a Pyromancer.
+
+**The open book.** *Landslide, the Toll.*
+- **What combines:** plate whose wearer's abilities read Defense in place of Attack while its Defense is the greater (Even-keel plate) · a Guard on it: Fortify, Mason's hammer, Glyphed robe, Penitent's mace.
+- **What the player sees:** a Paladin's Smite or a Vampire's drain growing with every Guard laid on it.
+- **Enough to see it:** the plate on a Paladin or a Vampire in Plate beside one Guard-giver.
+
+**Owed and the healer.** *Blood Pact, the Toll.*
+- **What combines:** mail whose wearer's hits wait and land at once (Owing mail) · any healer, or a Shield laid before the debt comes due.
+- **What the player sees:** a grey number climbing on the icon, the heal arriving, and the bill landing on a full bar.
+- **Enough to see it:** the mail beside a Cleric. It turns a burst into a beat a healer can answer.
+
+**The fixation line.** *The Toll, the Hunt.*
+- **What combines:** a Fixate, the Ranger's Lure or the Alarum horn · a Toll anchor that draws the rest.
+- **What the player sees:** two anchors, each holding its own foes: the biggest hitter on the Ranger, the pack on the wall.
+- **Enough to see it:** either Fixate and an anchor. A way to protect without being the wall.
+
 #### Already in the game
 
-Four engines the kits and the mythics make today, with nothing new. They're named so the loot doesn't repeat them, and so the upgrades and mythics know what the kits already hold.
+Three engines the kits and the mythics make today, with nothing new. They're named so the loot doesn't repeat them, and so the upgrades and mythics know what the kits already hold.
 - **The cull** (the Hunt, Thousand Cuts): the Assassin's Opening wound, Lacerate and Coup de grâce. Every strike on a fresh foe is a crit and a wound, the execute finishes it, and it's ready for the next. Found in play, where it carried a run to act II as the crit-Bleed build.
-- **The quake** (Landslide, Cold Snap, the Storm): the Geomancer's Stunning crits and Fissure. A rock crits and the foe is stunned; the next rock lands triple on it, and crits again.
-- **The vanishing blade** (the Hunt): the Assassin's mythic. A kill, and the killer is gone. It comes back with a doubled hit, kills, and is gone again; in a pack it's never there to be hit.
-- **The stonecutter** (Landslide): the Geomancer's mythic beside its own passive. Every crit rebuilds the stone, and while the stone stands it crits.
+- **The quake** (Landslide, Cold Snap, the Storm): the Geomancer's Stunning crits beside anything that hits a Stunned foe harder (Icebreaker, Idol of binding's like). A rock crits and the foe is stunned; the next blow lands double on it.
+- **The bedrock** (Landslide): the Geomancer's mythic, Bedrock heart. While its stone stands, every hit crits, and Bedrock's own Crit chance has nothing left to add, so the passive's versions decide what the stone is worth.
 
 ### Across the web
 
 | Engine | Sits on | Lives on | Its keystones in the loot |
 | --- | --- | --- | --- |
 | The shield detonation | Landslide | the party | Rubble plate, Shatterstone charm, Second skin, Rampart |
-| The frozen gate | the Toll, Cold Snap | two units | Frostward blade, Hoarfrost plate, Frost armor, Toll gate |
-| The mirror | the Toll, Landslide | two units | Thornheart plate, Mirror shield, Hoplon, The last wall |
+| The frozen gate | the Toll, Cold Snap | two units | Hoarfrost plate, Frost armor |
+| The mirror | the Toll, Landslide | two units | Thornheart plate, Mirror shield; Hoplon's Aegis blow beside it |
 | The goad | the Storm, the Toll | the party | Provoking blade, Goading totem |
-| The held charge | the Storm, Cold Snap, Landslide | the party | Stormbrand, Thunderhead maul, Lightning-glass, Thunderclap, Stormspear, Eye of the storm |
-| The reckoning | the Toll, Landslide | two units | Grudgebearer, The anvil, Hammer and anvil |
+| The held charge | the Storm, Cold Snap, Landslide | the party | Lightning-glass, Thunderclap |
+| The reckoning | the Toll, Landslide | two units | Grudgebearer, Hammer and anvil |
 | The reaping | the Hunt, the Storm, Bonfire, the Toll | two units | Bounty charm, Coup de grâce |
-| The judge's drum | the Hunt, Landslide, Bonfire | two units | Pack leader's coat, Hunting horn, Swift justice, Open season |
-| The opening, again | the Hunt | one unit | Overture coat, Second dawn |
-| The fuse | Bonfire, the Hunt | the party | Ember heart, Wick, Smouldering orb, Pyre line |
-| The avalanche | Landslide, the Hunt | one unit | Overkill axe, Overrun, Downhill charm |
-| The spell on the swing | Thousand Cuts, Barrage | one unit | Baton, Bell of the hour, Metronome |
+| The judge's drum | the Hunt, Landslide, Bonfire | two units | Pack leader's coat, Hunting horn, Swift justice |
+| The opening, again | the Hunt | one unit | Overture coat |
+| The fuse | Bonfire, the Hunt | the party | Wick |
+| The avalanche | Landslide, the Hunt | one unit | Overkill axe, Overrun |
+| The spell on the swing | Thousand Cuts, Barrage | one unit | Baton, Bell of the hour |
 | The red rain | Thousand Cuts, the Storm, the Toll | two units | none of its own: every hit that lands on many foes, with the kits' wide hits |
 | The riposte | the Toll, Thousand Cuts | one unit | Parrying spear, Duelist's leathers, Tempest cloak |
-| Every colour | Bonfire, Cold Snap, the Storm, Thousand Cuts | one unit | Wildmagic wand, Grimoire of plagues, Plague |
+| Every colour | Bonfire, Cold Snap, the Storm, Thousand Cuts | one unit | Wildmagic wand, Festering idol, Plague |
 | The lead's colour | Bonfire, Cold Snap, the Storm, Thousand Cuts | the party | Mimic wand, The standard |
 | The emptied quiver | Thousand Cuts, the Hunt | one unit | Quick draw |
 | The blood mage | Blood Pact, Barrage | one unit | Flagellant's vestments, The covenant |
-| The resonance | Barrage, the Storm, Bonfire, Cold Snap | one unit | Resonant robes, Storm front |
+| The resonance | Barrage, the Storm, Bonfire, Cold Snap | one unit | Resonant robes |
 | The crescendo | Barrage | one unit | Crescendo charm, Orb of the rising sun |
-| Mana as armour | Barrage, Blood Pact | two units | Orb of the deep, Idol of the deep |
-| The shatter bell | Cold Snap, Landslide, Bonfire, Barrage | two units | Floe charm, Frozen tome, Icefall |
-| The firecracker string | Cold Snap | the party | Winter's chain, Frostwalker's furs, Splinters, Glacier's heart, The long winter |
-| The brink | Blood Pact, Landslide, the Toll | two units | Bloodletter, Flagellant's vestments, Halved heart, Heart of the saint, Blood vial, Ravening draught, The chalice, Blood oath |
+| Mana as armour | Barrage, Blood Pact | two units | Orb of the deep |
+| The shatter bell | Cold Snap, Landslide, Bonfire, Barrage | two units | Frozen tome, Icefall |
+| The brink | Blood Pact, Landslide, the Toll | two units | Bloodletter, Flagellant's vestments, Halved heart, Heart of the saint, Blood vial |
 | Two in the dark | the Toll, Blood Pact, the Hunt | the party | Shroud charm, Shadow cloak, Smoke screen, Decoy |
-| The red stone | Thousand Cuts, Blood Pact, Landslide | one unit | Red stone mail, Phylactery, Blood oath |
+| The red stone | Thousand Cuts, Blood Pact, Landslide | one unit | Red stone mail |
 | The borrowed gift | none of its own | two units | Twin-knot, Twins |
 | The carrier | none | one unit | Carrier's coat |
+| The shield party | Landslide, the Toll | the party | Phalanx pike, Pavise of the line |
+| The borrowed hand | Barrage, Landslide | two units | Borrowed hand |
+| The open book | Landslide, the Toll | two units | Even-keel plate |
+| Owed and the healer | Blood Pact, the Toll | two units | Owing mail |
+| The fixation line | the Toll, the Hunt | two units | Lure, Alarum |
 
 - **Every road has engines, and none has only its own.** Landslide and the Toll touch nine; Thousand Cuts, Bonfire, Cold Snap, the Storm and the Hunt seven; Barrage six; Blood Pact five.
-- **Four sit on one road, eleven on two, eleven on three or more,** and the two exotics on none.
-- **Eleven live on one unit,** where play showed a player builds; ten need two units; seven need the party.
+- **Three sit on one road, sixteen on two, eleven on three or more,** and the two exotics on none.
+- **Eleven live on one unit,** where play showed a player builds; fourteen need two units; seven need the party.
 - **Five can start in act I** from the kits, a version and a formation: the red rain, the held charge, the reaping, the lead's colour and the brink. The rest are one piece from a party already on a road.
 - **Several need the rules to grow:** damage carried past a kill, a foe's swing called early, damage taken from MP, retaliation sized by the blow before the wall's share, an ability cast by a count of swings, start-of-fight effects that happen again, a status passed on by its holder, an ability brought back by the foes it hit. The director's intent allows it (`docs/gear-design/philosophy.md`).
 - **Two are loops,** each with a brake of its own: the emptied quiver (a crit that fails) and the resonance (a pack that thins, a pool that empties). Synergies may be overpowered until the balance pass.
@@ -547,7 +575,7 @@ One part, several engines, so a run holding one part has more than one partner t
 | A Shield made by what a unit already does (hits, dodges, a shatter, healing past full) | the detonation, the frozen gate, the riposte, the red stone, the brink |
 | A draw on one unit | the frozen gate, the mirror, the goad, the reckoning, the riposte, two in the dark |
 | A status on a swing | the lead's colour, every colour, the held charge, the carrier |
-| A hit on many foes | the red rain, the reaping, the resonance, the blood mage, the firecracker string |
+| A hit on many foes | the red rain, the reaping, the resonance, the blood mage |
 | A foe held still | the held charge, the shatter bell, the emptied quiver |
 | A kill that pays | the reaping, the judge's drum, the opening, again, the fuse, the avalanche |
 | The slowest, heaviest blow | the judge's drum, the avalanche, the reckoning, the shatter bell, the mirror |
@@ -675,7 +703,7 @@ Four things for the upgrades to know:
 - **The Hexer's spellbreaker and the Frostweaver's disabler serve an answer (stopping a cast), not a road.** The class frame wants each identity viable.
 - **The Assassin's ambusher and hunter both serve the Hunt.** The hunter also opens the wounds for Thousand Cuts.
 - **The Pyromancer is in two roads;** the Cleric, Ranger, Assassin, Vampire and Frostweaver are in three; every other class is in four or more.
-- **Two versions drain a foe's MP:** the Hexer's Mana burn and the Vampire's Drain the well. The player can't see a foe's MP, so they're mana gain for their user, and the drain counts for nothing in a build (`docs/rules.md`).
+- **A version drains a foe's MP:** the Vampire's Drain the well. The player can't see a foe's MP, so it's mana gain for its user, and the drain counts for nothing in a build (`docs/rules.md`).
 
 ## Checks on the whole set
 
