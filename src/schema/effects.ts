@@ -103,7 +103,7 @@ export const Effect = z
           .enum(["weapon", "hit", "dealt", "over"])
           .optional()
           .describe(
-            "weapon (the default): the actor's basic attack against each target, its damage with the weapon's riders and statuses, in whatever shape its basic attacks have (their boosts). hit: the raw amount of the hit that set the reaction off (before Defense), resolved afresh. dealt: what that hit dealt, again, as it is: no dodge, no crit, no boost and no Defense (a second landing); it's bare. over: what a killing blow had left over (a reaction to ko), which meets Evasion and Defense but isn't boosted or crit again; it's bare.",
+            "weapon (the default): the actor's basic attack against each target, its damage with the weapon's riders and statuses, in whatever shape its basic attacks have (their boosts). hit: the raw amount of the hit that set the reaction off (before Defense), resolved afresh; a dodged hit's too. dealt: what that hit dealt, again, as it is: no dodge, no crit, no boost and no Defense (a second landing); it's bare. over: what a killing blow had left over (a reaction to ko), which meets Evasion and Defense but isn't boosted or crit again; it's bare.",
           ),
         amount: Num.optional().describe("A hit of its own size, in place of `of` (a blow from Attack, not from the weapon)."),
         apply: z.array(HitApply).optional().describe("With `amount`: statuses the hit applies."),
@@ -147,7 +147,7 @@ export const Effect = z
       .strictObject({ op: z.literal("pass"), label: Label, except: z.array(Id).min(1).optional(), to: To })
       .describe("Every status of this label the actor holds passes to each target: the actor is rid of it, and it lands as a fresh application at its own length, with the stacks the actor held. Unremovable statuses stay."),
     z
-      .strictObject({ op: z.literal("share"), to: To })
+      .strictObject({ op: z.literal("share"), ratio: z.number().gt(0).max(1).optional().describe("A share of the stacks (default 1: the same)."), to: To })
       .describe("Reactions to status_gained only: each target gains the same status in the same stacks, as a copy. Only a status laid at a moment is shared: one with an icon that has a duration, stacks or a block; not a state its holder keeps while something is true of it."),
     z
       .strictObject({ op: z.literal("riders"), plain: z.literal(true).optional().describe("Only the riders every swing adds: none that waits for a crit, a tag or a test, and none borrowed."), to: To })
@@ -155,6 +155,12 @@ export const Effect = z
     z
       .strictObject({ op: z.literal("restart"), to: To })
       .describe("The start-of-fight effects of each target's gear and seat happen again: their reactions to fight_start, as a repeat (`repeat: false` keeps a price or a drawback out). One event restarts a unit once."),
+    z
+      .strictObject({ op: z.literal("trade"), to: To })
+      .describe("The actor and the target trade HP shares: each is left at the other's percent of its own max HP. Not damage and not healing: nothing reacts to it but HP lines."),
+    z
+      .strictObject({ op: z.literal("rewind"), ticks: z.number().positive(), to: To })
+      .describe("Each target's HP goes back to what it was this many ticks ago, if that was more. Not healing: nothing reacts to it but HP lines."),
     z.strictObject({ op: z.literal("fell"), to: To }).describe("Each target is knocked out at once: not damage, so no Shield, Aegis or floor stands in the way. The actor's kill, but no hit's."),
     z
       .strictObject({ op: z.literal("summon"), enemy: Id, count: PosInt.optional().describe("Default 1."), hp: z.number().int().min(-90).optional().describe("The summoned units' own max HP, +% (default 0); the fight's change to every foe applies on top.") })

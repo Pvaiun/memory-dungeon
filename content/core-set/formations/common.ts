@@ -1,6 +1,6 @@
 /** The common formations. Each adds itself to kit.ts's lists. */
 import type { StatusT, UnitCondT } from "../../../src/schema.js";
-import { EV, FEW_TICKS, NO_MARK, SO_OFTEN, TAUNTS_ALL_FIGHT, TO, against, atStart, give, hits, ofAmount, on, react, reactIf, share } from "../pieces/kit.js";
+import { EV, FEW_TICKS, NO_MARK, SO_OFTEN, TAUNTS_ALL_FIGHT, TO, against, atStart, give, hits, lift, marker, ofAmount, on, react, reactIf, share, swingNow } from "../pieces/kit.js";
 import { OVERHEAL } from "../pieces/shared.js";
 import { COOLDOWN, FLAT_STACKS } from "../scale.js";
 import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTEAL_HIGH, NOTHING, STRONGER_HEALS, THIRD_FASTER, THIRD_SOONER, THORNS, add, critSt, formation, held, st, thrice, twice } from "./kit.js";
@@ -9,7 +9,7 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
 
 {
   // The Hammer: Millstone's shape on a seat (Attack speed −100 is half as often).
-  const hammer = "Basic attacks come half as often, for 2.25× damage.", loader = `At fight start: the Hammer gains ${FLAT_STACKS.many} Might.`;
+  const hammer = "Basic attacks come half as often, for 2.25× damage.", loader = `Each cast gives the Hammer ${FLAT_STACKS.few} Might.`;
   add(
     formation("Heavy line", "common", "One loads, one takes the blows, one strikes.", [
       { name: "Hammer", text: hammer, stats: [{ stat: "attack_speed", flat: -100 }], statuses: ["heavy_line_hammer"] },
@@ -18,7 +18,7 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
     ]),
     [
       held("heavy_line_hammer", "Hammer", hammer, { boosts: [{ tag: "basic", pct: 125 }] }),
-      held("heavy_line_loader", "Loader", loader, { reactions: [atStart(give("might", TO.seat("hammer"), FLAT_STACKS.many))] }),
+      held("heavy_line_loader", "Loader", loader, { reactions: [react(EV.cast, give("might", TO.seat("hammer"), FLAT_STACKS.few))] }),
     ],
     "Landslide 1 ●●●, Hunt ● ⚙ judge's drum (half), avalanche (half), reckoning (half)",
   );
@@ -49,19 +49,24 @@ add(
   );
 }
 {
-  // The Breaker's aim: a Stunned foe, by draw among several, inside the Taunt rule and ahead of a Mark.
-  // A Chill a swing, not a few: two Frost seats at a few each, beside the riders, filled the counter in a couple of swings.
-  const frost = "Basic attacks add a Chill.", breaker = "Basic attacks go to a Stunned foe first. Hits on Stunned foes deal double.";
+  // Each Archer marks the foe it last hit (its own marker, moved with each hit); the other Archer's basic attacks aim at it.
+  const archer = "Basic attacks go to the foe the other Archer last hit, and deal +20% to it.";
+  const archerOf = (me: "a" | "b") => {
+    const them = me === "a" ? "b" : "a", mine = `crossfire_mark_${me}`, theirs = `crossfire_mark_${them}`;
+    return held(`crossfire_archer_${me}`, "Archer", archer, {
+      aim: { rule: { side: "foes", where: { has: theirs } } },
+      boosts: [{ tag: "basic", pct: against(20, { has: theirs }) }],
+      reactions: [react(EV.hit, lift(mine, TO.everyFoe, "marker"), give(mine, "other"))],
+    });
+  };
   add(
-    formation("Hoarfrost line", "common", "Two lay frost; the third breaks what freezes.", [
-      ...twice({ name: "Frost", text: frost, statuses: ["hoarfrost_line_frost"] }),
-      { name: "Breaker", text: breaker, statuses: ["hoarfrost_line_breaker"] },
+    formation("Crossfire", "common", "Two shoot where the other just struck; one draws the eye.", [
+      { name: "Archer", text: archer, statuses: ["crossfire_archer_a"] },
+      { name: "Archer", text: archer, statuses: ["crossfire_archer_b"] },
+      { name: "Spotter", text: "Draws far more.", stats: [st("aggro", 2)] },
     ]),
-    [
-      held("hoarfrost_line_frost", "Frost", frost, { reactions: [react(EV.basic, give("chill", "other", FLAT_STACKS.one))] }),
-      held("hoarfrost_line_breaker", "Breaker", breaker, { aim: { rule: { side: "foes", where: { has: "stun" }, pick: "random" }, first: true }, boosts: hits(against(100, { has: "stun" })) }),
-    ],
-    "Snap 1 ●●●, Landslide ● ⚙ lead's colour (half)",
+    [archerOf("a"), archerOf("b"), marker("crossfire_mark_a", "Crossfire", "The first Archer's last target."), marker("crossfire_mark_b", "Crossfire", "The second Archer's last target.")],
+    "Hunt 1 ●●, Cuts ● ◆ focus",
   );
 }
 {
@@ -81,35 +86,31 @@ add(
   );
 }
 {
-  const marker_ = "Basic attacks Mark their target, if no foe is Marked.";
+  // The Point marks the foe it last hit (one marker, moved with each hit); the Flanks' basic attacks on it hit harder.
+  const point = "Draws far more.", flank = "Basic attacks on the foe the Point last hit deal +30%.";
   add(
-    formation("Hunting party", "common", "One marks, one chases, one holds the line.", [
-      { name: "Marker", text: marker_, statuses: ["hunting_party_marker"] },
-      { name: "Chaser", text: "Everything it does ignores Taunt.", statuses: ["hunting_party_chaser"] },
-      { name: "Warden", text: "Draws far more. Defense up.", stats: [st("aggro", 2), st("defense", 1)] },
+    formation("Wedge", "common", "One drives in; two follow where it struck.", [
+      { name: "Point", text: point, stats: [st("aggro", 2)], statuses: ["wedge_point"] },
+      ...twice({ name: "Flank", text: flank, statuses: ["wedge_flank"] }),
     ]),
     [
-      held("hunting_party_marker", "Marker", marker_, { reactions: [reactIf(EV.basic, NO_MARK, give("marked", "other"))] }),
-      held("hunting_party_chaser", "Chaser", "Everything it does ignores Taunt.", { seek: "all" }),
+      held("wedge_point", "Point", "Marks the foe it last hit for the Flanks.", { reactions: [react(EV.hit, lift("wedge_mark", TO.everyFoe, "marker"), give("wedge_mark", "other"))] }),
+      held("wedge_flank", "Flank", flank, { boosts: [{ tag: "basic", pct: against(30, { has: "wedge_mark" }) }] }),
+      marker("wedge_mark", "Wedge", "The Point's last target."),
     ],
-    "Hunt 1 ●●●",
+    "Toll 1 ●●, Hunt ● ◆ focus, draw",
   );
 }
 {
-  // Reactions to a hit on the Anchor's seat: a heal sized from the Warden, damage sent back sized from the Barb.
-  const warden = "When the Anchor is hit, it heals 3% of the Warden's max HP.", barb = "A foe that hits the Anchor takes 5% of the Barb's Attack.";
-  const onAnchor = on("hit_taken", { whose: "team", seat: "anchor" });
+  // The Shepherd covers the ally with the lowest HP%: every hit on it, whatever its size, moves to the Shepherd.
+  const shepherd = "Takes the hits meant for the ally with the lowest HP%. Defense up.";
   add(
-    formation("Thorn hedge", "common", "A thorned wall, and two who make it cost.", [
-      { name: "Anchor", text: "Draws far more. Thorns.", stats: [st("aggro", 2), THORNS] },
-      { name: "Warden", text: warden, statuses: ["thorn_hedge_warden"] },
-      { name: "Barb", text: barb, statuses: ["thorn_hedge_barb"] },
+    formation("The shepherd", "common", "One stands over whoever is hurt most.", [
+      { name: "Shepherd", text: shepherd, stats: [st("defense", 1)], statuses: ["the_shepherd_shepherd"] },
+      ...twice({ name: "Flock", text: "Attack up.", stats: [st("attack", 1)] }),
     ]),
-    [
-      held("thorn_hedge_warden", "Warden", warden, { reactions: [react(onAnchor, { op: "heal", amount: share(0.03, "max_hp"), to: TO.seat("anchor") })] }),
-      held("thorn_hedge_barb", "Barb", barb, { reactions: [react(onAnchor, { op: "damage", type: "none", amount: share(0.05, "attack"), to: "other" })] }),
-    ],
-    "Toll 1 ●●●, Pact ●",
+    [held("the_shepherd_shepherd", "Shepherd", "Takes the hits meant for the ally with the lowest HP%.", { cover: { share: 0, lowest: true } })],
+    "Pact 1 ●●, Toll ● ◆ the net, the keeper",
   );
 }
 {
@@ -133,7 +134,7 @@ add(
   const party = "Healing past full goes to the ally with the lowest HP%.";
   add(
     formation("Shared cup", "common", "Nobody's healing is wasted.", [
-      ...twice({ name: "Drinker", text: "Lifesteal.", stats: [LIFESTEAL] }),
+      ...twice({ name: "Cup", text: "Heals on it are 20% bigger.", stats: [STRONGER_HEALS] }),
       { name: "Donor", text: "Heals it gives are 33% bigger.", statuses: ["shared_cup_donor"] },
     ], { text: party, statuses: ["shared_cup"] }),
     [
@@ -175,10 +176,10 @@ add(
   );
 }
 {
-  const party = "An ally that dodges gains a Shield of 10% of its max HP.";
+  const party = "An ally that dodges: its next basic attack comes at once.";
   add(
     formation("Skirmish line", "common", "Three who'd rather not be hit.", thrice({ name: "Skirmisher", text: "Evasion up. Defense down.", stats: [EVASION, st("defense", -1)] }), { text: party, statuses: ["skirmish_line"] }),
-    [held("skirmish_line", "Skirmish line", party, { reactions: [react(EV.dodge, give("shield", "holder", share(0.1, "max_hp")))] })],
-    "Toll ●●, Cuts ●● ⚙ riposte (half)",
+    [held("skirmish_line", "Skirmish line", party, { reactions: [react(EV.dodge, swingNow())] })],
+    "Toll ●●, Cuts ●● ⚙ riposte (half) ◆ the dancer",
   );
 }

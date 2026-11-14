@@ -4,7 +4,7 @@
  * statuses that special stats bring, the ruleset and the design block.
  */
 import type { ContentPack, GearKindT, StatDefT, StatusT, WeaponKindT } from "../../src/schema.js";
-import { KIND_SPEED, MP_REGEN, P, RULES, SPEED, STATUS, pts } from "./scale.js";
+import { KIND_SPEED, MP_REGEN, OWED, P, RULES, SPEED, STATUS, pts } from "./scale.js";
 
 const TIMING = ["attack_speed", "cooldown_reduction", "cast_time_reduction"] as const;
 
@@ -122,6 +122,15 @@ export const vocabulary: StatusT[] = [
   { id: "marked", name: "MARKED", text: "The party's basic attacks, and its abilities aimed at a random foe, go to it.", label: "debuff", show: "icon", stacking: "refresh", duration: STATUS.marked.duration, focus: true, single: true },
   { id: "rot", name: "ROT", text: "Heals less.", label: "debuff", show: "icon", stacking: "refresh", duration: STATUS.rot.duration, stats: [{ stat: "healing_received", flat: STATUS.rot.healing }] },
   { id: "clarity", name: "CLARITY", text: "Recovers MP over time.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.clarity.duration, pulse: { every: STATUS.clarity.every, do: [{ op: "mp", amount: { scale: [{ ratio: STATUS.clarity.share, stat: "max_mp", of: "holder" }] } }] } },
+  // Specialist, from the creative-builds pass: a foe turned on its own, a crit made by a set-up, a Taunt on one foe, hits that wait.
+  // Bewildered and Brittle are one-use: one stack, spent by the action or the hit they change.
+  {
+    id: "bewildered", name: "BEWILDERED", text: "Its next basic attack strikes one of its own side.", label: "debuff", show: "icon", stacking: "intensity", cap: 1, confuse: true,
+    trigger: { on: { event: "action_resolve", kind: "basic" } }, drop: "all",
+  },
+  { id: "brittle", name: "BRITTLE", text: "The next hit it takes is a crit.", label: "debuff", show: "icon", stacking: "intensity", cap: 1, critsTaken: "always", trigger: { on: { event: "hit_taken" } }, drop: "all" },
+  { id: "fixated", name: "FIXATED", text: "Picks the unit that fixated it, unless a Taunt forces another.", label: "debuff", show: "icon", stacking: "refresh", duration: STATUS.fixated.duration, fixate: true },
+  { id: "owed", name: "OWED", text: `Damage from hits waits here, and lands all at once ${OWED} ticks after the first.`, label: "marker", show: "icon", stacking: "intensity", duration: OWED, debt: true, unremovable: true },
   // Signature
   { id: "aegis", name: "AEGIS", text: "Blocks the next big blow.", label: "buff", show: "icon", stacking: "fizzle", block: { share: STATUS.aegis.share } },
   {

@@ -127,6 +127,11 @@ export class Combat {
     if (c.lower) this.statKey(c.lower.stat, `${path}.lower.stat`);
     c.top?.stats.forEach((k, i) => this.statKey(k, `${path}.top.stats[${i}]`));
     c.weapon?.forEach((k, i) => this.w.ref("weaponKinds", k, `${path}.weapon[${i}]`, "weapon kind"));
+    // What it wears, and its own stats against each other.
+    if (c.offhand) c.offhand.forEach((k, i) => this.w.ref("offhandKinds", k, `${path}.offhand[${i}]`, "offhand kind"));
+    c.offhandNot?.forEach((k, i) => this.w.ref("offhandKinds", k, `${path}.offhandNot[${i}]`, "offhand kind"));
+    c.armor?.forEach((k, i) => this.w.ref("armorTypes", k, `${path}.armor[${i}]`, "armor type"));
+    if (c.above) (this.statKey(c.above.stat, `${path}.above.stat`), this.statKey(c.above.over, `${path}.above.over`));
   }
 
   /** A seat names a position some formation has, or a relative seat. */
@@ -224,7 +229,8 @@ export class Combat {
         if (e.by) this.rule(e.by, `${path}.by`, { where });
         if (e.after !== undefined && e.of !== "dealt") this.r.error("strike.after", `${path}.after`, `only a second landing ('of: dealt') can come later`);
         if (e.of === "over" && on?.event !== "ko") this.r.error("strike.over", `${path}.of`, `only a reaction to ko has a killing blow's left-over`);
-        if ((e.of === "hit" || e.of === "dealt") && on && !["hit_lands", "hit_taken"].includes(on.event)) this.r.error("strike.hit", `${path}.of`, `only a reaction to a hit has that hit to size a strike from`);
+        if (e.of === "hit" && on && !["hit_lands", "hit_taken", "hit_evaded", "hit_missed"].includes(on.event)) this.r.error("strike.hit", `${path}.of`, `only a reaction to a hit has that hit to size a strike from`);
+        if (e.of === "dealt" && on && !["hit_lands", "hit_taken"].includes(on.event)) this.r.error("strike.hit", `${path}.of`, `only a reaction to a hit that landed has what it dealt`);
         this.ticks(e.after, `${path}.after`);
         break;
       case "one":
@@ -253,6 +259,8 @@ export class Combat {
         break;
       case "restart":
       case "fell":
+      case "trade":
+      case "rewind":
         break;
       case "revive": {
         this.num(e.hp, `${path}.hp`, where, inStatus);
@@ -321,8 +329,8 @@ export class Combat {
     if (m.of?.basic && [m.mp, m.hp, m.cast, m.wind, m.cooldown, m.damage, m.stacks, m.heal, m.target, m.seek, m.apply, m.times].some((x) => x !== undefined)) {
       this.r.error("mod.basic", path, `on the basic attack an ability change can only add a price (pay) or a wait`);
     }
-    const changes = [m.mp, m.hp, m.pay, m.cast, m.wind, m.cooldown, m.damage, m.stacks, m.heal, m.target, m.seek, m.wait, m.apply].filter((x) => x !== undefined).length;
-    if (!changes) this.r.error("mod.empty", path, `an ability change changes something: mp, hp, pay, cast, wind, cooldown, damage, stacks, heal, target, seek, wait or apply`);
+    const changes = [m.mp, m.hp, m.pay, m.cast, m.wind, m.cooldown, m.damage, m.stacks, m.heal, m.target, m.seek, m.wait, m.apply, m.spread, m.together].filter((x) => x !== undefined).length;
+    if (!changes) this.r.error("mod.empty", path, `an ability change changes something: mp, hp, pay, cast, wind, cooldown, damage, stacks, heal, target, seek, wait, apply, spread or together`);
   }
 
   /** Tags that boosts, modifiers, lockouts, riders and event filters can name. */
@@ -439,6 +447,12 @@ export class Combat {
         if (st.strike.carry && (st.strike.kind ?? "extra") === "extra") this.r.warn("strike.carry", `${p}.strike.carry`, `an extra strike carries the riders under echo; 'carry' is a bonus strike's`);
         if (st.strike.chain && st.strike.chance === undefined && !st.strike.scale) this.r.warn("strike.chain", `${p}.strike.chain`, `a strike that always lands would always chain to its most`);
       }
+      // Fixated, a debt, a rescale, a spare.
+      if (st.fixate && shared(st)) this.r.error("status.fixate", `${p}.fixate`, `a shared Intensity total has no single source to fixate on; make it Refresh, Fizzle or Per source`);
+      if (st.owe && this.w.ref("statuses", st.owe, `${p}.owe`, "status") && !this.ix.get<S.StatusT>("statuses", st.owe)!.debt) this.r.error("status.owe", `${p}.owe`, `'${st.owe}' isn't a debt: hits owed would never come due`);
+      if (st.debt && (st.stacking !== "intensity" || st.duration === undefined)) this.r.error("status.debt", `${p}.debt`, `a debt is an Intensity status with a duration: when it runs out, its stacks land`);
+      if (st.rescale?.if) this.unitCond(st.rescale.if, `${p}.rescale.if`);
+      if (st.spare && this.w.ref("statuses", st.spare.status, `${p}.spare.status`, "status") && !this.ix.get<S.StatusT>("statuses", st.spare.status)!.trigger) this.r.warn("status.spare", `${p}.spare`, `'${st.spare.status}' has no trigger to spare`);
       // Marked, aims, ability changes, crits, stats set, revives.
       if (st.single && shared(st)) this.r.error("status.single", `${p}.single`, `a shared Intensity total has no applier to keep one copy each; make it Refresh, Fizzle or Per source`);
       if (st.focus && st.label === "buff") this.r.warn("status.focus", `${p}.focus`, `a focus draws the holder's foes' basic attacks: usually a debuff (Marked)`);
@@ -498,7 +512,8 @@ export class Combat {
       });
       const empty = !st.stats && !st.boosts && !st.taken && !st.absorb && !st.block && !st.lockout && !st.riders && !st.seek && !st.strike && !st.pulse && !st.trigger && !st.reactions
         && !st.focus && !st.aim && !st.mods && !st.crits && !st.echo && !st.set && !st.cover && !st.floor && !st.heals && !st.revives
-        && !st.adds && !st.healCap && !st.soak && !st.divert && !st.swap && !st.tireless && !st.order && !st.borrow;
+        && !st.adds && !st.healCap && !st.soak && !st.divert && !st.swap && !st.tireless && !st.order && !st.borrow
+        && !st.confuse && !st.fixate && !st.critsTaken && !st.owe && !st.debt && !st.rescale && !st.sharesHeals && !st.drawBy && !st.spare;
       // A marker is bookkeeping, read by name, so it may have no effects of its own.
       if (empty && st.label !== "marker") this.r.warn("status.empty", p, `status '${st.id}' has no effects`);
     });

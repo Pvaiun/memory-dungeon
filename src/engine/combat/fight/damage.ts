@@ -126,6 +126,25 @@ function take(w: W, t: CUnit, amount: number, by: CUnit | null = null): { soaked
   return { soaked, lost, blocked: false, over };
 }
 
+/** The debt a unit's hits go to, if it holds a status that owes them. */
+function oweOf(w: W, t: CUnit): string | null {
+  for (const s of t.statuses) {
+    const o = def(w, s.id).owe;
+    if (o) return o;
+  }
+  return null;
+}
+
+/** A debt comes due: its stacks land on its holder as damage of no type, from nobody, which a block and absorbs meet. */
+export function debtLands(w: W, t: CUnit, d: S.StatusT, amount: number) {
+  if (t.ko || w.f.result || amount <= 0) return;
+  const r: Calc = { amount: Math.floor(amount), word: null, crit: false, raw: Math.floor(amount) };
+  const tk = take(w, t, r.amount, null);
+  logDamage(w, null, t, d.id, "pulse", r, tk, null, "untyped");
+  if (t.hp <= 0) ko(w, t, null, null);
+  if (!w.f.result) damageEvents(w, null, t, tk.blocked ? 0 : r.amount, tk.lost, d.id);
+}
+
 /** The floor that holds a blow: one that never spends, else the oldest that does. */
 function floorOf(w: W, t: CUnit): SInst | null {
   let spending: SInst | null = null;
@@ -190,8 +209,10 @@ export function hit(w: W, ctx: Ctx, t0: CUnit, e: S.DamageEffectT, o: HitOpts = 
   let parts = fixed ? [{ p: main, raw: o.fixed!, rider: false }] : partsOn(t);
   if (!fixed && main.type === "physical" && evaded(w, a, t)) {
     w.log?.({ t: "dmg", vis: "player", at: w.f.now, by: a.id, target: t.id, src: ctx.id, part: "hit", amount: 0, soaked: 0, word: "MISS", crit: false, hp: t.hp, shield: shield(w, t) });
-    fire(w, ev("hit_evaded", t, a, { kind, tags }));
-    fire(w, ev("hit_missed", a, t, { kind, tags }));
+    // A dodged hit's raw amount (after the attacker's boosts, before Defense) and type ride on its events, for a strike sized from it.
+    const raw = Math.max(0, Math.floor(parts[0].raw * (1 + (boostOf(w, a, shaped(tags), t) + stat(w, a, "power") + enrage(w) + (ctx.mod?.damage ?? 0)) / 100)));
+    fire(w, ev("hit_evaded", t, a, { kind, tags, raw, dtype: main.type }));
+    fire(w, ev("hit_missed", a, t, { kind, tags, raw, dtype: main.type }));
     return false;
   }
   // The hit and its riders read the same state, and share one crit roll.
@@ -207,7 +228,7 @@ export function hit(w: W, ctx: Ctx, t0: CUnit, e: S.DamageEffectT, o: HitOpts = 
   // A big hit on an ally moves, once, to a unit that covers it, and resolves again against that unit (its own mitigation, block,
   // absorbs and HP; the hit's riders and statuses with it), keeping its crit and without a second dodge.
   if (!o.moved && !fixed && feats(w.c).cover) {
-    const c = coverOf(w, t, results);
+    const c = coverOf(w, t, results, tags);
     if (c) {
       w.log?.({ t: "cover", vis: "player", at: w.f.now, by: c.id, unit: t.id });
       t = c;
@@ -226,6 +247,14 @@ export function hit(w: W, ctx: Ctx, t0: CUnit, e: S.DamageEffectT, o: HitOpts = 
     const part = parts[i].rider ? "rider" : kind === "extra" || kind === "bonus" ? "extra" : "hit";
     if (!r) {
       w.log?.({ t: "dmg", vis: "player", at: w.f.now, by: a.id, target: t.id, src: ctx.id, part, amount: 0, soaked: 0, word: "MISS", crit: false, hp: t.hp, shield: shield(w, t) });
+      continue;
+    }
+    // Damage from a hit on a unit that owes it waits, as stacks of its debt, and lands later (Owed).
+    const debt = feats(w.c).owe ? oweOf(w, t) : null;
+    if (debt && r.amount > 0) {
+      applyStatus(w, t, t, def(w, debt), { stacks: r.amount, rng: t });
+      logDamage(w, a, t, ctx.id, part, { ...r, word: "OWED" }, { soaked: 0, blocked: false }, null, dmgKind(parts[i].p));
+      dealt += r.amount;
       continue;
     }
     const tk = take(w, t, r.amount, a);
@@ -263,8 +292,8 @@ export function hit(w: W, ctx: Ctx, t0: CUnit, e: S.DamageEffectT, o: HitOpts = 
 function critOf(w: W, a: CUnit, t: CUnit, tags: readonly string[]): [number, number] {
   let chance = stat(w, a, "crit_chance");
   const mult = stat(w, a, "crit_multiplier");
-  if (!feats(w.c).crits) return [chance, mult];
   const rules: S.CritRuleT[] = [];
+  if (!feats(w.c).crits && !feats(w.c).critsTaken) return [chance, mult];
   for (const s of a.statuses) for (const r of def(w, s.id).crits ?? []) if (!(r.tag && !tags.includes(r.tag)) && !(r.when && !passes(w, t, r.when, a))) rules.push(r);
   // A capped rule never lifts the chance past its cap, and leaves a chance already higher as it is.
   const under = (now: number, next: number, cap: number | undefined) => (cap === undefined ? next : Math.max(now, Math.min(next, cap)));
@@ -280,6 +309,12 @@ function critOf(w: W, a: CUnit, t: CUnit, tags: readonly string[]): [number, num
   }
   if (set >= 0) chance = set;
   if (always) chance = 100;
+  // The unit hit can be made to take every hit as a crit (Brittle), or none (which wins).
+  if (feats(w.c).critsTaken) {
+    const taken = t.statuses.map((s) => def(w, s.id).critsTaken).filter(Boolean);
+    if (taken.includes("never")) chance = 0;
+    else if (taken.includes("always")) chance = 100;
+  }
   return [chance, bonus ? 100 + ((mult - 100) * (100 + bonus)) / 100 : mult];
 }
 
@@ -287,14 +322,19 @@ function critOf(w: W, a: CUnit, t: CUnit, tags: readonly string[]): [number, num
  * The first other living unit on the hit unit's side, in slot order, whose cover this hit exceeds: more than
  * its share of the hit unit's max HP, after mitigation and before block and absorbs.
  */
-function coverOf(w: W, t: CUnit, results: readonly (Calc | null)[]): CUnit | null {
+function coverOf(w: W, t: CUnit, results: readonly (Calc | null)[], tags: readonly string[]): CUnit | null {
   const dealt = results.reduce((s, r) => s + (r?.amount ?? 0), 0);
   if (dealt <= 0) return null;
+  const share = (u: CUnit) => (u.stats.max_hp > 0 ? u.hp / u.stats.max_hp : 0);
   for (const x of w.f.units) {
     if (x === t || x.ko || x.side !== t.side) continue;
     for (const s of x.statuses) {
       const c = def(w, s.id).cover;
-      if (c && dealt * 100 > c.share * t.stats.max_hp) return x;
+      if (!c || !(dealt * 100 > c.share * t.stats.max_hp)) continue;
+      // Only hits carrying its tag; only hits on the ally with the lowest share of its max HP (the holder aside).
+      if (c.tag && !tags.includes(c.tag)) continue;
+      if (c.lowest && w.f.units.some((u) => u !== x && u.side === t.side && !u.ko && share(u) < share(t))) continue;
+      return x;
     }
   }
   return null;
@@ -343,8 +383,14 @@ export function strike(w: W, ctx: Ctx, t: CUnit, e: S.DamageEffectT) {
  * stands in for its max HP. The part past full fires overhealed, unless the heal is `final` or answers an overheal
  * itself: healing passed on isn't passed on again. Both events carry an action's kind, or the status that healed.
  */
-export function heal(w: W, ctx: Ctx, t: CUnit, raw: number, final = false) {
+export function heal(w: W, ctx: Ctx, t: CUnit, raw: number, final = false, shared = false) {
   const st = ctx.st;
+  // A side that shares its healing (Sympathy mail): the heal is split evenly across its living units.
+  if (!shared && feats(w.c).sharesHeals && w.f.units.some((u) => u.side === t.side && !u.ko && u.statuses.some((s) => def(w, s.id).sharesHeals))) {
+    const all = w.f.units.filter((u) => u.side === t.side && !u.ko);
+    for (const u of all) heal(w, ctx, u, raw / all.length, final, true);
+    return;
+  }
   const healer = st?.fixedBoost ? unit(w, st.src) : ctx.actor;
   if (feats(w.c).heals && healer !== t && t.statuses.some((s) => def(w, s.id).heals === "own")) return;
   const boost = st ? (st.fixedBoost ? 0 : boostOf(w, ctx.actor, ["healing", ...compile(st.d).tags], t)) : boostOf(w, ctx.actor, ["healing"], t);

@@ -34,16 +34,17 @@ import { abilityUp, apply, cd, helper, hitOf, kit, passiveUp, phys, POWER, r6 } 
 }
 
 {
-  const pinning = (ratio: number): Partial<AbilityT> => ({ target: T.highestAMFoe, do: [phys(from("attack", ratio), { apply: [{ status: "slow" }] })] });
+  /** Lure: the marksman made an anchor of its own: the foe with the most Attack is Fixated on the Ranger. No Chill. */
+  const lure = (ratio: number): Partial<AbilityT> => ({ target: T.highestAMFoe, do: [phys(from("attack", ratio), { apply: [{ status: "fixated" }] })] });
   /** Hail: the arrow carries no Chill; a few Chill (half the word, as Frost arrow's own) lands on every foe. */
   const hail = (k: number): Partial<AbilityT> => ({ do: [phys(from("attack", 0.29)), apply("chill", { stacks: stacks("few", "attack", 0.5 * k), to: T.everyFoe })] });
   abilityUp({
     id: "frost_arrow", cls: "ranger",
     power: "+40% Chill, or damage without Chill.", shown: true,
-    a: { name: "Pinning arrow", text: "An arrow at the foe with the most Attack, Slowing it. No Chill.", builds: [] },
-    b: { name: "Hail", text: "An arrow at the foe with the most Chill; Chill on every foe.", serves: "Snap 1 ●●● ⚙ firecracker (half)" },
+    a: { name: "Lure", text: "An arrow at the foe with the most Attack; it's Fixated on the Ranger. No Chill.", serves: "Toll 2 ●●, Hunt ● ◆ draw, the second anchor" },
+    b: { name: "Hail", text: "An arrow at the foe with the most Chill; Chill on every foe.", serves: "Snap 1 ●●● ◆ the pack game" },
     form: (v, k) =>
-      v === "a" ? pinning(0.29 * k)
+      v === "a" ? lure(0.29 * k)
         : v === "b" ? hail(k)
           : { do: [phys(from("attack", 0.29), { apply: [{ status: "chill", stacks: stacks("few", "attack", 0.5 * k) }] })] },
   });

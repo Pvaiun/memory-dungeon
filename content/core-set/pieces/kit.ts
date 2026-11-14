@@ -37,18 +37,34 @@ export const budgetOf = (kind: string, rarity: Rarity, trade?: Trade): number =>
  * How many steps a piece's stats are: an amount stat's steps (HP's half points, Aggro's tens, MP regen's own), Crit chance's
  * table, a special stat at its medium word one and at its high word two. A stat that shapes a piece (the Worldbreaker's slow
  * swing, the Hummingbird charm's fast one: a special at any other value) or a price (the Phoenix ember's HP) counts none; Aggro
- * down counts, since the casters want it.
+ * down counts, since the casters want it. A step down (`downOf`) counts against the rest: a piece may give one stat up a step
+ * for one step more elsewhere, as the swing trade does.
  */
 export function stepsOf(stats: readonly Change[] = []): number {
   let n = 0;
   for (const c of stats) {
-    if (c.stat === "crit_chance") n += c.flat >= crit(2) ? 2 : c.flat > 0 ? 1 : 0;
-    else if (c.stat in SPECIAL_LEVELS) n += c.flat === SPECIAL_LEVELS[c.stat].high ? 2 : c.flat === SPECIAL_LEVELS[c.stat].medium ? 1 : 0;
+    if (c.stat === "crit_chance") n += c.flat >= crit(2) ? 2 : c.flat > 0 ? 1 : c.flat <= -crit(1) ? -1 : 0;
+    else if (c.stat in SPECIAL_LEVELS) n += c.flat === SPECIAL_LEVELS[c.stat].high ? 2 : c.flat === SPECIAL_LEVELS[c.stat].medium ? 1 : c.flat === -SPECIAL_LEVELS[c.stat].medium ? -1 : 0;
     else if (c.stat === "aggro") n += Math.round(Math.abs(c.flat) / stepFor(c.stat)); // Aggro down is a step the casters want.
-    else if (["max_hp", "max_mp", "mp_regen", "attack", "defense"].includes(c.stat) && c.flat > 0) n += Math.round(c.flat / stepFor(c.stat));
+    else if (["max_hp", "max_mp", "mp_regen", "attack", "defense"].includes(c.stat)) n += Math.round(c.flat / stepFor(c.stat));
   }
   return n;
 }
+/** The steps a piece's stats give up: a stat a step below nothing (Crit chance's first step, a special's medium word down). */
+export function downOf(stats: readonly Change[] = []): number {
+  let n = 0;
+  for (const c of stats) {
+    if (c.stat === "crit_chance") n += c.flat <= -crit(1) ? 1 : 0;
+    else if (c.stat in SPECIAL_LEVELS) n += c.flat === -SPECIAL_LEVELS[c.stat].medium ? 1 : 0;
+    else if (["max_hp", "max_mp", "mp_regen", "attack", "defense"].includes(c.stat) && c.flat < 0) n += Math.round(-c.flat / stepFor(c.stat));
+  }
+  return n;
+}
+/**
+ * Every piece whose stats miss its budget, gathered as the pieces are written, so a build lists them all at once. pack.ts
+ * fails on any (LOOT_LAX=1 builds the pack anyway, warning, while a pass rewrites the shares one at a time).
+ */
+export const BUDGET_ERRORS: string[] = [];
 const SPECIAL_LEVELS: Record<string, { medium: number; high: number }> = Object.fromEntries((Object.keys(SPECIAL) as SpecialStat[]).map((s) => [SPECIAL_KEY[s], PIECE_SPECIAL[s] ?? SPECIAL[s]]));
 
 /** Stacks from the holder's stat, read when a piece's status fires (a passive's words: a few 0.7 a point, several 1.3, many 2.3). */
@@ -149,15 +165,17 @@ export function piece(o: PieceOpts): GearT {
     g.weapon = { ...(kind ? { kind } : {}), amount: kind ? weaponHit(kind, { trade: o.trade }) : 0, ...o.weapon } as WeaponT;
     // Every piece carries its kind's steps at its rarity (the director's rule: stats at every rarity, and the kind's budget says how many).
     if (kind && stepsOf(o.stats) !== budgetOf(kind, o.rarity, o.trade)) {
-      throw new Error(`${o.name}: a ${o.rarity} ${kind} carries ${budgetOf(kind, o.rarity, o.trade)} stat steps, not ${stepsOf(o.stats)}`);
+      BUDGET_ERRORS.push(`${o.name}: a ${o.rarity} ${kind} carries ${budgetOf(kind, o.rarity, o.trade)} stat steps, not ${stepsOf(o.stats)}`);
     }
   } else {
     // An offhand, armor or amulet has no swing to trade against: the standard budget, exact for an offhand and a common or
     // uncommon of any slot; a rare, legendary or mythic armor or amulet carries at least its steps beside the effect that is its shape.
     const want = KIND_BUDGET.standard[o.rarity], have = stepsOf(o.stats);
     const exact = o.slot === "offhand" || o.rarity === "common" || o.rarity === "uncommon";
-    if (exact ? have !== want : have < want) throw new Error(`${o.name}: a ${o.rarity} ${o.slot} carries ${exact ? "" : "at least "}${want} stat steps, not ${have}`);
+    if (exact ? have !== want : have < want) BUDGET_ERRORS.push(`${o.name}: a ${o.rarity} ${o.slot} carries ${exact ? "" : "at least "}${want} stat steps, not ${have}`);
   }
+  // A step down buys one step more elsewhere, once: a piece gives up one stat a step at most.
+  if (downOf(o.stats) > 1) BUDGET_ERRORS.push(`${o.name}: gives up ${downOf(o.stats)} steps; a piece gives up one at most`);
   // A special stat on gear is medium, or high on a legendary or a mythic (the loot's rule).
   if (o.rarity !== "legendary" && o.rarity !== "mythic") {
     const high = o.stats?.find((c) => c.stat in SPECIAL_LEVELS && c.flat === SPECIAL_LEVELS[c.stat].high);

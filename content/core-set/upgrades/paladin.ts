@@ -70,7 +70,8 @@ import { abilityUp, apply, both, cd, helper, kit, passiveUp, phys, r6 } from "./
 }
 
 {
-  const hammer = (ratio: number): Partial<AbilityT> => ({ target: { ...T.highestAMFoe, where: { lacks: "stun" }, ifNone: "any" }, do: [phys(from("attack", ratio), { apply: [{ status: "stun" }] })] });
+  /** Dawn's call: no blow; the judge turned support: every ally is Cleansed and gains Might (the power step: more Might). */
+  const dawn = (k: number): Partial<AbilityT> => ({ target: T.everyAlly, do: [{ op: "remove", label: "debuff" }, apply("might", { stacks: stacks("few", "attack", k) })] });
   const pyre = (ratio: number): Partial<AbilityT> => ({
     if: { side: "foes", where: { has: "burn" } }, target: { side: "foes", where: { has: "burn" }, pick: "all" },
     do: [phys(from("attack", ratio), { apply: [{ status: "burn", stacks: stacks("few", "attack") }] })],
@@ -78,10 +79,10 @@ import { abilityUp, apply, both, cd, helper, kit, passiveUp, phys, r6 } from "./
   abilityUp({
     id: "smite", cls: "paladin",
     power: "+40% damage.", shown: true,
-    a: { name: "Hammer of dawn", text: "Strikes and Stuns the foe with the most Attack. No Burn.", builds: ["landslide"] },
+    a: { name: "Dawn's call", text: "No blow: Cleanses every ally and gives each Might.", serves: "Landslide 2 ●●, Barrage ● ◆ loading, the net" },
     b: { name: "Pyre of judgement", text: "Strikes every burning foe, adding Burn.", builds: ["bonfire", "storm"] },
     form: (v, k) =>
-      v === "a" ? hammer(0.5 * k)
+      v === "a" ? dawn(k)
         : v === "b" ? pyre(0.25 * k)
           : { do: [phys(from("attack", 0.5 * k), { apply: [{ status: "burn", stacks: stacks("several", "attack") }] })] },
   });

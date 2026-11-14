@@ -27,6 +27,8 @@ export type Spec = {
   mp?: number;
   /** Starts the fight knocked out. */
   ko?: boolean;
+  /** The offhand kind and armor type it wears. */
+  held?: { offhand?: string; armor?: string };
 };
 
 const IDLE: S.WeaponT = { type: "physical", cooldown: 100_000, amount: 0 };
@@ -76,7 +78,7 @@ export function arena(o: {
     const stats = derive(c, m);
     return {
       id, ref: id, name: s.name ?? id.toUpperCase(), side, stats, hp: s.ko ? 0 : (s.hp ?? stats.max_hp), mp: s.mp ?? stats.max_mp, slot, ...m,
-      start: [...(s.statuses ?? [])], weapon: `enemy:${id}`, ko: !!s.ko, rng: rngFor(seed, `arena:${id}`),
+      start: [...(s.statuses ?? [])], weapon: `enemy:${id}`, ko: !!s.ko, rng: rngFor(seed, `arena:${id}`), ...(s.held ? { held: s.held } : {}),
       acts: [...(s.abilities ?? []).map((a) => ({ id: a, ready: 0 })), { id: "basic", ready: 0 }], cast: null, busy: 0, statuses: [],
     };
   });

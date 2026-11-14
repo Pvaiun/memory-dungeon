@@ -38,6 +38,10 @@ export type CUnit = Unit & {
   cooldowns?: Record<string, number>;
   /** Where the basic attack comes from: a gear id, "enemy:<id>", or "unarmed". */
   weapon: string;
+  /** The offhand kind and armor type it wears (a party unit's). */
+  held?: { offhand?: string; armor?: string };
+  /** Its HP after each change this fight, with when, for a rewind (only while the content has one). */
+  hist?: [number, number][];
   acts: Act[];
   /** The action started and not yet resolved, and when it resolves. */
   cast: { act: number; end: number } | null;
@@ -150,6 +154,9 @@ export const world = (c: Content, f: CFight, log?: (e: Entry) => void): W => ({ 
 type Feats = {
   mods: boolean; crits: boolean; cover: boolean; floor: boolean; heals: boolean; revives: boolean; adds: boolean; soak: boolean; healCap: boolean; divert: boolean;
   party: boolean; borrow: boolean; tireless: boolean; order: boolean; swap: boolean; live: boolean;
+  confuse: boolean; fixate: boolean; critsTaken: boolean; owe: boolean; rescale: boolean; sharesHeals: boolean; drawBy: boolean; spare: boolean;
+  /** Some status's effects rewind HP, so units keep their HP's history. */
+  rewind: boolean;
   /** The HP lines content watches (hp_low, hp_high), in percent of max HP. */
   lines: number[];
 };
@@ -165,6 +172,8 @@ export function feats(c: Content): Feats {
       mods: any("mods"), crits: any("crits"), cover: any("cover"), floor: any("floor"), heals: any("heals"), revives: any("revives"), adds: any("adds"), soak: any("soak"),
       healCap: any("healCap"), divert: any("divert"), party: any("party"), borrow: any("borrow"), tireless: any("tireless"), order: any("order"), swap: any("swap"),
       live: ss.some((s) => s.stats?.some((ch) => ch.live)), lines: [...lines].sort((a, b) => a - b),
+      confuse: any("confuse"), fixate: any("fixate"), critsTaken: any("critsTaken"), owe: any("owe"), rescale: any("rescale"), sharesHeals: any("sharesHeals"), drawBy: any("drawBy"), spare: any("spare"),
+      rewind: ss.some((s) => [...(s.pulse?.do ?? []), ...(s.trigger?.do ?? []), ...(s.reactions ?? []).flatMap((r) => r.do)].some((e) => e.op === "rewind")),
     };
     featCache.set(c, x);
   }
@@ -193,6 +202,7 @@ export const hpBelow = (w: W, u: CUnit, pct: number) => hpRead(w, u) * 100 < pct
  * hp_low or hp_high, whatever moved it. A line fires again only after the unit has been on its other side.
  */
 export function hpMoved(w: W, u: CUnit, init = false) {
+  noteHp(w, u);
   const lines = feats(w.c).lines;
   if (!lines.length || u.ko || w.f.result) return;
   if (init) u.under = {};
@@ -203,6 +213,15 @@ export function hpMoved(w: W, u: CUnit, init = false) {
     u.under![line] = now;
     fire(w, ev(now ? "hp_low" : "hp_high", u, null, { amount: line }));
   }
+}
+
+/** Keeps a unit's HP history while the content can rewind HP: its HP now, with when, the last minute of the fight's worth. */
+export function noteHp(w: W, u: CUnit) {
+  if (!feats(w.c).rewind) return;
+  const h = (u.hist ??= []);
+  if (h.length && h[h.length - 1][0] === w.f.now) h[h.length - 1][1] = u.hp;
+  else h.push([w.f.now, u.hp]);
+  while (h.length > 2 && h[1][0] < w.f.now - 60 * SUBTICKS) h.shift();
 }
 
 export const def = (w: W, id: string) => w.c.statuses.get(id)!;
@@ -401,9 +420,30 @@ function countOf(w: W, u: CUnit, c: Exclude<NonNullable<S.ScaleT["count"]>, "tar
 /** A number in an action: `self` is the acting unit, `target` the unit the effect lands on, `act` the action (for counts). */
 export function aval(w: W, n: S.NumT, self: CUnit, target: CUnit | null, act?: Reading): number {
   const who: Who = (of) => (of === "target" ? target : of === "self" ? self : null);
+  // An ability of a unit that reads another stat, or another unit's, in place of its own (Even-keel plate, Borrowed hand).
+  const rs = feats(w.c).rescale && (act as { kind?: string } | undefined)?.kind === "ability" ? rescales(w, self) : null;
   let v = baseOf(n);
-  for (const s of scalesOf(n)) v += term(w, s, role(s, false) === "target" ? target : self, 0, who, act);
+  for (const s of scalesOf(n)) {
+    const r = role(s, false);
+    const x = rs && r !== "target" && s.stat && !s.seat ? rs.find((y) => y.from === s.stat) : undefined;
+    if (x) v += term(w, { ...s, stat: x.to }, x.unit, 0, who, act);
+    else v += term(w, s, r === "target" ? target : self, 0, who, act);
+  }
   return v;
+}
+
+/** A unit's rescales that hold now: the stat its abilities read in place of another, and from whom. */
+function rescales(w: W, u: CUnit): { from: string; to: string; unit: CUnit }[] | null {
+  let out: { from: string; to: string; unit: CUnit }[] | null = null;
+  for (const s of u.statuses) {
+    const r = def(w, s.id).rescale;
+    if (!r || (r.if && !passes(w, u, r.if, u))) continue;
+    const to = r.to ?? r.from;
+    let from = u;
+    if (r.best) for (const x of w.f.units) if (x.side === u.side && !x.ko && stat(w, x, to) > stat(w, from, to)) from = x;
+    (out ??= []).push({ from: r.from, to, unit: from });
+  }
+  return out;
 }
 
 /** At application: a status number's fixed part, from its source (and, for stat changes, its holder too). */

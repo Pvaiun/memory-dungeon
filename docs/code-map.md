@@ -46,9 +46,9 @@ src/
       fight/                 the fight, one file a part
         state.ts             the fight's data, the world (W), shared helpers, stats after statuses, HP lines, numbers
         actions.ts           abilities as actions: their changes, costs and HP prices, availability, start, resolution, casts made again, extra strikes
-        targeting.ts         picks: draw, Taunt, Hidden, Seek, focus, target rules, conditions, seats
-        effects.ts           every effect op but damage and healing: targets, numbers, MP, cooldowns, HP prices, strikes out of turn, riders laid, the opening again, revives
-        damage.ts            damage and healing: the resolution order, evasion, crits, Shield, Aegis, MP as armour, floors, cover, healing caps
+        targeting.ts         picks: draw, Taunt, Hidden, Seek, focus, Fixated and Bewildered, target rules, conditions (what a unit wears among them), seats
+        effects.ts           every effect op but damage and healing: targets, numbers, MP, cooldowns, HP prices, strikes out of turn, riders laid, the opening again, revives, HP traded and rewound
+        damage.ts            damage and healing: the resolution order, evasion, crits (taken too), Shield, Aegis, MP as armour, floors, cover, debts owed, healing caps and shared healing
         statuses.ts          applying, ending, removing, moving, spending and pulsing statuses; diverts, damping; control resistance; lockouts
         events.ts            events, their filters, reactions and Intensity triggers; riders, carried and borrowed; shared amounts
         units.ts             knockouts, the fight's end, revives, summons and splits
@@ -61,6 +61,7 @@ src/
       synergy-w.test.ts      tests: the building blocks for who and when
       loot-h.test.ts         tests: the loot pass's building blocks for what happens (hits out of turn, riders, HP lines, MP, healing caps)
       loot-w.test.ts         tests: the loot pass's building blocks for who and when (party rules, ability changes, casts again, sight)
+      creative.test.ts       tests: the creative-builds pass's building blocks (Bewildered, Fixated, crits taken, Owed, covers by tag, shared heals, HP traded and rewound, spreads, rescales, what a unit wears)
       coreset.test.ts        tests: the core set's own rules (Taunt and Hidden, Seek, revive, summons)
       dungeon.test.ts        tests: a run's rules (foes modifier, lost casts, stagger, enrage, Stun, campfires)
   rogue.ts                   the rogue mode's public face; lists its parts
@@ -135,6 +136,7 @@ tools/                       the Node command lines; each header says how to run
   piece-check.ts             does every item do what its card says?
   gear-slots.ts              the gear slots' counts: who wears which kinds
   loot-list.ts               today's loot as one line per item: its cards, and the builds it was tagged for
+  loot-count.ts              the loot's shapes counted, one measure for a pass's before and after: repeated effect shapes, exotics, conditional pieces, keyword share per build, keyword formations; and pairs of pieces one class can wear together whose cards share a sentence
   smoke.ts                   npm run smoke: the documents' own test trios
   dungeon.ts                 npm run dungeon: print one run
   study.ts                   npm run study: run a combat study
@@ -159,15 +161,15 @@ content/
     tests.ts                 the documents' own test trios, for npm run smoke
     pack.ts                  assembles the pack
     build.ts                 npm run content: validates and writes the pack
-    pieces/                  the 322 pieces, in six shares
-      kit.ts                 the helpers pieces, formations and upgrades are written with; the swing trade, the budget check, the plain card of a piece that is only its stats, and the Serves line's reader
-      shared.ts              statuses several files use: the six counters and the order of healing past full (Marked is the vocabulary's)
+    pieces/                  the 324 pieces, in six shares
+      kit.ts                 the helpers pieces, formations and upgrades are written with; the swing trade, the step down, the budget check (every miss gathered), the plain card of a piece that is only its stats, and the Serves line's reader
+      shared.ts              statuses several files use: the five counters, the afflictions, and the order of healing past full (Marked is the vocabulary's)
       weapons-1.ts           dagger, fist weapons, wand, sword, spear and axe: 60 pieces
       weapons-2.ts           bow, rune sword, hammer, mace, staff and great weapon: 53 pieces
       armor.ts               plate, mail, leather and robes: 55 pieces
       amulets.ts             the 37 amulets
-      offhands-1.ts          kite shield, round shield, horn, totem, relic and lantern: 54 pieces
-      offhands-2.ts          tome, orb, idol, vial, trophy, bell and cloak: 63 pieces
+      offhands-1.ts          kite shield, round shield, horn, totem, relic and lantern: 55 pieces
+      offhands-2.ts          tome, orb, idol, vial, trophy, bell and cloak: 64 pieces
       index.ts               every item gathered, for the pack and the tools
     upgrades/                each ability's and passive's power step and two versions, and the mythics
       index.ts               gathers them, in order

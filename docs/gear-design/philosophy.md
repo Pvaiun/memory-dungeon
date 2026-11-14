@@ -21,7 +21,8 @@ What the director wants from the loot, distilled, with their words quoted where 
 - **No balancing rules while making content:** "don't make rules about balancing. We're gonna do that in the balancing pass." Synergies may be overpowered: "We're trying synergies now, it's okay if they're OP." Number ranges are first values, not limits.
 - **Plenty of loot:** "It's better to have too much than not enough if you're unsure for the first versions." How much drops follows the gear's design, not the other way round.
 - **Cards say who can wear a piece, never what it's for:** "the signposting who the designer had in mind for that gear ruins the discovery".
-- **Rarity is mostly specificity,** plus power that grows by act and stays narrow. Tiers below legendary carry effects too: legendary shouldn't be "the only interesting gear".
+- **Rarity is mostly specificity,** and above rare strangeness, not power. Tiers below legendary carry effects too: legendary shouldn't be "the only interesting gear".
+- **Unique pieces, and inspiring, creative build making** (Nov 14, after the loot pass played "more functional, but less interesting"): builds were picked, not found, a player reading a keyword and taking everything that shared it. Each piece should feel like nothing else in the game, and a player should often look at something and wonder "how could I make that work?" **Builds may soften, a lot:** depth matters more than clarity, and nothing has to show a player which build to make.
 - **Choices that hurt the right way:** not "picking which of your favourite toys you wanted to throw in the garbage".
 - **Every class has an offhand:** "every class has at least one offhand that they can wield, no question". Two-handers that take the offhand's place are in.
 - **The amulet fits everyone,** valuable "in a game where you can switch units around".
@@ -29,7 +30,7 @@ What the director wants from the loot, distilled, with their words quoted where 
 - **Upgrades:** one plain power step and a choice of two versions for each ability and passive. "The importance is the difference, not that they're not better." Triggers and targeting are undervalued: "I like things that play on triggering conditions or targeting conditions." A training opportunity offers three choices: "For now I would start by just making training opportunities give 3 choices, and we can decide what else to do later."
 - **Elements are themes only.** A build is never one keyword turned up ("red fire or blue fire or gray fire").
 - **MP is fuel.** No build is made better at lasting many fights; what differs is whether it spends more HP or more MP.
-- **Signposting and power at each phase of a run** are among the things a build is judged by. At its first rung the content lets a player see the direction to push in, not the whole build. Each phase's step is worth taking, and the path to a build never leaves the team unable to beat the content.
+- **Power at each phase of a run** is among the things a build is judged by: each phase's step is worth taking, and the path to a build never leaves the team unable to beat the content. Signposting isn't: a build's first steps don't have to point the way. What stays is that every card says plainly what happens, and an effect is big enough to be seen when it fires.
 - **Every build manages survivability:** a constraint, not a design. How each build does it is the build's to say.
 - **Kits may change** where a build needs it.
 - **Formations are important,** enough that a build pivots to match a good one, and they have to work however they arrive in a run.
@@ -71,7 +72,9 @@ Averages can hide a rhythm: a surge after a fall or a lock's window can vanish i
 - **More than one route.** The same build can be reached through different classes, pieces and formations.
 - **A web, not bundles.** Most pieces matter to more than one build, by different amounts and for different reasons, some of them not obvious. Builds connect through the pieces they share, and a run drifts from one build to its neighbour through them.
 - **Engines.** A few parts that turn out to work together into something specific, on one road or more: found synergies, designed in advance. Each part earns its slot alone, the common half sits in the kits, commons and uncommons, and the keystone comes from more than one place. The set, and the test each engine passed, are in *Gear design: the builds*.
-- **Exotics.** Some pieces exist for their own sake: a strange effect worth seeing that belongs to no build.
+- **Exotics.** About a quarter of rares and legendaries exist for their own sake: powerful and strange alone, worth seeing, belonging to no build. A run may build around one.
+- **Conditional pieces.** About a third of rares and legendaries are weak until a set-up the party makes (a pairing, a seat, a stat, another piece, a class) and strong when it's there. The set-up is never one the fight has to supply: in play, pieces that waited on what the foes did were never taken. With its stats, a conditional piece is still worth wearing while the set-up is missing, and it can be conditional through its stats alone.
+- **Deeper than the keyword.** A build's pieces spread across its threads, so only about a third name its keyword. Where builds share a thread, the thread is the door; a door is never a card that names two keywords.
 - **Chaos.** A run finds its build in what it's given. Two runs toward the same build should get there differently, and a run should be able to land on a build nobody planned.
 
 ## What makes a piece good
@@ -82,7 +85,7 @@ Averages can hide a rhythm: a surge after a fall or a lock's window can vanish i
 
 ## Rarity
 
-Rarity is mostly how far a piece bends the game and how specific it is. It also means more power as the acts go on, as long as that power is narrow: a legendary can be far stronger than a rare for the builds that want it, and not for the rest. There are no random affixes. Beyond that, each piece is whatever it needs to be. What each rarity carries is in *Gear design: the loot*.
+Rarity is mostly how far a piece bends the game and how specific it is. Above rare it's strangeness, not power: a legendary or a mythic carries a rare's stats, and is often more exotic than a rare, never strictly better. Later acts roll more legendaries, so act III is stranger, not stronger. There are no random affixes. Beyond that, each piece is whatever it needs to be. What each rarity carries is in *Gear design: the loot*.
 
 ## Slots
 
@@ -94,13 +97,14 @@ What the slot structure has to give:
 How the four slots do it:
 - **Slots have no job.** Any effect can sit on any slot. Stats lean softly by slot (Defense more often on armor, damage on weapons), and nothing says what a slot, a kind or a piece is for.
 - **Only weapons carry behaviour of their own:** a speed, a swing (its three words: how hard per tick, how much of it is Attack, how many stats its pieces carry) and hands. A two-hander empties the offhand, so its pieces are worth a weapon and an offhand.
-- **Every piece fits exactly its kind's classes,** and every class has two kinds in the weapon and offhand slots, including a one-handed weapon, so it can always use an offhand. Every wearer of a kind reads its signature stat, so a piece of a kind is relevant to every class that can wear it.
-- **Two classes share at most one weapon kind and one offhand kind,** so every class's loot is mostly its own. Armor groups classes by weight, and weapons and offhands cut across those groups.
+- **Every piece fits exactly its kind's classes,** and every class has three kinds in the weapon and offhand slots, including a one-handed weapon, so it can always use an offhand. Kinds are picked by a class's fantasy and identities, and a kind may have up to about five wearers, so a class's loot is partly its own.
+- **Stats are a piece's own,** not its kind's: a kind keeps a leaning, which its commons draw on, and every other piece carries what that piece would carry. Taking a piece's stats from the build its effect serves rebuilds the lanes. Armor groups classes by weight, and weapons and offhands cut across those groups.
 - **Apart where it counts:** most pairs of kinds from different slots never meet on one unit, so pieces in them can be strong together without ever stacking. `npx tsx tools/gear-slots.ts` counts the widths and overlaps after any change.
 
 ## Formations
 
-- **A formation is a shape:** three seats with roles that together give a squad an identity and a fantasy, plus, if it wants, rules of its own.
+- **A formation is a shape and a rhythm:** three seats with roles that together give a squad an identity and a fantasy (who is struck, who acts often, who hits hard, who waits, and what the party trades), plus, if it wants, rules of its own.
+- **Keyword formations are a minority,** and what keeps them from being the only choice is the other formations being powerful and varied, not a price on the keyword ones. No formation makes a build strong the moment it's seated, and a formation with several keywords is worse than one with one.
 - **Seats can differ from each other as much as the shape needs,** and a formation can depend on who sits where as much as it wants.
 - **It joins the web two ways:** through seat roles that many builds share, so one formation suits several builds, and through its own identity, which makes it more than a sum of seats.
 - **It belongs to a build:** it's chosen for what the party is, not for the next foe. No build fishes for one formation. A build plays in Neutral, gets more from a formation with the seats or party effect it wants, and most from one built further in its direction: its ask range, as with gear.
@@ -110,15 +114,15 @@ How the four slots do it:
 
 - **Each ability and passive gets one plain power step and one choice between two versions.**
 - **The two versions are designed for that ability,** with no pattern across abilities. They can change anything about it, as long as the kit still reads as the class's own.
-- **What matters is how the two differ.** Either, both or neither can be better than the original. Each pulls toward different builds, often toward several, and abilities that already sit between two builds give their versions somewhere to go (*Gear design: the builds*, The web).
+- **What matters is how the two differ.** Either, both or neither can be better than the original. Each pulls toward different builds, often toward several, and abilities that already sit between two builds give their versions somewhere to go (*Gear design: the builds*, The web). About two of each class's three abilities have a version that points the ability at another job, and no passive holds its class to one lane.
 - **How a unit behaves matters as much as what it does.** What an ability aims at, what it waits for and when it fires are as open to change as its numbers. In an auto-battler they're among the most readable things a player can see change.
 - **Targeting can be part of a version, or a thing of its own.** A version may come with its own targeting. Choosing a target rule may also become its own kind of upgrade, designed later; neither shape is decided.
 
 ## Mythics
 
-- **A mythic rewrites one class,** where a legendary bends the game for whoever wears it.
-- **It's found, not trained.** An upgrade changes one ability or the passive; a mythic can be taken off and goes past any one ability.
-- **It's the best gear in the game** for its class: it carries a legendary's stats beside its effect, so it's never a downgrade for the stats it replaces.
+- **A mythic is spiky:** it takes one thing on its class's trunk to an extreme that changes how the fight plays, where a legendary bends the game for whoever wears it. "Getting a mythic that just makes your class do what it was doing better is not interesting": the director's reading is an extreme that changes the fight's rhythm, never only a bigger number, and never a job the class's builds can't support. A cost only where the cost is the identity.
+- **It's found, not trained,** from a boss's boon, so it should be good for the unit that gets it; the kiss-and-curse turns belong to the versions, which a player chooses. An upgrade changes one ability or the passive; a mythic can be taken off and goes past any one ability.
+- **It carries a rare's stats** beside its effect, chosen for it.
 - **Upgrades and mythics are designed together,** so they don't overlap, and neither repeats a piece.
 
 ## How it reads
@@ -133,7 +137,7 @@ The method, round by round:
 2. **Builds first.** Builds as ways to play, as many as the design needs: each one's rhythm, threads, routes, rungs and needs, and the web between them, its doors and engines. No pieces, no numbers.
 3. **The spine.** One line for every rare, legendary, formation, upgrade and mythic, built backwards from the builds and written all together, so the web is designed rather than found.
    - Its rules come first: the stock it chose and why, new words, the rules the pieces bend, and the code support they need.
-   - Commons get a rule per kind. Each uncommon's effect is named, since the uncommons carry the builds' first steps.
+   - Commons get a rule. Each uncommon's effect is named.
    - The web is checked for how often a run is offered what a build starts from, not only that a route exists: the offer roll and the stock decide that.
    - A fresh reader reads it before the director, who approves it on a sample.
 4. **The fill.** Parallel agents write the stats, numbers, card text and code support for their share. They all work from one brief, with intent and ranges and never examples (an agent copies any example it's given). The brief points at the rules rather than restating them, since a brief's paraphrase of a rule is where a fill goes wrong. Before anyone writes, each agent gets a shared index of every share's items, so no two write the same card. Each ends with its challenges and what it's least sure of.

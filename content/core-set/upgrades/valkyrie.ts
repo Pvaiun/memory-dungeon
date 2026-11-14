@@ -24,13 +24,17 @@ import { abilityUp, apply, both, helper, kit, passiveUp, phys } from "./kit.js";
   const spear = (ratio: number, extra: object = {}) => phys(from("attack", ratio), { apply: [shock], ...extra });
   /** Gale storm: one hit past any guard, then one each on two other random foes; fewer foes, fewer hits. */
   const storm = (ratio: number): Partial<AbilityT> => ({ do: [spear(ratio), spear(ratio, { to: { side: "foes", pick: "random", count: 2, exclude: "targets" } })] });
-  const hunt = (ratio: number): Partial<AbilityT> => ({ target: T.lowestHpFoe, do: [spear(ratio, { hits: 3 })] });
+  /** Shieldbreaker: the spellbreaker: three quick hits on the foe with the most buffs, each lifting one (newest first). No Shock. */
+  const breaker = (ratio: number): Partial<AbilityT> => ({
+    target: { side: "foes", pick: "highest", by: "buffs" },
+    do: [phys(from("attack", ratio), { hits: 3 }), { op: "remove", label: "buff", count: 1 }, { op: "remove", label: "buff", count: 1 }, { op: "remove", label: "buff", count: 1 }],
+  });
   abilityUp({
     id: "gale_spear", cls: "valkyrie",
     power: "+40% damage.", shown: true,
     a: { name: "Gale storm", text: "Three hits on three different foes, each adding Shock. The first ignores Taunt.", builds: ["storm", "cuts"] },
-    b: { name: "Spear of the hunt", text: "Three hits on the foe with the least HP, each adding Shock. Ignores Taunt.", builds: ["hunt"] },
-    form: (v, k) => (v === "a" ? storm(0.09 * k) : v === "b" ? hunt(0.09 * k) : { do: [spear(0.09 * k, { hits: 3 })] }),
+    b: { name: "Shieldbreaker", text: "Three hits on the foe with the most buffs, each lifting one of them. No Shock. Ignores Taunt.", serves: "Hunt 2 ●●, Toll ● ◆ spellbreaking" },
+    form: (v, k) => (v === "a" ? storm(0.09 * k) : v === "b" ? breaker(0.09 * k) : { do: [spear(0.09 * k, { hits: 3 })] }),
   });
 }
 

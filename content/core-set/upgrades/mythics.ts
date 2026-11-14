@@ -1,256 +1,191 @@
 /**
- * The 16 mythics, one per class, each rewriting how its class plays. Each carries a legendary's stat steps beside its effect
- * (scale.ts KIND_BUDGET), checked as any piece's are: a weapon its kind's, every other slot the standard. Its stats lean to its
- * kind's or its armor's profile, the signature first, and to what its class and its effect read. A piece's text is its effect
- * only: the interface shows its slot, its stats and its one class. Each adds its piece to kit.ts's mythics, its statuses to its
- * statuses, and its Serves line (the loot pass's tags) to its served.
+ * The 16 mythics, one per class, each spiky: it takes one thing on its class's trunk (what every build of the class does) to an
+ * extreme that changes how the fight plays, never only a bigger number and never a job the class doesn't do, with a cost only
+ * where the cost is the identity (docs/gear-design/loot.md, Mythics). Each carries a rare's stat steps beside its effect
+ * (scale.ts KIND_BUDGET), chosen for it, checked as any piece's are: a weapon its kind's, every other slot the standard. A
+ * piece's text is its effect only: the interface shows its slot, its stats and its one class. Each adds its piece to kit.ts's
+ * mythics, its statuses to its statuses, and its Serves line to its served.
  */
-import type { NumT } from "../../../src/schema.js";
-import { HIT, KIND_SPEED, KIT, STATUS, swingAt } from "../scale.js";
-import { countAt, count, critStep, own, piece, pieceStatus, serves, share, sp, st, stacksOf, swingStacks, weaponHit } from "../pieces/kit.js";
-import { T } from "../classes.js";
-import { apply, both, helper, kit, marker, mythics, ofHolder, removeMine, served, tidy } from "./kit.js";
+import type { EffectT, ReactionT, ToT } from "../../../src/schema.js";
+import { KIND_SPEED, P } from "../scale.js";
+import { EV, TO, atStart, critStep, give, lift, oneUse, on, own, piece, pieceStatus, react, reactIf, serves, sp, st, stacksOf, weaponHit, whileHolding } from "../pieces/kit.js";
+import { AFFLICTIONS } from "../pieces/shared.js";
+import { helper, kit, marker, mythics, served, tidy } from "./kit.js";
 
-/*
- * A mythic weapon belongs to a kind its class wears, for how it's shown (its icon, how it's held, its swing's look); its
- * own speed, swing and hands stand over the kind's.
- */
-/** A mythic weapon's hit at its own speed: a full, even swing, sized by its interval as every kind's is (scale.ts swingAt). */
-const ownHit = (cooldown: number, stat: string): NumT => swingAt(cooldown, "full", "even", stat);
 const mythic = (m: Parameters<typeof piece>[0], line: string) => {
   const g = tidy(piece(m));
   mythics.push(g);
   served[g.id] = serves(line);
 };
+/** The mythic's own status, on the sheet, saying what the card says. */
+const own_ = (id: string, name: string, text: string, body: Parameters<typeof pieceStatus>[3]) => helper(pieceStatus(id, name, text, body));
+const ready = (ability: string, to: ToT = "holder"): EffectT => ({ op: "cooldown", which: { ability: [ability] }, set: "ready", to }) as EffectT;
 
 // ─── Knight to Bard ──────────────────────────────────────────────────────────
 
-// Knight: Horn of the keep. A status doesn't know which ability applied it, so any Taunt the Knight loses while another ally casts comes back.
-mythic({ name: "Horn of the keep", slot: "offhand", rarity: "mythic", kind: "horn", mythic: "knight", statuses: ["horn_of_the_keep"],
-    stats: [st("aggro", 1), st("max_hp", 2), st("defense", 1)],
-    text: "When hit: the other ally with the lowest MP% gains half the damage as MP. A Taunt that ends during an ally's wind-up comes back." }, "Barrage 3 ●●●, Toll ●● ⚙ mana as armour (half)");
-helper(pieceStatus("horn_of_the_keep", "Horn of the keep", "When hit: the other ally with the lowest MP% gains half the damage as MP. A Taunt that ends during an ally's wind-up comes back.", {
-    reactions: [
-      { on: { event: "hit_taken" }, do: [{ op: "mp", amount: { scale: [{ ratio: 0.5, amount: true }] }, to: { side: "others", pick: "lowest", by: "mp_share" } }] },
-      { on: { event: "status_ended", status: "taunt", cause: ["expired"] }, if: { side: "others", where: { casting: true } }, do: [apply("taunt", { to: "holder" })] },
-    ],
-  }));
-
-// Cleric: Halo of the saint. Each heal its abilities give (what it restored and what went past full) lands again on every
-// other ally below half, and each Regen it gives is copied to them; a copy is a reaction's heal or a copy, so nothing copies it.
+// Knight: its body, which Vanguard's Shield and Shield bash already read, doubled; it lives on its own stone, not on heals.
 {
-  const below = { side: "allies" as const, where: { hpBelow: 50 }, pick: "all" as const, exclude: "owner" as const };
-  const again = { op: "heal" as const, amount: { scale: [{ ratio: 1, amount: true as const }] }, final: true as const, to: below };
-  mythic({ name: "Halo of the saint", slot: "amulet", rarity: "mythic", mythic: "cleric", statuses: ["halo_of_the_saint"],
-      stats: [st("attack", 1), st("max_mp", 1), st("mp_regen", 1), st("max_hp", 1)],
-      text: "Its abilities' heals and Regen also land on every other ally below half HP." }, "Pact 3 ●●● ⚙ brink (half)");
-  helper(pieceStatus("halo_of_the_saint", "Halo of the saint", "Its abilities' heals and Regen also land on every other ally below half HP.", {
-      reactions: [
-        { on: { event: "healed", whose: "team", other: "holder", kind: "ability" }, do: [again] },
-        { on: { event: "overhealed", whose: "team", other: "holder", kind: "ability" }, do: [again] },
-        { on: { event: "status_gained", status: "regen", whose: "team", other: "holder", repeat: false }, do: [apply("regen", { to: below, copy: true })] },
-      ],
-    }));
+  const text = "Max HP doubled. Healing on it is halved.";
+  mythic({ name: "Banner of the last keep", slot: "armor", rarity: "mythic", kind: "plate", mythic: "knight", statuses: ["banner_of_the_last_keep"],
+    stats: [st("aggro", 1), st("defense", 1), sp("cooldown", "medium")], text }, "Toll 3 ●●, Landslide ●● ◆ draw, the wall");
+  own_("banner_of_the_last_keep", "Banner of the last keep", text, { stats: [{ stat: "max_hp", pct: 100 }, { stat: "healing_received", flat: -50 }] });
 }
 
-// Ranger: Huntmaster's quiver. Its abilities that aim at one foe re-aimed past any guard at the lowest HP, marking what they
-// hit; a marked foe's fall readies every ability the Ranger has.
-mythic({ name: "Huntmaster's quiver", slot: "armor", rarity: "mythic", kind: "leather", mythic: "ranger", statuses: ["huntmasters_quiver"],
-    stats: [st("attack", 2), critStep(1), sp("evasion", "medium")],
-    text: "Abilities aimed at one foe ignore Taunt and go to the foe with the least HP. When a foe they hit falls, they're ready again." }, "Hunt 3 ●●● ⚙ reaping (half)");
-helper(pieceStatus("huntmasters_quiver", "Huntmaster's quiver", "Abilities aimed at one foe ignore Taunt and go to the foe with the least HP. When a foe they hit falls, they're ready again.", {
-      mods: [{ of: { single: true }, target: T.lowestHpFoe, seek: true, apply: [{ status: "huntmasters_quiver_mark" }] }],
-    }));
-helper(marker("huntmasters_quiver_mark", "QUARRY", "Its fall readies the hunter's abilities.", {
-      perSource: {}, survivesKO: true,
-      reactions: [{ on: { event: "ko" }, actor: "source", do: [{ op: "cooldown", which: "abilities", set: "ready", to: "source" }] }],
-    }));
-
-// Bramble knight: Heartwood mail. Its Thorns on every attacker of an ally; the base Briar's Bleed follows them from here (the passive forms hear this status's damage themselves).
-mythic({ name: "Heartwood mail", slot: "armor", rarity: "mythic", kind: "mail", mythic: "bramble_knight", statuses: ["heartwood_mail"],
-    stats: [sp("thorns", "medium"), st("max_hp", 2), st("defense", 1)],
-    text: "Its Thorns strike whoever hits an ally." }, "Toll 3 ●●●, Cuts ●● ⚙ red rain (half)");
-helper(pieceStatus("heartwood_mail", "Heartwood mail", "Its Thorns strike whoever hits an ally.", {
-    reactions: [
-      { on: { event: "hit_taken", whose: "ally" }, do: [{ op: "damage", type: "none", amount: ofHolder(1, "thorns"), to: "other" }] },
-      { on: { event: "damage_dealt", status: "heartwood_mail" }, if: { side: "self", where: { has: "briar" } }, do: [apply("bleed", { stacks: own("few", "defense"), to: "other" })] },
-    ],
-  }));
-
-// Hoplite: The last wall. An Aegis it gave that's spent (`source: holder`; its end carries the blocked amount and the attacker) strikes back in full, and Aspis is ready.
-mythic({ name: "The last wall", slot: "offhand", rarity: "mythic", kind: "round_shield", mythic: "hoplite", statuses: ["the_last_wall"],
-    stats: [st("max_hp", 2), st("defense", 1), st("aggro", 1)],
-    text: "When an Aegis it gave blocks a blow, the attacker takes the blocked damage and Aspis is ready." }, "Toll 3 ●●●, Landslide ●● ⚙ mirror (key)");
-helper(pieceStatus("the_last_wall", "The last wall", "When an Aegis it gave blocks a blow, the attacker takes the blocked damage and Aspis is ready.", {
-    reactions: [{ on: { event: "status_ended", status: "aegis", cause: ["spent"], whose: "any", source: "holder" }, do: [
-      { op: "damage", type: "none", amount: { scale: [{ ratio: 1, amount: true }] }, to: "other" },
-      { op: "cooldown", which: { ability: ["aspis"] }, set: "ready", to: "holder" },
-    ] }],
-  }));
-
-// Paladin: Writ of judgement. Condemn (every form, by name) calls a blow of its own on the foe it Marked, as it resolves.
-mythic({ name: "Writ of judgement", slot: "offhand", rarity: "mythic", kind: "relic", mythic: "paladin", statuses: ["writ_of_judgement"],
-    stats: [st("mp_regen", 1), st("attack", 2), st("max_hp", 1)],
-    text: "When Condemn Marks a foe, a blow falls on it, adding Burn." }, "Hunt 3 ●●●, Bonfire ●●, Landslide ●●");
-helper(pieceStatus("writ_of_judgement", "Writ of judgement", "When Condemn Marks a foe, a blow falls on it, adding Burn.", {
-    reactions: [{ on: { event: "action_resolve", kind: "ability", ability: ["condemn"] }, do: [{ op: "strike", amount: share(HIT.heavy, "attack"), apply: [{ status: "burn", stacks: swingStacks("several") }], to: "other" }] }],
-  }));
-
-// Valkyrie: Stormspear. A weapon of its own: a spear's speed and swing, one hand. Every fourth hit it lands (the blow's own
-// aside) calls Skyfall's blow on the foe with the most Shock, past any Taunt; the fourth pays before the count takes it.
+// Cleric: Last rites (its state, whichever form trains it) put on at the start and put back whenever anything lifts it; a
+// healing cap at 30% keeps it on the brink, so every form's own line reads it as below.
 {
-  const counted = { event: "hit_lands" as const, notTags: ["stormspear"] };
-  mythic({ name: "Stormspear", slot: "weapon", rarity: "mythic", mythic: "valkyrie", statuses: ["stormspear"],
-      stats: [st("aggro", 1), st("attack", 1), sp("attack_speed", "medium"), st("max_hp", 1)],
-      text: "Every 4th hit calls a blow on the foe with the most Shock, ignoring Taunt.",
-      weapon: { kind: "spear", type: "physical", hands: 1, cooldown: KIND_SPEED.spear, amount: weaponHit("spear") } }, "Storm 3 ●●●, Hunt ● ⚙ held charge (key)");
-  helper(pieceStatus("stormspear", "Stormspear", "Every 4th hit calls a blow on the foe with the most Shock, ignoring Taunt.", {
-    reactions: [
-      { on: counted, if: { side: "self", where: countAt("stormspear_count", 3) }, do: [{
-        op: "strike", tag: "stormspear", seek: true, to: { side: "foes", pick: "highest", by: { stacks: "shock" } },
-        amount: { scale: [{ ratio: HIT.heavy, stat: "attack", of: "holder" }, { ratio: KIT.skyfallPerShock, stacks: "shock", of: "target" }] },
-      }] },
-      { on: counted, do: [apply("stormspear_count", { stacks: 1, to: "holder" })] },
-    ],
-  }));
-  helper(count("stormspear_count", "STORMSPEAR", "Every 4th hit calls a blow from above.", 4));
+  const text = "Last rites holds all fight. It can't be healed above 30% HP.";
+  mythic({ name: "The saint's last breath", slot: "amulet", rarity: "mythic", mythic: "cleric", statuses: ["the_saints_last_breath"],
+    stats: [sp("cast_speed", "medium"), st("mp_regen", 1), st("max_mp", 1)], text }, "Pact 3 ●●● ◆ the brink, tempo");
+  own_("the_saints_last_breath", "The saint's last breath", text, {
+    healCap: 30,
+    reactions: [atStart(give("last_rites_on")), react(on("status_ended", { status: "last_rites_on", cause: ["removed", "expired"] }), give("last_rites_on"))],
+  });
 }
 
-// Bard: Metronome. A count of the party's hits (extra strikes and each hit of a multi-hit ability included); at 20 the three songs are ready (by name) and the count is spent.
-mythic({ name: "Metronome", slot: "offhand", rarity: "mythic", kind: "bell", mythic: "bard", statuses: ["metronome"],
-    stats: [sp("attack_speed", "medium"), st("max_mp", 1), st("mp_regen", 1), st("max_hp", 1)],
-    text: "Counts the party's hits. At 20, War ballad, Allegro and Encore are ready, and the count restarts." }, "Cuts 3 ●●●, Barrage ●●, Storm ● ⚙ spell on the swing (key)");
-helper(pieceStatus("metronome", "Metronome", "Counts the party's hits. At 20, War ballad, Allegro and Encore are ready, and the count restarts.", {
-      reactions: [
-        { on: { event: "hit_lands" }, do: [apply("metronome_count", { to: "holder" })] },
-        { on: { event: "hit_lands", whose: "ally" }, do: [apply("metronome_count", { to: "holder" })] },
-        { on: { event: "status_capped", status: "metronome_count" }, do: [{ op: "cooldown", which: { ability: ["war_ballad", "allegro", "encore"] }, set: "ready", to: "holder" }, removeMine("metronome_count", "marker")] },
-      ],
-    }));
-helper(marker("metronome_count", "BEAT", "The party's hits, counted to 20.", { show: "icon", stacking: "intensity", cap: 20 }));
+// Ranger: one foe watched until it falls. The watched foe holds the Ranger's marker (an aim picks it); each landed swing on it
+// adds a Watch, and a swing that lands on another foe (the first, or the next after a fall) moves the marker and spends them.
+{
+  const text = "Basic attacks stay on one foe until it falls, each 10% harder than the last.";
+  mythic({ name: "The long watch", slot: "armor", rarity: "mythic", kind: "leather", mythic: "ranger", statuses: ["the_long_watch"],
+    stats: [sp("accuracy", "medium"), critStep(1), st("attack", 1)], text }, "Hunt 3 ●●● ◆ focus, the boss game");
+  own_("the_long_watch", "The long watch", text, {
+    aim: { rule: { side: "foes", where: { has: "the_long_watch_prey" } }, first: true },
+    reactions: [
+      reactIf(EV.basic, { unit: "other", where: { lacks: "the_long_watch_prey" } }, lift("the_long_watch_prey", TO.everyFoe, "marker"), { op: "spend", status: "the_long_watch_count", to: "holder" }, give("the_long_watch_prey", "other")),
+      react(EV.basic, give("the_long_watch_count", "holder", 1)),
+    ],
+  });
+  helper(marker("the_long_watch_prey", "WATCHED", "The Ranger's basic attacks stay on it.", { show: "icon", perSource: {} }));
+  helper(kit("the_long_watch_count", "THE LONG WATCH", "Basic attacks deal +10% for each.", { stacking: "intensity", cap: 15, unremovable: true, boosts: [{ tag: "basic", pct: { scale: [{ ratio: 10, stacks: "the_long_watch_count", of: "holder" }] } }] }));
+}
+
+// Bramble knight: every hit it takes sends its Thorns into every foe, the attacker's own Thorns as ever; Briar's Bleed follows them.
+{
+  const text = "When hit, its Thorns strike every foe.";
+  mythic({ name: "Heart of the briar", slot: "armor", rarity: "mythic", kind: "plate", mythic: "bramble_knight", statuses: ["heart_of_the_briar"],
+    stats: [st("max_hp", 2), sp("thorns", "medium")], text }, "Toll 3 ●●●, Cuts ● ◆ the mirror, spread");
+  own_("heart_of_the_briar", "Heart of the briar", text, {
+    reactions: [
+      react(EV.struck, { op: "damage", type: "none", amount: { scale: [{ ratio: 1, stat: "thorns", of: "holder" }] }, to: TO.otherFoes("other") }),
+      reactIf(on("damage_dealt", { status: "heart_of_the_briar" }), { side: "self", where: { has: "briar" } }, give("bleed", "other", own("few", "defense"))),
+    ],
+  });
+}
+
+// Hoplite: the shove its rhythm, the swing waiting.
+{
+  const text = "Othismos comes round twice as often, with no wind-up. Basic attacks come half as often again.";
+  mythic({ name: "The last shove", slot: "offhand", rarity: "mythic", kind: "round_shield", mythic: "hoplite", statuses: ["the_last_shove"],
+    stats: [st("defense", 1), st("attack", 1), sp("cooldown", "medium")], text }, "Landslide 3 ●●, Toll ● ◆ spread, the heavy action");
+  own_("the_last_shove", "The last shove", text, { mods: [{ of: { ability: ["othismos"] }, cooldown: -50, cast: 0 }], stats: [{ stat: "attack_speed", flat: -100 }] });
+}
+
+// Paladin: Judgement made absolute, on top of whatever form of it the Paladin trained: +150% where it reads a buff or a debuff
+// (with its own +50%, triple), and −50% on a foe with neither.
+{
+  const text = "Hits deal triple damage to a foe with a buff or a debuff, and half to a foe with neither.";
+  mythic({ name: "Scales of the judge", slot: "amulet", rarity: "mythic", mythic: "paladin", statuses: ["scales_of_the_judge"],
+    stats: [st("attack", 1), sp("accuracy", "medium"), st("max_hp", 1)], text }, "Hunt 3 ●●, Bonfire ●, Storm ● ◆ the judge");
+  own_("scales_of_the_judge", "Scales of the judge", text, {
+    boosts: [{ tag: "physical", pct: { base: -50, scale: [{ ratio: 200, when: { debuffs: true }, of: "target" }, { ratio: 200, when: { buffs: true, debuffs: false }, of: "target" }] } }],
+  });
+}
+
+// Valkyrie: a spear of its kind's own swing; each Gale spear readies Skyfall (its MP still asked).
+{
+  const text = "Each Gale spear readies Skyfall.";
+  mythic({ name: "Valhalla's spear", slot: "weapon", rarity: "mythic", kind: "spear", mythic: "valkyrie", statuses: ["valhallas_spear"],
+    stats: [sp("cooldown", "medium"), st("attack", 1), critStep(1)], text,
+    weapon: { kind: "spear", type: "physical", hands: 1, cooldown: KIND_SPEED.spear, amount: weaponHit("spear") } }, "Storm 3 ●●● ◆ the storm spear");
+  own_("valhallas_spear", "Valhalla's spear", text, { reactions: [react(on("action_resolve", { kind: "ability", ability: ["gale_spear"] }), ready("skyfall"))] });
+}
+
+// Bard: the three songs cast as one (an ability change that waits for all three and casts the others with the first).
+{
+  const text = "War ballad, Allegro and Encore are cast together, as one, whenever the slowest of them is ready.";
+  mythic({ name: "The grand chord", slot: "offhand", rarity: "mythic", kind: "bell", mythic: "bard", statuses: ["the_grand_chord"],
+    stats: [st("max_mp", 1), sp("cooldown", "medium"), st("defense", 1)], text }, "Barrage 3 ●●, Landslide ●, Cuts ● ◆ party tempo");
+  own_("the_grand_chord", "The grand chord", text, { mods: [{ of: { ability: ["war_ballad", "allegro", "encore"] }, together: true }] });
+}
 
 // ─── Hexer to Geomancer ──────────────────────────────────────────────────────
 
-// Hexer: after each ability, three swings that hit every foe holding a debuff (an all-pick aim, each hit a basic attack's).
-const WITCH_SWINGS = 3;
-mythic({
-  name: "The witch-blade", slot: "weapon", rarity: "mythic", mythic: "hexer",
-  text: "After each ability, its next 3 basic attacks hit every foe with a debuff.",
-  weapon: { kind: "sword", type: "physical", hands: 1, cooldown: 5.8, amount: ownHit(5.8, "attack") },
-  stats: [st("attack", 1), sp("cooldown", "medium"), st("max_mp", 1), sp("siphon", "medium")],
-  statuses: ["the_witch_blade"],
-}, "Snap 3 ●●●, Bonfire ●●, Storm ●● ⚙ every colour (half), red rain (half)");
-helper(pieceStatus("the_witch_blade", "The witch-blade", "After each ability, its next 3 basic attacks hit every foe with a debuff.", {
-  // Each cast sets the count back to three; it doesn't add.
-  reactions: [{ on: { event: "action_resolve", kind: "ability" }, do: [apply("the_witch_blade_swings", { stacks: WITCH_SWINGS, to: "self" })] }],
-}));
-helper(kit("the_witch_blade_swings", "THE WITCH-BLADE", "Basic attacks hit every foe with a debuff.", {
-  stacking: "intensity", cap: WITCH_SWINGS,
-  aim: { rule: { side: "foes", where: { debuffs: true }, pick: "all" }, first: true },
-  trigger: { on: { event: "action_resolve", kind: "basic" } }, drop: { count: 1 },
-}));
-
-// Monk: Ember palms. Every hit it lands deals more for each Burn on the foe hit, added before boosts; the Burn stays.
-mythic({
-  name: "Ember palms", slot: "weapon", rarity: "mythic", mythic: "monk",
-  text: "Hits deal extra damage for each Burn on the target.",
-  weapon: { kind: "fist", type: "physical", hands: 1, cooldown: 6.0, amount: ownHit(6.0, "attack") },
-  // A full swing where the fist's is light: a heavy step along the trade, so a step fewer.
-  trade: "heavy", stats: [sp("double_strike", "medium"), st("attack", 1), sp("attack_speed", "medium")],
-  statuses: ["ember_palms"],
-}, "Bonfire 3 ●●●, Cuts ●●");
-helper(pieceStatus("ember_palms", "Ember palms", "Hits deal extra damage for each Burn on the target.", {
-  adds: [{ on: "physical", amount: stacksOf("burn", 25, "target") }],
-}));
-
-// Assassin: a killing blow it lands hides it, at Hidden's own length if it isn't Hidden already, and doubles its next hit.
-mythic({
-  name: "Night's edge", slot: "armor", rarity: "mythic", mythic: "assassin",
-  text: "On a kill: Hidden, and its next hit deals double.",
-  stats: [st("attack", 1), critStep(1), sp("crit_damage", "medium"), sp("evasion", "medium")],
-  statuses: ["nights_edge"],
-}, "Hunt 3 ●●● ⚙ two in the dark (half)");
-helper(pieceStatus("nights_edge", "Night's edge", "On a kill: Hidden, and its next hit deals double.", {
-  reactions: [{ on: { event: "ko", whose: "foe", other: "holder" }, do: [apply("hidden", { to: { side: "self", where: { lacks: "hidden" } } }), apply("nights_edge_strike", { to: "self" })] }],
-}));
-helper(kit("nights_edge_strike", "NIGHT'S EDGE", "Next hit deals double.", {
-  stacking: "fizzle", boosts: both(100),
-  reactions: [{ on: { event: "hit_lands" }, do: [removeMine("nights_edge_strike")] }],
-}));
-
-// Vampire: The chalice. A per-source status on every other ally: their abilities' MP is paid in the Vampire's HP, half the
-// share, while that leaves it above a tenth (the payer's floor); otherwise the ally pays its own MP.
+// Hexer: breadth as the curse's clock. A foe's first stack of an affliction readies Malison; a marker on the foe, one an
+// affliction, lifted as the affliction ends, keeps it to the first.
 {
-  const lay = apply("the_chalice_cup", { to: { side: "others", pick: "all" } });
-  mythic({
-    name: "The chalice", slot: "offhand", rarity: "mythic", mythic: "vampire",
-    text: "Other allies cast with its HP instead of their MP, while it stays above 10% HP.",
-    stats: [sp("lifesteal", "medium"), st("max_hp", 2), st("defense", 1)],
-    statuses: ["the_chalice"],
-  }, "Pact 3 ●●●, Barrage ●●● ⚙ blood mage (half), brink (key)");
-  helper(pieceStatus("the_chalice", "The chalice", "Other allies cast with its HP instead of their MP, while it stays above 10% HP.", {
-    reactions: [{ on: { event: "fight_start" }, do: [lay] }, { on: { event: "revived" }, do: [lay] }, { on: { event: "revived", whose: "ally" }, do: [apply("the_chalice_cup", { to: "owner" })] }],
-  }));
-  helper(kit("the_chalice_cup", "THE CHALICE", "Its abilities are paid in the Vampire's HP.", {
-    show: "sheet", perSource: { endsWithSource: true }, unremovable: true,
-    mods: [{ hp: { pct: 50, share: true, floor: 10, instead: true, payer: "source" } }],
-  }));
+  const text = "Malison is ready whenever a foe gains an affliction it didn't hold.";
+  const seen = (a: string) => `the_witchs_cauldron_${a}`;
+  const reactions: ReactionT[] = AFFLICTIONS.flatMap((a) => [
+    reactIf(on("status_gained", { status: a, whose: "foe" }), { unit: "owner", where: { lacks: seen(a) } }, ready("malison"), give(seen(a), "owner")),
+    react(on("status_ended", { status: a, whose: "foe" }), lift(seen(a), "owner", "marker")),
+  ]);
+  mythic({ name: "The witch's cauldron", slot: "offhand", rarity: "mythic", kind: "tome", mythic: "hexer", statuses: ["the_witchs_cauldron"],
+    stats: [st("mp_regen", 1), st("max_mp", 1), sp("siphon", "medium")], text }, "Barrage 3 ●●, Bonfire ●, Snap ●, Storm ●, Cuts ● ◆ every colour");
+  own_("the_witchs_cauldron", "The witch's cauldron", text, { reactions });
+  for (const a of AFFLICTIONS) helper(marker(seen(a), "Cauldron", "Already counted for the witch's cauldron.", { perSource: {} }));
 }
 
-// Pyromancer: an aura on every ally that ends with the Pyromancer's knockout, given again when it or an ally is revived.
-mythic({
-  name: "Crown of embers", slot: "amulet", rarity: "mythic", mythic: "pyromancer",
-  text: "While it stands, every ally's hits add a Burn.",
-  stats: [st("max_hp", 2), st("attack", 1), sp("cast_speed", "medium")],
-  statuses: ["crown_of_embers"],
-}, "Bonfire 3 ●●● ⚙ lead's colour (half)");
-helper(pieceStatus("crown_of_embers", "Crown of embers", "While it stands, every ally's hits add a Burn.", {
-  reactions: [
-    { on: { event: "fight_start" }, do: [apply("crown_of_embers_aura", { to: T.everyAlly })] },
-    { on: { event: "revived" }, do: [apply("crown_of_embers_aura", { to: T.everyAlly })] },
-    { on: { event: "revived", whose: "ally" }, do: [apply("crown_of_embers_aura", { to: "owner" })] },
-  ],
-}));
-helper(kit("crown_of_embers_aura", "CROWN OF EMBERS", "Hits add a Burn while the Pyromancer stands.", {
-  perSource: { endsWithSource: true }, unremovable: true,
-  reactions: [{ on: { event: "hit_lands" }, do: [apply("burn", { stacks: 1, to: "other" })] }],
-}));
+// Monk: the blur, certain: one more strike after every basic attack, beside any Double strike.
+{
+  const text = "Every basic attack strikes twice.";
+  mythic({ name: "Thousand-palm wraps", slot: "weapon", rarity: "mythic", kind: "fist", mythic: "monk", statuses: ["thousand_palm_wraps"],
+    stats: [sp("attack_speed", "medium"), st("attack", 1), sp("lifesteal", "medium")], text,
+    weapon: { kind: "fist", type: "physical", hands: 1, cooldown: KIND_SPEED.fist, amount: weaponHit("fist") } }, "Cuts 3 ●●● ◆ extra strikes");
+  own_("thousand_palm_wraps", "Thousand-palm wraps", text, { strike: { to: "target" } });
+}
 
-// Frostweaver: after a shatter spends a foe's Chill, a quarter of the cap goes back on (it listens for the end, cause removed, not
-// the cap). At half, with a cascade, every shatter left a foe halfway to the next.
-mythic({
-  name: "Glacier's heart", slot: "armor", rarity: "mythic", mythic: "frostweaver",
-  text: `When a foe's Chill shatters, ${STATUS.chill.cap / 4} Chill go back on it.`,
-  stats: [st("max_mp", 1), st("mp_regen", 1), st("attack", 1), sp("cast_speed", "medium")],
-  statuses: ["glaciers_heart"],
-}, "Snap 3 ●●● ⚙ firecracker (key)");
-helper(pieceStatus("glaciers_heart", "Glacier's heart", `When a foe's Chill shatters, ${STATUS.chill.cap / 4} Chill go back on it.`, {
-  reactions: [{ on: { event: "status_ended", status: "chill", cause: ["removed"], whose: "foe" }, do: [apply("chill", { stacks: STATUS.chill.cap / 4, to: "owner" })] }],
-}));
+// Assassin: the glass dagger, perfect until touched; each fight it starts untouched.
+{
+  const text = "Until it's first hit in a fight, every hit it lands crits.";
+  mythic({ name: "The unseen blade", slot: "armor", rarity: "mythic", kind: "leather", mythic: "assassin", statuses: ["the_unseen_blade"],
+    stats: [sp("evasion", "medium"), sp("crit_damage", "medium"), st("attack", 1)], text }, "Hunt 3 ●●●, Cuts ● ◆ crits, first strike");
+  own_("the_unseen_blade", "The unseen blade", text, { reactions: [atStart(give("the_unseen_blade_on")), react(EV.struck, lift("the_unseen_blade_on"))] });
+  helper(kit("the_unseen_blade_on", "UNSEEN", "Every hit it lands crits.", { stacking: "fizzle", crits: [{ chance: 100 }] }));
+}
 
-// Stormcaller: every hit it lands strikes one more random foe for half its raw damage; the jump is tagged, so it doesn't jump
-// again. A foe dying with Shock gives every other foe half of it (status_ended, cause ko, its amount).
-mythic({
-  name: "Eye of the tempest", slot: "weapon", rarity: "mythic", mythic: "stormcaller",
-  text: "Every hit also jumps to a random foe for half. When a foe falls holding Shock, every other foe gains half of it.",
-  weapon: { kind: "rune_sword", type: "physical", hands: 1, cooldown: 6.6, amount: ownHit(6.6, "attack") },
-  stats: [st("mp_regen", 1), sp("attack_speed", "medium"), st("attack", 1), st("max_hp", 1)],
-  statuses: ["eye_of_the_tempest"],
-}, "Storm 3 ●●●");
-helper(pieceStatus("eye_of_the_tempest", "Eye of the tempest", "Every hit also jumps to a random foe for half. When a foe falls holding Shock, every other foe gains half of it.", {
-  reactions: [
-    { on: { event: "hit_lands", notTags: ["jump"] }, do: [{ op: "strike", share: 50, of: "hit", tag: "jump", to: { side: "foes", pick: "random", exclude: "other" } }] },
-    { on: { event: "status_ended", status: "shock", cause: ["ko"], whose: "foe" }, do: [apply("shock", { stacks: { scale: [{ ratio: 0.5, amount: true }] }, to: { side: "foes", pick: "all", exclude: "owner" } })] },
-  ],
-}));
+// Vampire: the drinker swells: what its healing would bring past full raises its max HP by as much, and its HP with it.
+{
+  const text = "Healing past full raises its max HP by as much, for the fight.";
+  mythic({ name: "The crimson crown", slot: "amulet", rarity: "mythic", mythic: "vampire", statuses: ["the_crimson_crown"],
+    stats: [st("max_hp", 2), st("attack", 1)], text }, "Pact 3 ●●● ◆ the drinker");
+  own_("the_crimson_crown", "The crimson crown", text, { reactions: [react(on("overhealed"), give("the_crimson_crown_blood", "holder", { scale: [{ ratio: 1 / P, amount: true }] }))] });
+  helper(kit("the_crimson_crown_blood", "CRIMSON CROWN", "Max HP up by its stacks.", { stacking: "intensity", unremovable: true, stats: [{ stat: "max_hp", flat: P }] }));
+}
 
-// Geomancer: each crit it lands rebuilds its Shield by the damage dealt, up to the Shield's own cap.
-mythic({
-  name: "Mountain's crown", slot: "amulet", rarity: "mythic", mythic: "geomancer",
-  text: "Each crit rebuilds its Shield by the damage dealt.",
-  stats: [critStep(1), sp("crit_damage", "medium"), st("defense", 1), st("max_hp", 1)],
-  statuses: ["mountains_crown"],
-}, "Landslide 3 ●●● ⚙ detonation (half)");
-helper(pieceStatus("mountains_crown", "Mountain's crown", "Each crit rebuilds its Shield by the damage dealt.", {
-  reactions: [{ on: { event: "hit_lands", tags: ["crit"] }, do: [apply("shield", { stacks: { scale: [{ ratio: 1, amount: true }] }, to: "self" })] }],
-}));
+// Pyromancer: Pyre doubles the fire it lands on (stacks read off the foe hit, after the hit).
+{
+  const text = "Pyre adds as much Burn as its target holds.";
+  mythic({ name: "The pyre-heart", slot: "amulet", rarity: "mythic", mythic: "pyromancer", statuses: ["the_pyre_heart"],
+    stats: [sp("cast_speed", "medium"), st("attack", 1), st("max_hp", 1)], text }, "Bonfire 3 ●●● ◆ the long cast");
+  own_("the_pyre_heart", "The pyre-heart", text, { mods: [{ of: { ability: ["pyre"] }, apply: [{ status: "burn", stacks: stacksOf("burn", 1, "target") }] }] });
+}
+
+// Frostweaver: a shatter, anyone's, readies Frost lance and makes its next cast free; Chill to rebuild between is the brake.
+{
+  const text = "Each shatter readies Frost lance, and its next cast is free.";
+  mythic({ name: "Heart of the deep winter", slot: "armor", rarity: "mythic", kind: "robes", mythic: "frostweaver", statuses: ["heart_of_the_deep_winter"],
+    stats: [st("max_mp", 1), st("defense", 1), sp("cooldown", "medium")], text }, "Snap 3 ●●● ◆ the shatter's beat");
+  own_("heart_of_the_deep_winter", "Heart of the deep winter", text, { reactions: [react(EV.shatter, ready("frost_lance"), give("heart_of_the_deep_winter_free"))] });
+  helper(oneUse("heart_of_the_deep_winter_free", "DEEP WINTER", "Next Frost lance is free.", on("action_resolve", { kind: "ability", ability: ["frost_lance"] }), { mods: [{ of: { ability: ["frost_lance"] }, mp: -100 }] }));
+}
+
+// Stormcaller: the storm doesn't lift. Each of Thunderstorm's forms' storms that it gave, ending on its time, is given again.
+{
+  const text = "Thunderstorm lasts until the fight ends.";
+  const storms = ["thunderstorm_storm", "static_field", "storms_eye"].flatMap((s) => [s, `${s}_plus`]);
+  mythic({ name: "Eye of the gale", slot: "weapon", rarity: "mythic", kind: "fist", mythic: "stormcaller", statuses: ["eye_of_the_gale"],
+    stats: [sp("attack_speed", "medium"), sp("double_strike", "medium"), st("max_mp", 1)], text,
+    weapon: { kind: "fist", type: "physical", hands: 1, cooldown: KIND_SPEED.fist, amount: weaponHit("fist") } }, "Storm 3 ●●● ◆ the party's storm");
+  own_("eye_of_the_gale", "Eye of the gale", text, { reactions: storms.map((s) => react(on("status_ended", { status: s, whose: "team", source: "holder", cause: ["expired"] }), give(s, "owner"))) });
+}
+
+// Geomancer: behind stone, certain.
+{
+  const text = "While its Shield holds, every hit it lands crits.";
+  mythic({ name: "Bedrock heart", slot: "amulet", rarity: "mythic", mythic: "geomancer", statuses: ["bedrock_heart"],
+    stats: [st("defense", 1), sp("crit_damage", "medium"), st("max_hp", 1)], text }, "Landslide 3 ●●● ◆ crits behind stone");
+  own_("bedrock_heart", "Bedrock heart", text, { reactions: whileHolding("bedrock_heart_on", "shield") });
+  helper(kit("bedrock_heart_on", "BEDROCK HEART", "Every hit it lands crits.", { stacking: "fizzle", crits: [{ chance: 100 }] }));
+}
+
