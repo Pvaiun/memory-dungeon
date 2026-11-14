@@ -2,20 +2,24 @@
 import type { AbilityT, EffectT, ReactionT, StatusT } from "../../../src/schema.js";
 import { T } from "../classes.js";
 import { from, HIT, KIT, REVIVE, stacks } from "../scale.js";
-import { abilityUp, apply, both, helper, kit, passiveUp, phys } from "./kit.js";
+import { abilityUp, apply, both, helper, kit, passiveUp, phys, POWER } from "./kit.js";
 
 {
   /** The Shield from each hit landed: a share of the damage dealt, to the Valkyrie or (Shield-sister) to the ally lowest in HP share. */
+  /** Chooser of the slain's execute, and Shield-sister's share of each hit given to the ally. */
+  const CHOOSER = 40, SISTER = 0.35;
   const shieldOn = (ratio: number, to: "holder" | typeof T.lowestShareAlly): ReactionT => ({ on: { event: "hit_lands" }, do: [apply("shield", { stacks: { scale: [{ ratio, amount: true }] }, to })] });
   passiveUp({
     id: "shieldmaiden", cls: "valkyrie",
     power: "Shield +40%.",
-    a: { name: "Chooser of the slain", text: "No Shield. Hits deal +20% to foes below 50% HP.", builds: ["hunt", "storm"], plus: "+28%, not +20%." },
-    b: { name: "Shield-sister", text: `On a hit: Shields the ally with the lowest HP% instead, for ${KIT.shieldmaiden * 100}% of the damage.`, builds: ["toll", "pact"] },
-    // Chooser of the slain gives the Shield up: offence in place of defence, and the power step has nothing to grow.
+    a: { name: "Chooser of the slain", text: `No Shield. Hits deal +${CHOOSER}% to foes below 50% HP.`, builds: ["hunt", "storm"], plus: `+${Math.round(CHOOSER * POWER)}%, not +${CHOOSER}%.` },
+    b: { name: "Shield-sister", text: `On a hit: Shields the ally with the lowest HP% instead, for ${Math.round(SISTER * 100)}% of the damage.`, builds: ["toll", "pact"] },
+    // Chooser of the slain gives the Shield up: offence in place of defence, and the power step has nothing to grow. Each version
+    // pays more than the base where it points, since each gives up the Valkyrie's own Shield: at the base's sizes both were worse
+    // to have than the base in the builds they serve (the build test's ablation).
     form: (v, k) =>
-      v === "a" ? { reactions: [], boosts: both({ scale: [{ ratio: 20 * k, when: { hpBelow: 50 }, of: "target" }] }) as StatusT["boosts"] }
-        : { reactions: [shieldOn(KIT.shieldmaiden * k, v === "b" ? T.lowestShareAlly : "holder")] },
+      v === "a" ? { reactions: [], boosts: both({ scale: [{ ratio: CHOOSER * k, when: { hpBelow: 50 }, of: "target" }] }) as StatusT["boosts"] }
+        : { reactions: [shieldOn((v === "b" ? SISTER : KIT.shieldmaiden) * k, v === "b" ? T.lowestShareAlly : "holder")] },
   });
 }
 
@@ -34,7 +38,7 @@ import { abilityUp, apply, both, helper, kit, passiveUp, phys } from "./kit.js";
     power: "+40% damage.", shown: true,
     a: { name: "Gale storm", text: "3 hits on 3 different foes, each adding Shock. The first ignores Taunt.", builds: ["storm", "cuts"] },
     b: { name: "Shieldbreaker", text: "3 hits on the foe with the most buffs, each lifting one of them. No Shock. Ignores Taunt.", serves: "Hunt 2 ●●, Toll ● ◆ spellbreaking" },
-    form: (v, k) => (v === "a" ? storm(0.09 * k) : v === "b" ? breaker(0.09 * k) : { do: [spear(0.09 * k, { hits: 3 })] }),
+    form: (v, k) => (v === "a" ? storm(KIT.galeSpear * k) : v === "b" ? breaker(KIT.galeSpear * k) : { do: [spear(KIT.galeSpear * k, { hits: 3 })] }),
   });
 }
 

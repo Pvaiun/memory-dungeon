@@ -206,7 +206,7 @@ export const abilities: A[] = [
   a("hoplite", "aspis", "Aspis", "Aegis on the ally with the lowest HP%.", { ...timing("long", "quick"), mp: 325, ...waitsFor("allies", { lacks: "aegis" }), target: lacking(T.lowestShareAlly, "aegis"), do: [apply("aegis")] }),
   // The shove: the bruiser's Defense as damage on every foe, with Sunder from the same stat. No Taunt anywhere in the kit.
   a("hoplite", "othismos", "Othismos", "Shoves every foe, adding Sunder.", {
-    ...timing("medium", "long"), mp: 325, target: T.everyFoe, do: [phys(hit("defense", "light"), { apply: [{ status: "sunder", stacks: stacks("few", "defense") }] })],
+    ...timing("medium", "long"), mp: 325, target: T.everyFoe, do: [phys(from("defense", HIT.light * KIT.othismos), { apply: [{ status: "sunder", stacks: stacks("few", "defense") }] })],
   }),
   // Bigger than a normal hit: Phalanx boosts the Hoplite's swing, not the thrust.
   a("hoplite", "spear_thrust", "Spear thrust", "Thrusts at a random foe, adding Sunder.", { ...timing("medium", "normal"), mp: 325, do: [phys(from("attack", 1.1), { apply: [{ status: "sunder", stacks: stacks("few", "attack") }] })] }),
@@ -224,7 +224,7 @@ export const abilities: A[] = [
   }),
   // Valkyrie
   a("valkyrie", "gale_spear", "Gale spear", "3 hits on a random foe, each adding Shock. Ignores Taunt.", {
-    ...timing("quick", "quick"), mp: 200, seek: true, target: T.notTauntingFoe, do: [phys(from("attack", 0.09), { hits: 3, apply: [{ status: "shock", stacks: stacks("few", "attack", 0.5) }] })],
+    ...timing("quick", "quick"), mp: 200, seek: true, target: T.notTauntingFoe, do: [phys(from("attack", KIT.galeSpear), { hits: 3, apply: [{ status: "shock", stacks: stacks("few", "attack", 0.5) }] })],
   }),
   // Choosing: one target, a fallen ally first, else the lowest; a revive lands only on the fallen and a heal only on the living, so it does one or the other.
   a("valkyrie", "choosing", "Choosing", `Revives a fallen ally with ${Math.round(REVIVE.tenth * 100)}% HP, or else heals the ally with the lowest HP%.`, {
@@ -242,7 +242,8 @@ export const abilities: A[] = [
   a("bard", "war_ballad", "War ballad", "Might on every ally.", { ...timing("quick", "quick"), mp: 450, target: T.everyAlly, do: [apply("might", { stacks: stacks("few", "attack") })] }),
   a("bard", "allegro", "Allegro", "Haste on every ally.", { ...timing("long", "quick"), mp: 650, target: T.everyAlly, do: [apply("haste")] }),
   // The conductor's verb: an ally's next spell sounds twice.
-  a("bard", "encore", "Encore", "The other ally with the most Attack casts its next ability 2 times; the 2nd is free.", { ...timing("medium", "quick"), mp: 450, target: T.otherHighestAMAlly, do: [apply("encore")] }),
+  // Ready only while another ally stands: alone, the Bard swung nothing and fizzled Encore at every turn.
+  a("bard", "encore", "Encore", "The other ally with the most Attack casts its next ability 2 times; the 2nd is free.", { ...timing("medium", "quick"), mp: 450, if: { side: "others", where: {} }, target: T.otherHighestAMAlly, do: [apply("encore")] }),
   // Hexer
   // The curse every colour reads: a light hit on every foe, a fifth more for each different affliction it holds, then Bleed of its own.
   a("hexer", "malison", "Malison", "Curses every foe, adding Bleed. +20% damage for each of Burn, Chill, Shock, Bleed and Sunder a foe holds.", {
@@ -282,8 +283,9 @@ export const abilities: A[] = [
   a("pyromancer", "pyre", "Pyre", "Burns down the foe with the most Burn.", {
     // 200 a stack of Burn: the ramp's payoff, not a second ramp.
     // On the medium cooldown with a long wind-up, at 1,000 MP: on the long one with a very long wind-up it came 0.15 times a
-    // regular fight and a third of a boss fight, the reader of the fire that the fire never saw.
-    ...timing("medium", "long"), mp: 1000, target: T.mostFoe("burn"), do: [phys({ scale: [{ ratio: HIT.heavy, stat: "attack" }, { ratio: 200, stacks: "burn", of: "target" }] })],
+    // regular fight and a third of a boss fight, the reader of the fire that the fire never saw. At 800 MP, not 1,000: at 1,000 it
+    // still came under once a boss fight (0.7), each cast over the balance sheet's band.
+    ...timing("medium", "long"), mp: 800, target: T.mostFoe("burn"), do: [phys({ scale: [{ ratio: HIT.heavy, stat: "attack" }, { ratio: 200, stacks: "burn", of: "target" }] })],
   }),
   // Frostweaver
   // About 6 Chill a lance at Attack 4, so a shatter takes more than one cast.

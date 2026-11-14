@@ -34,17 +34,18 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
   );
 }
 {
-  // Each ally turns on its own clock, together: Surge for 22 ticks (Haste as it begins, hits +20%), then Ebb (Guard as it begins, 30% slower), and back.
-  const party = `Every ${SO_OFTEN} ticks the party turns. Surge: every ally Hasted, hits +20%. Ebb: every ally Guarded, 30% slower.`;
-  const slower = ["attack_speed", "cooldown_reduction", "cast_time_reduction"].map((stat) => ({ stat, flat: -30 }));
+  // Each ally turns on its own clock, together: Surge for 22 ticks (Haste as it begins, hits +10%), then Ebb (Guard as it begins, 40% slower:
+  // Haste's own size), and back. At +20% and 30% slower the tide only rose: 23 points over Neutral on the balance sheet's probe.
+  const party = `Every ${SO_OFTEN} ticks the party turns. Surge: every ally Hasted, hits +10%. Ebb: every ally Guarded, 40% slower.`;
+  const slower = ["attack_speed", "cooldown_reduction", "cast_time_reduction"].map((stat) => ({ stat, flat: -40 }));
   const tide = (id: string, name: string, text: string, next: string, body: Partial<StatusT>): StatusT =>
     ({ id, name, text, label: "buff", show: "icon", stacking: "refresh", unremovable: true, duration: SO_OFTEN, ...body, reactions: [...(body.reactions ?? []), react(on("status_ended", { status: id, cause: ["expired"] }), give(next))] }) as StatusT;
   add(
     formation("Tidal", "legendary", "The party rises and falls together.", thrice({ name: "Wave", text: NOTHING }), { text: party, statuses: ["tidal"] }),
     [
       held("tidal", "Tidal", party, { reactions: [atStart(give("tidal_surge"))] }),
-      tide("tidal_surge", "SURGE", "Hits +20%.", "tidal_ebb", { boosts: hits(20), reactions: [react(on("status_gained", { status: "tidal_surge" }), give("haste"))] }),
-      tide("tidal_ebb", "EBB", "30% slower.", "tidal_surge", { stats: slower, reactions: [react(on("status_gained", { status: "tidal_ebb" }), give("guard"))] }),
+      tide("tidal_surge", "SURGE", "Hits +10%.", "tidal_ebb", { boosts: hits(10), reactions: [react(on("status_gained", { status: "tidal_surge" }), give("haste"))] }),
+      tide("tidal_ebb", "EBB", "40% slower.", "tidal_surge", { stats: slower, reactions: [react(on("status_gained", { status: "tidal_ebb" }), give("guard"))] }),
     ],
     "Cuts 3 ●●, Landslide ●● ◆ tempo, the beat",
   );

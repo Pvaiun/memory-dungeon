@@ -387,8 +387,8 @@ Thirty-one more, for thirty-two, and three that the kits and the mythics already
 - **Enough to see it:** the piece, and two of those uncommons on its wearer. The cheapest pieces in the bag become the engine, and which ones a run happens to hold decides what it is.
 
 **The fuse.** *Bonfire in a pack, with the Hunt.*
-- **What combines:** something that hands a burning foe's whole fire to another foe when it falls: a piece or a seat, never Burn itself · a party that kills the weakest first, or a pack of small foes · the feeders' own aim at the hottest foe (the Pyromancer's bolts and pyre, the Monk's fists).
-- **What the player sees:** the smallest foe goes up, and its whole fire jumps to the next, which starts already roaring. Every feeder turns to it without being told. Each kill comes sooner than the last, and what reaches the big foe at the back is the whole pack's fire.
+- **What combines:** something that hands a burning foe's fire on to another foe when it falls (Wick hands on half): a piece or a seat, never Burn itself · a party that kills the weakest first, or a pack of small foes · the feeders' own aim at the hottest foe (the Pyromancer's bolts and pyre, the Monk's fists).
+- **What the player sees:** the smallest foe goes up, and its fire jumps to the next, which starts already burning. Every feeder turns to it without being told. Each kill comes sooner than the last, and the big foe at the back meets a fire the pack built. Handed on whole, one cast walked a whole pack down and Bonfire's worst fight became its easiest.
 - **Enough to see it:** the piece and one feeder that aims at the hottest. It's Bonfire's pack game: a kill no longer throws the fire away.
 
 **The avalanche.** *Landslide and the Hunt.*

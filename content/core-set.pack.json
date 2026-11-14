@@ -3539,7 +3539,7 @@
   {
    "id": "tidal",
    "name": "Tidal",
-   "text": "Every 22 ticks the party turns. Surge: every ally Hasted, hits +20%. Ebb: every ally Guarded, 30% slower.",
+   "text": "Every 22 ticks the party turns. Surge: every ally Hasted, hits +10%. Ebb: every ally Guarded, 40% slower.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -3562,7 +3562,7 @@
   {
    "id": "tidal_surge",
    "name": "SURGE",
-   "text": "Hits +20%.",
+   "text": "Hits +10%.",
    "label": "buff",
    "show": "icon",
    "stacking": "refresh",
@@ -3571,7 +3571,7 @@
    "boosts": [
     {
      "tag": "physical",
-     "pct": 20
+     "pct": 10
     }
    ],
    "reactions": [
@@ -3609,7 +3609,7 @@
   {
    "id": "tidal_ebb",
    "name": "EBB",
-   "text": "30% slower.",
+   "text": "40% slower.",
    "label": "buff",
    "show": "icon",
    "stacking": "refresh",
@@ -3618,15 +3618,15 @@
    "stats": [
     {
      "stat": "attack_speed",
-     "flat": -30
+     "flat": -40
     },
     {
      "stat": "cooldown_reduction",
-     "flat": -30
+     "flat": -40
     },
     {
      "stat": "cast_time_reduction",
-     "flat": -30
+     "flat": -40
     }
    ],
    "reactions": [
@@ -16582,7 +16582,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "No Shield. Hits deal +20% to foes below 50% HP.",
+   "text": "No Shield. Hits deal +40% to foes below 50% HP.",
    "reactions": [],
    "boosts": [
     {
@@ -16590,7 +16590,7 @@
      "pct": {
       "scale": [
        {
-        "ratio": 20,
+        "ratio": 40,
         "when": {
          "hpBelow": 50
         },
@@ -16608,7 +16608,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "On a hit: Shields the ally with the lowest HP% instead, for 25% of the damage.",
+   "text": "On a hit: Shields the ally with the lowest HP% instead, for 35% of the damage.",
    "reactions": [
     {
      "on": {
@@ -16621,7 +16621,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.25,
+          "ratio": 0.35,
           "amount": true
          }
         ]
@@ -16643,7 +16643,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "No Shield. Hits deal +20% to foes below 50% HP. +28%, not +20%.",
+   "text": "No Shield. Hits deal +40% to foes below 50% HP. +56%, not +40%.",
    "reactions": [],
    "boosts": [
     {
@@ -16651,7 +16651,7 @@
      "pct": {
       "scale": [
        {
-        "ratio": 28,
+        "ratio": 56,
         "when": {
          "hpBelow": 50
         },
@@ -16669,7 +16669,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "On a hit: Shields the ally with the lowest HP% instead, for 25% of the damage. Shield +40%.",
+   "text": "On a hit: Shields the ally with the lowest HP% instead, for 35% of the damage. Shield +40%.",
    "reactions": [
     {
      "on": {
@@ -16682,7 +16682,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.35,
+          "ratio": 0.49,
           "amount": true
          }
         ]
@@ -21981,7 +21981,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.29,
+        "ratio": 0.377,
         "stat": "defense"
        }
       ]
@@ -22197,7 +22197,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.09,
+        "ratio": 0.12,
         "stat": "attack"
        }
       ]
@@ -22367,6 +22367,10 @@
    "cooldown": 32.7,
    "cast": 1,
    "mp": 450,
+   "if": {
+    "side": "others",
+    "where": {}
+   },
    "target": {
     "side": "others",
     "pick": "highest",
@@ -22941,7 +22945,7 @@
    "text": "Burns down the foe with the most Burn.",
    "cooldown": 33.7,
    "cast": 6,
-   "mp": 1000,
+   "mp": 800,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -26171,7 +26175,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.29,
+        "ratio": 0.377,
         "stat": "defense"
        }
       ]
@@ -26211,7 +26215,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.29,
+        "ratio": 0.377,
         "stat": "defense"
        }
       ]
@@ -26308,7 +26312,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.29,
+        "ratio": 0.377,
         "stat": "defense"
        }
       ]
@@ -27265,7 +27269,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.126,
+        "ratio": 0.168,
         "stat": "attack"
        }
       ]
@@ -27310,7 +27314,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.09,
+        "ratio": 0.12,
         "stat": "attack"
        }
       ]
@@ -27335,7 +27339,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.09,
+        "ratio": 0.12,
         "stat": "attack"
        }
       ]
@@ -27383,7 +27387,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.09,
+        "ratio": 0.12,
         "stat": "attack"
        }
       ]
@@ -27430,7 +27434,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.126,
+        "ratio": 0.168,
         "stat": "attack"
        }
       ]
@@ -27455,7 +27459,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.126,
+        "ratio": 0.168,
         "stat": "attack"
        }
       ]
@@ -27503,7 +27507,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.126,
+        "ratio": 0.168,
         "stat": "attack"
        }
       ]
@@ -28321,6 +28325,10 @@
    "cooldown": 24,
    "cast": 1,
    "mp": 450,
+   "if": {
+    "side": "others",
+    "where": {}
+   },
    "target": {
     "side": "others",
     "pick": "highest",
@@ -28345,6 +28353,10 @@
    "cooldown": 32.7,
    "cast": 1,
    "mp": 450,
+   "if": {
+    "side": "others",
+    "where": {}
+   },
    "target": {
     "side": "others",
     "pick": "highest",
@@ -28370,6 +28382,10 @@
    "cooldown": 32.7,
    "cast": 1,
    "mp": 450,
+   "if": {
+    "side": "others",
+    "where": {}
+   },
    "target": "self",
    "do": [
     {
@@ -28387,6 +28403,10 @@
    "cooldown": 24,
    "cast": 1,
    "mp": 450,
+   "if": {
+    "side": "others",
+    "where": {}
+   },
    "target": {
     "side": "others",
     "pick": "highest",
@@ -28412,6 +28432,10 @@
    "cooldown": 24,
    "cast": 1,
    "mp": 450,
+   "if": {
+    "side": "others",
+    "where": {}
+   },
    "target": "self",
    "do": [
     {
@@ -31285,7 +31309,7 @@
    "text": "Burns down the foe with the most Burn.",
    "cooldown": 33.7,
    "cast": 6,
-   "mp": 1000,
+   "mp": 800,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -31320,7 +31344,7 @@
    "text": "Burns down every foe, each harder for its Burn.",
    "cooldown": 33.7,
    "cast": 6,
-   "mp": 1000,
+   "mp": 800,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -31352,7 +31376,7 @@
    "text": "Waits for a foe with 20+ Burn, then burns down the foe with the most.",
    "cooldown": 33.7,
    "cast": 6,
-   "mp": 1000,
+   "mp": 800,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -31396,7 +31420,7 @@
    "text": "Burns down every foe, each harder for its Burn.",
    "cooldown": 33.7,
    "cast": 6,
-   "mp": 1000,
+   "mp": 800,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -31428,7 +31452,7 @@
    "text": "Waits for a foe with 20+ Burn, then burns down the foe with the most.",
    "cooldown": 33.7,
    "cast": 6,
-   "mp": 1000,
+   "mp": 800,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -33469,11 +33493,11 @@
    "power": "Shield +40%.",
    "a": {
     "name": "Chooser of the slain",
-    "text": "No Shield. Hits deal +20% to foes below 50% HP."
+    "text": "No Shield. Hits deal +40% to foes below 50% HP."
    },
    "b": {
     "name": "Shield-sister",
-    "text": "On a hit: Shields the ally with the lowest HP% instead, for 25% of the damage."
+    "text": "On a hit: Shields the ally with the lowest HP% instead, for 35% of the damage."
    }
   },
   {
@@ -45372,7 +45396,7 @@
   {
    "id": "tidal",
    "name": "Tidal",
-   "text": "The party rises and falls together. The party: Every 22 ticks the party turns. Surge: every ally Hasted, hits +20%. Ebb: every ally Guarded, 30% slower.",
+   "text": "The party rises and falls together. The party: Every 22 ticks the party turns. Surge: every ally Hasted, hits +10%. Ebb: every ally Guarded, 40% slower.",
    "rarity": "legendary",
    "source": "unlock",
    "positions": [
