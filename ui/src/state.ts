@@ -8,6 +8,7 @@ import { c, classes, DEFAULT_NUMBERS, formations, NUMBER_SCALES } from "./conten
 import { plainWeapon } from "../../src/sim/parties.js";
 import { handsOf } from "../../src/validate.js";
 import { setMode } from "./mode.js";
+import { FILTER_NAMES, type Filter } from "./filter.js";
 
 /** `portraits`: what stands for a class in the menus. "faces" everywhere, "sprites" everywhere, or "mixed": sprites in the party's slots, faces elsewhere. */
 export type Portraits = "faces" | "sprites" | "mixed";
@@ -25,6 +26,8 @@ export type Settings = {
   headStart: [number, number, number];
   /** How fast the field's effects play, against their own pace (FX SPEED). */
   fxSpeed: number;
+  /** The colour filter over the whole screen (FILTER; filter.ts). */
+  filter: Filter;
 };
 /** The HEAD START choices, in ticks. */
 export const HEAD_STARTS = [0, 2, 4, 6, 9, 12, 16, 20] as const;
@@ -61,7 +64,7 @@ function fresh(): Setup {
     ...freshLoadout(),
     abilities: {},
     seed: 1,
-    settings: { speed: 1, step: false, hpBars: "both", mpBars: "party", sound: true, music: true, designer: false, autoContinue: false, theme: "night", numbers: DEFAULT_NUMBERS, hitPause: 0.75, seedLock: false, portraits: "mixed", headStart: [0, 0, 0], fxSpeed: 1 },
+    settings: { speed: 1, step: false, hpBars: "both", mpBars: "party", sound: true, music: true, designer: false, autoContinue: false, theme: "night", numbers: DEFAULT_NUMBERS, hitPause: 0.75, seedLock: false, portraits: "mixed", headStart: [0, 0, 0], fxSpeed: 1, filter: "off" },
   };
 }
 
@@ -89,6 +92,7 @@ function load(): Setup {
     if (!(SPEEDS as readonly number[]).includes(s.settings.speed)) s.settings.speed = 1;
     if (s.settings.theme !== "night" && s.settings.theme !== "day") s.settings.theme = "night";
     if (!["faces", "sprites", "mixed"].includes(s.settings.portraits)) s.settings.portraits = "mixed";
+    if (!FILTER_NAMES.includes(s.settings.filter)) s.settings.filter = "off";
     // An older save had a PARTY HP switch, with the foes' HP always shown: both now take the defaults.
     if (!BAR_SHOWS.includes(s.settings.hpBars)) s.settings.hpBars = fresh().settings.hpBars;
     if (!BAR_SHOWS.includes(s.settings.mpBars)) s.settings.mpBars = fresh().settings.mpBars;

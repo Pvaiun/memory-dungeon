@@ -5,9 +5,11 @@ import { setNumberScale } from "./content.js";
 import { setup } from "./state.js";
 import { go, mount, screen, setTheme } from "./screens.js";
 import { checkForUpdate } from "./update.js";
+import { setFilter } from "./filter.js";
 
 fitScale();
 setTheme(setup.settings.theme);
+setFilter(setup.settings.filter);
 setNumberScale(setup.settings.numbers);
 window.addEventListener("resize", fitScale);
 

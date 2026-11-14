@@ -19,6 +19,7 @@ A phone-sized browser interface on the headless engine: the rogue mode, free pla
   - powerful gear is gold and mythic crimson.
 - **The font** is Press Start 2P (`public/fonts/`), rasterized once for the field's numbers and words.
 - **Numbers on screen:** the data stores 1,000 a point of the documents' scale. Settings → NUMBERS picks how many the interface shows a point (`NUMBER_SCALES` in `src/content.ts`, 3× by default).
+- **Screen filters:** Settings → FILTER lays a colour filter over the whole screen, menus and fights alike (`FILTERS` in `src/filter.ts`): OFF by default, then GREEN, GREY and RED in four hard shades, 1-BIT in two, SEPIA, AMBER and BLUE as smooth tints, and INVERT. Each maps the picture's brightness onto its colours, so a new one is a list of colours.
 
 ## Art and sound
 
