@@ -172,3 +172,9 @@ test("tests on what a unit wears, its kin, its own stats against each other, the
   const c = arena({ party: [{ name: "P", weapon: club(10, 5), statuses: ["most"] }], enemies: [{ ...BAG, name: "B1", statuses: ["sore"] }], statuses: [most, sore] }).to(6);
   assert.deepEqual(amounts(c, "B1"), [20]);
 });
+
+test("a dodged hit's raw amount sizes a strike: the hit lands on another foe", () => {
+  const mirror = buff("mirror", { reactions: [{ on: { event: "hit_evaded" }, do: [{ op: "strike", of: "hit", to: { side: "foes", exclude: "other", pick: "random" } }] }] });
+  const a = arena({ party: [{ name: "P", stats: { max_hp: 1e6, evasion: 100 }, statuses: ["mirror"] }], enemies: [{ name: "F", weapon: club(70, 5) }, { ...BAG, name: "G" }], statuses: [mirror] }).to(6);
+  assert.deepEqual(amounts(a, "G"), [70]);
+});

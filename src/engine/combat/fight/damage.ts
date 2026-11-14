@@ -209,8 +209,10 @@ export function hit(w: W, ctx: Ctx, t0: CUnit, e: S.DamageEffectT, o: HitOpts = 
   let parts = fixed ? [{ p: main, raw: o.fixed!, rider: false }] : partsOn(t);
   if (!fixed && main.type === "physical" && evaded(w, a, t)) {
     w.log?.({ t: "dmg", vis: "player", at: w.f.now, by: a.id, target: t.id, src: ctx.id, part: "hit", amount: 0, soaked: 0, word: "MISS", crit: false, hp: t.hp, shield: shield(w, t) });
-    fire(w, ev("hit_evaded", t, a, { kind, tags }));
-    fire(w, ev("hit_missed", a, t, { kind, tags }));
+    // A dodged hit's raw amount (after the attacker's boosts, before Defense) and type ride on its events, for a strike sized from it.
+    const raw = Math.max(0, Math.floor(parts[0].raw * (1 + (boostOf(w, a, shaped(tags), t) + stat(w, a, "power") + enrage(w) + (ctx.mod?.damage ?? 0)) / 100)));
+    fire(w, ev("hit_evaded", t, a, { kind, tags, raw, dtype: main.type }));
+    fire(w, ev("hit_missed", a, t, { kind, tags, raw, dtype: main.type }));
     return false;
   }
   // The hit and its riders read the same state, and share one crit roll.

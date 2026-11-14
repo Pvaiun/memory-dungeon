@@ -230,7 +230,7 @@ armor("mail", "common", "Thick byrnie", { stats: [st("max_hp", 1)], serves: "Blo
   const name = "Tallymail", effect = "Each hit it lands: a Cut (up to 25). +1% Lifesteal per Cut.";
   armor("mail", "legendary", name, {
     effect, stats: [st("max_hp", 1), st("attack", 2), sp("lifesteal", "medium")],
-    statuses: [own_(name, effect, { reactions: [react(EV.hit, give("cuts", "self", 1))], stats: [{ stat: "lifesteal", flat: stacksOf("cuts", 1), live: true }] })],
+    statuses: [own_(name, effect, { reactions: [react(EV.hit, give("edge", "self", 1))], stats: [{ stat: "lifesteal", flat: stacksOf("edge", 1), live: true }] })],
     serves: "Cuts 3 ●●●, Pact ●●",
   });
 }

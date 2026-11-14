@@ -847,6 +847,60 @@
    }
   },
   {
+   "id": "bewildered",
+   "name": "BEWILDERED",
+   "text": "Its next basic attack strikes one of its own side.",
+   "label": "debuff",
+   "show": "icon",
+   "stacking": "intensity",
+   "cap": 1,
+   "confuse": true,
+   "trigger": {
+    "on": {
+     "event": "action_resolve",
+     "kind": "basic"
+    }
+   },
+   "drop": "all"
+  },
+  {
+   "id": "brittle",
+   "name": "BRITTLE",
+   "text": "The next hit it takes is a crit.",
+   "label": "debuff",
+   "show": "icon",
+   "stacking": "intensity",
+   "cap": 1,
+   "critsTaken": "always",
+   "trigger": {
+    "on": {
+     "event": "hit_taken"
+    }
+   },
+   "drop": "all"
+  },
+  {
+   "id": "fixated",
+   "name": "FIXATED",
+   "text": "Picks the unit that fixated it, unless a Taunt forces another.",
+   "label": "debuff",
+   "show": "icon",
+   "stacking": "refresh",
+   "duration": 16,
+   "fixate": true
+  },
+  {
+   "id": "owed",
+   "name": "OWED",
+   "text": "Damage from hits waits here, and lands all at once 10 ticks after the first.",
+   "label": "marker",
+   "show": "icon",
+   "stacking": "intensity",
+   "duration": 10,
+   "debt": true,
+   "unremovable": true
+  },
+  {
    "id": "aegis",
    "name": "AEGIS",
    "text": "Blocks the next big blow.",
@@ -3555,7 +3609,7 @@
   {
    "id": "the_whetstone",
    "name": "The whetstone",
-   "text": "Every ally's hits add to one count of Cuts (up to 25). Hits deal −20%, then +3% per Cut.",
+   "text": "Every ally's hits add to one count of Edge (up to 25). Hits deal −20%, then +3% per Edge.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -3569,7 +3623,7 @@
      "do": [
       {
        "op": "apply",
-       "status": "cuts",
+       "status": "edge",
        "to": "holder",
        "stacks": 1
       }
@@ -3584,7 +3638,7 @@
       "scale": [
        {
         "ratio": 3,
-        "stacks": "cuts",
+        "stacks": "edge",
         "of": "holder"
        }
       ]
@@ -4351,8 +4405,8 @@
    ]
   },
   {
-   "id": "cuts",
-   "name": "CUTS",
+   "id": "edge",
+   "name": "EDGE",
    "text": "One per hit landed.",
    "label": "buff",
    "show": "icon",
@@ -4671,7 +4725,7 @@
   {
    "id": "thousandth_cut",
    "name": "Thousandth cut",
-   "text": "Each hit adds a Cut (up to 25). Hits deal +2% per Cut.",
+   "text": "Each hit adds an Edge (up to 25). Hits deal +2% per Edge.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -4684,7 +4738,7 @@
      "do": [
       {
        "op": "apply",
-       "status": "cuts",
+       "status": "edge",
        "to": "self",
        "stacks": 1
       }
@@ -4698,7 +4752,7 @@
       "scale": [
        {
         "ratio": 2,
-        "stacks": "cuts",
+        "stacks": "edge",
         "of": "holder"
        }
       ]
@@ -8743,7 +8797,7 @@
      "do": [
       {
        "op": "apply",
-       "status": "cuts",
+       "status": "edge",
        "to": "self",
        "stacks": 1
       }
@@ -8757,7 +8811,7 @@
       "scale": [
        {
         "ratio": 1,
-        "stacks": "cuts",
+        "stacks": "edge",
         "of": "holder"
        }
       ]
@@ -34715,7 +34769,7 @@
   {
    "id": "thousandth_cut",
    "name": "Thousandth cut",
-   "text": "Each hit adds a Cut (up to 25). Hits deal +2% per Cut.",
+   "text": "Each hit adds an Edge (up to 25). Hits deal +2% per Edge.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
@@ -45162,7 +45216,7 @@
   {
    "id": "the_whetstone",
    "name": "The whetstone",
-   "text": "Every hit the party lands sharpens the next. The party: Every ally's hits add to one count of Cuts (up to 25). Hits deal −20%, then +3% per Cut.",
+   "text": "Every hit the party lands sharpens the next. The party: Every ally's hits add to one count of Edge (up to 25). Hits deal −20%, then +3% per Edge.",
    "rarity": "legendary",
    "source": "unlock",
    "positions": [

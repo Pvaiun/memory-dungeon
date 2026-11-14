@@ -103,7 +103,7 @@ export const Effect = z
           .enum(["weapon", "hit", "dealt", "over"])
           .optional()
           .describe(
-            "weapon (the default): the actor's basic attack against each target, its damage with the weapon's riders and statuses, in whatever shape its basic attacks have (their boosts). hit: the raw amount of the hit that set the reaction off (before Defense), resolved afresh. dealt: what that hit dealt, again, as it is: no dodge, no crit, no boost and no Defense (a second landing); it's bare. over: what a killing blow had left over (a reaction to ko), which meets Evasion and Defense but isn't boosted or crit again; it's bare.",
+            "weapon (the default): the actor's basic attack against each target, its damage with the weapon's riders and statuses, in whatever shape its basic attacks have (their boosts). hit: the raw amount of the hit that set the reaction off (before Defense), resolved afresh; a dodged hit's too. dealt: what that hit dealt, again, as it is: no dodge, no crit, no boost and no Defense (a second landing); it's bare. over: what a killing blow had left over (a reaction to ko), which meets Evasion and Defense but isn't boosted or crit again; it's bare.",
           ),
         amount: Num.optional().describe("A hit of its own size, in place of `of` (a blow from Attack, not from the weapon)."),
         apply: z.array(HitApply).optional().describe("With `amount`: statuses the hit applies."),

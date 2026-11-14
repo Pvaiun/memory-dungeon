@@ -88,10 +88,10 @@ weapon("dagger", "common", "Keen dirk", { stats: [critStep(1)], serves: "Hunt, C
 }
 {
   const name = "Thousandth cut";
-  const effect = "Each hit adds a Cut (up to 25). Hits deal +2% per Cut.";
+  const effect = "Each hit adds an Edge (up to 25). Hits deal +2% per Edge.";
   weapon("dagger", "legendary", name, {
     effect, stats: [critStep(2), sp("attack_speed", "high")],
-    statuses: [own_(name, effect, { reactions: [react(EV.hit, give("cuts", "self", 1))], boosts: hits(stacksOf("cuts", 2)) })],
+    statuses: [own_(name, effect, { reactions: [react(EV.hit, give("edge", "self", 1))], boosts: hits(stacksOf("edge", 2)) })],
     serves: "Cuts 3 ●●●, Snap ●, Storm ●",
   });
 }

@@ -229,7 +229,8 @@ export class Combat {
         if (e.by) this.rule(e.by, `${path}.by`, { where });
         if (e.after !== undefined && e.of !== "dealt") this.r.error("strike.after", `${path}.after`, `only a second landing ('of: dealt') can come later`);
         if (e.of === "over" && on?.event !== "ko") this.r.error("strike.over", `${path}.of`, `only a reaction to ko has a killing blow's left-over`);
-        if ((e.of === "hit" || e.of === "dealt") && on && !["hit_lands", "hit_taken"].includes(on.event)) this.r.error("strike.hit", `${path}.of`, `only a reaction to a hit has that hit to size a strike from`);
+        if (e.of === "hit" && on && !["hit_lands", "hit_taken", "hit_evaded", "hit_missed"].includes(on.event)) this.r.error("strike.hit", `${path}.of`, `only a reaction to a hit has that hit to size a strike from`);
+        if (e.of === "dealt" && on && !["hit_lands", "hit_taken"].includes(on.event)) this.r.error("strike.hit", `${path}.of`, `only a reaction to a hit that landed has what it dealt`);
         this.ticks(e.after, `${path}.after`);
         break;
       case "one":

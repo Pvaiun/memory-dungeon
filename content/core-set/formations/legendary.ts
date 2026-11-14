@@ -25,11 +25,11 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
   );
 }
 {
-  // Each ally keeps its own copy of the party's count, fed by every ally's hits (one Cut an event).
-  const party = "Every ally's hits add to one count of Cuts (up to 25). Hits deal −20%, then +3% per Cut.";
+  // Each ally keeps its own copy of the party's count, fed by every ally's hits (one Edge an event).
+  const party = "Every ally's hits add to one count of Edge (up to 25). Hits deal −20%, then +3% per Edge.";
   add(
     formation("The whetstone", "legendary", "Every hit the party lands sharpens the next.", thrice({ name: "Blade", text: NOTHING }), { text: party, statuses: ["the_whetstone"] }),
-    [held("the_whetstone", "The whetstone", party, { reactions: [react(on("hit_lands", { whose: "team" }), give("cuts", "holder", 1))], boosts: hits({ base: -20, scale: [{ ratio: 3, stacks: "cuts", of: "holder" }] }) })],
+    [held("the_whetstone", "The whetstone", party, { reactions: [react(on("hit_lands", { whose: "team" }), give("edge", "holder", 1))], boosts: hits({ base: -20, scale: [{ ratio: 3, stacks: "edge", of: "holder" }] }) })],
     "Cuts 3 ●●●, Storm ●●",
   );
 }
