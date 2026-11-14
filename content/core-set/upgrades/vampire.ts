@@ -17,31 +17,28 @@ const feast: ReactionT = {
 helper(lustOn("bloodlust_on_plus", "BLOODLUST", 1.5));
 helper(lustOn("shared_feast_on", "SHARED FEAST", 1, { text: "Lifesteal doubled; each hit heals the other ally with the lowest HP% as much as it drank.", reactions: [feast] }));
 helper(lustOn("shared_feast_on_plus", "SHARED FEAST", 1.5, { text: "Lifesteal ×2.5; each hit heals the other ally with the lowest HP% as much as it drank.", reactions: [feast] }));
-// Undying thirst: for 5 ticks, an HP floor and Lifesteal three times its own in place of the doubling (or of the power step's two and a
-// half): read once as it lands, on top of the on-state Bloodlust has just given it (half again of 40, or a fifth of 50).
-const UNDYING = 5;
-const thirst = (id: string, ratio: number): StatusT =>
-  kit(id, "UNDYING THIRST", "Can't fall below 1 HP; Lifesteal tripled.", { stacking: "fizzle", duration: UNDYING, floor: {}, stats: [{ stat: "lifesteal", flat: { scale: [{ ratio, stat: "lifesteal", of: "holder" }] } }] });
-helper(thirst("undying_thirst", 0.5));
-helper(thirst("undying_thirst_plus", 0.2));
-// Once a fight, through a knockout too.
-helper(marker("undying_thirst_spent", "UNDYING THIRST", "Spent this fight.", { stacking: "fizzle", survivesKO: true }));
+// Shepherd's thirst: the passive outside its own wounds: the doubling while any ally (itself included) is below half, read off
+// the HP lines of the whole side, and lifted when none is.
+const NONE_LOW = { side: "allies" as const, where: { hpBelow: 50 }, atMost: 0 };
 
 passiveUp({
   id: "bloodlust", cls: "vampire",
   power: "Lifesteal ×2.5 instead of doubled.",
   a: { name: "Shared feast", text: "Below half HP: Lifesteal doubled, and each hit heals the other ally with the lowest HP% as much as it drank.", builds: ["pact"] },
-  b: { name: "Undying thirst", text: "Below half HP: Lifesteal doubled. Once a fight, below 10% HP: for 5 ticks it can't fall below 1 HP, and Lifesteal triples.", builds: ["pact"] },
+  b: { name: "Shepherd's thirst", text: "While any ally is below half HP: Lifesteal doubled.", serves: "Pact 2 ●●, Toll ● ◆ the net" },
   form: (v, _k, plus) => {
     const on = v === "a" ? (plus ? "shared_feast_on_plus" : "shared_feast_on") : plus ? "bloodlust_on_plus" : "bloodlust_on";
+    if (v === "b") return {
+      reactions: [
+        { on: { event: "hp_low", line: 50, whose: "team" }, do: [apply(on, { to: "holder" })] },
+        { on: { event: "hp_high", line: 50, whose: "team" }, if: NONE_LOW, do: [{ op: "remove", label: "buff", status: on, to: "holder" } as EffectT] },
+        { on: { event: "ko", whose: "ally" }, if: NONE_LOW, do: [{ op: "remove", label: "buff", status: on, to: "holder" } as EffectT] },
+      ],
+    };
     return {
       reactions: [
         { on: { event: "hp_lost" }, do: [apply(on, { to: { side: "self", where: { hpBelow: 50 } } })] },
         { on: { event: "healed" }, do: [{ op: "remove", label: "buff", status: on, to: { side: "self", where: { hpAtLeast: 50 } } } as EffectT] },
-        ...(v === "b" ? [{
-          on: { event: "hp_lost" }, if: { side: "self", where: { hpBelow: 10, lacks: "undying_thirst_spent" } },
-          do: [apply(plus ? "undying_thirst_plus" : "undying_thirst", { to: "self" }), apply("undying_thirst_spent", { to: "self" })],
-        } as ReactionT] : []),
       ],
     };
   },

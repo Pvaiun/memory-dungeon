@@ -9,24 +9,32 @@ import { abilityUp, apply, cd, helper, hitOf, kit, marker, passiveUp, phys, remo
 helper(kit("bedrock_on_plus", "BEDROCK", "Crit chance doubled; Crit damage up.", {
   stacking: "fizzle", stats: [{ stat: "crit_chance", flat: { scale: [{ ratio: 1, stat: "crit_chance", of: "holder" }] } }, { stat: "crit_multiplier", flat: SPECIAL.crit_damage.medium }],
 }));
-// Faultline: the next hit always crits (a crit rule, so Gambler's coin too), at three times (the Geomancer's own crit is twice).
-helper(kit("faultline", "FAULTLINE", "Next hit crits for triple damage.", {
-  stacking: "fizzle", stats: [{ stat: "crit_multiplier", flat: 100 }], crits: [{ chance: 100 }],
-  reactions: [{ on: { event: "hit_lands" }, do: [removeMine("faultline")] }],
-}));
+// Bare rock: the passive turned outside its stone: Crit damage while it holds no Shield (given at the start, lifted as a Shield
+// lands, given back as the last one ends); the power step's +25% on top.
+helper(kit("bare_rock", "BARE ROCK", "Crit damage +50%.", { stacking: "fizzle", stats: [{ stat: "crit_multiplier", flat: 50 }] }));
+helper(kit("bare_rock_plus", "BARE ROCK", "Crit damage +75%.", { stacking: "fizzle", stats: [{ stat: "crit_multiplier", flat: 75 }] }));
 passiveUp({
   id: "bedrock", cls: "geomancer",
   power: "+25% Crit damage while its Shield holds.",
   a: { name: "Stunning crits", text: "While its Shield holds: Crit chance doubled, and crits Stun.", builds: [] },
-  b: { name: "Faultline", text: "While its Shield holds: Crit chance doubled. When it breaks, its next hit crits for triple damage.", serves: "Landslide 2 ●●● ⚙ detonation (half)" },
+  b: { name: "Bare rock", text: "While it holds no Shield: Crit damage +50%.", serves: "Hunt 2 ●●, Cuts ● ◆ crits", plus: "Crit damage +75%." },
   form: (v, _k, plus) => {
     const on = plus ? "bedrock_on_plus" : "bedrock_on";
+    if (v === "b") {
+      const bare = plus ? "bare_rock_plus" : "bare_rock";
+      return {
+        reactions: [
+          { on: { event: "fight_start" }, if: { side: "self", where: { lacks: "shield" } }, do: [apply(bare, { to: "holder" })] },
+          { on: { event: "status_gained", status: "shield" }, do: [removeMine(bare)] },
+          { on: { event: "status_ended", status: "shield" }, do: [apply(bare, { to: "holder" })] },
+        ],
+      };
+    }
     return {
       reactions: [
         { on: { event: "status_gained", status: "shield" }, do: [apply(on, { to: "holder" })] },
         { on: { event: "status_ended", status: "shield" }, do: [removeMine(on)] },
         ...(v === "a" ? [{ on: { event: "hit_lands", tags: ["crit"] }, if: { side: "self", where: { has: on } }, do: [apply("stun", { to: "other" })] } as ReactionT] : []),
-        ...(v === "b" ? [{ on: { event: "status_ended", status: "shield", cause: ["stacks"] }, do: [apply("faultline", { to: "holder" })] } as ReactionT] : []),
       ],
     };
   },
@@ -73,13 +81,10 @@ abilityUp({
   power: "+40% damage.",
   shown: true,
   a: { name: "Aftershock", text: "Hits a random foe and Stuns every foe.", serves: "Landslide ●●, Storm ●● ⚙ held charge (half)" },
-  b: { name: "Fissure", text: "Hits a Stunned foe for triple, else a random foe. No Stun.", builds: ["landslide", "snap"] },
-  form: (v, k) =>
+  b: { name: "Groundswell", text: "No blow and no Stun: every ally's next basic attack comes at once.", serves: "Landslide 2 ●●, Cuts ● ◆ party tempo, the heavy swing", plus: "Costs less MP." },
+  form: (v, k, plus) =>
     // Statuses are universal: the Stun at its own 8 ticks on every foe (Fizzle skips those already Stunned).
     v === "a" ? { do: [phys(hitOf("defense", "normal", k)), apply("stun", { to: T.everyFoe })] }
-      : v === "b" ? {
-        cast: WINDUP.normal, target: { side: "foes", where: { has: "stun" }, ifNone: "any" },
-        do: [phys({ scale: [{ ratio: HIT.normal * k, stat: "defense" }, { ratio: HIT.normal * 2 * k, when: { has: "stun" }, of: "target", times: { stat: "defense", of: "self" } }] })],
-      }
+      : v === "b" ? { target: T.everyAlly, ...(plus ? { mp: 450 } : {}), do: [{ op: "cooldown", which: "basic", set: "ready" }] }
         : { do: [phys(hitOf("defense", "normal", k), { apply: [{ status: "stun" }] })] },
 });

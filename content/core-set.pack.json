@@ -15917,17 +15917,16 @@
   },
   {
    "id": "briar__b",
-   "name": "Spreading thorns",
+   "name": "Scything briar",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Its Thorns also strike a second random foe; both gain Bleed.",
+   "text": "Its hits add Bleed in place of its Thorns.",
    "reactions": [
     {
      "on": {
-      "event": "damage_dealt",
-      "status": "thorns"
+      "event": "hit_lands"
      },
      "do": [
       {
@@ -15943,102 +15942,6 @@
         ]
        },
        "to": "other"
-      }
-     ]
-    },
-    {
-     "on": {
-      "event": "damage_dealt",
-      "status": "heart_of_the_briar"
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "bleed",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.00042,
-          "stat": "defense",
-          "of": "holder"
-         }
-        ]
-       },
-       "to": "other"
-      }
-     ]
-    },
-    {
-     "on": {
-      "event": "damage_dealt",
-      "status": "briar__b"
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "bleed",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.00042,
-          "stat": "defense",
-          "of": "holder"
-         }
-        ]
-       },
-       "to": "other"
-      }
-     ]
-    },
-    {
-     "on": {
-      "event": "damage_dealt",
-      "status": "thorns"
-     },
-     "do": [
-      {
-       "op": "damage",
-       "type": "none",
-       "amount": {
-        "scale": [
-         {
-          "ratio": 1,
-          "stat": "thorns",
-          "of": "holder"
-         }
-        ]
-       },
-       "to": {
-        "side": "foes",
-        "pick": "random",
-        "exclude": "other"
-       }
-      }
-     ]
-    },
-    {
-     "on": {
-      "event": "damage_dealt",
-      "status": "heart_of_the_briar"
-     },
-     "do": [
-      {
-       "op": "damage",
-       "type": "none",
-       "amount": {
-        "scale": [
-         {
-          "ratio": 1,
-          "stat": "thorns",
-          "of": "holder"
-         }
-        ]
-       },
-       "to": {
-        "side": "foes",
-        "pick": "random",
-        "exclude": "other"
-       }
       }
      ]
     }
@@ -16111,17 +16014,16 @@
   },
   {
    "id": "briar__bp",
-   "name": "Spreading thorns+",
+   "name": "Scything briar+",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Its Thorns also strike a second random foe; both gain Bleed. +40% Bleed.",
+   "text": "Its hits add Bleed in place of its Thorns. +40% Bleed.",
    "reactions": [
     {
      "on": {
-      "event": "damage_dealt",
-      "status": "thorns"
+      "event": "hit_lands"
      },
      "do": [
       {
@@ -16137,102 +16039,6 @@
         ]
        },
        "to": "other"
-      }
-     ]
-    },
-    {
-     "on": {
-      "event": "damage_dealt",
-      "status": "heart_of_the_briar"
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "bleed",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.000588,
-          "stat": "defense",
-          "of": "holder"
-         }
-        ]
-       },
-       "to": "other"
-      }
-     ]
-    },
-    {
-     "on": {
-      "event": "damage_dealt",
-      "status": "briar__bp"
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "bleed",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.000588,
-          "stat": "defense",
-          "of": "holder"
-         }
-        ]
-       },
-       "to": "other"
-      }
-     ]
-    },
-    {
-     "on": {
-      "event": "damage_dealt",
-      "status": "thorns"
-     },
-     "do": [
-      {
-       "op": "damage",
-       "type": "none",
-       "amount": {
-        "scale": [
-         {
-          "ratio": 1,
-          "stat": "thorns",
-          "of": "holder"
-         }
-        ]
-       },
-       "to": {
-        "side": "foes",
-        "pick": "random",
-        "exclude": "other"
-       }
-      }
-     ]
-    },
-    {
-     "on": {
-      "event": "damage_dealt",
-      "status": "heart_of_the_briar"
-     },
-     "do": [
-      {
-       "op": "damage",
-       "type": "none",
-       "amount": {
-        "scale": [
-         {
-          "ratio": 1,
-          "stat": "thorns",
-          "of": "holder"
-         }
-        ]
-       },
-       "to": {
-        "side": "foes",
-        "pick": "random",
-        "exclude": "other"
-       }
       }
      ]
     }
@@ -16309,35 +16115,50 @@
    ]
   },
   {
-   "id": "rebuke",
-   "name": "REBUKE",
-   "text": "Counts the hits it takes.",
-   "label": "marker",
-   "show": "sheet",
+   "id": "thornshield",
+   "name": "THORNSHIELD",
+   "text": "Thorns up, by the Bramble knight's own.",
+   "label": "buff",
+   "show": "icon",
    "stacking": "refresh",
-   "unremovable": true,
-   "reactions": [
+   "duration": 20,
+   "stats": [
     {
-     "on": {
-      "event": "hit_taken"
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "rebuke_count",
-       "to": "holder"
-      }
-     ]
+     "stat": "thorns",
+     "flat": {
+      "scale": [
+       {
+        "ratio": 1,
+        "stat": "thorns",
+        "of": "source"
+       }
+      ]
+     }
     }
    ]
   },
   {
-   "id": "rebuke_count",
-   "name": "REBUKE",
-   "text": "Hits taken since its last lash.",
-   "label": "marker",
+   "id": "thornshield_plus",
+   "name": "THORNSHIELD",
+   "text": "Thorns up, by the Bramble knight's own.",
+   "label": "buff",
    "show": "icon",
-   "stacking": "intensity"
+   "stacking": "refresh",
+   "duration": 20,
+   "stats": [
+    {
+     "stat": "thorns",
+     "flat": {
+      "scale": [
+       {
+        "ratio": 1.4,
+        "stat": "thorns",
+        "of": "source"
+       }
+      ]
+     }
+    }
+   ]
   },
   {
    "id": "opening_thrust",
@@ -17574,40 +17395,6 @@
    ]
   },
   {
-   "id": "mana_burn",
-   "name": "MANA BURN",
-   "text": "Its MP goes to the Hexer that burned it.",
-   "label": "marker",
-   "show": "sheet",
-   "stacking": "refresh",
-   "perSource": {},
-   "duration": 1,
-   "reactions": [
-    {
-     "on": {
-      "event": "status_gained",
-      "status": "mana_burn"
-     },
-     "actor": "source",
-     "do": [
-      {
-       "op": "mp",
-       "amount": {
-        "scale": [
-         {
-          "ratio": 0.2,
-          "stat": "max_mp",
-          "of": "holder"
-         }
-        ]
-       },
-       "to": "source"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "id": "iron_palm__p",
    "name": "Iron palm+",
    "label": "buff",
@@ -18178,12 +17965,12 @@
   },
   {
    "id": "lacerate__b",
-   "name": "Rupture",
+   "name": "Bloodless",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Crits deal extra damage for each Bleed on the foe, then add Bleed.",
+   "text": "Crits heal it for 20% of the damage, in place of Bleed.",
    "reactions": [
     {
      "on": {
@@ -18194,32 +17981,16 @@
      },
      "do": [
       {
-       "op": "damage",
-       "type": "none",
+       "op": "heal",
        "amount": {
         "scale": [
          {
-          "ratio": 60,
-          "stacks": "bleed",
-          "of": "target"
+          "ratio": 0.2,
+          "amount": true
          }
         ]
        },
-       "to": "other"
-      },
-      {
-       "op": "apply",
-       "status": "bleed",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.00078,
-          "stat": "attack",
-          "of": "holder"
-         }
-        ]
-       },
-       "to": "other"
+       "to": "self"
       }
      ]
     }
@@ -18282,12 +18053,12 @@
   },
   {
    "id": "lacerate__bp",
-   "name": "Rupture+",
+   "name": "Bloodless+",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Crits deal extra damage for each Bleed on the foe, then add Bleed. +40% Bleed.",
+   "text": "Crits heal it for 20% of the damage, in place of Bleed. Heals 28% of the damage.",
    "reactions": [
     {
      "on": {
@@ -18298,32 +18069,16 @@
      },
      "do": [
       {
-       "op": "damage",
-       "type": "none",
+       "op": "heal",
        "amount": {
         "scale": [
          {
-          "ratio": 60,
-          "stacks": "bleed",
-          "of": "target"
+          "ratio": 0.28,
+          "amount": true
          }
         ]
        },
-       "to": "other"
-      },
-      {
-       "op": "apply",
-       "status": "bleed",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.001092,
-          "stat": "attack",
-          "of": "holder"
-         }
-        ]
-       },
-       "to": "other"
+       "to": "self"
       }
      ]
     }
@@ -18577,63 +18332,6 @@
    ]
   },
   {
-   "id": "undying_thirst",
-   "name": "UNDYING THIRST",
-   "text": "Can't fall below 1 HP; Lifesteal tripled.",
-   "label": "buff",
-   "show": "icon",
-   "stacking": "fizzle",
-   "duration": 5,
-   "floor": {},
-   "stats": [
-    {
-     "stat": "lifesteal",
-     "flat": {
-      "scale": [
-       {
-        "ratio": 0.5,
-        "stat": "lifesteal",
-        "of": "holder"
-       }
-      ]
-     }
-    }
-   ]
-  },
-  {
-   "id": "undying_thirst_plus",
-   "name": "UNDYING THIRST",
-   "text": "Can't fall below 1 HP; Lifesteal tripled.",
-   "label": "buff",
-   "show": "icon",
-   "stacking": "fizzle",
-   "duration": 5,
-   "floor": {},
-   "stats": [
-    {
-     "stat": "lifesteal",
-     "flat": {
-      "scale": [
-       {
-        "ratio": 0.2,
-        "stat": "lifesteal",
-        "of": "holder"
-       }
-      ]
-     }
-    }
-   ]
-  },
-  {
-   "id": "undying_thirst_spent",
-   "name": "UNDYING THIRST",
-   "text": "Spent this fight.",
-   "label": "marker",
-   "show": "sheet",
-   "stacking": "fizzle",
-   "survivesKO": true
-  },
-  {
    "id": "bloodlust__p",
    "name": "Bloodlust+",
    "label": "buff",
@@ -18727,69 +18425,67 @@
   },
   {
    "id": "bloodlust__b",
-   "name": "Undying thirst",
+   "name": "Shepherd's thirst",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Below half HP: Lifesteal doubled. Once a fight, below 10% HP: for 5 ticks it can't fall below 1 HP, and Lifesteal triples.",
+   "text": "While any ally is below half HP: Lifesteal doubled.",
    "reactions": [
     {
      "on": {
-      "event": "hp_lost"
+      "event": "hp_low",
+      "line": 50,
+      "whose": "team"
      },
      "do": [
       {
        "op": "apply",
        "status": "bloodlust_on",
-       "to": {
-        "side": "self",
-        "where": {
-         "hpBelow": 50
-        }
-       }
+       "to": "holder"
       }
      ]
     },
     {
      "on": {
-      "event": "healed"
+      "event": "hp_high",
+      "line": 50,
+      "whose": "team"
+     },
+     "if": {
+      "side": "allies",
+      "where": {
+       "hpBelow": 50
+      },
+      "atMost": 0
      },
      "do": [
       {
        "op": "remove",
        "label": "buff",
        "status": "bloodlust_on",
-       "to": {
-        "side": "self",
-        "where": {
-         "hpAtLeast": 50
-        }
-       }
+       "to": "holder"
       }
      ]
     },
     {
      "on": {
-      "event": "hp_lost"
+      "event": "ko",
+      "whose": "ally"
      },
      "if": {
-      "side": "self",
+      "side": "allies",
       "where": {
-       "hpBelow": 10,
-       "lacks": "undying_thirst_spent"
-      }
+       "hpBelow": 50
+      },
+      "atMost": 0
      },
      "do": [
       {
-       "op": "apply",
-       "status": "undying_thirst",
-       "to": "self"
-      },
-      {
-       "op": "apply",
-       "status": "undying_thirst_spent",
-       "to": "self"
+       "op": "remove",
+       "label": "buff",
+       "status": "bloodlust_on",
+       "to": "holder"
       }
      ]
     }
@@ -18843,69 +18539,67 @@
   },
   {
    "id": "bloodlust__bp",
-   "name": "Undying thirst+",
+   "name": "Shepherd's thirst+",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Below half HP: Lifesteal doubled. Once a fight, below 10% HP: for 5 ticks it can't fall below 1 HP, and Lifesteal triples. Lifesteal ×2.5 instead of doubled.",
+   "text": "While any ally is below half HP: Lifesteal doubled. Lifesteal ×2.5 instead of doubled.",
    "reactions": [
     {
      "on": {
-      "event": "hp_lost"
+      "event": "hp_low",
+      "line": 50,
+      "whose": "team"
      },
      "do": [
       {
        "op": "apply",
        "status": "bloodlust_on_plus",
-       "to": {
-        "side": "self",
-        "where": {
-         "hpBelow": 50
-        }
-       }
+       "to": "holder"
       }
      ]
     },
     {
      "on": {
-      "event": "healed"
+      "event": "hp_high",
+      "line": 50,
+      "whose": "team"
+     },
+     "if": {
+      "side": "allies",
+      "where": {
+       "hpBelow": 50
+      },
+      "atMost": 0
      },
      "do": [
       {
        "op": "remove",
        "label": "buff",
        "status": "bloodlust_on_plus",
-       "to": {
-        "side": "self",
-        "where": {
-         "hpAtLeast": 50
-        }
-       }
+       "to": "holder"
       }
      ]
     },
     {
      "on": {
-      "event": "hp_lost"
+      "event": "ko",
+      "whose": "ally"
      },
      "if": {
-      "side": "self",
+      "side": "allies",
       "where": {
-       "hpBelow": 10,
-       "lacks": "undying_thirst_spent"
-      }
+       "hpBelow": 50
+      },
+      "atMost": 0
      },
      "do": [
       {
-       "op": "apply",
-       "status": "undying_thirst_plus",
-       "to": "self"
-      },
-      {
-       "op": "apply",
-       "status": "undying_thirst_spent",
-       "to": "self"
+       "op": "remove",
+       "label": "buff",
+       "status": "bloodlust_on_plus",
+       "to": "holder"
       }
      ]
     }
@@ -19092,12 +18786,12 @@
   },
   {
    "id": "stoke__b",
-   "name": "Wildfire",
+   "name": "Ember of haste",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Each cast adds Burn to every burning foe.",
+   "text": "Each cast Hastes the ally with the fastest basic attack, in place of Burn.",
    "reactions": [
     {
      "on": {
@@ -19107,22 +18801,11 @@
      "do": [
       {
        "op": "apply",
-       "status": "burn",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.0000875,
-          "stat": "attack",
-          "of": "holder"
-         }
-        ]
-       },
+       "status": "haste",
        "to": {
-        "side": "foes",
-        "where": {
-         "has": "burn"
-        },
-        "pick": "all"
+        "side": "allies",
+        "pick": "lowest",
+        "by": "swing"
        }
       }
      ]
@@ -19164,12 +18847,12 @@
   },
   {
    "id": "stoke__bp",
-   "name": "Wildfire+",
+   "name": "Ember of haste+",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Each cast adds Burn to every burning foe. +40% Burn.",
+   "text": "Each cast Hastes the ally with the fastest basic attack, in place of Burn. Hastes the two with the fastest.",
    "reactions": [
     {
      "on": {
@@ -19179,22 +18862,12 @@
      "do": [
       {
        "op": "apply",
-       "status": "burn",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.0001225,
-          "stat": "attack",
-          "of": "holder"
-         }
-        ]
-       },
+       "status": "haste",
        "to": {
-        "side": "foes",
-        "where": {
-         "has": "burn"
-        },
-        "pick": "all"
+        "side": "allies",
+        "pick": "lowest",
+        "by": "swing",
+        "count": 2
        }
       }
      ]
@@ -19275,18 +18948,17 @@
   },
   {
    "id": "shatterpoint__b",
-   "name": "Splinters",
+   "name": "Rime edge",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "On a shatter: that foe gains Sunder, and every other foe a third of its Chill.",
+   "text": "Basic attacks add Sunder. No Sunder on a shatter.",
    "reactions": [
     {
      "on": {
-      "event": "status_capped",
-      "status": "chill",
-      "whose": "foe"
+      "event": "hit_lands",
+      "kind": "basic"
      },
      "do": [
       {
@@ -19295,31 +18967,13 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0013,
+          "ratio": 0.0007,
           "stat": "attack",
           "of": "holder"
          }
         ]
        },
-       "to": "owner"
-      },
-      {
-       "op": "apply",
-       "status": "chill",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.333333333,
-          "amount": true
-         }
-        ]
-       },
-       "to": {
-        "side": "foes",
-        "pick": "all",
-        "exclude": "owner"
-       },
-       "passed": true
+       "to": "other"
       }
      ]
     }
@@ -19365,18 +19019,17 @@
   },
   {
    "id": "shatterpoint__bp",
-   "name": "Splinters+",
+   "name": "Rime edge+",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "On a shatter: that foe gains Sunder, and every other foe a third of its Chill. +40% Sunder.",
+   "text": "Basic attacks add Sunder. No Sunder on a shatter. +40% Sunder.",
    "reactions": [
     {
      "on": {
-      "event": "status_capped",
-      "status": "chill",
-      "whose": "foe"
+      "event": "hit_lands",
+      "kind": "basic"
      },
      "do": [
       {
@@ -19385,31 +19038,13 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00182,
+          "ratio": 0.00098,
           "stat": "attack",
           "of": "holder"
          }
         ]
        },
-       "to": "owner"
-      },
-      {
-       "op": "apply",
-       "status": "chill",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.333333333,
-          "amount": true
-         }
-        ]
-       },
-       "to": {
-        "side": "foes",
-        "pick": "all",
-        "exclude": "owner"
-       },
-       "passed": true
+       "to": "other"
       }
      ]
     }
@@ -19652,14 +19287,18 @@
   },
   {
    "id": "arc__b",
-   "name": "Static grip",
+   "name": "Grounded arc",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks strike their target twice, each adding Shock.",
+   "text": "Basic attacks also hit a second random foe; both gain Sunder in place of Shock.",
    "strike": {
-    "to": "target"
+    "to": {
+     "side": "foes",
+     "pick": "random",
+     "exclude": "targets"
+    }
    },
    "reactions": [
     {
@@ -19670,11 +19309,11 @@
      "do": [
       {
        "op": "apply",
-       "status": "shock",
+       "status": "sunder",
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00105,
+          "ratio": 0.0007,
           "stat": "attack",
           "of": "holder"
          }
@@ -19692,11 +19331,11 @@
      "do": [
       {
        "op": "apply",
-       "status": "shock",
+       "status": "sunder",
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00105,
+          "ratio": 0.0007,
           "stat": "attack",
           "of": "holder"
          }
@@ -19773,14 +19412,18 @@
   },
   {
    "id": "arc__bp",
-   "name": "Static grip+",
+   "name": "Grounded arc+",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks strike their target twice, each adding Shock. +40% Shock.",
+   "text": "Basic attacks also hit a second random foe; both gain Sunder in place of Shock. +40% Shock.",
    "strike": {
-    "to": "target"
+    "to": {
+     "side": "foes",
+     "pick": "random",
+     "exclude": "targets"
+    }
    },
    "reactions": [
     {
@@ -19791,11 +19434,11 @@
      "do": [
       {
        "op": "apply",
-       "status": "shock",
+       "status": "sunder",
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00147,
+          "ratio": 0.00098,
           "stat": "attack",
           "of": "holder"
          }
@@ -19813,11 +19456,11 @@
      "do": [
       {
        "op": "apply",
-       "status": "shock",
+       "status": "sunder",
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00147,
+          "ratio": 0.00098,
           "stat": "attack",
           "of": "holder"
          }
@@ -20119,36 +19762,30 @@
    ]
   },
   {
-   "id": "faultline",
-   "name": "FAULTLINE",
-   "text": "Next hit crits for triple damage.",
+   "id": "bare_rock",
+   "name": "BARE ROCK",
+   "text": "Crit damage +50%.",
    "label": "buff",
    "show": "icon",
    "stacking": "fizzle",
    "stats": [
     {
      "stat": "crit_multiplier",
-     "flat": 100
+     "flat": 50
     }
-   ],
-   "crits": [
+   ]
+  },
+  {
+   "id": "bare_rock_plus",
+   "name": "BARE ROCK",
+   "text": "Crit damage +75%.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "fizzle",
+   "stats": [
     {
-     "chance": 100
-    }
-   ],
-   "reactions": [
-    {
-     "on": {
-      "event": "hit_lands"
-     },
-     "do": [
-      {
-       "op": "remove",
-       "label": "buff",
-       "status": "faultline",
-       "to": "holder"
-      }
-     ]
+     "stat": "crit_multiplier",
+     "flat": 75
     }
    ]
   },
@@ -20251,13 +19888,31 @@
   },
   {
    "id": "bedrock__b",
-   "name": "Faultline",
+   "name": "Bare rock",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "While its Shield holds: Crit chance doubled. When it breaks, its next hit crits for triple damage.",
+   "text": "While it holds no Shield: Crit damage +50%.",
    "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "if": {
+      "side": "self",
+      "where": {
+       "lacks": "shield"
+      }
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "bare_rock",
+       "to": "holder"
+      }
+     ]
+    },
     {
      "on": {
       "event": "status_gained",
@@ -20265,8 +19920,9 @@
      },
      "do": [
       {
-       "op": "apply",
-       "status": "bedrock_on",
+       "op": "remove",
+       "label": "buff",
+       "status": "bare_rock",
        "to": "holder"
       }
      ]
@@ -20278,25 +19934,8 @@
      },
      "do": [
       {
-       "op": "remove",
-       "label": "buff",
-       "status": "bedrock_on",
-       "to": "holder"
-      }
-     ]
-    },
-    {
-     "on": {
-      "event": "status_ended",
-      "status": "shield",
-      "cause": [
-       "stacks"
-      ]
-     },
-     "do": [
-      {
        "op": "apply",
-       "status": "faultline",
+       "status": "bare_rock",
        "to": "holder"
       }
      ]
@@ -20364,13 +20003,31 @@
   },
   {
    "id": "bedrock__bp",
-   "name": "Faultline+",
+   "name": "Bare rock+",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "While its Shield holds: Crit chance doubled. When it breaks, its next hit crits for triple damage. +25% Crit damage while its Shield holds.",
+   "text": "While it holds no Shield: Crit damage +50%. Crit damage +75%.",
    "reactions": [
+    {
+     "on": {
+      "event": "fight_start"
+     },
+     "if": {
+      "side": "self",
+      "where": {
+       "lacks": "shield"
+      }
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "bare_rock_plus",
+       "to": "holder"
+      }
+     ]
+    },
     {
      "on": {
       "event": "status_gained",
@@ -20378,8 +20035,9 @@
      },
      "do": [
       {
-       "op": "apply",
-       "status": "bedrock_on_plus",
+       "op": "remove",
+       "label": "buff",
+       "status": "bare_rock_plus",
        "to": "holder"
       }
      ]
@@ -20391,25 +20049,8 @@
      },
      "do": [
       {
-       "op": "remove",
-       "label": "buff",
-       "status": "bedrock_on_plus",
-       "to": "holder"
-      }
-     ]
-    },
-    {
-     "on": {
-      "event": "status_ended",
-      "status": "shield",
-      "cause": [
-       "stacks"
-      ]
-     },
-     "do": [
-      {
        "op": "apply",
-       "status": "faultline",
+       "status": "bare_rock_plus",
        "to": "holder"
       }
      ]
@@ -25871,8 +25512,8 @@
   {
    "id": "frost_arrow__a",
    "class": "ranger",
-   "name": "Pinning arrow",
-   "text": "An arrow at the foe with the most Attack, Slowing it. No Chill.",
+   "name": "Lure",
+   "text": "An arrow at the foe with the most Attack; it's Fixated on the Ranger. No Chill.",
    "cooldown": 15.3,
    "cast": 1,
    "mp": 200,
@@ -25899,7 +25540,7 @@
      },
      "apply": [
       {
-       "status": "slow"
+       "status": "fixated"
       }
      ]
     }
@@ -25954,8 +25595,8 @@
   {
    "id": "frost_arrow__ap",
    "class": "ranger",
-   "name": "Pinning arrow+",
-   "text": "An arrow at the foe with the most Attack, Slowing it. No Chill.",
+   "name": "Lure+",
+   "text": "An arrow at the foe with the most Attack; it's Fixated on the Ranger. No Chill.",
    "cooldown": 15.3,
    "cast": 1,
    "mp": 200,
@@ -25982,7 +25623,7 @@
      },
      "apply": [
       {
-       "status": "slow"
+       "status": "fixated"
       }
      ]
     }
@@ -26532,43 +26173,22 @@
   {
    "id": "bramble_lash__b",
    "class": "bramble_knight",
-   "name": "Rebuke",
-   "text": "After 5 hits taken since its last lash, lashes a random foe.",
+   "name": "Thornshield",
+   "text": "No lash: the other ally with the lowest HP% gains Thorns equal to its own.",
    "cooldown": 12,
    "cast": 1,
    "mp": 200,
    "do": [
     {
-     "op": "damage",
-     "type": "physical",
-     "amount": {
-      "scale": [
-       {
-        "ratio": 9,
-        "stat": "thorns"
-       }
-      ]
-     }
-    },
-    {
-     "op": "remove",
-     "label": "marker",
-     "status": "rebuke_count",
-     "to": "self"
+     "op": "apply",
+     "status": "thornshield"
     }
    ],
-   "if": {
-    "side": "self",
-    "where": {
-     "stacks": {
-      "status": "rebuke_count",
-      "atLeast": 5
-     }
-    }
-   },
-   "statuses": [
-    "rebuke"
-   ]
+   "target": {
+    "side": "others",
+    "pick": "lowest",
+    "by": "hp_share"
+   }
   },
   {
    "id": "bramble_lash__ap",
@@ -26600,43 +26220,22 @@
   {
    "id": "bramble_lash__bp",
    "class": "bramble_knight",
-   "name": "Rebuke+",
-   "text": "After 5 hits taken since its last lash, lashes a random foe.",
+   "name": "Thornshield+",
+   "text": "No lash: the other ally with the lowest HP% gains Thorns equal to its own. Thorns 40% above its own.",
    "cooldown": 12,
    "cast": 1,
    "mp": 200,
    "do": [
     {
-     "op": "damage",
-     "type": "physical",
-     "amount": {
-      "scale": [
-       {
-        "ratio": 12.6,
-        "stat": "thorns"
-       }
-      ]
-     }
-    },
-    {
-     "op": "remove",
-     "label": "marker",
-     "status": "rebuke_count",
-     "to": "self"
+     "op": "apply",
+     "status": "thornshield_plus"
     }
    ],
-   "if": {
-    "side": "self",
-    "where": {
-     "stacks": {
-      "status": "rebuke_count",
-      "atLeast": 5
-     }
-    }
-   },
-   "statuses": [
-    "rebuke"
-   ]
+   "target": {
+    "side": "others",
+    "pick": "lowest",
+    "by": "hp_share"
+   }
   },
   {
    "id": "aspis__p",
@@ -26701,28 +26300,26 @@
   {
    "id": "aspis__b",
    "class": "hoplite",
-   "name": "Shield wall",
-   "text": "Aegis on every ally.",
-   "cooldown": 59.4,
+   "name": "Hold the gap",
+   "text": "Aegis on itself, and Taunts.",
+   "cooldown": 42.4,
    "cast": 1,
-   "mp": 750,
+   "mp": 325,
    "if": {
     "side": "allies",
     "where": {
      "lacks": "aegis"
     }
    },
-   "target": {
-    "side": "allies",
-    "where": {
-     "lacks": "aegis"
-    },
-    "pick": "all"
-   },
+   "target": "self",
    "do": [
     {
      "op": "apply",
      "status": "aegis"
+    },
+    {
+     "op": "apply",
+     "status": "taunt"
     }
    ]
   },
@@ -26760,28 +26357,26 @@
   {
    "id": "aspis__bp",
    "class": "hoplite",
-   "name": "Shield wall+",
-   "text": "Aegis on every ally.",
-   "cooldown": 42.4,
+   "name": "Hold the gap+",
+   "text": "Aegis on itself, and Taunts.",
+   "cooldown": 31.8,
    "cast": 1,
-   "mp": 750,
+   "mp": 325,
    "if": {
     "side": "allies",
     "where": {
      "lacks": "aegis"
     }
    },
-   "target": {
-    "side": "allies",
-    "where": {
-     "lacks": "aegis"
-    },
-    "pick": "all"
-   },
+   "target": "self",
    "do": [
     {
      "op": "apply",
      "status": "aegis"
+    },
+    {
+     "op": "apply",
+     "status": "taunt"
     }
    ]
   },
@@ -27718,41 +27313,31 @@
   {
    "id": "smite__a",
    "class": "paladin",
-   "name": "Hammer of dawn",
-   "text": "Strikes and Stuns the foe with the most Attack. No Burn.",
+   "name": "Dawn's call",
+   "text": "No blow: Cleanses every ally and gives each Might.",
    "cooldown": 29.1,
    "cast": 6,
    "mp": 650,
    "target": {
-    "side": "foes",
-    "pick": "highest",
-    "by": {
-     "stats": [
-      "attack"
-     ]
-    },
-    "where": {
-     "lacks": "stun"
-    },
-    "ifNone": "any"
+    "side": "allies",
+    "pick": "all"
    },
    "do": [
     {
-     "op": "damage",
-     "type": "physical",
-     "amount": {
+     "op": "remove",
+     "label": "debuff"
+    },
+    {
+     "op": "apply",
+     "status": "might",
+     "stacks": {
       "scale": [
        {
-        "ratio": 0.5,
+        "ratio": 0.0014,
         "stat": "attack"
        }
       ]
-     },
-     "apply": [
-      {
-       "status": "stun"
-      }
-     ]
+     }
     }
    ]
   },
@@ -27808,41 +27393,31 @@
   {
    "id": "smite__ap",
    "class": "paladin",
-   "name": "Hammer of dawn+",
-   "text": "Strikes and Stuns the foe with the most Attack. No Burn.",
+   "name": "Dawn's call+",
+   "text": "No blow: Cleanses every ally and gives each Might.",
    "cooldown": 29.1,
    "cast": 6,
    "mp": 650,
    "target": {
-    "side": "foes",
-    "pick": "highest",
-    "by": {
-     "stats": [
-      "attack"
-     ]
-    },
-    "where": {
-     "lacks": "stun"
-    },
-    "ifNone": "any"
+    "side": "allies",
+    "pick": "all"
    },
    "do": [
     {
-     "op": "damage",
-     "type": "physical",
-     "amount": {
+     "op": "remove",
+     "label": "debuff"
+    },
+    {
+     "op": "apply",
+     "status": "might",
+     "stacks": {
       "scale": [
        {
-        "ratio": 0.7,
+        "ratio": 0.00196,
         "stat": "attack"
        }
       ]
-     },
-     "apply": [
-      {
-       "status": "stun"
-      }
-     ]
+     }
     }
    ]
   },
@@ -28018,16 +27593,16 @@
   {
    "id": "gale_spear__b",
    "class": "valkyrie",
-   "name": "Spear of the hunt",
-   "text": "Three hits on the foe with the least HP, each adding Shock. Ignores Taunt.",
+   "name": "Shieldbreaker",
+   "text": "Three hits on the foe with the most buffs, each lifting one of them. No Shock. Ignores Taunt.",
    "cooldown": 14.3,
    "cast": 1,
    "mp": 200,
    "seek": true,
    "target": {
     "side": "foes",
-    "pick": "lowest",
-    "by": "hp"
+    "pick": "highest",
+    "by": "buffs"
    },
    "do": [
     {
@@ -28041,20 +27616,22 @@
        }
       ]
      },
-     "apply": [
-      {
-       "status": "shock",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.0007,
-          "stat": "attack"
-         }
-        ]
-       }
-      }
-     ],
      "hits": 3
+    },
+    {
+     "op": "remove",
+     "label": "buff",
+     "count": 1
+    },
+    {
+     "op": "remove",
+     "label": "buff",
+     "count": 1
+    },
+    {
+     "op": "remove",
+     "label": "buff",
+     "count": 1
     }
    ]
   },
@@ -28136,16 +27713,16 @@
   {
    "id": "gale_spear__bp",
    "class": "valkyrie",
-   "name": "Spear of the hunt+",
-   "text": "Three hits on the foe with the least HP, each adding Shock. Ignores Taunt.",
+   "name": "Shieldbreaker+",
+   "text": "Three hits on the foe with the most buffs, each lifting one of them. No Shock. Ignores Taunt.",
    "cooldown": 14.3,
    "cast": 1,
    "mp": 200,
    "seek": true,
    "target": {
     "side": "foes",
-    "pick": "lowest",
-    "by": "hp"
+    "pick": "highest",
+    "by": "buffs"
    },
    "do": [
     {
@@ -28159,20 +27736,22 @@
        }
       ]
      },
-     "apply": [
-      {
-       "status": "shock",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.0007,
-          "stat": "attack"
-         }
-        ]
-       }
-      }
-     ],
      "hits": 3
+    },
+    {
+     "op": "remove",
+     "label": "buff",
+     "count": 1
+    },
+    {
+     "op": "remove",
+     "label": "buff",
+     "count": 1
+    },
+    {
+     "op": "remove",
+     "label": "buff",
+     "count": 1
     }
    ]
   },
@@ -28903,20 +28482,19 @@
   {
    "id": "allegro__b",
    "class": "bard",
-   "name": "Accelerando",
-   "text": "Haste on the ally with the fastest basic attack.",
-   "cooldown": 23.4,
+   "name": "Dirge",
+   "text": "Slows every foe. No Haste.",
+   "cooldown": 42.5,
    "cast": 1,
-   "mp": 450,
+   "mp": 650,
    "target": {
-    "side": "allies",
-    "pick": "lowest",
-    "by": "swing"
+    "side": "foes",
+    "pick": "all"
    },
    "do": [
     {
      "op": "apply",
-     "status": "haste"
+     "status": "slow"
     }
    ]
   },
@@ -28947,20 +28525,19 @@
   {
    "id": "allegro__bp",
    "class": "bard",
-   "name": "Accelerando+",
-   "text": "Haste on the ally with the fastest basic attack.",
-   "cooldown": 14.9,
+   "name": "Dirge+",
+   "text": "Slows every foe. No Haste.",
+   "cooldown": 31.9,
    "cast": 1,
    "mp": 450,
    "target": {
-    "side": "allies",
-    "pick": "lowest",
-    "by": "swing"
+    "side": "foes",
+    "pick": "all"
    },
    "do": [
     {
      "op": "apply",
-     "status": "haste"
+     "status": "slow"
     }
    ]
   },
@@ -29672,53 +29249,43 @@
   {
    "id": "unmake__b",
    "class": "hexer",
-   "name": "Mana burn",
-   "text": "Waits for a foe to cast, then Silences it, strips its buffs and takes 20% of its max MP as MP.",
+   "name": "Rebind",
+   "text": "Waits for an ally to be Stunned or Silenced, then frees it and Hastes it.",
    "cooldown": 31.3,
    "cast": 1,
    "mp": 650,
    "if": {
-    "side": "foes",
+    "side": "allies",
     "where": {
-     "casting": true
+     "hasAny": [
+      "stun",
+      "silence"
+     ]
     }
    },
    "target": {
-    "side": "foes",
+    "side": "allies",
     "where": {
-     "casting": true
-    },
-    "pick": "highest",
-    "by": {
-     "stats": [
-      "attack"
+     "hasAny": [
+      "stun",
+      "silence"
      ]
     }
    },
    "do": [
     {
-     "op": "mp",
-     "amount": {
-      "scale": [
-       {
-        "ratio": -0.2,
-        "stat": "max_mp",
-        "of": "target"
-       }
-      ]
-     }
-    },
-    {
-     "op": "apply",
-     "status": "mana_burn"
-    },
-    {
-     "op": "apply",
-     "status": "silence"
+     "op": "remove",
+     "label": "debuff",
+     "status": "stun"
     },
     {
      "op": "remove",
-     "label": "buff"
+     "label": "debuff",
+     "status": "silence"
+    },
+    {
+     "op": "apply",
+     "status": "haste"
     }
    ]
   },
@@ -29757,53 +29324,43 @@
   {
    "id": "unmake__bp",
    "class": "hexer",
-   "name": "Mana burn+",
-   "text": "Waits for a foe to cast, then Silences it, strips its buffs and takes 20% of its max MP as MP.",
+   "name": "Rebind+",
+   "text": "Waits for an ally to be Stunned or Silenced, then frees it and Hastes it.",
    "cooldown": 22.9,
    "cast": 1,
    "mp": 650,
    "if": {
-    "side": "foes",
+    "side": "allies",
     "where": {
-     "casting": true
+     "hasAny": [
+      "stun",
+      "silence"
+     ]
     }
    },
    "target": {
-    "side": "foes",
+    "side": "allies",
     "where": {
-     "casting": true
-    },
-    "pick": "highest",
-    "by": {
-     "stats": [
-      "attack"
+     "hasAny": [
+      "stun",
+      "silence"
      ]
     }
    },
    "do": [
     {
-     "op": "mp",
-     "amount": {
-      "scale": [
-       {
-        "ratio": -0.2,
-        "stat": "max_mp",
-        "of": "target"
-       }
-      ]
-     }
-    },
-    {
-     "op": "apply",
-     "status": "mana_burn"
-    },
-    {
-     "op": "apply",
-     "status": "silence"
+     "op": "remove",
+     "label": "debuff",
+     "status": "stun"
     },
     {
      "op": "remove",
-     "label": "buff"
+     "label": "debuff",
+     "status": "silence"
+    },
+    {
+     "op": "apply",
+     "status": "haste"
     }
    ]
   },
@@ -31637,16 +31194,19 @@
   {
    "id": "firebolt__b",
    "class": "pyromancer",
-   "name": "Flash bolt",
-   "text": "A bolt at the foe with the most Burn, trading Burn for speed and MP.",
+   "name": "Searing light",
+   "text": "Waits for a foe to cast, then a bolt at the casting foe with the most Attack, Silencing it. No Burn.",
    "cooldown": 12.3,
    "cast": 1,
-   "mp": 225,
+   "mp": 450,
    "target": {
     "side": "foes",
+    "where": {
+     "casting": true
+    },
     "pick": "highest",
     "by": {
-     "stacks": "burn"
+     "stat": "attack"
     }
    },
    "do": [
@@ -31663,19 +31223,17 @@
      },
      "apply": [
       {
-       "status": "burn",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.0013,
-          "stat": "attack"
-         }
-        ]
-       }
+       "status": "silence"
       }
      ]
     }
-   ]
+   ],
+   "if": {
+    "side": "foes",
+    "where": {
+     "casting": true
+    }
+   }
   },
   {
    "id": "firebolt__ap",
@@ -31723,16 +31281,19 @@
   {
    "id": "firebolt__bp",
    "class": "pyromancer",
-   "name": "Flash bolt+",
-   "text": "A bolt at the foe with the most Burn, trading Burn for speed and MP.",
+   "name": "Searing light+",
+   "text": "Waits for a foe to cast, then a bolt at the casting foe with the most Attack, Silencing it. No Burn. +40% damage.",
    "cooldown": 12.3,
    "cast": 1,
-   "mp": 225,
+   "mp": 450,
    "target": {
     "side": "foes",
+    "where": {
+     "casting": true
+    },
     "pick": "highest",
     "by": {
-     "stacks": "burn"
+     "stat": "attack"
     }
    },
    "do": [
@@ -31742,26 +31303,24 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.29,
+        "ratio": 0.406,
         "stat": "attack"
        }
       ]
      },
      "apply": [
       {
-       "status": "burn",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.00182,
-          "stat": "attack"
-         }
-        ]
-       }
+       "status": "silence"
       }
      ]
     }
-   ]
+   ],
+   "if": {
+    "side": "foes",
+    "where": {
+     "casting": true
+    }
+   }
   },
   {
    "id": "fireball__p",
@@ -31846,11 +31405,11 @@
   {
    "id": "fireball__b",
    "class": "pyromancer",
-   "name": "Flashfire",
-   "text": "Hits every foe, adding Burn: smaller, quicker and more often.",
-   "cooldown": 22.6,
-   "cast": 1,
-   "mp": 650,
+   "name": "Smoke",
+   "text": "Hits every foe and Weakens them. No Burn.",
+   "cooldown": 30.8,
+   "cast": 6,
+   "mp": 1000,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -31862,22 +31421,14 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.1,
+        "ratio": 0.17,
         "stat": "attack"
        }
       ]
      },
      "apply": [
       {
-       "status": "burn",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.00084,
-          "stat": "attack"
-         }
-        ]
-       }
+       "status": "weaken"
       }
      ]
     }
@@ -31926,11 +31477,11 @@
   {
    "id": "fireball__bp",
    "class": "pyromancer",
-   "name": "Flashfire+",
-   "text": "Hits every foe, adding Burn: smaller, quicker and more often.",
-   "cooldown": 22.6,
-   "cast": 1,
-   "mp": 650,
+   "name": "Smoke+",
+   "text": "Hits every foe and Weakens them. No Burn.",
+   "cooldown": 30.8,
+   "cast": 6,
+   "mp": 1000,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -31942,22 +31493,14 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.14,
+        "ratio": 0.238,
         "stat": "attack"
        }
       ]
      },
      "apply": [
       {
-       "status": "burn",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.00084,
-          "stat": "attack"
-         }
-        ]
-       }
+       "status": "weaken"
       }
      ]
     }
@@ -33734,41 +33277,20 @@
   {
    "id": "tremor__b",
    "class": "geomancer",
-   "name": "Fissure",
-   "text": "Hits a Stunned foe for triple, else a random foe. No Stun.",
+   "name": "Groundswell",
+   "text": "No blow and no Stun: every ally's next basic attack comes at once.",
    "cooldown": 36.4,
-   "cast": 3,
+   "cast": 6,
    "mp": 650,
    "target": {
-    "side": "foes",
-    "where": {
-     "has": "stun"
-    },
-    "ifNone": "any"
+    "side": "allies",
+    "pick": "all"
    },
    "do": [
     {
-     "op": "damage",
-     "type": "physical",
-     "amount": {
-      "scale": [
-       {
-        "ratio": 0.5,
-        "stat": "defense"
-       },
-       {
-        "ratio": 1,
-        "when": {
-         "has": "stun"
-        },
-        "of": "target",
-        "times": {
-         "stat": "defense",
-         "of": "self"
-        }
-       }
-      ]
-     }
+     "op": "cooldown",
+     "which": "basic",
+     "set": "ready"
     }
    ]
   },
@@ -33813,41 +33335,20 @@
   {
    "id": "tremor__bp",
    "class": "geomancer",
-   "name": "Fissure+",
-   "text": "Hits a Stunned foe for triple, else a random foe. No Stun.",
+   "name": "Groundswell+",
+   "text": "No blow and no Stun: every ally's next basic attack comes at once. Costs less MP.",
    "cooldown": 36.4,
-   "cast": 3,
-   "mp": 650,
+   "cast": 6,
+   "mp": 450,
    "target": {
-    "side": "foes",
-    "where": {
-     "has": "stun"
-    },
-    "ifNone": "any"
+    "side": "allies",
+    "pick": "all"
    },
    "do": [
     {
-     "op": "damage",
-     "type": "physical",
-     "amount": {
-      "scale": [
-       {
-        "ratio": 0.7,
-        "stat": "defense"
-       },
-       {
-        "ratio": 1.4,
-        "when": {
-         "has": "stun"
-        },
-        "of": "target",
-        "times": {
-         "stat": "defense",
-         "of": "self"
-        }
-       }
-      ]
-     }
+     "op": "cooldown",
+     "which": "basic",
+     "set": "ready"
     }
    ]
   }
@@ -33999,8 +33500,8 @@
    "kind": "ability",
    "power": "+40% Chill, or damage without Chill.",
    "a": {
-    "name": "Pinning arrow",
-    "text": "An arrow at the foe with the most Attack, Slowing it. No Chill."
+    "name": "Lure",
+    "text": "An arrow at the foe with the most Attack; it's Fixated on the Ranger. No Chill."
    },
    "b": {
     "name": "Hail",
@@ -34031,8 +33532,8 @@
     "text": "Its Thorns add Bleed. While that Bleed lasts, the foe heals it 1.5% of max HP each time it acts."
    },
    "b": {
-    "name": "Spreading thorns",
-    "text": "Its Thorns also strike a second random foe; both gain Bleed."
+    "name": "Scything briar",
+    "text": "Its hits add Bleed in place of its Thorns."
    }
   },
   {
@@ -34073,8 +33574,8 @@
     "text": "Lashes every foe with its Thorns."
    },
    "b": {
-    "name": "Rebuke",
-    "text": "After 5 hits taken since its last lash, lashes a random foe."
+    "name": "Thornshield",
+    "text": "No lash: the other ally with the lowest HP% gains Thorns equal to its own."
    }
   },
   {
@@ -34101,8 +33602,8 @@
     "text": "Aegis on the ally with the most Aggro that lacks one."
    },
    "b": {
-    "name": "Shield wall",
-    "text": "Aegis on every ally."
+    "name": "Hold the gap",
+    "text": "Aegis on itself, and Taunts."
    }
   },
   {
@@ -34181,8 +33682,8 @@
    "kind": "ability",
    "power": "+40% damage.",
    "a": {
-    "name": "Hammer of dawn",
-    "text": "Strikes and Stuns the foe with the most Attack. No Burn."
+    "name": "Dawn's call",
+    "text": "No blow: Cleanses every ally and gives each Might."
    },
    "b": {
     "name": "Pyre of judgement",
@@ -34213,8 +33714,8 @@
     "text": "Three hits on three different foes, each adding Shock. The first ignores Taunt."
    },
    "b": {
-    "name": "Spear of the hunt",
-    "text": "Three hits on the foe with the least HP, each adding Shock. Ignores Taunt."
+    "name": "Shieldbreaker",
+    "text": "Three hits on the foe with the most buffs, each lifting one of them. No Shock. Ignores Taunt."
    }
   },
   {
@@ -34283,8 +33784,8 @@
     "text": "Haste on every ally, and readies each ally's ability nearest to ready."
    },
    "b": {
-    "name": "Accelerando",
-    "text": "Haste on the ally with the fastest basic attack."
+    "name": "Dirge",
+    "text": "Slows every foe. No Haste."
    }
   },
   {
@@ -34339,8 +33840,8 @@
     "text": "Waits for a foe to cast, then Silences every casting foe and strips their buffs."
    },
    "b": {
-    "name": "Mana burn",
-    "text": "Waits for a foe to cast, then Silences it, strips its buffs and takes 20% of its max MP as MP."
+    "name": "Rebind",
+    "text": "Waits for an ally to be Stunned or Silenced, then frees it and Hastes it."
    }
   },
   {
@@ -34423,8 +33924,8 @@
     "text": "Its first hit on each foe always crits. Crits add Bleed."
    },
    "b": {
-    "name": "Rupture",
-    "text": "Crits deal extra damage for each Bleed on the foe, then add Bleed."
+    "name": "Bloodless",
+    "text": "Crits heal it for 20% of the damage, in place of Bleed."
    }
   },
   {
@@ -34479,8 +33980,8 @@
     "text": "Below half HP: Lifesteal doubled, and each hit heals the other ally with the lowest HP% as much as it drank."
    },
    "b": {
-    "name": "Undying thirst",
-    "text": "Below half HP: Lifesteal doubled. Once a fight, below 10% HP: for 5 ticks it can't fall below 1 HP, and Lifesteal triples."
+    "name": "Shepherd's thirst",
+    "text": "While any ally is below half HP: Lifesteal doubled."
    }
   },
   {
@@ -34535,8 +34036,8 @@
     "text": "Basic attacks, not casts, add Burn."
    },
    "b": {
-    "name": "Wildfire",
-    "text": "Each cast adds Burn to every burning foe."
+    "name": "Ember of haste",
+    "text": "Each cast Hastes the ally with the fastest basic attack, in place of Burn."
    }
   },
   {
@@ -34549,8 +34050,8 @@
     "text": "A bolt at the foe with the most Burn, trading hit for Burn."
    },
    "b": {
-    "name": "Flash bolt",
-    "text": "A bolt at the foe with the most Burn, trading Burn for speed and MP."
+    "name": "Searing light",
+    "text": "Waits for a foe to cast, then a bolt at the casting foe with the most Attack, Silencing it. No Burn."
    }
   },
   {
@@ -34563,8 +34064,8 @@
     "text": "Hits every foe, trading a long wind-up for far more Burn."
    },
    "b": {
-    "name": "Flashfire",
-    "text": "Hits every foe, adding Burn: smaller, quicker and more often."
+    "name": "Smoke",
+    "text": "Hits every foe and Weakens them. No Burn."
    }
   },
   {
@@ -34591,8 +34092,8 @@
     "text": "On a shatter: the ally with the lowest HP% gains a Shield of 30% of the Frostweaver's max HP, instead of the Sunder."
    },
    "b": {
-    "name": "Splinters",
-    "text": "On a shatter: that foe gains Sunder, and every other foe a third of its Chill."
+    "name": "Rime edge",
+    "text": "Basic attacks add Sunder. No Sunder on a shatter."
    }
   },
   {
@@ -34647,8 +34148,8 @@
     "text": "Basic attacks also hit two other random foes; all three gain Shock."
    },
    "b": {
-    "name": "Static grip",
-    "text": "Basic attacks strike their target twice, each adding Shock."
+    "name": "Grounded arc",
+    "text": "Basic attacks also hit a second random foe; both gain Sunder in place of Shock."
    }
   },
   {
@@ -34703,8 +34204,8 @@
     "text": "While its Shield holds: Crit chance doubled, and crits Stun."
    },
    "b": {
-    "name": "Faultline",
-    "text": "While its Shield holds: Crit chance doubled. When it breaks, its next hit crits for triple damage."
+    "name": "Bare rock",
+    "text": "While it holds no Shield: Crit damage +50%."
    }
   },
   {
@@ -34745,8 +34246,8 @@
     "text": "Hits a random foe and Stuns every foe."
    },
    "b": {
-    "name": "Fissure",
-    "text": "Hits a Stunned foe for triple, else a random foe. No Stun."
+    "name": "Groundswell",
+    "text": "No blow and no Stun: every ally's next basic attack comes at once."
    }
   }
  ],

@@ -7,22 +7,21 @@ import { abilityUp, apply, baseAbility, both, helper, hitOf, kit, marker, passiv
 
 // ─── Assassin ────────────────────────────────────────────────────────────────
 
-/** Rupture: the share of Bleed's per-hit damage a crit deals for each stack. */
-const RUPTURE = 0.5;
 passiveUp({
   id: "lacerate", cls: "assassin",
   power: "+40% Bleed.",
   a: { name: "Opening wound", text: "Its first hit on each foe always crits. Crits add Bleed.", builds: ["hunt"] },
-  b: { name: "Rupture", text: "Crits deal extra damage for each Bleed on the foe, then add Bleed.", builds: ["hunt"] },
-  form: (v, k) => ({
+  b: { name: "Bloodless", text: "Crits heal it for 20% of the damage, in place of Bleed.", serves: "Pact 2 ●●, Hunt ● ◆ staying alive by hitting", plus: "Heals 28% of the damage." },
+  form: (v, k) => v === "b" ? ({
+    // Bloodless: the crit's own damage, a fifth of it, back as health; no Bleed.
+    reactions: [{ on: { event: "hit_lands", tags: ["crit"] }, do: [{ op: "heal", amount: { scale: [{ ratio: 0.2 * k, amount: true }] }, to: "self" } as EffectT] }],
+  }) : ({
     // Opening wound: hits on a foe it hasn't yet landed a hit on always crit (a crit rule: chance after every stat change, so Gambler's coin too).
     ...(v === "a" ? { crits: [{ when: { lacks: "opening_wound" }, chance: 100 }] } : {}),
     reactions: [
       {
         on: { event: "hit_lands", tags: ["crit"] },
         do: [
-          // Rupture: half of Bleed's own per-hit damage for each stack the foe holds after the crit's own hit; the Bleed stays (a status runs its own course).
-          ...(v === "b" ? [{ op: "damage", type: "none", amount: { scale: [{ ratio: RUPTURE * STATUS.bleed.perStack, stacks: "bleed", of: "target" }] }, to: "other" } as EffectT] : []),
           apply("bleed", { stacks: own("several", "attack", k), to: "other" }),
         ],
       },

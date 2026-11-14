@@ -13,15 +13,16 @@ passiveUp({
   id: "shatterpoint", cls: "frostweaver",
   power: "+40% Sunder.",
   a: { name: "Rime shield", text: "On a shatter: the ally with the lowest HP% gains a Shield of 30% of the Frostweaver's max HP, instead of the Sunder.", serves: "Snap 2 ●●, Toll ●● ⚙ frozen gate (half), detonation (half), brink (half)", plus: "+40% Shield." },
-  b: { name: "Splinters", text: "On a shatter: that foe gains Sunder, and every other foe a third of its Chill.", serves: "Snap 2 ●●● ⚙ firecracker (key)" },
-  form: (v, k) => ({
+  b: { name: "Rime edge", text: "Basic attacks add Sunder. No Sunder on a shatter.", serves: "Cuts 2 ●●, Landslide ● ◆ the ramp, swing-status" },
+  form: (v, k) => v === "b" ? ({
+    // Rime edge: the passive outside the shatter: Sunder on every swing, a rider, at the few word (the Monk's Iron palm's own).
+    reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("sunder", { stacks: own("few", "attack", k), to: "other" })] }],
+  }) : ({
     reactions: [{
       on: { event: "status_capped", status: "chill", whose: "foe" },
       do: v === "a" ? [apply("shield", { stacks: ofHolder(RIME * k, "max_hp"), to: T.lowestShareAlly })]
         : [
           apply("sunder", { stacks: own("several", "attack", k), to: "owner" }),
-          // Splinters: a third of the cold the foe held, passed on, so a chain of shatters dies down.
-          ...(v === "b" ? [apply("chill", { stacks: { scale: [{ ratio: 1 / 3, amount: true }] }, to: { side: "foes", pick: "all", exclude: "owner" }, passed: true }) as EffectT] : []),
         ],
     }],
   }),

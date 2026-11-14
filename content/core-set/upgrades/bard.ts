@@ -2,6 +2,7 @@
 import type { AbilityT, NumT, ReactionT, TargetRuleT, ToT } from "../../../src/schema.js";
 import { stacks, STATUS } from "../scale.js";
 import { own } from "../pieces/kit.js";
+import { T } from "../classes.js";
 import { abilityUp, apply, cd, helper, kit, passiveUp, r6 } from "./kit.js";
 
 {
@@ -37,17 +38,17 @@ import { abilityUp, apply, cd, helper, kit, passiveUp, r6 } from "./kit.js";
 {
   /** Rubato: Haste, and each ally's ability nearest to ready made ready (an ability's own `soonest` never picks itself on its caster). */
   const rubato: Partial<AbilityT> = { do: [apply("haste"), { op: "cooldown", which: "soonest", set: "ready" }] };
-  /** Accelerando: Haste on the ally whose basic attack comes most often now (by `swing`, lowest first). */
-  const accelerando: Partial<AbilityT> = { cooldown: cd("short", "allegro"), mp: 450, target: { side: "allies", pick: "lowest", by: "swing" } };
+  /** Dirge: tempo taken from the foes: Slow on every foe in place of Haste on the party. */
+  const dirge: Partial<AbilityT> = { target: T.everyFoe, do: [apply("slow")] };
   abilityUp({
     id: "allegro", cls: "bard",
     // Cheaper too: sooner at the base's 650, the Bard spent its mana on Haste and War ballad went quiet (the party dealt 7% less).
     power: "Shorter cooldown; costs less MP.", shown: true,
     a: { name: "Rubato", text: "Haste on every ally, and readies each ally's ability nearest to ready.", serves: "Barrage 2 ●●●, Landslide ●" },
-    b: { name: "Accelerando", text: "Haste on the ally with the fastest basic attack.", builds: ["cuts"] },
+    b: { name: "Dirge", text: "Slows every foe. No Haste.", serves: "Toll 2 ●●, Snap ● ◆ foes do less, the slow" },
     form: (v, _k, plus) =>
       v === "a" ? { ...rubato, ...(plus ? { cooldown: cd("medium", "allegro") } : {}) }
-        : v === "b" ? { ...accelerando, ...(plus ? { cooldown: cd("quick", "allegro") } : {}) }
+        : v === "b" ? { ...dirge, ...(plus ? { cooldown: cd("medium", "allegro"), mp: 450 } : {}) }
           : { cooldown: cd("medium", "allegro"), mp: 450 },
   });
 }

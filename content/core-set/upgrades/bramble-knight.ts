@@ -3,7 +3,7 @@ import type { AbilityT, EffectT, ReactionT, StatusT } from "../../../src/schema.
 import { own } from "../pieces/kit.js";
 import { SPECIAL, STATUS } from "../scale.js";
 import { T } from "../classes.js";
-import { abilityUp, apply, cd, helper, kit, marker, ofHolder, passiveUp, phys, removeMine } from "./kit.js";
+import { abilityUp, apply, cd, helper, kit, marker, ofHolder, passiveUp, phys, POWER, removeMine } from "./kit.js";
 
 {
   /**
@@ -22,18 +22,14 @@ import { abilityUp, apply, cd, helper, kit, marker, ofHolder, passiveUp, phys, r
       { on: { event: "status_ended", status: "bleed" }, do: [{ op: "remove", label: "debuff", status: "bloodroot", to: "holder" }] },
     ],
   } as StatusT);
-  /** Spreading thorns: each Thorns strike also strikes a random other foe for the full Thorns. It's the form's own damage, so it never chains, and Briar bleeds it too. */
-  const spreading = (self: string, k: number): ReactionT[] => [
-    ...THORNS.map((s) => bleedOn(s, k)),
-    bleedOn(self, k),
-    ...THORNS.map((s): ReactionT => ({ on: { event: "damage_dealt", status: s }, do: [{ op: "damage", type: "none", amount: ofHolder(1, "thorns"), to: { side: "foes", pick: "random", exclude: "other" } }] })),
-  ];
+  /** Scything briar: the passive outside being struck: its own hits add the Bleed, a rider, and its Thorns add none. */
+  const scything = (k: number): ReactionT[] => [{ on: { event: "hit_lands" }, do: [apply("bleed", { stacks: own("few", "defense", k), to: "other" })] }];
   passiveUp({
     id: "briar", cls: "bramble_knight",
     power: "+40% Bleed.",
     a: { name: "Bloodroot", text: "Its Thorns add Bleed. While that Bleed lasts, the foe heals it 1.5% of max HP each time it acts.", builds: ["pact", "toll"] },
-    b: { name: "Spreading thorns", text: "Its Thorns also strike a second random foe; both gain Bleed.", builds: ["storm"] },
-    form: (v, k, plus) => ({ reactions: v === "a" ? bloodroot(k) : v === "b" ? spreading(plus ? "briar__bp" : "briar__b", k) : plain(k) }),
+    b: { name: "Scything briar", text: "Its hits add Bleed in place of its Thorns.", serves: "Cuts 2 ●●, Hunt ● ◆ the stream, swing-status" },
+    form: (v, k) => ({ reactions: v === "a" ? bloodroot(k) : v === "b" ? scything(k) : plain(k) }),
   });
 }
 
@@ -81,19 +77,20 @@ import { abilityUp, apply, cd, helper, kit, marker, ofHolder, passiveUp, phys, r
 {
   const lash = (ratio: number) => phys({ scale: [{ ratio, stat: "thorns" }] });
   const vines = (ratio: number): Partial<AbilityT> => ({ cooldown: cd("short", "bramble_lash"), mp: 325, target: T.everyFoe, do: [lash(ratio)] });
-  /** Rebuke: waits for five hits taken since its last lash (a count the ability brings), then lashes for double and spends the count. */
-  const rebuke = (ratio: number): Partial<AbilityT> => ({
-    if: { side: "self", where: { stacks: { status: "rebuke_count", atLeast: 5 } } },
-    statuses: ["rebuke"],
-    do: [lash(ratio), removeMine("rebuke_count", "marker", "self")],
-  });
-  helper(marker("rebuke", "REBUKE", "Counts the hits it takes.", { unremovable: true, reactions: [{ on: { event: "hit_taken" }, do: [apply("rebuke_count", { to: "holder" })] }] }));
-  helper(marker("rebuke_count", "REBUKE", "Hits taken since its last lash.", { show: "icon", stacking: "intensity" }));
+  /**
+   * Thornshield: no lash; another unit made the anchor: the other ally with the lowest HP% gains Thorns equal to the Bramble
+   * knight's own (read as it lands, from its source) for Taunt's length; the power step gives two fifths more.
+   */
+  const thornshield: Partial<AbilityT> = { target: { side: "others", pick: "lowest", by: "hp_share" }, do: [apply("thornshield")] };
+  const thornshieldPlus: Partial<AbilityT> = { target: { side: "others", pick: "lowest", by: "hp_share" }, do: [apply("thornshield_plus")] };
+  for (const [id, k] of [["thornshield", 1], ["thornshield_plus", POWER]] as const) {
+    helper(kit(id, "THORNSHIELD", "Thorns up, by the Bramble knight's own.", { duration: STATUS.taunt.duration, stats: [{ stat: "thorns", flat: { scale: [{ ratio: k, stat: "thorns", of: "source" }] } }] }));
+  }
   abilityUp({
     id: "bramble_lash", cls: "bramble_knight",
     power: "+40% damage.", shown: true,
     a: { name: "Whipping vines", text: "Lashes every foe with its Thorns.", serves: "Toll 2 ●●, Cuts ●● ⚙ red rain (half)" },
-    b: { name: "Rebuke", text: "After 5 hits taken since its last lash, lashes a random foe.", builds: ["toll"] },
-    form: (v, k) => (v === "a" ? vines(2.25 * k) : v === "b" ? rebuke(9 * k) : { do: [lash(4.5 * k)] }),
+    b: { name: "Thornshield", text: "No lash: the other ally with the lowest HP% gains Thorns equal to its own.", serves: "Toll 2 ●●●, Pact ● ◆ the anchor, the mirror", plus: "Thorns 40% above its own." },
+    form: (v, k, plus) => (v === "a" ? vines(2.25 * k) : v === "b" ? (plus ? thornshieldPlus : thornshield) : { do: [lash(4.5 * k)] }),
   });
 }

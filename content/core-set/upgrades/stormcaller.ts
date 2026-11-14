@@ -8,15 +8,17 @@ import { abilityUp, apply, cd, helper, hitOf, kit, marker, passiveUp, phys, POWE
 // ─── Stormcaller ─────────────────────────────────────────────────────────────
 
 const shockOn = (kind: "basic" | "extra", k: number): ReactionT => ({ on: { event: "hit_lands", kind }, do: [apply("shock", { stacks: own("few", "attack", SHOCK_STACKS * k), to: "other" })] });
+/** Grounded arc's rider: Sunder at the few word, as Iron palm's, where Arc's Shock was. */
+const sunderOn = (kind: "basic" | "extra", k: number): ReactionT => ({ on: { event: "hit_lands", kind }, do: [apply("sunder", { stacks: own("few", "attack", k), to: "other" })] });
 passiveUp({
   id: "arc", cls: "stormcaller",
   power: "+40% Shock.",
   a: { name: "Forked arc", text: "Basic attacks also hit two other random foes; all three gain Shock.", builds: ["storm"] },
-  b: { name: "Static grip", text: "Basic attacks strike their target twice, each adding Shock.", builds: ["cuts", "hunt"] },
+  b: { name: "Grounded arc", text: "Basic attacks also hit a second random foe; both gain Sunder in place of Shock.", serves: "Cuts 2 ●●, Landslide ● ◆ spread, the ramp" },
   form: (v, k) => ({
     // A strike rule that picks several foes strikes each of them.
-    strike: { to: v === "a" ? { side: "foes", pick: "random", count: 2, exclude: "targets" } : v === "b" ? "target" : T.secondFoe },
-    reactions: [shockOn("basic", k), shockOn("extra", k)],
+    strike: { to: v === "a" ? { side: "foes", pick: "random", count: 2, exclude: "targets" } : T.secondFoe },
+    reactions: v === "b" ? [sunderOn("basic", k), sunderOn("extra", k)] : [shockOn("basic", k), shockOn("extra", k)],
   }),
 });
 

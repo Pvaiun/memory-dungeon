@@ -13,11 +13,11 @@ passiveUp({
   id: "stoke", cls: "pyromancer",
   power: "+40% Burn.",
   a: { name: "Kindling", text: "Basic attacks, not casts, add Burn.", serves: "Bonfire 1 ●●● ⚙ lead's colour (half)" },
-  b: { name: "Wildfire", text: "Each cast adds Burn to every burning foe.", builds: ["storm"] },
-  form: (v, k) => ({
+  b: { name: "Ember of haste", text: "Each cast Hastes the ally with the fastest basic attack, in place of Burn.", serves: "Cuts 2 ●●, Barrage ● ◆ speed, the feeders' tempo", plus: "Hastes the two with the fastest." },
+  form: (v, k, plus) => ({
     reactions: [
       v === "a" ? { on: { event: "hit_lands", kind: "basic" }, do: [stoke("other", k)] }
-        : v === "b" ? { on: { event: "action_resolve", kind: "ability" }, do: [stoke({ side: "foes", where: { has: "burn" }, pick: "all" }, 0.5 * k)] }
+        : v === "b" ? { on: { event: "action_resolve", kind: "ability" }, do: [apply("haste", { to: { side: "allies", pick: "lowest", by: "swing", ...(plus ? { count: 2 } : {}) } })] }
           : { on: { event: "action_resolve", kind: "ability" }, do: [stoke(T.mostFoe("burn"), k)] },
     ],
   }),
@@ -29,11 +29,11 @@ abilityUp({
   power: "+40% Burn.",
   shown: true,
   a: { name: "Slow burn", text: "A bolt at the foe with the most Burn, trading hit for Burn.", builds: ["bonfire"] },
-  b: { name: "Flash bolt", text: "A bolt at the foe with the most Burn, trading Burn for speed and MP.", builds: ["barrage", "cuts"] },
+  b: { name: "Searing light", text: "Waits for a foe to cast, then a bolt at the casting foe with the most Attack, Silencing it. No Burn.", serves: "Toll 2 ●●, Hunt ● ◆ stops a cast", plus: "+40% damage." },
   form: (v, k) =>
     v === "a" ? { do: [phys(from("attack", HIT.light / 2), { apply: fireboltBurn(2 * k) })] }
-      // Half the cost, off the ladder (as Blood drain's 125), and half the Burn; the hit is the base's.
-      : v === "b" ? { cast: WINDUP.quick, mp: 225, do: [phys(hitOf("attack", "light"), { apply: fireboltBurn(0.5 * k) })] }
+      // The disabler: a quick wind-up, so the bolt lands inside the foe's.
+      : v === "b" ? { cast: WINDUP.quick, if: { side: "foes", where: { casting: true } }, target: { side: "foes", where: { casting: true }, pick: "highest", by: { stat: "attack" } }, do: [phys(hitOf("attack", "light", k), { apply: [{ status: "silence" }] })] }
         : { do: [phys(hitOf("attack", "light"), { apply: fireboltBurn(k) })] },
 });
 
@@ -42,11 +42,11 @@ abilityUp({
   power: "+40% damage.",
   shown: true,
   a: { name: "Conflagration", text: "Hits every foe, trading a long wind-up for far more Burn.", builds: ["bonfire", "storm"] },
-  b: { name: "Flashfire", text: "Hits every foe, adding Burn: smaller, quicker and more often.", builds: ["cuts", "barrage"] },
+  b: { name: "Smoke", text: "Hits every foe and Weakens them. No Burn.", serves: "Toll 2 ●●, Landslide ● ◆ foes do less" },
   form: (v, k) =>
     // The ritualist's cast: the long wind-up is the cost, which Cast speed pays down.
     v === "a" ? { cast: WINDUP.very_long, do: [phys(hitOf("attack", "touch", k), { apply: [{ status: "burn", stacks: stacks("many", "attack", BURN_STACKS) }] })] }
-      : v === "b" ? { cooldown: cd("short", "fireball"), cast: WINDUP.quick, mp: 650, do: [phys(from("attack", 0.1 * k), { apply: [{ status: "burn", stacks: stacks("few", "attack", BURN_STACKS * 0.6) }] })] }
+      : v === "b" ? { do: [phys(hitOf("attack", "touch", k), { apply: [{ status: "weaken" }] })] }
         : { do: [phys(hitOf("attack", "touch", k), { apply: [{ status: "burn", stacks: stacks("few", "attack", BURN_STACKS) }] })] },
 });
 
