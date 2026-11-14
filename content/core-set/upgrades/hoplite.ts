@@ -17,9 +17,9 @@ import { abilityUp, apply, cd, helper, kit, passiveUp, phys, r6, removeMine } fr
   const bearer: NonNullable<StatusT["riders"]> = [{ on: "basic", add: { type: "physical", amount: { scale: ["spear", "great_weapon"].map((kind) => ({ ratio: sized(kind), when: { weapon: [kind] }, of: "holder" as const, times: { stat: "defense", of: "holder" as const } })) } } }];
   passiveUp({
     id: "phalanx", cls: "hoplite",
-    power: "Basic attacks deal ×2.4, not double.",
-    a: { name: "Opening thrust", text: "Basic attacks half as often, for double; the first each fight comes at once, for triple.", serves: "Hunt 1 ●●●, Landslide ●●", plus: "Basic attacks ×2.4, the first ×3.4." },
-    b: { name: "Shieldbearer", text: "Basic attacks half as often, for double; Defense adds to them half as much as Attack.", serves: "Landslide 1 ●●●" },
+    power: "Basic attacks deal ×2.4, not ×2.",
+    a: { name: "Opening thrust", text: "Basic attacks 50% as often, for ×2; the first each fight comes at once, for ×3.", serves: "Hunt 1 ●●●, Landslide ●●", plus: "Basic attacks ×2.4, the first ×3.4." },
+    b: { name: "Shieldbearer", text: "Basic attacks 50% as often, for ×2; Defense adds to them 50% as much as Attack.", serves: "Landslide 1 ●●●" },
     form: (v, _k, plus) => ({ ...phalanx(plus ? 140 : 100), ...(v === "a" ? { reactions: [opening] } : v === "b" ? { riders: bearer } : {}) }),
   });
 }

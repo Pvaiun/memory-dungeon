@@ -82,7 +82,7 @@ export function add(f: FormationT, statuses: StatusT[], line: string) {
 // ─── Neutral: the starter ────────────────────────────────────────────────────
 
 export const neutral: FormationT = {
-  id: "neutral", name: "Neutral", text: "Three empty seats.", rarity: "common", source: "starter",
+  id: "neutral", name: "Neutral", text: "3 empty seats.", rarity: "common", source: "starter",
   positions: [
     { id: "a", name: "Left", layout: { line: "front", column: 0 } },
     { id: "b", name: "Centre", layout: { line: "middle", column: 1 } },

@@ -104,13 +104,13 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
   );
 }
 {
-  const glass = "Deals and takes double. Draws less.";
+  const glass = "Deals and takes ×2. Draws less.";
   add(
     formation("Glass and stone", "rare", "One strikes like glass; two stand like stone.", [
       { name: "Glass", text: glass, stats: [st("aggro", -1)], statuses: ["glass_and_stone_glass"] },
       ...twice({ name: "Stone", text: "Draws far more.", stats: [st("aggro", 2)] }),
     ]),
-    [held("glass_and_stone_glass", "Glass", "Deals and takes double.", { boosts: hits(100), taken: [{ pct: 100 }] })],
+    [held("glass_and_stone_glass", "Glass", "Deals and takes ×2.", { boosts: hits(100), taken: [{ pct: 100 }] })],
     "Toll 2 ●●, Hunt ●● ◆ draw, the glass",
   );
 }
@@ -132,12 +132,12 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
 }
 {
   // The Anchor takes a third less; the Lifeline takes that third, as damage of no type from itself (half of what the Anchor took).
-  const anchor = "Draws far more. Takes 33% less: the Lifeline takes it instead.", lifeline = "Takes a third of the damage the Anchor takes.";
+  const anchor = "Draws far more. Takes 33% less: the Lifeline takes it instead.", lifeline = "Takes 50% of the damage the Anchor takes.";
   add(
     formation("Lifeline", "rare", "One is struck; one bears part of every blow; one is free.", [
       { name: "Anchor", text: anchor, stats: [st("aggro", 2)], statuses: ["lifeline_anchor"] },
       { name: "Lifeline", text: lifeline, statuses: ["lifeline_lifeline"] },
-      { name: "Free", text: "Attack up two steps.", stats: [st("attack", 2)] },
+      { name: "Free", text: "Attack up 2 steps.", stats: [st("attack", 2)] },
     ]),
     [
       held("lifeline_anchor", "Anchor", "Takes 33% less: the Lifeline takes it instead.", { taken: [{ pct: -33 }] }),

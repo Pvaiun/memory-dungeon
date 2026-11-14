@@ -168,7 +168,7 @@ function dropView(run: RogueRun): Child[] {
   const cards = p.options.map((id) => win("roffer", h("div", { class: "line" }, iconEl(SUPPLY_ICON[id]), h("span", { class: "grow hi" }, id.toUpperCase()), h("span", { class: "dim small" }, `${held(run, id)}/${rogue(c).config.bag[id]} HELD`)), h("div", { class: "line dim small" }, SUPPLY_TEXT[id]),
     h("div", { class: "btns" }, button("TAKE", () => pickOrSave(run, id), "hi sm"))));
   return [
-    header("FOUND SUPPLIES", () => go("home"), h("span", { class: "dim" }, "PICK ONE")),
+    header("FOUND SUPPLIES", () => go("home"), h("span", { class: "dim" }, "PICK 1")),
     scene(run, "drop", { h: 96, actors: partyActors(run, 96, "victory", { cx: 135 }) }),
     win("scroll flat", ...cards),
     actions(button("PARTY", () => go("rparty"))),

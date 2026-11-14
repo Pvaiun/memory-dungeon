@@ -439,7 +439,7 @@
   {
    "id": "bleed",
    "name": "BLEED",
-   "text": "Each hit it takes deals damage for each stack, then a third of the stacks close.",
+   "text": "Each hit it takes deals damage for each stack, then 33% of the stacks close.",
    "label": "debuff",
    "show": "icon",
    "stacking": "intensity",
@@ -984,7 +984,7 @@
   {
    "id": "bulwark_broken",
    "name": "BROKEN",
-   "text": "Stunned and takes double damage, until the Bulwark refills.",
+   "text": "Stunned and takes ×2 damage, until the Bulwark refills.",
    "label": "debuff",
    "show": "icon",
    "stacking": "refresh",
@@ -1289,7 +1289,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks come half as often and deal double.",
+   "text": "Basic attacks come 50% as often and deal ×2.",
    "stats": [
     {
      "stat": "attack_speed",
@@ -1343,7 +1343,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Below 30% HP: cooldowns halved.",
+   "text": "Below 30% HP: cooldowns 50% shorter.",
    "reactions": [
     {
      "on": {
@@ -1385,7 +1385,7 @@
   {
    "id": "last_rites_on",
    "name": "LAST RITES",
-   "text": "Cooldowns halved.",
+   "text": "Cooldowns 50% shorter.",
    "label": "buff",
    "show": "icon",
    "stacking": "fizzle",
@@ -1575,7 +1575,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Below half HP: Lifesteal doubled.",
+   "text": "Below 50% HP: Lifesteal ×2.",
    "reactions": [
     {
      "on": {
@@ -1617,7 +1617,7 @@
   {
    "id": "bloodlust_on",
    "name": "BLOODLUST",
-   "text": "Lifesteal doubled.",
+   "text": "Lifesteal ×2.",
    "label": "buff",
    "show": "icon",
    "stacking": "fizzle",
@@ -1716,7 +1716,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks also hit a second random foe; both gain Shock.",
+   "text": "Basic attacks also hit a 2nd random foe; both gain Shock.",
    "strike": {
     "to": {
      "side": "foes",
@@ -1778,7 +1778,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "While its Shield holds: Crit chance doubled.",
+   "text": "While its Shield holds: Crit chance ×2.",
    "reactions": [
     {
      "on": {
@@ -1812,7 +1812,7 @@
   {
    "id": "bedrock_on",
    "name": "BEDROCK",
-   "text": "Crit chance doubled.",
+   "text": "Crit chance ×2.",
    "label": "buff",
    "show": "icon",
    "stacking": "fizzle",
@@ -1834,7 +1834,7 @@
   {
    "id": "encore",
    "name": "ENCORE",
-   "text": "Its next ability is cast twice; the second is free.",
+   "text": "Its next ability is cast 2 times; the 2nd is free.",
    "label": "buff",
    "show": "icon",
    "stacking": "refresh",
@@ -1911,7 +1911,7 @@
   {
    "id": "heavy_line_hammer",
    "name": "Hammer",
-   "text": "Basic attacks come half as often, for 2.25× damage.",
+   "text": "Basic attacks come 50% as often, for ×2.25 damage.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2163,7 +2163,7 @@
   {
    "id": "squall_line_squall",
    "name": "Squall",
-   "text": "Basic attacks add 2 Shock and also hit a second random foe for half, Shock included.",
+   "text": "Basic attacks add 2 Shock and also hit a 2nd random foe for 50%, Shock included.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2878,7 +2878,7 @@
   {
    "id": "glass_and_stone_glass",
    "name": "Glass",
-   "text": "Deals and takes double.",
+   "text": "Deals and takes ×2.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2983,7 +2983,7 @@
   {
    "id": "lifeline_lifeline",
    "name": "Lifeline",
-   "text": "Takes a third of the damage the Anchor takes.",
+   "text": "Takes 50% of the damage the Anchor takes.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -3409,7 +3409,7 @@
   {
    "id": "the_mountain_peak",
    "name": "Peak",
-   "text": "While every ally holds a Shield, each hit lands twice.",
+   "text": "While every ally holds a Shield, each hit lands 2 times.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -3959,7 +3959,7 @@
   {
    "id": "split",
    "name": "Split",
-   "text": "Below half HP it splits in two.",
+   "text": "Below 50% HP it splits in 2.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -3988,7 +3988,7 @@
   {
    "id": "incorporeal",
    "name": "Incorporeal",
-   "text": "Takes half of every hit; its burns, bleeds and shocks hurt it in full.",
+   "text": "Takes 50% of every hit; its burns, bleeds and shocks hurt it in full.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -4401,7 +4401,7 @@
   {
    "id": "second_thrust",
    "name": "Second thrust",
-   "text": "Every 3rd basic attack strikes twice.",
+   "text": "Every 3rd basic attack strikes 2 times.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -4435,7 +4435,7 @@
   {
    "id": "second_thrust_count",
    "name": "SECOND THRUST",
-   "text": "Every 3rd basic attack strikes twice.",
+   "text": "Every 3rd basic attack strikes 2 times.",
    "label": "buff",
    "show": "icon",
    "stacking": "intensity",
@@ -4712,7 +4712,7 @@
   {
    "id": "gorged_claws",
    "name": "Gorged claws",
-   "text": "Below half HP: basic attacks come 33% faster.",
+   "text": "Below 50% HP: basic attacks come 33% faster.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -4789,7 +4789,7 @@
   {
    "id": "still_hand",
    "name": "Still hand",
-   "text": "Basic attacks come half as often, and each that lands pushes the foe's next basic attack back by a full wait.",
+   "text": "Basic attacks come 50% as often, and each that lands pushes the foe's next basic attack back by a full wait.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -4816,7 +4816,7 @@
   {
    "id": "forked_knuckles",
    "name": "Forked knuckles",
-   "text": "Basic attacks also hit a second random foe for half, effects included. Each hit past the target restores 5% of max MP.",
+   "text": "Basic attacks also hit a 2nd random foe for 50%, effects included. Each hit past the target restores 5% of max MP.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -4860,7 +4860,7 @@
   {
    "id": "flurry_wraps",
    "name": "Flurry wraps",
-   "text": "Extra strikes roll Double strike again, up to two more, each 20% weaker.",
+   "text": "Extra strikes roll Double strike again, up to 2 more, each 20% weaker.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -5003,7 +5003,7 @@
   {
    "id": "hecklers_wand",
    "name": "Heckler's wand",
-   "text": "Basic attacks on a foe winding up deal triple.",
+   "text": "Basic attacks on a foe winding up deal ×3.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -5362,7 +5362,7 @@
   {
    "id": "drawn_steel",
    "name": "Drawn steel",
-   "text": "The first hit on each foe deals double.",
+   "text": "The first hit on each foe deals ×2.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -5612,7 +5612,7 @@
   {
    "id": "kingmaker",
    "name": "Kingmaker",
-   "text": "At fight start: the other ally with the least Attack gains the wearer's Attack, and the wearer keeps only a third.",
+   "text": "At fight start: the other ally with the least Attack gains the wearer's Attack, and the wearer keeps only 33%.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -5674,7 +5674,7 @@
   {
    "id": "kingmaker_kept",
    "name": "KINGMAKER",
-   "text": "Keeps a third of its Attack, for the fight.",
+   "text": "Keeps 33% of its Attack, for the fight.",
    "label": "marker",
    "show": "sheet",
    "stacking": "refresh",
@@ -5729,7 +5729,7 @@
   {
    "id": "avengers_spear",
    "name": "Avenger's spear",
-   "text": "When another ally drops below half HP: next basic attack comes at once, at the foe that last hit it.",
+   "text": "When another ally drops below 50% HP: next basic attack comes at once, at the foe that last hit it.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -5805,7 +5805,7 @@
   {
    "id": "hunting_spear",
    "name": "Hunting spear",
-   "text": "Hits on a foe below half HP land twice.",
+   "text": "Hits on a foe below 50% HP land 2 times.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -5991,7 +5991,7 @@
   {
    "id": "hungry_axe",
    "name": "Hungry axe",
-   "text": "Lifesteal doubles on hits against a foe below half HP.",
+   "text": "Lifesteal ×2 on hits against a foe below 50% HP.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -6058,7 +6058,7 @@
   {
    "id": "executioners_axe",
    "name": "Executioner's axe",
-   "text": "Hits on a foe below 25% HP deal double.",
+   "text": "Hits on a foe below 25% HP deal ×2.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -6199,7 +6199,7 @@
   {
    "id": "the_red_feast",
    "name": "The Red Feast",
-   "text": "Below half HP: hits deal +50% and Lifesteal doubles. After a won fight, heals up to half HP.",
+   "text": "Below 50% HP: hits deal +50% and Lifesteal ×2. After a won fight, heals up to 50% HP.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -6268,7 +6268,7 @@
   {
    "id": "the_red_feast_on",
    "name": "FEAST",
-   "text": "Hits deal +50% and Lifesteal is doubled.",
+   "text": "Hits deal +50% and Lifesteal ×2.",
    "label": "buff",
    "show": "icon",
    "stacking": "fizzle",
@@ -6297,7 +6297,7 @@
   {
    "id": "headsmans_axe",
    "name": "Headsman's axe",
-   "text": "Basic attacks come half as often and deal double. On a kill: next basic attack comes at once.",
+   "text": "Basic attacks come 50% as often and deal ×2. On a kill: next basic attack comes at once.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -6481,7 +6481,7 @@
   {
    "id": "executioners_longbow",
    "name": "Executioner's longbow",
-   "text": "Basic attacks ignore Taunt and deal more as the target's HP falls: +25% below 75%, +50% below half, +75% below 25%, double below 10%.",
+   "text": "Basic attacks ignore Taunt and deal more as the target's HP falls: +25% below 75%, +50% below 50%, +75% below 25%, ×2 below 10%.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -6614,7 +6614,7 @@
   {
    "id": "winters_chain",
    "name": "Winter's chain",
-   "text": "When a foe's Chill shatters, the other foe with the most Chill gains half of it.",
+   "text": "When a foe's Chill shatters, the other foe with the most Chill gains 50% of it.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -6731,7 +6731,7 @@
   {
    "id": "spellbinder",
    "name": "Spellbinder",
-   "text": "After each cast: next basic attack deals double and, when it lands, refunds half that cast's MP.",
+   "text": "After each cast: next basic attack deals ×2 and, when it lands, refunds 50% of that cast's MP.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -6821,7 +6821,7 @@
   {
    "id": "spellbinder_on",
    "name": "SPELLBOUND",
-   "text": "Next basic attack deals double.",
+   "text": "Next basic attack deals ×2.",
    "label": "buff",
    "show": "icon",
    "stacking": "fizzle",
@@ -7033,7 +7033,7 @@
   {
    "id": "cornerstone_hammer",
    "name": "Cornerstone hammer",
-   "text": "Basic attacks deal extra damage equal to half of all Shield the party holds.",
+   "text": "Basic attacks deal extra damage equal to 50% of all Shield the party holds.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -7150,7 +7150,7 @@
   {
    "id": "saints_mace",
    "name": "Saint's mace",
-   "text": "Each heal it gives: the ally's next hit deals extra damage equal to half the heal, adding up.",
+   "text": "Each heal it gives: the ally's next hit deals extra damage equal to 50% of the heal, adding up.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -7186,7 +7186,7 @@
   {
    "id": "saints_mace_blessing",
    "name": "BLESSED",
-   "text": "Next hit deals extra damage: half the heals it was given.",
+   "text": "Next hit deals extra damage: 50% of the heals it was given.",
    "label": "buff",
    "show": "icon",
    "stacking": "intensity",
@@ -7206,7 +7206,7 @@
   {
    "id": "anchorites_mace",
    "name": "Anchorite's mace",
-   "text": "Heals it gives the ally with the most Aggro are doubled.",
+   "text": "Heals it gives the ally with the most Aggro: ×2.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -7235,7 +7235,7 @@
   {
    "id": "martyrs_mace",
    "name": "Martyr's mace",
-   "text": "Basic attacks deal +50% below 70% HP, double below half, ×2.5 below 33% and triple below 10%. Below 33%, they heal it for the damage dealt.",
+   "text": "Basic attacks deal +50% below 70% HP, ×2 below 50%, ×2.5 below 33% and ×3 below 10%. Below 33%, they heal it for the damage dealt.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -7355,7 +7355,7 @@
   {
    "id": "shepherds_staff",
    "name": "Shepherd's staff",
-   "text": "Each cast gives the ally with the lowest MP% half its MP cost.",
+   "text": "Each cast gives the ally with the lowest MP% 50% of its MP cost.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -7504,7 +7504,7 @@
   {
    "id": "evensong_staff",
    "name": "Evensong staff",
-   "text": "Every second ability it casts has no wind-up.",
+   "text": "Every 2nd ability it casts has no wind-up.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -7558,7 +7558,7 @@
   {
    "id": "staff_of_echoes",
    "name": "Staff of echoes",
-   "text": "Abilities are cast twice, the second at once and aimed anew. Each cast pays its MP.",
+   "text": "Abilities are cast 2 times, the 2nd at once and aimed anew. Each cast pays its MP.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -7595,7 +7595,7 @@
   {
    "id": "giantsbane",
    "name": "Giantsbane",
-   "text": "Basic attacks deal +50% to a foe above half HP.",
+   "text": "Basic attacks deal +50% to a foe above 50% HP.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -7640,7 +7640,7 @@
   {
    "id": "icebreaker",
    "name": "Icebreaker",
-   "text": "Hits on a Stunned foe deal double.",
+   "text": "Hits on a Stunned foe deal ×2.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -7762,7 +7762,7 @@
   {
    "id": "worldbreaker",
    "name": "Worldbreaker",
-   "text": "Basic attacks come half as often, deal triple and Stun their target.",
+   "text": "Basic attacks come 50% as often, deal ×3 and Stun their target.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -7792,7 +7792,7 @@
   {
    "id": "twinfall",
    "name": "Twinfall",
-   "text": "Every hit lands again a tick later, for half the damage.",
+   "text": "Every hit lands again a tick later, for 50% of the damage.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -7820,7 +7820,7 @@
   {
    "id": "portcullis",
    "name": "Portcullis",
-   "text": "Above half HP: Aggro +25.",
+   "text": "Above 50% HP: Aggro +25.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -7897,7 +7897,7 @@
   {
    "id": "holdfast",
    "name": "Holdfast",
-   "text": "First drop below half HP each fight: Guarded.",
+   "text": "First drop below 50% HP each fight: Guarded.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -8134,7 +8134,7 @@
   {
    "id": "last_bastion",
    "name": "Last bastion",
-   "text": "Once a fight, a blow that would knock it out leaves it at 1 HP and Guarded. Until healed, hits deal double.",
+   "text": "Once a fight, a blow that would knock it out leaves it at 1 HP and Guarded. Until healed, hits deal ×2.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -8204,7 +8204,7 @@
   {
    "id": "last_bastion_on",
    "name": "BASTION",
-   "text": "Hits deal double until healed.",
+   "text": "Hits deal ×2 until healed.",
    "label": "buff",
    "show": "icon",
    "stacking": "fizzle",
@@ -8373,7 +8373,7 @@
   {
    "id": "bloodsworn_mail",
    "name": "Bloodsworn mail",
-   "text": "Below half HP: +20% Lifesteal.",
+   "text": "Below 50% HP: +20% Lifesteal.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -8551,7 +8551,7 @@
   {
    "id": "sanguine_mail",
    "name": "Sanguine mail",
-   "text": "Healing on it: doubled below half HP, halved otherwise.",
+   "text": "Healing on it: ×2 below 50% HP, −50% otherwise.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -8616,7 +8616,7 @@
   {
    "id": "sanguine_mail_low",
    "name": "SANGUINE",
-   "text": "Healing on it doubled.",
+   "text": "Healing on it ×2.",
    "label": "buff",
    "show": "icon",
    "stacking": "fizzle",
@@ -8630,7 +8630,7 @@
   {
    "id": "sanguine_mail_high",
    "name": "SANGUINE",
-   "text": "Healing on it halved.",
+   "text": "Healing on it −50%.",
    "label": "buff",
    "show": "icon",
    "stacking": "fizzle",
@@ -8743,7 +8743,7 @@
   {
    "id": "mottled_hide",
    "name": "Mottled hide",
-   "text": "Below half HP: Aggro −25.",
+   "text": "Below 50% HP: Aggro −25.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -8841,7 +8841,7 @@
   {
    "id": "shadow_mantle",
    "name": "Shadow mantle",
-   "text": "While Hidden: hits deal double.",
+   "text": "While Hidden: hits deal ×2.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -9004,7 +9004,7 @@
   {
    "id": "windrunners_garb",
    "name": "Windrunner's garb",
-   "text": "On a dodge: 3 Heat (5% faster each, up to 10). When hit: loses half its Heat.",
+   "text": "On a dodge: 3 Heat (5% faster each, up to 10). When hit: loses 50% of its Heat.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -9456,7 +9456,7 @@
   {
    "id": "motley_robe",
    "name": "Motley robe",
-   "text": "Abilities cast in random order, at half MP cost.",
+   "text": "Abilities cast in random order, at 50% MP cost.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -9618,7 +9618,7 @@
   {
    "id": "millstone",
    "name": "Millstone",
-   "text": "Basic attacks come half as often and deal ×2.25 damage.",
+   "text": "Basic attacks come 50% as often and deal ×2.25 damage.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -9648,7 +9648,7 @@
   {
    "id": "clear_headed_charm",
    "name": "Clear-headed charm",
-   "text": "Below half MP: Clarity every 22 ticks, starting at once.",
+   "text": "Below 50% MP: Clarity every 22 ticks, starting at once.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -9714,7 +9714,7 @@
   {
    "id": "shatterstone_charm",
    "name": "Shatterstone charm",
-   "text": "When a foe breaks its Shield: sends back double the most it held.",
+   "text": "When a foe breaks its Shield: sends back 200% of the most it held.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -9869,7 +9869,7 @@
   {
    "id": "halved_heart",
    "name": "Halved heart",
-   "text": "Starts each fight at half HP and can't be healed above it. Counts as below half. Hits deal +50%.",
+   "text": "Starts each fight at 50% HP and can't be healed above it. Counts as below 50%. Hits deal +50%.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -10369,7 +10369,7 @@
   {
    "id": "ready_stance",
    "name": "Ready stance",
-   "text": "Abilities start each fight at least half charged. Cooldowns 20% longer.",
+   "text": "Abilities start each fight at least 50% charged. Cooldowns 20% longer.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -10395,7 +10395,7 @@
   {
    "id": "gamblers_coin",
    "name": "Gambler's coin",
-   "text": "Crit chance is 50%. Hits that don't crit deal half.",
+   "text": "Crit chance is 50%. Hits that don't crit deal −50%.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -10443,7 +10443,7 @@
   {
    "id": "salted_kite",
    "name": "Salted kite",
-   "text": "Takes half damage from statuses.",
+   "text": "Takes −50% damage from statuses.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -10671,7 +10671,7 @@
   {
    "id": "monolith_shield",
    "name": "Monolith shield",
-   "text": "Damaging abilities come round half as often and deal double.",
+   "text": "Damaging abilities come round 50% as often and deal ×2.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -10902,7 +10902,7 @@
   {
    "id": "hoplon",
    "name": "Hoplon",
-   "text": "While it holds Aegis: basic attacks deal double.",
+   "text": "While it holds Aegis: basic attacks deal ×2.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -11193,7 +11193,7 @@
   {
    "id": "watch_horn",
    "name": "Watch horn",
-   "text": "Taunts when an ally drops below half HP.",
+   "text": "Taunts when an ally drops below 50% HP.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -11278,7 +11278,7 @@
   {
    "id": "alarum",
    "name": "Alarum",
-   "text": "When a foe hits another ally below half HP: Fixates that foe.",
+   "text": "When a foe hits another ally below 50% HP: Fixates that foe.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -11408,7 +11408,7 @@
   {
    "id": "bear_fetish",
    "name": "Bear fetish",
-   "text": "Guards any ally that drops below half HP.",
+   "text": "Guards any ally that drops below 50% HP.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -11752,7 +11752,7 @@
   {
    "id": "phylactery",
    "name": "Phylactery",
-   "text": "Its healing past full, Regen included, is kept, and given to the next ally who drops below half HP.",
+   "text": "Its healing past full, Regen included, is kept, and given to the next ally who drops below 50% HP.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -11826,7 +11826,7 @@
   {
    "id": "phylactery_store",
    "name": "PHYLACTERY",
-   "text": "Healing kept for the next ally who drops below half HP.",
+   "text": "Healing kept for the next ally who drops below 50% HP.",
    "label": "marker",
    "show": "icon",
    "stacking": "intensity"
@@ -11869,7 +11869,7 @@
   {
    "id": "heart_of_the_saint",
    "name": "Heart of the saint",
-   "text": "Healing abilities cost HP instead of MP, and heal double.",
+   "text": "Healing abilities cost HP instead of MP, and heal ×2.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -11954,7 +11954,7 @@
   {
    "id": "dazzling_lantern",
    "name": "Dazzling lantern",
-   "text": "At fight start: Weakens the two foes with the most Attack.",
+   "text": "At fight start: Weakens the 2 foes with the most Attack.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -12029,7 +12029,7 @@
   {
    "id": "shuttered_lantern",
    "name": "Shuttered lantern",
-   "text": "Takes half damage while winding up.",
+   "text": "Takes −50% damage while winding up.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -12547,7 +12547,7 @@
   {
    "id": "twice_told_tome",
    "name": "Twice-told tome",
-   "text": "Every second ability it casts is cast again at once, free.",
+   "text": "Every 2nd ability it casts is cast again at once, free.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -12596,7 +12596,7 @@
   {
    "id": "twice_told_tome_count",
    "name": "TWICE-TOLD",
-   "text": "Every second ability is cast twice.",
+   "text": "Every 2nd ability is cast 2 times.",
    "label": "buff",
    "show": "icon",
    "stacking": "intensity",
@@ -12788,7 +12788,7 @@
   {
    "id": "frozen_tome",
    "name": "Frozen tome",
-   "text": "Each shatter halves the wait on every ally's first-slotted ability.",
+   "text": "Each shatter cuts the wait on every ally's first-slotted ability by 50%.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -13303,7 +13303,7 @@
   {
    "id": "idol_of_binding",
    "name": "Idol of binding",
-   "text": "Foes it Weakens are Slowed too. Hits on them deal double.",
+   "text": "Foes it Weakens are Slowed too. Hits on them deal ×2.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -13453,7 +13453,7 @@
   {
    "id": "idol_of_stillness",
    "name": "Idol of stillness",
-   "text": "Never makes a basic attack. Defense doubled.",
+   "text": "Never makes a basic attack. Defense ×2.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -13571,7 +13571,7 @@
   {
    "id": "blood_vial",
    "name": "Blood vial",
-   "text": "Abilities cost half their MP, plus HP equal to their full cost.",
+   "text": "Abilities cost 50% of their MP, plus HP equal to their full cost.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -13691,7 +13691,7 @@
   {
    "id": "heartsblood",
    "name": "Heartsblood",
-   "text": "Its Lifesteal also heals every other ally for half, even past full.",
+   "text": "Its Lifesteal also heals every other ally for 50%, even past full.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -13929,7 +13929,7 @@
   {
    "id": "the_kings_head",
    "name": "The king's head",
-   "text": "On a kill: every ally's Crit chance doubles for 20 ticks (up to 80%).",
+   "text": "On a kill: every ally's Crit chance ×2 for 20 ticks (up to 80%).",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -13960,7 +13960,7 @@
   {
    "id": "the_kings_head_on",
    "name": "CROWNED",
-   "text": "Crit chance doubled, up to 80%.",
+   "text": "Crit chance ×2, up to 80%.",
    "label": "buff",
    "show": "icon",
    "stacking": "refresh",
@@ -14327,7 +14327,7 @@
   {
    "id": "feathered_cloak",
    "name": "Feathered cloak",
-   "text": "Once a fight, below half HP: goes Hidden.",
+   "text": "Once a fight, below 50% HP: goes Hidden.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -14424,7 +14424,7 @@
   {
    "id": "tempest_cloak",
    "name": "Tempest cloak",
-   "text": "On a dodge: next basic attack comes at once and lands twice.",
+   "text": "On a dodge: next basic attack comes at once and lands 2 times.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -14453,7 +14453,7 @@
   {
    "id": "tempest_cloak_on",
    "name": "TEMPEST",
-   "text": "Next basic attack lands twice.",
+   "text": "Next basic attack lands 2 times.",
    "label": "buff",
    "show": "icon",
    "stacking": "intensity",
@@ -14832,7 +14832,7 @@
   {
    "id": "rite_of_passage",
    "name": "RITE OF PASSAGE",
-   "text": "Cooldowns halved.",
+   "text": "Cooldowns 50% shorter.",
    "label": "buff",
    "show": "icon",
    "stacking": "refresh",
@@ -14851,7 +14851,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Below 30% HP: cooldowns halved. At 40% HP, not 30%.",
+   "text": "Below 30% HP: cooldowns 50% shorter. At 40% HP, not 30%.",
    "reactions": [
     {
      "on": {
@@ -14897,7 +14897,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "While any ally is below 30% HP: cooldowns halved.",
+   "text": "While any ally is below 30% HP: cooldowns 50% shorter.",
    "reactions": [
     {
      "on": {
@@ -15044,7 +15044,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Below 30% HP, and for 20 ticks after an ally falls: cooldowns halved.",
+   "text": "Below 30% HP, and for 20 ticks after an ally falls: cooldowns 50% shorter.",
    "reactions": [
     {
      "on": {
@@ -15103,7 +15103,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "While any ally is below 30% HP: cooldowns halved. At 40% HP, not 30%.",
+   "text": "While any ally is below 30% HP: cooldowns 50% shorter. At 40% HP, not 30%.",
    "reactions": [
     {
      "on": {
@@ -15250,7 +15250,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Below 30% HP, and for 20 ticks after an ally falls: cooldowns halved. At 40% HP, not 30%.",
+   "text": "Below 30% HP, and for 20 ticks after an ally falls: cooldowns 50% shorter. At 40% HP, not 30%.",
    "reactions": [
     {
      "on": {
@@ -15814,7 +15814,7 @@
   {
    "id": "overgrowth",
    "name": "OVERGROWTH",
-   "text": "Thorns doubled.",
+   "text": "Thorns ×2.",
    "label": "buff",
    "show": "icon",
    "stacking": "refresh",
@@ -15978,7 +15978,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks come half as often and deal double. Basic attacks deal ×2.4, not double.",
+   "text": "Basic attacks come 50% as often and deal ×2. Basic attacks deal ×2.4, not ×2.",
    "stats": [
     {
      "stat": "attack_speed",
@@ -15999,7 +15999,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks half as often, for double; the first each fight comes at once, for triple.",
+   "text": "Basic attacks 50% as often, for ×2; the first each fight comes at once, for ×3.",
    "stats": [
     {
      "stat": "attack_speed",
@@ -16040,7 +16040,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks half as often, for double; Defense adds to them half as much as Attack.",
+   "text": "Basic attacks 50% as often, for ×2; Defense adds to them 50% as much as Attack.",
    "stats": [
     {
      "stat": "attack_speed",
@@ -16099,7 +16099,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks half as often, for double; the first each fight comes at once, for triple. Basic attacks ×2.4, the first ×3.4.",
+   "text": "Basic attacks 50% as often, for ×2; the first each fight comes at once, for ×3. Basic attacks ×2.4, the first ×3.4.",
    "stats": [
     {
      "stat": "attack_speed",
@@ -16140,7 +16140,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks half as often, for double; Defense adds to them half as much as Attack. Basic attacks deal ×2.4, not double.",
+   "text": "Basic attacks 50% as often, for ×2; Defense adds to them 50% as much as Attack. Basic attacks deal ×2.4, not ×2.",
    "stats": [
     {
      "stat": "attack_speed",
@@ -16324,7 +16324,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Hits deal +50% to buffed or debuffed foes, with triple Crit chance.",
+   "text": "Hits deal +50% to buffed or debuffed foes, with ×3 Crit chance.",
    "boosts": [
     {
      "tag": "physical",
@@ -16464,7 +16464,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Hits deal +50% to buffed or debuffed foes, with triple Crit chance. +70%, not +50%.",
+   "text": "Hits deal +50% to buffed or debuffed foes, with ×3 Crit chance. +70%, not +50%.",
    "boosts": [
     {
      "tag": "physical",
@@ -16577,7 +16577,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "No Shield. Hits deal +20% to foes below half HP.",
+   "text": "No Shield. Hits deal +20% to foes below 50% HP.",
    "reactions": [],
    "boosts": [
     {
@@ -16638,7 +16638,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "No Shield. Hits deal +20% to foes below half HP. +28%, not +20%.",
+   "text": "No Shield. Hits deal +20% to foes below 50% HP. +28%, not +20%.",
    "reactions": [],
    "boosts": [
     {
@@ -17862,7 +17862,7 @@
   {
    "id": "shadow_step",
    "name": "SHADOW STEP",
-   "text": "When Hidden runs out: next hit deals triple damage.",
+   "text": "When Hidden runs out: next hit deals ×3 damage.",
    "label": "marker",
    "show": "sheet",
    "stacking": "refresh",
@@ -17894,7 +17894,7 @@
   {
    "id": "shadow_step_strike",
    "name": "SHADOW STEP",
-   "text": "Next hit deals triple damage.",
+   "text": "Next hit deals ×3 damage.",
    "label": "buff",
    "show": "icon",
    "stacking": "fizzle",
@@ -17954,7 +17954,7 @@
   {
    "id": "bleed_them_dry",
    "name": "BLED DRY",
-   "text": "Lifesteal doubled.",
+   "text": "Lifesteal ×2.",
    "label": "buff",
    "show": "icon",
    "stacking": "refresh",
@@ -17999,7 +17999,7 @@
   {
    "id": "shared_feast_on",
    "name": "SHARED FEAST",
-   "text": "Lifesteal doubled; each hit heals the other ally with the lowest HP% as much as it drank.",
+   "text": "Lifesteal ×2; each hit heals the other ally with the lowest HP% as much as it drank.",
    "label": "buff",
    "show": "icon",
    "stacking": "fizzle",
@@ -18105,7 +18105,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Below half HP: Lifesteal doubled. Lifesteal ×2.5 instead of doubled.",
+   "text": "Below 50% HP: Lifesteal ×2. Lifesteal ×2.5 instead of ×2.",
    "reactions": [
     {
      "on": {
@@ -18151,7 +18151,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Below half HP: Lifesteal doubled, and each hit heals the other ally with the lowest HP% as much as it drank.",
+   "text": "Below 50% HP: Lifesteal ×2, and each hit heals the other ally with the lowest HP% as much as it drank.",
    "reactions": [
     {
      "on": {
@@ -18197,7 +18197,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "While any ally is below half HP: Lifesteal doubled.",
+   "text": "While any ally is below 50% HP: Lifesteal ×2.",
    "reactions": [
     {
      "on": {
@@ -18265,7 +18265,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Below half HP: Lifesteal doubled, and each hit heals the other ally with the lowest HP% as much as it drank. Lifesteal ×2.5 instead of doubled.",
+   "text": "Below 50% HP: Lifesteal ×2, and each hit heals the other ally with the lowest HP% as much as it drank. Lifesteal ×2.5 instead of ×2.",
    "reactions": [
     {
      "on": {
@@ -18311,7 +18311,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "While any ally is below half HP: Lifesteal doubled. Lifesteal ×2.5 instead of doubled.",
+   "text": "While any ally is below 50% HP: Lifesteal ×2. Lifesteal ×2.5 instead of ×2.",
    "reactions": [
     {
      "on": {
@@ -18619,7 +18619,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Each cast Hastes the ally with the fastest basic attack, in place of Burn. Hastes the two with the fastest.",
+   "text": "Each cast Hastes the ally with the fastest basic attack, in place of Burn. Hastes the 2 with the fastest.",
    "reactions": [
     {
      "on": {
@@ -18934,7 +18934,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks also hit a second random foe; both gain Shock. +40% Shock.",
+   "text": "Basic attacks also hit a 2nd random foe; both gain Shock. +40% Shock.",
    "strike": {
     "to": {
      "side": "foes",
@@ -18996,7 +18996,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks also hit two other random foes; all three gain Shock.",
+   "text": "Basic attacks also hit 2 other random foes; all 3 gain Shock.",
    "strike": {
     "to": {
      "side": "foes",
@@ -19059,7 +19059,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks also hit a second random foe; both gain Sunder in place of Shock.",
+   "text": "Basic attacks also hit a 2nd random foe; both gain Sunder in place of Shock.",
    "strike": {
     "to": {
      "side": "foes",
@@ -19121,7 +19121,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks also hit two other random foes; all three gain Shock. +40% Shock.",
+   "text": "Basic attacks also hit 2 other random foes; all 3 gain Shock. +40% Shock.",
    "strike": {
     "to": {
      "side": "foes",
@@ -19184,7 +19184,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "Basic attacks also hit a second random foe; both gain Sunder in place of Shock. +40% Shock.",
+   "text": "Basic attacks also hit a 2nd random foe; both gain Sunder in place of Shock. +40% Shock.",
    "strike": {
     "to": {
      "side": "foes",
@@ -19275,7 +19275,7 @@
   {
    "id": "storms_eye",
    "name": "THUNDERSTORM",
-   "text": "Basic attacks add triple Shock to the foe with the most Shock.",
+   "text": "Basic attacks add ×3 Shock to the foe with the most Shock.",
    "label": "buff",
    "show": "icon",
    "stacking": "refresh",
@@ -19382,7 +19382,7 @@
   {
    "id": "storms_eye_plus",
    "name": "THUNDERSTORM",
-   "text": "Basic attacks add triple Shock to the foe with the most Shock.",
+   "text": "Basic attacks add ×3 Shock to the foe with the most Shock.",
    "label": "buff",
    "show": "icon",
    "stacking": "refresh",
@@ -19422,7 +19422,7 @@
   {
    "id": "overcharge",
    "name": "OVERCHARGE",
-   "text": "Next three abilities cost no MP.",
+   "text": "Next 3 abilities cost no MP.",
    "label": "marker",
    "show": "sheet",
    "stacking": "refresh",
@@ -19505,7 +19505,7 @@
   {
    "id": "bedrock_on_plus",
    "name": "BEDROCK",
-   "text": "Crit chance doubled; Crit damage up.",
+   "text": "Crit chance ×2; Crit damage +25%.",
    "label": "buff",
    "show": "icon",
    "stacking": "fizzle",
@@ -19563,7 +19563,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "While its Shield holds: Crit chance doubled. +25% Crit damage while its Shield holds.",
+   "text": "While its Shield holds: Crit chance ×2. +25% Crit damage while its Shield holds.",
    "reactions": [
     {
      "on": {
@@ -19601,7 +19601,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "While its Shield holds: Crit chance doubled, and crits Stun.",
+   "text": "While its Shield holds: Crit chance ×2, and crits Stun.",
    "reactions": [
     {
      "on": {
@@ -19716,7 +19716,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "While its Shield holds: Crit chance doubled, and crits Stun. +25% Crit damage while its Shield holds.",
+   "text": "While its Shield holds: Crit chance ×2, and crits Stun. +25% Crit damage while its Shield holds.",
    "reactions": [
     {
      "on": {
@@ -19905,7 +19905,7 @@
   {
    "id": "banner_of_the_last_keep",
    "name": "Banner of the last keep",
-   "text": "Max HP doubled. Healing on it is halved.",
+   "text": "Max HP ×2. Healing on it −50%.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -20129,7 +20129,7 @@
   {
    "id": "the_last_shove",
    "name": "The last shove",
-   "text": "Othismos comes round twice as often, with no wind-up. Basic attacks come half as often again.",
+   "text": "Othismos comes round 100% faster, with no wind-up. Basic attacks come 50% as often again.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -20155,7 +20155,7 @@
   {
    "id": "scales_of_the_judge",
    "name": "Scales of the judge",
-   "text": "Hits deal triple damage to a foe with a buff or a debuff, and half to a foe with neither.",
+   "text": "Hits deal ×3 damage to a foe with a buff or a debuff, and −50% to a foe with neither.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -20523,7 +20523,7 @@
   {
    "id": "thousand_palm_wraps",
    "name": "Thousand-palm wraps",
-   "text": "Every basic attack strikes twice.",
+   "text": "Every basic attack strikes 2 times.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -20938,7 +20938,7 @@
   {
    "id": "cleric",
    "name": "Cleric",
-   "text": "Healer. Heals the ally with the lowest HP% with quick, small heals, lifts a curse and wraps the ally in Regen, raises the fallen, and prays twice as fast when its own life is in danger.",
+   "text": "Healer. Heals the ally with the lowest HP% with quick, small heals, lifts a curse and wraps the ally in Regen, raises the fallen, and prays 100% faster when its own life is in danger.",
    "source": "starter",
    "stats": {
     "max_hp": 2000,
@@ -20965,7 +20965,7 @@
    ],
    "passive": {
     "name": "Last rites",
-    "text": "Below 30% HP: cooldowns halved.",
+    "text": "Below 30% HP: cooldowns 50% shorter.",
     "statuses": [
      "last_rites"
     ]
@@ -21063,7 +21063,7 @@
   {
    "id": "hoplite",
    "name": "Hoplite",
-   "text": "The bruiser. Slow double swings, a thrust that opens one foe up, a shove with the whole shield that sunders every foe, and an Aegis on the ally about to take the killing blow. Very tanky and hits hard; nothing it does draws fire.",
+   "text": "The bruiser. Slow swings for ×2, a thrust that opens one foe up, a shove with the whole shield that sunders every foe, and an Aegis on the ally about to take the killing blow. Very tanky and hits hard; nothing it does draws fire.",
    "source": "unlock",
    "stats": {
     "max_hp": 4000,
@@ -21090,7 +21090,7 @@
    ],
    "passive": {
     "name": "Phalanx",
-    "text": "Basic attacks come half as often and deal double.",
+    "text": "Basic attacks come 50% as often and deal ×2.",
     "statuses": [
      "phalanx"
     ]
@@ -21104,7 +21104,7 @@
   {
    "id": "paladin",
    "name": "Paladin",
-   "text": "The judge: helper of the righteous, killer of the wicked. Its hits land half again as hard on any foe that holds a buff or a debuff; it condemns one foe and the whole party strikes it; it lifts curses and heals; and it brings down a slow, heavy, burning Smite.",
+   "text": "The judge: helper of the righteous, killer of the wicked. Its hits deal +50% to any foe that holds a buff or a debuff; it condemns one foe and the whole party strikes it; it lifts curses and heals; and it brings down a slow, heavy, burning Smite.",
    "source": "unlock",
    "stats": {
     "max_hp": 4000,
@@ -21145,7 +21145,7 @@
   {
    "id": "valkyrie",
    "name": "Valkyrie",
-   "text": "The shieldmaiden: a quick, survivable damage dealer, not a tank. Her spear builds her Shield as it strikes, three quick hits reach past any guard and shock what they hit, a heavy blow from above hits harder for each Shock, and she chooses the slain: one ability mends the ally with the lowest HP% or raises a fallen one.",
+   "text": "The shieldmaiden: a quick, survivable damage dealer, not a tank. Her spear builds her Shield as it strikes, 3 quick hits reach past any guard and shock what they hit, a heavy blow from above hits harder for each Shock, and she chooses the slain: one ability mends the ally with the lowest HP% or raises a fallen one.",
    "source": "unlock",
    "stats": {
     "max_hp": 3000,
@@ -21187,7 +21187,7 @@
   {
    "id": "bard",
    "name": "Bard",
-   "text": "Party tempo. A caster at the back whose every basic attack heals an ally and gives another MP, with a ballad that steadies the party, an allegro that quickens it, and an encore that makes an ally's next spell sound twice.",
+   "text": "Party tempo. A caster at the back whose every basic attack heals an ally and gives another MP, with a ballad that steadies the party, an allegro that quickens it, and an encore that makes an ally's next spell sound 2 times.",
    "source": "unlock",
    "stats": {
     "max_hp": 3000,
@@ -21384,7 +21384,7 @@
    ],
    "passive": {
     "name": "Bloodlust",
-    "text": "Below half HP: Lifesteal doubled.",
+    "text": "Below 50% HP: Lifesteal ×2.",
     "statuses": [
      "bloodlust"
     ]
@@ -21480,7 +21480,7 @@
   {
    "id": "stormcaller",
    "name": "Stormcaller",
-   "text": "The striker among the mages. Each swing arcs to a second foe, lightning chains, a storm puts Shock on every ally's swings, and it charges itself to swing faster.",
+   "text": "The striker among the mages. Each swing arcs to a 2nd foe, lightning chains, a storm puts Shock on every ally's swings, and it charges itself to swing faster.",
    "source": "unlock",
    "stats": {
     "max_hp": 2000,
@@ -21508,7 +21508,7 @@
    ],
    "passive": {
     "name": "Arc",
-    "text": "Basic attacks also hit a second random foe; both gain Shock.",
+    "text": "Basic attacks also hit a 2nd random foe; both gain Shock.",
     "statuses": [
      "arc"
     ]
@@ -21550,7 +21550,7 @@
    ],
    "passive": {
     "name": "Bedrock",
-    "text": "While its Shield holds: Crit chance doubled.",
+    "text": "While its Shield holds: Crit chance ×2.",
     "statuses": [
      "bedrock"
     ]
@@ -22173,7 +22173,7 @@
    "id": "gale_spear",
    "class": "valkyrie",
    "name": "Gale spear",
-   "text": "Three hits on a random foe, each adding Shock. Ignores Taunt.",
+   "text": "3 hits on a random foe, each adding Shock. Ignores Taunt.",
    "cooldown": 14.3,
    "cast": 1,
    "mp": 200,
@@ -22358,7 +22358,7 @@
    "id": "encore",
    "class": "bard",
    "name": "Encore",
-   "text": "The other ally with the most Attack casts its next ability twice; the second is free.",
+   "text": "The other ally with the most Attack casts its next ability 2 times; the 2nd is free.",
    "cooldown": 32.7,
    "cast": 1,
    "mp": 450,
@@ -22565,7 +22565,7 @@
    "id": "burning_fist",
    "class": "monk",
    "name": "Burning fist",
-   "text": "Three blows on the foe with the most Burn, each adding more.",
+   "text": "3 blows on the foe with the most Burn, each adding more.",
    "cooldown": 14.5,
    "cast": 1,
    "mp": 200,
@@ -23091,7 +23091,7 @@
    "id": "chain_lightning",
    "class": "stormcaller",
    "name": "Chain lightning",
-   "text": "Lightning at a random foe and up to three others, adding Shock.",
+   "text": "Lightning at a random foe and up to 3 others, adding Shock.",
    "cooldown": 14.2,
    "cast": 1,
    "mp": 450,
@@ -23593,7 +23593,7 @@
   {
    "id": "reap",
    "name": "Reap",
-   "text": "Three scythe slashes at random foes.",
+   "text": "3 scythe slashes at random foes.",
    "cooldown": 42.3,
    "cast": 3,
    "mp": 500,
@@ -23871,7 +23871,7 @@
   {
    "id": "call_drones",
    "name": "Call drones",
-   "text": "Summons two Drones.",
+   "text": "Summons 2 Drones.",
    "cooldown": 36.4,
    "cast": 6,
    "mp": 500,
@@ -23886,7 +23886,7 @@
   {
    "id": "tempest",
    "name": "Tempest",
-   "text": "Three lightning bolts at random foes, each with a stack of Shock.",
+   "text": "3 lightning bolts at random foes, each with a stack of Shock.",
    "cooldown": 25.6,
    "cast": 6,
    "mp": 300,
@@ -23966,7 +23966,7 @@
   {
    "id": "rally_soldiers",
    "name": "Rally",
-   "text": "Summons two Soldiers, each with half a Soldier's HP.",
+   "text": "Summons 2 Soldiers, each with 50% of a Soldier's HP.",
    "cooldown": 38.7,
    "cast": 6,
    "mp": 500,
@@ -24158,7 +24158,7 @@
    "id": "stand_fast__a",
    "class": "knight",
    "name": "Rally the well",
-   "text": "Clarity to every ally below half MP; waits for one. No Taunt.",
+   "text": "Clarity to every ally below 50% MP; waits for one. No Taunt.",
    "cooldown": 29.4,
    "cast": 1,
    "mp": 200,
@@ -24206,7 +24206,7 @@
    "id": "stand_fast__ap",
    "class": "knight",
    "name": "Rally the well+",
-   "text": "Clarity to every ally below half MP; waits for one. No Taunt.",
+   "text": "Clarity to every ally below 50% MP; waits for one. No Taunt.",
    "cooldown": 29.4,
    "cast": 1,
    "mp": 125,
@@ -24805,7 +24805,7 @@
    "id": "raise__a",
    "class": "cleric",
    "name": "Martyr's raise",
-   "text": "Pays half its HP to raise a random fallen ally with that much.",
+   "text": "Pays 50% of its HP to raise a random fallen ally with that much.",
    "cooldown": 55.9,
    "cast": 8,
    "mp": 0,
@@ -24920,7 +24920,7 @@
    "id": "raise__ap",
    "class": "cleric",
    "name": "Martyr's raise+",
-   "text": "Pays half its HP to raise a random fallen ally with that much. Raises with 40% more HP than it pays.",
+   "text": "Pays 50% of its HP to raise a random fallen ally with that much. Raises with 40% more HP than it pays.",
    "cooldown": 55.9,
    "cast": 8,
    "mp": 0,
@@ -25532,7 +25532,7 @@
    "id": "rending_arrow__b",
    "class": "ranger",
    "name": "Gutting arrow",
-   "text": "An arrow at the foe with the least HP: +50% below half HP, double below a quarter.",
+   "text": "An arrow at the foe with the least HP: +50% below 50% HP, ×2 below 25%.",
    "cooldown": 19.1,
    "cast": 3,
    "mp": 325,
@@ -25625,7 +25625,7 @@
    "id": "rending_arrow__bp",
    "class": "ranger",
    "name": "Gutting arrow+",
-   "text": "An arrow at the foe with the least HP: +50% below half HP, double below a quarter.",
+   "text": "An arrow at the foe with the least HP: +50% below 50% HP, ×2 below 25%.",
    "cooldown": 19.1,
    "cast": 3,
    "mp": 325,
@@ -25695,7 +25695,7 @@
    "id": "thicket__a",
    "class": "bramble_knight",
    "name": "Overgrowth",
-   "text": "Taunts twice in a row, with Thorns doubled throughout. No Guard.",
+   "text": "Taunts 2 times in a row, with Thorns ×2 throughout. No Guard.",
    "cooldown": 52.8,
    "cast": 1,
    "mp": 325,
@@ -25744,7 +25744,7 @@
    "id": "thicket__ap",
    "class": "bramble_knight",
    "name": "Overgrowth+",
-   "text": "Taunts twice in a row, with Thorns doubled throughout. No Guard.",
+   "text": "Taunts 2 times in a row, with Thorns ×2 throughout. No Guard.",
    "cooldown": 37.7,
    "cast": 1,
    "mp": 325,
@@ -27241,7 +27241,7 @@
    "id": "gale_spear__p",
    "class": "valkyrie",
    "name": "Gale spear+",
-   "text": "Three hits on a random foe, each adding Shock. Ignores Taunt.",
+   "text": "3 hits on a random foe, each adding Shock. Ignores Taunt.",
    "cooldown": 14.3,
    "cast": 1,
    "mp": 200,
@@ -27286,7 +27286,7 @@
    "id": "gale_spear__a",
    "class": "valkyrie",
    "name": "Gale storm",
-   "text": "Three hits on three different foes, each adding Shock. The first ignores Taunt.",
+   "text": "3 hits on 3 different foes, each adding Shock. The first ignores Taunt.",
    "cooldown": 14.3,
    "cast": 1,
    "mp": 200,
@@ -27361,7 +27361,7 @@
    "id": "gale_spear__b",
    "class": "valkyrie",
    "name": "Shieldbreaker",
-   "text": "Three hits on the foe with the most buffs, each lifting one of them. No Shock. Ignores Taunt.",
+   "text": "3 hits on the foe with the most buffs, each lifting one of them. No Shock. Ignores Taunt.",
    "cooldown": 14.3,
    "cast": 1,
    "mp": 200,
@@ -27406,7 +27406,7 @@
    "id": "gale_spear__ap",
    "class": "valkyrie",
    "name": "Gale storm+",
-   "text": "Three hits on three different foes, each adding Shock. The first ignores Taunt.",
+   "text": "3 hits on 3 different foes, each adding Shock. The first ignores Taunt.",
    "cooldown": 14.3,
    "cast": 1,
    "mp": 200,
@@ -27481,7 +27481,7 @@
    "id": "gale_spear__bp",
    "class": "valkyrie",
    "name": "Shieldbreaker+",
-   "text": "Three hits on the foe with the most buffs, each lifting one of them. No Shock. Ignores Taunt.",
+   "text": "3 hits on the foe with the most buffs, each lifting one of them. No Shock. Ignores Taunt.",
    "cooldown": 14.3,
    "cast": 1,
    "mp": 200,
@@ -27923,7 +27923,7 @@
    "id": "skyfall__b",
    "class": "valkyrie",
    "name": "Valkyrie's descent",
-   "text": "A blow on the foe with the least HP, double below a quarter HP. Ignores Taunt.",
+   "text": "A blow on the foe with the least HP, ×2 below 25% HP. Ignores Taunt.",
    "cooldown": 25.6,
    "cast": 3,
    "mp": 325,
@@ -28004,7 +28004,7 @@
    "id": "skyfall__bp",
    "class": "valkyrie",
    "name": "Valkyrie's descent+",
-   "text": "A blow on the foe with the least HP, double below a quarter HP. Ignores Taunt.",
+   "text": "A blow on the foe with the least HP, ×2 below 25% HP. Ignores Taunt.",
    "cooldown": 25.6,
    "cast": 3,
    "mp": 325,
@@ -28071,7 +28071,7 @@
    "id": "war_ballad__a",
    "class": "bard",
    "name": "Lament",
-   "text": "Might to every ally below half HP.",
+   "text": "Might to every ally below 50% HP.",
    "cooldown": 16,
    "cast": 1,
    "mp": 450,
@@ -28139,7 +28139,7 @@
    "id": "war_ballad__ap",
    "class": "bard",
    "name": "Lament+",
-   "text": "Might to every ally below half HP.",
+   "text": "Might to every ally below 50% HP.",
    "cooldown": 16,
    "cast": 1,
    "mp": 450,
@@ -28312,7 +28312,7 @@
    "id": "encore__p",
    "class": "bard",
    "name": "Encore+",
-   "text": "The other ally with the most Attack casts its next ability twice; the second is free.",
+   "text": "The other ally with the most Attack casts its next ability 2 times; the 2nd is free.",
    "cooldown": 24,
    "cast": 1,
    "mp": 450,
@@ -28361,7 +28361,7 @@
    "id": "encore__b",
    "class": "bard",
    "name": "Cadenza",
-   "text": "Its own next three basic attacks come at once.",
+   "text": "Its own next 3 basic attacks come at once.",
    "cooldown": 32.7,
    "cast": 1,
    "mp": 450,
@@ -28403,7 +28403,7 @@
    "id": "encore__bp",
    "class": "bard",
    "name": "Cadenza+",
-   "text": "Its own next three basic attacks come at once.",
+   "text": "Its own next 3 basic attacks come at once.",
    "cooldown": 24,
    "cast": 1,
    "mp": 450,
@@ -29281,7 +29281,7 @@
    "id": "flow__a",
    "class": "monk",
    "name": "Flow state",
-   "text": "Hastes itself. While Hasted, every 5th hit renews the Haste, twice a cast at most.",
+   "text": "Hastes itself. While Hasted, every 5th hit renews the Haste, 2 times a cast at most.",
    "cooldown": 30,
    "cast": 1,
    "mp": 200,
@@ -29322,7 +29322,7 @@
    "id": "flow__ap",
    "class": "monk",
    "name": "Flow state+",
-   "text": "Hastes itself. While Hasted, every 5th hit renews the Haste, twice a cast at most.",
+   "text": "Hastes itself. While Hasted, every 5th hit renews the Haste, 2 times a cast at most.",
    "cooldown": 22,
    "cast": 1,
    "mp": 200,
@@ -29363,7 +29363,7 @@
    "id": "burning_fist__p",
    "class": "monk",
    "name": "Burning fist+",
-   "text": "Three blows on the foe with the most Burn, each adding more.",
+   "text": "3 blows on the foe with the most Burn, each adding more.",
    "cooldown": 14.5,
    "cast": 1,
    "mp": 200,
@@ -29407,7 +29407,7 @@
    "id": "burning_fist__a",
    "class": "monk",
    "name": "Frost fist",
-   "text": "Three blows on the foe with the most Chill, each adding more.",
+   "text": "3 blows on the foe with the most Chill, each adding more.",
    "cooldown": 14.5,
    "cast": 1,
    "mp": 200,
@@ -29451,7 +29451,7 @@
    "id": "burning_fist__b",
    "class": "monk",
    "name": "Fanned flames",
-   "text": "Five lighter blows on the foe with the most Burn, each adding more.",
+   "text": "5 lighter blows on the foe with the most Burn, each adding more.",
    "cooldown": 14.5,
    "cast": 1,
    "mp": 200,
@@ -29495,7 +29495,7 @@
    "id": "burning_fist__ap",
    "class": "monk",
    "name": "Frost fist+",
-   "text": "Three blows on the foe with the most Chill, each adding more.",
+   "text": "3 blows on the foe with the most Chill, each adding more.",
    "cooldown": 14.5,
    "cast": 1,
    "mp": 200,
@@ -29539,7 +29539,7 @@
    "id": "burning_fist__bp",
    "class": "monk",
    "name": "Fanned flames+",
-   "text": "Five lighter blows on the foe with the most Burn, each adding more.",
+   "text": "5 lighter blows on the foe with the most Burn, each adding more.",
    "cooldown": 14.5,
    "cast": 1,
    "mp": 200,
@@ -29827,7 +29827,7 @@
    "id": "vanish__b",
    "class": "assassin",
    "name": "Shadow step",
-   "text": "Goes Hidden. When the Hidden runs out, its next hit deals triple damage.",
+   "text": "Goes Hidden. When the Hidden runs out, its next hit deals ×3 damage.",
    "cooldown": 24.5,
    "cast": 1,
    "mp": 200,
@@ -29885,7 +29885,7 @@
    "id": "vanish__bp",
    "class": "assassin",
    "name": "Shadow step+",
-   "text": "Goes Hidden. When the Hidden runs out, its next hit deals triple damage.",
+   "text": "Goes Hidden. When the Hidden runs out, its next hit deals ×3 damage.",
    "cooldown": 18.4,
    "cast": 1,
    "mp": 200,
@@ -30162,7 +30162,7 @@
    "id": "garrote__b",
    "class": "assassin",
    "name": "Bleed them dry",
-   "text": "Strikes a random foe that isn't Taunting, adding Rot and Bleed; its own Lifesteal doubles for 20 ticks. No Silence.",
+   "text": "Strikes a random foe that isn't Taunting, adding Rot and Bleed; its own Lifesteal ×2 for 20 ticks. No Silence.",
    "cooldown": 31.8,
    "cast": 1,
    "mp": 325,
@@ -30261,7 +30261,7 @@
    "id": "garrote__bp",
    "class": "assassin",
    "name": "Bleed them dry+",
-   "text": "Strikes a random foe that isn't Taunting, adding Rot and Bleed; its own Lifesteal doubles for 20 ticks. No Silence.",
+   "text": "Strikes a random foe that isn't Taunting, adding Rot and Bleed; its own Lifesteal ×2 for 20 ticks. No Silence.",
    "cooldown": 31.8,
    "cast": 1,
    "mp": 200,
@@ -30341,7 +30341,7 @@
    "id": "blood_drain__a",
    "class": "vampire",
    "name": "Savage drain",
-   "text": "Three quick drains on a random foe, Weakening it.",
+   "text": "3 quick drains on a random foe, Weakening it.",
    "cooldown": 13.8,
    "cast": 1,
    "mp": 125,
@@ -30398,7 +30398,7 @@
    "id": "blood_drain__ap",
    "class": "vampire",
    "name": "Savage drain+",
-   "text": "Three quick drains on a random foe, Weakening it.",
+   "text": "3 quick drains on a random foe, Weakening it.",
    "cooldown": 13.8,
    "cast": 1,
    "mp": 125,
@@ -30512,7 +30512,7 @@
    "id": "blood_gift__a",
    "class": "vampire",
    "name": "Blood for mana",
-   "text": "Pays 20% of its max HP to give the other ally with the lowest MP% as much MP, and Clarity. Waits for one under half MP.",
+   "text": "Pays 20% of its max HP to give the other ally with the lowest MP% as much MP, and Clarity. Waits for one under 50% MP.",
    "cooldown": 27.2,
    "cast": 3,
    "mp": 450,
@@ -30624,7 +30624,7 @@
    "id": "blood_gift__ap",
    "class": "vampire",
    "name": "Blood for mana+",
-   "text": "Pays 20% of its max HP to give the other ally with the lowest MP% as much MP, and Clarity. Waits for one under half MP.",
+   "text": "Pays 20% of its max HP to give the other ally with the lowest MP% as much MP, and Clarity. Waits for one under 50% MP.",
    "cooldown": 27.2,
    "cast": 3,
    "mp": 450,
@@ -31553,7 +31553,7 @@
    "id": "frost_lance__b",
    "class": "frostweaver",
    "name": "Icicles",
-   "text": "Lances at the three foes with the most Chill, each adding more.",
+   "text": "Lances at the 3 foes with the most Chill, each adding more.",
    "cooldown": 15.7,
    "cast": 3,
    "mp": 450,
@@ -31643,7 +31643,7 @@
    "id": "frost_lance__bp",
    "class": "frostweaver",
    "name": "Icicles+",
-   "text": "Lances at the three foes with the most Chill, each adding more.",
+   "text": "Lances at the 3 foes with the most Chill, each adding more.",
    "cooldown": 15.7,
    "cast": 3,
    "mp": 450,
@@ -32041,7 +32041,7 @@
    "id": "chain_lightning__p",
    "class": "stormcaller",
    "name": "Chain lightning+",
-   "text": "Lightning at a random foe and up to three others, adding Shock.",
+   "text": "Lightning at a random foe and up to 3 others, adding Shock.",
    "cooldown": 14.2,
    "cast": 1,
    "mp": 450,
@@ -32108,7 +32108,7 @@
    "id": "chain_lightning__a",
    "class": "stormcaller",
    "name": "Ball lightning",
-   "text": "Four strikes at the foe with the least HP, the first adding Shock. If it falls, the rest go to the next.",
+   "text": "4 strikes at the foe with the least HP, the first adding Shock. If it falls, the rest go to the next.",
    "cooldown": 14.2,
    "cast": 1,
    "mp": 450,
@@ -32200,7 +32200,7 @@
    "id": "chain_lightning__b",
    "class": "stormcaller",
    "name": "Recharge",
-   "text": "Lightning at a random foe and up to three others, adding Shock. Regains MP for each foe hit: four repay the cast.",
+   "text": "Lightning at a random foe and up to 3 others, adding Shock. Regains MP for each foe hit: 4 repay the cast.",
    "cooldown": 14.2,
    "cast": 1,
    "mp": 450,
@@ -32279,7 +32279,7 @@
    "id": "chain_lightning__ap",
    "class": "stormcaller",
    "name": "Ball lightning+",
-   "text": "Four strikes at the foe with the least HP, the first adding Shock. If it falls, the rest go to the next.",
+   "text": "4 strikes at the foe with the least HP, the first adding Shock. If it falls, the rest go to the next.",
    "cooldown": 14.2,
    "cast": 1,
    "mp": 450,
@@ -32371,7 +32371,7 @@
    "id": "chain_lightning__bp",
    "class": "stormcaller",
    "name": "Recharge+",
-   "text": "Lightning at a random foe and up to three others, adding Shock. Regains MP for each foe hit: four repay the cast.",
+   "text": "Lightning at a random foe and up to 3 others, adding Shock. Regains MP for each foe hit: 4 repay the cast.",
    "cooldown": 14.2,
    "cast": 1,
    "mp": 450,
@@ -32488,7 +32488,7 @@
    "id": "thunderstorm__b",
    "class": "stormcaller",
    "name": "Storm's eye",
-   "text": "For 20 ticks, every ally's basic attacks add triple Shock to the foe with the most Shock.",
+   "text": "For 20 ticks, every ally's basic attacks add ×3 Shock to the foe with the most Shock.",
    "cooldown": 27.9,
    "cast": 3,
    "mp": 650,
@@ -32526,7 +32526,7 @@
    "id": "thunderstorm__bp",
    "class": "stormcaller",
    "name": "Storm's eye+",
-   "text": "For 20 ticks, every ally's basic attacks add triple Shock to the foe with the most Shock. +40% Shock.",
+   "text": "For 20 ticks, every ally's basic attacks add ×3 Shock to the foe with the most Shock. +40% Shock.",
    "cooldown": 27.9,
    "cast": 3,
    "mp": 650,
@@ -32561,7 +32561,7 @@
    "id": "static_charge__a",
    "class": "stormcaller",
    "name": "Overcharge",
-   "text": "Its basic attacks come 50% faster for 20 ticks, and its next three abilities in that time cost no MP.",
+   "text": "Its basic attacks come 50% faster for 20 ticks, and its next 3 abilities in that time cost no MP.",
    "cooldown": 31.1,
    "cast": 1,
    "mp": 650,
@@ -32597,7 +32597,7 @@
    "id": "static_charge__ap",
    "class": "stormcaller",
    "name": "Overcharge+",
-   "text": "Its basic attacks come 50% faster for 20 ticks, and its next three abilities in that time cost no MP.",
+   "text": "Its basic attacks come 50% faster for 20 ticks, and its next 3 abilities in that time cost no MP.",
    "cooldown": 22.8,
    "cast": 1,
    "mp": 650,
@@ -33156,7 +33156,7 @@
    "power": "Costs less MP.",
    "a": {
     "name": "Rally the well",
-    "text": "Clarity to every ally below half MP; waits for one. No Taunt."
+    "text": "Clarity to every ally below 50% MP; waits for one. No Taunt."
    },
    "b": {
     "name": "Hold the line",
@@ -33184,11 +33184,11 @@
    "power": "At 40% HP, not 30%.",
    "a": {
     "name": "Shared rites",
-    "text": "While any ally is below 30% HP: cooldowns halved."
+    "text": "While any ally is below 30% HP: cooldowns 50% shorter."
    },
    "b": {
     "name": "Rite of passage",
-    "text": "Below 30% HP, and for 20 ticks after an ally falls: cooldowns halved."
+    "text": "Below 30% HP, and for 20 ticks after an ally falls: cooldowns 50% shorter."
    }
   },
   {
@@ -33226,7 +33226,7 @@
    "power": "Raises at 70% HP, not 50%.",
    "a": {
     "name": "Martyr's raise",
-    "text": "Pays half its HP to raise a random fallen ally with that much."
+    "text": "Pays 50% of its HP to raise a random fallen ally with that much."
    },
    "b": {
     "name": "Ward of life",
@@ -33286,7 +33286,7 @@
    },
    "b": {
     "name": "Gutting arrow",
-    "text": "An arrow at the foe with the least HP: +50% below half HP, double below a quarter."
+    "text": "An arrow at the foe with the least HP: +50% below 50% HP, ×2 below 25%."
    }
   },
   {
@@ -33310,7 +33310,7 @@
    "power": "Shorter cooldown.",
    "a": {
     "name": "Overgrowth",
-    "text": "Taunts twice in a row, with Thorns doubled throughout. No Guard."
+    "text": "Taunts 2 times in a row, with Thorns ×2 throughout. No Guard."
    },
    "b": {
     "name": "Grove",
@@ -33349,14 +33349,14 @@
    "id": "phalanx",
    "class": "hoplite",
    "kind": "passive",
-   "power": "Basic attacks deal ×2.4, not double.",
+   "power": "Basic attacks deal ×2.4, not ×2.",
    "a": {
     "name": "Opening thrust",
-    "text": "Basic attacks half as often, for double; the first each fight comes at once, for triple."
+    "text": "Basic attacks 50% as often, for ×2; the first each fight comes at once, for ×3."
    },
    "b": {
     "name": "Shieldbearer",
-    "text": "Basic attacks half as often, for double; Defense adds to them half as much as Attack."
+    "text": "Basic attacks 50% as often, for ×2; Defense adds to them 50% as much as Attack."
    }
   },
   {
@@ -33412,7 +33412,7 @@
    },
    "b": {
     "name": "Verdict",
-    "text": "Hits deal +50% to buffed or debuffed foes, with triple Crit chance."
+    "text": "Hits deal +50% to buffed or debuffed foes, with ×3 Crit chance."
    }
   },
   {
@@ -33464,7 +33464,7 @@
    "power": "Shield +40%.",
    "a": {
     "name": "Chooser of the slain",
-    "text": "No Shield. Hits deal +20% to foes below half HP."
+    "text": "No Shield. Hits deal +20% to foes below 50% HP."
    },
    "b": {
     "name": "Shield-sister",
@@ -33478,11 +33478,11 @@
    "power": "+40% damage.",
    "a": {
     "name": "Gale storm",
-    "text": "Three hits on three different foes, each adding Shock. The first ignores Taunt."
+    "text": "3 hits on 3 different foes, each adding Shock. The first ignores Taunt."
    },
    "b": {
     "name": "Shieldbreaker",
-    "text": "Three hits on the foe with the most buffs, each lifting one of them. No Shock. Ignores Taunt."
+    "text": "3 hits on the foe with the most buffs, each lifting one of them. No Shock. Ignores Taunt."
    }
   },
   {
@@ -33510,7 +33510,7 @@
    },
    "b": {
     "name": "Valkyrie's descent",
-    "text": "A blow on the foe with the least HP, double below a quarter HP. Ignores Taunt."
+    "text": "A blow on the foe with the least HP, ×2 below 25% HP. Ignores Taunt."
    }
   },
   {
@@ -33534,7 +33534,7 @@
    "power": "+40% Might.",
    "a": {
     "name": "Lament",
-    "text": "Might to every ally below half HP."
+    "text": "Might to every ally below 50% HP."
    },
    "b": {
     "name": "Rousing chorus",
@@ -33566,7 +33566,7 @@
    },
    "b": {
     "name": "Cadenza",
-    "text": "Its own next three basic attacks come at once."
+    "text": "Its own next 3 basic attacks come at once."
    }
   },
   {
@@ -33646,7 +33646,7 @@
    "power": "Shorter cooldown.",
    "a": {
     "name": "Flow state",
-    "text": "Hastes itself. While Hasted, every 5th hit renews the Haste, twice a cast at most."
+    "text": "Hastes itself. While Hasted, every 5th hit renews the Haste, 2 times a cast at most."
    },
    "b": {
     "name": "Stillness of mind",
@@ -33660,11 +33660,11 @@
    "power": "+40% stacks.",
    "a": {
     "name": "Frost fist",
-    "text": "Three blows on the foe with the most Chill, each adding more."
+    "text": "3 blows on the foe with the most Chill, each adding more."
    },
    "b": {
     "name": "Fanned flames",
-    "text": "Five lighter blows on the foe with the most Burn, each adding more."
+    "text": "5 lighter blows on the foe with the most Burn, each adding more."
    }
   },
   {
@@ -33706,7 +33706,7 @@
    },
    "b": {
     "name": "Shadow step",
-    "text": "Goes Hidden. When the Hidden runs out, its next hit deals triple damage."
+    "text": "Goes Hidden. When the Hidden runs out, its next hit deals ×3 damage."
    }
   },
   {
@@ -33734,21 +33734,21 @@
    },
    "b": {
     "name": "Bleed them dry",
-    "text": "Strikes a random foe that isn't Taunting, adding Rot and Bleed; its own Lifesteal doubles for 20 ticks. No Silence."
+    "text": "Strikes a random foe that isn't Taunting, adding Rot and Bleed; its own Lifesteal ×2 for 20 ticks. No Silence."
    }
   },
   {
    "id": "bloodlust",
    "class": "vampire",
    "kind": "passive",
-   "power": "Lifesteal ×2.5 instead of doubled.",
+   "power": "Lifesteal ×2.5 instead of ×2.",
    "a": {
     "name": "Shared feast",
-    "text": "Below half HP: Lifesteal doubled, and each hit heals the other ally with the lowest HP% as much as it drank."
+    "text": "Below 50% HP: Lifesteal ×2, and each hit heals the other ally with the lowest HP% as much as it drank."
    },
    "b": {
     "name": "Shepherd's thirst",
-    "text": "While any ally is below half HP: Lifesteal doubled."
+    "text": "While any ally is below 50% HP: Lifesteal ×2."
    }
   },
   {
@@ -33758,7 +33758,7 @@
    "power": "+40% damage.",
    "a": {
     "name": "Savage drain",
-    "text": "Three quick drains on a random foe, Weakening it."
+    "text": "3 quick drains on a random foe, Weakening it."
    },
    "b": {
     "name": "Drain the well",
@@ -33772,7 +33772,7 @@
    "power": "Gives 40% more than it pays.",
    "a": {
     "name": "Blood for mana",
-    "text": "Pays 20% of its max HP to give the other ally with the lowest MP% as much MP, and Clarity. Waits for one under half MP."
+    "text": "Pays 20% of its max HP to give the other ally with the lowest MP% as much MP, and Clarity. Waits for one under 50% MP."
    },
    "b": {
     "name": "Lifeblood",
@@ -33874,7 +33874,7 @@
    },
    "b": {
     "name": "Icicles",
-    "text": "Lances at the three foes with the most Chill, each adding more."
+    "text": "Lances at the 3 foes with the most Chill, each adding more."
    }
   },
   {
@@ -33912,11 +33912,11 @@
    "power": "+40% Shock.",
    "a": {
     "name": "Forked arc",
-    "text": "Basic attacks also hit two other random foes; all three gain Shock."
+    "text": "Basic attacks also hit 2 other random foes; all 3 gain Shock."
    },
    "b": {
     "name": "Grounded arc",
-    "text": "Basic attacks also hit a second random foe; both gain Sunder in place of Shock."
+    "text": "Basic attacks also hit a 2nd random foe; both gain Sunder in place of Shock."
    }
   },
   {
@@ -33926,11 +33926,11 @@
    "power": "+40% damage.",
    "a": {
     "name": "Ball lightning",
-    "text": "Four strikes at the foe with the least HP, the first adding Shock. If it falls, the rest go to the next."
+    "text": "4 strikes at the foe with the least HP, the first adding Shock. If it falls, the rest go to the next."
    },
    "b": {
     "name": "Recharge",
-    "text": "Lightning at a random foe and up to three others, adding Shock. Regains MP for each foe hit: four repay the cast."
+    "text": "Lightning at a random foe and up to 3 others, adding Shock. Regains MP for each foe hit: 4 repay the cast."
    }
   },
   {
@@ -33944,7 +33944,7 @@
    },
    "b": {
     "name": "Storm's eye",
-    "text": "For 20 ticks, every ally's basic attacks add triple Shock to the foe with the most Shock."
+    "text": "For 20 ticks, every ally's basic attacks add ×3 Shock to the foe with the most Shock."
    }
   },
   {
@@ -33954,7 +33954,7 @@
    "power": "Shorter cooldown.",
    "a": {
     "name": "Overcharge",
-    "text": "Its basic attacks come 50% faster for 20 ticks, and its next three abilities in that time cost no MP."
+    "text": "Its basic attacks come 50% faster for 20 ticks, and its next 3 abilities in that time cost no MP."
    },
    "b": {
     "name": "Storm shield",
@@ -33968,7 +33968,7 @@
    "power": "+25% Crit damage while its Shield holds.",
    "a": {
     "name": "Stunning crits",
-    "text": "While its Shield holds: Crit chance doubled, and crits Stun."
+    "text": "While its Shield holds: Crit chance ×2, and crits Stun."
    },
    "b": {
     "name": "Bare rock",
@@ -34388,7 +34388,7 @@
   {
    "id": "second_thrust",
    "name": "Second thrust",
-   "text": "Every 3rd basic attack strikes twice.",
+   "text": "Every 3rd basic attack strikes 2 times.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -34810,7 +34810,7 @@
   {
    "id": "gorged_claws",
    "name": "Gorged claws",
-   "text": "Below half HP: basic attacks come 33% faster.",
+   "text": "Below 50% HP: basic attacks come 33% faster.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -34882,7 +34882,7 @@
   {
    "id": "still_hand",
    "name": "Still hand",
-   "text": "Basic attacks come half as often, and each that lands pushes the foe's next basic attack back by a full wait.",
+   "text": "Basic attacks come 50% as often, and each that lands pushes the foe's next basic attack back by a full wait.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -34924,7 +34924,7 @@
   {
    "id": "forked_knuckles",
    "name": "Forked knuckles",
-   "text": "Basic attacks also hit a second random foe for half, effects included. Each hit past the target restores 5% of max MP.",
+   "text": "Basic attacks also hit a 2nd random foe for 50%, effects included. Each hit past the target restores 5% of max MP.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -34966,7 +34966,7 @@
   {
    "id": "flurry_wraps",
    "name": "Flurry wraps",
-   "text": "Extra strikes roll Double strike again, up to two more, each 20% weaker.",
+   "text": "Extra strikes roll Double strike again, up to 2 more, each 20% weaker.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
@@ -35134,7 +35134,7 @@
   {
    "id": "hecklers_wand",
    "name": "Heckler's wand",
-   "text": "Basic attacks on a foe winding up deal triple.",
+   "text": "Basic attacks on a foe winding up deal ×3.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -35486,7 +35486,7 @@
   {
    "id": "drawn_steel",
    "name": "Drawn steel",
-   "text": "The first hit on each foe deals double.",
+   "text": "The first hit on each foe deals ×2.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -35714,7 +35714,7 @@
   {
    "id": "kingmaker",
    "name": "Kingmaker",
-   "text": "At fight start: the other ally with the least Attack gains the wearer's Attack, and the wearer keeps only a third.",
+   "text": "At fight start: the other ally with the least Attack gains the wearer's Attack, and the wearer keeps only 33%.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
@@ -35856,7 +35856,7 @@
   {
    "id": "avengers_spear",
    "name": "Avenger's spear",
-   "text": "When another ally drops below half HP: next basic attack comes at once, at the foe that last hit it.",
+   "text": "When another ally drops below 50% HP: next basic attack comes at once, at the foe that last hit it.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -35924,7 +35924,7 @@
   {
    "id": "hunting_spear",
    "name": "Hunting spear",
-   "text": "Hits on a foe below half HP land twice.",
+   "text": "Hits on a foe below 50% HP land 2 times.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -36164,7 +36164,7 @@
   {
    "id": "hungry_axe",
    "name": "Hungry axe",
-   "text": "Lifesteal doubles on hits against a foe below half HP.",
+   "text": "Lifesteal ×2 on hits against a foe below 50% HP.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -36224,7 +36224,7 @@
   {
    "id": "executioners_axe",
    "name": "Executioner's axe",
-   "text": "Hits on a foe below 25% HP deal double.",
+   "text": "Hits on a foe below 25% HP deal ×2.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -36326,7 +36326,7 @@
   {
    "id": "the_red_feast",
    "name": "The Red Feast",
-   "text": "Below half HP: hits deal +50% and Lifesteal doubles. After a won fight, heals up to half HP.",
+   "text": "Below 50% HP: hits deal +50% and Lifesteal ×2. After a won fight, heals up to 50% HP.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
@@ -36360,7 +36360,7 @@
   {
    "id": "headsmans_axe",
    "name": "Headsman's axe",
-   "text": "Basic attacks come half as often and deal double. On a kill: next basic attack comes at once.",
+   "text": "Basic attacks come 50% as often and deal ×2. On a kill: next basic attack comes at once.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
@@ -36638,7 +36638,7 @@
   {
    "id": "executioners_longbow",
    "name": "Executioner's longbow",
-   "text": "Basic attacks ignore Taunt and deal more as the target's HP falls: +25% below 75%, +50% below half, +75% below 25%, double below 10%.",
+   "text": "Basic attacks ignore Taunt and deal more as the target's HP falls: +25% below 75%, +50% below 50%, +75% below 25%, ×2 below 10%.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
@@ -36840,7 +36840,7 @@
   {
    "id": "winters_chain",
    "name": "Winter's chain",
-   "text": "When a foe's Chill shatters, the other foe with the most Chill gains half of it.",
+   "text": "When a foe's Chill shatters, the other foe with the most Chill gains 50% of it.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -36916,7 +36916,7 @@
   {
    "id": "spellbinder",
    "name": "Spellbinder",
-   "text": "After each cast: next basic attack deals double and, when it lands, refunds half that cast's MP.",
+   "text": "After each cast: next basic attack deals ×2 and, when it lands, refunds 50% of that cast's MP.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -37252,7 +37252,7 @@
   {
    "id": "cornerstone_hammer",
    "name": "Cornerstone hammer",
-   "text": "Basic attacks deal extra damage equal to half of all Shield the party holds.",
+   "text": "Basic attacks deal extra damage equal to 50% of all Shield the party holds.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
@@ -37458,7 +37458,7 @@
   {
    "id": "saints_mace",
    "name": "Saint's mace",
-   "text": "Each heal it gives: the ally's next hit deals extra damage equal to half the heal, adding up.",
+   "text": "Each heal it gives: the ally's next hit deals extra damage equal to 50% of the heal, adding up.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -37500,7 +37500,7 @@
   {
    "id": "anchorites_mace",
    "name": "Anchorite's mace",
-   "text": "Heals it gives the ally with the most Aggro are doubled.",
+   "text": "Heals it gives the ally with the most Aggro: ×2.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -37542,7 +37542,7 @@
   {
    "id": "martyrs_mace",
    "name": "Martyr's mace",
-   "text": "Basic attacks deal +50% below 70% HP, double below half, ×2.5 below 33% and triple below 10%. Below 33%, they heal it for the damage dealt.",
+   "text": "Basic attacks deal +50% below 70% HP, ×2 below 50%, ×2.5 below 33% and ×3 below 10%. Below 33%, they heal it for the damage dealt.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
@@ -37688,7 +37688,7 @@
   {
    "id": "shepherds_staff",
    "name": "Shepherd's staff",
-   "text": "Each cast gives the ally with the lowest MP% half its MP cost.",
+   "text": "Each cast gives the ally with the lowest MP% 50% of its MP cost.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -37840,7 +37840,7 @@
   {
    "id": "evensong_staff",
    "name": "Evensong staff",
-   "text": "Every second ability it casts has no wind-up.",
+   "text": "Every 2nd ability it casts has no wind-up.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -37886,7 +37886,7 @@
   {
    "id": "staff_of_echoes",
    "name": "Staff of echoes",
-   "text": "Abilities are cast twice, the second at once and aimed anew. Each cast pays its MP.",
+   "text": "Abilities are cast 2 times, the 2nd at once and aimed anew. Each cast pays its MP.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
@@ -38024,7 +38024,7 @@
   {
    "id": "giantsbane",
    "name": "Giantsbane",
-   "text": "Basic attacks deal +50% to a foe above half HP.",
+   "text": "Basic attacks deal +50% to a foe above 50% HP.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -38100,7 +38100,7 @@
   {
    "id": "icebreaker",
    "name": "Icebreaker",
-   "text": "Hits on a Stunned foe deal double.",
+   "text": "Hits on a Stunned foe deal ×2.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -38222,7 +38222,7 @@
   {
    "id": "worldbreaker",
    "name": "Worldbreaker",
-   "text": "Basic attacks come half as often, deal triple and Stun their target.",
+   "text": "Basic attacks come 50% as often, deal ×3 and Stun their target.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
@@ -38264,7 +38264,7 @@
   {
    "id": "twinfall",
    "name": "Twinfall",
-   "text": "Every hit lands again a tick later, for half the damage.",
+   "text": "Every hit lands again a tick later, for 50% of the damage.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
@@ -38366,7 +38366,7 @@
   {
    "id": "portcullis",
    "name": "Portcullis",
-   "text": "Above half HP: Aggro +25.",
+   "text": "Above 50% HP: Aggro +25.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -38412,7 +38412,7 @@
   {
    "id": "holdfast",
    "name": "Holdfast",
-   "text": "First drop below half HP each fight: Guarded.",
+   "text": "First drop below 50% HP each fight: Guarded.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -38570,7 +38570,7 @@
   {
    "id": "last_bastion",
    "name": "Last bastion",
-   "text": "Once a fight, a blow that would knock it out leaves it at 1 HP and Guarded. Until healed, hits deal double.",
+   "text": "Once a fight, a blow that would knock it out leaves it at 1 HP and Guarded. Until healed, hits deal ×2.",
    "slot": "armor",
    "tier": "powerful",
    "source": "unlock",
@@ -38726,7 +38726,7 @@
   {
    "id": "bloodsworn_mail",
    "name": "Bloodsworn mail",
-   "text": "Below half HP: +20% Lifesteal.",
+   "text": "Below 50% HP: +20% Lifesteal.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -38831,7 +38831,7 @@
   {
    "id": "sanguine_mail",
    "name": "Sanguine mail",
-   "text": "Healing on it: doubled below half HP, halved otherwise.",
+   "text": "Healing on it: ×2 below 50% HP, −50% otherwise.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -39041,7 +39041,7 @@
   {
    "id": "mottled_hide",
    "name": "Mottled hide",
-   "text": "Below half HP: Aggro −25.",
+   "text": "Below 50% HP: Aggro −25.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -39114,7 +39114,7 @@
   {
    "id": "shadow_mantle",
    "name": "Shadow mantle",
-   "text": "While Hidden: hits deal double.",
+   "text": "While Hidden: hits deal ×2.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -39222,7 +39222,7 @@
   {
    "id": "windrunners_garb",
    "name": "Windrunner's garb",
-   "text": "On a dodge: 3 Heat (5% faster each, up to 10). When hit: loses half its Heat.",
+   "text": "On a dodge: 3 Heat (5% faster each, up to 10). When hit: loses 50% of its Heat.",
    "slot": "armor",
    "tier": "powerful",
    "source": "unlock",
@@ -39625,7 +39625,7 @@
   {
    "id": "motley_robe",
    "name": "Motley robe",
-   "text": "Abilities cast in random order, at half MP cost.",
+   "text": "Abilities cast in random order, at 50% MP cost.",
    "slot": "armor",
    "tier": "powerful",
    "source": "unlock",
@@ -39946,7 +39946,7 @@
   {
    "id": "millstone",
    "name": "Millstone",
-   "text": "Basic attacks come half as often and deal ×2.25 damage.",
+   "text": "Basic attacks come 50% as often and deal ×2.25 damage.",
    "slot": "amulet",
    "tier": "ordinary",
    "source": "drop",
@@ -39998,7 +39998,7 @@
   {
    "id": "clear_headed_charm",
    "name": "Clear-headed charm",
-   "text": "Below half MP: Clarity every 22 ticks, starting at once.",
+   "text": "Below 50% MP: Clarity every 22 ticks, starting at once.",
    "slot": "amulet",
    "tier": "ordinary",
    "source": "drop",
@@ -40020,7 +40020,7 @@
   {
    "id": "shatterstone_charm",
    "name": "Shatterstone charm",
-   "text": "When a foe breaks its Shield: sends back double the most it held.",
+   "text": "When a foe breaks its Shield: sends back 200% of the most it held.",
    "slot": "amulet",
    "tier": "ordinary",
    "source": "drop",
@@ -40146,7 +40146,7 @@
   {
    "id": "halved_heart",
    "name": "Halved heart",
-   "text": "Starts each fight at half HP and can't be healed above it. Counts as below half. Hits deal +50%.",
+   "text": "Starts each fight at 50% HP and can't be healed above it. Counts as below 50%. Hits deal +50%.",
    "slot": "amulet",
    "tier": "ordinary",
    "source": "drop",
@@ -40434,7 +40434,7 @@
   {
    "id": "ready_stance",
    "name": "Ready stance",
-   "text": "Abilities start each fight at least half charged. Cooldowns 20% longer.",
+   "text": "Abilities start each fight at least 50% charged. Cooldowns 20% longer.",
    "slot": "amulet",
    "tier": "powerful",
    "source": "unlock",
@@ -40464,7 +40464,7 @@
   {
    "id": "gamblers_coin",
    "name": "Gambler's coin",
-   "text": "Crit chance is 50%. Hits that don't crit deal half.",
+   "text": "Crit chance is 50%. Hits that don't crit deal −50%.",
    "slot": "amulet",
    "tier": "powerful",
    "source": "unlock",
@@ -40560,7 +40560,7 @@
   {
    "id": "salted_kite",
    "name": "Salted kite",
-   "text": "Takes half damage from statuses.",
+   "text": "Takes −50% damage from statuses.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -40683,7 +40683,7 @@
   {
    "id": "monolith_shield",
    "name": "Monolith shield",
-   "text": "Damaging abilities come round half as often and deal double.",
+   "text": "Damaging abilities come round 50% as often and deal ×2.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -40877,7 +40877,7 @@
   {
    "id": "hoplon",
    "name": "Hoplon",
-   "text": "While it holds Aegis: basic attacks deal double.",
+   "text": "While it holds Aegis: basic attacks deal ×2.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -41075,7 +41075,7 @@
   {
    "id": "watch_horn",
    "name": "Watch horn",
-   "text": "Taunts when an ally drops below half HP.",
+   "text": "Taunts when an ally drops below 50% HP.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -41152,7 +41152,7 @@
   {
    "id": "alarum",
    "name": "Alarum",
-   "text": "When a foe hits another ally below half HP: Fixates that foe.",
+   "text": "When a foe hits another ally below 50% HP: Fixates that foe.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -41300,7 +41300,7 @@
   {
    "id": "bear_fetish",
    "name": "Bear fetish",
-   "text": "Guards any ally that drops below half HP.",
+   "text": "Guards any ally that drops below 50% HP.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -41571,7 +41571,7 @@
   {
    "id": "phylactery",
    "name": "Phylactery",
-   "text": "Its healing past full, Regen included, is kept, and given to the next ally who drops below half HP.",
+   "text": "Its healing past full, Regen included, is kept, and given to the next ally who drops below 50% HP.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -41630,7 +41630,7 @@
   {
    "id": "heart_of_the_saint",
    "name": "Heart of the saint",
-   "text": "Healing abilities cost HP instead of MP, and heal double.",
+   "text": "Healing abilities cost HP instead of MP, and heal ×2.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -41751,7 +41751,7 @@
   {
    "id": "dazzling_lantern",
    "name": "Dazzling lantern",
-   "text": "At fight start: Weakens the two foes with the most Attack.",
+   "text": "At fight start: Weakens the 2 foes with the most Attack.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -41801,7 +41801,7 @@
   {
    "id": "shuttered_lantern",
    "name": "Shuttered lantern",
-   "text": "Takes half damage while winding up.",
+   "text": "Takes −50% damage while winding up.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -42022,7 +42022,7 @@
   {
    "id": "twice_told_tome",
    "name": "Twice-told tome",
-   "text": "Every second ability it casts is cast again at once, free.",
+   "text": "Every 2nd ability it casts is cast again at once, free.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -42161,7 +42161,7 @@
   {
    "id": "frozen_tome",
    "name": "Frozen tome",
-   "text": "Each shatter halves the wait on every ally's first-slotted ability.",
+   "text": "Each shatter cuts the wait on every ally's first-slotted ability by 50%.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -42553,7 +42553,7 @@
   {
    "id": "idol_of_binding",
    "name": "Idol of binding",
-   "text": "Foes it Weakens are Slowed too. Hits on them deal double.",
+   "text": "Foes it Weakens are Slowed too. Hits on them deal ×2.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -42603,7 +42603,7 @@
   {
    "id": "idol_of_stillness",
    "name": "Idol of stillness",
-   "text": "Never makes a basic attack. Defense doubled.",
+   "text": "Never makes a basic attack. Defense ×2.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -42743,7 +42743,7 @@
   {
    "id": "blood_vial",
    "name": "Blood vial",
-   "text": "Abilities cost half their MP, plus HP equal to their full cost.",
+   "text": "Abilities cost 50% of their MP, plus HP equal to their full cost.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -42828,7 +42828,7 @@
   {
    "id": "heartsblood",
    "name": "Heartsblood",
-   "text": "Its Lifesteal also heals every other ally for half, even past full.",
+   "text": "Its Lifesteal also heals every other ally for 50%, even past full.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -43061,7 +43061,7 @@
   {
    "id": "the_kings_head",
    "name": "The king's head",
-   "text": "On a kill: every ally's Crit chance doubles for 20 ticks (up to 80%).",
+   "text": "On a kill: every ally's Crit chance ×2 for 20 ticks (up to 80%).",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -43314,7 +43314,7 @@
   {
    "id": "feathered_cloak",
    "name": "Feathered cloak",
-   "text": "Once a fight, below half HP: goes Hidden.",
+   "text": "Once a fight, below 50% HP: goes Hidden.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -43395,7 +43395,7 @@
   {
    "id": "tempest_cloak",
    "name": "Tempest cloak",
-   "text": "On a dodge: next basic attack comes at once and lands twice.",
+   "text": "On a dodge: next basic attack comes at once and lands 2 times.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -43472,7 +43472,7 @@
   {
    "id": "banner_of_the_last_keep",
    "name": "Banner of the last keep",
-   "text": "Max HP doubled. Healing on it is halved.",
+   "text": "Max HP ×2. Healing on it −50%.",
    "slot": "armor",
    "tier": "powerful",
    "source": "unlock",
@@ -43583,7 +43583,7 @@
   {
    "id": "the_last_shove",
    "name": "The last shove",
-   "text": "Othismos comes round twice as often, with no wind-up. Basic attacks come half as often again.",
+   "text": "Othismos comes round 100% faster, with no wind-up. Basic attacks come 50% as often again.",
    "slot": "offhand",
    "tier": "powerful",
    "source": "unlock",
@@ -43611,7 +43611,7 @@
   {
    "id": "scales_of_the_judge",
    "name": "Scales of the judge",
-   "text": "Hits deal triple damage to a foe with a buff or a debuff, and half to a foe with neither.",
+   "text": "Hits deal ×3 damage to a foe with a buff or a debuff, and −50% to a foe with neither.",
    "slot": "amulet",
    "tier": "powerful",
    "source": "unlock",
@@ -43744,7 +43744,7 @@
   {
    "id": "thousand_palm_wraps",
    "name": "Thousand-palm wraps",
-   "text": "Every basic attack strikes twice.",
+   "text": "Every basic attack strikes 2 times.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
@@ -43971,7 +43971,7 @@
   {
    "id": "neutral",
    "name": "Neutral",
-   "text": "Three empty seats.",
+   "text": "3 empty seats.",
    "rarity": "common",
    "source": "starter",
    "positions": [
@@ -44011,7 +44011,7 @@
     {
      "id": "hammer",
      "name": "Hammer",
-     "text": "Basic attacks come half as often, for 2.25× damage.",
+     "text": "Basic attacks come 50% as often, for ×2.25 damage.",
      "layout": {
       "line": "front",
       "column": 0
@@ -44222,7 +44222,7 @@
     {
      "id": "squall_a",
      "name": "Squall",
-     "text": "Basic attacks add 2 Shock and also hit a second random foe for half, Shock included.",
+     "text": "Basic attacks add 2 Shock and also hit a 2nd random foe for 50%, Shock included.",
      "layout": {
       "line": "front",
       "column": 0
@@ -44234,7 +44234,7 @@
     {
      "id": "squall_b",
      "name": "Squall",
-     "text": "Basic attacks add 2 Shock and also hit a second random foe for half, Shock included.",
+     "text": "Basic attacks add 2 Shock and also hit a 2nd random foe for 50%, Shock included.",
      "layout": {
       "line": "middle",
       "column": 1
@@ -44497,7 +44497,7 @@
     {
      "id": "wall",
      "name": "Wall",
-     "text": "Draws far more. Defense up two steps.",
+     "text": "Draws far more. Defense up 2 steps.",
      "layout": {
       "line": "front",
       "column": 0
@@ -44987,7 +44987,7 @@
     {
      "id": "glass",
      "name": "Glass",
-     "text": "Deals and takes double. Draws less.",
+     "text": "Deals and takes ×2. Draws less.",
      "layout": {
       "line": "front",
       "column": 0
@@ -45116,7 +45116,7 @@
     {
      "id": "lifeline",
      "name": "Lifeline",
-     "text": "Takes a third of the damage the Anchor takes.",
+     "text": "Takes 50% of the damage the Anchor takes.",
      "layout": {
       "line": "middle",
       "column": 1
@@ -45128,7 +45128,7 @@
     {
      "id": "free",
      "name": "Free",
-     "text": "Attack up two steps.",
+     "text": "Attack up 2 steps.",
      "layout": {
       "line": "back",
       "column": 2
@@ -45287,7 +45287,7 @@
     {
      "id": "peak",
      "name": "Peak",
-     "text": "While every ally holds a Shield, each hit lands twice.",
+     "text": "While every ally holds a Shield, each hit lands 2 times.",
      "layout": {
       "line": "front",
       "column": 0
@@ -45451,7 +45451,7 @@
   {
    "id": "the_hundred_hands",
    "name": "The hundred hands",
-   "text": "A blur of small blows. The party: Every ally's basic attacks come twice as often, for 45% of the damage.",
+   "text": "A blur of small blows. The party: Every ally's basic attacks come 100% faster, for 45% of the damage.",
    "rarity": "legendary",
    "source": "unlock",
    "positions": [
@@ -45755,7 +45755,7 @@
     {
      "id": "odd_one_out",
      "name": "Odd one out",
-     "text": "Attack up two steps.",
+     "text": "Attack up 2 steps.",
      "layout": {
       "line": "back",
       "column": 2
@@ -48638,7 +48638,7 @@
      {
       "id": "take",
       "label": "TAKE THEM IN",
-      "text": "They join you, hurt: a third of their HP.",
+      "text": "They join you, hurt: 33% of their HP.",
       "do": [
        {
         "op": "recruit",
@@ -48649,7 +48649,7 @@
      {
       "id": "lesson",
       "label": "A LESSON",
-      "text": "Patched up, they show yours a few tricks before they go: three members each learn an ability or train one.",
+      "text": "Patched up, they show yours a few tricks before they go: 3 members each learn an ability or train one.",
       "do": [
        {
         "op": "train",
@@ -48723,7 +48723,7 @@
      {
       "id": "bet",
       "label": "BET 40 GOLD",
-      "text": "Half the time, win 100 back.",
+      "text": "50% of the time, win 100 back.",
       "gold": 40,
       "do": [
        {
@@ -48883,7 +48883,7 @@
      {
       "id": "open",
       "label": "OPEN IT",
-      "text": "Two times in three, a legendary piece. Otherwise it bites: a hard fight.",
+      "text": "67% of the time, a legendary piece. Otherwise it bites: a hard fight.",
       "do": [
        {
         "op": "chance",
@@ -48929,7 +48929,7 @@
      {
       "id": "search",
       "label": "SEARCH THE PACKS",
-      "text": "20 gold, and a potion, a tonic or a phoenix feather (with someone down, the feather raises them at half HP).",
+      "text": "20 gold, and a potion, a tonic or a phoenix feather (with someone down, the feather raises them at 50% HP).",
       "do": [
        {
         "op": "gold",
@@ -48975,7 +48975,7 @@
      {
       "id": "donate",
       "label": "DONATE 40",
-      "text": "Everyone recovers 40% of max HP, and one fallen member rises at half HP (with nobody down, the healer gives you a phoenix feather).",
+      "text": "Everyone recovers 40% of max HP, and one fallen member rises at 50% HP (with nobody down, the healer gives you a phoenix feather).",
       "gold": 40,
       "do": [
        {
@@ -49004,7 +49004,7 @@
      {
       "id": "take",
       "label": "TAKE THEM IN",
-      "text": "They join you at half HP, with an uncommon piece suited to them.",
+      "text": "They join you at 50% HP, with an uncommon piece suited to them.",
       "do": [
        {
         "op": "recruit",
@@ -49016,7 +49016,7 @@
      {
       "id": "lesson",
       "label": "A LESSON",
-      "text": "They teach yours their drill and walk on: three members each learn an ability or train one.",
+      "text": "They teach yours their drill and walk on: 3 members each learn an ability or train one.",
       "do": [
        {
         "op": "train",
@@ -49042,7 +49042,7 @@
        {
         "id": "take",
         "label": "TAKE THEM IN",
-        "text": "They join you at half HP, with an uncommon piece suited to them.",
+        "text": "They join you at 50% HP, with an uncommon piece suited to them.",
         "do": [
          {
           "op": "recruit",
@@ -49054,7 +49054,7 @@
        {
         "id": "lesson",
         "label": "A LESSON",
-        "text": "They teach yours their drill and walk on: three members each learn an ability or train one.",
+        "text": "They teach yours their drill and walk on: 3 members each learn an ability or train one.",
         "do": [
          {
           "op": "train",
@@ -49081,7 +49081,7 @@
        {
         "id": "take",
         "label": "TAKE THEM IN",
-        "text": "They join you at a third of their HP, knowing two abilities, with a rare piece suited to them.",
+        "text": "They join you at 33% of their HP, knowing 2 abilities, with a rare piece suited to them.",
         "do": [
          {
           "op": "recruit",
@@ -49094,7 +49094,7 @@
        {
         "id": "lesson",
         "label": "A LESSON",
-        "text": "They teach yours an officer's drill and walk on: three members each learn an ability or train one.",
+        "text": "They teach yours an officer's drill and walk on: 3 members each learn an ability or train one.",
         "do": [
          {
           "op": "train",
@@ -49124,8 +49124,8 @@
     "options": [
      {
       "id": "hire",
-      "label": "HIRE ONE FOR 60",
-      "text": "Pick one of three recruits.",
+      "label": "HIRE 1 FOR 60",
+      "text": "Pick 1 of 3 recruits.",
       "gold": 60,
       "do": [
        {
@@ -49146,8 +49146,8 @@
       "options": [
        {
         "id": "hire",
-        "label": "HIRE ONE FOR 60",
-        "text": "Pick one of three recruits.",
+        "label": "HIRE 1 FOR 60",
+        "text": "Pick 1 of 3 recruits.",
         "gold": 60,
         "do": [
          {
@@ -49169,8 +49169,8 @@
       "options": [
        {
         "id": "hire",
-        "label": "HIRE ONE FOR 110",
-        "text": "Pick one of two recruits who know all three abilities.",
+        "label": "HIRE 1 FOR 110",
+        "text": "Pick 1 of 2 recruits who know all 3 abilities.",
         "gold": 110,
         "do": [
          {
@@ -49247,7 +49247,7 @@
        {
         "id": "free",
         "label": "FREE THE PRISONER",
-        "text": "They join you knowing two abilities, and the escort attacks: a hard fight, with an elite's spoils.",
+        "text": "They join you knowing 2 abilities, and the escort attacks: a hard fight, with an elite's spoils.",
         "do": [
          {
           "op": "recruit",
@@ -49277,7 +49277,7 @@
      {
       "id": "trade",
       "label": "TRADE",
-      "text": "Your newest member (never the leader) leaves; their gear stays in your bag. One of theirs joins, knowing all three abilities.",
+      "text": "Your newest member (never the leader) leaves; their gear stays in your bag. One of theirs joins, knowing all 3 abilities.",
       "do": [
        {
         "op": "trade"
@@ -49297,7 +49297,7 @@
        {
         "id": "trade",
         "label": "TRADE",
-        "text": "Your newest member (never the leader) leaves; their gear stays in your bag. One of theirs joins, knowing all three abilities.",
+        "text": "Your newest member (never the leader) leaves; their gear stays in your bag. One of theirs joins, knowing all 3 abilities.",
         "do": [
          {
           "op": "trade"
@@ -49318,7 +49318,7 @@
        {
         "id": "trade",
         "label": "TRADE FOR 60",
-        "text": "Your newest member (never the leader) leaves; their gear stays in your bag. One of theirs joins, knowing all three abilities, and +60 gold.",
+        "text": "Your newest member (never the leader) leaves; their gear stays in your bag. One of theirs joins, knowing all 3 abilities, and +60 gold.",
         "do": [
          {
           "op": "trade"
@@ -49461,7 +49461,7 @@
      {
       "id": "train",
       "label": "TRAIN FOR 50",
-      "text": "Three members each learn an ability or train one.",
+      "text": "3 members each learn an ability or train one.",
       "gold": 50,
       "do": [
        {
@@ -49487,7 +49487,7 @@
        {
         "id": "train",
         "label": "TRAIN FOR 50",
-        "text": "Three members each learn an ability or train one.",
+        "text": "3 members each learn an ability or train one.",
         "gold": 50,
         "do": [
          {
@@ -49514,7 +49514,7 @@
        {
         "id": "train",
         "label": "TAKE THE DRILL",
-        "text": "Three members each learn an ability or train one; everyone loses 15% of max HP.",
+        "text": "3 members each learn an ability or train one; everyone loses 15% of max HP.",
         "do": [
          {
           "op": "hp",
@@ -49625,7 +49625,7 @@
        {
         "id": "try",
         "label": "LET HIM TRY",
-        "text": "A piece of yours becomes one of the next rarity, of its kind (a rare one a legendary). Half the time it cracks and is lost.",
+        "text": "A piece of yours becomes one of the next rarity, of its kind (a rare one a legendary). 50% of the time it cracks and is lost.",
         "do": [
          {
           "op": "temper",
@@ -49655,8 +49655,8 @@
     "options": [
      {
       "id": "free",
-      "label": "FREE ONE",
-      "text": "Pick one of three prisoners, each with a piece from the sack. The guards attack: a fight.",
+      "label": "FREE 1",
+      "text": "Pick 1 of 3 prisoners, each with a piece from the sack. The guards attack: a fight.",
       "do": [
        {
         "op": "muster",
@@ -49672,7 +49672,7 @@
      {
       "id": "bribe",
       "label": "BRIBE THE GUARDS",
-      "text": "Pick one of three prisoners, each with a piece from the sack. No fight.",
+      "text": "Pick 1 of 3 prisoners, each with a piece from the sack. No fight.",
       "gold": 60,
       "do": [
        {
@@ -49694,8 +49694,8 @@
       "options": [
        {
         "id": "free",
-        "label": "FREE ONE",
-        "text": "Pick one of three prisoners, each with a piece from the sack. The guards attack: a fight.",
+        "label": "FREE 1",
+        "text": "Pick 1 of 3 prisoners, each with a piece from the sack. The guards attack: a fight.",
         "do": [
          {
           "op": "muster",
@@ -49711,7 +49711,7 @@
        {
         "id": "bribe",
         "label": "BRIBE THE GUARDS",
-        "text": "Pick one of three prisoners, each with a piece from the sack. No fight.",
+        "text": "Pick 1 of 3 prisoners, each with a piece from the sack. No fight.",
         "gold": 60,
         "do": [
          {
@@ -49734,8 +49734,8 @@
       "options": [
        {
         "id": "free",
-        "label": "FREE ONE",
-        "text": "Pick one of three, each knowing two abilities and carrying a rare piece. The escort attacks: a hard fight, with an elite's spoils.",
+        "label": "FREE 1",
+        "text": "Pick 1 of 3, each knowing 2 abilities and carrying a rare piece. The escort attacks: a hard fight, with an elite's spoils.",
         "do": [
          {
           "op": "muster",
@@ -49767,7 +49767,7 @@
      {
       "id": "take",
       "label": "TAKE HIM IN",
-      "text": "He joins you, knowing two abilities.",
+      "text": "He joins you, knowing 2 abilities.",
       "do": [
        {
         "op": "recruit",
@@ -49778,7 +49778,7 @@
      {
       "id": "lesson",
       "label": "A LESSON",
-      "text": "Three members each learn an ability or train one; he stays by the road.",
+      "text": "3 members each learn an ability or train one; he stays by the road.",
       "do": [
        {
         "op": "train",
@@ -49793,7 +49793,7 @@
        {
         "id": "take",
         "label": "TAKE HIM IN",
-        "text": "He joins you, knowing two abilities.",
+        "text": "He joins you, knowing 2 abilities.",
         "do": [
          {
           "op": "recruit",
@@ -49804,7 +49804,7 @@
        {
         "id": "lesson",
         "label": "A LESSON",
-        "text": "Three members each learn an ability or train one; he stays by the road.",
+        "text": "3 members each learn an ability or train one; he stays by the road.",
         "do": [
          {
           "op": "train",
@@ -49820,7 +49820,7 @@
        {
         "id": "take",
         "label": "TAKE HIM IN",
-        "text": "He joins you at half HP, knowing two abilities, with an uncommon piece suited to him.",
+        "text": "He joins you at 50% HP, knowing 2 abilities, with an uncommon piece suited to him.",
         "do": [
          {
           "op": "recruit",
@@ -49833,7 +49833,7 @@
        {
         "id": "lesson",
         "label": "A LESSON",
-        "text": "Three members each learn an ability or train one.",
+        "text": "3 members each learn an ability or train one.",
         "do": [
          {
           "op": "train",
@@ -49858,7 +49858,7 @@
     "options": [
      {
       "id": "open",
-      "label": "OPEN ONE",
+      "label": "OPEN 1",
       "text": "A piece of unknown rarity: one crate holds a legendary, one a rare, one a common.",
       "do": [
        {
@@ -49903,7 +49903,7 @@
       "options": [
        {
         "id": "open",
-        "label": "OPEN ONE",
+        "label": "OPEN 1",
         "text": "A piece of unknown rarity: one crate holds a legendary, one a rare, one a common.",
         "do": [
          {
@@ -49949,7 +49949,7 @@
       "options": [
        {
         "id": "open",
-        "label": "OPEN ONE",
+        "label": "OPEN 1",
         "text": "A piece of unknown rarity: one crate holds a legendary, one a rare, one a common.",
         "do": [
          {
@@ -49984,8 +49984,8 @@
        },
        {
         "id": "two",
-        "label": "OPEN TWO",
-        "text": "Two of the three crates, at random.",
+        "label": "OPEN 2",
+        "text": "2 of the 3 crates, at random.",
         "gold": 30,
         "do": [
          {
@@ -50140,7 +50140,7 @@
      {
       "id": "pay",
       "label": "PAY THE SURGEON",
-      "text": "Everyone recovers 40% of max HP, and the fallen rise at half HP.",
+      "text": "Everyone recovers 40% of max HP, and the fallen rise at 50% HP.",
       "gold": 50,
       "do": [
        {
@@ -50178,7 +50178,7 @@
        {
         "id": "pay",
         "label": "PAY THE SURGEON",
-        "text": "Everyone recovers 40% of max HP, and the fallen rise at half HP.",
+        "text": "Everyone recovers 40% of max HP, and the fallen rise at 50% HP.",
         "gold": 50,
         "do": [
          {
@@ -50217,7 +50217,7 @@
        {
         "id": "help",
         "label": "HELP OUT",
-        "text": "Everyone loses 15% of max MP. A potion and a phoenix feather from the stores (with someone down, the feather raises them at half HP).",
+        "text": "Everyone loses 15% of max MP. A potion and a phoenix feather from the stores (with someone down, the feather raises them at 50% HP).",
         "do": [
          {
           "op": "mp",
@@ -50352,7 +50352,7 @@
      {
       "id": "watch",
       "label": "WATCH",
-      "text": "Three members each learn an ability or train one from the champion's form.",
+      "text": "3 members each learn an ability or train one from the champion's form.",
       "do": [
        {
         "op": "train",
@@ -50378,7 +50378,7 @@
        {
         "id": "watch",
         "label": "WATCH",
-        "text": "Three members each learn an ability or train one from the champion's form.",
+        "text": "3 members each learn an ability or train one from the champion's form.",
         "do": [
          {
           "op": "train",
@@ -50429,7 +50429,7 @@
      {
       "id": "search",
       "label": "SEARCH",
-      "text": "Two uncommon pieces.",
+      "text": "2 uncommon pieces.",
       "do": [
        {
         "op": "gear",
@@ -50444,7 +50444,7 @@
      {
       "id": "deeper",
       "label": "SEARCH DEEPER",
-      "text": "Three rare pieces, and whatever breathes wakes: a hard fight, with an elite's spoils.",
+      "text": "3 rare pieces, and whatever breathes wakes: a hard fight, with an elite's spoils.",
       "do": [
        {
         "op": "gear",
@@ -50471,7 +50471,7 @@
        {
         "id": "search",
         "label": "SEARCH",
-        "text": "Two uncommon pieces.",
+        "text": "2 uncommon pieces.",
         "do": [
          {
           "op": "gear",
@@ -50486,7 +50486,7 @@
        {
         "id": "deeper",
         "label": "SEARCH DEEPER",
-        "text": "Three rare pieces, and whatever breathes wakes: a hard fight, with an elite's spoils.",
+        "text": "3 rare pieces, and whatever breathes wakes: a hard fight, with an elite's spoils.",
         "do": [
          {
           "op": "gear",

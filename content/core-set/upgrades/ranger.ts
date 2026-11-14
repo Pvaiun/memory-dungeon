@@ -65,7 +65,7 @@ import { abilityUp, apply, cd, helper, hitOf, kit, passiveUp, phys, POWER, r6 } 
     id: "rending_arrow", cls: "ranger",
     power: "+40% Sunder, or damage without Sunder.", shown: true,
     a: { name: "Armor breaker", text: "An arrow at the foe with the most Defense, adding Sunder.", builds: ["cuts", "landslide"] },
-    b: { name: "Gutting arrow", text: "An arrow at the foe with the least HP: +50% below half HP, double below a quarter.", builds: ["hunt"] },
+    b: { name: "Gutting arrow", text: "An arrow at the foe with the least HP: +50% below 50% HP, ×2 below 25%.", builds: ["hunt"] },
     form: (v, k) => (v === "a" ? breaker(k) : v === "b" ? gutting(k) : { do: [phys(from("attack", 0.5), { apply: [{ status: "sunder", stacks: stacks("few", "attack", k) }] })] }),
   });
 }

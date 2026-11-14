@@ -34,7 +34,7 @@ abilityUp({
   power: "+40% Chill.",
   shown: true,
   a: { name: "Ice spear", text: "A lance at the foe with the most Attack, adding Chill. Ignores Taunt.", builds: [] },
-  b: { name: "Icicles", text: "Lances at the three foes with the most Chill, each adding more.", builds: ["snap"] },
+  b: { name: "Icicles", text: "Lances at the 3 foes with the most Chill, each adding more.", builds: ["snap"] },
   form: (v, k) =>
     v === "a" ? { seek: true, target: T.highestAMFoe, do: [phys(hitOf("attack", "normal"), { apply: lanceChill("several", LANCE_CHILL * k) })] } // The Chill class doesn't Slow: Chill is its slow.
       : v === "b" ? { target: { side: "foes", pick: "highest", by: { stacks: "chill" }, count: 3 }, do: [phys(hitOf("attack", "light"), { apply: lanceChill("few", LANCE_CHILL * k) })] }

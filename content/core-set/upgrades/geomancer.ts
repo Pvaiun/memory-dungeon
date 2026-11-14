@@ -6,7 +6,7 @@ import { abilityUp, apply, cd, helper, hitOf, kit, marker, passiveUp, phys, remo
 
 // ─── Geomancer ───────────────────────────────────────────────────────────────
 
-helper(kit("bedrock_on_plus", "BEDROCK", "Crit chance doubled; Crit damage up.", {
+helper(kit("bedrock_on_plus", "BEDROCK", `Crit chance ×2; Crit damage +${SPECIAL.crit_damage.medium}%.`, {
   stacking: "fizzle", stats: [{ stat: "crit_chance", flat: { scale: [{ ratio: 1, stat: "crit_chance", of: "holder" }] } }, { stat: "crit_multiplier", flat: SPECIAL.crit_damage.medium }],
 }));
 // Bare rock: the passive turned outside its stone: Crit damage while it holds no Shield (given at the start, lifted as a Shield
@@ -16,7 +16,7 @@ helper(kit("bare_rock_plus", "BARE ROCK", "Crit damage +75%.", { stacking: "fizz
 passiveUp({
   id: "bedrock", cls: "geomancer",
   power: "+25% Crit damage while its Shield holds.",
-  a: { name: "Stunning crits", text: "While its Shield holds: Crit chance doubled, and crits Stun.", builds: [] },
+  a: { name: "Stunning crits", text: "While its Shield holds: Crit chance ×2, and crits Stun.", builds: [] },
   b: { name: "Bare rock", text: "While it holds no Shield: Crit damage +50%.", serves: "Hunt 2 ●●, Cuts ● ◆ crits", plus: "Crit damage +75%." },
   form: (v, _k, plus) => {
     const on = plus ? "bedrock_on_plus" : "bedrock_on";

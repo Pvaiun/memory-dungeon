@@ -41,7 +41,7 @@ offhand("kite_shield", "common", "Chaplain's kite", { stats: [sp("cooldown", "me
 
 {
   // Status damage carries its status's id as a tag: the afflictions, a shatter, Doom's blow and Thorns (a debt come due lands past damage-taken changes).
-  const name = "Salted kite", effect = "Takes half damage from statuses.";
+  const name = "Salted kite", effect = "Takes −50% damage from statuses.";
   const from = ["burn", "chill", "shock", "bleed", "doom", "thorns"];
   offhand("kite_shield", "uncommon", name, {
     effect, stats: [st("max_hp", 1), st("mp_regen", 1)],
@@ -91,7 +91,7 @@ offhand("kite_shield", "common", "Chaplain's kite", { stats: [sp("cooldown", "me
 {
   // Conditional through its stats: Thorns pays only on a unit that's struck, Crit damage only on one that crits.
   const name = "Monolith shield";
-  const effect = "Damaging abilities come round half as often and deal double.";
+  const effect = "Damaging abilities come round 50% as often and deal ×2.";
   offhand("kite_shield", "rare", name, {
     effect, stats: [sp("thorns", "medium"), sp("crit_damage", "medium"), st("max_mp", 1)],
     statuses: [own_(name, effect, { mods: [{ of: { does: ["damage"] }, cooldown: 100, damage: 100 }] })],
@@ -151,7 +151,7 @@ offhand("round_shield", "common", "Burnished buckler", { stats: [sp("cast_speed"
   });
 }
 {
-  const name = "Hoplon", effect = "While it holds Aegis: basic attacks deal double.";
+  const name = "Hoplon", effect = "While it holds Aegis: basic attacks deal ×2.";
   offhand("round_shield", "rare", name, {
     effect, stats: [st("max_hp", 1), sp("double_strike", "medium"), st("mp_regen", 1)],
     statuses: [own_(name, effect, { boosts: [{ tag: "basic", pct: whileIt(100, { has: "aegis" }) }] })],
@@ -224,7 +224,7 @@ offhand("horn", "common", "Drinking horn", { stats: [sp("attack_speed", "medium"
   });
 }
 {
-  const name = "Watch horn", effect = "Taunts when an ally drops below half HP.";
+  const name = "Watch horn", effect = "Taunts when an ally drops below 50% HP.";
   offhand("horn", "uncommon", name, {
     effect, stats: [st("mp_regen", 1), sp("accuracy", "medium")],
     statuses: [own_(name, effect, { reactions: [react(on("hp_low", { whose: "team", line: 50 }), give("taunt"))] })],
@@ -249,7 +249,7 @@ offhand("horn", "common", "Drinking horn", { stats: [sp("attack_speed", "medium"
 }
 {
   // The hit's unit was below half as it landed (wasBelow); the attacker's picks go to the holder for Fixated's length, under a Taunt.
-  const name = "Alarum", effect = "When a foe hits another ally below half HP: Fixates that foe.";
+  const name = "Alarum", effect = "When a foe hits another ally below 50% HP: Fixates that foe.";
   offhand("horn", "rare", name, {
     effect, stats: [st("attack", 1), sp("evasion", "medium"), st("max_mp", 1)],
     statuses: [own_(name, effect, { reactions: [react(on("hit_taken", { whose: "ally", other: "foe", wasBelow: 50 }), give("fixated", "other"))] })],
@@ -289,7 +289,7 @@ offhand("totem", "common", "Twin-fang fetish", { stats: [sp("double_strike", "me
   });
 }
 {
-  const name = "Bear fetish", effect = "Guards any ally that drops below half HP.";
+  const name = "Bear fetish", effect = "Guards any ally that drops below 50% HP.";
   offhand("totem", "uncommon", name, {
     effect, stats: [st("attack", 1), sp("lifesteal", "medium")],
     statuses: [own_(name, effect, { reactions: [react(on("hp_low", { whose: "team", line: 50 }), give("guard", "owner"))] })],
@@ -385,7 +385,7 @@ offhand("relic", "common", "All-seeing eye", { stats: [sp("accuracy", "medium"),
   // Second in the order of healing past full: the healer's piece, where the healed unit's own doesn't take it. The store counts
   // in points of HP (an amount is 1,000 a point) and is given whole, as a heal that can't go past full in its turn.
   const name = "Phylactery", store = `${id(name)}_store`;
-  const effect = "Its healing past full, Regen included, is kept, and given to the next ally who drops below half HP.";
+  const effect = "Its healing past full, Regen included, is kept, and given to the next ally who drops below 50% HP.";
   offhand("relic", "rare", name, {
     effect, stats: [st("defense", 1), sp("siphon", "medium"), st("max_mp", 1)],
     statuses: [
@@ -395,7 +395,7 @@ offhand("relic", "common", "All-seeing eye", { stats: [sp("accuracy", "medium"),
           reactIf(on("hp_low", { whose: "team", line: 50 }), { side: "self", where: { has: store } }, { op: "heal", amount: stacksOf(store, P), final: true, to: "owner" }, lift(store, "holder", "marker")),
         ],
       }),
-      { id: store, name: "PHYLACTERY", text: "Healing kept for the next ally who drops below half HP.", label: "marker", show: "icon", stacking: "intensity" },
+      { id: store, name: "PHYLACTERY", text: "Healing kept for the next ally who drops below 50% HP.", label: "marker", show: "icon", stacking: "intensity" },
     ],
     also: [OVERHEAL.given],
     serves: "exotic ◆ nets",
@@ -411,7 +411,7 @@ offhand("relic", "common", "All-seeing eye", { stats: [sp("accuracy", "medium"),
 }
 {
   const name = "Heart of the saint";
-  const effect = "Healing abilities cost HP instead of MP, and heal double.";
+  const effect = "Healing abilities cost HP instead of MP, and heal ×2.";
   offhand("relic", "legendary", name, {
     effect, stats: [st("defense", 1), sp("crit_damage", "high")],
     statuses: [own_(name, effect, { mods: [{ of: { does: ["heal"] }, hp: { pct: 50, share: true, instead: true }, heal: 100 }] })],
@@ -441,7 +441,7 @@ offhand("lantern", "common", "Hooded lantern", { stats: [sp("evasion", "medium")
   });
 }
 {
-  const name = "Dazzling lantern", effect = "At fight start: Weakens the two foes with the most Attack.";
+  const name = "Dazzling lantern", effect = "At fight start: Weakens the 2 foes with the most Attack.";
   offhand("lantern", "uncommon", name, {
     effect, stats: [sp("cast_speed", "medium"), sp("evasion", "medium")],
     statuses: [own_(name, effect, { reactions: [atStart(give("weaken", { side: "foes", pick: "highest", by: { stats: ["attack"] }, count: 2 }))] })],
@@ -459,7 +459,7 @@ offhand("lantern", "common", "Hooded lantern", { stats: [sp("evasion", "medium")
   });
 }
 {
-  const name = "Shuttered lantern", effect = "Takes half damage while winding up.";
+  const name = "Shuttered lantern", effect = "Takes −50% damage while winding up.";
   offhand("lantern", "rare", name, {
     effect, stats: [st("max_mp", 1), st("defense", 1), st("aggro", -1)],
     statuses: [own_(name, effect, { taken: [{ pct: { scale: [{ ratio: -50, when: { casting: true }, of: "holder" }] } }] })],

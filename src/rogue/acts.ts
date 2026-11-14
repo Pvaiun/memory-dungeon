@@ -222,7 +222,7 @@ export function beginAct(c: Content, run: RogueRun, region: string, restore: boo
   // A seat at camp comes with each new act (never fewer than the run already has).
   const by = cfg(c).benchByAct;
   const seats = by?.[Math.min(run.act, by.length) - 1];
-  if (seats !== undefined && seats > seatsOf(c, run)) (run.seats = seats), note(run, `Room for one more at camp: ${seats} seats.`);
+  if (seats !== undefined && seats > seatsOf(c, run)) (run.seats = seats), note(run, `Room for 1 more at camp: ${seats} seats.`);
   note(run, `Act ${run.act}: ${reg.name}. ${run.boss.name} waits at the end.`);
 }
 

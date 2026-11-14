@@ -13,8 +13,8 @@ const sunderOn = (kind: "basic" | "extra", k: number): ReactionT => ({ on: { eve
 passiveUp({
   id: "arc", cls: "stormcaller",
   power: "+40% Shock.",
-  a: { name: "Forked arc", text: "Basic attacks also hit two other random foes; all three gain Shock.", builds: ["storm"] },
-  b: { name: "Grounded arc", text: "Basic attacks also hit a second random foe; both gain Sunder in place of Shock.", serves: "Cuts 2 ●●, Landslide ● ◆ spread, the ramp" },
+  a: { name: "Forked arc", text: "Basic attacks also hit 2 other random foes; all 3 gain Shock.", builds: ["storm"] },
+  b: { name: "Grounded arc", text: "Basic attacks also hit a 2nd random foe; both gain Sunder in place of Shock.", serves: "Cuts 2 ●●, Landslide ● ◆ spread, the ramp" },
   form: (v, k) => ({
     // A strike rule that picks several foes strikes each of them.
     strike: { to: v === "a" ? { side: "foes", pick: "random", count: 2, exclude: "targets" } : T.secondFoe },
@@ -27,8 +27,8 @@ abilityUp({
   id: "chain_lightning", cls: "stormcaller",
   power: "+40% damage.",
   shown: true,
-  a: { name: "Ball lightning", text: "Four strikes at the foe with the least HP, the first adding Shock. If it falls, the rest go to the next.", builds: ["hunt"] },
-  b: { name: "Recharge", text: "Lightning at a random foe and up to three others, adding Shock. Regains MP for each foe hit: four repay the cast.", serves: "Barrage 2 ●●●, Storm ●● ⚙ resonance (half)" },
+  a: { name: "Ball lightning", text: "4 strikes at the foe with the least HP, the first adding Shock. If it falls, the rest go to the next.", builds: ["hunt"] },
+  b: { name: "Recharge", text: "Lightning at a random foe and up to 3 others, adding Shock. Regains MP for each foe hit: 4 repay the cast.", serves: "Barrage 2 ●●●, Storm ●● ⚙ resonance (half)" },
   form: (v, k) => {
     const first = phys(hitOf("attack", "light", k), { apply: chainShock });
     if (v === "a") {
@@ -52,13 +52,13 @@ for (const [suffix, k] of [["", 1], ["_plus", POWER]] as const) {
   // The base storm (thunderstorm_storm) is the kit's, in classes.ts; its power step is written here.
   if (suffix) helper(storm(`thunderstorm_storm${suffix}`, "Basic attacks add Shock.", { on: { event: "hit_lands", kind: "basic" }, do: [stormShock(k, "other")] }));
   helper(storm(`static_field${suffix}`, "Foes that hit it gain Shock.", { on: { event: "hit_taken" }, do: [stormShock(k, "other")] }));
-  helper(storm(`storms_eye${suffix}`, "Basic attacks add triple Shock to the foe with the most Shock.", { on: { event: "hit_lands", kind: "basic" }, do: [stormShock(3 * k, T.mostFoe("shock"))] }));
+  helper(storm(`storms_eye${suffix}`, "Basic attacks add ×3 Shock to the foe with the most Shock.", { on: { event: "hit_lands", kind: "basic" }, do: [stormShock(3 * k, T.mostFoe("shock"))] }));
 }
 abilityUp({
   id: "thunderstorm", cls: "stormcaller",
   power: "+40% Shock.",
   a: { name: "Static field", text: `For ${KIT.storm.duration} ticks, foes that hit an ally gain Shock. None on the swings.`, serves: "Toll 2 ●●●, Storm 2 ●● ⚙ goad (half)" },
-  b: { name: "Storm's eye", text: `For ${KIT.storm.duration} ticks, every ally's basic attacks add triple Shock to the foe with the most Shock.`, builds: ["hunt", "cuts"] },
+  b: { name: "Storm's eye", text: `For ${KIT.storm.duration} ticks, every ally's basic attacks add ×3 Shock to the foe with the most Shock.`, builds: ["hunt", "cuts"] },
   form: (v, _k, plus) => ({ do: [apply(`${v === "a" ? "static_field" : v === "b" ? "storms_eye" : "thunderstorm_storm"}${plus ? "_plus" : ""}`)] }),
 });
 
@@ -66,7 +66,7 @@ abilityUp({
   id: "static_charge", cls: "stormcaller",
   power: "Shorter cooldown.",
   shown: true,
-  a: { name: "Overcharge", text: `Its basic attacks come ${KIT.staticCharge.speed}% faster for ${KIT.staticCharge.duration} ticks, and its next three abilities in that time cost no MP.`, serves: "Barrage 2 ●●● ⚙ crescendo (half)" },
+  a: { name: "Overcharge", text: `Its basic attacks come ${KIT.staticCharge.speed}% faster for ${KIT.staticCharge.duration} ticks, and its next 3 abilities in that time cost no MP.`, serves: "Barrage 2 ●●● ⚙ crescendo (half)" },
   b: { name: "Storm shield", text: `Thorns up and +${4 * AGGRO_STEP} Aggro for 20 ticks. No speed.`, builds: ["toll", "storm"] },
   form: (v, _k, plus) => ({
     ...(plus ? { cooldown: cd("short", "static_charge") } : {}),
@@ -75,7 +75,7 @@ abilityUp({
   }),
 });
 // The charges land a sub-tick after the cast resolves (a cue), so Static charge itself doesn't spend one; they end with the charge.
-helper(marker("overcharge", "OVERCHARGE", "Next three abilities cost no MP.", {
+helper(marker("overcharge", "OVERCHARGE", "Next 3 abilities cost no MP.", {
   duration: 1,
   reactions: [{ on: { event: "status_gained", status: "overcharge" }, do: [apply("overcharge_charges", { stacks: 3, to: "holder" })] }],
 }));

@@ -42,7 +42,7 @@ passiveUp({
   abilityUp({
     id: "stand_fast", cls: "knight",
     power: "Costs less MP.", shown: true,
-    a: { name: "Rally the well", text: "Clarity to every ally below half MP; waits for one. No Taunt.", serves: "Barrage 1 ●●● ⚙ mana as armour (half)" },
+    a: { name: "Rally the well", text: "Clarity to every ally below 50% MP; waits for one. No Taunt.", serves: "Barrage 1 ●●● ⚙ mana as armour (half)" },
     b: { name: "Hold the line", text: "Taunts, with Thorns while the Taunt lasts. No Clarity.", serves: "Toll 1 ●●● ⚙ goad (half)" },
     form: (v, _k, plus) => ({ ...(v === "a" ? rallyTheWell : v === "b" ? holdTheLine : {}), ...(plus ? { mp: 125 } : {}) }),
   });

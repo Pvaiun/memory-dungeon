@@ -10,7 +10,7 @@ import { abilityUp, apply, both, helper, kit, passiveUp, phys } from "./kit.js";
   passiveUp({
     id: "shieldmaiden", cls: "valkyrie",
     power: "Shield +40%.",
-    a: { name: "Chooser of the slain", text: "No Shield. Hits deal +20% to foes below half HP.", builds: ["hunt", "storm"], plus: "+28%, not +20%." },
+    a: { name: "Chooser of the slain", text: "No Shield. Hits deal +20% to foes below 50% HP.", builds: ["hunt", "storm"], plus: "+28%, not +20%." },
     b: { name: "Shield-sister", text: `On a hit: Shields the ally with the lowest HP% instead, for ${KIT.shieldmaiden * 100}% of the damage.`, builds: ["toll", "pact"] },
     // Chooser of the slain gives the Shield up: offence in place of defence, and the power step has nothing to grow.
     form: (v, k) =>
@@ -24,7 +24,7 @@ import { abilityUp, apply, both, helper, kit, passiveUp, phys } from "./kit.js";
   const spear = (ratio: number, extra: object = {}) => phys(from("attack", ratio), { apply: [shock], ...extra });
   /** Gale storm: one hit past any guard, then one each on two other random foes; fewer foes, fewer hits. */
   const storm = (ratio: number): Partial<AbilityT> => ({ do: [spear(ratio), spear(ratio, { to: { side: "foes", pick: "random", count: 2, exclude: "targets" } })] });
-  /** Shieldbreaker: the spellbreaker: three quick hits on the foe with the most buffs, each lifting one (newest first). No Shock. */
+  /** Shieldbreaker: the spellbreaker: 3 quick hits on the foe with the most buffs, each lifting one (newest first). No Shock. */
   const breaker = (ratio: number): Partial<AbilityT> => ({
     target: { side: "foes", pick: "highest", by: "buffs" },
     do: [phys(from("attack", ratio), { hits: 3 }), { op: "remove", label: "buff", count: 1 }, { op: "remove", label: "buff", count: 1 }, { op: "remove", label: "buff", count: 1 }],
@@ -32,8 +32,8 @@ import { abilityUp, apply, both, helper, kit, passiveUp, phys } from "./kit.js";
   abilityUp({
     id: "gale_spear", cls: "valkyrie",
     power: "+40% damage.", shown: true,
-    a: { name: "Gale storm", text: "Three hits on three different foes, each adding Shock. The first ignores Taunt.", builds: ["storm", "cuts"] },
-    b: { name: "Shieldbreaker", text: "Three hits on the foe with the most buffs, each lifting one of them. No Shock. Ignores Taunt.", serves: "Hunt 2 ●●, Toll ● ◆ spellbreaking" },
+    a: { name: "Gale storm", text: "3 hits on 3 different foes, each adding Shock. The first ignores Taunt.", builds: ["storm", "cuts"] },
+    b: { name: "Shieldbreaker", text: "3 hits on the foe with the most buffs, each lifting one of them. No Shock. Ignores Taunt.", serves: "Hunt 2 ●●, Toll ● ◆ spellbreaking" },
     form: (v, k) => (v === "a" ? storm(0.09 * k) : v === "b" ? breaker(0.09 * k) : { do: [spear(0.09 * k, { hits: 3 })] }),
   });
 }
@@ -73,7 +73,7 @@ import { abilityUp, apply, both, helper, kit, passiveUp, phys } from "./kit.js";
     id: "skyfall", cls: "valkyrie",
     power: "+40% damage.", shown: true,
     a: { name: "Thunderclap", text: "A blow from above on every foe that holds Shock.", serves: "Storm 3 ●●● ⚙ held charge (key)" },
-    b: { name: "Valkyrie's descent", text: "A blow on the foe with the least HP, double below a quarter HP. Ignores Taunt.", builds: ["hunt"] },
+    b: { name: "Valkyrie's descent", text: "A blow on the foe with the least HP, ×2 below 25% HP. Ignores Taunt.", builds: ["hunt"] },
     form: (v, k) =>
       v === "a" ? { if: { side: "foes", where: { has: "shock" } }, target: { side: "foes", where: { has: "shock" }, pick: "all" }, do: [fall(0.5, k)] }
         : v === "b" ? descent(k)

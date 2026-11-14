@@ -199,7 +199,7 @@ export class Narrator {
         break;
       }
       case "leave":
-        this.add(ev, { text: `${this.n(ev.unit)} splits in two!`, tone: "sys" });
+        this.add(ev, { text: `${this.n(ev.unit)} splits in 2!`, tone: "sys" });
         break;
       case "strike":
         this.add(ev, { text: ev.status === "arc" ? `The arc jumps to ${this.n(ev.target)}!` : `${this.n(ev.by)} strikes again!`, tone: "act" }, "act");

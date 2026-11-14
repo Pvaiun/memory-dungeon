@@ -35,12 +35,12 @@ import { abilityUp, apply, cd, helper, kit, marker, ofHolder, passiveUp, phys, P
 
 {
   /**
-   * Overgrowth: Taunt, then Taunt once more when it runs out (a marker spent by the second), and Thorns doubled for both. The doubling reads the
+   * Overgrowth: Taunt, then Taunt once more when it runs out (a marker spent by the second), and Thorns ×2 for both. The doubling reads the
    * Thorns when it lands, so the cast lifts any Overgrowth still held first: with the power step (37.7 ticks) it comes back before the last one
    * ends, and a doubling read on top of itself would grow with every cast.
    */
   const overgrowth: Partial<AbilityT> = { cooldown: cd("very_long", "thicket"), mp: 325, do: [apply("taunt"), removeMine("overgrowth", "buff", "self"), apply("overgrowth"), apply("overgrowth_again")] };
-  helper(kit("overgrowth", "OVERGROWTH", "Thorns doubled.", { duration: 2 * STATUS.taunt.duration, stats: [{ stat: "thorns", flat: ofHolder(1, "thorns") }] }));
+  helper(kit("overgrowth", "OVERGROWTH", "Thorns ×2.", { duration: 2 * STATUS.taunt.duration, stats: [{ stat: "thorns", flat: ofHolder(1, "thorns") }] }));
   helper(marker("overgrowth_again", "OVERGROWTH", "Taunts once more when its Taunt runs out.", {
     reactions: [{ on: { event: "status_ended", status: "taunt", cause: ["expired"] }, do: [apply("taunt", { to: "holder" }), removeMine("overgrowth_again", "marker")] }],
   }));
@@ -48,7 +48,7 @@ import { abilityUp, apply, cd, helper, kit, marker, ofHolder, passiveUp, phys, P
   abilityUp({
     id: "thicket", cls: "bramble_knight",
     power: "Shorter cooldown.", shown: true,
-    a: { name: "Overgrowth", text: "Taunts twice in a row, with Thorns doubled throughout. No Guard.", serves: "Toll 2 ●●● ⚙ goad (half)" },
+    a: { name: "Overgrowth", text: "Taunts 2 times in a row, with Thorns ×2 throughout. No Guard.", serves: "Toll 2 ●●● ⚙ goad (half)" },
     b: { name: "Grove", text: "Guards every ally. No Taunt.", builds: ["landslide", "bonfire", "storm"] },
     form: (v, _k, plus) =>
       v === "a" ? { ...overgrowth, ...(plus ? { cooldown: cd("long", "thicket") } : {}) }

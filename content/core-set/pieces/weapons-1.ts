@@ -63,9 +63,9 @@ weapon("dagger", "common", "Brawler's dirk", { stats: [st("max_hp", 2), st("defe
   });
 }
 {
-  // A count of basic attacks made: the third, reading two, strikes twice, and its own count fills and empties the count.
+  // A count of basic attacks made: the third, reading two, strikes 2 times, and its own count fills and empties the count.
   const name = "Second thrust", n = `${id(name)}_count`;
-  const effect = "Every 3rd basic attack strikes twice.";
+  const effect = "Every 3rd basic attack strikes 2 times.";
   weapon("dagger", "uncommon", name, {
     effect, stats: [sp("evasion", "medium"), st("defense", 1)],
     statuses: [
@@ -159,7 +159,7 @@ weapon("fist", "common", "Brazen talons", { stats: [st("aggro", 2), st("max_hp",
 }
 {
   const name = "Gorged claws", on_ = `${id(name)}_on`;
-  const effect = "Below half HP: basic attacks come 33% faster.";
+  const effect = "Below 50% HP: basic attacks come 33% faster.";
   weapon("fist", "rare", name, {
     effect, stats: [st("max_hp", 2), sp("lifesteal", "medium")],
     statuses: [
@@ -181,7 +181,7 @@ weapon("fist", "common", "Brazen talons", { stats: [st("aggro", 2), st("max_hp",
 {
   // Half as often is its shape (Attack speed −100 counts no step). Each landing pushes the foe's own basic attack back by its whole cooldown.
   const name = "Still hand";
-  const effect = "Basic attacks come half as often, and each that lands pushes the foe's next basic attack back by a full wait.";
+  const effect = "Basic attacks come 50% as often, and each that lands pushes the foe's next basic attack back by a full wait.";
   weapon("fist", "rare", name, {
     effect, stats: [{ stat: "attack_speed", flat: -100 }, sp("evasion", "medium"), sp("cooldown", "medium"), st("mp_regen", 1)],
     statuses: [own_(name, effect, { reactions: [react(EV.basic, { op: "cooldown", which: "basic", set: { lessPct: -100 }, to: "other" })] })],
@@ -191,7 +191,7 @@ weapon("fist", "common", "Brazen talons", { stats: [st("aggro", 2), st("max_hp",
 {
   // The leap is a bonus hit on another foe (tagged wide); every wide hit its basic attacks land gives the MP.
   const name = "Forked knuckles";
-  const effect = "Basic attacks also hit a second random foe for half, effects included. Each hit past the target restores 5% of max MP.";
+  const effect = "Basic attacks also hit a 2nd random foe for 50%, effects included. Each hit past the target restores 5% of max MP.";
   weapon("fist", "rare", name, {
     effect, stats: [st("max_mp", 1), sp("attack_speed", "medium"), critStep(1)],
     statuses: [own_(name, effect, {
@@ -204,7 +204,7 @@ weapon("fist", "common", "Brazen talons", { stats: [st("aggro", 2), st("max_hp",
 {
   // Crit damage on the classes that wear it, which crit little: conditional by its stats, on a party that makes crits.
   const name = "Flurry wraps";
-  const effect = "Extra strikes roll Double strike again, up to two more, each 20% weaker.";
+  const effect = "Extra strikes roll Double strike again, up to 2 more, each 20% weaker.";
   weapon("fist", "legendary", name, {
     effect, stats: [sp("crit_damage", "medium"), sp("double_strike", "medium"), st("attack", 1)],
     statuses: [own_(name, effect, { strike: { scale: "double_strike", to: "target", chain: { times: 2, share: 80 } } })],
@@ -247,7 +247,7 @@ weapon("wand", "common", "Lifewood wand", { stats: [st("max_hp", 2)], serves: "P
   });
 }
 {
-  const name = "Heckler's wand", effect = "Basic attacks on a foe winding up deal triple.";
+  const name = "Heckler's wand", effect = "Basic attacks on a foe winding up deal ×3.";
   weapon("wand", "uncommon", name, {
     effect, stats: [st("aggro", -1), st("max_mp", 1), sp("cooldown", "medium")],
     statuses: [own_(name, effect, { boosts: [{ tag: "basic", pct: against(200, { casting: true }) }] })],
@@ -333,7 +333,7 @@ weapon("sword", "common", "Ceremonial sword", { stats: [st("max_mp", 2), down(sp
 }
 {
   // The marker on each foe it has hit; the boost reads its absence, and the marker lands after the hit.
-  const name = "Drawn steel", mark = `${id(name)}_mark`, effect = "The first hit on each foe deals double.";
+  const name = "Drawn steel", mark = `${id(name)}_mark`, effect = "The first hit on each foe deals ×2.";
   weapon("sword", "uncommon", name, {
     effect, stats: [sp("attack_speed", "medium"), st("attack", 1)],
     statuses: [
@@ -400,13 +400,13 @@ weapon("sword", "common", "Ceremonial sword", { stats: [st("max_mp", 2), down(sp
   // wearer gives up two thirds of the Attack it had, so the crowned ally gains the whole of it and the wearer keeps a third.
   const name = "Kingmaker", crown = `${id(name)}_crown`, kept = `${id(name)}_kept`;
   const KING: TargetRuleT = { side: "others", pick: "lowest", by: { stat: "attack" } };
-  const effect = "At fight start: the other ally with the least Attack gains the wearer's Attack, and the wearer keeps only a third.";
+  const effect = "At fight start: the other ally with the least Attack gains the wearer's Attack, and the wearer keeps only 33%.";
   weapon("sword", "legendary", name, {
     effect, stats: [st("attack", 1), st("max_mp", 1), sp("cast_speed", "medium")],
     statuses: [
       own_(name, effect, { reactions: [reactIf(on("fight_start", { repeat: false }), { side: "others", where: {} }, give(crown, KING), give(kept, "holder"))] }),
       { id: crown, name: "CROWNED", text: "Holds the Kingmaker's wearer's Attack, for the fight.", label: "buff", show: "icon", stacking: "refresh", unremovable: true, stats: [{ stat: "attack", flat: share(1, "attack", "source") }] } as StatusT,
-      { id: kept, name: "KINGMAKER", text: "Keeps a third of its Attack, for the fight.", label: "marker", show: "sheet", stacking: "refresh", unremovable: true, stats: [{ stat: "attack", flat: share(-2 / 3, "attack", "holder") }] } as StatusT,
+      { id: kept, name: "KINGMAKER", text: "Keeps 33% of its Attack, for the fight.", label: "marker", show: "sheet", stacking: "refresh", unremovable: true, stats: [{ stat: "attack", flat: share(-2 / 3, "attack", "holder") }] } as StatusT,
     ],
     serves: "exotic",
   });
@@ -428,7 +428,7 @@ weapon("spear", "common", "Bident", { stats: [sp("double_strike", "medium"), st(
 {
   // The foe that last hit the ally, marked for the called swing to aim at (ahead of a Mark); the swing lifts the mark.
   const name = "Avenger's spear", foe = `${id(name)}_foe`;
-  const effect = "When another ally drops below half HP: next basic attack comes at once, at the foe that last hit it.";
+  const effect = "When another ally drops below 50% HP: next basic attack comes at once, at the foe that last hit it.";
   weapon("spear", "uncommon", name, {
     effect, stats: [sp("crit_damage", "medium"), st("max_hp", 1)],
     statuses: [
@@ -452,7 +452,7 @@ weapon("spear", "common", "Bident", { stats: [sp("double_strike", "medium"), st(
 {
   // Crit damage on the classes that wear it, which crit little: conditional by its stats, on a party that makes crits.
   const name = "Hunting spear";
-  const effect = "Hits on a foe below half HP land twice.";
+  const effect = "Hits on a foe below 50% HP land 2 times.";
   weapon("spear", "rare", name, {
     effect, stats: [sp("crit_damage", "medium"), sp("evasion", "medium"), st("max_hp", 1)],
     statuses: [own_(name, effect, { reactions: [react(on("hit_lands", { notTags: ["bare"], wasBelow: 50 }), { op: "strike", of: "dealt", to: "other" })] })],
@@ -508,7 +508,7 @@ weapon("axe", "common", "Cleaver", { stats: [critStep(2), down(sp("cooldown", "m
 }
 {
   // Its own Lifesteal again: a heal of the damage at the wearer's Lifesteal, on a foe that was below half as the hit landed.
-  const name = "Hungry axe", effect = "Lifesteal doubles on hits against a foe below half HP.";
+  const name = "Hungry axe", effect = "Lifesteal ×2 on hits against a foe below 50% HP.";
   weapon("axe", "uncommon", name, {
     effect, stats: [sp("attack_speed", "medium")],
     statuses: [own_(name, effect, { reactions: [react(on("hit_lands", { wasBelow: 50 }), { op: "heal", amount: { scale: [{ ratio: 0.01, amount: true, times: { stat: "lifesteal", of: "holder" } }] }, to: "holder" })] })],
@@ -524,7 +524,7 @@ weapon("axe", "common", "Cleaver", { stats: [critStep(2), down(sp("cooldown", "m
   });
 }
 {
-  const name = "Executioner's axe", effect = "Hits on a foe below 25% HP deal double.";
+  const name = "Executioner's axe", effect = "Hits on a foe below 25% HP deal ×2.";
   weapon("axe", "rare", name, {
     effect, stats: [sp("crit_damage", "medium"), sp("accuracy", "medium")],
     statuses: [own_(name, effect, { boosts: hits(against(100, { hpBelow: 25 })) })],
@@ -560,7 +560,7 @@ weapon("axe", "common", "Cleaver", { stats: [critStep(2), down(sp("cooldown", "m
 {
   const name = "The Red Feast", on_ = `${id(name)}_on`;
   // Half again, not double, on the hits: a Pact party holds its wearer below half all fight (the brink).
-  const effect = "Below half HP: hits deal +50% and Lifesteal doubles. After a won fight, heals up to half HP.";
+  const effect = "Below 50% HP: hits deal +50% and Lifesteal ×2. After a won fight, heals up to 50% HP.";
   weapon("axe", "legendary", name, {
     effect, stats: [st("max_hp", 1), sp("siphon", "medium")],
     statuses: [
@@ -570,7 +570,7 @@ weapon("axe", "common", "Cleaver", { stats: [critStep(2), down(sp("cooldown", "m
           reactIf(on("fight_won"), { side: "self", where: { hpBelow: 50 } }, { op: "heal", amount: { scale: [{ ratio: 0.5, stat: "max_hp", of: "holder" }, { ratio: -1, hp: "current", of: "holder" }] }, to: "holder" }),
         ],
       }),
-      switched(on_, "FEAST", "Hits deal +50% and Lifesteal is doubled.", {
+      switched(on_, "FEAST", "Hits deal +50% and Lifesteal ×2.", {
         boosts: hits(50), stats: [{ stat: "lifesteal", flat: share(1, "lifesteal"), live: true }],
       }),
     ],
@@ -579,7 +579,7 @@ weapon("axe", "common", "Cleaver", { stats: [critStep(2), down(sp("cooldown", "m
 }
 {
   // Half as often is its shape (Attack speed −100 counts no step); the boost doubles its basic attacks.
-  const name = "Headsman's axe", effect = "Basic attacks come half as often and deal double. On a kill: next basic attack comes at once.";
+  const name = "Headsman's axe", effect = "Basic attacks come 50% as often and deal ×2. On a kill: next basic attack comes at once.";
   weapon("axe", "legendary", name, {
     effect, stats: [{ stat: "attack_speed", flat: -100 }, sp("crit_damage", "medium"), st("defense", 1)],
     statuses: [own_(name, effect, { boosts: [{ tag: "basic", pct: 100 }], reactions: [react(EV.kill, swingNow())] })],

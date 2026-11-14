@@ -9,7 +9,7 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
 
 {
   // The Foothills' larger Shields: every ally's Shields on a Foothill are a third bigger, its own included.
-  const peak = "While every ally holds a Shield, each hit lands twice.";
+  const peak = "While every ally holds a Shield, each hit lands 2 times.";
   const foothill = "At fight start: a Shield of 20% of its max HP. Shields on it are 33% bigger.";
   add(
     formation("The mountain", "legendary", "A peak that stands on the party's stone.", [
@@ -58,7 +58,7 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
   );
 }
 {
-  const party = "Every ally's basic attacks come twice as often, for 45% of the damage.";
+  const party = "Every ally's basic attacks come 100% faster, for 45% of the damage.";
   add(
     formation("The hundred hands", "legendary", "A blur of small blows.", thrice({ name: "Hand", text: NOTHING }), { text: party, stats: [{ stat: "attack_speed", flat: 100 }], statuses: ["the_hundred_hands"] }),
     [held("the_hundred_hands", "The hundred hands", "Basic attacks deal 45% of the damage.", { boosts: [{ tag: "basic", pct: -55 }] })],
@@ -136,7 +136,7 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
   add(
     formation("Twins", "legendary", "Two are bound as one.", [
       ...twice({ name: "Twin", text: twin, statuses: ["twins_twin"] }),
-      { name: "Odd one out", text: "Attack up two steps.", stats: [st("attack", 2)] },
+      { name: "Odd one out", text: "Attack up 2 steps.", stats: [st("attack", 2)] },
     ]),
     [held("twins_twin", "Twin", twin, { reactions: [react(on("status_gained", { other: "holder", repeat: false }), { op: "share", to: { side: "others", where: { has: "twins_twin" }, pick: "all" } })] })],
     "exotic ⚙ borrowed gift (key), two in the dark (half)",

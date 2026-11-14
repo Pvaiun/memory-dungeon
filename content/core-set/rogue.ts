@@ -293,8 +293,8 @@ export const ROGUE_EVENTS: RogueEvent[] = [
   {
     id: "wounded_traveller", name: "A Wounded Traveller", text: "Someone lies hurt by the road, a weapon still in hand. They look like they can fight.",
     options: [
-      { id: "take", label: "TAKE THEM IN", text: "They join you, hurt: a third of their HP.", do: [{ op: "recruit", hp: 33 }] },
-      { id: "lesson", label: "A LESSON", text: "Patched up, they show yours a few tricks before they go: three members each learn an ability or train one.", do: [{ op: "train", n: 3 }] },
+      { id: "take", label: "TAKE THEM IN", text: "They join you, hurt: 33% of their HP.", do: [{ op: "recruit", hp: 33 }] },
+      { id: "lesson", label: "A LESSON", text: "Patched up, they show yours a few tricks before they go: 3 members each learn an ability or train one.", do: [{ op: "train", n: 3 }] },
       { id: "rob", label: "TAKE THEIR PURSE", text: "+40 gold.", do: [{ op: "gold", amount: 40 }] },
       { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
     ],
@@ -310,7 +310,7 @@ export const ROGUE_EVENTS: RogueEvent[] = [
   {
     id: "gambler", name: "The Gambler", text: "A grinning stranger with a pair of bone dice. \"Double or nothing?\"",
     options: [
-      { id: "bet", label: "BET 40 GOLD", text: "Half the time, win 100 back.", gold: 40, do: [{ op: "chance", pct: 50, then: [{ op: "gold", amount: 100 }], else: [] }] },
+      { id: "bet", label: "BET 40 GOLD", text: "50% of the time, win 100 back.", gold: 40, do: [{ op: "chance", pct: 50, then: [{ op: "gold", amount: 100 }], else: [] }] },
       { id: "leave", label: "WALK AWAY", text: "Nothing happens.", do: [] },
     ],
   },
@@ -346,7 +346,7 @@ export const ROGUE_EVENTS: RogueEvent[] = [
   {
     id: "strange_chest", name: "A Strange Chest", text: "A chest in the middle of the road, unlocked. Too easy?",
     options: [
-      { id: "open", label: "OPEN IT", text: "Two times in three, a legendary piece. Otherwise it bites: a hard fight.", do: [{ op: "chance", pct: 67, then: [{ op: "gear", rarity: "legendary" }], else: [{ op: "fight", tier: "elite" }] }] },
+      { id: "open", label: "OPEN IT", text: "67% of the time, a legendary piece. Otherwise it bites: a hard fight.", do: [{ op: "chance", pct: 67, then: [{ op: "gear", rarity: "legendary" }], else: [{ op: "fight", tier: "elite" }] }] },
       { id: "leave", label: "LEAVE IT", text: "Nothing happens.", do: [] },
     ],
   },
@@ -354,13 +354,13 @@ export const ROGUE_EVENTS: RogueEvent[] = [
     id: "camp", name: "An Empty Camp", text: "Someone left in a hurry: the fire is still burning, the bedrolls still laid out.",
     options: [
       { id: "camp", label: "MAKE CAMP", text: "A campfire: everyone recovers and the fallen rise, then rest or train.", do: [{ op: "camp" }] },
-      { id: "search", label: "SEARCH THE PACKS", text: "20 gold, and a potion, a tonic or a phoenix feather (with someone down, the feather raises them at half HP).", do: [{ op: "gold", amount: 20 }, { op: "chance", pct: 40, then: [{ op: "supply", id: "potion" }], else: [{ op: "chance", pct: 50, then: [{ op: "supply", id: "tonic" }], else: [{ op: "supply", id: "phoenix" }] }] }] },
+      { id: "search", label: "SEARCH THE PACKS", text: "20 gold, and a potion, a tonic or a phoenix feather (with someone down, the feather raises them at 50% HP).", do: [{ op: "gold", amount: 20 }, { op: "chance", pct: 40, then: [{ op: "supply", id: "potion" }], else: [{ op: "chance", pct: 50, then: [{ op: "supply", id: "tonic" }], else: [{ op: "supply", id: "phoenix" }] }] }] },
     ],
   },
   {
     id: "pilgrims", name: "Pilgrims", text: "A band of pilgrims with a healer among them. \"For a donation…\"",
     options: [
-      { id: "donate", label: "DONATE 40", text: "Everyone recovers 40% of max HP, and one fallen member rises at half HP (with nobody down, the healer gives you a phoenix feather).", gold: 40, do: [{ op: "hp", pct: 40 }, { op: "supply", id: "phoenix" }] },
+      { id: "donate", label: "DONATE 40", text: "Everyone recovers 40% of max HP, and one fallen member rises at 50% HP (with nobody down, the healer gives you a phoenix feather).", gold: 40, do: [{ op: "hp", pct: 40 }, { op: "supply", id: "phoenix" }] },
       { id: "leave", label: "PASS BY", text: "Nothing happens.", do: [] },
     ],
   },
@@ -368,19 +368,19 @@ export const ROGUE_EVENTS: RogueEvent[] = [
   {
     id: "deserter", name: "A Deserter", text: "A soldier slumps against a milestone, still in uniform. \"I'm done with them. Not with fighting.\"",
     options: [
-      { id: "take", label: "TAKE THEM IN", text: "They join you at half HP, with an uncommon piece suited to them.", do: [{ op: "recruit", hp: 50, gear: "uncommon" }] },
-      { id: "lesson", label: "A LESSON", text: "They teach yours their drill and walk on: three members each learn an ability or train one.", do: [{ op: "train", n: 3 }] },
+      { id: "take", label: "TAKE THEM IN", text: "They join you at 50% HP, with an uncommon piece suited to them.", do: [{ op: "recruit", hp: 50, gear: "uncommon" }] },
+      { id: "lesson", label: "A LESSON", text: "They teach yours their drill and walk on: 3 members each learn an ability or train one.", do: [{ op: "train", n: 3 }] },
       { id: "turn", label: "TURN THEM IN", text: "+50 gold.", do: [{ op: "gold", amount: 50 }] },
     ],
     variants: [
       { options: [
-        { id: "take", label: "TAKE THEM IN", text: "They join you at half HP, with an uncommon piece suited to them.", do: [{ op: "recruit", hp: 50, gear: "uncommon" }] },
-        { id: "lesson", label: "A LESSON", text: "They teach yours their drill and walk on: three members each learn an ability or train one.", do: [{ op: "train", n: 3 }] },
+        { id: "take", label: "TAKE THEM IN", text: "They join you at 50% HP, with an uncommon piece suited to them.", do: [{ op: "recruit", hp: 50, gear: "uncommon" }] },
+        { id: "lesson", label: "A LESSON", text: "They teach yours their drill and walk on: 3 members each learn an ability or train one.", do: [{ op: "train", n: 3 }] },
         { id: "turn", label: "TURN THEM IN", text: "+50 gold.", do: [{ op: "gold", amount: 50 }] },
       ] },
       { text: "An officer, by the look of the blade at their hip, bleeding from a wound they won't explain.", options: [
-        { id: "take", label: "TAKE THEM IN", text: "They join you at a third of their HP, knowing two abilities, with a rare piece suited to them.", do: [{ op: "recruit", hp: 33, known: 2, gear: "rare" }] },
-        { id: "lesson", label: "A LESSON", text: "They teach yours an officer's drill and walk on: three members each learn an ability or train one.", do: [{ op: "train", n: 3 }] },
+        { id: "take", label: "TAKE THEM IN", text: "They join you at 33% of their HP, knowing 2 abilities, with a rare piece suited to them.", do: [{ op: "recruit", hp: 33, known: 2, gear: "rare" }] },
+        { id: "lesson", label: "A LESSON", text: "They teach yours an officer's drill and walk on: 3 members each learn an ability or train one.", do: [{ op: "train", n: 3 }] },
         { id: "blade", label: "TAKE THE BLADE", text: "A rare piece; they limp off.", do: [{ op: "gear", rarity: "rare" }] },
       ] },
     ],
@@ -388,16 +388,16 @@ export const ROGUE_EVENTS: RogueEvent[] = [
   {
     id: "mercenaries", name: "Mercenaries", text: "A company of sellswords around a crossroads fire. \"Coin first.\"",
     options: [
-      { id: "hire", label: "HIRE ONE FOR 60", text: "Pick one of three recruits.", gold: 60, do: [{ op: "muster", n: 3 }] },
+      { id: "hire", label: "HIRE 1 FOR 60", text: "Pick 1 of 3 recruits.", gold: 60, do: [{ op: "muster", n: 3 }] },
       { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
     ],
     variants: [
       { options: [
-        { id: "hire", label: "HIRE ONE FOR 60", text: "Pick one of three recruits.", gold: 60, do: [{ op: "muster", n: 3 }] },
+        { id: "hire", label: "HIRE 1 FOR 60", text: "Pick 1 of 3 recruits.", gold: 60, do: [{ op: "muster", n: 3 }] },
         { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
       ] },
       { text: "Veterans, scarred and expensive. \"We know our trade.\"", options: [
-        { id: "hire", label: "HIRE ONE FOR 110", text: "Pick one of two recruits who know all three abilities.", gold: 110, do: [{ op: "muster", n: 2, known: 3 }] },
+        { id: "hire", label: "HIRE 1 FOR 110", text: "Pick 1 of 2 recruits who know all 3 abilities.", gold: 110, do: [{ op: "muster", n: 2, known: 3 }] },
         { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
       ] },
     ],
@@ -414,7 +414,7 @@ export const ROGUE_EVENTS: RogueEvent[] = [
         { id: "pass", label: "LET IT PASS", text: "Nothing happens.", do: [] },
       ] },
       { text: "A cart with a cage on the back, and an escort of hard-looking guards. The prisoner wears an old company's colours.", options: [
-        { id: "free", label: "FREE THE PRISONER", text: "They join you knowing two abilities, and the escort attacks: a hard fight, with an elite's spoils.", do: [{ op: "recruit", known: 2 }, { op: "fight", tier: "elite" }] },
+        { id: "free", label: "FREE THE PRISONER", text: "They join you knowing 2 abilities, and the escort attacks: a hard fight, with an elite's spoils.", do: [{ op: "recruit", known: 2 }, { op: "fight", tier: "elite" }] },
         { id: "pass", label: "LET IT PASS", text: "Nothing happens.", do: [] },
       ] },
     ],
@@ -422,16 +422,16 @@ export const ROGUE_EVENTS: RogueEvent[] = [
   {
     id: "rival_company", name: "A Rival Company", text: "Another party shares the road. Their captain eyes your newest recruit. \"A trade? One of yours for one of ours, sight unseen.\"",
     options: [
-      { id: "trade", label: "TRADE", text: "Your newest member (never the leader) leaves; their gear stays in your bag. One of theirs joins, knowing all three abilities.", do: [{ op: "trade" }] },
+      { id: "trade", label: "TRADE", text: "Your newest member (never the leader) leaves; their gear stays in your bag. One of theirs joins, knowing all 3 abilities.", do: [{ op: "trade" }] },
       { id: "decline", label: "DECLINE", text: "Nothing happens.", do: [] },
     ],
     variants: [
       { options: [
-        { id: "trade", label: "TRADE", text: "Your newest member (never the leader) leaves; their gear stays in your bag. One of theirs joins, knowing all three abilities.", do: [{ op: "trade" }] },
+        { id: "trade", label: "TRADE", text: "Your newest member (never the leader) leaves; their gear stays in your bag. One of theirs joins, knowing all 3 abilities.", do: [{ op: "trade" }] },
         { id: "decline", label: "DECLINE", text: "Nothing happens.", do: [] },
       ] },
       { text: "Another party shares the road, short of hands and long on coin. \"A trade, and we'll pay for it.\"", options: [
-        { id: "trade", label: "TRADE FOR 60", text: "Your newest member (never the leader) leaves; their gear stays in your bag. One of theirs joins, knowing all three abilities, and +60 gold.", do: [{ op: "trade" }, { op: "gold", amount: 60 }] },
+        { id: "trade", label: "TRADE FOR 60", text: "Your newest member (never the leader) leaves; their gear stays in your bag. One of theirs joins, knowing all 3 abilities, and +60 gold.", do: [{ op: "trade" }, { op: "gold", amount: 60 }] },
         { id: "decline", label: "DECLINE", text: "Nothing happens.", do: [] },
       ] },
     ],
@@ -460,16 +460,16 @@ export const ROGUE_EVENTS: RogueEvent[] = [
   {
     id: "training_hall", name: "A Training Hall", text: "Practice dummies, a rack of blunted weapons, and a sergeant with a whistle.",
     options: [
-      { id: "train", label: "TRAIN FOR 50", text: "Three members each learn an ability or train one.", gold: 50, do: [{ op: "train", n: 3 }] },
+      { id: "train", label: "TRAIN FOR 50", text: "3 members each learn an ability or train one.", gold: 50, do: [{ op: "train", n: 3 }] },
       { id: "watch", label: "WATCH", text: "One member learns an ability.", do: [{ op: "learn" }] },
     ],
     variants: [
       { options: [
-        { id: "train", label: "TRAIN FOR 50", text: "Three members each learn an ability or train one.", gold: 50, do: [{ op: "train", n: 3 }] },
+        { id: "train", label: "TRAIN FOR 50", text: "3 members each learn an ability or train one.", gold: 50, do: [{ op: "train", n: 3 }] },
         { id: "watch", label: "WATCH", text: "One member learns an ability.", do: [{ op: "learn" }] },
       ] },
       { text: "The sergeant drills anyone who walks in, for free, and hard.", options: [
-        { id: "train", label: "TAKE THE DRILL", text: "Three members each learn an ability or train one; everyone loses 15% of max HP.", do: [{ op: "hp", pct: -15 }, { op: "train", n: 3 }] },
+        { id: "train", label: "TAKE THE DRILL", text: "3 members each learn an ability or train one; everyone loses 15% of max HP.", do: [{ op: "hp", pct: -15 }, { op: "train", n: 3 }] },
         { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
       ] },
     ],
@@ -488,7 +488,7 @@ export const ROGUE_EVENTS: RogueEvent[] = [
         { id: "scrap", label: "SELL HIM SCRAP", text: "+40 gold.", do: [{ op: "gold", amount: 40 }] },
       ] },
       { text: "The smith is drunk, cheerful and working for free. \"Give it here. I'll make it sing.\"", options: [
-        { id: "try", label: "LET HIM TRY", text: "A piece of yours becomes one of the next rarity, of its kind (a rare one a legendary). Half the time it cracks and is lost.", do: [{ op: "temper", from: ["common", "uncommon", "rare"], risk: 50 }] },
+        { id: "try", label: "LET HIM TRY", text: "A piece of yours becomes one of the next rarity, of its kind (a rare one a legendary). 50% of the time it cracks and is lost.", do: [{ op: "temper", from: ["common", "uncommon", "rare"], risk: 50 }] },
         { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
       ] },
     ],
@@ -496,18 +496,18 @@ export const ROGUE_EVENTS: RogueEvent[] = [
   {
     id: "prisoner_convoy", name: "A Prisoner Convoy", text: "Three prisoners in chains on a cart, their confiscated gear in a sack beside the guards.",
     options: [
-      { id: "free", label: "FREE ONE", text: "Pick one of three prisoners, each with a piece from the sack. The guards attack: a fight.", do: [{ op: "muster", n: 3, gear: "uncommon" }, { op: "fight", tier: "normal" }] },
-      { id: "bribe", label: "BRIBE THE GUARDS", text: "Pick one of three prisoners, each with a piece from the sack. No fight.", gold: 60, do: [{ op: "muster", n: 3, gear: "uncommon" }] },
+      { id: "free", label: "FREE 1", text: "Pick 1 of 3 prisoners, each with a piece from the sack. The guards attack: a fight.", do: [{ op: "muster", n: 3, gear: "uncommon" }, { op: "fight", tier: "normal" }] },
+      { id: "bribe", label: "BRIBE THE GUARDS", text: "Pick 1 of 3 prisoners, each with a piece from the sack. No fight.", gold: 60, do: [{ op: "muster", n: 3, gear: "uncommon" }] },
       { id: "ride", label: "RIDE ON", text: "Nothing happens.", do: [] },
     ],
     variants: [
       { options: [
-        { id: "free", label: "FREE ONE", text: "Pick one of three prisoners, each with a piece from the sack. The guards attack: a fight.", do: [{ op: "muster", n: 3, gear: "uncommon" }, { op: "fight", tier: "normal" }] },
-        { id: "bribe", label: "BRIBE THE GUARDS", text: "Pick one of three prisoners, each with a piece from the sack. No fight.", gold: 60, do: [{ op: "muster", n: 3, gear: "uncommon" }] },
+        { id: "free", label: "FREE 1", text: "Pick 1 of 3 prisoners, each with a piece from the sack. The guards attack: a fight.", do: [{ op: "muster", n: 3, gear: "uncommon" }, { op: "fight", tier: "normal" }] },
+        { id: "bribe", label: "BRIBE THE GUARDS", text: "Pick 1 of 3 prisoners, each with a piece from the sack. No fight.", gold: 60, do: [{ op: "muster", n: 3, gear: "uncommon" }] },
         { id: "ride", label: "RIDE ON", text: "Nothing happens.", do: [] },
       ] },
       { text: "A convoy of hardened convicts under heavy guard. One wears an old company's colours.", options: [
-        { id: "free", label: "FREE ONE", text: "Pick one of three, each knowing two abilities and carrying a rare piece. The escort attacks: a hard fight, with an elite's spoils.", do: [{ op: "muster", n: 3, known: 2, gear: "rare" }, { op: "fight", tier: "elite" }] },
+        { id: "free", label: "FREE 1", text: "Pick 1 of 3, each knowing 2 abilities and carrying a rare piece. The escort attacks: a hard fight, with an elite's spoils.", do: [{ op: "muster", n: 3, known: 2, gear: "rare" }, { op: "fight", tier: "elite" }] },
         { id: "ride", label: "RIDE ON", text: "Nothing happens.", do: [] },
       ] },
     ],
@@ -515,17 +515,17 @@ export const ROGUE_EVENTS: RogueEvent[] = [
   {
     id: "old_soldier", name: "An Old Soldier", text: "A grey-haired soldier sharpening a blade by the road. \"Still got some fight in me. Or some sense, if you'd rather.\"",
     options: [
-      { id: "take", label: "TAKE HIM IN", text: "He joins you, knowing two abilities.", do: [{ op: "recruit", known: 2 }] },
-      { id: "lesson", label: "A LESSON", text: "Three members each learn an ability or train one; he stays by the road.", do: [{ op: "train", n: 3 }] },
+      { id: "take", label: "TAKE HIM IN", text: "He joins you, knowing 2 abilities.", do: [{ op: "recruit", known: 2 }] },
+      { id: "lesson", label: "A LESSON", text: "3 members each learn an ability or train one; he stays by the road.", do: [{ op: "train", n: 3 }] },
     ],
     variants: [
       { options: [
-        { id: "take", label: "TAKE HIM IN", text: "He joins you, knowing two abilities.", do: [{ op: "recruit", known: 2 }] },
-        { id: "lesson", label: "A LESSON", text: "Three members each learn an ability or train one; he stays by the road.", do: [{ op: "train", n: 3 }] },
+        { id: "take", label: "TAKE HIM IN", text: "He joins you, knowing 2 abilities.", do: [{ op: "recruit", known: 2 }] },
+        { id: "lesson", label: "A LESSON", text: "3 members each learn an ability or train one; he stays by the road.", do: [{ op: "train", n: 3 }] },
       ] },
       { text: "An old soldier with a limp, too slow to march with anyone, too proud to beg.", options: [
-        { id: "take", label: "TAKE HIM IN", text: "He joins you at half HP, knowing two abilities, with an uncommon piece suited to him.", do: [{ op: "recruit", known: 2, hp: 50, gear: "uncommon" }] },
-        { id: "lesson", label: "A LESSON", text: "Three members each learn an ability or train one.", do: [{ op: "train", n: 3 }] },
+        { id: "take", label: "TAKE HIM IN", text: "He joins you at 50% HP, knowing 2 abilities, with an uncommon piece suited to him.", do: [{ op: "recruit", known: 2, hp: 50, gear: "uncommon" }] },
+        { id: "lesson", label: "A LESSON", text: "3 members each learn an ability or train one.", do: [{ op: "train", n: 3 }] },
         { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
       ] },
     ],
@@ -533,17 +533,17 @@ export const ROGUE_EVENTS: RogueEvent[] = [
   {
     id: "sealed_crates", name: "Three Sealed Crates", text: "Three crates, nailed shut and stamped with a merchant's mark. Room on your cart for one.",
     options: [
-      { id: "open", label: "OPEN ONE", text: "A piece of unknown rarity: one crate holds a legendary, one a rare, one a common.", do: [{ op: "chance", pct: 33, then: [{ op: "gear", rarity: "legendary" }], else: [{ op: "chance", pct: 50, then: [{ op: "gear", rarity: "rare" }], else: [{ op: "gear", rarity: "common" }] }] }] },
+      { id: "open", label: "OPEN 1", text: "A piece of unknown rarity: one crate holds a legendary, one a rare, one a common.", do: [{ op: "chance", pct: 33, then: [{ op: "gear", rarity: "legendary" }], else: [{ op: "chance", pct: 50, then: [{ op: "gear", rarity: "rare" }], else: [{ op: "gear", rarity: "common" }] }] }] },
       { id: "leave", label: "LEAVE THEM", text: "Nothing happens.", do: [] },
     ],
     variants: [
       { options: [
-        { id: "open", label: "OPEN ONE", text: "A piece of unknown rarity: one crate holds a legendary, one a rare, one a common.", do: [{ op: "chance", pct: 33, then: [{ op: "gear", rarity: "legendary" }], else: [{ op: "chance", pct: 50, then: [{ op: "gear", rarity: "rare" }], else: [{ op: "gear", rarity: "common" }] }] }] },
+        { id: "open", label: "OPEN 1", text: "A piece of unknown rarity: one crate holds a legendary, one a rare, one a common.", do: [{ op: "chance", pct: 33, then: [{ op: "gear", rarity: "legendary" }], else: [{ op: "chance", pct: 50, then: [{ op: "gear", rarity: "rare" }], else: [{ op: "gear", rarity: "common" }] }] }] },
         { id: "leave", label: "LEAVE THEM", text: "Nothing happens.", do: [] },
       ] },
       { text: "Three crates, nailed shut, and the merchant's boy, who'll pry open a second for a coin.", options: [
-        { id: "open", label: "OPEN ONE", text: "A piece of unknown rarity: one crate holds a legendary, one a rare, one a common.", do: [{ op: "chance", pct: 33, then: [{ op: "gear", rarity: "legendary" }], else: [{ op: "chance", pct: 50, then: [{ op: "gear", rarity: "rare" }], else: [{ op: "gear", rarity: "common" }] }] }] },
-        { id: "two", label: "OPEN TWO", text: "Two of the three crates, at random.", gold: 30, do: [{ op: "chance", pct: 33, then: [{ op: "gear", rarity: "rare" }, { op: "gear", rarity: "common" }], else: [{ op: "gear", rarity: "legendary" }, { op: "chance", pct: 50, then: [{ op: "gear", rarity: "rare" }], else: [{ op: "gear", rarity: "common" }] }] }] },
+        { id: "open", label: "OPEN 1", text: "A piece of unknown rarity: one crate holds a legendary, one a rare, one a common.", do: [{ op: "chance", pct: 33, then: [{ op: "gear", rarity: "legendary" }], else: [{ op: "chance", pct: 50, then: [{ op: "gear", rarity: "rare" }], else: [{ op: "gear", rarity: "common" }] }] }] },
+        { id: "two", label: "OPEN 2", text: "2 of the 3 crates, at random.", gold: 30, do: [{ op: "chance", pct: 33, then: [{ op: "gear", rarity: "rare" }, { op: "gear", rarity: "common" }], else: [{ op: "gear", rarity: "legendary" }, { op: "chance", pct: 50, then: [{ op: "gear", rarity: "rare" }], else: [{ op: "gear", rarity: "common" }] }] }] },
       ] },
     ],
   },
@@ -567,18 +567,18 @@ export const ROGUE_EVENTS: RogueEvent[] = [
   {
     id: "field_hospital", name: "A Field Hospital", text: "Tents, cots, and a surgeon who has seen worse than you.",
     options: [
-      { id: "pay", label: "PAY THE SURGEON", text: "Everyone recovers 40% of max HP, and the fallen rise at half HP.", gold: 50, do: [{ op: "hp", pct: 40 }, { op: "revive", pct: 50 }] },
+      { id: "pay", label: "PAY THE SURGEON", text: "Everyone recovers 40% of max HP, and the fallen rise at 50% HP.", gold: 50, do: [{ op: "hp", pct: 40 }, { op: "revive", pct: 50 }] },
       { id: "medic", label: "HIRE THE MEDIC", text: "One who heals or raises others joins you.", gold: 80, do: [{ op: "recruit", healer: true }] },
       { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
     ],
     variants: [
       { options: [
-        { id: "pay", label: "PAY THE SURGEON", text: "Everyone recovers 40% of max HP, and the fallen rise at half HP.", gold: 50, do: [{ op: "hp", pct: 40 }, { op: "revive", pct: 50 }] },
+        { id: "pay", label: "PAY THE SURGEON", text: "Everyone recovers 40% of max HP, and the fallen rise at 50% HP.", gold: 50, do: [{ op: "hp", pct: 40 }, { op: "revive", pct: 50 }] },
         { id: "medic", label: "HIRE THE MEDIC", text: "One who heals or raises others joins you.", gold: 80, do: [{ op: "recruit", healer: true }] },
         { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
       ] },
       { text: "A hospital overrun with wounded. The surgeon looks up: \"You. Hands. Now.\"", options: [
-        { id: "help", label: "HELP OUT", text: "Everyone loses 15% of max MP. A potion and a phoenix feather from the stores (with someone down, the feather raises them at half HP).", do: [{ op: "mp", pct: -15 }, { op: "supply", id: "potion" }, { op: "supply", id: "phoenix" }] },
+        { id: "help", label: "HELP OUT", text: "Everyone loses 15% of max MP. A potion and a phoenix feather from the stores (with someone down, the feather raises them at 50% HP).", do: [{ op: "mp", pct: -15 }, { op: "supply", id: "potion" }, { op: "supply", id: "phoenix" }] },
         { id: "leave", label: "WALK ON", text: "Nothing happens.", do: [] },
       ] },
     ],
@@ -604,12 +604,12 @@ export const ROGUE_EVENTS: RogueEvent[] = [
     id: "duelling_ground", name: "A Duelling Ground", text: "A ring of stakes, a champion inside it, and a crowd that wants blood.",
     options: [
       { id: "challenge", label: "CHALLENGE THE CHAMPION", text: "A hard fight, with an elite's spoils: a legendary, then a formation.", do: [{ op: "fight", tier: "elite" }] },
-      { id: "watch", label: "WATCH", text: "Three members each learn an ability or train one from the champion's form.", do: [{ op: "train", n: 3 }] },
+      { id: "watch", label: "WATCH", text: "3 members each learn an ability or train one from the champion's form.", do: [{ op: "train", n: 3 }] },
     ],
     variants: [
       { options: [
         { id: "challenge", label: "CHALLENGE THE CHAMPION", text: "A hard fight, with an elite's spoils: a legendary, then a formation.", do: [{ op: "fight", tier: "elite" }] },
-        { id: "watch", label: "WATCH", text: "Three members each learn an ability or train one from the champion's form.", do: [{ op: "train", n: 3 }] },
+        { id: "watch", label: "WATCH", text: "3 members each learn an ability or train one from the champion's form.", do: [{ op: "train", n: 3 }] },
       ] },
       { text: "An empty ring. The last champion's gear hangs on a stake under a sign: TAKE IT IF YOU CAN LIFT IT.", options: [
         { id: "lift", label: "LIFT IT", text: "A legendary piece; everyone loses 20% of max HP.", do: [{ op: "hp", pct: -20 }, { op: "gear", rarity: "legendary" }] },
@@ -620,13 +620,13 @@ export const ROGUE_EVENTS: RogueEvent[] = [
   {
     id: "armoury", name: "The Abandoned Armoury", text: "Racks of old weapons behind a door hanging off its hinges. Something breathes further in.",
     options: [
-      { id: "search", label: "SEARCH", text: "Two uncommon pieces.", do: [{ op: "gear", rarity: "uncommon" }, { op: "gear", rarity: "uncommon" }] },
-      { id: "deeper", label: "SEARCH DEEPER", text: "Three rare pieces, and whatever breathes wakes: a hard fight, with an elite's spoils.", do: [{ op: "gear", rarity: "rare" }, { op: "gear", rarity: "rare" }, { op: "gear", rarity: "rare" }, { op: "fight", tier: "elite" }] },
+      { id: "search", label: "SEARCH", text: "2 uncommon pieces.", do: [{ op: "gear", rarity: "uncommon" }, { op: "gear", rarity: "uncommon" }] },
+      { id: "deeper", label: "SEARCH DEEPER", text: "3 rare pieces, and whatever breathes wakes: a hard fight, with an elite's spoils.", do: [{ op: "gear", rarity: "rare" }, { op: "gear", rarity: "rare" }, { op: "gear", rarity: "rare" }, { op: "fight", tier: "elite" }] },
     ],
     variants: [
       { options: [
-        { id: "search", label: "SEARCH", text: "Two uncommon pieces.", do: [{ op: "gear", rarity: "uncommon" }, { op: "gear", rarity: "uncommon" }] },
-        { id: "deeper", label: "SEARCH DEEPER", text: "Three rare pieces, and whatever breathes wakes: a hard fight, with an elite's spoils.", do: [{ op: "gear", rarity: "rare" }, { op: "gear", rarity: "rare" }, { op: "gear", rarity: "rare" }, { op: "fight", tier: "elite" }] },
+        { id: "search", label: "SEARCH", text: "2 uncommon pieces.", do: [{ op: "gear", rarity: "uncommon" }, { op: "gear", rarity: "uncommon" }] },
+        { id: "deeper", label: "SEARCH DEEPER", text: "3 rare pieces, and whatever breathes wakes: a hard fight, with an elite's spoils.", do: [{ op: "gear", rarity: "rare" }, { op: "gear", rarity: "rare" }, { op: "gear", rarity: "rare" }, { op: "fight", tier: "elite" }] },
       ] },
       { text: "The armoury's old caretaker is still here, and wants paying for what he's kept oiled all these years.", options: [
         { id: "buy", label: "BUY THE BEST", text: "A legendary piece.", gold: 90, do: [{ op: "gear", rarity: "legendary" }] },

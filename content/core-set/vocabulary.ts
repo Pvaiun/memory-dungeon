@@ -87,7 +87,7 @@ export const vocabulary: StatusT[] = [
   // Fundamental
   // Nothing on its own and no duration; each hit the holder takes opens it.
   {
-    id: "bleed", name: "BLEED", text: "Each hit it takes deals damage for each stack, then a third of the stacks close.", label: "debuff", show: "icon", stacking: "intensity",
+    id: "bleed", name: "BLEED", text: `Each hit it takes deals damage for each stack, then ${Math.round(STATUS.bleed.drop * 100)}% of the stacks close.`, label: "debuff", show: "icon", stacking: "intensity",
     trigger: { on: { event: "hit_taken" }, do: [{ op: "damage", type: "none", amount: STATUS.bleed.perStack, to: "holder" }] }, drop: { fraction: STATUS.bleed.drop },
   },
   { id: "regen", name: "REGEN", text: "Recovers health over time.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.regen.duration, pulse: { every: STATUS.regen.every, do: [{ op: "heal", amount: { scale: [{ ratio: STATUS.regen.share, stat: "max_hp", of: "holder" }] } }] } },
@@ -143,7 +143,7 @@ export const vocabulary: StatusT[] = [
     reactions: [{ on: { event: "status_ended", status: "bulwark", cause: ["stacks"] }, do: [{ op: "apply", status: "bulwark_broken", to: "holder" }] }],
   },
   {
-    id: "bulwark_broken", name: "BROKEN", text: "Stunned and takes double damage, until the Bulwark refills.", label: "debuff", show: "icon", stacking: "refresh", unremovable: true, duration: STATUS.bulwark.broken,
+    id: "bulwark_broken", name: "BROKEN", text: "Stunned and takes ×2 damage, until the Bulwark refills.", label: "debuff", show: "icon", stacking: "refresh", unremovable: true, duration: STATUS.bulwark.broken,
     lockout: { covers: "all", interrupt: true }, taken: [{ pct: STATUS.bulwark.takenPct }],
     reactions: [{ on: { event: "status_ended", status: "bulwark_broken", cause: ["expired"] }, do: [{ op: "apply", status: "bulwark", stacks: STATUS.bulwark.stacks, to: "holder" }] }],
   },

@@ -50,7 +50,7 @@ export function overView(run: RogueRun): Child[] {
   return [
     header(won ? "VICTORY" : "THE RUN ENDS", null),
     scene(run, "over", { h: 112, night: !won, actors: partyActors(run, 112, won ? "victory" : "dead", { cx: 135 }) }),
-    win("", h("div", { class: `line ${won ? "good" : "bad"}` }, won ? "ALL THREE ACTS CLEARED" : `FELL IN ACT ${ROMAN[run.act]}, FLOOR ${run.floor}`),
+    win("", h("div", { class: `line ${won ? "good" : "bad"}` }, won ? "ALL 3 ACTS CLEARED" : `FELL IN ACT ${ROMAN[run.act]}, FLOOR ${run.floor}`),
       h("div", { class: "line small dim wrap" }, `${run.stats.fights} FIGHTS · ${run.stats.elites} ELITES · ${run.stats.gold}G EARNED`),
       won && !choice ? h("div", { class: "line small dim wrap" }, "THE WHOLE PARTY CAN ALREADY LEAD A RUN") : null),
     choice,

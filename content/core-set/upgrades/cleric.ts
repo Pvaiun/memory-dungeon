@@ -27,12 +27,12 @@ import { abilityUp, apply, DRAWN, helper, kit, ofHolder, passiveUp, removeMine }
     ];
   };
   const rite: ReactionT = { on: { event: "ko", whose: "ally" }, do: [apply("rite_of_passage", { to: "holder" })] };
-  helper(kit("rite_of_passage", "RITE OF PASSAGE", "Cooldowns halved.", { duration: 20, stats: [{ stat: "cooldown_reduction", flat: 100 }] }));
+  helper(kit("rite_of_passage", "RITE OF PASSAGE", "Cooldowns 50% shorter.", { duration: 20, stats: [{ stat: "cooldown_reduction", flat: 100 }] }));
   passiveUp({
     id: "last_rites", cls: "cleric",
     power: "At 40% HP, not 30%.",
-    a: { name: "Shared rites", text: "While any ally is below 30% HP: cooldowns halved.", serves: "Pact 2 ●●● ⚙ brink (half)" },
-    b: { name: "Rite of passage", text: "Below 30% HP, and for 20 ticks after an ally falls: cooldowns halved.", builds: [] },
+    a: { name: "Shared rites", text: "While any ally is below 30% HP: cooldowns 50% shorter.", serves: "Pact 2 ●●● ⚙ brink (half)" },
+    b: { name: "Rite of passage", text: "Below 30% HP, and for 20 ticks after an ally falls: cooldowns 50% shorter.", builds: [] },
     form: (v, _k, plus) => {
       const line = plus ? 40 : 30;
       return { reactions: v === "a" ? shared(line) : v === "b" ? [...own(line), rite] : own(line) };
@@ -101,7 +101,7 @@ import { abilityUp, apply, DRAWN, helper, kit, ofHolder, passiveUp, removeMine }
   abilityUp({
     id: "raise", cls: "cleric",
     power: "Raises at 70% HP, not 50%.",
-    a: { name: "Martyr's raise", text: "Pays half its HP to raise a random fallen ally with that much.", builds: ["pact"], plus: "Raises with 40% more HP than it pays." },
+    a: { name: "Martyr's raise", text: "Pays 50% of its HP to raise a random fallen ally with that much.", builds: ["pact"], plus: "Raises with 40% more HP than it pays." },
     b: { name: "Ward of life", text: "Raises a fallen ally at 50% HP, and Shields the ally with the lowest HP% below 33% HP.", builds: ["toll", "pact"] },
     form: (v, k) => (v === "a" ? martyr(0.5 * k) : v === "b" ? ward(0.5 * k, k / 3) : { do: [{ op: "revive", hp: raiseHp(0.5 * k) }] }),
   });

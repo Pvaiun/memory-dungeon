@@ -43,7 +43,7 @@ export function rewardView(run: RogueRun): Child[] {
     sceneEl,
     goldLine,
     // The choice is named where it's made, right over the cards.
-    win("scroll flat", trophy, p.kind === "treasure" ? null : h("div", { class: "section" }, "PICK ONE"), ...cards),
+    win("scroll flat", trophy, p.kind === "treasure" ? null : h("div", { class: "section" }, "PICK 1"), ...cards),
     actions(
       p.kind === "treasure"
         ? button("TAKE", () => { if (opts.includes("take")) pickOrSave(run, "take"); }, "hi")
@@ -334,7 +334,7 @@ export function roomView(run: RogueRun): Child[] {
     header(p.kind === "muster" ? "MUSTER" : "DRILL GROUND", () => go("home"), h("span", { class: "dim" }, p.kind === "muster" ? `ROSTER ${run.roster.length}/${rogue(c).config.party + seatsOf(c, run)}` : `${run.formations.length} OWNED`)),
     scene(run, `room:${p.kind}`, { h: 96, actors: [...partyActors(run, 96, "wait", { cx: 72 }), ...lootActors(run, p.offers, false, 96, 160, 248)] }),
     full ? h("div", { class: "line small bad wrap" }, "ROSTER FULL: SEND SOMEONE AT CAMP HOME FIRST (PARTY)") : null,
-    win("scroll flat", h("div", { class: "section" }, "PICK ONE"), ...cards),
+    win("scroll flat", h("div", { class: "section" }, "PICK 1"), ...cards),
     actions(take, opts.includes("train") ? button(`TRAIN ${rogue(c).config.drill?.train ?? 3}`, () => { roomPick = null; trainWho = null; pickOrSave(run, "train"); }) : null, button("SKIP", () => { roomPick = null; pickOrSave(run, "skip"); }), button("PARTY", () => go("rparty"))),
   ];
 }
@@ -382,7 +382,7 @@ export function regionView(run: RogueRun): Child[] {
   const seats = by?.[Math.min(run.act + 1, by.length) - 1] ?? 0;
   return [
     header(`ACT ${ROMAN[run.act + 1]}`, () => go("home")),
-    seats > seatsOf(c, run) ? h("div", { class: "line small hi wrap" }, iconEl(ICON.campfire), ` ROOM FOR ONE MORE AT CAMP: ${seats} SEATS`) : null,
+    seats > seatsOf(c, run) ? h("div", { class: "line small hi wrap" }, iconEl(ICON.campfire), ` ROOM FOR 1 MORE AT CAMP: ${seats} SEATS`) : null,
     win("scroll flat", ...p.options.map((id) => {
       const r = rogue(c).regions.find((x) => x.id === id)!;
       // The boss this way is already set by the act's dice: shown with its moves, so the fork is a choice with its eyes open.

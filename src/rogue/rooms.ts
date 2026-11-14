@@ -136,7 +136,7 @@ export function doOps(c: Content, run: RogueRun, ops: readonly EventOpT[], rng: 
         break;
       }
       case "formation": { const o = rollFormation(c, run, rng, [], op.rarity); if (o) (take(c, run, o), note(run, `Gained ${offerText(c, run, o)}.`)); break; }
-      case "seat": if (take(c, run, { kind: "seat" })) note(run, "Room for one more at camp."); break;
+      case "seat": if (take(c, run, { kind: "seat" })) note(run, "Room for 1 more at camp."); break;
       case "trade": {
         // The newest member who isn't the leader leaves (its gear stays in the bag); a stranger joins knowing all three.
         const out = [...run.roster].reverse().find((m) => m.cls !== run.leader);

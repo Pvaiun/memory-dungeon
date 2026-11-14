@@ -41,7 +41,7 @@ armor("plate", "common", "Deacon's plate", { stats: [st("max_mp", 2), st("attack
 armor("plate", "common", "Mauler's cuirass", { stats: [st("attack", 2), down(critStep(1))], serves: "Attack for Crit chance: Blood Pact's drinker and the Toll's free seat in plate." });
 
 {
-  const name = "Portcullis", on_ = `${id(name)}_on`, effect = `Above half HP: Aggro +${FAR}.`;
+  const name = "Portcullis", on_ = `${id(name)}_on`, effect = `Above 50% HP: Aggro +${FAR}.`;
   armor("plate", "uncommon", name, {
     effect, stats: [sp("thorns", "medium"), st("mp_regen", 1)],
     statuses: [own_(name, effect, { reactions: whileHp(on_, 50, false) }), switched(on_, "PORTCULLIS", `Aggro +${FAR}.`, { stats: [{ stat: "aggro", flat: FAR }] })],
@@ -57,7 +57,7 @@ armor("plate", "common", "Mauler's cuirass", { stats: [st("attack", 2), down(cri
   });
 }
 {
-  const name = "Holdfast", done = `${id(name)}_used`, effect = "First drop below half HP each fight: Guarded.";
+  const name = "Holdfast", done = `${id(name)}_used`, effect = "First drop below 50% HP each fight: Guarded.";
   armor("plate", "uncommon", name, {
     effect, stats: [st("defense", 1), sp("lifesteal", "medium")],
     statuses: [own_(name, effect, { reactions: [onceBelow(50, done, give("guard"))] }), used(done, "HOLDFAST")],
@@ -116,7 +116,7 @@ armor("plate", "common", "Mauler's cuirass", { stats: [st("attack", 2), down(cri
 {
   // The floor comes with the fight's true start, so neither a revive nor a start made again brings a second.
   const name = "Last bastion", floor = `${id(name)}_floor`, on_ = `${id(name)}_on`;
-  const effect = "Once a fight, a blow that would knock it out leaves it at 1 HP and Guarded. Until healed, hits deal double.";
+  const effect = "Once a fight, a blow that would knock it out leaves it at 1 HP and Guarded. Until healed, hits deal ×2.";
   armor("plate", "legendary", name, {
     effect, stats: [st("max_hp", 1), st("attack", 1), critStep(1)],
     statuses: [
@@ -128,7 +128,7 @@ armor("plate", "common", "Mauler's cuirass", { stats: [st("attack", 2), down(cri
         ],
       }),
       state(floor, "LAST BASTION", "The next knockout blow leaves it at 1 HP.", { show: "sheet", unremovable: true, floor: { spend: true } }),
-      switched(on_, "BASTION", "Hits deal double until healed.", { boosts: hits(100) }),
+      switched(on_, "BASTION", "Hits deal ×2 until healed.", { boosts: hits(100) }),
     ],
     serves: "exotic ◆ the net",
   });
@@ -176,7 +176,7 @@ armor("mail", "common", "Clanking byrnie", { stats: [st("aggro", 2), down(sp("co
   });
 }
 {
-  const name = "Bloodsworn mail", on_ = `${id(name)}_on`, effect = `Below half HP: +${SPECIAL.lifesteal.high}% Lifesteal.`;
+  const name = "Bloodsworn mail", on_ = `${id(name)}_on`, effect = `Below 50% HP: +${SPECIAL.lifesteal.high}% Lifesteal.`;
   armor("mail", "uncommon", name, {
     effect, stats: [st("attack", 1), sp("double_strike", "medium")],
     statuses: [own_(name, effect, { reactions: whileHp(on_, 50, true) }), switched(on_, "BLOODSWORN", `+${SPECIAL.lifesteal.high}% Lifesteal.`, { stats: [{ stat: "lifesteal", flat: SPECIAL.lifesteal.high }] })],
@@ -214,13 +214,13 @@ armor("mail", "common", "Clanking byrnie", { stats: [st("aggro", 2), down(sp("co
 }
 {
   const name = "Sanguine mail", low = `${id(name)}_low`, high = `${id(name)}_high`;
-  const effect = "Healing on it: doubled below half HP, halved otherwise.";
+  const effect = "Healing on it: ×2 below 50% HP, −50% otherwise.";
   armor("mail", "rare", name, {
     effect, stats: [st("max_hp", 1), sp("attack_speed", "medium"), sp("crit_damage", "medium")],
     statuses: [
       own_(name, effect, { reactions: [...whileHp(low, 50, true), ...whileHp(high, 50, false)] }),
-      switched(low, "SANGUINE", "Healing on it doubled.", { stats: [{ stat: "healing_received", flat: 100 }] }),
-      switched(high, "SANGUINE", "Healing on it halved.", { stats: [{ stat: "healing_received", flat: -50 }] }),
+      switched(low, "SANGUINE", "Healing on it ×2.", { stats: [{ stat: "healing_received", flat: 100 }] }),
+      switched(high, "SANGUINE", "Healing on it −50%.", { stats: [{ stat: "healing_received", flat: -50 }] }),
     ],
     serves: "Pact 2 ●●●, Toll ●, conditional ⚙ brink (half) ◆ Pact (below half as power)",
   });
@@ -274,7 +274,7 @@ armor("leather", "common", "Quilted gambeson", { stats: [st("max_hp", 2), down(s
   });
 }
 {
-  const name = "Mottled hide", on_ = `${id(name)}_on`, effect = `Below half HP: Aggro −${FAR}.`;
+  const name = "Mottled hide", on_ = `${id(name)}_on`, effect = `Below 50% HP: Aggro −${FAR}.`;
   armor("leather", "uncommon", name, {
     effect, stats: [sp("evasion", "medium"), st("defense", 1)],
     statuses: [own_(name, effect, { reactions: whileHp(on_, 50, true) }), switched(on_, "MOTTLED", `Aggro −${FAR}.`, { stats: [{ stat: "aggro", flat: -FAR }] })],
@@ -298,7 +298,7 @@ armor("leather", "common", "Quilted gambeson", { stats: [st("max_hp", 2), down(s
   });
 }
 {
-  const name = "Shadow mantle", effect = "While Hidden: hits deal double.";
+  const name = "Shadow mantle", effect = "While Hidden: hits deal ×2.";
   armor("leather", "rare", name, {
     effect, stats: [critStep(1), st("aggro", -1), sp("attack_speed", "medium")],
     statuses: [own_(name, effect, { boosts: hits(whileIt(100, { has: "hidden" })) })],
@@ -344,7 +344,7 @@ armor("leather", "common", "Quilted gambeson", { stats: [st("max_hp", 2), down(s
 }
 {
   const name = "Windrunner's garb";
-  const effect = `On a dodge: 3 Heat (${COUNTER.heat.speed}% faster each, up to ${COUNTER.heat.cap}). When hit: loses half its Heat.`;
+  const effect = `On a dodge: 3 Heat (${COUNTER.heat.speed}% faster each, up to ${COUNTER.heat.cap}). When hit: loses 50% of its Heat.`;
   armor("leather", "legendary", name, {
     effect, stats: [sp("evasion", "medium"), sp("attack_speed", "high")],
     statuses: [own_(name, effect, { reactions: [react(EV.dodge, give("heat", "holder", 3)), react(EV.struck, { op: "spend", status: "heat", share: 50, to: "holder" })] })],
@@ -475,7 +475,7 @@ armor("robes", "common", "Padded cassock", { stats: [st("defense", 2), down(sp("
   });
 }
 {
-  const name = "Motley robe", effect = "Abilities cast in random order, at half MP cost.";
+  const name = "Motley robe", effect = "Abilities cast in random order, at 50% MP cost.";
   armor("robes", "legendary", name, {
     effect, stats: [st("attack", 1), critStep(2), sp("evasion", "medium"), st("defense", -1)],
     statuses: [own_(name, effect, { order: "random", mods: [{ mp: -50 }] })],

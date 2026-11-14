@@ -19,7 +19,7 @@ import { abilityUp, apply, both, cd, helper, kit, passiveUp, phys, r6 } from "./
     id: "judgement", cls: "paladin",
     power: "+70%, not +50%.",
     a: { name: "Zeal", text: "Hits deal +50% to buffed or debuffed foes; basic attacks add Burn to them.", serves: "Bonfire 1 ●●●" },
-    b: { name: "Verdict", text: "Hits deal +50% to buffed or debuffed foes, with triple Crit chance.", builds: ["hunt"] },
+    b: { name: "Verdict", text: "Hits deal +50% to buffed or debuffed foes, with ×3 Crit chance.", builds: ["hunt"] },
     form: (v, _k, plus) => ({
       boosts: judged(plus ? 70 : 50),
       ...(v === "a" ? { reactions: zeal } : {}),
