@@ -85,7 +85,7 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
           reactIf(on("revived", { whose: "ally" }), both, give("vanguard_and_rear_unseen")),
         ],
       }),
-      { id: "vanguard_and_rear_unseen", name: "UNSEEN", text: "Can't be picked.", label: "buff", show: "icon", stacking: "fizzle", unremovable: true, stats: [{ stat: "forbidden", flat: 1 }] } as StatusT,
+      { id: "vanguard_and_rear_unseen", name: "UNSEEN", text: "Can't be picked.", label: "buff", show: "icon", stacking: "fizzle", stats: [{ stat: "forbidden", flat: 1 }] } as StatusT,
     ],
     "Barrage 3 ●●, Hunt ● ◆ draw, the soloist's safety",
   );

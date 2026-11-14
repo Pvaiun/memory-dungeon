@@ -141,7 +141,7 @@ const ready = (ability: string, to: ToT = "holder"): EffectT => ({ op: "cooldown
   mythic({ name: "The unseen blade", slot: "armor", rarity: "mythic", kind: "leather", mythic: "assassin", statuses: ["the_unseen_blade"],
     stats: [sp("evasion", "medium"), sp("crit_damage", "medium"), st("attack", 1)], text }, "Hunt 3 ●●●, Cuts ● ◆ crits, first strike");
   own_("the_unseen_blade", "The unseen blade", text, { reactions: [atStart(give("the_unseen_blade_on")), react(EV.struck, lift("the_unseen_blade_on"))] });
-  helper(kit("the_unseen_blade_on", "UNSEEN", "Every hit it lands crits.", { stacking: "fizzle", unremovable: true, crits: [{ chance: 100 }] }));
+  helper(kit("the_unseen_blade_on", "UNSEEN", "Every hit it lands crits.", { stacking: "fizzle", crits: [{ chance: 100 }] }));
 }
 
 // Vampire: the drinker swells: what its healing would bring past full raises its max HP by as much, and its HP with it.
@@ -186,6 +186,6 @@ const ready = (ability: string, to: ToT = "holder"): EffectT => ({ op: "cooldown
   mythic({ name: "Bedrock heart", slot: "amulet", rarity: "mythic", mythic: "geomancer", statuses: ["bedrock_heart"],
     stats: [st("defense", 1), sp("crit_damage", "medium"), st("max_hp", 1)], text }, "Landslide 3 ●●● ◆ crits behind stone");
   own_("bedrock_heart", "Bedrock heart", text, { reactions: whileHolding("bedrock_heart_on", "shield") });
-  helper(kit("bedrock_heart_on", "BEDROCK HEART", "Every hit it lands crits.", { stacking: "fizzle", unremovable: true, crits: [{ chance: 100 }] }));
+  helper(kit("bedrock_heart_on", "BEDROCK HEART", "Every hit it lands crits.", { stacking: "fizzle", crits: [{ chance: 100 }] }));
 }
 

@@ -3784,7 +3784,6 @@
    "label": "buff",
    "show": "icon",
    "stacking": "fizzle",
-   "unremovable": true,
    "stats": [
     {
      "stat": "forbidden",
@@ -6656,7 +6655,6 @@
    "label": "buff",
    "show": "icon",
    "stacking": "fizzle",
-   "unremovable": true,
    "boosts": [
     {
      "tag": "basic",
@@ -7694,7 +7692,6 @@
    "label": "buff",
    "show": "icon",
    "stacking": "fizzle",
-   "unremovable": true,
    "stats": [
     {
      "stat": "aggro",
@@ -7772,57 +7769,23 @@
    "survivesKO": true
   },
   {
-   "id": "urchin_plate",
-   "name": "Urchin plate",
-   "text": "While it has a Shield: extra Thorns (high).",
+   "id": "even_keel_plate",
+   "name": "Even-keel plate",
+   "text": "While its Defense is above its Attack: abilities scale from Defense in place of Attack.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "reactions": [
-    {
-     "on": {
-      "event": "status_gained",
-      "status": "shield"
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "urchin_plate_on",
-       "to": "holder"
-      }
-     ]
-    },
-    {
-     "on": {
-      "event": "status_ended",
-      "status": "shield"
-     },
-     "do": [
-      {
-       "op": "remove",
-       "label": "buff",
-       "status": "urchin_plate_on",
-       "to": "holder"
-      }
-     ]
+   "rescale": {
+    "from": "attack",
+    "to": "defense",
+    "if": {
+     "above": {
+      "stat": "defense",
+      "over": "attack"
+     }
     }
-   ]
-  },
-  {
-   "id": "urchin_plate_on",
-   "name": "URCHIN",
-   "text": "Extra Thorns (high).",
-   "label": "buff",
-   "show": "icon",
-   "stacking": "fizzle",
-   "unremovable": true,
-   "stats": [
-    {
-     "stat": "thorns",
-     "flat": 300
-    }
-   ]
+   }
   },
   {
    "id": "challengers_plate",
@@ -8001,7 +7964,7 @@
   {
    "id": "last_bastion",
    "name": "Last bastion",
-   "text": "Once a fight, survives a knockout at 1 HP, Guarded. Hits deal double until healed.",
+   "text": "Once a fight, a blow that would knock it out leaves it at 1 HP and Guarded. Until healed, hits deal double.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -8075,7 +8038,6 @@
    "label": "buff",
    "show": "icon",
    "stacking": "fizzle",
-   "unremovable": true,
    "boosts": [
     {
      "tag": "physical",
@@ -8084,32 +8046,14 @@
    ]
   },
   {
-   "id": "the_anvil",
-   "name": "The anvil",
-   "text": "When hit: the other ally with the slowest basic attack gains a Wrath (+20% next basic attack, up to 10).",
+   "id": "lodestone_plate",
+   "name": "Lodestone plate",
+   "text": "Foes pick among the party by max HP instead of Aggro.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "reactions": [
-    {
-     "on": {
-      "event": "hit_taken"
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "wrath",
-       "to": {
-        "side": "others",
-        "pick": "highest",
-        "by": "swing"
-       },
-       "stacks": 1
-      }
-     ]
-    }
-   ]
+   "drawBy": "max_hp"
   },
   {
    "id": "scabbed_mail",
@@ -8144,9 +8088,9 @@
    ]
   },
   {
-   "id": "reprisal_hauberk",
-   "name": "Reprisal hauberk",
-   "text": "Each foe's first hit on it: sends back 17% of its max HP.",
+   "id": "heralds_hauberk",
+   "name": "Herald's hauberk",
+   "text": "While no ally has more max HP: Taunts.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -8154,47 +8098,102 @@
    "reactions": [
     {
      "on": {
-      "event": "hit_taken"
+      "event": "fight_start"
+     },
+     "if": {
+      "side": "self",
+      "where": {
+       "top": {
+        "stats": [
+         "max_hp"
+        ]
+       }
+      }
      },
      "do": [
       {
        "op": "apply",
-       "status": "reprisal_hauberk_mark",
-       "to": "other"
+       "status": "taunt",
+       "to": "holder"
       }
      ]
-    }
-   ]
-  },
-  {
-   "id": "reprisal_hauberk_mark",
-   "name": "REPRISAL",
-   "text": "Has paid the Reprisal hauberk.",
-   "label": "marker",
-   "show": "sheet",
-   "stacking": "fizzle",
-   "unremovable": true,
-   "perSource": {},
-   "reactions": [
+    },
     {
      "on": {
-      "event": "status_gained",
-      "status": "reprisal_hauberk_mark"
+      "event": "status_ended",
+      "status": "taunt",
+      "cause": [
+       "expired",
+       "removed"
+      ]
      },
-     "actor": "source",
+     "if": {
+      "side": "self",
+      "where": {
+       "top": {
+        "stats": [
+         "max_hp"
+        ]
+       }
+      }
+     },
      "do": [
       {
-       "op": "damage",
-       "type": "none",
-       "amount": {
-        "scale": [
-         {
-          "ratio": 0.17,
-          "stat": "max_hp",
-          "of": "source"
-         }
+       "op": "apply",
+       "status": "taunt",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived"
+     },
+     "if": {
+      "side": "self",
+      "where": {
+       "top": {
+        "stats": [
+         "max_hp"
         ]
-       },
+       }
+      }
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "taunt",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "ko",
+      "whose": "ally"
+     },
+     "if": [
+      {
+       "side": "self",
+       "where": {
+        "top": {
+         "stats": [
+          "max_hp"
+         ]
+        }
+       }
+      },
+      {
+       "side": "self",
+       "where": {
+        "lacks": "taunt"
+       }
+      }
+     ],
+     "do": [
+      {
+       "op": "apply",
+       "status": "taunt",
        "to": "holder"
       }
      ]
@@ -8246,7 +8245,6 @@
    "label": "buff",
    "show": "icon",
    "stacking": "fizzle",
-   "unremovable": true,
    "stats": [
     {
      "stat": "lifesteal",
@@ -8257,7 +8255,7 @@
   {
    "id": "warded_mail",
    "name": "Warded mail",
-   "text": "First drop below half HP each fight: a Shield of 25% of max HP.",
+   "text": "Every 22 ticks (the first at 11): lifts one of its debuffs.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -8265,33 +8263,46 @@
    "reactions": [
     {
      "on": {
-      "event": "hp_low",
-      "line": 50
-     },
-     "if": {
-      "side": "self",
-      "where": {
-       "lacks": "warded_mail_used"
-      }
+      "event": "fight_start"
      },
      "do": [
       {
        "op": "apply",
-       "status": "shield",
-       "to": "holder",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.25,
-          "stat": "max_hp",
-          "of": "holder"
-         }
-        ]
-       }
+       "status": "warded_mail_wait",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "revived"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "warded_mail_wait",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "status_ended",
+      "status": "warded_mail_wait",
+      "cause": [
+       "expired"
+      ]
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "debuff",
+       "count": 1,
+       "to": "holder"
       },
       {
        "op": "apply",
-       "status": "warded_mail_used",
+       "status": "warded_mail_beat",
        "to": "holder"
       }
      ]
@@ -8299,45 +8310,42 @@
    ]
   },
   {
-   "id": "warded_mail_used",
-   "name": "WARDED",
-   "text": "Spent for this fight.",
+   "id": "warded_mail_wait",
+   "name": "Warded mail (waiting)",
+   "text": "Its first beat comes when this runs out.",
    "label": "marker",
    "show": "sheet",
-   "stacking": "fizzle",
-   "survivesKO": true
+   "stacking": "refresh",
+   "duration": 11
   },
   {
-   "id": "static_mail",
-   "name": "Static mail",
-   "text": "When hit: the attacker gains Shock.",
+   "id": "warded_mail_beat",
+   "name": "Warded mail (beating)",
+   "text": "Its beat, every 22 ticks.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "refresh",
+   "pulse": {
+    "every": 22,
+    "do": [
+     {
+      "op": "remove",
+      "label": "debuff",
+      "count": 1,
+      "to": "holder"
+     }
+    ]
+   }
+  },
+  {
+   "id": "owing_mail",
+   "name": "Owing mail",
+   "text": "Damage from hits on it waits, and lands all at once 10 ticks after the first.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "reactions": [
-    {
-     "on": {
-      "event": "hit_taken"
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "shock",
-       "to": "other",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.0007,
-          "stat": "defense",
-          "of": "holder"
-         }
-        ]
-       }
-      }
-     ]
-    }
-   ]
+   "owe": "owed"
   },
   {
    "id": "red_stone_mail",
@@ -8442,7 +8450,6 @@
    "label": "buff",
    "show": "icon",
    "stacking": "fizzle",
-   "unremovable": true,
    "stats": [
     {
      "stat": "healing_received",
@@ -8457,7 +8464,6 @@
    "label": "buff",
    "show": "icon",
    "stacking": "fizzle",
-   "unremovable": true,
    "stats": [
     {
      "stat": "healing_received",
@@ -8514,43 +8520,14 @@
    ]
   },
   {
-   "id": "tallymail",
-   "name": "Tallymail",
-   "text": "Each hit it lands: a Cut (up to 25). +1% Lifesteal per Cut.",
+   "id": "sympathy_mail",
+   "name": "Sympathy mail",
+   "text": "Healing any ally receives is shared evenly by the party.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "reactions": [
-    {
-     "on": {
-      "event": "hit_lands"
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "edge",
-       "to": "self",
-       "stacks": 1
-      }
-     ]
-    }
-   ],
-   "stats": [
-    {
-     "stat": "lifesteal",
-     "flat": {
-      "scale": [
-       {
-        "ratio": 1,
-        "stacks": "edge",
-        "of": "holder"
-       }
-      ]
-     },
-     "live": true
-    }
-   ]
+   "sharesHeals": true
   },
   {
    "id": "gleaners_leathers",
@@ -8638,7 +8615,6 @@
    "label": "buff",
    "show": "icon",
    "stacking": "fizzle",
-   "unremovable": true,
    "stats": [
     {
      "stat": "aggro",
@@ -8750,9 +8726,9 @@
    ]
   },
   {
-   "id": "frostwalkers_furs",
-   "name": "Frostwalker's furs",
-   "text": "On a shatter: Hasted; its next hit adds Chill to every foe.",
+   "id": "outriders_coat",
+   "name": "Outrider's coat",
+   "text": "While no ally has a faster basic attack: basic attacks ignore Taunt and deal +20%.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -8760,66 +8736,73 @@
    "reactions": [
     {
      "on": {
-      "event": "status_capped",
-      "status": "chill",
-      "whose": "foe"
+      "event": "fight_start"
+     },
+     "if": {
+      "side": "self",
+      "where": {
+       "swing": "fastest"
+      }
      },
      "do": [
       {
        "op": "apply",
-       "status": "haste",
-       "to": "holder"
-      },
-      {
-       "op": "apply",
-       "status": "frostwalkers_furs_on",
+       "status": "outriders_coat_on",
        "to": "holder"
       }
      ]
     }
-   ]
+   ],
+   "pulse": {
+    "every": 1,
+    "if": {
+     "side": "self",
+     "where": {
+      "swing": "fastest",
+      "lacks": "outriders_coat_on"
+     }
+    },
+    "do": [
+     {
+      "op": "apply",
+      "status": "outriders_coat_on",
+      "to": "holder"
+     }
+    ]
+   }
   },
   {
-   "id": "frostwalkers_furs_on",
-   "name": "FROSTWALK",
-   "text": "Next hit adds Chill to every foe.",
+   "id": "outriders_coat_on",
+   "name": "OUTRIDER",
+   "text": "Basic attacks ignore Taunt and deal +20%.",
    "label": "buff",
    "show": "icon",
-   "stacking": "refresh",
-   "unremovable": true,
-   "reactions": [
+   "stacking": "fizzle",
+   "seek": "basic",
+   "boosts": [
     {
-     "on": {
-      "event": "hit_lands"
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "chill",
-       "to": {
-        "side": "foes",
-        "pick": "all"
-       },
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.00014,
-          "stat": "attack",
-          "of": "holder"
-         }
-        ]
-       },
-       "rider": false
-      },
-      {
-       "op": "remove",
-       "label": "buff",
-       "status": "frostwalkers_furs_on",
-       "to": "holder"
-      }
-     ]
+     "tag": "basic",
+     "pct": 20
     }
-   ]
+   ],
+   "pulse": {
+    "every": 1,
+    "if": {
+     "side": "self",
+     "where": {
+      "swing": "fastest"
+     },
+     "atMost": 0
+    },
+    "do": [
+     {
+      "op": "remove",
+      "label": "buff",
+      "status": "outriders_coat_on",
+      "to": "holder"
+     }
+    ]
+   }
   },
   {
    "id": "overture_coat",
@@ -8994,7 +8977,7 @@
   {
    "id": "matins_robe",
    "name": "Matins robe",
-   "text": "Every second ability it casts each fight is free.",
+   "text": "Every other ability it casts is free.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -9031,7 +9014,7 @@
   {
    "id": "matins_robe_count",
    "name": "MATINS",
-   "text": "Every second cast is free.",
+   "text": "Every other cast is free.",
    "label": "buff",
    "show": "icon",
    "stacking": "intensity",
@@ -9048,7 +9031,7 @@
   {
    "id": "banked_robe",
    "name": "Banked robe",
-   "text": "Abilities add +50% Burn, Chill and Shock.",
+   "text": "Abilities add +50% stacks of any status, Shields included.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -9056,12 +9039,7 @@
    "mods": [
     {
      "stacks": {
-      "pct": 50,
-      "statuses": [
-       "burn",
-       "chill",
-       "shock"
-      ]
+      "pct": 50
      }
     }
    ]
@@ -9069,7 +9047,7 @@
   {
    "id": "glyphed_robe",
    "name": "Glyphed robe",
-   "text": "Each cast gives it a Shield of 10% of max MP.",
+   "text": "Each ability it casts Guards it.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -9083,17 +9061,8 @@
      "do": [
       {
        "op": "apply",
-       "status": "shield",
-       "to": "holder",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.1,
-          "stat": "max_mp",
-          "of": "holder"
-         }
-        ]
-       }
+       "status": "guard",
+       "to": "holder"
       }
      ]
     }
@@ -9133,30 +9102,33 @@
    ]
   },
   {
-   "id": "kindled_robes",
-   "name": "Kindled robes",
-   "text": "While any foe burns: a Heat every 4 ticks (5% faster each, up to 10).",
+   "id": "conclave_robes",
+   "name": "Conclave robes",
+   "text": "Abilities come round 20% faster for each other ally in robes.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "pulse": {
-    "every": 4,
-    "if": {
-     "side": "foes",
-     "where": {
-      "has": "burn"
+   "stats": [
+    {
+     "stat": "cooldown_reduction",
+     "flat": {
+      "scale": [
+       {
+        "ratio": 20,
+        "count": {
+         "side": "others",
+         "where": {
+          "armor": [
+           "robes"
+          ]
+         }
+        }
+       }
+      ]
      }
-    },
-    "do": [
-     {
-      "op": "apply",
-      "status": "heat",
-      "to": "holder",
-      "stacks": 1
-     }
-    ]
-   }
+    }
+   ]
   },
   {
    "id": "quiet_robes",
@@ -9299,36 +9271,16 @@
    ]
   },
   {
-   "id": "vestments_of_return",
-   "name": "Vestments of return",
-   "text": "While it stands: revived allies return behind a Shield of half their max HP.",
+   "id": "inverted_vestments",
+   "name": "Inverted vestments",
+   "text": "Max HP and max MP trade places.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "reactions": [
-    {
-     "on": {
-      "event": "revived",
-      "whose": "ally"
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "shield",
-       "to": "owner",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.5,
-          "stat": "max_hp",
-          "of": "target"
-         }
-        ]
-       }
-      }
-     ]
-    }
+   "swap": [
+    "max_hp",
+    "max_mp"
    ]
   },
   {
@@ -19380,7 +19332,6 @@
    "label": "buff",
    "show": "icon",
    "stacking": "fizzle",
-   "unremovable": true,
    "stats": [
     {
      "stat": "crit_multiplier",
@@ -19395,7 +19346,6 @@
    "label": "buff",
    "show": "icon",
    "stacking": "fizzle",
-   "unremovable": true,
    "stats": [
     {
      "stat": "crit_multiplier",
@@ -20422,7 +20372,6 @@
    "label": "buff",
    "show": "icon",
    "stacking": "fizzle",
-   "unremovable": true,
    "crits": [
     {
      "chance": 100
@@ -20735,7 +20684,6 @@
    "label": "buff",
    "show": "icon",
    "stacking": "fizzle",
-   "unremovable": true,
    "crits": [
     {
      "chance": 100
@@ -38077,8 +38025,8 @@
    "rarity": "common"
   },
   {
-   "id": "crested_plate",
-   "name": "Crested plate",
+   "id": "deacons_plate",
+   "name": "Deacon's plate",
    "text": "Nothing beyond its stats.",
    "slot": "armor",
    "tier": "ordinary",
@@ -38086,15 +38034,23 @@
    "armor": "plate",
    "stats": [
     {
+     "stat": "max_mp",
+     "flat": 2000
+    },
+    {
+     "stat": "attack",
+     "flat": -1000
+    },
+    {
      "stat": "max_hp",
-     "flat": 500
+     "flat": 1000
     }
    ],
    "rarity": "common"
   },
   {
-   "id": "bristled_plate",
-   "name": "Bristled plate",
+   "id": "maulers_cuirass",
+   "name": "Mauler's cuirass",
    "text": "Nothing beyond its stats.",
    "slot": "armor",
    "tier": "ordinary",
@@ -38102,8 +38058,12 @@
    "armor": "plate",
    "stats": [
     {
-     "stat": "thorns",
-     "flat": 150
+     "stat": "attack",
+     "flat": 2000
+    },
+    {
+     "stat": "crit_chance",
+     "flat": -3
     }
    ],
    "rarity": "common"
@@ -38122,8 +38082,8 @@
      "flat": 150
     },
     {
-     "stat": "max_hp",
-     "flat": 500
+     "stat": "mp_regen",
+     "flat": 3000
     }
    ],
    "statuses": [
@@ -38141,12 +38101,12 @@
    "armor": "plate",
    "stats": [
     {
-     "stat": "defense",
-     "flat": 1000
-    },
-    {
      "stat": "max_hp",
      "flat": 500
+    },
+    {
+     "stat": "cooldown_reduction",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -38165,7 +38125,11 @@
    "stats": [
     {
      "stat": "defense",
-     "flat": 2000
+     "flat": 1000
+    },
+    {
+     "stat": "lifesteal",
+     "flat": 10
     }
    ],
    "statuses": [
@@ -38174,25 +38138,25 @@
    "rarity": "uncommon"
   },
   {
-   "id": "urchin_plate",
-   "name": "Urchin plate",
-   "text": "While it has a Shield: extra Thorns (high).",
+   "id": "even_keel_plate",
+   "name": "Even-keel plate",
+   "text": "While its Defense is above its Attack: abilities scale from Defense in place of Attack.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
    "armor": "plate",
    "stats": [
     {
-     "stat": "aggro",
-     "flat": 10
-    },
-    {
      "stat": "defense",
      "flat": 1000
+    },
+    {
+     "stat": "siphon",
+     "flat": 10
     }
    ],
    "statuses": [
-    "urchin_plate"
+    "even_keel_plate"
    ],
    "rarity": "uncommon"
   },
@@ -38206,16 +38170,16 @@
    "armor": "plate",
    "stats": [
     {
-     "stat": "defense",
-     "flat": 1000
-    },
-    {
      "stat": "max_hp",
      "flat": 500
     },
     {
-     "stat": "thorns",
-     "flat": 150
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "crit_multiplier",
+     "flat": 25
     }
    ],
    "statuses": [
@@ -38234,11 +38198,19 @@
    "stats": [
     {
      "stat": "defense",
-     "flat": 2000
+     "flat": 1000
     },
     {
-     "stat": "aggro",
-     "flat": 10
+     "stat": "cast_time_reduction",
+     "flat": 15
+    },
+    {
+     "stat": "max_mp",
+     "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -38256,16 +38228,16 @@
    "armor": "plate",
    "stats": [
     {
-     "stat": "defense",
-     "flat": 1000
-    },
-    {
-     "stat": "max_hp",
-     "flat": 500
-    },
-    {
      "stat": "aggro",
      "flat": 10
+    },
+    {
+     "stat": "accuracy",
+     "flat": 20
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -38284,15 +38256,15 @@
    "stats": [
     {
      "stat": "thorns",
-     "flat": 300
+     "flat": 150
     },
     {
-     "stat": "aggro",
+     "stat": "lifesteal",
      "flat": 10
     },
     {
-     "stat": "defense",
-     "flat": 1000
+     "stat": "attack_speed",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -38303,19 +38275,23 @@
   {
    "id": "last_bastion",
    "name": "Last bastion",
-   "text": "Once a fight, survives a knockout at 1 HP, Guarded. Hits deal double until healed.",
+   "text": "Once a fight, a blow that would knock it out leaves it at 1 HP and Guarded. Until healed, hits deal double.",
    "slot": "armor",
    "tier": "powerful",
    "source": "unlock",
    "armor": "plate",
    "stats": [
     {
-     "stat": "defense",
-     "flat": 2000
+     "stat": "max_hp",
+     "flat": 500
     },
     {
-     "stat": "max_hp",
+     "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
     }
    ],
    "statuses": [
@@ -38324,51 +38300,35 @@
    "rarity": "legendary"
   },
   {
-   "id": "the_anvil",
-   "name": "The anvil",
-   "text": "When hit: the other ally with the slowest basic attack gains a Wrath (+20% next basic attack, up to 10).",
+   "id": "lodestone_plate",
+   "name": "Lodestone plate",
+   "text": "Foes pick among the party by max HP instead of Aggro.",
    "slot": "armor",
    "tier": "powerful",
    "source": "unlock",
    "armor": "plate",
    "stats": [
     {
-     "stat": "aggro",
-     "flat": 20
-    },
-    {
-     "stat": "defense",
-     "flat": 1000
-    },
-    {
      "stat": "max_hp",
      "flat": 500
+    },
+    {
+     "stat": "siphon",
+     "flat": 10
+    },
+    {
+     "stat": "accuracy",
+     "flat": 20
     }
    ],
    "statuses": [
-    "the_anvil"
+    "lodestone_plate"
    ],
    "rarity": "legendary"
   },
   {
-   "id": "inscribed_hauberk",
-   "name": "Inscribed hauberk",
-   "text": "Nothing beyond its stats.",
-   "slot": "armor",
-   "tier": "ordinary",
-   "source": "drop",
-   "armor": "mail",
-   "stats": [
-    {
-     "stat": "attack",
-     "flat": 1000
-    }
-   ],
-   "rarity": "common"
-  },
-  {
-   "id": "lamprey_mail",
-   "name": "Lamprey mail",
+   "id": "leechlink_hauberk",
+   "name": "Leechlink hauberk",
    "text": "Nothing beyond its stats.",
    "slot": "armor",
    "tier": "ordinary",
@@ -38383,8 +38343,8 @@
    "rarity": "common"
   },
   {
-   "id": "thick_byrnie",
-   "name": "Thick byrnie",
+   "id": "rune_linked_mail",
+   "name": "Rune-linked mail",
    "text": "Nothing beyond its stats.",
    "slot": "armor",
    "tier": "ordinary",
@@ -38392,8 +38352,32 @@
    "armor": "mail",
    "stats": [
     {
-     "stat": "max_hp",
-     "flat": 500
+     "stat": "mp_regen",
+     "flat": 6000
+    },
+    {
+     "stat": "defense",
+     "flat": -1000
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "clanking_byrnie",
+   "name": "Clanking byrnie",
+   "text": "Nothing beyond its stats.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "mail",
+   "stats": [
+    {
+     "stat": "aggro",
+     "flat": 20
+    },
+    {
+     "stat": "cooldown_reduction",
+     "flat": -15
     }
    ],
    "rarity": "common"
@@ -38412,8 +38396,8 @@
      "flat": 500
     },
     {
-     "stat": "lifesteal",
-     "flat": 10
+     "stat": "defense",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -38422,25 +38406,25 @@
    "rarity": "uncommon"
   },
   {
-   "id": "reprisal_hauberk",
-   "name": "Reprisal hauberk",
-   "text": "Each foe's first hit on it: sends back 17% of its max HP.",
+   "id": "heralds_hauberk",
+   "name": "Herald's hauberk",
+   "text": "While no ally has more max HP: Taunts.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
    "armor": "mail",
    "stats": [
     {
-     "stat": "max_hp",
-     "flat": 500
+     "stat": "defense",
+     "flat": 1000
     },
     {
-     "stat": "thorns",
-     "flat": 150
+     "stat": "mp_regen",
+     "flat": 3000
     }
    ],
    "statuses": [
-    "reprisal_hauberk"
+    "heralds_hauberk"
    ],
    "rarity": "uncommon"
   },
@@ -38454,12 +38438,12 @@
    "armor": "mail",
    "stats": [
     {
-     "stat": "max_hp",
-     "flat": 500
-    },
-    {
      "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "double_strike",
+     "flat": 25
     }
    ],
    "statuses": [
@@ -38470,15 +38454,23 @@
   {
    "id": "warded_mail",
    "name": "Warded mail",
-   "text": "First drop below half HP each fight: a Shield of 25% of max HP.",
+   "text": "Every 22 ticks (the first at 11): lifts one of its debuffs.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
    "armor": "mail",
    "stats": [
     {
-     "stat": "max_hp",
+     "stat": "max_mp",
      "flat": 1000
+    },
+    {
+     "stat": "defense",
+     "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -38487,29 +38479,29 @@
    "rarity": "uncommon"
   },
   {
-   "id": "static_mail",
-   "name": "Static mail",
-   "text": "When hit: the attacker gains Shock.",
+   "id": "owing_mail",
+   "name": "Owing mail",
+   "text": "Damage from hits on it waits, and lands all at once 10 ticks after the first.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
    "armor": "mail",
    "stats": [
     {
-     "stat": "max_hp",
-     "flat": 500
-    },
-    {
-     "stat": "defense",
+     "stat": "attack",
      "flat": 1000
     },
     {
-     "stat": "aggro",
-     "flat": 10
+     "stat": "cooldown_reduction",
+     "flat": 15
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
     }
    ],
    "statuses": [
-    "static_mail"
+    "owing_mail"
    ],
    "rarity": "rare"
   },
@@ -38523,16 +38515,16 @@
    "armor": "mail",
    "stats": [
     {
-     "stat": "max_hp",
-     "flat": 500
+     "stat": "lifesteal",
+     "flat": 10
     },
     {
-     "stat": "attack",
+     "stat": "defense",
      "flat": 1000
     },
     {
-     "stat": "lifesteal",
-     "flat": 10
+     "stat": "mp_regen",
+     "flat": 3000
     }
    ],
    "statuses": [
@@ -38552,11 +38544,15 @@
    "stats": [
     {
      "stat": "max_hp",
-     "flat": 1000
+     "flat": 500
     },
     {
-     "stat": "lifesteal",
-     "flat": 10
+     "stat": "attack_speed",
+     "flat": 15
+    },
+    {
+     "stat": "crit_multiplier",
+     "flat": 25
     }
    ],
    "statuses": [
@@ -38575,11 +38571,15 @@
    "stats": [
     {
      "stat": "attack",
-     "flat": 2000
+     "flat": 1000
     },
     {
-     "stat": "max_hp",
-     "flat": 500
+     "stat": "siphon",
+     "flat": 10
+    },
+    {
+     "stat": "cast_time_reduction",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -38598,15 +38598,15 @@
    "stats": [
     {
      "stat": "max_hp",
-     "flat": 1000
+     "flat": 500
     },
     {
      "stat": "defense",
      "flat": 1000
     },
     {
-     "stat": "lifesteal",
-     "flat": 10
+     "stat": "mp_regen",
+     "flat": 3000
     }
    ],
    "statuses": [
@@ -38615,9 +38615,9 @@
    "rarity": "legendary"
   },
   {
-   "id": "tallymail",
-   "name": "Tallymail",
-   "text": "Each hit it lands: a Cut (up to 25). +1% Lifesteal per Cut.",
+   "id": "sympathy_mail",
+   "name": "Sympathy mail",
+   "text": "Healing any ally receives is shared evenly by the party.",
    "slot": "armor",
    "tier": "powerful",
    "source": "unlock",
@@ -38628,54 +38628,22 @@
      "flat": 500
     },
     {
-     "stat": "attack",
-     "flat": 2000
+     "stat": "cooldown_reduction",
+     "flat": 15
     },
-    {
-     "stat": "lifesteal",
-     "flat": 10
-    }
-   ],
-   "statuses": [
-    "tallymail"
-   ],
-   "rarity": "legendary"
-  },
-  {
-   "id": "tumblers_vest",
-   "name": "Tumbler's vest",
-   "text": "Nothing beyond its stats.",
-   "slot": "armor",
-   "tier": "ordinary",
-   "source": "drop",
-   "armor": "leather",
-   "stats": [
     {
      "stat": "evasion",
      "flat": 12
     }
    ],
-   "rarity": "common"
-  },
-  {
-   "id": "footpads_jerkin",
-   "name": "Footpad's jerkin",
-   "text": "Nothing beyond its stats.",
-   "slot": "armor",
-   "tier": "ordinary",
-   "source": "drop",
-   "armor": "leather",
-   "stats": [
-    {
-     "stat": "crit_chance",
-     "flat": 3
-    }
+   "statuses": [
+    "sympathy_mail"
    ],
-   "rarity": "common"
+   "rarity": "legendary"
   },
   {
-   "id": "spotters_coat",
-   "name": "Spotter's coat",
+   "id": "spotters_vest",
+   "name": "Spotter's vest",
    "text": "Nothing beyond its stats.",
    "slot": "armor",
    "tier": "ordinary",
@@ -38690,6 +38658,46 @@
    "rarity": "common"
   },
   {
+   "id": "studded_jerkin",
+   "name": "Studded jerkin",
+   "text": "Nothing beyond its stats.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "leather",
+   "stats": [
+    {
+     "stat": "defense",
+     "flat": 2000
+    },
+    {
+     "stat": "max_hp",
+     "flat": -500
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "quilted_gambeson",
+   "name": "Quilted gambeson",
+   "text": "Nothing beyond its stats.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "leather",
+   "stats": [
+    {
+     "stat": "max_hp",
+     "flat": 1000
+    },
+    {
+     "stat": "attack_speed",
+     "flat": -15
+    }
+   ],
+   "rarity": "common"
+  },
+  {
    "id": "gleaners_leathers",
    "name": "Gleaner's leathers",
    "text": "Each hit it lands heals it for 2% of max HP.",
@@ -38699,12 +38707,12 @@
    "armor": "leather",
    "stats": [
     {
-     "stat": "evasion",
-     "flat": 12
-    },
-    {
      "stat": "max_hp",
      "flat": 500
+    },
+    {
+     "stat": "mp_regen",
+     "flat": 3000
     }
    ],
    "statuses": [
@@ -38722,12 +38730,12 @@
    "armor": "leather",
    "stats": [
     {
-     "stat": "crit_chance",
-     "flat": 3
-    },
-    {
      "stat": "accuracy",
      "flat": 20
+    },
+    {
+     "stat": "cast_time_reduction",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -38749,8 +38757,8 @@
      "flat": 12
     },
     {
-     "stat": "crit_chance",
-     "flat": 3
+     "stat": "defense",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -38768,12 +38776,12 @@
    "armor": "leather",
    "stats": [
     {
-     "stat": "evasion",
-     "flat": 12
+     "stat": "attack_speed",
+     "flat": 15
     },
     {
-     "stat": "attack",
-     "flat": 1000
+     "stat": "accuracy",
+     "flat": 20
     }
    ],
    "statuses": [
@@ -38795,12 +38803,12 @@
      "flat": 12
     },
     {
-     "stat": "aggro",
-     "flat": 10
+     "stat": "crit_multiplier",
+     "flat": 25
     },
     {
-     "stat": "attack",
-     "flat": 1000
+     "stat": "aggro",
+     "flat": 10
     }
    ],
    "statuses": [
@@ -38819,11 +38827,15 @@
    "stats": [
     {
      "stat": "crit_chance",
-     "flat": 5
+     "flat": 3
     },
     {
-     "stat": "attack",
-     "flat": 1000
+     "stat": "aggro",
+     "flat": -10
+    },
+    {
+     "stat": "attack_speed",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -38845,12 +38857,12 @@
      "flat": 1000
     },
     {
-     "stat": "crit_chance",
-     "flat": 3
+     "stat": "max_hp",
+     "flat": 500
     },
     {
-     "stat": "accuracy",
-     "flat": 20
+     "stat": "crit_multiplier",
+     "flat": 25
     }
    ],
    "statuses": [
@@ -38859,29 +38871,29 @@
    "rarity": "rare"
   },
   {
-   "id": "frostwalkers_furs",
-   "name": "Frostwalker's furs",
-   "text": "On a shatter: Hasted; its next hit adds Chill to every foe.",
+   "id": "outriders_coat",
+   "name": "Outrider's coat",
+   "text": "While no ally has a faster basic attack: basic attacks ignore Taunt and deal +20%.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
    "armor": "leather",
    "stats": [
     {
-     "stat": "evasion",
-     "flat": 12
+     "stat": "accuracy",
+     "flat": 20
     },
     {
-     "stat": "attack",
-     "flat": 1000
+     "stat": "max_hp",
+     "flat": 500
     },
     {
-     "stat": "attack_speed",
+     "stat": "cooldown_reduction",
      "flat": 15
     }
    ],
    "statuses": [
-    "frostwalkers_furs"
+    "outriders_coat"
    ],
    "rarity": "rare"
   },
@@ -38896,11 +38908,15 @@
    "stats": [
     {
      "stat": "attack",
-     "flat": 2000
+     "flat": 1000
     },
     {
-     "stat": "crit_chance",
-     "flat": 3
+     "stat": "cast_time_reduction",
+     "flat": 15
+    },
+    {
+     "stat": "crit_multiplier",
+     "flat": 25
     }
    ],
    "statuses": [
@@ -38919,15 +38935,11 @@
    "stats": [
     {
      "stat": "evasion",
-     "flat": 20
+     "flat": 12
     },
     {
-     "stat": "attack",
-     "flat": 1000
-    },
-    {
-     "stat": "aggro",
-     "flat": 10
+     "stat": "attack_speed",
+     "flat": 30
     }
    ],
    "statuses": [
@@ -38945,12 +38957,12 @@
    "armor": "leather",
    "stats": [
     {
-     "stat": "attack_speed",
-     "flat": 30
-    },
-    {
      "stat": "max_hp",
      "flat": 1000
+    },
+    {
+     "stat": "attack_speed",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -38959,28 +38971,8 @@
    "rarity": "legendary"
   },
   {
-   "id": "wayfarers_habit",
-   "name": "Wayfarer's habit",
-   "text": "Nothing beyond its stats.",
-   "slot": "armor",
-   "tier": "ordinary",
-   "source": "drop",
-   "armor": "robes",
-   "stats": [
-    {
-     "stat": "max_mp",
-     "flat": 1000
-    },
-    {
-     "stat": "max_hp",
-     "flat": 500
-    }
-   ],
-   "rarity": "common"
-  },
-  {
-   "id": "rainwater_robe",
-   "name": "Rainwater robe",
+   "id": "meditants_habit",
+   "name": "Meditant's habit",
    "text": "Nothing beyond its stats.",
    "slot": "armor",
    "tier": "ordinary",
@@ -38995,8 +38987,8 @@
    "rarity": "common"
   },
   {
-   "id": "hermits_cowl",
-   "name": "Hermit's cowl",
+   "id": "augurs_robe",
+   "name": "Augur's robe",
    "text": "Nothing beyond its stats.",
    "slot": "armor",
    "tier": "ordinary",
@@ -39004,8 +38996,32 @@
    "armor": "robes",
    "stats": [
     {
-     "stat": "aggro",
-     "flat": -10
+     "stat": "crit_chance",
+     "flat": 5
+    },
+    {
+     "stat": "max_hp",
+     "flat": -500
+    }
+   ],
+   "rarity": "common"
+  },
+  {
+   "id": "padded_cassock",
+   "name": "Padded cassock",
+   "text": "Nothing beyond its stats.",
+   "slot": "armor",
+   "tier": "ordinary",
+   "source": "drop",
+   "armor": "robes",
+   "stats": [
+    {
+     "stat": "defense",
+     "flat": 2000
+    },
+    {
+     "stat": "attack_speed",
+     "flat": -15
     }
    ],
    "rarity": "common"
@@ -39013,7 +39029,7 @@
   {
    "id": "matins_robe",
    "name": "Matins robe",
-   "text": "Every second ability it casts each fight is free.",
+   "text": "Every other ability it casts is free.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -39024,8 +39040,8 @@
      "flat": 1000
     },
     {
-     "stat": "attack",
-     "flat": 1000
+     "stat": "cooldown_reduction",
+     "flat": 15
     },
     {
      "stat": "max_hp",
@@ -39040,7 +39056,7 @@
   {
    "id": "banked_robe",
    "name": "Banked robe",
-   "text": "Abilities add +50% Burn, Chill and Shock.",
+   "text": "Abilities add +50% stacks of any status, Shields included.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
@@ -39051,8 +39067,8 @@
      "flat": 1000
     },
     {
-     "stat": "cast_time_reduction",
-     "flat": 15
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -39063,19 +39079,15 @@
   {
    "id": "glyphed_robe",
    "name": "Glyphed robe",
-   "text": "Each cast gives it a Shield of 10% of max MP.",
+   "text": "Each ability it casts Guards it.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
    "armor": "robes",
    "stats": [
     {
-     "stat": "max_mp",
-     "flat": 1000
-    },
-    {
-     "stat": "aggro",
-     "flat": -10
+     "stat": "cast_time_reduction",
+     "flat": 15
     },
     {
      "stat": "max_hp",
@@ -39097,12 +39109,8 @@
    "armor": "robes",
    "stats": [
     {
-     "stat": "max_mp",
-     "flat": 1000
-    },
-    {
-     "stat": "mp_regen",
-     "flat": 3000
+     "stat": "aggro",
+     "flat": -10
     },
     {
      "stat": "max_hp",
@@ -39115,29 +39123,33 @@
    "rarity": "uncommon"
   },
   {
-   "id": "kindled_robes",
-   "name": "Kindled robes",
-   "text": "While any foe burns: a Heat every 4 ticks (5% faster each, up to 10).",
+   "id": "conclave_robes",
+   "name": "Conclave robes",
+   "text": "Abilities come round 20% faster for each other ally in robes.",
    "slot": "armor",
    "tier": "ordinary",
    "source": "drop",
    "armor": "robes",
    "stats": [
     {
-     "stat": "attack",
+     "stat": "max_mp",
      "flat": 1000
     },
     {
-     "stat": "cast_time_reduction",
-     "flat": 15
+     "stat": "siphon",
+     "flat": 10
     },
     {
-     "stat": "mp_regen",
-     "flat": 3000
+     "stat": "double_strike",
+     "flat": 25
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
-    "kindled_robes"
+    "conclave_robes"
    ],
    "rarity": "rare"
   },
@@ -39155,12 +39167,12 @@
      "flat": 1000
     },
     {
-     "stat": "mp_regen",
-     "flat": 3000
+     "stat": "thorns",
+     "flat": 150
     },
     {
      "stat": "aggro",
-     "flat": -10
+     "flat": 10
     },
     {
      "stat": "max_hp",
@@ -39182,20 +39194,16 @@
    "armor": "robes",
    "stats": [
     {
-     "stat": "max_mp",
-     "flat": 1000
-    },
-    {
      "stat": "mp_regen",
      "flat": 3000
     },
     {
-     "stat": "cast_time_reduction",
-     "flat": 15
-    },
-    {
      "stat": "max_hp",
      "flat": 500
+    },
+    {
+     "stat": "crit_multiplier",
+     "flat": 25
     }
    ],
    "statuses": [
@@ -39213,16 +39221,20 @@
    "armor": "robes",
    "stats": [
     {
-     "stat": "max_mp",
-     "flat": 2000
-    },
-    {
-     "stat": "aggro",
-     "flat": -10
-    },
-    {
      "stat": "max_hp",
      "flat": 1000
+    },
+    {
+     "stat": "lifesteal",
+     "flat": 10
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
+    },
+    {
+     "stat": "defense",
+     "flat": -1000
     }
    ],
    "statuses": [
@@ -39244,16 +39256,12 @@
      "flat": 1000
     },
     {
-     "stat": "max_mp",
-     "flat": 1000
+     "stat": "crit_chance",
+     "flat": 3
     },
     {
-     "stat": "aggro",
-     "flat": -10
-    },
-    {
-     "stat": "max_hp",
-     "flat": 500
+     "stat": "cast_time_reduction",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -39272,19 +39280,15 @@
    "stats": [
     {
      "stat": "max_mp",
-     "flat": 2000
-    },
-    {
-     "stat": "mp_regen",
-     "flat": 3000
-    },
-    {
-     "stat": "attack",
      "flat": 1000
+    },
+    {
+     "stat": "cast_time_reduction",
+     "flat": 30
     },
     {
      "stat": "max_hp",
-     "flat": 1000
+     "flat": 500
     }
    ],
    "statuses": [
@@ -39293,9 +39297,9 @@
    "rarity": "legendary"
   },
   {
-   "id": "vestments_of_return",
-   "name": "Vestments of return",
-   "text": "While it stands: revived allies return behind a Shield of half their max HP.",
+   "id": "inverted_vestments",
+   "name": "Inverted vestments",
+   "text": "Max HP and max MP trade places.",
    "slot": "armor",
    "tier": "powerful",
    "source": "unlock",
@@ -39303,23 +39307,23 @@
    "stats": [
     {
      "stat": "max_mp",
-     "flat": 2000
+     "flat": 1000
     },
     {
-     "stat": "mp_regen",
-     "flat": 3000
+     "stat": "defense",
+     "flat": 1000
     },
     {
-     "stat": "aggro",
-     "flat": -10
+     "stat": "cooldown_reduction",
+     "flat": 15
     },
     {
      "stat": "max_hp",
-     "flat": 1000
+     "flat": 500
     }
    ],
    "statuses": [
-    "vestments_of_return"
+    "inverted_vestments"
    ],
    "rarity": "legendary"
   },
@@ -39334,15 +39338,19 @@
    "stats": [
     {
      "stat": "attack",
-     "flat": 2000
+     "flat": 1000
     },
     {
-     "stat": "cast_time_reduction",
-     "flat": 15
+     "stat": "crit_chance",
+     "flat": 5
     },
     {
-     "stat": "aggro",
-     "flat": -10
+     "stat": "evasion",
+     "flat": 12
+    },
+    {
+     "stat": "defense",
+     "flat": -1000
     }
    ],
    "statuses": [

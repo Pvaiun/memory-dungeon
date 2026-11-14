@@ -11,8 +11,8 @@ helper(kit("bedrock_on_plus", "BEDROCK", "Crit chance doubled; Crit damage up.",
 }));
 // Bare rock: the passive turned outside its stone: Crit damage while it holds no Shield (given at the start, lifted as a Shield
 // lands, given back as the last one ends); the power step's +25% on top.
-helper(kit("bare_rock", "BARE ROCK", "Crit damage +50%.", { stacking: "fizzle", unremovable: true, stats: [{ stat: "crit_multiplier", flat: 50 }] }));
-helper(kit("bare_rock_plus", "BARE ROCK", "Crit damage +75%.", { stacking: "fizzle", unremovable: true, stats: [{ stat: "crit_multiplier", flat: 75 }] }));
+helper(kit("bare_rock", "BARE ROCK", "Crit damage +50%.", { stacking: "fizzle", stats: [{ stat: "crit_multiplier", flat: 50 }] }));
+helper(kit("bare_rock_plus", "BARE ROCK", "Crit damage +75%.", { stacking: "fizzle", stats: [{ stat: "crit_multiplier", flat: 75 }] }));
 passiveUp({
   id: "bedrock", cls: "geomancer",
   power: "+25% Crit damage while its Shield holds.",

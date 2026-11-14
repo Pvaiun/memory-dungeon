@@ -159,7 +159,8 @@ weapon("rune_sword", "common", "Honed runeblade", { stats: [critStep(2), down(sp
           react(EV.swing, lift(on_), lift(mp, "holder", "marker")),
         ],
       }),
-      { id: on_, name: "SPELLBOUND", text: "Next basic attack deals double.", label: "buff", show: "icon", stacking: "fizzle", unremovable: true, boosts: [{ tag: "basic", pct: 100 }] },
+      // Removable, so its own swing lifts it (a remove skips an unremovable status even by name).
+      { id: on_, name: "SPELLBOUND", text: "Next basic attack deals double.", label: "buff", show: "icon", stacking: "fizzle", boosts: [{ tag: "basic", pct: 100 }] },
       marker(mp, "Spellbound MP", "MP its next basic attack gives back.", { stacking: "intensity" }),
     ],
     serves: "conditional, Barrage 2 ●●● ◆ the spellblade",
