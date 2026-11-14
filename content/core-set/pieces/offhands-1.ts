@@ -451,10 +451,10 @@ offhand("lantern", "common", "Hooded lantern", { stats: [sp("evasion", "medium")
 {
   // A fallen foe's fire moves once: every piece and seat that moves it shares it.
   const name = "Wick";
-  const effect = "When a burning foe falls: its Burn passes to the foe with the most Burn.";
+  const effect = "When a burning foe falls: 50% of its Burn passes to the foe with the most Burn.";
   offhand("lantern", "rare", name, {
     effect, stats: [st("attack", 1), st("mp_regen", 1), st("defense", 1)],
-    statuses: [own_(name, effect, { reactions: [{ on: on("status_ended", { status: "burn", cause: ["ko"], whose: "foe" }), split: "fire", do: [give("burn", TO.mostFoe("burn"), ofAmount())] }] })],
+    statuses: [own_(name, effect, { reactions: [{ on: on("status_ended", { status: "burn", cause: ["ko"], whose: "foe" }), split: "fire", do: [give("burn", TO.mostFoe("burn"), ofAmount(0.5))] }] })],
     serves: "Bonfire 2 ●●●, Hunt ●● ⚙ fuse (key)",
   });
 }

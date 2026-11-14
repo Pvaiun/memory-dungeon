@@ -301,8 +301,8 @@ export const abilities: A[] = [
     ],
   }),
   // The party's storm: Shock on every ally's swings for a while, not a nuke (Fireball is the nuke, Blizzard the field's Chill).
-  a("stormcaller", "thunderstorm", "Thunderstorm", `For ${KIT.storm.duration} ticks, every ally's basic attacks add Shock.`, { ...timing("medium", "normal"), mp: 650, target: T.everyAlly, do: [apply("thunderstorm_storm")] }),
-  a("stormcaller", "static_charge", "Static charge", `Basic attacks come ${KIT.staticCharge.speed}% faster for ${KIT.staticCharge.duration} ticks.`, { ...timing("medium", "quick"), mp: 650, target: "self", do: [apply("static_charge_on")] }),
+  a("stormcaller", "thunderstorm", "Thunderstorm", `For ${KIT.storm.duration} ticks, every ally's basic attacks add Shock.`, { ...timing("medium", "normal"), mp: 450, target: T.everyAlly, do: [apply("thunderstorm_storm")] }),
+  a("stormcaller", "static_charge", "Static charge", `Basic attacks come ${KIT.staticCharge.speed}% faster for ${KIT.staticCharge.duration} ticks.`, { ...timing("medium", "quick"), mp: 325, target: "self", do: [apply("static_charge_on")] }),
   // Geomancer
   a("geomancer", "earthen_shell", "Earthen shell", "Shields itself and the other ally with the lowest HP%.", {
     ...timing("medium", "normal"), mp: 650, ...waitsFor("allies", { belowCap: "shield" }), target: "self",

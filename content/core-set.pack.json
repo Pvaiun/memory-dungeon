@@ -11991,7 +11991,7 @@
   {
    "id": "wick",
    "name": "Wick",
-   "text": "When a burning foe falls: its Burn passes to the foe with the most Burn.",
+   "text": "When a burning foe falls: 50% of its Burn passes to the foe with the most Burn.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -12021,7 +12021,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 1,
+          "ratio": 0.5,
           "amount": true
          }
         ]
@@ -23166,7 +23166,7 @@
    "text": "For 20 ticks, every ally's basic attacks add Shock.",
    "cooldown": 27.9,
    "cast": 3,
-   "mp": 650,
+   "mp": 450,
    "target": {
     "side": "allies",
     "pick": "all"
@@ -23185,7 +23185,7 @@
    "text": "Basic attacks come 50% faster for 20 ticks.",
    "cooldown": 31.1,
    "cast": 1,
-   "mp": 650,
+   "mp": 325,
    "target": "self",
    "do": [
     {
@@ -30953,7 +30953,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0052,
+          "ratio": 0.0039,
           "stat": "attack"
          }
         ]
@@ -31040,7 +31040,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00728,
+          "ratio": 0.00546,
           "stat": "attack"
          }
         ]
@@ -31164,7 +31164,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0046,
+          "ratio": 0.0026,
           "stat": "attack"
          }
         ]
@@ -31236,7 +31236,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0046,
+          "ratio": 0.0026,
           "stat": "attack"
          }
         ]
@@ -32458,7 +32458,7 @@
    "text": "For 20 ticks, every ally's basic attacks add Shock. +40% Shock.",
    "cooldown": 27.9,
    "cast": 3,
-   "mp": 650,
+   "mp": 450,
    "target": {
     "side": "allies",
     "pick": "all"
@@ -32477,7 +32477,7 @@
    "text": "For 20 ticks, foes that hit an ally gain Shock. None on the swings.",
    "cooldown": 27.9,
    "cast": 3,
-   "mp": 650,
+   "mp": 450,
    "target": {
     "side": "allies",
     "pick": "all"
@@ -32496,7 +32496,7 @@
    "text": "For 20 ticks, every ally's basic attacks add ×3 Shock to the foe with the most Shock.",
    "cooldown": 27.9,
    "cast": 3,
-   "mp": 650,
+   "mp": 450,
    "target": {
     "side": "allies",
     "pick": "all"
@@ -32515,7 +32515,7 @@
    "text": "For 20 ticks, foes that hit an ally gain Shock. None on the swings. +40% Shock.",
    "cooldown": 27.9,
    "cast": 3,
-   "mp": 650,
+   "mp": 450,
    "target": {
     "side": "allies",
     "pick": "all"
@@ -32534,7 +32534,7 @@
    "text": "For 20 ticks, every ally's basic attacks add ×3 Shock to the foe with the most Shock. +40% Shock.",
    "cooldown": 27.9,
    "cast": 3,
-   "mp": 650,
+   "mp": 450,
    "target": {
     "side": "allies",
     "pick": "all"
@@ -32553,7 +32553,7 @@
    "text": "Basic attacks come 50% faster for 20 ticks.",
    "cooldown": 22.8,
    "cast": 1,
-   "mp": 650,
+   "mp": 325,
    "target": "self",
    "do": [
     {
@@ -32569,7 +32569,7 @@
    "text": "Its basic attacks come 50% faster for 20 ticks, and its next 3 abilities in that time cost no MP.",
    "cooldown": 31.1,
    "cast": 1,
-   "mp": 650,
+   "mp": 325,
    "target": "self",
    "do": [
     {
@@ -32589,7 +32589,7 @@
    "text": "Thorns up and +40 Aggro for 20 ticks. No speed.",
    "cooldown": 31.1,
    "cast": 1,
-   "mp": 650,
+   "mp": 325,
    "target": "self",
    "do": [
     {
@@ -32605,7 +32605,7 @@
    "text": "Its basic attacks come 50% faster for 20 ticks, and its next 3 abilities in that time cost no MP.",
    "cooldown": 22.8,
    "cast": 1,
-   "mp": 650,
+   "mp": 325,
    "target": "self",
    "do": [
     {
@@ -32625,7 +32625,7 @@
    "text": "Thorns up and +40 Aggro for 20 ticks. No speed.",
    "cooldown": 22.8,
    "cast": 1,
-   "mp": 650,
+   "mp": 325,
    "target": "self",
    "do": [
     {
@@ -41779,7 +41779,7 @@
   {
    "id": "wick",
    "name": "Wick",
-   "text": "When a burning foe falls: its Burn passes to the foe with the most Burn.",
+   "text": "When a burning foe falls: 50% of its Burn passes to the foe with the most Burn.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
