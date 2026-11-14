@@ -123,6 +123,7 @@ tools/                       the Node command lines; each header says how to run
   swing-rate.ts              a stat step against a swing step, class by class: the weapon kinds' exchange rate
   rogue-bosses.ts            how bosses fight in runs: casts, interrupts, held wind-ups
   rogue-acts.ts              the act road and the MP economy, on the rosters
+  road-read.ts               what the road's regular fights and elites cost each roster at today's knobs: cost, fights nearly free, losses, MP spent, the lowest a member falls; --without prices a class
   rogue-feel.ts              fight logs for a feel read (the reader's brief: docs/feel-reader.md); --builds for the build parties
   rogue-feel/
     builds.ts                its build mode: the build test's parties on their fights or named ones, the packs picked, the cards gathered
