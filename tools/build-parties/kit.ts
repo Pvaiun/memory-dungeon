@@ -103,14 +103,11 @@ const draws = (g: GearT) => !!SERVED[g.id]?.threads.includes("draw") || (g.stats
 /**
  * Where a good player wouldn't hang a piece, whatever the tags say: the few placements the fight reads found self-defeating.
  * Halved heart (half HP all fight, no healing past it) on the healer, a caster's seat or a frail class; Blood vial (an HP price
- * on top) beside Flagellant's vestments, which already pay every cost in HP; Goading totem (every foe swings at once when it
- * Taunts) anywhere, since the goad pays only with Weaken or Shock on the field, which a route's tags don't promise, and without
- * them it made the Bramble knight's party pay more in every tier.
+ * on top) beside Flagellant's vestments, which already pay every cost in HP.
  */
 const MISFIT: Record<string, (c: ClassDefT, role: Role, worn: Partial<Gear>) => boolean> = {
   halved_heart: (c, role) => role === "heal" || role === "cast" || (FIT[c.id]?.heal ?? 0) >= 3 || (c.stats?.max_hp ?? 0) <= 3000,
   blood_vial: (_c, _role, worn) => worn.armor === "flagellants_vestments",
-  goading_totem: () => true,
 };
 
 function pick(c: ClassDefT, slot: Slot, build: BuildId, rung: Rung, used: Set<string>, front: boolean, role: Role, worn: Partial<Gear>): GearT {

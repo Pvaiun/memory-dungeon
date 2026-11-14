@@ -355,7 +355,7 @@ Thirty-one more, for thirty-two, and three that the kits and the mythics already
 - **Enough to see it:** the retaliation on any Guarded anchor. The better the stone, the more goes back, so it's the Toll's game against the bosses that barely swing, where it died in play. Weaken works against it: a weakened blow sends less back.
 
 **The goad.** *The Storm and the Toll.*
-- **What combines:** something that makes foes swing at once: when its wearer Taunts, or on the foe its blow lands on · anything that makes a foe's own action cost it: a charge it holds, thorns on what it strikes, frost or a wound it picks up there · Weaken on the field, so the blows called early are small ones.
+- **What combines:** something that makes foes swing at once: when its wearer Taunts (Goading totem Weakens them as it calls them), or on the foe its blow lands on · anything that makes a foe's own action cost it: a charge it holds, thorns on what it strikes, frost or a wound it picks up there · Weaken on the field, so the blows called early are small ones.
 - **What the player sees:** the anchor shouts and every foe swings out of turn, sparks and thorns flying off each one as it does. The anchor's bar dips, and the pack's drops further. Against a slow boss, the party sets the pace the boss pays at.
 - **Enough to see it:** the piece on a Bramble knight, or on anyone under a Stormcaller's storm. The blow taken is real, and that's its price.
 

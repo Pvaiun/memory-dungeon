@@ -131,7 +131,8 @@ add(
 }
 {
   // Last in the order of healing past full: after the healed unit's own piece and the healer's. Held once by the side.
-  const party = "Healing past full goes to the ally with the lowest HP%.";
+  // Half the overflow, not all: with all of it, the first rung's lifesteal and heals undid every regular fight and elite of act I.
+  const party = "50% of healing past full goes to the ally with the lowest HP%.";
   add(
     formation("Shared cup", "common", "Nobody's healing is wasted.", [
       ...twice({ name: "Cup", text: "Heals on it are 20% bigger.", stats: [STRONGER_HEALS] }),
@@ -142,7 +143,7 @@ add(
       held("shared_cup", "Shared cup", party, {
         party: true,
         reactions: [reactIf(on("overhealed", { whose: "team" }), [{ unit: "owner", where: { lacks: OVERHEAL.own } }, { unit: "other", where: { lacks: OVERHEAL.given }, absent: true }],
-          { op: "heal", amount: ofAmount(1), final: true, to: { side: "allies", where: { canHeal: true }, pick: "lowest", by: "hp_share" } })],
+          { op: "heal", amount: ofAmount(0.5), final: true, to: { side: "allies", where: { canHeal: true }, pick: "lowest", by: "hp_share" } })],
       }),
     ],
     "Pact 1 ●●●, Cuts ●● ⚙ brink (half)",

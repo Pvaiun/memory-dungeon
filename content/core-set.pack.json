@@ -2379,7 +2379,7 @@
   {
    "id": "shared_cup",
    "name": "Shared cup",
-   "text": "Healing past full goes to the ally with the lowest HP%.",
+   "text": "50% of healing past full goes to the ally with the lowest HP%.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2412,7 +2412,7 @@
        "amount": {
         "scale": [
          {
-          "ratio": 1,
+          "ratio": 0.5,
           "amount": true
          }
         ]
@@ -4685,7 +4685,7 @@
   {
    "id": "lamprey_claws",
    "name": "Lamprey claws",
-   "text": "Each extra strike heals it for 10% of max HP.",
+   "text": "Each extra strike heals it for 5% of max HP.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -4702,7 +4702,7 @@
        "amount": {
         "scale": [
          {
-          "ratio": 0.1,
+          "ratio": 0.05,
           "stat": "max_hp",
           "of": "holder"
          }
@@ -5422,7 +5422,7 @@
   {
    "id": "mercys_edge",
    "name": "Mercy's edge",
-   "text": "Basic attacks heal the ally with the lowest HP% for 33% of the damage.",
+   "text": "Basic attacks heal the ally with the lowest HP% for 20% of the damage.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -5439,7 +5439,7 @@
        "amount": {
         "scale": [
          {
-          "ratio": 0.3333333333333333,
+          "ratio": 0.2,
           "amount": true
          }
         ]
@@ -7096,7 +7096,7 @@
   {
    "id": "menders_mace",
    "name": "Mender's mace",
-   "text": "Every 22 ticks: heals the ally with the lowest HP% for 20% of the wearer's max HP.",
+   "text": "Every 22 ticks: heals the ally with the lowest HP% for 12% of the wearer's max HP.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -7109,7 +7109,7 @@
       "amount": {
        "scale": [
         {
-         "ratio": 0.2,
+         "ratio": 0.12,
          "stat": "max_hp",
          "of": "holder"
         }
@@ -8087,7 +8087,7 @@
   {
    "id": "thornheart_plate",
    "name": "Thornheart plate",
-   "text": "When hit: gains a Spite (up to 20) and sends back 33% of the blow, +5% per Spite.",
+   "text": "When hit: gains a Spite (up to 20) and sends back 25% of the blow, +2% per Spite.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -8117,11 +8117,11 @@
        "amount": {
         "scale": [
          {
-          "ratio": 0.3333333333333333,
+          "ratio": 0.25,
           "event": "raw"
          },
          {
-          "ratio": 0.05,
+          "ratio": 0.02,
           "event": "raw",
           "times": {
            "stacks": "spite",
@@ -11544,7 +11544,7 @@
   {
    "id": "goading_totem",
    "name": "Goading totem",
-   "text": "When it Taunts: every foe attacks at once.",
+   "text": "When it Taunts: every foe is Weakened and attacks at once.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -11556,6 +11556,14 @@
       "status": "taunt"
      },
      "do": [
+      {
+       "op": "apply",
+       "status": "weaken",
+       "to": {
+        "side": "foes",
+        "pick": "all"
+       }
+      },
       {
        "op": "cooldown",
        "which": "basic",
@@ -19910,7 +19918,7 @@
   {
    "id": "banner_of_the_last_keep",
    "name": "Banner of the last keep",
-   "text": "Max HP ×2. Healing on it −50%.",
+   "text": "Max HP ×1.5. Healing on it −50%.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -19918,7 +19926,7 @@
    "stats": [
     {
      "stat": "max_hp",
-     "pct": 100
+     "pct": 50
     },
     {
      "stat": "healing_received",
@@ -34797,7 +34805,7 @@
   {
    "id": "lamprey_claws",
    "name": "Lamprey claws",
-   "text": "Each extra strike heals it for 10% of max HP.",
+   "text": "Each extra strike heals it for 5% of max HP.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -35541,7 +35549,7 @@
   {
    "id": "mercys_edge",
    "name": "Mercy's edge",
-   "text": "Basic attacks heal the ally with the lowest HP% for 33% of the damage.",
+   "text": "Basic attacks heal the ally with the lowest HP% for 20% of the damage.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -37403,7 +37411,7 @@
   {
    "id": "menders_mace",
    "name": "Mender's mace",
-   "text": "Every 22 ticks: heals the ally with the lowest HP% for 20% of the wearer's max HP.",
+   "text": "Every 22 ticks: heals the ally with the lowest HP% for 12% of the wearer's max HP.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -38564,7 +38572,7 @@
   {
    "id": "thornheart_plate",
    "name": "Thornheart plate",
-   "text": "When hit: gains a Spite (up to 20) and sends back 33% of the blow, +5% per Spite.",
+   "text": "When hit: gains a Spite (up to 20) and sends back 25% of the blow, +2% per Spite.",
    "slot": "armor",
    "tier": "powerful",
    "source": "unlock",
@@ -41433,7 +41441,7 @@
   {
    "id": "goading_totem",
    "name": "Goading totem",
-   "text": "When it Taunts: every foe attacks at once.",
+   "text": "When it Taunts: every foe is Weakened and attacks at once.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -43493,7 +43501,7 @@
   {
    "id": "banner_of_the_last_keep",
    "name": "Banner of the last keep",
-   "text": "Max HP ×2. Healing on it −50%.",
+   "text": "Max HP ×1.5. Healing on it −50%.",
    "slot": "armor",
    "tier": "powerful",
    "source": "unlock",
@@ -44457,7 +44465,7 @@
   {
    "id": "shared_cup",
    "name": "Shared cup",
-   "text": "Nobody's healing is wasted. The party: Healing past full goes to the ally with the lowest HP%.",
+   "text": "Nobody's healing is wasted. The party: 50% of healing past full goes to the ally with the lowest HP%.",
    "rarity": "common",
    "source": "unlock",
    "positions": [
@@ -47544,7 +47552,7 @@
        "archer",
        "archer"
       ],
-      "knob": 10
+      "knob": 7
      },
      {
       "id": "viper_den",
@@ -47701,7 +47709,7 @@
        "bat",
        "bat"
       ],
-      "knob": 212
+      "knob": 215
      },
      {
       "id": "curse_room",
@@ -47758,7 +47766,7 @@
        "ghoul",
        "ghoul"
       ],
-      "knob": 186
+      "knob": 192
      },
      {
       "id": "lich_lair",
@@ -47767,7 +47775,7 @@
        "lich",
        "mummy"
       ],
-      "knob": 311
+      "knob": 309
      },
      {
       "id": "grave_watch",
@@ -47879,7 +47887,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": -16
+      "knob": -12
      },
      {
       "id": "hound_run",
@@ -47924,7 +47932,7 @@
        "lava_slime",
        "lava_slime"
       ],
-      "knob": 190
+      "knob": 193
      },
      {
       "id": "imp_court",
@@ -47936,7 +47944,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 93
+      "knob": 97
      },
      {
       "id": "powder_room",
@@ -48053,7 +48061,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 106
+      "knob": 110
      },
      {
       "id": "whiteout",
@@ -48073,7 +48081,7 @@
        "ice_ghost",
        "ice_ghost"
       ],
-      "knob": 148
+      "knob": 151
      },
      {
       "id": "long_pack",
@@ -48119,7 +48127,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 139
+      "knob": 142
      },
      {
       "id": "frost_trolls",
@@ -48130,7 +48138,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 28
+      "knob": 32
      }
     ],
     "bosses": [
@@ -48276,7 +48284,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 356
+      "knob": 353
      },
      {
       "id": "sniper_ridge",
@@ -48385,7 +48393,7 @@
        "lich",
        "mummy"
       ],
-      "knob": 309
+      "knob": 299
      },
      {
       "id": "silent_hall",
@@ -48452,7 +48460,7 @@
        "lich",
        "lich"
       ],
-      "knob": 140
+      "knob": 137
      },
      {
       "id": "tomb_lords",
@@ -48462,7 +48470,7 @@
        "mummy",
        "witch"
       ],
-      "knob": 192
+      "knob": 188
      }
     ],
     "bosses": [
@@ -48482,7 +48490,7 @@
        "bone_priest",
        "bone_priest"
       ],
-      "knob": 55
+      "knob": 51
      }
     ]
    },
@@ -48566,7 +48574,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 421
+      "knob": 410
      },
      {
       "id": "drone_wall",
@@ -48602,7 +48610,7 @@
        "drone",
        "drone"
       ],
-      "knob": 172
+      "knob": 169
      },
      {
       "id": "honour_guard",
@@ -48613,7 +48621,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 425
+      "knob": 418
      },
      {
       "id": "leech_den",
@@ -48645,7 +48653,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 113
+      "knob": 107
      }
     ]
    }

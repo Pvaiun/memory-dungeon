@@ -101,13 +101,14 @@ armor("plate", "common", "Mauler's cuirass", { stats: [st("attack", 2), down(cri
 {
   // The Spite comes first, so the blow that adds it counts it.
   const name = "Thornheart plate";
-  const effect = `When hit: gains a Spite (up to ${COUNTER.spite.cap}) and sends back 33% of the blow, +5% per Spite.`;
+  // 25% and 2% a Spite, not 33% and 5%: at the cap the plate sent back 133% of each blow, and packs killed themselves on it.
+  const effect = `When hit: gains a Spite (up to ${COUNTER.spite.cap}) and sends back 25% of the blow, +2% per Spite.`;
   armor("plate", "legendary", name, {
     effect, stats: [sp("thorns", "medium"), sp("lifesteal", "medium"), sp("attack_speed", "medium")],
     statuses: [own_(name, effect, {
       reactions: [
         react(EV.struck, give("spite", "holder", 1)),
-        react(EV.struck, { op: "damage", type: "none", amount: { scale: [{ ratio: 1 / 3, event: "raw" }, { ratio: 0.05, event: "raw", times: { stacks: "spite", of: "holder" } }] }, to: "other" }),
+        react(EV.struck, { op: "damage", type: "none", amount: { scale: [{ ratio: 0.25, event: "raw" }, { ratio: 0.02, event: "raw", times: { stacks: "spite", of: "holder" } }] }, to: "other" }),
       ],
     })],
     serves: "Toll 3 ●●●, Landslide ●●, conditional ⚙ mirror (key) ◆ Toll (the mirror)",

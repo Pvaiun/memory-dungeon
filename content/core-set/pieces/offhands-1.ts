@@ -324,10 +324,11 @@ offhand("totem", "common", "Twin-fang fetish", { stats: [sp("double_strike", "me
   });
 }
 {
-  const name = "Goading totem", effect = "When it Taunts: every foe attacks at once.";
+  // The swings it calls come Weakened (the goad's own price paid down: without Weaken on the field it lost every tier).
+  const name = "Goading totem", effect = "When it Taunts: every foe is Weakened and attacks at once.";
   offhand("totem", "rare", name, {
     effect, stats: [st("max_hp", 1), sp("double_strike", "medium"), sp("cooldown", "medium")],
-    statuses: [own_(name, effect, { reactions: [react(on("status_gained", { status: "taunt" }), swingNow(TO.everyFoe))] })],
+    statuses: [own_(name, effect, { reactions: [react(on("status_gained", { status: "taunt" }), give("weaken", TO.everyFoe), swingNow(TO.everyFoe))] })],
     serves: "conditional, Storm 2 ●●●, Toll 2 ●●● ⚙ goad (key) ◆ draw",
   });
 }

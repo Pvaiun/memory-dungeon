@@ -150,10 +150,10 @@ weapon("fist", "common", "Brazen talons", { stats: [st("aggro", 2), st("max_hp",
   });
 }
 {
-  const name = "Lamprey claws", effect = "Each extra strike heals it for 10% of max HP.";
+  const name = "Lamprey claws", effect = "Each extra strike heals it for 5% of max HP.";
   weapon("fist", "uncommon", name, {
     effect, stats: [sp("siphon", "medium"), st("max_hp", 1)],
-    statuses: [own_(name, effect, { reactions: [react(EV.extra, { op: "heal", amount: share(0.1, "max_hp"), to: "holder" })] })],
+    statuses: [own_(name, effect, { reactions: [react(EV.extra, { op: "heal", amount: share(0.05, "max_hp"), to: "holder" })] })],
     serves: "Pact 1 ●●, Cuts 1 ● ◆ Pact (staying alive by hitting), Cuts (staying alive by hitting)",
   });
 }
@@ -344,10 +344,10 @@ weapon("sword", "common", "Ceremonial sword", { stats: [st("max_mp", 2), down(sp
   });
 }
 {
-  const name = "Mercy's edge", effect = "Basic attacks heal the ally with the lowest HP% for 33% of the damage.";
+  const name = "Mercy's edge", effect = "Basic attacks heal the ally with the lowest HP% for 20% of the damage.";
   weapon("sword", "uncommon", name, {
     effect, stats: [st("mp_regen", 1), st("max_hp", 1)],
-    statuses: [own_(name, effect, { reactions: [react(EV.basic, { op: "heal", amount: ofAmount(1 / 3), to: TO.lowestAlly })] })],
+    statuses: [own_(name, effect, { reactions: [react(EV.basic, { op: "heal", amount: ofAmount(0.2), to: TO.lowestAlly })] })],
     serves: "Pact 1 ●● ⚙ brink (half) ◆ Pact (life passed on)",
   });
 }
