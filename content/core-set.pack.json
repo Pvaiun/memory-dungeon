@@ -28382,10 +28382,6 @@
    "cooldown": 32.7,
    "cast": 1,
    "mp": 450,
-   "if": {
-    "side": "others",
-    "where": {}
-   },
    "target": "self",
    "do": [
     {
@@ -28432,10 +28428,6 @@
    "cooldown": 24,
    "cast": 1,
    "mp": 450,
-   "if": {
-    "side": "others",
-    "where": {}
-   },
    "target": "self",
    "do": [
     {
@@ -31759,7 +31751,7 @@
    "text": "Guards every ally. While the Guard lasts, foes that hit them gain Chill. No damage.",
    "cooldown": 26.5,
    "cast": 6,
-   "mp": 1000,
+   "mp": 650,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -31822,7 +31814,7 @@
    "text": "Guards every ally. While the Guard lasts, foes that hit them gain Chill. No damage. +40% Chill.",
    "cooldown": 26.5,
    "cast": 6,
-   "mp": 1000,
+   "mp": 650,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -47527,7 +47519,7 @@
        "archer",
        "bandit"
       ],
-      "knob": 18
+      "knob": 15
      },
      {
       "id": "night_wolves",
@@ -47598,7 +47590,7 @@
        "ogre",
        "ogre"
       ],
-      "knob": 47
+      "knob": 44
      },
      {
       "id": "war_camp",
@@ -47642,7 +47634,7 @@
        "ogre_chief",
        "ogre"
       ],
-      "knob": 35
+      "knob": 32
      }
     ]
    },
@@ -47753,7 +47745,7 @@
        "witch",
        "ghost"
       ],
-      "knob": 160
+      "knob": 164
      }
     ],
     "elite": [
@@ -47807,7 +47799,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 87
+      "knob": 85
      }
     ]
    },
@@ -47887,7 +47879,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": -13
+      "knob": -16
      },
      {
       "id": "hound_run",
@@ -47932,7 +47924,7 @@
        "lava_slime",
        "lava_slime"
       ],
-      "knob": 187
+      "knob": 190
      },
      {
       "id": "imp_court",
@@ -48117,7 +48109,7 @@
        "ice_golem",
        "ice_golem"
       ],
-      "knob": 203
+      "knob": 206
      },
      {
       "id": "golem_gate",
@@ -48271,7 +48263,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 60
+      "knob": 58
      }
     ],
     "elite": [
@@ -48449,7 +48441,7 @@
        "bone_priest",
        "troll"
       ],
-      "knob": 177
+      "knob": 180
      },
      {
       "id": "lich_court",
@@ -48480,7 +48472,7 @@
       "enemies": [
        "silent_one"
       ],
-      "knob": 112
+      "knob": 109
      },
      {
       "id": "silent_court",
@@ -48598,7 +48590,7 @@
        "drone",
        "drone"
       ],
-      "knob": 272
+      "knob": 270
      }
     ],
     "elite": [
@@ -48610,7 +48602,7 @@
        "drone",
        "drone"
       ],
-      "knob": 169
+      "knob": 172
      },
      {
       "id": "honour_guard",

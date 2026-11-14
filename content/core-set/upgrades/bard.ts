@@ -61,7 +61,8 @@ import { abilityUp, apply, cd, helper, kit, passiveUp, r6 } from "./kit.js";
    * lands; each swing spends a count (the trigger, which runs first) and readies the next while any is left (the reaction's `if`).
    */
   const CADENZA = 3;
-  const cadenza: Partial<AbilityT> = { target: "self", do: [apply("cadenza", { stacks: CADENZA })] };
+  // Its own swings: none of Encore's wait for another ally standing.
+  const cadenza: Partial<AbilityT> = { target: "self", if: undefined, do: [apply("cadenza", { stacks: CADENZA })] };
   helper(kit("cadenza", "CADENZA", `Its next ${CADENZA} basic attacks come at once.`, {
     stacking: "intensity", cap: CADENZA,
     trigger: { on: { event: "action_resolve", kind: "basic" } }, drop: { count: 1 },
