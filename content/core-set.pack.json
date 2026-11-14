@@ -4344,32 +4344,57 @@
    "perSource": {}
   },
   {
-   "id": "sleet_dirk",
-   "name": "Sleet dirk",
-   "text": "Basic attacks add Chill.",
+   "id": "follow_up_dirk",
+   "name": "Follow-up dirk",
+   "text": "Basic attacks on a foe an ally hit since its last basic attack deal +25%.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
+   "boosts": [
+    {
+     "tag": "basic",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 25,
+        "when": {
+         "has": "follow_up_dirk_mark"
+        },
+        "of": "target"
+       }
+      ]
+     }
+    }
+   ],
    "reactions": [
     {
      "on": {
       "event": "hit_lands",
-      "kind": "basic"
+      "whose": "ally"
      },
      "do": [
       {
        "op": "apply",
-       "status": "chill",
+       "status": "follow_up_dirk_mark",
        "to": "other",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.00014,
-          "stat": "attack",
-          "of": "holder"
-         }
-        ]
+       "rider": false
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "action_resolve",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "marker",
+       "status": "follow_up_dirk_mark",
+       "to": {
+        "side": "foes",
+        "pick": "all"
        }
       }
      ]
@@ -4377,9 +4402,68 @@
    ]
   },
   {
+   "id": "follow_up_dirk_mark",
+   "name": "Followed up",
+   "text": "An ally hit it since the Follow-up dirk's last basic attack.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "refresh"
+  },
+  {
    "id": "second_thrust",
    "name": "Second thrust",
-   "text": "On a kill: next basic attack comes at once and always crits.",
+   "text": "Every 3rd basic attack strikes twice.",
+   "label": "buff",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "strike": {
+    "to": "target",
+    "when": {
+     "stacks": {
+      "status": "second_thrust_count",
+      "atLeast": 2
+     }
+    }
+   },
+   "reactions": [
+    {
+     "on": {
+      "event": "action_resolve",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "second_thrust_count",
+       "to": "holder",
+       "stacks": 1
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "second_thrust_count",
+   "name": "SECOND THRUST",
+   "text": "Every 3rd basic attack strikes twice.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "intensity",
+   "unremovable": true,
+   "cap": 3,
+   "trigger": {
+    "on": {
+     "event": "status_capped",
+     "status": "second_thrust_count"
+    }
+   },
+   "drop": "all"
+  },
+  {
+   "id": "letter_opener",
+   "name": "Letter opener",
+   "text": "Hits strip the foe's buffs.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -4387,55 +4471,22 @@
    "reactions": [
     {
      "on": {
-      "event": "ko",
-      "whose": "foe",
-      "other": "holder",
-      "tags": [
-       "physical"
-      ]
+      "event": "hit_lands"
      },
      "do": [
       {
-       "op": "cooldown",
-       "which": "basic",
-       "set": "ready",
-       "to": "holder"
-      },
-      {
-       "op": "apply",
-       "status": "second_thrust_on",
-       "to": "holder"
+       "op": "remove",
+       "label": "buff",
+       "to": "other"
       }
      ]
     }
    ]
   },
   {
-   "id": "second_thrust_on",
-   "name": "SECOND THRUST",
-   "text": "Next basic attack always crits.",
-   "label": "buff",
-   "show": "icon",
-   "stacking": "intensity",
-   "cap": 1,
-   "trigger": {
-    "on": {
-     "event": "action_resolve",
-     "kind": "basic"
-    }
-   },
-   "drop": "all",
-   "crits": [
-    {
-     "tag": "basic",
-     "chance": 100
-    }
-   ]
-  },
-  {
-   "id": "marking_knife",
-   "name": "Marking knife",
-   "text": "On a crit: Marks the target, if no foe is Marked.",
+   "id": "twin_dirk",
+   "name": "Twin dirk",
+   "text": "When another ally wielding a dagger crits: next basic attack comes at once.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -4444,42 +4495,27 @@
     {
      "on": {
       "event": "hit_lands",
+      "whose": "ally",
       "tags": [
        "crit"
       ]
      },
      "if": {
-      "side": "foes",
+      "unit": "owner",
       "where": {
-       "has": "marked"
-      },
-      "atMost": 0
+       "weapon": [
+        "dagger"
+       ]
+      }
      },
      "do": [
       {
-       "op": "apply",
-       "status": "marked",
-       "to": "other"
+       "op": "cooldown",
+       "which": "basic",
+       "set": "ready",
+       "to": "holder"
       }
      ]
-    }
-   ]
-  },
-  {
-   "id": "bloodscent_knife",
-   "name": "Bloodscent knife",
-   "text": "Hits on a bleeding foe: +30% Crit chance, up to 60%.",
-   "label": "buff",
-   "show": "sheet",
-   "stacking": "refresh",
-   "unremovable": true,
-   "crits": [
-    {
-     "when": {
-      "has": "bleed"
-     },
-     "chance": 30,
-     "cap": 60
     }
    ]
   },
@@ -4541,7 +4577,7 @@
   {
    "id": "quietus",
    "name": "Quietus",
-   "text": "At fight start: strikes every foe with its weapon.",
+   "text": "On a crit: Bewilders the target.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -4549,16 +4585,16 @@
    "reactions": [
     {
      "on": {
-      "event": "fight_start"
+      "event": "hit_lands",
+      "tags": [
+       "crit"
+      ]
      },
      "do": [
       {
-       "op": "strike",
-       "carry": true,
-       "to": {
-        "side": "foes",
-        "pick": "all"
-       }
+       "op": "apply",
+       "status": "bewildered",
+       "to": "other"
       }
      ]
     }
@@ -4620,114 +4656,37 @@
    ]
   },
   {
-   "id": "cinder_wraps",
-   "name": "Cinder wraps",
-   "text": "Basic attacks and extra strikes add Burn.",
+   "id": "knuckle_dusters",
+   "name": "Knuckle-dusters",
+   "text": "Extra strikes deal +50%.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "reactions": [
+   "boosts": [
     {
-     "on": {
-      "event": "hit_lands",
-      "kind": "basic"
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "burn",
-       "to": "other",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.000175,
-          "stat": "attack",
-          "of": "holder"
-         }
-        ]
-       }
-      }
-     ]
-    },
-    {
-     "on": {
-      "event": "hit_lands",
-      "kind": "extra"
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "burn",
-       "to": "other",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.000175,
-          "stat": "attack",
-          "of": "holder"
-         }
-        ]
-       }
-      }
-     ]
+     "tag": "extra",
+     "pct": 50
     }
    ]
   },
   {
-   "id": "rime_knuckles",
-   "name": "Rime knuckles",
-   "text": "Basic attacks and extra strikes add Chill.",
+   "id": "weavers_wraps",
+   "name": "Weaver's wraps",
+   "text": "Extra strikes land on a random other foe, never the target.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "reactions": [
-    {
-     "on": {
-      "event": "hit_lands",
-      "kind": "basic"
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "chill",
-       "to": "other",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.00014,
-          "stat": "attack",
-          "of": "holder"
-         }
-        ]
-       }
-      }
-     ]
-    },
-    {
-     "on": {
-      "event": "hit_lands",
-      "kind": "extra"
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "chill",
-       "to": "other",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.00014,
-          "stat": "attack",
-          "of": "holder"
-         }
-        ]
-       }
-      }
-     ]
+   "strike": {
+    "scale": "double_strike",
+    "replace": true,
+    "to": {
+     "side": "foes",
+     "pick": "random",
+     "exclude": "targets"
     }
-   ]
+   }
   },
   {
    "id": "lamprey_claws",
@@ -4806,7 +4765,6 @@
    "label": "buff",
    "show": "icon",
    "stacking": "fizzle",
-   "unremovable": true,
    "stats": [
     {
      "stat": "attack_speed",
@@ -4817,7 +4775,7 @@
   {
    "id": "bellows_wraps",
    "name": "Bellows wraps",
-   "text": "Hits on a burning foe add 5% of its Burn.",
+   "text": "When another ally gains Haste: Hasted too.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -4825,28 +4783,15 @@
    "reactions": [
     {
      "on": {
-      "event": "hit_lands"
-     },
-     "if": {
-      "unit": "other",
-      "where": {
-       "has": "burn"
-      }
+      "event": "status_gained",
+      "status": "haste",
+      "whose": "ally",
+      "repeat": false
      },
      "do": [
       {
-       "op": "apply",
-       "status": "burn",
-       "to": "other",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.05,
-          "stacks": "burn",
-          "of": "target"
-         }
-        ]
-       }
+       "op": "share",
+       "to": "holder"
       }
      ]
     }
@@ -4855,7 +4800,7 @@
   {
    "id": "still_hand",
    "name": "Still hand",
-   "text": "Hits on a Stunned foe land twice.",
+   "text": "Basic attacks come half as often, and each that lands pushes the foe's next basic attack back by a full wait.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -4864,20 +4809,15 @@
     {
      "on": {
       "event": "hit_lands",
-      "notTags": [
-       "bare"
-      ]
-     },
-     "if": {
-      "unit": "other",
-      "where": {
-       "has": "stun"
-      }
+      "kind": "basic"
      },
      "do": [
       {
-       "op": "strike",
-       "of": "dealt",
+       "op": "cooldown",
+       "which": "basic",
+       "set": {
+        "lessPct": -100
+       },
        "to": "other"
       }
      ]
@@ -4948,34 +4888,95 @@
   {
    "id": "answering_thunder",
    "name": "Answering thunder",
-   "text": "When a foe holding Shock acts: strikes it with its weapon.",
+   "text": "Basic attacks come only when a foe acts: once ready, each waits for one, then strikes it at once.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
+   "mods": [
+    {
+     "of": {
+      "basic": true
+     },
+     "wait": {
+      "side": "self",
+      "where": {
+       "has": "answering_thunder_cue"
+      }
+     }
+    }
+   ],
+   "aim": {
+    "rule": {
+     "side": "foes",
+     "where": {
+      "has": "answering_thunder_acted"
+     }
+    },
+    "first": true
+   },
    "reactions": [
     {
      "on": {
-      "event": "status_triggered",
-      "status": "shock",
+      "event": "action_resolve",
       "whose": "foe"
-     },
-     "if": {
-      "side": "self",
-      "where": {
-       "lacks": "stun",
-       "casting": false
-      }
      },
      "do": [
       {
-       "op": "strike",
-       "carry": true,
-       "to": "owner"
+       "op": "apply",
+       "status": "answering_thunder_cue",
+       "to": "holder"
+      },
+      {
+       "op": "apply",
+       "status": "answering_thunder_acted",
+       "to": "owner",
+       "rider": false
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "action_resolve",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "marker",
+       "status": "answering_thunder_cue",
+       "to": "holder"
+      },
+      {
+       "op": "remove",
+       "label": "marker",
+       "status": "answering_thunder_acted",
+       "to": {
+        "side": "foes",
+        "pick": "all"
+       }
       }
      ]
     }
    ]
+  },
+  {
+   "id": "answering_thunder_cue",
+   "name": "Thunder's cue",
+   "text": "A foe just acted: the next basic attack answers it.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "refresh",
+   "duration": 1
+  },
+  {
+   "id": "answering_thunder_acted",
+   "name": "Called the thunder",
+   "text": "Just acted: Answering thunder strikes it.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "refresh",
+   "duration": 1
   },
   {
    "id": "spark_wand",
@@ -5011,35 +5012,27 @@
    ]
   },
   {
-   "id": "jolt_wand",
-   "name": "Jolt wand",
-   "text": "Basic attacks add Shock.",
+   "id": "hushing_wand",
+   "name": "Hushing wand",
+   "text": "Basic attacks on a foe winding up deal triple.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "reactions": [
+   "boosts": [
     {
-     "on": {
-      "event": "hit_lands",
-      "kind": "basic"
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "shock",
-       "to": "other",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.0007,
-          "stat": "attack",
-          "of": "holder"
-         }
-        ]
+     "tag": "basic",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 200,
+        "when": {
+         "casting": true
+        },
+        "of": "target"
        }
-      }
-     ]
+      ]
+     }
     }
    ]
   },
@@ -5080,24 +5073,129 @@
    ]
   },
   {
-   "id": "chain_wand",
-   "name": "Chain wand",
-   "text": "Basic attacks also hit up to two other random foes for half, effects included.",
+   "id": "echoing_wand",
+   "name": "Echoing wand",
+   "text": "Basic attacks also strike each foe the party's last damaging ability hit, for 20% of that hit.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "strike": {
-    "to": {
-     "side": "foes",
-     "pick": "random",
-     "count": 2,
-     "exclude": "targets"
+   "reactions": [
+    {
+     "on": {
+      "event": "action_start",
+      "whose": "team",
+      "kind": "ability",
+      "does": [
+       "damage"
+      ]
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "echoing_wand_fresh",
+       "to": "holder"
+      }
+     ]
     },
-    "share": 50,
-    "kind": "bonus",
-    "carry": true
-   }
+    {
+     "on": {
+      "event": "hit_lands",
+      "whose": "team",
+      "kind": "ability"
+     },
+     "if": {
+      "side": "self",
+      "where": {
+       "has": "echoing_wand_fresh"
+      }
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "marker",
+       "status": "echoing_wand_echo",
+       "to": {
+        "side": "foes",
+        "pick": "all"
+       }
+      },
+      {
+       "op": "remove",
+       "label": "marker",
+       "status": "echoing_wand_fresh",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "hit_lands",
+      "whose": "team",
+      "kind": "ability"
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "echoing_wand_echo",
+       "to": "other",
+       "stacks": {
+        "scale": [
+         {
+          "ratio": 0.2,
+          "event": "raw"
+         }
+        ]
+       },
+       "rider": false
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "action_resolve",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "strike",
+       "amount": {
+        "scale": [
+         {
+          "ratio": 1,
+          "stacks": "echoing_wand_echo",
+          "of": "target"
+         }
+        ]
+       },
+       "tag": "echo",
+       "to": {
+        "side": "foes",
+        "pick": "all",
+        "where": {
+         "has": "echoing_wand_echo"
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "echoing_wand_echo",
+   "name": "Echo",
+   "text": "What the Echoing wand's basic attacks strike it for, until the party's next damaging ability lands.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "intensity"
+  },
+  {
+   "id": "echoing_wand_fresh",
+   "name": "Echo to come",
+   "text": "An ally's damaging ability is on its way: its first hit replaces the echo.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "refresh"
   },
   {
    "id": "mimic_wand",
@@ -5122,7 +5220,7 @@
   {
    "id": "wildmagic_wand",
    "name": "Wildmagic wand",
-   "text": "Basic attacks add one of Burn, Chill, Shock, Bleed or Sunder, at random.",
+   "text": "Basic attacks add a random affliction.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -5232,35 +5330,43 @@
    ]
   },
   {
-   "id": "rimed_blade",
-   "name": "Rimed blade",
-   "text": "Basic attacks add Chill, from max HP.",
+   "id": "duellists_sword",
+   "name": "Duellist's sword",
+   "text": "With no offhand: +12% Evasion, and basic attacks deal +25%.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "reactions": [
+   "stats": [
     {
-     "on": {
-      "event": "hit_lands",
-      "kind": "basic"
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "chill",
-       "to": "other",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.00014,
-          "stat": "max_hp",
-          "of": "holder"
-         }
-        ]
+     "stat": "evasion",
+     "flat": {
+      "scale": [
+       {
+        "ratio": 12,
+        "when": {
+         "offhand": false
+        },
+        "of": "holder"
        }
-      }
-     ]
+      ]
+     }
+    }
+   ],
+   "boosts": [
+    {
+     "tag": "basic",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 25,
+        "when": {
+         "offhand": false
+        },
+        "of": "holder"
+       }
+      ]
+     }
     }
    ]
   },
@@ -5479,7 +5585,6 @@
    "label": "buff",
    "show": "icon",
    "stacking": "fizzle",
-   "unremovable": true,
    "strike": {
     "to": {
      "side": "foes",
@@ -5516,28 +5621,84 @@
    ]
   },
   {
-   "id": "stormbrand",
-   "name": "Stormbrand",
-   "text": "Hits deal extra damage: 0.5% of Attack for each Shock the foes hold.",
+   "id": "kingmaker",
+   "name": "Kingmaker",
+   "text": "At fight start: the other ally with the least Attack gains the wearer's Attack, and the wearer keeps only a third.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "adds": [
+   "reactions": [
     {
-     "on": "physical",
-     "amount": {
+     "on": {
+      "event": "fight_start",
+      "repeat": false
+     },
+     "if": {
+      "side": "others",
+      "where": {}
+     },
+     "do": [
+      {
+       "op": "apply",
+       "status": "kingmaker_crown",
+       "to": {
+        "side": "others",
+        "pick": "lowest",
+        "by": {
+         "stat": "attack"
+        }
+       }
+      },
+      {
+       "op": "apply",
+       "status": "kingmaker_kept",
+       "to": "holder"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "kingmaker_crown",
+   "name": "CROWNED",
+   "text": "Holds the Kingmaker's wearer's Attack, for the fight.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "refresh",
+   "unremovable": true,
+   "stats": [
+    {
+     "stat": "attack",
+     "flat": {
       "scale": [
        {
-        "ratio": 0.005,
-        "count": {
-         "side": "foes",
-         "stacks": "shock"
-        },
-        "times": {
-         "stat": "attack",
-         "of": "holder"
-        }
+        "ratio": 1,
+        "stat": "attack",
+        "of": "source"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "kingmaker_kept",
+   "name": "KINGMAKER",
+   "text": "Keeps a third of its Attack, for the fight.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "refresh",
+   "unremovable": true,
+   "stats": [
+    {
+     "stat": "attack",
+     "flat": {
+      "scale": [
+       {
+        "ratio": -0.6666666666666666,
+        "stat": "attack",
+        "of": "holder"
        }
       ]
      }
@@ -5577,41 +5738,70 @@
    ]
   },
   {
-   "id": "victors_spear",
-   "name": "Victor's spear",
-   "text": "On a kill: gains a Shield of 25% of Attack.",
+   "id": "avengers_spear",
+   "name": "Avenger's spear",
+   "text": "When another ally drops below half HP: next basic attack comes at once, at the foe that last hit it.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
+   "aim": {
+    "rule": {
+     "side": "foes",
+     "where": {
+      "has": "avengers_spear_foe"
+     }
+    },
+    "first": true
+   },
    "reactions": [
     {
      "on": {
-      "event": "ko",
-      "whose": "foe",
-      "other": "holder",
-      "tags": [
-       "physical"
-      ]
+      "event": "hp_low",
+      "line": 50,
+      "whose": "ally"
      },
      "do": [
       {
        "op": "apply",
-       "status": "shield",
-       "to": "holder",
-       "stacks": {
-        "scale": [
-         {
-          "ratio": 0.25,
-          "stat": "attack",
-          "of": "holder"
-         }
-        ]
+       "status": "avengers_spear_foe",
+       "to": "assailant",
+       "rider": false
+      },
+      {
+       "op": "cooldown",
+       "which": "basic",
+       "set": "ready",
+       "to": "holder"
+      }
+     ]
+    },
+    {
+     "on": {
+      "event": "action_resolve",
+      "kind": "basic"
+     },
+     "do": [
+      {
+       "op": "remove",
+       "label": "marker",
+       "status": "avengers_spear_foe",
+       "to": {
+        "side": "foes",
+        "pick": "all"
        }
       }
      ]
     }
    ]
+  },
+  {
+   "id": "avengers_spear_foe",
+   "name": "Avenged",
+   "text": "Hurt an ally: the Avenger's spear's next basic attack comes for it.",
+   "label": "marker",
+   "show": "sheet",
+   "stacking": "refresh"
   },
   {
    "id": "long_spear",
@@ -5683,86 +5873,34 @@
    ]
   },
   {
-   "id": "squall_lance",
-   "name": "Squall lance",
-   "text": "Every 5th hit also hits every other foe, effects included.",
+   "id": "phalanx_pike",
+   "name": "Phalanx pike",
+   "text": "Hits deal +10% for each ally holding a kite shield or round shield.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "reactions": [
+   "boosts": [
     {
-     "on": {
-      "event": "hit_lands",
-      "notTags": [
-       "squall"
-      ]
-     },
-     "if": {
-      "side": "self",
-      "where": {
-       "stacks": {
-        "status": "squall_lance_count",
-        "atLeast": 4
-       }
-      }
-     },
-     "do": [
-      {
-       "op": "strike",
-       "amount": {
-        "scale": [
-         {
-          "ratio": 0.29,
-          "stat": "attack",
-          "of": "holder"
+     "tag": "physical",
+     "pct": {
+      "scale": [
+       {
+        "ratio": 10,
+        "count": {
+         "side": "allies",
+         "where": {
+          "offhand": [
+           "kite_shield",
+           "round_shield"
+          ]
          }
-        ]
-       },
-       "carry": true,
-       "tag": "squall",
-       "to": {
-        "side": "foes",
-        "pick": "all",
-        "exclude": "other"
+        }
        }
-      }
-     ]
-    },
-    {
-     "on": {
-      "event": "hit_lands",
-      "notTags": [
-       "squall"
       ]
-     },
-     "do": [
-      {
-       "op": "apply",
-       "status": "squall_lance_count",
-       "to": "holder",
-       "stacks": 1
-      }
-     ]
+     }
     }
    ]
-  },
-  {
-   "id": "squall_lance_count",
-   "name": "SQUALL",
-   "text": "Every 5th hit also hits every other foe.",
-   "label": "buff",
-   "show": "icon",
-   "stacking": "intensity",
-   "unremovable": true,
-   "cap": 5,
-   "trigger": {
-    "on": {
-     "event": "status_capped",
-     "status": "squall_lance_count"
-    }
-   },
-   "drop": "all"
   },
   {
    "id": "sarissa",
@@ -5825,9 +5963,9 @@
    "perSource": {}
   },
   {
-   "id": "reavers_axe",
-   "name": "Reaver's axe",
-   "text": "On a kill: gains Might.",
+   "id": "woodsmans_axe",
+   "name": "Woodsman's axe",
+   "text": "Basic attacks give Might to the ally with the slowest basic attack.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -5835,22 +5973,22 @@
    "reactions": [
     {
      "on": {
-      "event": "ko",
-      "whose": "foe",
-      "other": "holder",
-      "tags": [
-       "physical"
-      ]
+      "event": "hit_lands",
+      "kind": "basic"
      },
      "do": [
       {
        "op": "apply",
        "status": "might",
-       "to": "holder",
+       "to": {
+        "side": "allies",
+        "pick": "highest",
+        "by": "swing"
+       },
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0023,
+          "ratio": 0.0007,
           "stat": "attack",
           "of": "holder"
          }
@@ -5954,9 +6092,9 @@
    ]
   },
   {
-   "id": "thirsting_axe",
-   "name": "Thirsting axe",
-   "text": "On a kill: heals 20% of max HP.",
+   "id": "miners_pick",
+   "name": "Miner's pick",
+   "text": "Basic attacks that land steal 1 Defense from the foe for the fight, up to 5.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -5964,28 +6102,72 @@
    "reactions": [
     {
      "on": {
-      "event": "ko",
-      "whose": "foe",
-      "other": "holder",
-      "tags": [
-       "physical"
-      ]
+      "event": "hit_lands",
+      "kind": "basic"
      },
+     "if": [
+      {
+       "side": "self",
+       "where": {
+        "belowCap": "miners_pick_ore"
+       }
+      },
+      {
+       "unit": "other",
+       "where": {
+        "above": {
+         "stat": "defense",
+         "over": "max_hp",
+         "ratio": 0.000001
+        }
+       }
+      }
+     ],
      "do": [
       {
-       "op": "heal",
-       "amount": {
-        "scale": [
-         {
-          "ratio": 0.2,
-          "stat": "max_hp",
-          "of": "holder"
-         }
-        ]
-       },
-       "to": "holder"
+       "op": "apply",
+       "status": "miners_pick_mined",
+       "to": "other",
+       "stacks": 1
+      },
+      {
+       "op": "apply",
+       "status": "miners_pick_ore",
+       "to": "holder",
+       "stacks": 1
       }
      ]
+    }
+   ]
+  },
+  {
+   "id": "miners_pick_mined",
+   "name": "MINED",
+   "text": "1 Defense less for each stack, for the fight.",
+   "label": "debuff",
+   "show": "icon",
+   "stacking": "intensity",
+   "cap": 5,
+   "stats": [
+    {
+     "stat": "defense",
+     "flat": -1000
+    }
+   ]
+  },
+  {
+   "id": "miners_pick_ore",
+   "name": "ORE",
+   "text": "1 Defense more for each stack, for the fight.",
+   "label": "buff",
+   "show": "icon",
+   "stacking": "intensity",
+   "cap": 5,
+   "unremovable": true,
+   "stats": [
+    {
+     "stat": "defense",
+     "flat": 1000
     }
    ]
   },
@@ -6101,7 +6283,6 @@
    "label": "buff",
    "show": "icon",
    "stacking": "fizzle",
-   "unremovable": true,
    "boosts": [
     {
      "tag": "physical",
@@ -34065,8 +34246,8 @@
    "source": "drop",
    "stats": [
     {
-     "stat": "attack_speed",
-     "flat": 15
+     "stat": "crit_chance",
+     "flat": 3
     }
    ],
    "weapon": {
@@ -34084,16 +34265,20 @@
    "rarity": "common"
   },
   {
-   "id": "keen_dirk",
-   "name": "Keen dirk",
+   "id": "brawlers_dirk",
+   "name": "Brawler's dirk",
    "text": "Nothing beyond its stats.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
-     "stat": "crit_chance",
-     "flat": 3
+     "stat": "max_hp",
+     "flat": 1000
+    },
+    {
+     "stat": "defense",
+     "flat": -1000
     }
    ],
    "weapon": {
@@ -34119,12 +34304,12 @@
    "source": "drop",
    "stats": [
     {
-     "stat": "crit_chance",
-     "flat": 3
+     "stat": "siphon",
+     "flat": 10
     },
     {
-     "stat": "attack_speed",
-     "flat": 15
+     "stat": "attack",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -34145,24 +34330,24 @@
    "rarity": "uncommon"
   },
   {
-   "id": "sleet_dirk",
-   "name": "Sleet dirk",
-   "text": "Basic attacks add Chill.",
+   "id": "follow_up_dirk",
+   "name": "Follow-up dirk",
+   "text": "Basic attacks on a foe an ally hit since its last basic attack deal +25%.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
-     "stat": "crit_chance",
-     "flat": 3
+     "stat": "attack_speed",
+     "flat": 15
     },
     {
-     "stat": "accuracy",
-     "flat": 20
+     "stat": "cooldown_reduction",
+     "flat": 15
     }
    ],
    "statuses": [
-    "sleet_dirk"
+    "follow_up_dirk"
    ],
    "weapon": {
     "kind": "dagger",
@@ -34181,18 +34366,18 @@
   {
    "id": "second_thrust",
    "name": "Second thrust",
-   "text": "On a kill: next basic attack comes at once and always crits.",
+   "text": "Every 3rd basic attack strikes twice.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
-     "stat": "crit_chance",
-     "flat": 3
+     "stat": "evasion",
+     "flat": 12
     },
     {
-     "stat": "crit_multiplier",
-     "flat": 25
+     "stat": "defense",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -34213,24 +34398,32 @@
    "rarity": "uncommon"
   },
   {
-   "id": "marking_knife",
-   "name": "Marking knife",
-   "text": "On a crit: Marks the target, if no foe is Marked.",
+   "id": "letter_opener",
+   "name": "Letter opener",
+   "text": "Hits strip the foe's buffs.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
-     "stat": "crit_chance",
-     "flat": 5
+     "stat": "max_mp",
+     "flat": 1000
     },
     {
-     "stat": "attack_speed",
+     "stat": "cast_time_reduction",
      "flat": 15
+    },
+    {
+     "stat": "accuracy",
+     "flat": 20
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
-    "marking_knife"
+    "letter_opener"
    ],
    "weapon": {
     "kind": "dagger",
@@ -34247,28 +34440,28 @@
    "rarity": "rare"
   },
   {
-   "id": "bloodscent_knife",
-   "name": "Bloodscent knife",
-   "text": "Hits on a bleeding foe: +30% Crit chance, up to 60%.",
+   "id": "twin_dirk",
+   "name": "Twin dirk",
+   "text": "When another ally wielding a dagger crits: next basic attack comes at once.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
+     "stat": "double_strike",
+     "flat": 25
+    },
+    {
      "stat": "crit_chance",
      "flat": 3
     },
     {
-     "stat": "attack_speed",
-     "flat": 15
-    },
-    {
-     "stat": "crit_multiplier",
-     "flat": 25
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
-    "bloodscent_knife"
+    "twin_dirk"
    ],
    "weapon": {
     "kind": "dagger",
@@ -34293,12 +34486,16 @@
    "source": "drop",
    "stats": [
     {
-     "stat": "crit_chance",
-     "flat": 5
+     "stat": "aggro",
+     "flat": -10
     },
     {
      "stat": "crit_multiplier",
      "flat": 25
+    },
+    {
+     "stat": "accuracy",
+     "flat": 20
     }
    ],
    "statuses": [
@@ -34327,12 +34524,16 @@
    "source": "unlock",
    "stats": [
     {
-     "stat": "crit_chance",
-     "flat": 5
+     "stat": "attack_speed",
+     "flat": 15
     },
     {
-     "stat": "attack_speed",
-     "flat": 30
+     "stat": "lifesteal",
+     "flat": 10
+    },
+    {
+     "stat": "defense",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -34355,18 +34556,18 @@
   {
    "id": "quietus",
    "name": "Quietus",
-   "text": "At fight start: strikes every foe with its weapon.",
+   "text": "On a crit: Bewilders the target.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
    "stats": [
     {
-     "stat": "crit_chance",
-     "flat": 5
+     "stat": "aggro",
+     "flat": -20
     },
     {
-     "stat": "crit_multiplier",
-     "flat": 50
+     "stat": "crit_chance",
+     "flat": 3
     }
    ],
    "statuses": [
@@ -34387,16 +34588,16 @@
    "rarity": "legendary"
   },
   {
-   "id": "mantis_claws",
-   "name": "Mantis claws",
+   "id": "sidestep_claws",
+   "name": "Sidestep claws",
    "text": "Nothing beyond its stats.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
-     "stat": "double_strike",
-     "flat": 25
+     "stat": "evasion",
+     "flat": 12
     }
    ],
    "weapon": {
@@ -34414,16 +34615,20 @@
    "rarity": "common"
   },
   {
-   "id": "red_talons",
-   "name": "Red talons",
+   "id": "brazen_talons",
+   "name": "Brazen talons",
    "text": "Nothing beyond its stats.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
-     "stat": "lifesteal",
-     "flat": 10
+     "stat": "aggro",
+     "flat": 20
+    },
+    {
+     "stat": "max_hp",
+     "flat": -500
     }
    ],
    "weapon": {
@@ -34449,11 +34654,11 @@
    "source": "drop",
    "stats": [
     {
-     "stat": "double_strike",
-     "flat": 25
+     "stat": "attack",
+     "flat": 1000
     },
     {
-     "stat": "attack_speed",
+     "stat": "cooldown_reduction",
      "flat": 15
     }
    ],
@@ -34475,24 +34680,28 @@
    "rarity": "uncommon"
   },
   {
-   "id": "cinder_wraps",
-   "name": "Cinder wraps",
-   "text": "Basic attacks and extra strikes add Burn.",
+   "id": "knuckle_dusters",
+   "name": "Knuckle-dusters",
+   "text": "Extra strikes deal +50%.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
-     "stat": "double_strike",
+     "stat": "attack",
+     "flat": 2000
+    },
+    {
+     "stat": "crit_multiplier",
      "flat": 25
     },
     {
      "stat": "attack_speed",
-     "flat": 15
+     "flat": -15
     }
    ],
    "statuses": [
-    "cinder_wraps"
+    "knuckle_dusters"
    ],
    "weapon": {
     "kind": "fist",
@@ -34509,24 +34718,24 @@
    "rarity": "uncommon"
   },
   {
-   "id": "rime_knuckles",
-   "name": "Rime knuckles",
-   "text": "Basic attacks and extra strikes add Chill.",
+   "id": "weavers_wraps",
+   "name": "Weaver's wraps",
+   "text": "Extra strikes land on a random other foe, never the target.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
-     "stat": "double_strike",
-     "flat": 25
+     "stat": "cast_time_reduction",
+     "flat": 15
     },
     {
-     "stat": "attack_speed",
-     "flat": 15
+     "stat": "evasion",
+     "flat": 12
     }
    ],
    "statuses": [
-    "rime_knuckles"
+    "weavers_wraps"
    ],
    "weapon": {
     "kind": "fist",
@@ -34551,8 +34760,8 @@
    "source": "drop",
    "stats": [
     {
-     "stat": "double_strike",
-     "flat": 25
+     "stat": "siphon",
+     "flat": 10
     },
     {
      "stat": "max_hp",
@@ -34585,16 +34794,12 @@
    "source": "drop",
    "stats": [
     {
-     "stat": "double_strike",
-     "flat": 25
+     "stat": "max_hp",
+     "flat": 1000
     },
     {
      "stat": "lifesteal",
      "flat": 10
-    },
-    {
-     "stat": "max_hp",
-     "flat": 500
     }
    ],
    "statuses": [
@@ -34617,22 +34822,22 @@
   {
    "id": "bellows_wraps",
    "name": "Bellows wraps",
-   "text": "Hits on a burning foe add 5% of its Burn.",
+   "text": "When another ally gains Haste: Hasted too.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
-     "stat": "double_strike",
-     "flat": 25
+     "stat": "defense",
+     "flat": 1000
     },
     {
-     "stat": "attack_speed",
-     "flat": 15
+     "stat": "attack",
+     "flat": 1000
     },
     {
-     "stat": "evasion",
-     "flat": 12
+     "stat": "mp_regen",
+     "flat": 3000
     }
    ],
    "statuses": [
@@ -34655,22 +34860,26 @@
   {
    "id": "still_hand",
    "name": "Still hand",
-   "text": "Hits on a Stunned foe land twice.",
+   "text": "Basic attacks come half as often, and each that lands pushes the foe's next basic attack back by a full wait.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
-     "stat": "double_strike",
-     "flat": 25
+     "stat": "attack_speed",
+     "flat": -100
     },
     {
-     "stat": "attack_speed",
+     "stat": "evasion",
+     "flat": 12
+    },
+    {
+     "stat": "cooldown_reduction",
      "flat": 15
     },
     {
-     "stat": "lifesteal",
-     "flat": 10
+     "stat": "mp_regen",
+     "flat": 3000
     }
    ],
    "statuses": [
@@ -34699,12 +34908,16 @@
    "source": "drop",
    "stats": [
     {
-     "stat": "double_strike",
-     "flat": 25
+     "stat": "max_mp",
+     "flat": 1000
     },
     {
      "stat": "attack_speed",
      "flat": 15
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
     },
     {
      "stat": "max_hp",
@@ -34737,16 +34950,16 @@
    "source": "unlock",
    "stats": [
     {
+     "stat": "crit_multiplier",
+     "flat": 25
+    },
+    {
      "stat": "double_strike",
-     "flat": 40
+     "flat": 25
     },
     {
-     "stat": "attack_speed",
-     "flat": 15
-    },
-    {
-     "stat": "lifesteal",
-     "flat": 10
+     "stat": "attack",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -34769,26 +34982,18 @@
   {
    "id": "answering_thunder",
    "name": "Answering thunder",
-   "text": "When a foe holding Shock acts: strikes it with its weapon.",
+   "text": "Basic attacks come only when a foe acts: once ready, each waits for one, then strikes it at once.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
    "stats": [
     {
-     "stat": "double_strike",
-     "flat": 25
+     "stat": "attack",
+     "flat": 2000
     },
     {
-     "stat": "attack_speed",
+     "stat": "cast_time_reduction",
      "flat": 15
-    },
-    {
-     "stat": "lifesteal",
-     "flat": 10
-    },
-    {
-     "stat": "evasion",
-     "flat": 12
     }
    ],
    "statuses": [
@@ -34809,8 +35014,8 @@
    "rarity": "legendary"
   },
   {
-   "id": "quickbeam_wand",
-   "name": "Quickbeam wand",
+   "id": "leechwood_wand",
+   "name": "Leechwood wand",
    "text": "Nothing beyond its stats.",
    "slot": "weapon",
    "tier": "ordinary",
@@ -34821,8 +35026,8 @@
      "flat": 15
     },
     {
-     "stat": "attack_speed",
-     "flat": 15
+     "stat": "lifesteal",
+     "flat": 10
     }
    ],
    "weapon": {
@@ -34840,20 +35045,16 @@
    "rarity": "common"
   },
   {
-   "id": "hazel_wand",
-   "name": "Hazel wand",
+   "id": "lifewood_wand",
+   "name": "Lifewood wand",
    "text": "Nothing beyond its stats.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
-     "stat": "cooldown_reduction",
-     "flat": 15
-    },
-    {
-     "stat": "mp_regen",
-     "flat": 3000
+     "stat": "max_hp",
+     "flat": 1000
     }
    ],
    "weapon": {
@@ -34879,16 +35080,16 @@
    "source": "drop",
    "stats": [
     {
-     "stat": "cooldown_reduction",
+     "stat": "cast_time_reduction",
      "flat": 15
     },
     {
-     "stat": "attack_speed",
-     "flat": 15
+     "stat": "crit_chance",
+     "flat": 3
     },
     {
-     "stat": "attack",
-     "flat": 1000
+     "stat": "evasion",
+     "flat": 12
     }
    ],
    "statuses": [
@@ -34909,28 +35110,32 @@
    "rarity": "uncommon"
   },
   {
-   "id": "jolt_wand",
-   "name": "Jolt wand",
-   "text": "Basic attacks add Shock.",
+   "id": "hushing_wand",
+   "name": "Hushing wand",
+   "text": "Basic attacks on a foe winding up deal triple.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
+     "stat": "aggro",
+     "flat": -10
+    },
+    {
+     "stat": "max_mp",
+     "flat": 1000
+    },
+    {
      "stat": "cooldown_reduction",
      "flat": 15
     },
     {
-     "stat": "attack_speed",
-     "flat": 15
-    },
-    {
-     "stat": "attack",
-     "flat": 1000
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
-    "jolt_wand"
+    "hushing_wand"
    ],
    "weapon": {
     "kind": "wand",
@@ -34955,16 +35160,16 @@
    "source": "drop",
    "stats": [
     {
-     "stat": "cooldown_reduction",
-     "flat": 15
-    },
-    {
-     "stat": "attack_speed",
-     "flat": 15
-    },
-    {
      "stat": "mp_regen",
      "flat": 3000
+    },
+    {
+     "stat": "defense",
+     "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -34985,9 +35190,9 @@
    "rarity": "uncommon"
   },
   {
-   "id": "chain_wand",
-   "name": "Chain wand",
-   "text": "Basic attacks also hit up to two other random foes for half, effects included.",
+   "id": "echoing_wand",
+   "name": "Echoing wand",
+   "text": "Basic attacks also strike each foe the party's last damaging ability hit, for 20% of that hit.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -34997,20 +35202,24 @@
      "flat": 15
     },
     {
-     "stat": "attack_speed",
-     "flat": 15
-    },
-    {
-     "stat": "attack",
+     "stat": "max_mp",
      "flat": 1000
     },
     {
-     "stat": "mp_regen",
-     "flat": 3000
+     "stat": "thorns",
+     "flat": 150
+    },
+    {
+     "stat": "aggro",
+     "flat": 10
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
-    "chain_wand"
+    "echoing_wand"
    ],
    "weapon": {
     "kind": "wand",
@@ -35035,16 +35244,20 @@
    "source": "drop",
    "stats": [
     {
-     "stat": "cooldown_reduction",
-     "flat": 15
+     "stat": "evasion",
+     "flat": 12
     },
     {
-     "stat": "attack_speed",
-     "flat": 15
+     "stat": "double_strike",
+     "flat": 25
     },
     {
      "stat": "attack",
-     "flat": 2000
+     "flat": 1000
+    },
+    {
+     "stat": "crit_chance",
+     "flat": 3
     }
    ],
    "statuses": [
@@ -35067,26 +35280,30 @@
   {
    "id": "wildmagic_wand",
    "name": "Wildmagic wand",
-   "text": "Basic attacks add one of Burn, Chill, Shock, Bleed or Sunder, at random.",
+   "text": "Basic attacks add a random affliction.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
    "stats": [
     {
-     "stat": "cooldown_reduction",
+     "stat": "cast_time_reduction",
      "flat": 30
     },
     {
-     "stat": "attack_speed",
-     "flat": 15
+     "stat": "max_mp",
+     "flat": 2000
     },
     {
-     "stat": "attack",
+     "stat": "crit_chance",
+     "flat": 3
+    },
+    {
+     "stat": "defense",
+     "flat": -1000
+    },
+    {
+     "stat": "max_hp",
      "flat": 1000
-    },
-    {
-     "stat": "mp_regen",
-     "flat": 3000
     }
    ],
    "statuses": [
@@ -35119,16 +35336,16 @@
      "flat": 15
     },
     {
-     "stat": "attack_speed",
-     "flat": 30
-    },
-    {
      "stat": "cast_time_reduction",
      "flat": 15
     },
     {
-     "stat": "mp_regen",
-     "flat": 3000
+     "stat": "aggro",
+     "flat": 10
+    },
+    {
+     "stat": "defense",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -35176,16 +35393,24 @@
    "rarity": "common"
   },
   {
-   "id": "gilded_sword",
-   "name": "Gilded sword",
+   "id": "ceremonial_sword",
+   "name": "Ceremonial sword",
    "text": "Nothing beyond its stats.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
+     "stat": "max_mp",
+     "flat": 2000
+    },
+    {
+     "stat": "attack_speed",
+     "flat": -15
+    },
+    {
      "stat": "max_hp",
-     "flat": 500
+     "flat": 1000
     }
    ],
    "weapon": {
@@ -35203,24 +35428,24 @@
    "rarity": "common"
   },
   {
-   "id": "rimed_blade",
-   "name": "Rimed blade",
-   "text": "Basic attacks add Chill, from max HP.",
+   "id": "duellists_sword",
+   "name": "Duellist's sword",
+   "text": "With no offhand: +12% Evasion, and basic attacks deal +25%.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
-     "stat": "attack",
-     "flat": 1000
+     "stat": "accuracy",
+     "flat": 20
     },
     {
-     "stat": "defense",
-     "flat": 1000
+     "stat": "crit_chance",
+     "flat": 3
     }
    ],
    "statuses": [
-    "rimed_blade"
+    "duellists_sword"
    ],
    "weapon": {
     "kind": "sword",
@@ -35245,12 +35470,12 @@
    "source": "drop",
    "stats": [
     {
-     "stat": "attack",
-     "flat": 1000
+     "stat": "attack_speed",
+     "flat": 15
     },
     {
-     "stat": "crit_chance",
-     "flat": 3
+     "stat": "attack",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -35279,8 +35504,8 @@
    "source": "drop",
    "stats": [
     {
-     "stat": "attack",
-     "flat": 1000
+     "stat": "mp_regen",
+     "flat": 3000
     },
     {
      "stat": "max_hp",
@@ -35313,12 +35538,16 @@
    "source": "drop",
    "stats": [
     {
-     "stat": "attack",
-     "flat": 2000
+     "stat": "crit_multiplier",
+     "flat": 25
     },
     {
-     "stat": "crit_chance",
-     "flat": 3
+     "stat": "siphon",
+     "flat": 10
+    },
+    {
+     "stat": "attack",
+     "flat": 1000
     }
    ],
    "statuses": [
@@ -35347,16 +35576,20 @@
    "source": "drop",
    "stats": [
     {
-     "stat": "attack",
-     "flat": 1000
-    },
-    {
-     "stat": "aggro",
-     "flat": 10
+     "stat": "thorns",
+     "flat": 150
     },
     {
      "stat": "defense",
      "flat": 1000
+    },
+    {
+     "stat": "max_mp",
+     "flat": 1000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -35385,12 +35618,12 @@
    "source": "drop",
    "stats": [
     {
-     "stat": "attack",
-     "flat": 1000
+     "stat": "mp_regen",
+     "flat": 3000
     },
     {
-     "stat": "max_hp",
-     "flat": 500
+     "stat": "cooldown_reduction",
+     "flat": 15
     },
     {
      "stat": "defense",
@@ -35423,12 +35656,16 @@
    "source": "drop",
    "stats": [
     {
-     "stat": "attack",
-     "flat": 1000
+     "stat": "max_hp",
+     "flat": 500
     },
     {
-     "stat": "max_hp",
-     "flat": 1000
+     "stat": "lifesteal",
+     "flat": 10
+    },
+    {
+     "stat": "attack_speed",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -35453,24 +35690,32 @@
    "rarity": "rare"
   },
   {
-   "id": "stormbrand",
-   "name": "Stormbrand",
-   "text": "Hits deal extra damage: 0.5% of Attack for each Shock the foes hold.",
+   "id": "kingmaker",
+   "name": "Kingmaker",
+   "text": "At fight start: the other ally with the least Attack gains the wearer's Attack, and the wearer keeps only a third.",
    "slot": "weapon",
    "tier": "powerful",
    "source": "unlock",
    "stats": [
     {
      "stat": "attack",
-     "flat": 2000
+     "flat": 1000
     },
     {
-     "stat": "crit_chance",
-     "flat": 5
+     "stat": "max_mp",
+     "flat": 1000
+    },
+    {
+     "stat": "cast_time_reduction",
+     "flat": 15
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
-    "stormbrand"
+    "kingmaker"
    ],
    "weapon": {
     "kind": "sword",
@@ -35514,16 +35759,28 @@
    "rarity": "common"
   },
   {
-   "id": "boar_spear",
-   "name": "Boar spear",
+   "id": "bident",
+   "name": "Bident",
    "text": "Nothing beyond its stats.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
-     "stat": "attack",
+     "stat": "double_strike",
+     "flat": 25
+    },
+    {
+     "stat": "max_mp",
      "flat": 1000
+    },
+    {
+     "stat": "attack_speed",
+     "flat": -15
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "weapon": {
@@ -35553,8 +35810,8 @@
      "flat": 15
     },
     {
-     "stat": "attack",
-     "flat": 1000
+     "stat": "cast_time_reduction",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -35575,24 +35832,24 @@
    "rarity": "uncommon"
   },
   {
-   "id": "victors_spear",
-   "name": "Victor's spear",
-   "text": "On a kill: gains a Shield of 25% of Attack.",
+   "id": "avengers_spear",
+   "name": "Avenger's spear",
+   "text": "When another ally drops below half HP: next basic attack comes at once, at the foe that last hit it.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
-     "stat": "aggro",
-     "flat": 10
+     "stat": "crit_multiplier",
+     "flat": 25
     },
     {
-     "stat": "attack",
-     "flat": 1000
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
-    "victors_spear"
+    "avengers_spear"
    ],
    "weapon": {
     "kind": "spear",
@@ -35617,11 +35874,11 @@
    "source": "drop",
    "stats": [
     {
-     "stat": "crit_chance",
-     "flat": 3
+     "stat": "accuracy",
+     "flat": 20
     },
     {
-     "stat": "attack",
+     "stat": "defense",
      "flat": 1000
     }
    ],
@@ -35651,12 +35908,16 @@
    "source": "drop",
    "stats": [
     {
-     "stat": "crit_chance",
-     "flat": 3
+     "stat": "crit_multiplier",
+     "flat": 25
     },
     {
-     "stat": "attack",
-     "flat": 2000
+     "stat": "evasion",
+     "flat": 12
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
@@ -35685,12 +35946,16 @@
    "source": "drop",
    "stats": [
     {
-     "stat": "aggro",
-     "flat": 20
-    },
-    {
      "stat": "evasion",
      "flat": 12
+    },
+    {
+     "stat": "defense",
+     "flat": 1000
+    },
+    {
+     "stat": "cooldown_reduction",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -35711,24 +35976,28 @@
    "rarity": "rare"
   },
   {
-   "id": "squall_lance",
-   "name": "Squall lance",
-   "text": "Every 5th hit also hits every other foe, effects included.",
+   "id": "phalanx_pike",
+   "name": "Phalanx pike",
+   "text": "Hits deal +10% for each ally holding a kite shield or round shield.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
-     "stat": "attack_speed",
-     "flat": 15
+     "stat": "accuracy",
+     "flat": 20
     },
     {
-     "stat": "attack",
-     "flat": 2000
+     "stat": "mp_regen",
+     "flat": 3000
+    },
+    {
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "statuses": [
-    "squall_lance"
+    "phalanx_pike"
    ],
    "weapon": {
     "kind": "spear",
@@ -35753,12 +36022,12 @@
    "source": "unlock",
    "stats": [
     {
-     "stat": "aggro",
-     "flat": 20
+     "stat": "cooldown_reduction",
+     "flat": 15
     },
     {
-     "stat": "defense",
-     "flat": 1000
+     "stat": "crit_multiplier",
+     "flat": 25
     },
     {
      "stat": "max_hp",
@@ -35783,16 +36052,16 @@
    "rarity": "legendary"
   },
   {
-   "id": "hand_axe",
-   "name": "Hand axe",
+   "id": "stout_hatchet",
+   "name": "Stout hatchet",
    "text": "Nothing beyond its stats.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
-     "stat": "lifesteal",
-     "flat": 10
+     "stat": "max_hp",
+     "flat": 500
     }
    ],
    "weapon": {
@@ -35818,8 +36087,12 @@
    "source": "drop",
    "stats": [
     {
-     "stat": "attack",
-     "flat": 1000
+     "stat": "crit_chance",
+     "flat": 5
+    },
+    {
+     "stat": "cooldown_reduction",
+     "flat": -15
     }
    ],
    "weapon": {
@@ -35837,20 +36110,20 @@
    "rarity": "common"
   },
   {
-   "id": "reavers_axe",
-   "name": "Reaver's axe",
-   "text": "On a kill: gains Might.",
+   "id": "woodsmans_axe",
+   "name": "Woodsman's axe",
+   "text": "Basic attacks give Might to the ally with the slowest basic attack.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
-     "stat": "crit_multiplier",
-     "flat": 25
+     "stat": "defense",
+     "flat": 1000
     }
    ],
    "statuses": [
-    "reavers_axe"
+    "woodsmans_axe"
    ],
    "weapon": {
     "kind": "axe",
@@ -35875,8 +36148,8 @@
    "source": "drop",
    "stats": [
     {
-     "stat": "lifesteal",
-     "flat": 10
+     "stat": "attack_speed",
+     "flat": 15
     }
    ],
    "statuses": [
@@ -35905,8 +36178,8 @@
    "source": "drop",
    "stats": [
     {
-     "stat": "attack",
-     "flat": 1000
+     "stat": "crit_chance",
+     "flat": 3
     }
    ],
    "statuses": [
@@ -35935,12 +36208,12 @@
    "source": "drop",
    "stats": [
     {
-     "stat": "lifesteal",
-     "flat": 10
+     "stat": "crit_multiplier",
+     "flat": 25
     },
     {
-     "stat": "attack",
-     "flat": 1000
+     "stat": "accuracy",
+     "flat": 20
     }
    ],
    "statuses": [
@@ -35961,24 +36234,24 @@
    "rarity": "rare"
   },
   {
-   "id": "thirsting_axe",
-   "name": "Thirsting axe",
-   "text": "On a kill: heals 20% of max HP.",
+   "id": "miners_pick",
+   "name": "Miner's pick",
+   "text": "Basic attacks that land steal 1 Defense from the foe for the fight, up to 5.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
    "stats": [
     {
-     "stat": "lifesteal",
-     "flat": 10
+     "stat": "max_hp",
+     "flat": 500
     },
     {
-     "stat": "crit_multiplier",
-     "flat": 25
+     "stat": "mp_regen",
+     "flat": 3000
     }
    ],
    "statuses": [
-    "thirsting_axe"
+    "miners_pick"
    ],
    "weapon": {
     "kind": "axe",
@@ -36007,8 +36280,8 @@
      "flat": 1000
     },
     {
-     "stat": "crit_multiplier",
-     "flat": 25
+     "stat": "aggro",
+     "flat": 10
     }
    ],
    "statuses": [
@@ -36037,12 +36310,12 @@
    "source": "unlock",
    "stats": [
     {
-     "stat": "lifesteal",
-     "flat": 20
-    },
-    {
      "stat": "max_hp",
      "flat": 500
+    },
+    {
+     "stat": "siphon",
+     "flat": 10
     }
    ],
    "statuses": [
@@ -36075,12 +36348,12 @@
      "flat": -100
     },
     {
-     "stat": "lifesteal",
-     "flat": 10
+     "stat": "crit_multiplier",
+     "flat": 25
     },
     {
-     "stat": "crit_multiplier",
-     "flat": 50
+     "stat": "defense",
+     "flat": 1000
     }
    ],
    "statuses": [
