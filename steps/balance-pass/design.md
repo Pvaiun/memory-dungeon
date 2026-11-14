@@ -26,16 +26,35 @@ Your intent is in `intent.md`. This is what I'd do, and why. Nothing is tuned ye
 - **Act III's elites lose 29% of fights on average:** the creative-builds pass left them unbalanced. A single knob can't fix both problems. Set to make the Cleric parties pay, it kills the parties without a healer.
 - **Smaller heals don't help.** A Cure 30% weaker moved the Cleric rosters from 5–6% to 6–8%: against foes this soft it over-heals, so it just casts more. What helps is foes that hit faster than the healing can undo, and a healer that heals less often.
 
+**It isn't only the Cleric.** Each class was left out of the rosters that hold it, one at a time. The table shows how many points of party HP that class takes off a fight, averaged over those rosters (2 seeds each, so about ±4).
+
+| Class (rosters holding it) | Act I fights | Act II fights | Act II elites | Act III fights | Fights it makes nearly free (act II) |
+| --- | --- | --- | --- | --- | --- |
+| Bramble knight (3) | 23 | 15 | 19 | 24 | 8 in 100 |
+| Knight (5) | 25 | 10 | 13 | 16 | 14 in 100 (37 in act I) |
+| Valkyrie (5) | 6 | 16 | 16 | 17 | 9 in 100 |
+| Cleric (6) | 4 | 15 | 15 | 9 | 43 in 100 |
+| Paladin (3) | 0 | 5 | 0 | 13 | 8 in 100 |
+| Vampire (2) | 9 | 0 | 0 | 10 | none |
+| The other ten classes | 7 at most | 3 at most | 12 at most | 12 at most | 7 in 100 at most |
+
+- **The walls and healers** (the Bramble knight, the Knight, the Valkyrie, the Cleric) each take 10–25 points off a fight. A damage dealer takes under 7 on most tiers.
+- **The Cleric is the one that makes fights free,** because it tops everyone back up. The others make fights cheaper.
+- **Your party had two of the four,** the Bramble knight and the Cleric, plus the Geomancer's Shields.
+
 ## Decisions
 
-1. **The healer's lead.**
-   - **A (recommended): narrow it, then raise the road for everyone.**
-     - The Cleric heals less often: Cure on a medium cooldown, not a quick one. Its size and MP stay. Renew and Triage get checked the same way in the tuning.
-     - Then the fights hit harder (decision 2), and every fight's knob is set to the harder targets (decision 3).
-     - Measured on act II at a 27% average cost: the Cleric rosters pay 13–17%, most others 22–38%, and nearly-free fights fall from 26% to 7%. Losses stay at 2%.
-   - **B: keep the Cleric and set the road against the parties with a healer.**
-     - At the level where they pay 15–22%, the rosters with no healer at all pay about half their HP (47–63%) and lose 8–19% of regular fights.
-     - A healer would become every run's start, the way a wall is today.
+1. **Protection's lead.**
+   - **A (recommended): a ceiling, then a harder road for everyone.**
+     - First, fights hit harder (decision 2). At the same average cost, that narrows every protector's lead a little: rosters with a wall or a healer pay 3–7 points more, the others 1–4 less.
+     - Then trim at the source whoever still sits over the ceiling. The ceiling: no class takes more than about a third off its rosters' fights, and none makes more than about 1 fight in 5 nearly free. Today that's the Bramble knight, the Knight in act I, the Valkyrie and the Cleric.
+     - For the Cleric, the trim is healing less often (Cure on a medium cooldown); its size and MP stay. A smaller Cure barely helped, because it just casts more. The others' levers are found in the tuning: the part of each kit that soaks or heals.
+     - Then every fight's knob is set to the harder targets (decision 3).
+     - The Cleric's trim plus the harder fights, measured on act II at a 27% average cost: the Cleric rosters pay 13–17%, most others 22–38%, nearly-free fights fall from 26% to 7%, and losses stay at 2%.
+     - **The Knight in act I** is the wall problem you've said you'll fix another way. A ceiling would narrow it too. Say whether the Knight stays out of this.
+   - **B: leave protection as it is and set the road against the protected parties.**
+     - At the level where the Cleric rosters pay 15–22%, the rosters with no healer at all pay about half their HP (47–63%) and lose 8–19% of their regular fights.
+     - A wall or a healer would become every run's start.
 2. **Fights hit harder and end sooner.**
    - Today a regular fight's foes have +40% HP and −10% damage on top of their knob; I'd turn that around, to about −40% HP and +60% damage. Elites the same way.
    - Every fight's knob is then re-measured, so this changes the shape of a fight, not its cost.
