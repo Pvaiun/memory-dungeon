@@ -37,7 +37,7 @@ abilityUp({
   power: "Shorter cooldown.",
   shown: true,
   a: { name: "Smoke screen", text: "Hides the ally with the lowest HP% that isn't Taunting or Hidden. Waits for an ally below 80% HP.", serves: "Pact ●●, Toll ●● ⚙ two in the dark (key), brink (half)" },
-  b: { name: "Shadow step", text: "Goes Hidden. When the Hidden runs out, its next hit deals triple damage.", builds: ["hunt"] },
+  b: { name: "Shadow step", text: "Goes Hidden. When the Hidden runs out, its next hit deals ×3 damage.", builds: ["hunt"] },
   form: (v, _k, plus) => ({
     // A quarter off (22 → 16): one word down would hide it about 70% of a fight.
     ...(plus ? { cooldown: Math.round(baseAbility("vanish").cooldown * 0.75 * 10) / 10 } : {}),
@@ -45,10 +45,10 @@ abilityUp({
     ...(v === "b" ? { do: [apply("hidden"), apply("shadow_step")] } : {}),
   }),
 });
-helper(marker("shadow_step", "SHADOW STEP", "When Hidden runs out: next hit deals triple damage.", {
+helper(marker("shadow_step", "SHADOW STEP", "When Hidden runs out: next hit deals ×3 damage.", {
   reactions: [{ on: { event: "status_ended", status: "hidden", cause: ["expired"] }, do: [apply("shadow_step_strike", { to: "holder" }), removeMine("shadow_step", "marker")] }],
 }));
-helper(kit("shadow_step_strike", "SHADOW STEP", "Next hit deals triple damage.", {
+helper(kit("shadow_step_strike", "SHADOW STEP", "Next hit deals ×3 damage.", {
   stacking: "fizzle", boosts: both(200),
   reactions: [{ on: { event: "hit_lands" }, do: [removeMine("shadow_step_strike")] }],
 }));
@@ -70,15 +70,15 @@ helper(kit("coup_de_grace", "COUP DE GRÂCE", "A kill with an ability makes Back
   reactions: [{ on: { event: "ko", whose: "foe", other: "holder", kind: "ability" }, do: [{ op: "cooldown", which: { ability: ["backstab"] }, set: "ready", to: "self" }] }],
 }));
 
-/** Bleed them dry: the drinker's reach. Its Lifesteal is doubled for a while (read live off its own). */
+/** Bleed them dry: the drinker's reach. Its Lifesteal ×2 for a while (read live off its own). */
 const DRY = 20;
-helper(kit("bleed_them_dry", "BLED DRY", "Lifesteal doubled.", { duration: DRY, stats: [{ stat: "lifesteal", flat: { scale: [{ ratio: 1, stat: "lifesteal", of: "holder" }] } }] }));
+helper(kit("bleed_them_dry", "BLED DRY", "Lifesteal ×2.", { duration: DRY, stats: [{ stat: "lifesteal", flat: { scale: [{ ratio: 1, stat: "lifesteal", of: "holder" }] } }] }));
 abilityUp({
   id: "garrote", cls: "assassin",
   power: "Costs less MP.",
   shown: true,
   a: { name: "Choke", text: "Waits for a foe to cast, then Silences the casting foe with the most Attack. Ignores Taunt.", builds: [] },
-  b: { name: "Bleed them dry", text: `Strikes a random foe that isn't Taunting, adding Rot and Bleed; its own Lifesteal doubles for ${DRY} ticks. No Silence.`, builds: ["pact", "hunt"] },
+  b: { name: "Bleed them dry", text: `Strikes a random foe that isn't Taunting, adding Rot and Bleed; its own Lifesteal ×2 for ${DRY} ticks. No Silence.`, builds: ["pact", "hunt"] },
   form: (v, _k, plus) => ({
     ...(plus ? { mp: 200 } : {}),
     ...(v === "a" ? { if: { side: "foes", where: { casting: true } }, target: T.castingFoe } : {}),

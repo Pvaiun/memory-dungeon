@@ -25,7 +25,7 @@ const ready = (ability: string, to: ToT = "holder"): EffectT => ({ op: "cooldown
 
 // Knight: its body, which Vanguard's Shield and Shield bash already read, doubled; it lives on its own stone, not on heals.
 {
-  const text = "Max HP doubled. Healing on it is halved.";
+  const text = "Max HP ×2. Healing on it −50%.";
   mythic({ name: "Banner of the last keep", slot: "armor", rarity: "mythic", kind: "plate", mythic: "knight", statuses: ["banner_of_the_last_keep"],
     stats: [st("aggro", 1), st("defense", 1), sp("cooldown", "medium")], text }, "Toll 3 ●●, Landslide ●● ◆ draw, the wall");
   own_("banner_of_the_last_keep", "Banner of the last keep", text, { stats: [{ stat: "max_hp", pct: 100 }, { stat: "healing_received", flat: -50 }] });
@@ -75,7 +75,7 @@ const ready = (ability: string, to: ToT = "holder"): EffectT => ({ op: "cooldown
 
 // Hoplite: the shove its rhythm, the swing waiting.
 {
-  const text = "Othismos comes round twice as often, with no wind-up. Basic attacks come half as often again.";
+  const text = "Othismos comes round 100% faster, with no wind-up. Basic attacks come 50% as often again.";
   mythic({ name: "The last shove", slot: "offhand", rarity: "mythic", kind: "round_shield", mythic: "hoplite", statuses: ["the_last_shove"],
     stats: [st("defense", 1), st("attack", 1), sp("cooldown", "medium")], text }, "Landslide 3 ●●, Toll ● ◆ spread, the heavy action");
   own_("the_last_shove", "The last shove", text, { mods: [{ of: { ability: ["othismos"] }, cooldown: -50, cast: 0 }], stats: [{ stat: "attack_speed", flat: -100 }] });
@@ -84,7 +84,7 @@ const ready = (ability: string, to: ToT = "holder"): EffectT => ({ op: "cooldown
 // Paladin: Judgement made absolute, on top of whatever form of it the Paladin trained: +150% where it reads a buff or a debuff
 // (with its own +50%, triple), and −50% on a foe with neither.
 {
-  const text = "Hits deal triple damage to a foe with a buff or a debuff, and half to a foe with neither.";
+  const text = "Hits deal ×3 damage to a foe with a buff or a debuff, and −50% to a foe with neither.";
   mythic({ name: "Scales of the judge", slot: "amulet", rarity: "mythic", mythic: "paladin", statuses: ["scales_of_the_judge"],
     stats: [st("attack", 1), sp("accuracy", "medium"), st("max_hp", 1)], text }, "Hunt 3 ●●, Bonfire ●, Storm ● ◆ the judge");
   own_("scales_of_the_judge", "Scales of the judge", text, {
@@ -128,7 +128,7 @@ const ready = (ability: string, to: ToT = "holder"): EffectT => ({ op: "cooldown
 
 // Monk: the blur, certain: one more strike after every basic attack, beside any Double strike.
 {
-  const text = "Every basic attack strikes twice.";
+  const text = "Every basic attack strikes 2 times.";
   mythic({ name: "Thousand-palm wraps", slot: "weapon", rarity: "mythic", kind: "fist", mythic: "monk", statuses: ["thousand_palm_wraps"],
     stats: [sp("attack_speed", "medium"), st("attack", 1), sp("lifesteal", "medium")], text,
     weapon: { kind: "fist", type: "physical", hands: 1, cooldown: KIND_SPEED.fist, amount: weaponHit("fist") } }, "Cuts 3 ●●● ◆ extra strikes");

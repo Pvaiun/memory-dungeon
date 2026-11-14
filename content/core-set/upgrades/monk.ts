@@ -30,7 +30,7 @@ abilityUp({
   id: "flow", cls: "monk",
   power: "Shorter cooldown.",
   shown: true,
-  a: { name: "Flow state", text: "Hastes itself. While Hasted, every 5th hit renews the Haste, twice a cast at most.", builds: ["cuts"] },
+  a: { name: "Flow state", text: "Hastes itself. While Hasted, every 5th hit renews the Haste, 2 times a cast at most.", builds: ["cuts"] },
   b: { name: "Stillness of mind", text: "Taunts, with +35 Evasion while the Taunt lasts. No Haste.", serves: "Toll 2 ●●● ⚙ riposte (half)" },
   form: (v, _k, plus) => ({
     ...(plus ? { cooldown: cd("short", "flow") } : {}),
@@ -56,8 +56,8 @@ abilityUp({
   id: "burning_fist", cls: "monk",
   power: "+40% stacks.",
   shown: true,
-  a: { name: "Frost fist", text: "Three blows on the foe with the most Chill, each adding more.", serves: "Snap 1 ●●●" },
-  b: { name: "Fanned flames", text: "Five lighter blows on the foe with the most Burn, each adding more.", builds: ["bonfire", "cuts"] },
+  a: { name: "Frost fist", text: "3 blows on the foe with the most Chill, each adding more.", serves: "Snap 1 ●●●" },
+  b: { name: "Fanned flames", text: "5 lighter blows on the foe with the most Burn, each adding more.", builds: ["bonfire", "cuts"] },
   form: (v, k) =>
     v === "a" ? { target: T.mostFoe("chill"), do: [phys(from("attack", 0.11), { hits: 3, apply: [{ status: "chill", stacks: stacks("few", "attack", FIST_BURN * k) }] })] } // Burning fist's own share of the word.
       : v === "b" ? { do: [phys(from("attack", 0.07), { hits: 5, apply: [{ status: "burn", stacks: stacks("few", "attack", 0.4 * k) }] })] }

@@ -25,7 +25,7 @@ export function evalNum(n: NumT, stats: Stats | null, target: Stats | null = nul
     } else if (s.stacks) extra.push(`+${disp(s.ratio)} per ${status(s.stacks).name} stack on the target`);
     else if (s.hp) extra.push(`${fmtRatio(s.ratio)} × ${s.hp} HP`);
     else if (s.amount) extra.push(`${Math.round(s.ratio * 100)}% of the amount${s.times ? ` × ${s.times.stat ? statWord(s.times.stat) : status(s.times.stacks!).name}` : ""}`);
-    else if (s.when) extra.push("doubled when the condition holds");
+    else if (s.when) extra.push("×2 when the condition holds");
   }
   return { value: v, extra };
 }
@@ -344,7 +344,7 @@ export function statusText(d: StatusT): string[] {
   }
   for (const b of d.boosts ?? []) out.push(`${tagWord(b.tag)} damage ${typeof b.pct === "number" ? `${b.pct >= 0 ? "+" : ""}${b.pct}%` : "scaled"}${d.stacking === "intensity" ? " per stack" : ""}`);
   for (const t of d.taken ?? []) out.push(`${tagWord(t.tag)} damage taken ${typeof t.pct === "number" ? `${t.pct >= 0 ? "+" : ""}${t.pct}%` : "changed"}`);
-  if (d.absorb) out.push(`Soaks damage, one point per stack, before HP${typeof d.cap === "object" ? `; cap ${Math.round((d.cap.scale[0]?.ratio ?? 0) * 100)}% of max HP` : ""}.`);
+  if (d.absorb) out.push(`Soaks damage, 1 point per stack, before HP${typeof d.cap === "object" ? `; cap ${Math.round((d.cap.scale[0]?.ratio ?? 0) * 100)}% of max HP` : ""}.`);
   if (d.block) out.push(`Blocks the next damage above ${d.block.share}% of max HP, then ends.`);
   if (d.lockout) out.push(`Locks out ${d.lockout.covers === "all" ? "every action" : `${d.lockout.covers} actions`}${d.lockout.interrupt ? ", cancelling a wind-up" : ""}.`);
   if (d.pulse) {

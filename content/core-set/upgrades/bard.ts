@@ -29,7 +29,7 @@ import { abilityUp, apply, cd, helper, kit, passiveUp, r6 } from "./kit.js";
   abilityUp({
     id: "war_ballad", cls: "bard",
     power: "+40% Might.", shown: true,
-    a: { name: "Lament", text: "Might to every ally below half HP.", serves: "Pact 2 ●●● ⚙ brink (half)" },
+    a: { name: "Lament", text: "Might to every ally below 50% HP.", serves: "Pact 2 ●●● ⚙ brink (half)" },
     b: { name: "Rousing chorus", text: "All its Might to the ally with the slowest basic attack.", serves: "Landslide 2 ●●●, Hunt ●" },
     form: (v, k) => (v === "a" ? lament(2 * k) : v === "b" ? chorus(k) : { do: [might(k)] }),
   });
@@ -57,7 +57,7 @@ import { abilityUp, apply, cd, helper, kit, passiveUp, r6 } from "./kit.js";
   /** Reprise: in place of the repeat, the ally's ability with the longest cooldown left is ready at once. */
   const reprise: Partial<AbilityT> = { do: [{ op: "cooldown", which: "longest", set: "ready" }] };
   /**
-   * Cadenza: the Bard's own next three basic attacks come at once: three Refrains in a breath. The first is readied as the count
+   * Cadenza: the Bard's own next 3 basic attacks come at once: three Refrains in a breath. The first is readied as the count
    * lands; each swing spends a count (the trigger, which runs first) and readies the next while any is left (the reaction's `if`).
    */
   const CADENZA = 3;
@@ -74,7 +74,7 @@ import { abilityUp, apply, cd, helper, kit, passiveUp, r6 } from "./kit.js";
     id: "encore", cls: "bard",
     power: "Shorter cooldown.", shown: true,
     a: { name: "Reprise", text: "Readies the ability with the most cooldown left on the other ally with the most Attack.", serves: "Barrage 2 ●●●, Landslide 2 ●●" },
-    b: { name: "Cadenza", text: "Its own next three basic attacks come at once.", builds: ["cuts", "landslide"] },
+    b: { name: "Cadenza", text: "Its own next 3 basic attacks come at once.", builds: ["cuts", "landslide"] },
     form: (v, _k, plus) => ({ ...(v === "a" ? reprise : v === "b" ? cadenza : {}), ...(plus ? { cooldown: cd("short", "encore") } : {}) }),
   });
 }

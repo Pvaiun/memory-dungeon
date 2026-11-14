@@ -8,14 +8,14 @@ import { abilityUp, apply, cd, helper, kit, marker, passiveUp, phys, r6, removeM
 
 /** Bloodlust's doubling (classes.ts bloodlust_on), and the power step's two and a half times, as on-states that Bloodlust's reactions keep. */
 const lustOn = (id: string, name: string, times: number, extra: Partial<StatusT> = {}): StatusT =>
-  kit(id, name, times === 1 ? "Lifesteal doubled." : "Lifesteal ×2.5.", { stacking: "fizzle", stats: [{ stat: "lifesteal", flat: { scale: [{ ratio: times, stat: "lifesteal", of: "holder" }] } }], ...extra });
+  kit(id, name, times === 1 ? "Lifesteal ×2." : "Lifesteal ×2.5.", { stacking: "fizzle", stats: [{ stat: "lifesteal", flat: { scale: [{ ratio: times, stat: "lifesteal", of: "holder" }] } }], ...extra });
 const feast: ReactionT = {
   // The other ally lowest in HP share gets as much as the Vampire drinks: Lifesteal's own shape (its `times`, read live).
   on: { event: "hit_lands" },
   do: [{ op: "heal", amount: { scale: [{ ratio: 0.01, amount: true, times: { stat: "lifesteal", of: "holder" } }] }, to: T.otherLowestShareAlly }],
 };
 helper(lustOn("bloodlust_on_plus", "BLOODLUST", 1.5));
-helper(lustOn("shared_feast_on", "SHARED FEAST", 1, { text: "Lifesteal doubled; each hit heals the other ally with the lowest HP% as much as it drank.", reactions: [feast] }));
+helper(lustOn("shared_feast_on", "SHARED FEAST", 1, { text: "Lifesteal ×2; each hit heals the other ally with the lowest HP% as much as it drank.", reactions: [feast] }));
 helper(lustOn("shared_feast_on_plus", "SHARED FEAST", 1.5, { text: "Lifesteal ×2.5; each hit heals the other ally with the lowest HP% as much as it drank.", reactions: [feast] }));
 // Shepherd's thirst: the passive outside its own wounds: the doubling while any ally (itself included) is below half, read off
 // the HP lines of the whole side, and lifted when none is.
@@ -23,9 +23,9 @@ const NONE_LOW = { side: "allies" as const, where: { hpBelow: 50 }, atMost: 0 };
 
 passiveUp({
   id: "bloodlust", cls: "vampire",
-  power: "Lifesteal ×2.5 instead of doubled.",
-  a: { name: "Shared feast", text: "Below half HP: Lifesteal doubled, and each hit heals the other ally with the lowest HP% as much as it drank.", builds: ["pact"] },
-  b: { name: "Shepherd's thirst", text: "While any ally is below half HP: Lifesteal doubled.", serves: "Pact 2 ●●, Toll ● ◆ the net" },
+  power: "Lifesteal ×2.5 instead of ×2.",
+  a: { name: "Shared feast", text: "Below 50% HP: Lifesteal ×2, and each hit heals the other ally with the lowest HP% as much as it drank.", builds: ["pact"] },
+  b: { name: "Shepherd's thirst", text: "While any ally is below 50% HP: Lifesteal ×2.", serves: "Pact 2 ●●, Toll ● ◆ the net" },
   form: (v, _k, plus) => {
     const on = v === "a" ? (plus ? "shared_feast_on_plus" : "shared_feast_on") : plus ? "bloodlust_on_plus" : "bloodlust_on";
     if (v === "b") return {
@@ -48,7 +48,7 @@ abilityUp({
   id: "blood_drain", cls: "vampire",
   power: "+40% damage.",
   shown: true,
-  a: { name: "Savage drain", text: "Three quick drains on a random foe, Weakening it.", serves: "Cuts 1 ●●●, Pact ●●" },
+  a: { name: "Savage drain", text: "3 quick drains on a random foe, Weakening it.", serves: "Cuts 1 ●●●, Pact ●●" },
   b: { name: "Drain the well", text: "Drains a random foe; the ally with the lowest MP% gains MP: 25% of the damage. No Weaken.", serves: "Barrage 1 ●●●" },
   form: (v, k) =>
     v === "a" ? { do: [phys(from("max_hp", r6((0.4 * k) / 3)), { hits: 3, apply: [{ status: "weaken" }] })] }
@@ -74,7 +74,7 @@ abilityUp({
   id: "blood_gift", cls: "vampire",
   power: "Gives 40% more than it pays.",
   shown: true,
-  a: { name: "Blood for mana", text: "Pays 20% of its max HP to give the other ally with the lowest MP% as much MP, and Clarity. Waits for one under half MP.", serves: "Barrage 2 ●●●, Pact ●● ⚙ mana as armour (half)" },
+  a: { name: "Blood for mana", text: "Pays 20% of its max HP to give the other ally with the lowest MP% as much MP, and Clarity. Waits for one under 50% MP.", serves: "Barrage 2 ●●●, Pact ●● ⚙ mana as armour (half)" },
   b: { name: "Lifeblood", text: "Pays 20% of its max HP to revive a fallen ally with as much HP.", builds: [], plus: "It revives with 40% more than it pays." },
   form: (v, k) =>
     v === "a" ? {

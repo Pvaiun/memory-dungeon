@@ -47,12 +47,12 @@ export const KIND_TEXT: Record<RogueNodeKindT, string> = {
   shop: "GEAR · RECRUITS · TRAINING · SUPPLIES",
   treasure: "A RARE OR LEGENDARY PIECE, OR A CAGED RECRUIT · GOLD",
   boss: "THE ACT'S END · EVERYONE RESTORED AND LEARNS",
-  muster: "PICK ONE OF TWO RECRUITS",
-  drill: `PICK ONE OF TWO FORMATIONS, OR TRAIN ${rogue(c).config.drill?.train ?? 3}`,
+  muster: "PICK 1 OF 2 RECRUITS",
+  drill: `PICK 1 OF 2 FORMATIONS, OR TRAIN ${rogue(c).config.drill?.train ?? 3}`,
 };
 // A potion heals one member, a tonic refills one member's MP.
 export const SUPPLY_ICON: Record<string, Cell> = { potion: [21, 7], tonic: [20, 7], phoenix: [21, 14] };
-export const SUPPLY_TEXT: Record<string, string> = { potion: "ONE MEMBER +30% HP", tonic: "ONE MEMBER +50% MP", phoenix: "A FALLEN MEMBER UP, 50% HP" };
+export const SUPPLY_TEXT: Record<string, string> = { potion: "1 MEMBER +30% HP", tonic: "1 MEMBER +50% MP", phoenix: "A FALLEN MEMBER UP, 50% HP" };
 export const held = (run: RogueRun, id: string) => run.supplies.filter((x) => x === id).length;
 /** Mythic in crimson (offered in the boss's boons that open acts II and III). */
 export const RARITY_CLASS = RARITY_TONE;
@@ -142,7 +142,7 @@ export function offerBody(run: RogueRun, o: Offer): Child[] {
     const rar = formationRarity(c, o.id);
     return [h("div", { class: "line wrap" }, h("span", { class: RARITY_CLASS[rar] ?? "hi" }, `${rar === "legendary" ? "★" : ""}FORMATION: ${f.name.toUpperCase()}`), rar !== "common" ? h("span", { class: `small r ${RARITY_CLASS[rar]}` }, rar.toUpperCase()) : null), h("div", { class: "text dim small wrap" }, f.text), ...seatLines(f)];
   }
-  if (o.kind === "seat") return [h("div", { class: "line" }, iconEl(ICON.campfire), h("span", { class: "grow hi" }, "A SEAT AT CAMP")), h("div", { class: "line dim small wrap" }, `ROOM FOR ONE MORE IN THE ROSTER · ${seatsOf(c, run)} → ${seatsOf(c, run) + 1} AT CAMP`)];
+  if (o.kind === "seat") return [h("div", { class: "line" }, iconEl(ICON.campfire), h("span", { class: "grow hi" }, "A SEAT AT CAMP")), h("div", { class: "line dim small wrap" }, `ROOM FOR 1 MORE IN THE ROSTER · ${seatsOf(c, run)} → ${seatsOf(c, run) + 1} AT CAMP`)];
   return [h("div", { class: "line" }, iconEl(SUPPLY_ICON[o.id]), h("span", { class: "grow" }, o.id.toUpperCase())), h("div", { class: "line dim small" }, SUPPLY_TEXT[o.id])];
 }
 

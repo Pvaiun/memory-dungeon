@@ -64,9 +64,9 @@ const apply = (status: string, extra: object = {}) => ({ op: "apply", status, ..
 export const enemyStatuses: StatusT[] = [
   passive("venom", "Venom", "Its bites leave wounds that bleed.", { reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("bleed", { stacks: FLAT_STACKS.one, to: "other" })] }] }),
   passive("fire_bite", "Fire bite", "Its bites burn.", { reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("burn", { stacks: FLAT_STACKS.one, to: "other" })] }] }),
-  passive("split", "Split", "Below half HP it splits in two.", { reactions: [{ on: { event: "hp_lost" }, do: [{ op: "replace", enemy: "mini_slime", count: 2, to: { side: "self", where: { hpBelow: 50 } } }] }] }),
+  passive("split", "Split", "Below 50% HP it splits in 2.", { reactions: [{ on: { event: "hp_lost" }, do: [{ op: "replace", enemy: "mini_slime", count: 2, to: { side: "self", where: { hpBelow: 50 } } }] }] }),
   // The Ghost's challenge: hits print slivers, a status's own damage lands in full.
-  passive("incorporeal", "Incorporeal", "Takes half of every hit; its burns, bleeds and shocks hurt it in full.", { taken: [{ tag: "physical", pct: INCORPOREAL.hits }] }),
+  passive("incorporeal", "Incorporeal", "Takes 50% of every hit; its burns, bleeds and shocks hurt it in full.", { taken: [{ tag: "physical", pct: INCORPOREAL.hits }] }),
   passive("volatile", "Volatile", "Explodes when it dies.", {
     survivesKO: true,
     reactions: [{ on: { event: "ko" }, do: [{ op: "damage", type: "physical", amount: { scale: [{ ratio: ENEMY_HIT.volatile, stat: "attack", of: "holder" }] }, to: T.everyFoe }, apply("burn", { stacks: FLAT_STACKS.few, to: T.everyFoe })] }],
@@ -103,7 +103,7 @@ export const enemyAbilities: AbilityT[] = [
   a("dig_up", "Raise", "Digs a fallen packmate back up.", { ...timing("long", "long"), if: { side: "allies", where: { ko: true } }, target: T.koAlly, do: [{ op: "revive", hp: { scale: [{ ratio: REVIVE.ghoul, stat: "max_hp", of: "target" }] } }] }),
   a("death_bell", "Death bell", "Dooms a foe.", { ...timing("short", "long"), if: { side: "foes", where: { lacks: "doom" } }, target: { side: "foes", where: { lacks: "doom" } }, do: [apply("doom")] }),
   // Bosses have behaviours of their own; the one-shot is the Ogre Chief's alone.
-  a("reap", "Reap", "Three scythe slashes at random foes.", { ...timing("medium", "normal"), target: { side: "foes", pick: "random" }, do: [1, 2, 3].map(() => ({ op: "damage" as const, type: "physical" as const, amount: fromStat("attack", ENEMY_HIT.reap), to: { side: "foes" as const, pick: "random" as const } })) }),
+  a("reap", "Reap", "3 scythe slashes at random foes.", { ...timing("medium", "normal"), target: { side: "foes", pick: "random" }, do: [1, 2, 3].map(() => ({ op: "damage" as const, type: "physical" as const, amount: fromStat("attack", ENEMY_HIT.reap), to: { side: "foes" as const, pick: "random" as const } })) }),
   a("tolling", "Tolling", "Might and Haste on itself: its swings come faster and harder.", { ...timing("short", "quick"), mp: 0, target: "self", do: [apply("might", { stacks: FLAT_STACKS.many }), apply("haste")] }),
   a("kindle", "Kindle", "Might and a Guard on itself; the Inferno follows.", { ...timing("medium", "quick"), mp: 0, target: "self", do: [apply("might", { stacks: FLAT_STACKS.several }), apply("guard")] }),
   a("mute", "Mute", "Silences the foe with the most Attack.", { ...timing("medium", "normal"), if: { side: "foes", where: { lacks: "silence" } }, target: { ...T.highestAMFoe, where: { lacks: "silence" } }, do: [apply("silence")] }),
@@ -113,10 +113,10 @@ export const enemyAbilities: AbilityT[] = [
   a("brand", "Brand", "A fiery spell on a foe, adding Burn.", { ...timing("short", "quick"), do: [{ op: "damage", type: "physical", amount: fromStat("attack", ENEMY_HIT.brand), apply: [{ status: "burn", stacks: FLAT_STACKS.few }] }] }),
   a("inferno", "Inferno", "A very long cast: a huge blast of fire on every foe, adding Burn. It waits until the Giant has kindled.", { ...timing("short", "very_long"), if: { side: "self", where: { has: "might" } }, target: T.everyFoe, do: [{ op: "damage", type: "physical", amount: fromStat("attack", ENEMY_HIT.inferno), apply: [{ status: "burn", stacks: FLAT_STACKS.several }] }] }),
   a("hailstorm", "Hailstorm", "Hail on every foe, with a stack of Chill.", { ...timing("short", "normal"), target: T.everyFoe, do: [{ op: "damage", type: "physical", amount: fromStat("attack", ENEMY_HIT.hailstorm), apply: [{ status: "chill", stacks: FLAT_STACKS.one }] }] }),
-  a("call_drones", "Call drones", "Summons two Drones.", { ...timing("medium", "long"), do: [{ op: "summon", enemy: "drone", count: 2 }] }),
+  a("call_drones", "Call drones", "Summons 2 Drones.", { ...timing("medium", "long"), do: [{ op: "summon", enemy: "drone", count: 2 }] }),
   // Each bolt picks its own foe, so two may land on one.
-  a("tempest", "Tempest", "Three lightning bolts at random foes, each with a stack of Shock.", { ...timing("short", "long"), target: { side: "foes", pick: "random" }, do: [1, 2, 3].map(() => ({ op: "damage" as const, type: "physical" as const, amount: fromStat("attack", ENEMY_HIT.tempest), apply: [{ status: "shock", stacks: FLAT_STACKS.one }], to: { side: "foes" as const, pick: "random" as const } })) }),
-  a("rally_soldiers", "Rally", "Summons two Soldiers, each with half a Soldier's HP.", { ...timing("medium", "long"), do: [{ op: "summon", enemy: "soldier", count: 2, hp: -50 }] }),
+  a("tempest", "Tempest", "3 lightning bolts at random foes, each with a stack of Shock.", { ...timing("short", "long"), target: { side: "foes", pick: "random" }, do: [1, 2, 3].map(() => ({ op: "damage" as const, type: "physical" as const, amount: fromStat("attack", ENEMY_HIT.tempest), apply: [{ status: "shock", stacks: FLAT_STACKS.one }], to: { side: "foes" as const, pick: "random" as const } })) }),
+  a("rally_soldiers", "Rally", "Summons 2 Soldiers, each with 50% of a Soldier's HP.", { ...timing("medium", "long"), do: [{ op: "summon", enemy: "soldier", count: 2, hp: -50 }] }),
 ];
 
 // ─── Enemies ─────────────────────────────────────────────────────────────────

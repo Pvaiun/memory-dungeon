@@ -75,7 +75,7 @@ amulet("common", "Tin whistle", { stats: [st("aggro", 2), st("attack", -1)], ser
 }
 {
   // Half as often is its shape (Attack speed −100 counts no step).
-  const name = "Millstone", effect = "Basic attacks come half as often and deal ×2.25 damage.";
+  const name = "Millstone", effect = "Basic attacks come 50% as often and deal ×2.25 damage.";
   amulet("uncommon", name, {
     effect, stats: [st("attack", 1), st("max_hp", 1), { stat: "attack_speed", flat: -100 }],
     statuses: [own_(name, effect, { boosts: [{ tag: "basic", pct: 125 }] })],
@@ -95,7 +95,7 @@ amulet("common", "Tin whistle", { stats: [st("aggro", 2), st("attack", -1)], ser
 {
   // A look every tick: under half its MP, and no Clarity from the charm for a short while, it gains one and the wait begins.
   const name = "Clear-headed charm", wait = `${id(name)}_wait`;
-  const effect = `Below half MP: Clarity every ${SO_OFTEN} ticks, starting at once.`;
+  const effect = `Below 50% MP: Clarity every ${SO_OFTEN} ticks, starting at once.`;
   const ready = { side: "self" as const, where: { mpBelow: 50, lacks: wait } };
   amulet("uncommon", name, {
     effect, stats: [sp("cast_speed", "medium"), st("aggro", -1)],
@@ -112,7 +112,7 @@ amulet("common", "Tin whistle", { stats: [st("aggro", 2), st("attack", -1)], ser
 {
   // A Shield emptied by a foe's damage ends (cause stacks) with its peak as the amount and that foe as its other unit.
   const name = "Shatterstone charm";
-  const effect = "When a foe breaks its Shield: sends back double the most it held.";
+  const effect = "When a foe breaks its Shield: sends back 200% of the most it held.";
   amulet("rare", name, {
     effect, stats: [st("defense", 2), sp("crit_damage", "medium")],
     statuses: [own_(name, effect, { reactions: [react(on("status_ended", { status: "shield", cause: ["stacks"], other: "foe" }), { op: "damage", type: "none", amount: ofAmount(2), to: "other" })] })],
@@ -161,7 +161,7 @@ amulet("common", "Tin whistle", { stats: [st("aggro", 2), st("attack", -1)], ser
 {
   // The cap takes what's above half as the status lands, and at the cap the unit reads as under it (the engine's).
   const name = "Halved heart";
-  const effect = "Starts each fight at half HP and can't be healed above it. Counts as below half. Hits deal +50%.";
+  const effect = "Starts each fight at 50% HP and can't be healed above it. Counts as below 50%. Hits deal +50%.";
   amulet("rare", name, {
     effect, stats: [st("max_hp", 2), sp("crit_damage", "medium")],
     statuses: [own_(name, effect, { healCap: 50, boosts: hits(50) })],
@@ -292,7 +292,7 @@ amulet("common", "Tin whistle", { stats: [st("aggro", 2), st("attack", -1)], ser
 }
 {
   // Cooldown −16.7 is its shape (cooldowns ×1.2, a fifth longer), counting no step.
-  const name = "Ready stance", effect = "Abilities start each fight at least half charged. Cooldowns 20% longer.";
+  const name = "Ready stance", effect = "Abilities start each fight at least 50% charged. Cooldowns 20% longer.";
   amulet("legendary", name, {
     effect, stats: [st("attack", 1), st("defense", 1), sp("evasion", "medium"), { stat: "cooldown_reduction", flat: -16.7 }],
     statuses: [own_(name, effect, { reactions: [atStart({ op: "cooldown", which: "abilities", set: { atMost: 50 }, to: "holder" })] })],
@@ -303,7 +303,7 @@ amulet("common", "Tin whistle", { stats: [st("aggro", 2), st("attack", -1)], ser
   // The chance set after every stat; hits −50%, and the crit multiplier doubled, so a crit lands at its usual size. A gambler's
   // guard: a step of Defense given up for a second step of Attack.
   const name = "Gambler's coin";
-  const effect = "Crit chance is 50%. Hits that don't crit deal half.";
+  const effect = "Crit chance is 50%. Hits that don't crit deal −50%.";
   amulet("legendary", name, {
     effect, stats: [sp("crit_damage", "medium"), st("attack", 2), st("defense", -1), st("max_hp", 1)],
     statuses: [own_(name, effect, { set: [{ stat: "crit_chance", value: 50 }], boosts: hits(-50), stats: [{ stat: "crit_multiplier", flat: share(1, "crit_multiplier") }] })],

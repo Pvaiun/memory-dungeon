@@ -13,7 +13,7 @@ passiveUp({
   id: "stoke", cls: "pyromancer",
   power: "+40% Burn.",
   a: { name: "Kindling", text: "Basic attacks, not casts, add Burn.", serves: "Bonfire 1 ●●● ⚙ lead's colour (half)" },
-  b: { name: "Ember of haste", text: "Each cast Hastes the ally with the fastest basic attack, in place of Burn.", serves: "Cuts 2 ●●, Barrage ● ◆ speed, the feeders' tempo", plus: "Hastes the two with the fastest." },
+  b: { name: "Ember of haste", text: "Each cast Hastes the ally with the fastest basic attack, in place of Burn.", serves: "Cuts 2 ●●, Barrage ● ◆ speed, the feeders' tempo", plus: "Hastes the 2 with the fastest." },
   form: (v, k, plus) => ({
     reactions: [
       v === "a" ? { on: { event: "hit_lands", kind: "basic" }, do: [stoke("other", k)] }

@@ -9,7 +9,7 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
 
 {
   // The Hammer: Millstone's shape on a seat (Attack speed −100 is half as often).
-  const hammer = "Basic attacks come half as often, for 2.25× damage.", loader = `Each cast gives the Hammer ${FLAT_STACKS.few} Might.`;
+  const hammer = "Basic attacks come 50% as often, for ×2.25 damage.", loader = `Each cast gives the Hammer ${FLAT_STACKS.few} Might.`;
   add(
     formation("Heavy line", "common", "One loads, one takes the blows, one strikes.", [
       { name: "Hammer", text: hammer, stats: [{ stat: "attack_speed", flat: -100 }], statuses: ["heavy_line_hammer"] },
@@ -70,7 +70,7 @@ add(
   );
 }
 {
-  const squall = `Basic attacks add ${FLAT_STACKS.few} Shock and also hit a second random foe for half, Shock included.`;
+  const squall = `Basic attacks add ${FLAT_STACKS.few} Shock and also hit a 2nd random foe for 50%, Shock included.`;
   add(
     formation("Squall line", "common", "Two charge the field; one draws the eye.", [
       ...twice({ name: "Squall", text: squall, statuses: ["squall_line_squall"] }),
@@ -150,7 +150,7 @@ add(
 }
 add(
   formation("Shieldwall", "common", "One shield up front; two behind it.", [
-    { name: "Wall", text: "Draws far more. Defense up two steps.", stats: [st("aggro", 2), st("defense", 2)] },
+    { name: "Wall", text: "Draws far more. Defense up 2 steps.", stats: [st("aggro", 2), st("defense", 2)] },
     ...twice({ name: "Behind", text: "Draws less.", stats: [st("aggro", -1)] }),
   ]),
   [],

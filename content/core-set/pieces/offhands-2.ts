@@ -87,12 +87,12 @@ offhand("tome", "common", "Antiphonary", { stats: [sp("crit_damage", "medium"), 
 {
   // The third of its own casts is cast again, free (a free repeat isn't counted, so it's never cast again).
   const name = "Twice-told tome", n = `${id(name)}_count`;
-  const effect = "Every second ability it casts is cast again at once, free.";
+  const effect = "Every 2nd ability it casts is cast again at once, free.";
   offhand("tome", "rare", name, {
     effect, stats: [sp("double_strike", "medium"), st("mp_regen", 1), st("max_hp", 1)],
     statuses: [
       own_(name, effect, { reactions: [reactIf(OWN_CAST, { side: "self", where: countAt(n, 1) }, { op: "recast" }), react(OWN_CAST, give(n, "holder", 1))] }),
-      count(n, "TWICE-TOLD", "Every second ability is cast twice.", 2),
+      count(n, "TWICE-TOLD", "Every 2nd ability is cast 2 times.", 2),
     ],
     serves: "Barrage 2 ●●● ⚙ crescendo (half) ◆ Barrage (the cast twice)",
   });
@@ -146,7 +146,7 @@ offhand("tome", "common", "Antiphonary", { stats: [sp("crit_damage", "medium"), 
   });
 }
 {
-  const name = "Frozen tome", effect = "Each shatter halves the wait on every ally's first-slotted ability.";
+  const name = "Frozen tome", effect = "Each shatter cuts the wait on every ally's first-slotted ability by 50%.";
   offhand("tome", "legendary", name, {
     effect, stats: [st("defense", 2), sp("cooldown", "medium")],
     statuses: [own_(name, effect, { reactions: [react(EV.shatter, { op: "cooldown", which: "first", set: { times: 50 }, to: TO.everyAlly })] })],
@@ -286,7 +286,7 @@ offhand("idol", "common", "Hawk-headed idol", { stats: [sp("accuracy", "medium")
 }
 {
   // A Weaken the holder applied (`other: holder` on the foe's status_gained).
-  const name = "Idol of binding", effect = "Foes it Weakens are Slowed too. Hits on them deal double.";
+  const name = "Idol of binding", effect = "Foes it Weakens are Slowed too. Hits on them deal ×2.";
   offhand("idol", "rare", name, {
     effect, stats: [st("defense", 1), st("aggro", 1), st("attack", 1)],
     statuses: [own_(name, effect, {
@@ -309,7 +309,7 @@ offhand("idol", "common", "Hawk-headed idol", { stats: [sp("accuracy", "medium")
 }
 {
   // Its basic attack is locked out for good; Defense doubled with everything else on it, Guard included.
-  const name = "Idol of stillness", effect = "Never makes a basic attack. Defense doubled.";
+  const name = "Idol of stillness", effect = "Never makes a basic attack. Defense ×2.";
   offhand("idol", "legendary", name, {
     effect, stats: [sp("cooldown", "high"), st("defense", 1)],
     statuses: [own_(name, effect, { lockout: { covers: "basic" }, stats: [{ stat: "defense", pct: 100 }] })],
@@ -349,7 +349,7 @@ offhand("vial", "common", "Bracing salts", { stats: [sp("accuracy", "medium"), s
 }
 {
   // The HP price is a share of the cost as it stands after the half: twice that is the full cost.
-  const name = "Blood vial", effect = "Abilities cost half their MP, plus HP equal to their full cost.";
+  const name = "Blood vial", effect = "Abilities cost 50% of their MP, plus HP equal to their full cost.";
   offhand("vial", "rare", name, {
     effect, stats: [st("max_hp", 1), st("max_mp", 1), sp("cooldown", "medium")],
     statuses: [own_(name, effect, { mods: [{ mp: -50, hp: { pct: 200 } }] })],
@@ -392,7 +392,7 @@ offhand("vial", "common", "Bracing salts", { stats: [sp("accuracy", "medium"), s
   // Half its own Lifesteal, healed and past full, given to every other ally as healing that goes no further. At the same amount,
   // one drinker kept a whole party full. Its Thorns and Aggro pay only on the party's anchor.
   const name = "Heartsblood";
-  const effect = "Its Lifesteal also heals every other ally for half, even past full.";
+  const effect = "Its Lifesteal also heals every other ally for 50%, even past full.";
   const pass = { op: "heal" as const, amount: ofAmount(0.5), final: true as const, to: TO.otherAllies };
   offhand("vial", "legendary", name, {
     effect, stats: [sp("lifesteal", "medium"), sp("thorns", "medium"), st("aggro", 1)],
@@ -462,12 +462,12 @@ offhand("trophy", "common", "Geode", { stats: [st("mp_regen", 1), sp("thorns", "
 {
   // Its Aggro pays only on the party's anchor.
   const name = "The king's head", crowned = `${id(name)}_on`;
-  const effect = "On a kill: every ally's Crit chance doubles for 20 ticks (up to 80%).";
+  const effect = "On a kill: every ally's Crit chance ×2 for 20 ticks (up to 80%).";
   offhand("trophy", "legendary", name, {
     effect, stats: [st("aggro", 2), sp("crit_damage", "medium")],
     statuses: [
       own_(name, effect, { reactions: [react(EV.kill, give(crowned, TO.everyAlly))] }),
-      given(crowned, "CROWNED", "Crit chance doubled, up to 80%.", { show: "icon", unremovable: undefined, duration: 20, crits: [{ times: 2, cap: 80 }] }),
+      given(crowned, "CROWNED", "Crit chance ×2, up to 80%.", { show: "icon", unremovable: undefined, duration: 20, crits: [{ times: 2, cap: 80 }] }),
     ],
     serves: "Hunt 3 ●●●, Landslide ●●, conditional ⚙ emptied quiver (half) ◆ Hunt (the kill as a trigger)",
   });
@@ -562,7 +562,7 @@ offhand("cloak", "common", "Swallowtail cloak", { stats: [st("aggro", 1), sp("do
   });
 }
 {
-  const name = "Feathered cloak", done = `${id(name)}_used`, effect = "Once a fight, below half HP: goes Hidden.";
+  const name = "Feathered cloak", done = `${id(name)}_used`, effect = "Once a fight, below 50% HP: goes Hidden.";
   offhand("cloak", "uncommon", name, {
     effect, stats: [sp("attack_speed", "medium"), st("mp_regen", 1)],
     statuses: [own_(name, effect, { reactions: [onceBelow(50, done, give("hidden"))] }), used(done, "FEATHERED CLOAK")],
@@ -590,12 +590,12 @@ offhand("cloak", "common", "Swallowtail cloak", { stats: [st("aggro", 1), sp("do
 {
   // The swing made ready carries a state whose basic hits land a second time (bare, so nothing repeats them); the swing spends it.
   const name = "Tempest cloak", on_ = `${id(name)}_on`;
-  const effect = "On a dodge: next basic attack comes at once and lands twice.";
+  const effect = "On a dodge: next basic attack comes at once and lands 2 times.";
   offhand("cloak", "rare", name, {
     effect, stats: [sp("attack_speed", "medium"), sp("double_strike", "medium"), sp("cooldown", "medium")],
     statuses: [
       own_(name, effect, { reactions: [react(EV.dodge, swingNow(), give(on_))] }),
-      oneUse(on_, "TEMPEST", "Next basic attack lands twice.", EV.swing, { reactions: [react(on("hit_lands", { kind: "basic", notTags: ["bare"] }), { op: "strike", of: "dealt", to: "other" })] }),
+      oneUse(on_, "TEMPEST", "Next basic attack lands 2 times.", EV.swing, { reactions: [react(on("hit_lands", { kind: "basic", notTags: ["bare"] }), { op: "strike", of: "dealt", to: "other" })] }),
     ],
     serves: "Toll 2 ●●●, Cuts 2 ●●● ⚙ riposte (key) ◆ Toll (the dancer), Cuts (Evasion)",
   });
