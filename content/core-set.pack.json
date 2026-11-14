@@ -47475,7 +47475,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 214
+      "knob": 198
      },
      {
       "id": "snake_pit",
@@ -47487,7 +47487,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 105
+      "knob": 81
      },
      {
       "id": "bandit_camp",
@@ -47498,7 +47498,7 @@
        "archer",
        "bandit"
       ],
-      "knob": 27
+      "knob": 14
      },
      {
       "id": "night_wolves",
@@ -47512,7 +47512,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 180
+      "knob": 177
      },
      {
       "id": "archers_nest",
@@ -47523,7 +47523,7 @@
        "archer",
        "archer"
       ],
-      "knob": 22
+      "knob": 6
      },
      {
       "id": "viper_den",
@@ -47536,7 +47536,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 74
+      "knob": 49
      },
      {
       "id": "bandit_horde",
@@ -47548,7 +47548,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 84
+      "knob": 60
      }
     ],
     "elite": [
@@ -47560,7 +47560,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 92
+      "knob": 83
      },
      {
       "id": "twin_ogres",
@@ -47569,7 +47569,7 @@
        "ogre",
        "ogre"
       ],
-      "knob": 39
+      "knob": 43
      },
      {
       "id": "war_camp",
@@ -47580,7 +47580,7 @@
        "archer",
        "ogre"
       ],
-      "knob": 12
+      "knob": 8
      }
     ],
     "bosses": [
@@ -47592,7 +47592,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 84
+      "knob": 71
      },
      {
       "id": "packmaster",
@@ -47604,7 +47604,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 87
+      "knob": 62
      },
      {
       "id": "chiefs_return",
@@ -47613,7 +47613,7 @@
        "ogre_chief",
        "ogre"
       ],
-      "knob": 52
+      "knob": 31
      }
     ]
    },
@@ -47669,7 +47669,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 257
+      "knob": 224
      },
      {
       "id": "dark_hall",
@@ -47680,7 +47680,7 @@
        "bat",
        "bat"
       ],
-      "knob": 233
+      "knob": 200
      },
      {
       "id": "curse_room",
@@ -47690,7 +47690,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 240
+      "knob": 198
      },
      {
       "id": "haunted_hall",
@@ -47701,7 +47701,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 187
+      "knob": 163
      },
      {
       "id": "bone_wall",
@@ -47713,7 +47713,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 222
+      "knob": 202
      },
      {
       "id": "dead_watch",
@@ -47724,7 +47724,7 @@
        "witch",
        "ghost"
       ],
-      "knob": 172
+      "knob": 153
      }
     ],
     "elite": [
@@ -47737,7 +47737,7 @@
        "ghoul",
        "ghoul"
       ],
-      "knob": 219
+      "knob": 177
      },
      {
       "id": "lich_lair",
@@ -47746,7 +47746,7 @@
        "lich",
        "mummy"
       ],
-      "knob": 318
+      "knob": 293
      },
      {
       "id": "grave_watch",
@@ -47756,7 +47756,7 @@
        "troll",
        "troll"
       ],
-      "knob": 96
+      "knob": 83
      }
     ],
     "bosses": [
@@ -47768,7 +47768,7 @@
        "bat",
        "bat"
       ],
-      "knob": 161
+      "knob": 94
      },
      {
       "id": "reapers_court",
@@ -47778,7 +47778,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 137
+      "knob": 87
      }
     ]
    },
@@ -47836,7 +47836,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 93
+      "knob": -39
      },
      {
       "id": "bomb_room",
@@ -47847,7 +47847,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 14
+      "knob": -122
      },
      {
       "id": "imp_kennel",
@@ -47858,7 +47858,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 102
+      "knob": -24
      },
      {
       "id": "hound_run",
@@ -47871,7 +47871,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 26
+      "knob": -57
      },
      {
       "id": "slag_heap",
@@ -47881,7 +47881,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 168
+      "knob": 64
      },
      {
       "id": "miners",
@@ -47892,7 +47892,7 @@
        "bandit",
        "bomb_bug"
       ],
-      "knob": 157
+      "knob": 15
      }
     ],
     "elite": [
@@ -47903,7 +47903,7 @@
        "lava_slime",
        "lava_slime"
       ],
-      "knob": 274
+      "knob": 187
      },
      {
       "id": "imp_court",
@@ -47915,7 +47915,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 165
+      "knob": 96
      },
      {
       "id": "powder_room",
@@ -47925,7 +47925,7 @@
        "bomb_bug",
        "ogre"
       ],
-      "knob": 54
+      "knob": -28
      },
      {
       "id": "bomb_nest",
@@ -47935,7 +47935,7 @@
        "bomb_bug",
        "bomb_bug"
       ],
-      "knob": 87
+      "knob": 1
      }
     ],
     "bosses": [
@@ -47945,7 +47945,7 @@
       "enemies": [
        "fire_giant"
       ],
-      "knob": 143
+      "knob": 88
      },
      {
       "id": "giants_forge",
@@ -47955,7 +47955,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 106
+      "knob": 58
      },
      {
       "id": "giants_wrath",
@@ -47965,7 +47965,7 @@
        "fire_imp",
        "fire_imp"
       ],
-      "knob": 101
+      "knob": 54
      }
     ]
    },
@@ -48022,7 +48022,7 @@
        "snow_wolf",
        "snow_wolf"
       ],
-      "knob": 361
+      "knob": 342
      },
      {
       "id": "ice_heart",
@@ -48032,7 +48032,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 127
+      "knob": 89
      },
      {
       "id": "whiteout",
@@ -48042,7 +48042,7 @@
        "ice_ghost",
        "ice_spirit"
       ],
-      "knob": 167
+      "knob": 118
      },
      {
       "id": "ghost_lights",
@@ -48052,7 +48052,7 @@
        "ice_ghost",
        "ice_ghost"
       ],
-      "knob": 191
+      "knob": 144
      },
      {
       "id": "long_pack",
@@ -48066,7 +48066,7 @@
        "snow_wolf",
        "snow_wolf"
       ],
-      "knob": 311
+      "knob": 277
      },
      {
       "id": "drift",
@@ -48077,7 +48077,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 172
+      "knob": 136
      }
     ],
     "elite": [
@@ -48088,7 +48088,7 @@
        "ice_golem",
        "ice_golem"
       ],
-      "knob": 250
+      "knob": 194
      },
      {
       "id": "golem_gate",
@@ -48098,7 +48098,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 185
+      "knob": 132
      },
      {
       "id": "frost_trolls",
@@ -48109,7 +48109,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 52
+      "knob": 28
      }
     ],
     "bosses": [
@@ -48119,7 +48119,7 @@
       "enemies": [
        "ice_titan"
       ],
-      "knob": 211
+      "knob": 135
      },
      {
       "id": "glacier_king",
@@ -48129,7 +48129,7 @@
        "snow_wolf",
        "snow_wolf"
       ],
-      "knob": 188
+      "knob": 113
      }
     ]
    },
@@ -48192,7 +48192,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 158
+      "knob": 42
      },
      {
       "id": "wisp_nest",
@@ -48205,7 +48205,7 @@
        "leech",
        "leech"
       ],
-      "knob": 175
+      "knob": 76
      },
      {
       "id": "leech_den",
@@ -48216,7 +48216,7 @@
        "leech",
        "leech"
       ],
-      "knob": 336
+      "knob": 182
      },
      {
       "id": "drone_wall",
@@ -48229,7 +48229,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 151
+      "knob": 31
      },
      {
       "id": "storm_front",
@@ -48242,7 +48242,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 156
+      "knob": 43
      }
     ],
     "elite": [
@@ -48255,7 +48255,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 459
+      "knob": 298
      },
      {
       "id": "sniper_ridge",
@@ -48267,7 +48267,7 @@
        "archer",
        "archer"
       ],
-      "knob": 149
+      "knob": 76
      },
      {
       "id": "lich_pair",
@@ -48277,7 +48277,7 @@
        "lich",
        "lich"
       ],
-      "knob": 303
+      "knob": 181
      }
     ],
     "bosses": [
@@ -48289,7 +48289,7 @@
        "drone",
        "drone"
       ],
-      "knob": 360
+      "knob": 195
      },
      {
       "id": "hive_queen",
@@ -48301,7 +48301,7 @@
        "drone",
        "drone"
       ],
-      "knob": 300
+      "knob": 122
      }
     ]
    },
@@ -48355,7 +48355,7 @@
        "troll",
        "troll"
       ],
-      "knob": 116
+      "knob": 60
      },
      {
       "id": "lich_lair",
@@ -48364,7 +48364,7 @@
        "lich",
        "mummy"
       ],
-      "knob": 316
+      "knob": 267
      },
      {
       "id": "silent_hall",
@@ -48375,7 +48375,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 207
+      "knob": 130
      },
      {
       "id": "quiet_hall",
@@ -48386,7 +48386,7 @@
        "ghost",
        "ghost"
       ],
-      "knob": 159
+      "knob": 122
      },
      {
       "id": "coven",
@@ -48397,7 +48397,7 @@
        "wraith",
        "wraith"
       ],
-      "knob": 126
+      "knob": 100
      },
      {
       "id": "ghoul_feast",
@@ -48408,7 +48408,7 @@
        "ghoul",
        "ghoul"
       ],
-      "knob": 224
+      "knob": 158
      }
     ],
     "elite": [
@@ -48420,7 +48420,7 @@
        "bone_priest",
        "troll"
       ],
-      "knob": 221
+      "knob": 156
      },
      {
       "id": "lich_court",
@@ -48431,7 +48431,7 @@
        "lich",
        "lich"
       ],
-      "knob": 208
+      "knob": 127
      },
      {
       "id": "tomb_lords",
@@ -48441,7 +48441,7 @@
        "mummy",
        "witch"
       ],
-      "knob": 246
+      "knob": 159
      }
     ],
     "bosses": [
@@ -48451,7 +48451,7 @@
       "enemies": [
        "silent_one"
       ],
-      "knob": 262
+      "knob": 108
      },
      {
       "id": "silent_court",
@@ -48461,7 +48461,7 @@
        "bone_priest",
        "bone_priest"
       ],
-      "knob": 195
+      "knob": 41
      }
     ]
    },
@@ -48522,7 +48522,7 @@
        "leech",
        "leech"
       ],
-      "knob": 99
+      "knob": 48
      },
      {
       "id": "wisp_nest",
@@ -48535,7 +48535,7 @@
        "leech",
        "leech"
       ],
-      "knob": 170
+      "knob": 86
      },
      {
       "id": "barracks",
@@ -48545,7 +48545,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 523
+      "knob": 308
      },
      {
       "id": "drone_wall",
@@ -48558,7 +48558,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 128
+      "knob": 61
      },
      {
       "id": "watch",
@@ -48569,7 +48569,7 @@
        "drone",
        "drone"
       ],
-      "knob": 336
+      "knob": 221
      }
     ],
     "elite": [
@@ -48581,7 +48581,7 @@
        "drone",
        "drone"
       ],
-      "knob": 181
+      "knob": 134
      },
      {
       "id": "honour_guard",
@@ -48592,7 +48592,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 485
+      "knob": 370
      },
      {
       "id": "leech_den",
@@ -48604,7 +48604,7 @@
        "leech",
        "leech"
       ],
-      "knob": 360
+      "knob": 302
      }
     ],
     "bosses": [
@@ -48614,7 +48614,7 @@
       "enemies": [
        "storm_king"
       ],
-      "knob": 308
+      "knob": 151
      },
      {
       "id": "kings_guard",
@@ -48624,7 +48624,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 222
+      "knob": 93
      }
     ]
    }
