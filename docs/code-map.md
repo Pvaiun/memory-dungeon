@@ -134,6 +134,7 @@ tools/                       the Node command lines; each header says how to run
   build-parties/
     kit.ts                   their types, the builds' names, formation seats, mythics, and route(): each rung's gear, versions, mythics and seats from the loot's tags; the placements a good player wouldn't make (MISFIT)
   rhythm-read.ts             does a party play the fight its build says it does?
+  wall-read.ts               what a wall does to a fight's cost: the build parties walled against unwalled by rung and tier, and each party's incoming damage followed through dodge, Defense and Shield to HP (--layers)
   piece-check.ts             does every item do what its card says?
   gear-slots.ts              the gear slots' counts: who wears which kinds
   loot-list.ts               today's loot as one line per item: its cards, and the builds it was tagged for
