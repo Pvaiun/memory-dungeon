@@ -131,6 +131,8 @@ export type Mods = {
   seek: boolean;
   wait: S.ConditionT[];
   apply: S.ApplyT[];
+  /** Aimed at one foe, it lands on every foe, each hit an even share. */
+  spread: boolean;
   /** A count of casts kept for it, and the status that shows it. */
   casts: { cap: number; show?: string } | null;
 };
@@ -159,7 +161,7 @@ export function modsOf(w: W, u: CUnit, d: ActDef): Mods | null {
   for (const s of u.statuses) {
     for (const x of def(w, s.id).mods ?? []) {
       if (!reaches(x.of, u, d) || (x.if && !passes(w, u, x.if, u))) continue;
-      m ??= { mp: 0, hp: [], pay: 0, cast: null, wind: 0, cooldown: 0, damage: 0, stacks: [], heal: 0, target: null, seek: false, wait: [], apply: [], casts: null };
+      m ??= { mp: 0, hp: [], pay: 0, cast: null, wind: 0, cooldown: 0, damage: 0, stacks: [], heal: 0, target: null, seek: false, wait: [], apply: [], spread: false, casts: null };
       // What the change counts: a status's stacks, or this ability's own casts this fight.
       let k = 1;
       if (x.times) {
@@ -183,6 +185,7 @@ export function modsOf(w: W, u: CUnit, d: ActDef): Mods | null {
       if (x.seek) m.seek = true;
       if (x.wait) m.wait.push(...[x.wait].flat());
       if (x.apply) m.apply.push(...x.apply);
+      if (x.spread) m.spread = true;
     }
   }
   if (!m) return null;
@@ -339,6 +342,8 @@ export function resolve(w: W, u: CUnit, i: number, swing = false) {
 /** An action's targets: a change's rule in place of its own, which takes over again when the change's finds nobody. */
 function pick(w: W, u: CUnit, d: ActDef, m: Mods | null): CUnit[] {
   const seek = !!m?.seek || seeks(w, u, d);
+  // Spread: an ability aimed at one foe lands on every foe it could pick.
+  if (m?.spread && d.kind === "ability" && d.single && choose(w, u, d.target, seek, d.kind).length) return choose(w, u, { side: "foes", pick: "all" }, true, d.kind);
   if (m?.target) {
     const out = choose(w, u, m.target, seek, d.kind);
     if (out.length) return out;
@@ -425,14 +430,14 @@ function strikes(w: W, u: CUnit, d: ActDef, targets: CUnit[], ctx: Ctx) {
   let chained: Set<string> | null = null;
   for (const s of u.statuses) {
     const k = def(w, s.id).strike;
-    if (k?.chain && k.scale) (chained ??= new Set()).add(k.scale);
+    if ((k?.chain || k?.replace) && k.scale) (chained ??= new Set()).add(k.scale);
   }
   const echo = u.statuses.some((s) => def(w, s.id).echo);
   for (const s of u.statuses.slice()) {
     const st = def(w, s.id);
     const k = st.strike;
     if (!k || !u.statuses.includes(s)) continue;
-    if (chained && !k.chain && k.scale && chained.has(k.scale)) continue;
+    if (chained && !k.chain && !k.replace && k.scale && chained.has(k.scale)) continue;
     if (k.when && !passes(w, u, k.when, u)) continue;
     if (w.f.result || u.ko) return;
     const chance = (k.chance ?? (k.scale ? 0 : 100)) + (k.scale ? stat(w, u, k.scale) : 0);

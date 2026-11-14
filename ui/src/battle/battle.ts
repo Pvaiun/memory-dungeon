@@ -314,6 +314,13 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
         scene.number(String(ev.target), `+${disp(ev.amount as number)}`, { color: "#6fb4ff", sub: "MP" });
         fx.mp(String(ev.target), ev.part);
         break;
+      case "hp": {
+        // HP set by a trade or a rewind: not damage and not healing; the bar moves, with its number in its colour.
+        if (typeof ev.hp === "number") scene.told(String(ev.unit), ev.hp);
+        const n = disp(ev.amount as number);
+        if (n) scene.number(String(ev.unit), n > 0 ? `+${n}` : `${n}`, { color: n > 0 ? "#7ee07e" : "#ff7b6b", sub: "HP" });
+        break;
+      }
       case "pay": {
         // HP paid as a price (an ability's, a piece's, a drain's): the bar drops, and a price's number shows in red, under HP.
         if (typeof ev.hp === "number") scene.told(String(ev.unit), ev.hp);
@@ -447,6 +454,11 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
     if (word === "MISS") {
       scene.number(target, "MISS", { color: "#c8d0e8" });
       sfx.miss();
+      return;
+    }
+    // A hit owed (Owing mail) waits on the unit's Owed count: its number shows, greyed, and the bar stays.
+    if (word === "OWED") {
+      scene.number(target, `${disp(amount)}`, { color: "#a89cc8", sub: "OWED", subColor: "#a89cc8" });
       return;
     }
     if (word === "AEGIS" || word === "IMMUNE" || word === "BLOCKED") {

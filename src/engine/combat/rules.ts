@@ -33,12 +33,20 @@ export type Member = Unit & {
   /** Of `start`, the statuses its gear and its seat give (what a restart makes happen again). */
   opening?: string[];
   weapon: string;
+  /** The offhand kind and armor type it wears (unit tests read them); an offhand under a two-handed weapon is none. */
+  held?: { offhand?: string; armor?: string };
   abilities: string[];
   /** Ticks of cooldown each ability had left when the last fight ended; the next fight starts from there. */
   cooldowns?: Record<string, number>;
 };
 
 type Grant = { stats?: FixedStatT[]; statuses?: string[] };
+
+/** The offhand kind and armor type a unit wears, with nothing for an empty slot (so a saved run reads the same). */
+function heldOf(gear: { slot: string; offhand?: string; armor?: string }[]): NonNullable<Member["held"]> {
+  const offhand = gear.find((g) => g.slot === "offhand")?.offhand, armor = gear.find((g) => g.slot === "armor")?.armor;
+  return { ...(offhand ? { offhand } : {}), ...(armor ? { armor } : {}) };
+}
 
 function grant(m: Pick<Member, "flat" | "pct" | "start">, g: Grant | undefined) {
   for (const s of g?.stats ?? []) {
@@ -92,6 +100,7 @@ export const combat: Rules = {
       return {
         id: `p${i + 1}`, ref: cls.id, name: cls.name, side: "party", stats, hp: stats.max_hp, mp: stats.max_mp, slot, seat: pu.position, base, ...m, opening,
         weapon: gear.find((g) => g.weapon)?.id ?? "unarmed", abilities: [...pu.abilities],
+        held: heldOf(gear),
       };
     });
   },
@@ -100,7 +109,7 @@ export const combat: Rules = {
     const seed = x.run.record.seed;
     const party = (x.run.party as Member[])
       .map(({ abilities, ...m }) => {
-        const copy = { ...m, stats: { ...m.stats }, base: { ...m.base }, flat: { ...m.flat }, pct: { ...m.pct }, start: [...m.start], opening: [...(m.opening ?? [])] };
+        const copy = { ...m, stats: { ...m.stats }, base: { ...m.base }, flat: { ...m.flat }, pct: { ...m.pct }, start: [...m.start], opening: [...(m.opening ?? [])], ...(m.held ? { held: { ...m.held } } : {}) };
         return fighter(copy, abilities, rngFor(seed, `fight:${stage.id}:${m.ref}`));
       })
       .sort((a, b) => a.slot - b.slot);

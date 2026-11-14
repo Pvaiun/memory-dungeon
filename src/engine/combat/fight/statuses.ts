@@ -10,6 +10,7 @@ import { ev, fire } from "./events.js";
 import { actDef, cooldownOf, covers } from "./actions.js";
 import { hasKind, holds, lastInSight, randomIndex } from "./targeting.js";
 import { type Ctx, divertOf, firstFor, run } from "./effects.js";
+import { debtLands } from "./damage.js";
 
 // ─── Statuses ───────────────────────────────────────────────────────────────
 
@@ -111,7 +112,8 @@ export function applyStatus(w: W, by: CUnit, to: CUnit, d: S.StatusT, o: ApplyOp
       cur.src = by.id;
     } else {
       cur.stacks = Math.min(capOf(w, d, cur.nums, to), cur.stacks + add);
-      if (dur !== "permanent") cur.end = end;
+      // A debt keeps the time it came due on: stacks added to it don't renew it.
+      if (dur !== "permanent" && !d.debt) cur.end = end;
     }
     gained(w, to, d, cur, by, cur.stacks - before, o);
     return;
@@ -211,6 +213,8 @@ export function endStatus(w: W, u: CUnit, s: SInst, cause: S.CauseT, by: Ending 
   if (d.stats || d.swap || (isIntensity(d) && readsStacks(w, u)) || w.c.pack.stats.some((x) => x.brings === d.id)) refresh(w, u);
   const amount = by.amount ?? (cause === "stacks" && d.absorb ? (s.peak ?? s.stacks) : s.stacks) / SUBTICKS;
   fire(w, ev("status_ended", u, by.other ?? null, { status: d.id, cause, ending: s, amount, src: s.src }));
+  // A debt that runs out comes due (Owed).
+  if (d.debt && cause === "expired") debtLands(w, u, d, s.stacks / SUBTICKS);
 }
 
 /**

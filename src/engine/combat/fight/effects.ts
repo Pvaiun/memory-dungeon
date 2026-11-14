@@ -98,7 +98,9 @@ export function run(w: W, ctx: Ctx, e: S.EffectT) {
     switch (e.op) {
       case "damage":
         if (ctx.kind) {
-          for (let h = 0; h < (e.hits ?? 1) && !t.ko && !w.f.result; h++) hit(w, ctx, t, e, { area });
+          // Spread over every foe (Diffusion orb): each hit an even share.
+          const share = ctx.mod?.spread && ctx.kind === "ability" ? 100 / Math.max(1, ts.length) : undefined;
+          for (let h = 0; h < (e.hits ?? 1) && !t.ko && !w.f.result; h++) hit(w, ctx, t, e, { area, share });
         } else strike(w, ctx, t, e);
         break;
       case "heal":
@@ -151,7 +153,13 @@ export function run(w: W, ctx: Ctx, e: S.EffectT) {
         pass(w, ctx.actor, t, e);
         break;
       case "share":
-        share(w, ctx, t);
+        share(w, ctx, t, e.ratio ?? 1);
+        break;
+      case "trade":
+        trade(w, ctx.actor, t);
+        break;
+      case "rewind":
+        rewind(w, t, e.ticks);
         break;
       case "riders":
         layRiders(w, ctx, t, !!e.plain);
@@ -336,13 +344,41 @@ function pass(w: W, a: CUnit, t: CUnit, e: Extract<S.EffectT, { op: "pass" }>) {
  * repeat). Only a status laid at a moment is shared: one with an icon that has a duration, stacks or a block; never a marker,
  * and never a state its holder keeps while something is true of it.
  */
-function share(w: W, ctx: Ctx, t: CUnit) {
+function share(w: W, ctx: Ctx, t: CUnit, ratio: number) {
   const st = ctx.st;
   if (!st?.about || st.on !== "status_gained") return;
   const d = def(w, st.about);
   if (d.label === "marker" || d.show !== "icon" || !(d.duration !== undefined || isIntensity(d) || d.block)) return;
   if (isIntensity(d) && st.amount <= 0) return;
-  applyStatus(w, ctx.actor, t, d, { stacks: isIntensity(d) ? st.amount : 1, rng: ctx.actor, copy: true });
+  applyStatus(w, ctx.actor, t, d, { stacks: isIntensity(d) ? st.amount * ratio : 1, rng: ctx.actor, copy: true });
+}
+
+/** HP set to a share of max, not damage and not healing: logged as a move of the bar, and heard only by HP lines. Never below 1. */
+function setHp(w: W, t: CUnit, hp: number, why: string, by: CUnit) {
+  const v = Math.min(t.stats.max_hp, Math.max(1, Math.floor(hp)));
+  if (v === t.hp || t.ko) return;
+  const amount = v - t.hp;
+  t.hp = v;
+  w.log?.({ t: "hp", vis: "player", at: w.f.now, by: by.id, unit: t.id, amount, hp: t.hp, why });
+  hpMoved(w, t);
+}
+
+/** The actor and the target trade HP shares: each is left at the other's percent of its own max HP. */
+function trade(w: W, a: CUnit, t: CUnit) {
+  if (a === t || a.ko || t.ko) return;
+  const sa = a.stats.max_hp > 0 ? a.hp / a.stats.max_hp : 0, stt = t.stats.max_hp > 0 ? t.hp / t.stats.max_hp : 0;
+  setHp(w, a, stt * a.stats.max_hp, "trade", t);
+  setHp(w, t, sa * t.stats.max_hp, "trade", a);
+}
+
+/** A unit's HP goes back to what it was `ticks` ago, if that was more (its history is kept while content can rewind). */
+function rewind(w: W, t: CUnit, ticks: number) {
+  const h = t.hist;
+  if (!h?.length) return;
+  const at = w.f.now - sub(ticks);
+  let then = h[0][1];
+  for (const [when, hp] of h) if (when <= at) then = hp;
+  if (then > t.hp) setHp(w, t, then, "rewind", t);
 }
 
 /** True the first time `key` is asked for the event now being answered; with no event, always. */

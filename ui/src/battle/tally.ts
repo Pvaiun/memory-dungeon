@@ -74,7 +74,8 @@ export function tallyFight(log: readonly Entry[], x: TallyCtx): Tally {
         const amount = Number(e.amount) || 0;
         if (amount <= 0) break;
         const target = String(e.target), ts = x.side(target), src = String(e.src);
-        unit(target).taken += amount;
+        // A hit owed is taken when the debt comes due, so it counts as taken then, not twice.
+        if (e.word !== "OWED") unit(target).taken += amount;
         const soaked = Number(e.soaked) || 0;
         if (soaked > 0) status(ts ?? "party", x.absorb).soak += soaked;
         const fromStatus = e.part === "pulse" || e.part === "reaction";

@@ -4,7 +4,7 @@
   "properties": {
     "schemaVersion": {
       "type": "string",
-      "const": "0.12"
+      "const": "0.13"
     },
     "id": {
       "type": "string",
@@ -1129,6 +1129,11 @@
                   "share"
                 ],
                 "additionalProperties": false
+              },
+              "replace": {
+                "description": "It takes the place of a plain strike on the unit that reads the same `scale` stat, as a chain does, without chaining (Double strike's second strike landing elsewhere).",
+                "type": "boolean",
+                "const": true
               }
             },
             "required": [
@@ -1982,6 +1987,11 @@
                     ],
                     "additionalProperties": false
                   }
+                },
+                "spread": {
+                  "description": "Aimed at one foe, it lands on every foe instead, each hit dealing an even share of its damage (its share divided by the foes it lands on).",
+                  "type": "boolean",
+                  "const": true
                 }
               },
               "additionalProperties": false
@@ -2065,8 +2075,18 @@
             "properties": {
               "share": {
                 "type": "number",
-                "exclusiveMinimum": 0,
+                "minimum": 0,
                 "maximum": 100
+              },
+              "tag": {
+                "description": "Only hits carrying this tag (`area`: every Area hit on an ally lands on the holder, once for each ally it would have struck).",
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]*(:[a-z0-9_]+)*$"
+              },
+              "lowest": {
+                "description": "Only hits on the ally with the lowest share of its max HP (ties: every one of them).",
+                "type": "boolean",
+                "const": true
               }
             },
             "required": [
@@ -2216,6 +2236,94 @@
             },
             "additionalProperties": false
           },
+          "confuse": {
+            "description": "The holder's basic attacks pick a random unit of its own side, itself aside (with nobody there, a foe as usual): Bewildered.",
+            "type": "boolean",
+            "const": true
+          },
+          "fixate": {
+            "description": "The holder's basic attacks and its abilities aimed at a random foe pick the unit that applied this status while it can be picked, under the Taunt rule (Fixated). Statuses that know their source only.",
+            "type": "boolean",
+            "const": true
+          },
+          "critsTaken": {
+            "description": "Every hit on the holder crits (always: Brittle), or none does (never, which wins).",
+            "type": "string",
+            "enum": [
+              "always",
+              "never"
+            ]
+          },
+          "owe": {
+            "description": "Damage from hits on the holder, after Defense and before its block and absorbs, isn't taken: it's added as stacks of this status (a `debt`) instead.",
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "debt": {
+            "description": "Intensity with a duration: stacks added don't renew it, and when it runs out its holder takes its stacks as damage of no type, from nobody, which a block and absorbs meet (Owed).",
+            "type": "boolean",
+            "const": true
+          },
+          "rescale": {
+            "description": "The holder's abilities read `to` in place of `from` wherever they scale from the holder's own `from`.",
+            "type": "object",
+            "properties": {
+              "from": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]*(:[a-z0-9_]+)*$"
+              },
+              "to": {
+                "description": "The stat read in its place (default: the same stat).",
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]*(:[a-z0-9_]+)*$"
+              },
+              "best": {
+                "description": "Read from whichever living unit on the holder's side has the most of it, the holder included.",
+                "type": "boolean",
+                "const": true
+              },
+              "if": {
+                "description": "Only while the holder passes this.",
+                "$ref": "#/$defs/UnitCond"
+              }
+            },
+            "required": [
+              "from"
+            ],
+            "additionalProperties": false
+          },
+          "sharesHeals": {
+            "description": "A rule its side holds once: healing any unit on the side receives is shared evenly by the side's living units.",
+            "type": "boolean",
+            "const": true
+          },
+          "drawBy": {
+            "description": "A rule its side holds once: foes' picks among the side weigh each unit by its max HP in place of its draw from Aggro.",
+            "type": "string",
+            "const": "max_hp"
+          },
+          "spare": {
+            "description": "The holder's actions of this kind don't set off this Intensity status's trigger (basic attacks that don't spend Might).",
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]*$"
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "basic",
+                  "ability"
+                ]
+              }
+            },
+            "required": [
+              "status",
+              "kind"
+            ],
+            "additionalProperties": false
+          },
           "note": {
             "type": "string",
             "minLength": 1,
@@ -2277,7 +2385,7 @@
               "type": "string",
               "pattern": "^[a-z][a-z0-9_]*$"
             },
-            "description": "The weapon kinds it can use, first kind first: it arrives with that kind's plain weapon."
+            "description": "The weapon kinds it can use, first kind first: it arrives with the plain weapon of its first one-handed kind."
           },
           "armor": {
             "minItems": 1,
@@ -5667,6 +5775,83 @@
             "type": "string",
             "pattern": "^[a-z][a-z0-9_]*$"
           }
+        },
+        "offhand": {
+          "description": "Holds an offhand of one of these kinds; false: holds none (an offhand under a two-handed weapon is none).",
+          "anyOf": [
+            {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]*$"
+              }
+            },
+            {
+              "type": "boolean",
+              "const": false
+            }
+          ]
+        },
+        "offhandNot": {
+          "description": "Holds no offhand of these kinds (an empty hand passes).",
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          }
+        },
+        "armor": {
+          "description": "Wears armor of one of these types.",
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          }
+        },
+        "kin": {
+          "description": "Wields a weapon of the reading unit's kind; the reading unit itself never passes.",
+          "type": "boolean",
+          "const": true
+        },
+        "above": {
+          "description": "Its own `stat` is above `ratio` × its own `over` (\"while its Defense is above its Attack\").",
+          "type": "object",
+          "properties": {
+            "stat": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*(:[a-z0-9_]+)*$"
+            },
+            "over": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*(:[a-z0-9_]+)*$"
+            },
+            "ratio": {
+              "description": "Default 1: a percent stat against an amount reads the amount in points (0.001).",
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          },
+          "required": [
+            "stat",
+            "over"
+          ],
+          "additionalProperties": false
+        },
+        "swing": {
+          "description": "No living unit on its side has a faster (slower) basic attack now; ties pass.",
+          "type": "string",
+          "enum": [
+            "fastest",
+            "slowest"
+          ]
+        },
+        "mostDebuffs": {
+          "description": "Holds a debuff, and no living unit on its side holds more.",
+          "type": "boolean",
+          "const": true
         }
       },
       "additionalProperties": false
@@ -6898,6 +7083,12 @@
               "type": "string",
               "const": "share"
             },
+            "ratio": {
+              "description": "A share of the stacks (default 1: the same).",
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 1
+            },
             "to": {
               "anyOf": [
                 {
@@ -6997,6 +7188,79 @@
           ],
           "additionalProperties": false,
           "description": "The start-of-fight effects of each target's gear and seat happen again: their reactions to fight_start, as a repeat (`repeat: false` keeps a price or a drawback out). One event restarts a unit once."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string",
+              "const": "trade"
+            },
+            "to": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "target",
+                    "self",
+                    "holder",
+                    "source",
+                    "other",
+                    "owner",
+                    "assailant"
+                  ]
+                },
+                {
+                  "$ref": "#/$defs/TargetRule"
+                }
+              ]
+            }
+          },
+          "required": [
+            "op",
+            "to"
+          ],
+          "additionalProperties": false,
+          "description": "The actor and the target trade HP shares: each is left at the other's percent of its own max HP. Not damage and not healing: nothing reacts to it but HP lines."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string",
+              "const": "rewind"
+            },
+            "ticks": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "to": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "target",
+                    "self",
+                    "holder",
+                    "source",
+                    "other",
+                    "owner",
+                    "assailant"
+                  ]
+                },
+                {
+                  "$ref": "#/$defs/TargetRule"
+                }
+              ]
+            }
+          },
+          "required": [
+            "op",
+            "ticks",
+            "to"
+          ],
+          "additionalProperties": false,
+          "description": "Each target's HP goes back to what it was this many ticks ago, if that was more. Not healing: nothing reacts to it but HP lines."
         },
         {
           "type": "object",

@@ -106,6 +106,7 @@ export const AbilityMod = z.strictObject({
   seek: z.literal(true).optional().describe("It has Seek: its first pick ignores Taunt."),
   wait: z.union([Condition, z.array(Condition).min(1)]).optional().describe("It also waits for these, as its own `if` does."),
   apply: z.array(HitApply).min(1).optional().describe("Statuses its hits apply as well, after its own."),
+  spread: z.literal(true).optional().describe("Aimed at one foe, it lands on every foe instead, each hit dealing an even share of its damage (its share divided by the foes it lands on)."),
 });
 export type AbilityModT = z.infer<typeof AbilityMod>;
 
@@ -177,6 +178,7 @@ export const Status = z.strictObject({
         .strictObject({ times: PosInt, share: z.number().positive().max(100) })
         .optional()
         .describe("Each strike that lands rolls `chance` again for one more, at most `times` more after the first, each share % of the one before. It takes the place of a plain strike on the unit that reads the same `scale` stat (Flurry wraps over Double strike), so a swing rolls that chance once. The one bend of \"extra strikes don't chain\"."),
+      replace: z.literal(true).optional().describe("It takes the place of a plain strike on the unit that reads the same `scale` stat, as a chain does, without chaining (Double strike's second strike landing elsewhere)."),
     })
     .optional()
     .describe("After each of the holder's basic attacks: one more hit with the weapon's damage, of kind extra, at `to`. Extra strikes don't chain."),
@@ -225,7 +227,11 @@ export const Status = z.strictObject({
     .optional()
     .describe("After every other change, the holder's stat is this value while it holds the status."),
   cover: z
-    .strictObject({ share: z.number().gt(0).max(100) })
+    .strictObject({
+      share: z.number().min(0).max(100),
+      tag: Tag.optional().describe("Only hits carrying this tag (`area`: every Area hit on an ally lands on the holder, once for each ally it would have struck)."),
+      lowest: z.literal(true).optional().describe("Only hits on the ally with the lowest share of its max HP (ties: every one of them)."),
+    })
     .optional()
     .describe("When a hit on another living ally would deal it more than share % of its max HP, after its mitigation and before its block and absorbs, the holder takes the whole hit instead: it resolves again against the holder, statuses and riders included, keeping its crit and without a second dodge. A hit moves once."),
   floor: z
@@ -267,6 +273,29 @@ export const Status = z.strictObject({
     })
     .optional()
     .describe("Every revive the holder makes, from its abilities and its statuses' reactions alike (Einherjar)."),
+  confuse: z.literal(true).optional().describe("The holder's basic attacks pick a random unit of its own side, itself aside (with nobody there, a foe as usual): Bewildered."),
+  fixate: z.literal(true).optional().describe("The holder's basic attacks and its abilities aimed at a random foe pick the unit that applied this status while it can be picked, under the Taunt rule (Fixated). Statuses that know their source only."),
+  critsTaken: z.enum(["always", "never"]).optional().describe("Every hit on the holder crits (always: Brittle), or none does (never, which wins)."),
+  owe: Id.optional().describe("Damage from hits on the holder, after Defense and before its block and absorbs, isn't taken: it's added as stacks of this status (a `debt`) instead."),
+  debt: z
+    .literal(true)
+    .optional()
+    .describe("Intensity with a duration: stacks added don't renew it, and when it runs out its holder takes its stacks as damage of no type, from nobody, which a block and absorbs meet (Owed)."),
+  rescale: z
+    .strictObject({
+      from: StatKey,
+      to: StatKey.optional().describe("The stat read in its place (default: the same stat)."),
+      best: z.literal(true).optional().describe("Read from whichever living unit on the holder's side has the most of it, the holder included."),
+      if: UnitCond.optional().describe("Only while the holder passes this."),
+    })
+    .optional()
+    .describe("The holder's abilities read `to` in place of `from` wherever they scale from the holder's own `from`."),
+  sharesHeals: z.literal(true).optional().describe("A rule its side holds once: healing any unit on the side receives is shared evenly by the side's living units."),
+  drawBy: z.literal("max_hp").optional().describe("A rule its side holds once: foes' picks among the side weigh each unit by its max HP in place of its draw from Aggro."),
+  spare: z
+    .strictObject({ status: Id, kind: z.enum(["basic", "ability"]) })
+    .optional()
+    .describe("The holder's actions of this kind don't set off this Intensity status's trigger (basic attacks that don't spend Might)."),
   note: Note.optional(),
 });
 export type StatusT = z.infer<typeof Status>;

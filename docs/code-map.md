@@ -46,9 +46,9 @@ src/
       fight/                 the fight, one file a part
         state.ts             the fight's data, the world (W), shared helpers, stats after statuses, HP lines, numbers
         actions.ts           abilities as actions: their changes, costs and HP prices, availability, start, resolution, casts made again, extra strikes
-        targeting.ts         picks: draw, Taunt, Hidden, Seek, focus, target rules, conditions, seats
-        effects.ts           every effect op but damage and healing: targets, numbers, MP, cooldowns, HP prices, strikes out of turn, riders laid, the opening again, revives
-        damage.ts            damage and healing: the resolution order, evasion, crits, Shield, Aegis, MP as armour, floors, cover, healing caps
+        targeting.ts         picks: draw, Taunt, Hidden, Seek, focus, Fixated and Bewildered, target rules, conditions (what a unit wears among them), seats
+        effects.ts           every effect op but damage and healing: targets, numbers, MP, cooldowns, HP prices, strikes out of turn, riders laid, the opening again, revives, HP traded and rewound
+        damage.ts            damage and healing: the resolution order, evasion, crits (taken too), Shield, Aegis, MP as armour, floors, cover, debts owed, healing caps and shared healing
         statuses.ts          applying, ending, removing, moving, spending and pulsing statuses; diverts, damping; control resistance; lockouts
         events.ts            events, their filters, reactions and Intensity triggers; riders, carried and borrowed; shared amounts
         units.ts             knockouts, the fight's end, revives, summons and splits
@@ -61,6 +61,7 @@ src/
       synergy-w.test.ts      tests: the building blocks for who and when
       loot-h.test.ts         tests: the loot pass's building blocks for what happens (hits out of turn, riders, HP lines, MP, healing caps)
       loot-w.test.ts         tests: the loot pass's building blocks for who and when (party rules, ability changes, casts again, sight)
+      creative.test.ts       tests: the creative-builds pass's building blocks (Bewildered, Fixated, crits taken, Owed, covers by tag, shared heals, HP traded and rewound, spreads, rescales, what a unit wears)
       coreset.test.ts        tests: the core set's own rules (Taunt and Hidden, Seek, revive, summons)
       dungeon.test.ts        tests: a run's rules (foes modifier, lost casts, stagger, enrage, Stun, campfires)
   rogue.ts                   the rogue mode's public face; lists its parts

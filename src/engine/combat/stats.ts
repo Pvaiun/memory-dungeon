@@ -101,7 +101,9 @@ export function compile(s: StatusT): Compiled {
   if (s.absorb) kinds.push(["absorb", null]);
   if (s.block || s.floor || s.cover) kinds.push(["block", null]);
   if (s.lockout) kinds.push(["lockout", s.lockout.covers]);
-  if (s.riders?.length || s.adds || s.seek || s.strike || s.aim || s.mods || s.crits || s.echo || s.revives || s.borrow || s.tireless || s.order) kinds.push(["action_change", null]);
+  if (s.riders?.length || s.adds || s.seek || s.strike || s.aim || s.mods || s.crits || s.echo || s.revives || s.borrow || s.tireless || s.order || s.confuse || s.fixate || s.rescale || s.spare) kinds.push(["action_change", null]);
+  if (s.critsTaken) kinds.push(["taken", null]);
+  if (s.owe) kinds.push(["block", null]);
   if (s.pulse) kinds.push(["pulse", null]);
   if (s.reactions?.length || s.trigger) kinds.push(["reaction", null]);
   const harms = (s.pulse?.do ?? []).some((e) => e.op === "damage" && (e.to ?? "holder") === "holder");

@@ -127,6 +127,11 @@ export class Combat {
     if (c.lower) this.statKey(c.lower.stat, `${path}.lower.stat`);
     c.top?.stats.forEach((k, i) => this.statKey(k, `${path}.top.stats[${i}]`));
     c.weapon?.forEach((k, i) => this.w.ref("weaponKinds", k, `${path}.weapon[${i}]`, "weapon kind"));
+    // What it wears, and its own stats against each other.
+    if (c.offhand) c.offhand.forEach((k, i) => this.w.ref("offhandKinds", k, `${path}.offhand[${i}]`, "offhand kind"));
+    c.offhandNot?.forEach((k, i) => this.w.ref("offhandKinds", k, `${path}.offhandNot[${i}]`, "offhand kind"));
+    c.armor?.forEach((k, i) => this.w.ref("armorTypes", k, `${path}.armor[${i}]`, "armor type"));
+    if (c.above) (this.statKey(c.above.stat, `${path}.above.stat`), this.statKey(c.above.over, `${path}.above.over`));
   }
 
   /** A seat names a position some formation has, or a relative seat. */
@@ -253,6 +258,8 @@ export class Combat {
         break;
       case "restart":
       case "fell":
+      case "trade":
+      case "rewind":
         break;
       case "revive": {
         this.num(e.hp, `${path}.hp`, where, inStatus);
@@ -439,6 +446,12 @@ export class Combat {
         if (st.strike.carry && (st.strike.kind ?? "extra") === "extra") this.r.warn("strike.carry", `${p}.strike.carry`, `an extra strike carries the riders under echo; 'carry' is a bonus strike's`);
         if (st.strike.chain && st.strike.chance === undefined && !st.strike.scale) this.r.warn("strike.chain", `${p}.strike.chain`, `a strike that always lands would always chain to its most`);
       }
+      // Fixated, a debt, a rescale, a spare.
+      if (st.fixate && shared(st)) this.r.error("status.fixate", `${p}.fixate`, `a shared Intensity total has no single source to fixate on; make it Refresh, Fizzle or Per source`);
+      if (st.owe && this.w.ref("statuses", st.owe, `${p}.owe`, "status") && !this.ix.get<S.StatusT>("statuses", st.owe)!.debt) this.r.error("status.owe", `${p}.owe`, `'${st.owe}' isn't a debt: hits owed would never come due`);
+      if (st.debt && (st.stacking !== "intensity" || st.duration === undefined)) this.r.error("status.debt", `${p}.debt`, `a debt is an Intensity status with a duration: when it runs out, its stacks land`);
+      if (st.rescale?.if) this.unitCond(st.rescale.if, `${p}.rescale.if`);
+      if (st.spare && this.w.ref("statuses", st.spare.status, `${p}.spare.status`, "status") && !this.ix.get<S.StatusT>("statuses", st.spare.status)!.trigger) this.r.warn("status.spare", `${p}.spare`, `'${st.spare.status}' has no trigger to spare`);
       // Marked, aims, ability changes, crits, stats set, revives.
       if (st.single && shared(st)) this.r.error("status.single", `${p}.single`, `a shared Intensity total has no applier to keep one copy each; make it Refresh, Fizzle or Per source`);
       if (st.focus && st.label === "buff") this.r.warn("status.focus", `${p}.focus`, `a focus draws the holder's foes' basic attacks: usually a debuff (Marked)`);

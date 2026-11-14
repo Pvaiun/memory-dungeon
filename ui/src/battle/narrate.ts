@@ -100,6 +100,14 @@ export class Narrator {
       this.add(price, { text: `${this.n(price.unit)} pays ${disp(price.amount as number)} HP.`, tone: "bad" });
     }
     switch (ev.t) {
+      case "hp": {
+        // A trade of HP shares (Effigy of exchange, Tethered heart) or a rewind (Sandglass).
+        const n = disp(ev.amount as number);
+        if (!n) this.silent(ev);
+        else if (ev.why === "rewind") this.add(ev, { text: `${this.n(ev.unit)}'s wounds unwind: +${n} HP.`, tone: "buff" });
+        else this.add(ev, { text: `${this.n(ev.unit)} trades its life: ${n > 0 ? "+" : ""}${n} HP.`, tone: n > 0 ? "buff" : "bad" });
+        break;
+      }
       case "pay":
         // A drain (Blood oath's Bleeder) ticks on the bar only; any other price is told.
         if (ev.drain || disp(ev.amount as number) <= 0) this.silent(ev);
@@ -232,6 +240,7 @@ export class Narrator {
     if (word === "AEGIS") return this.add(ev, { text: `${t}'s Aegis blocks the blow!`, tone: "buff" }, kind);
     if (word === "IMMUNE") return this.add(ev, { text: `${t} is immune.`, tone: "sys" }, kind);
     if (word === "BLOCKED") return this.add(ev, { text: `${t} blocks it.`, tone: "hit" }, kind);
+    if (word === "OWED") return this.add(ev, { text: `${t} owes ${disp(ev.amount as number)}.`, tone: "hit" }, kind);
     // A hit's amount includes what a Shield soaked of it: n is the rest, what reached HP.
     const s = disp((ev.soaked as number) || 0), n = disp(ev.amount as number) - s;
     if (isStatus && n + s <= 0) return;
