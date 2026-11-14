@@ -10,6 +10,7 @@ import { effects, formations } from "./formations.js";
 import { gear } from "./gear.js";
 import { armorTypes, design, machinery, offhandKinds, ruleset, stats, vocabulary, weaponKinds } from "./vocabulary.js";
 import { mythicGear, pieceGear, pieceStatuses, upgradeAbilities, upgrades } from "./pieces/index.js";
+import { BUDGET_ERRORS } from "./pieces/kit.js";
 import { ROGUE_CONFIG, ROGUE_EVENTS, ROGUE_REGIONS } from "./rogue.js";
 import { APPLIED } from "./scale.js";
 
@@ -44,6 +45,12 @@ function rogueBlock(): NonNullable<ContentPack["rogue"]> {
 }
 
 export function buildPack(): unknown {
+  // Every piece on its budget (pieces/kit.ts): all the misses at once. LOOT_LAX=1 builds anyway, for a pass under way.
+  if (BUDGET_ERRORS.length) {
+    const lax = typeof process !== "undefined" && process.env?.LOOT_LAX === "1";
+    if (!lax) throw new Error(`pieces off their stat budget:\n  ${BUDGET_ERRORS.join("\n  ")}`);
+    console.warn(`  (LOOT_LAX) pieces off their stat budget:\n    ${BUDGET_ERRORS.join("\n    ")}`);
+  }
   const pack: ContentPack = {
     schemaVersion: "0.13",
     id: "core_set",

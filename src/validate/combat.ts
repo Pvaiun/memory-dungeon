@@ -229,7 +229,8 @@ export class Combat {
         if (e.by) this.rule(e.by, `${path}.by`, { where });
         if (e.after !== undefined && e.of !== "dealt") this.r.error("strike.after", `${path}.after`, `only a second landing ('of: dealt') can come later`);
         if (e.of === "over" && on?.event !== "ko") this.r.error("strike.over", `${path}.of`, `only a reaction to ko has a killing blow's left-over`);
-        if ((e.of === "hit" || e.of === "dealt") && on && !["hit_lands", "hit_taken"].includes(on.event)) this.r.error("strike.hit", `${path}.of`, `only a reaction to a hit has that hit to size a strike from`);
+        if (e.of === "hit" && on && !["hit_lands", "hit_taken", "hit_evaded", "hit_missed"].includes(on.event)) this.r.error("strike.hit", `${path}.of`, `only a reaction to a hit has that hit to size a strike from`);
+        if (e.of === "dealt" && on && !["hit_lands", "hit_taken"].includes(on.event)) this.r.error("strike.hit", `${path}.of`, `only a reaction to a hit that landed has what it dealt`);
         this.ticks(e.after, `${path}.after`);
         break;
       case "one":
@@ -328,8 +329,8 @@ export class Combat {
     if (m.of?.basic && [m.mp, m.hp, m.cast, m.wind, m.cooldown, m.damage, m.stacks, m.heal, m.target, m.seek, m.apply, m.times].some((x) => x !== undefined)) {
       this.r.error("mod.basic", path, `on the basic attack an ability change can only add a price (pay) or a wait`);
     }
-    const changes = [m.mp, m.hp, m.pay, m.cast, m.wind, m.cooldown, m.damage, m.stacks, m.heal, m.target, m.seek, m.wait, m.apply].filter((x) => x !== undefined).length;
-    if (!changes) this.r.error("mod.empty", path, `an ability change changes something: mp, hp, pay, cast, wind, cooldown, damage, stacks, heal, target, seek, wait or apply`);
+    const changes = [m.mp, m.hp, m.pay, m.cast, m.wind, m.cooldown, m.damage, m.stacks, m.heal, m.target, m.seek, m.wait, m.apply, m.spread, m.together].filter((x) => x !== undefined).length;
+    if (!changes) this.r.error("mod.empty", path, `an ability change changes something: mp, hp, pay, cast, wind, cooldown, damage, stacks, heal, target, seek, wait, apply, spread or together`);
   }
 
   /** Tags that boosts, modifiers, lockouts, riders and event filters can name. */
@@ -511,7 +512,8 @@ export class Combat {
       });
       const empty = !st.stats && !st.boosts && !st.taken && !st.absorb && !st.block && !st.lockout && !st.riders && !st.seek && !st.strike && !st.pulse && !st.trigger && !st.reactions
         && !st.focus && !st.aim && !st.mods && !st.crits && !st.echo && !st.set && !st.cover && !st.floor && !st.heals && !st.revives
-        && !st.adds && !st.healCap && !st.soak && !st.divert && !st.swap && !st.tireless && !st.order && !st.borrow;
+        && !st.adds && !st.healCap && !st.soak && !st.divert && !st.swap && !st.tireless && !st.order && !st.borrow
+        && !st.confuse && !st.fixate && !st.critsTaken && !st.owe && !st.debt && !st.rescale && !st.sharesHeals && !st.drawBy && !st.spare;
       // A marker is bookkeeping, read by name, so it may have no effects of its own.
       if (empty && st.label !== "marker") this.r.warn("status.empty", p, `status '${st.id}' has no effects`);
     });

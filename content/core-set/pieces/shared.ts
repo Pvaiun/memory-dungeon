@@ -1,5 +1,5 @@
 /**
- * The statuses several content files use, defined once: the six counters, and the two markers that order healing past
+ * The statuses several content files use, defined once: the five counters, and the two markers that order healing past
  * full. Each counter is one status with one fixed meaning, an icon with a number on its holder, kept for the fight unless a
  * card spends it. A card decides who gets a stack and when, and says in a bracket what a stack does. One event adds one
  * stack to a holder, however many of its cards count it. Marked, which the pieces also use, is the vocabulary's.
@@ -12,8 +12,8 @@ const counter = (id: string, name: string, text: string, body: Partial<StatusT>)
 
 /** The counters' own numbers: each one's cap, and what a stack is worth by itself where it's worth anything. */
 export const COUNTER = {
-  /** A hit its holder landed. Nothing by itself: the card says what a Cut is worth. */
-  cuts: { cap: 25 },
+  /** A hit its holder landed. Nothing by itself: the card says what an Edge is worth. */
+  edge: { cap: 25 },
   /** Given by a card, on its trigger: faster in everything. */
   heat: { speed: 5, cap: 10 },
   /** A hit its holder took. Nothing by itself. `thorns`: what Spite totem makes a Spite worth. */
@@ -27,7 +27,7 @@ export const COUNTER = {
 } as const;
 
 export const counters: StatusT[] = [
-  counter("cuts", "CUTS", "One per hit landed.", { cap: COUNTER.cuts.cap }),
+  counter("edge", "EDGE", "One per hit landed.", { cap: COUNTER.edge.cap }),
   counter("heat", "HEAT", `${COUNTER.heat.speed}% faster in everything per Heat.`, {
     stats: ["attack_speed", "cooldown_reduction", "cast_time_reduction"].map((stat) => ({ stat, flat: COUNTER.heat.speed })), cap: COUNTER.heat.cap,
   }),
@@ -54,6 +54,12 @@ const order: StatusT[] = [
   { id: OVERHEAL.own, name: "Keeps its overhealing", text: "Its overhealing goes to its own piece.", label: "marker", show: "sheet", stacking: "refresh" },
   { id: OVERHEAL.given, name: "Keeps the overhealing it gives", text: "Overhealing it gives goes to its own piece.", label: "marker", show: "sheet", stacking: "refresh" },
 ];
+
+/**
+ * The five afflictions: the debuffs that stack on a foe (Burn, Chill, Shock, Bleed, Sunder). A card that reaches every status
+ * road at once says "affliction", never two of their names.
+ */
+export const AFFLICTIONS = ["burn", "chill", "shock", "bleed", "sunder"] as const;
 
 /** Marked is the vocabulary's (a class applies it: the Paladin's Condemn); the pieces and formations reach it here. */
 export const marked: StatusT = vocabulary.find((s) => s.id === "marked")!;

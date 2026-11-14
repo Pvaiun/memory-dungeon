@@ -133,6 +133,8 @@ export type Mods = {
   apply: S.ApplyT[];
   /** Aimed at one foe, it lands on every foe, each hit an even share. */
   spread: boolean;
+  /** The unit's equipped abilities cast as one with this one (their slots), or null. */
+  together: number[] | null;
   /** A count of casts kept for it, and the status that shows it. */
   casts: { cap: number; show?: string } | null;
 };
@@ -161,7 +163,7 @@ export function modsOf(w: W, u: CUnit, d: ActDef): Mods | null {
   for (const s of u.statuses) {
     for (const x of def(w, s.id).mods ?? []) {
       if (!reaches(x.of, u, d) || (x.if && !passes(w, u, x.if, u))) continue;
-      m ??= { mp: 0, hp: [], pay: 0, cast: null, wind: 0, cooldown: 0, damage: 0, stacks: [], heal: 0, target: null, seek: false, wait: [], apply: [], spread: false, casts: null };
+      m ??= { mp: 0, hp: [], pay: 0, cast: null, wind: 0, cooldown: 0, damage: 0, stacks: [], heal: 0, target: null, seek: false, wait: [], apply: [], spread: false, together: null, casts: null };
       // What the change counts: a status's stacks, or this ability's own casts this fight.
       let k = 1;
       if (x.times) {
@@ -186,6 +188,7 @@ export function modsOf(w: W, u: CUnit, d: ActDef): Mods | null {
       if (x.wait) m.wait.push(...[x.wait].flat());
       if (x.apply) m.apply.push(...x.apply);
       if (x.spread) m.spread = true;
+      if (x.together) m.together = u.acts.map((_, j) => j).filter((j) => u.acts[j].id !== "basic" && u.acts[j].id !== d.id && reaches(x.of, u, actDef(w, u, j)));
     }
   }
   if (!m) return null;
@@ -272,6 +275,8 @@ export function available(w: W, u: CUnit, i: number): boolean {
   if (u.acts[i].ready > w.f.now) return false;
   const d = actDef(w, u, i);
   const m = modsOf(w, u, d);
+  // Cast as one: it waits until every ability cast with it is ready too.
+  if (m?.together?.some((j) => u.acts[j].ready > w.f.now)) return false;
   if (u.mp < mpCost(d, m)) return false;
   return allowed(w, u, d, m);
 }
@@ -337,6 +342,16 @@ export function resolve(w: W, u: CUnit, i: number, swing = false) {
   u.acts[i].ready = w.f.now + cooldownOf(w, u, d);
   if (!swing) (u.busy = w.f.now + d.recovery), (u.rest = d.kind);
   perform(w, u, d, targets, m, paid, 0);
+  // The abilities cast as one with it: each at once, free, its targets its own, and on its cooldown.
+  for (const j of m?.together ?? []) {
+    if (w.f.result || u.ko) return;
+    const dj = actDef(w, u, j), mj = modsOf(w, u, dj);
+    const tj = pick(w, u, dj, mj);
+    u.acts[j].ready = w.f.now + cooldownOf(w, u, dj);
+    if (!tj.length) continue;
+    w.log?.({ t: "act", vis: "player", at: w.f.now, by: u.id, act: dj.id, name: dj.name, kind: dj.kind, targets: tj.map((x) => x.id), repeat: true });
+    perform(w, u, dj, tj, mj, { mp: 0, hp: 0 }, 0);
+  }
 }
 
 /** An action's targets: a change's rule in place of its own, which takes over again when the change's finds nobody. */

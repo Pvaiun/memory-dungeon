@@ -107,6 +107,7 @@ export const AbilityMod = z.strictObject({
   wait: z.union([Condition, z.array(Condition).min(1)]).optional().describe("It also waits for these, as its own `if` does."),
   apply: z.array(HitApply).min(1).optional().describe("Statuses its hits apply as well, after its own."),
   spread: z.literal(true).optional().describe("Aimed at one foe, it lands on every foe instead, each hit dealing an even share of its damage (its share divided by the foes it lands on)."),
+  together: z.literal(true).optional().describe("The abilities this change reaches are cast as one: each waits until every one of them the holder has equipped is ready, and when one is cast the others are cast with it, free, and go on cooldown."),
 });
 export type AbilityModT = z.infer<typeof AbilityMod>;
 

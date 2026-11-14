@@ -172,3 +172,22 @@ test("tests on what a unit wears, its kin, its own stats against each other, the
   const c = arena({ party: [{ name: "P", weapon: club(10, 5), statuses: ["most"] }], enemies: [{ ...BAG, name: "B1", statuses: ["sore"] }], statuses: [most, sore] }).to(6);
   assert.deepEqual(amounts(c, "B1"), [20]);
 });
+
+test("a dodged hit's raw amount sizes a strike: the hit lands on another foe", () => {
+  const mirror = buff("mirror", { reactions: [{ on: { event: "hit_evaded" }, do: [{ op: "strike", of: "hit", to: { side: "foes", exclude: "other", pick: "random" } }] }] });
+  const a = arena({ party: [{ name: "P", stats: { max_hp: 1e6, evasion: 100 }, statuses: ["mirror"] }], enemies: [{ name: "F", weapon: club(70, 5) }, { ...BAG, name: "G" }], statuses: [mirror] }).to(6);
+  assert.deepEqual(amounts(a, "G"), [70]);
+});
+
+test("abilities cast as one wait for each other, and the others come free with the first", () => {
+  const chord = buff("chord", { mods: [{ of: { ability: ["s1", "s2"] }, together: true }] });
+  const s1 = device("s1", { target: "self", cooldown: 10, mp: 5, do: [{ op: "heal", amount: 1 }] });
+  const s2 = device("s2", { target: "self", cooldown: 30, mp: 5, do: [{ op: "heal", amount: 1 }] });
+  const a = arena({ party: [{ name: "P", stats: { max_mp: 100 }, abilities: ["s1", "s2"], statuses: ["chord"] }], enemies: [BAG], statuses: [chord], abilities: [s1, s2] });
+  a.unit("P").acts.find((x) => x.id === "s1")!.ready = 0;
+  a.unit("P").acts.find((x) => x.id === "s2")!.ready = at(12);
+  a.to(40);
+  assert.deepEqual(a.acts("P", "s1"), [12, 42].filter((t) => t <= 40));
+  assert.deepEqual(a.acts("P", "s2"), [12]);
+  assert.equal(a.unit("P").mp, 95, "the one cast with it is free");
+});

@@ -148,15 +148,15 @@ export const SWING_SCALING = { base_heavy: 0.3, even: 0.5, attack_heavy: 0.7 } a
 /** A piece's step along the trade: a heavy piece swings this much harder for a stat step fewer, a light piece this much lighter for one more. */
 export const SWING_TRADE = 1.2;
 /**
- * Stat steps a piece carries, by rarity: every piece has stats, and each rarity carries more than the last (the director's rule).
- * A mythic carries at least a legendary's (the director's word), beside the effect that rewrites its class.
+ * Stat steps a piece carries, by rarity: every piece has stats, and a rare carries more than an uncommon, an uncommon more
+ * than a common. Legendaries and mythics carry a rare's: above rare, rarity is strangeness, not power (the director's word).
  * A weapon kind's budget word moves the ladder a step down (lean, never below one) or up (rich); every other slot takes the standard.
- * A piece's step along the swing trade moves it once more (kit.ts).
+ * A piece's step along the swing trade moves it once more, and a step down on one stat buys one more elsewhere (kit.ts).
  */
 export const KIND_BUDGET = {
-  lean: { common: 1, uncommon: 1, rare: 2, legendary: 3, mythic: 3 },
-  standard: { common: 1, uncommon: 2, rare: 3, legendary: 4, mythic: 4 },
-  rich: { common: 2, uncommon: 3, rare: 4, legendary: 5, mythic: 5 },
+  lean: { common: 1, uncommon: 1, rare: 2, legendary: 2, mythic: 2 },
+  standard: { common: 1, uncommon: 2, rare: 3, legendary: 3, mythic: 3 },
+  rich: { common: 2, uncommon: 3, rare: 4, legendary: 4, mythic: 4 },
 } as const;
 export type SwingWordK = keyof typeof SWING_POWER;
 export type ScalingWord = keyof typeof SWING_SCALING;
@@ -420,8 +420,16 @@ export const STATUS = {
   /** Doom's blow is this share of the doomed unit's max HP: from full nobody dies to it; hurt, anyone does. */
   doom: { countdown: 10, share: 0.6 },
   bulwark: { stacks: 6, broken: 5, takenPct: 100 },
+  /** Fixated: its holder's picks go to the unit that fixated it for this long. */
+  fixated: { duration: 16 },
   ice_crust: { perStack: pts(1), duration: 6, cap: 6 },
 } as const;
+
+/**
+ * Owed: damage from hits on a unit that owes it waits, adding up, and lands all at once this many ticks after the first
+ * (`debt`): long enough for a heal or a Shield to arrive first, short enough to be one beat of a fight.
+ */
+export const OWED = 10;
 
 /**
  * The campfire in the middle of each run: REST gives back this % of max HP to everyone standing, FOCUS this % of max MP,
