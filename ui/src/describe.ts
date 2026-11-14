@@ -423,6 +423,37 @@ export function statusNumbers(d: StatusT): SizePart[] {
   return out;
 }
 
+/**
+ * How a card names a status, as a pattern: its word in any form ("Bewilders", "a Chilled foe", "burning"). A status whose
+ * name is also an everyday word (Slow, Guard, Shield, Might, Marked, Hidden, Rot, Doom, Haste) counts only capitalized, as
+ * the cards write a status: "a slow weapon" isn't Slow.
+ */
+const STATUS_WORD: Record<string, RegExp> = {
+  bewildered: /\bbewilder(?:s|ed|ing)?\b/i, fixated: /\bfixate[sd]?\b/i, owed: /\bowe[sd]?\b/i, brittle: /\bbrittle\b/i,
+  stun: /\bstun(?:s|ned|ning)?\b/i, marked: /\bMark(?:s|ed|ing)?\b/, hidden: /\bHid(?:den|es?)\b/, bulwark_broken: /\bBroken\b/,
+};
+const PLAIN_WORDS = new Set(["slow", "guard", "shield", "might", "rot", "doom", "haste"]);
+const wordFor = (d: StatusT): RegExp => {
+  if (STATUS_WORD[d.id]) return STATUS_WORD[d.id];
+  const stem = d.name.toLowerCase().replace(/e$/, "");
+  const forms = `${stem.slice(1)}(?:e|es|s|ed|d|ing)?\\b`;
+  return PLAIN_WORDS.has(d.id) ? new RegExp(`\\b${stem[0].toUpperCase()}${forms}`) : new RegExp(`\\b${stem[0]}${forms}`, "i");
+};
+/**
+ * The statuses a card's words name, in the order they first appear, for the glossary under it: each status the player
+ * sees as an icon and has words for. A card says what happens and leaves what a status is to its own line ("Bewilders
+ * the target" → BEWILDERED: its next basic attack strikes one of its own side).
+ */
+export function namedStatuses(text: string): StatusT[] {
+  const found: { d: StatusT; at: number }[] = [];
+  for (const d of c.statuses.values()) {
+    if (d.show !== "icon" || d.label === "marker" || !d.text) continue;
+    const m = wordFor(d).exec(text);
+    if (m) found.push({ d, at: m.index });
+  }
+  return found.sort((a, b) => a.at - b.at).map((f) => f.d);
+}
+
 /** A damage tag in words: the physical tag is every hit (Ward's and Incorporeal's cut), no tag all damage, statuses' own included. */
 const tagWord = (tag: string | undefined) => (tag === "physical" ? "hit" : tag ?? "all");
 const dropText = (drop: NonNullable<StatusT["drop"]>) => (drop === "all" ? "ends" : "fraction" in drop ? `loses ${Math.round(drop.fraction * 100)}% of its stacks` : `loses ${drop.count} stack${drop.count === 1 ? "" : "s"}`);

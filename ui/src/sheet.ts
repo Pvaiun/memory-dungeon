@@ -14,7 +14,7 @@ import type { AbilityT, EnemyT, FormationT, GearT, WeaponT } from "../../src/sch
 import { combat, type Member } from "../../src/engine/combat/rules.js";
 import { drawOf, resolveWeapon, weaponOf } from "../../src/engine/combat/fight.js";
 import { armorName, c, cls, disp, DISPLAY_DIV, immuneTo, kindOf, offhandName, SHEET_STATS, shortName, SPECIAL_STATS, showStat, statCode, status, tagline } from "./content.js";
-import { abilityInfo, abilityTag, evalNum, heldParts, scalesOf, sizeParts, statusText, TYPE_TONE, TYPE_WORD, type Scale, type SizePart, type Stats } from "./describe.js";
+import { abilityInfo, abilityTag, evalNum, heldParts, namedStatuses, scalesOf, sizeParts, statusNumbers, statusText, TYPE_TONE, TYPE_WORD, type Scale, type SizePart, type Stats } from "./describe.js";
 import { basicIconKind, weaponLook } from "./art.js";
 import { canEquip, handsOf } from "../../src/validate.js";
 import { h, type Child } from "./dom.js";
@@ -308,9 +308,27 @@ export function gearRow(g: GearT | null, slot: string, stats: Stats | null, onCl
       who ? wearersLine(g, who) : null,
       effect ? h("div", { class: `text small wrap ${tone === "gold" || tone === "mythic" ? tone : "ink"} effect` }, effect) : null,
       size,
+      ...(effect ? glossary(effect) : []),
     ),
     onClick && arrow ? h("span", { class: "dim go" }, "▶") : null,
   );
+}
+
+/**
+ * What each status a card names is, under the card: its icon, its name in its colour, its words and a stack's numbers,
+ * as a fight's sheet shows a status. The card says what happens; this says what the word means.
+ */
+export function glossary(text: string): HTMLElement[] {
+  return namedStatuses(text).map((d) => {
+    const nums = statusNumbers(d);
+    return h("div", { class: "gloss" },
+      statusEl(d.id),
+      h("div", { class: "grow" },
+        h("div", { class: "text small wrap" }, h("span", { class: d.label === "buff" ? "buff" : "debuff" }, d.name.toUpperCase()), h("span", { class: "dim" }, ` ${d.text}`)),
+        nums.length ? sizeEl(nums, " · ") : null,
+      ),
+    );
+  });
 }
 
 /**

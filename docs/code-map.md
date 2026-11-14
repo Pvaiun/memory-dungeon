@@ -187,8 +187,8 @@ ui/
     mode.ts                  free play or the rogue mode, saved
     filter.ts                Settings → FILTER: the colour filters over the whole screen (green, grey, sepia, invert and the rest)
     screens.ts               the menus and free play's screens; go() switches screens
-    sheet.ts                 unit sheets: a class or an enemy, its stats, abilities and gear; a party member's seat in a fight, unfolding to the whole formation
-    describe.ts              plain-language descriptions of abilities, effects and statuses; the sizes cards show, an ability's and the stacks a piece or a passive lays; a status's own numbers, a stack's worth
+    sheet.ts                 unit sheets: a class or an enemy, its stats, abilities and gear; a piece's card, with a line under it for each status its words name; a party member's seat in a fight, unfolding to the whole formation
+    describe.ts              plain-language descriptions of abilities, effects and statuses; the sizes cards show, an ability's and the stacks a piece or a passive lays; a status's own numbers, a stack's worth; the statuses a card's words name
     bestiary.ts              the bestiary's record: enemies met and looked at
     dom.ts                   DOM helpers: h(), windows, rows, buttons, the back gesture
     art.ts                   art tables: which sprite, icon or look shows what
