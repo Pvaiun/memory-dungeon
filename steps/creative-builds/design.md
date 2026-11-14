@@ -2,13 +2,20 @@
 
 The design for the pass in `kickoff.md` (the intent, and the rules this page follows). Nothing here is built: this page is for the director's approval, and the build fills the numbers and card text from it. Names are working names; a name of today's means today's piece, changed as its line says.
 
+## Ruled at the gate
+
+The director, Nov 14, on this design (they're not reading the gear lines, to keep the surprise for their playtest):
+- **The status roads stay at about a third:** test this version.
+- **Keyword formations carry no built-in price.** What kept them from being the only choice in play is fixed by the other formations being "powerful and varied and interesting", not by debuffing the nine; a cost stays only where it's interesting and the formation's identity (*Formations*).
+- **Mythics are spiky:** one a class, doubling down on something the class does well, at the cost of something else where that's the identity, or at no cost. Not "monkey wrenches" that turn a class to a job its build can't support; the kiss-and-curse turns belong to the versions, which the player chooses (*Mythics*).
+
 ## What the director decides
 
 1. **The kinds table** (*Kinds*, below): each class's third weapon kind, third offhand kind and second armor, picked by fantasy. Approve it, or swap any class's picks.
 2. **Four new statuses, two counters retired** (*New words*). Each new one needs an icon in the art pass.
-3. **The mythics** (*Mythics*): sixteen new ones, every one turning its class to something it doesn't do today. They're the boldest lines here; read them all.
+3. **The mythics** (*Mythics*): sixteen new ones, one a class, each taking one thing on its class's trunk to an extreme, with a cost only where the cost is the identity. This replaces the kickoff's "every mythic is exotic".
 4. **Where I push back on the kickoff,** each a line to rule on:
-   - **The status roads' keyword share.** A third is reachable for Bonfire, Cold Snap and the Storm only because their kits make most of their status. Their gear moves onto tempo, spread, aim and readers, so a fire party with no Pyromancer, Paladin or Monk finds almost no Burn in its loot. I think that's right (it's what "builds may soften" means), but it narrows who can play those roads. Rule: keep a third, or let the four status roads sit near two fifths.
+   - **The status roads' keyword share** (ruled: keep a third). A third is reachable for Bonfire, Cold Snap and the Storm only because their kits make most of their status. Their gear moves onto tempo, spread, aim and readers, so a fire party with no Pyromancer, Paladin or Monk finds almost no Burn in its loot. I think that's right (it's what "builds may soften" means), but it narrows who can play those roads. Rule: keep a third, or let the four status roads sit near two fifths.
    - **"When a foe falls" is a trigger the fight supplies,** so by the kickoff's rule it can't be a conditional piece's condition. I've kept kills as triggers on the Hunt's pieces (they're its thread, and every fight has kills), but none of them counts as conditional. Rule: agree, or have me move the Hunt's kill pieces to party set-ups too.
    - **Commons get their own stats** like every piece, but a common has one or two steps, so "unique" means its own pick of stats, not a story. I've written commons by a rule (*Commons*), not one by one.
    - **A step down.** For stat lines to be things of their own, a piece may carry one stat a step down for one more step up. It's the swing trade's rule applied to stats. It's new, so it's yours to accept.
@@ -44,9 +51,9 @@ Measured on today's pack across the 450 lines of `out/loot-list.md`, with the ki
 | --- | --- | --- | --- |
 | Landslide | Shield | 35% | 30% |
 | Thousand Cuts | Bleed | 33% | 30% |
-| Bonfire | Burn | 80% | 35% |
-| Cold Snap | Chill, shatter | 74% | 35% |
-| The Storm | Shock | 68% | 35% |
+| Bonfire | Burn | 80% | about 30% |
+| Cold Snap | Chill, shatter | 74% | about 38% |
+| The Storm | Shock | 68% | about 21% |
 | The Hunt | Mark, a kill | 66% | 35% |
 | The Toll | Thorns, "when hit" | 53% | 33% |
 | Barrage | MP, a free cast | 74% | 33% |
@@ -452,30 +459,30 @@ Commons in every kind are written by the commons rule and not listed. Each kind'
 
 ## Mythics
 
-Every one is exotic: it turns its class to something it doesn't do today. Each carries a rare's steps beside its effect, its stats chosen for the mythic.
+**One a class, and spiky.** A mythic is the least controllable loot in the game: it comes from a boss boon, for one class, and a run can't aim for it. So when it comes it should be good for the unit that gets it. Each one takes one thing on its class's trunk, the part every build of the class does, to an extreme that changes how the fight plays: never only a bigger number, and never a job the class doesn't do. Some pay a cost, and only where the cost is the identity (the wall that can't be mended, the glass dagger that is perfect until it's touched). The kiss-and-curse turns belong to the versions, which a player chooses and which are the same every time. Each mythic carries a rare's steps beside its effect, its stats chosen for it.
 
-| Class | Mythic (slot) | What it does | Turns it to |
+| Class | Mythic (slot) | What it does | The spike, and its cost |
 | --- | --- | --- | --- |
-| Knight | **Lance of the joust** (weapon, a spear's swing) | At fight start and on each kill: its next basic attack comes at once, ignores Taunt and deals triple. Stand fast no longer Taunts. | a charging hunter, not a wall |
-| Cleric | **Inverted halo** (amulet) | Its heals land as damage on the foe with the lowest HP%, for the heal's size; Last rites holds all fight. | a killer that heals nobody |
-| Ranger | **Lure-caller's horn** (offhand, horn) | Its basic attacks Fixate their target on it. Evasion doubled. | a dodging anchor that pulls foes one by one |
-| Bramble knight | **Briar crown** (amulet) | Its Thorns strike every foe an ally hits, once a hit. It draws far less. | the party's offence, from the back |
-| Hoplite | **The runner's linen** (armor, leather) | Its basic attacks come three times as often, for a third. Spear thrust strikes three times. | a blur of small blows, Phalanx undone |
-| Paladin | **Writ of the crusade** (offhand, relic) | Condemn readies every ally's first-slotted ability instead of calling their swings. | the conductor |
-| Valkyrie | **Wings of the chooser** (armor) | A blow that would knock out an ally lands on her instead. Her Shield from hits is doubled. | the guardian who takes the death |
-| Bard | **The discord** (offhand, bell) | War ballad Weakens every foe, Allegro Slows them, and Encore makes the foe with the most Attack lose its next ability's wind-up. | the party's tempo turned on the foes |
-| Hexer | **The witch's poppet** (offhand, totem) | Half of every hit it takes goes to the foe with the most different afflictions instead. | an anchor, by curse |
-| Monk | **Bowl of the mendicant** (offhand, relic) | Its hits heal the ally with the lowest HP% for 25% of the damage; Flow Hastes that ally instead of itself. | a healer that never stops hitting |
-| Assassin | **Mask of many faces** (armor) | Vanish hides both other allies instead, and while they're hidden it Taunts. | the decoy, two in the dark turned round |
-| Vampire | **The red communion** (offhand, relic) | Frenzy's Might goes to both other allies; their hits heal it for 10% of the damage. | a buffer who drinks through the others |
-| Pyromancer | **Cautery** (amulet) | Each ability it casts heals the ally with the lowest HP% for the damage it dealt. Stoke adds no Burn. | a healer of the fire |
-| Frostweaver | **The glacier's teeth** (weapon, a staff's swing) | A foe whose Chill shatters while it's below a third of its HP falls. | an executioner |
-| Stormcaller | **The Leyden jar** (offhand, orb) | Its basic attacks don't strike: each stores a charge (up to 10). Its next ability spends them all, +25% for each. | a capacitor: one great spell, not a storm of swings |
-| Geomancer | **Mountain's crown** (amulet) | While its Shield holds, every ally's crit chance is doubled instead of its own. | the party's crit, not its own |
+| Knight | **Banner of the last keep** (armor) | Max HP doubled. Healing on it is halved. | its body, which Vanguard and Shield bash already read; it lives on its own stone |
+| Cleric | **The saint's last breath** (amulet) | Last rites holds all fight. It can't be healed above 30% HP. | double-pace healing, all fight, from the brink |
+| Ranger | **The long watch** (armor) | Its basic attacks stay on one foe until it falls, each landing 10% harder than the last, and still ignore Taunt. | the marksman's focus; no cost |
+| Bramble knight | **Heart of the briar** (armor) | When hit, its Thorns strike every foe, not only the attacker. | the thorns, against the whole field; no cost |
+| Hoplite | **The last shove** (offhand, round shield) | Othismos comes round twice as often, with no wind-up. Its basic attacks come half as often again. | the shove becomes its rhythm, and the swing waits |
+| Paladin | **Scales of the judge** (amulet) | Judgement: triple damage to a foe with a buff or a debuff, half to a foe with neither. | judgement, absolute; the innocent are hard to strike |
+| Valkyrie | **Valhalla's spear** (weapon, a spear's swing) | Each Gale spear readies Skyfall. | the storm spear's beat, every time; no cost |
+| Bard | **The grand chord** (offhand, bell) | War ballad, Allegro and Encore are cast together, as one, whenever the slowest of them is ready. | the party's tempo in one huge window, and long waits between |
+| Hexer | **The witch's cauldron** (offhand, tome) | Malison is ready whenever a foe gains an affliction it didn't hold. | breadth as the curse's clock; its mana is the brake |
+| Monk | **Thousand-palm wraps** (weapon, fist) | Every basic attack strikes twice. | the blur, certain; no cost |
+| Assassin | **The unseen blade** (armor) | Until it's first hit in a fight, every hit it lands crits. | the glass dagger: perfect until touched |
+| Vampire | **The crimson crown** (amulet) | Healing past full raises its max HP by as much, for the fight. | the drinker swells; no cost |
+| Pyromancer | **The pyre-heart** (amulet) | Pyre adds as much Burn as its target holds. | the long cast that doubles the fire; no cost |
+| Frostweaver | **Heart of the deep winter** (armor) | Each shatter readies Frost lance, free. | shatters that feed the next; no cost |
+| Stormcaller | **Eye of the gale** (weapon, fist) | Thunderstorm lasts until the fight ends. | the party's storm that doesn't lift; no cost |
+| Geomancer | **Bedrock heart** (amulet) | While its Shield holds, every hit it lands crits. | behind stone, certain; no cost |
 
-- **None repeats a piece or a version,** and none is an engine that copies one in the loot. The Valkyrie's Wings and Oathbound shield both take blows for allies: Wings takes only the killing blow.
-- **Each is strong where it fits and wrong in most parties,** which is what a mythic should be at a rare's stats.
-- **Retired with the old set:** the vanishing blade and the stonecutter (*Already in the game*, `builds.md`) are gone; the Geomancer's crown keeps a crit engine of another shape.
+- **None repeats a piece or a version.** The nearest are Frozen tome (each shatter halves every ally's first-slotted wait, where the Frostweaver's readies its own lance) and Flurry wraps (extra strikes that roll again, where the Monk's second strike is certain).
+- **Two are loops,** each with its brake: the cauldron (mana, and a foe already holding every affliction) and the deep winter (Chill to rebuild between shatters).
+- **Retired with the old set:** the vanishing blade and the stonecutter (*Already in the game*, `builds.md`) go with their mythics; Bedrock heart is the stonecutter's successor, a crit engine of its own.
 
 ## Upgrades and passives
 
@@ -511,21 +518,11 @@ Every one is exotic: it turns its class to something it doesn't do today. Each c
 
 ## Formations
 
-A formation is a shape and a rhythm: who is struck, who acts often, who hits hard, who waits, and what the party trades. After this pass, 9 of 35 are themed to one build's keyword, one a road, and each of them asks a real price; the other 26 are shapes any party can read and has to work out.
+A formation is a shape and a rhythm: who is struck, who acts often, who hits hard, who waits, and what the party trades. 9 of 35 are themed to one build's keyword, one a road; the other 26 are shapes any party can read and has to work out.
 
-**The nine keyword formations, and what each asks:**
+**What keeps a keyword formation from being the only choice** is the shapes around it, not a price on it. In play a keyword formation was the only viable pick because keywords were everywhere and the other formations were weaker. So the nine keep today's seats with no debuff added, and every shape below is as strong as they are in its own way: each has at least one seat or rule that changes a fight as much as a keyword formation's best seat. A shape carries a cost only where the cost is its identity (the Glass that takes double, the Banner that never acts).
 
-| Formation | Road | What it asks |
-| --- | --- | --- |
-| Hearth (common) | Bonfire | the Torch's own hits deal 30% less |
-| Squall line (common) | the Storm | the Squalls' Defense is down |
-| Wellspring (common) | Barrage | the Conductor's own abilities cost double |
-| Bloodied ground (rare) | Thousand Cuts | the Blades' Defense is down |
-| Icefall (rare) | Cold Snap | the Breaker's basic attacks come half as often |
-| The pack (rare) | the Hunt | the Packmates' hits on unmarked foes deal 25% less |
-| Hammer and anvil (rare) | the Toll and Landslide | the Anvil's Attack is down two steps |
-| The mountain (legendary) | Landslide | the Foothills' Attack is down |
-| The covenant (legendary) | Blood Pact | as today: every cast costs HP |
+**The nine keyword formations,** kept as they are today: Hearth (Bonfire), Squall line (the Storm), Wellspring (Barrage), Bloodied ground (Thousand Cuts), Icefall (Cold Snap), The pack (the Hunt), Hammer and anvil (the Toll and Landslide), The mountain (Landslide), The covenant (Blood Pact; its price in HP is its identity).
 
 **The rest, as shapes.** Kept formations keep their seats unless a line says; new ones are marked.
 
@@ -533,15 +530,15 @@ A formation is a shape and a rhythm: who is struck, who acts often, who hits har
 | --- | --- | --- |
 | Neutral | common | three empty seats |
 | Heavy line | common | Hammer slow and heavy, Anvil draws, Loader: each of its casts gives the Hammer Might (no start-of-fight Might) |
-| Spur | common | an Opener that crits more, two Blades 20% faster with Defense down |
-| **Crossfire** (new; was Hoarfrost line) | common | two Archers whose basic attacks go to the foe the other last hit; a Spotter that draws far more |
-| **Wedge** (new; was Hunting party) | common | the Point draws far more, its Aggro raised by the others'; two Flanks with Attack up and Aggro down |
-| **The shepherd** (new; was Thorn hedge) | common | the Shepherd takes the hits meant for the ally with the lowest HP%, Defense up and Attack down; two of the Flock, Aggro down |
-| Shared cup | common | the party's healing past full goes to the lowest; the Donor's heals +33%; no Lifesteal seats |
+| Spur | common | kept: an Opener that crits far more, two Blades 20% faster |
+| **Crossfire** (new; was Hoarfrost line) | common | two Archers whose basic attacks go to the foe the other last hit, each dealing +20% to it; a Spotter that draws far more |
+| **Wedge** (new; was Hunting party) | common | the Point draws far more; two Flanks whose basic attacks on the foe the Point last hit deal +30% |
+| **The shepherd** (new; was Thorn hedge) | common | the Shepherd takes the hits meant for the ally with the lowest HP%, Defense up; two of the Flock, Attack up |
+| Shared cup | common | the party's healing past full goes to the lowest; the Donor's heals +33%; heals on the two Cups are 20% bigger |
 | Shieldwall | common | kept |
-| The standard | common | kept, and the Lead's Attack is down |
+| The standard | common | kept |
 | First light | common | kept: the one start-of-fight party rule |
-| Skirmish line | common | Evasion up and Defense down for all three; a dodge brings that ally's next basic attack at once |
+| Skirmish line | common | Evasion up and Defense down for all three (the light body is the shape); a dodge brings that ally's next basic attack at once |
 | **Relay** (new; was Pyre line) | rare | a Runner 30% faster; every third landed swing of the Runner brings the Second's next at once; an Anchor that draws far more |
 | **Seesaw** (new; was Storm front) | rare | two ends: when one uses an ability, the other's nearest-to-ready is ready; a Pivot that draws more |
 | **Glass and stone** (new; was Toll gate) | rare | the Glass deals and takes double and draws less; two Stones draw far more |
@@ -556,10 +553,10 @@ A formation is a shape and a rhythm: who is struck, who acts often, who hits har
 | **The hundred hands** (new; was Eye of the storm) | legendary | every ally's basic attacks come twice as often, for 45% of the damage |
 | **Vanguard and rear** (new; was Open season) | legendary | two Vanguards draw far more and act 25% faster; the Rear's abilities come 50% sooner, and it can't be picked while both Vanguards stand |
 | **Bannerman** (new; was The palisade) | legendary | the Banner never acts; both other allies gain its Attack and Defense |
-| The cathedral | legendary | the Soloist's first-slotted ability has no cooldown and costs double; the two Voices draw more and never use abilities (no MP gift) |
+| The cathedral | legendary | the Soloist's first-slotted ability has no cooldown; the two Voices draw more (no MP gift: the Soloist's own mana is the brake) |
 | Twins | legendary | kept |
 
-- **No formation makes a build strong the moment it's seated:** the nine ask their price, and the shapes do nothing until the party is arranged around them (who is the Runner, who the Glass, who the Banner).
+- **Checked against today's formations:** the weakest of today's were the plain shapes (Shieldwall, Neutral's neighbours) beside keyword formations that made a build at once. Here the shapes that replace six keyword formations each change who acts, who is struck or when (Relay, Seesaw, Glass and stone, Tidal, The still hour, Bannerman), and the three thin commons (Crossfire, Wedge, Shared cup) get a seat with a number on it. Shieldwall and First light stay plain: a common has to be something a run can start in. Whether the shapes hold their own beside the nine is the playtest's to judge.
 - **Engines touched:** Pyre line was a fuse keystone (Wick stays), Storm front a resonance one (Resonant robes stays), Toll gate a frozen gate one (Hoarfrost plate stays), Open season the judge's drum's (Pack leader's coat and Hunting horn stay), The long winter the string's, Eye of the storm the held charge's, The forge Bonfire's far end.
 
 ## The engines, after
@@ -571,7 +568,7 @@ Engines aren't protected (kickoff). What this design does to each one with a par
 - **New, found in this design** (each two parts, each told in one sentence; written into `builds.md`'s set):
   - *The shield party:* Phalanx pike, Pavise of the line and the new kinds' shields: three shields in a party, and everyone's Defense and hits climb together.
   - *The borrowed hand:* Borrowed hand on a Bard or a Hexer beside a Pyromancer: the support's Might, Haste-free songs and curses read the mage's Attack.
-  - *The poppet and the plague:* the Hexer's poppet with a party laying every affliction: the foe holding most takes half of every blow on the Hexer.
+  - *The open book:* Even-keel plate on a Paladin or a Vampire in Plate beside a Guard-giver: abilities that read Defense, and Defense that keeps rising.
   - *Owed and the healer:* Owing mail beside any healer: the hits land late, and the heal arrives first.
   - *The fixation line:* the Ranger's lure, or any Fixate, with a Toll anchor: two anchors, each holding its own foes.
 
@@ -581,7 +578,7 @@ Each added plainly; `ENGINE_VERSION` and the schema bump once, with the statuses
 
 - **Four statuses:** Bewildered (a basic attack whose pick goes to the holder's own side), Brittle (the next hit taken crits), Fixated (picks go to the source, inside Taunt), Owed (hits' damage held and landed later, `OWED`).
 - **Stat rules:** an ability's scaling stat swapped (Even-keel plate's Defense; Borrowed hand's ally's Attack); a stat that reads another stat (Sigil blade); two stats trading places (Inverted vestments, like Turncoat charm); a stat taken from a foe for the fight (Miner's pick); a stat or a swing that reads a seat-free condition on the party (an ally's kind, an empty offhand, the fastest swing, the most Crit chance, more Defense than Attack).
-- **Targeting and timing:** a basic attack that waits for a foe's action (Answering thunder); a foe's next basic attack pushed back (Still hand); a party unit that never basic attacks (Idol of stillness, The still hour); damage split across every foe (Diffusion orb); an HP% trade (Effigy of exchange, Tethered heart); an HP rewind (Sandglass); a dodged hit landing on another foe (Mirror charm); Area redirected (Lodestone shield); picks by max HP (Lodestone plate); a killing blow taken for an ally (Wings of the chooser).
+- **Targeting and timing:** a basic attack that waits for a foe's action (Answering thunder); a foe's next basic attack pushed back (Still hand); a party unit that never basic attacks (Idol of stillness, The still hour); damage split across every foe (Diffusion orb); an HP% trade (Effigy of exchange, Tethered heart); an HP rewind (Sandglass); a dodged hit landing on another foe (Mirror charm); Area redirected (Lodestone shield); picks by max HP (Lodestone plate); for the mythics, healing past full as max HP, three abilities cast as one, an ability readied by a new affliction, and a basic attack that keeps its target until it falls.
 - **Counts and tools:** one counting tool (`tools/loot-count.ts`, added to the code map) that prints the shapes, exotics, conditional pieces, keyword shares and reorienting versions from the Serves lines and cards, so the report's before and after are one measure; a check for alike sentences between pieces one class can wear together.
 - **Tags:** a Serves line gains `exotic` and `conditional` marks, and threads by name (`SERVED`), so the counting tool reads them rather than guessing from words.
 - **`gear-slots.ts`** takes the new kinds table and drops the retired rules' checks.
@@ -593,9 +590,9 @@ Rewritten as the kickoff lists (`docs/rules.md`; `philosophy.md`, `builds.md`, `
 - **The ladder:** legendaries and mythics at a rare's steps; rarity above rare is strangeness; the "best gear in the game" line for mythics goes.
 - **Stats:** every piece's stats its own; commons by rule; a step down.
 - **The pieces:** exotics, conditional pieces and deeper threads as the loot's three shapes; keyword share as a check; the uncommon's "first rung" line softened to "a simple effect"; the signposting requirement retired (the philosophy's "Signposting and power at each phase", each build's first-rung *sign*, "a first step that's seen the first time it fires" kept only as *an effect is big enough to be seen*).
-- **Mythics:** each turns its class to what it doesn't do; the table in `loot.md`.
+- **Mythics:** one a class, each taking its trunk to an extreme, a cost only where it's the identity; the director's reading of the kickoff's "doing what it was doing better is not interesting" (an extreme that changes how the fight plays, never only a bigger number) goes into `rules.md`; the table in `loot.md`.
 - **Upgrades:** roughly two reorienting versions a class; no passive held to one lane.
-- **Formations:** a shape and a rhythm; keyword formations a minority, each with a price; none strong the moment it's seated.
+- **Formations:** a shape and a rhythm; keyword formations a minority, kept plain, and the shapes as strong as they are, so a keyword formation isn't the only pick.
 - **New words:** the four statuses in the vocabulary; Cascade retired; Edge.
 
 ## The build, in the kickoff's order
@@ -612,7 +609,7 @@ If the fill uses workers, each takes a share of kinds with this page, the live l
 ## Least sure
 
 - **The status roads with a third of their pieces on their status.** The fire, the frost and the charge come almost all from kits now. A Bonfire party without a Pyromancer may be a party that never found its fire.
-- **Five mythics turn a damage class to healing or support** (Cleric, Monk, Pyromancer, Vampire, Paladin). That's the most common "something it wasn't doing", so it may read as one idea five times.
+- **Spiky mythics with no cost** (nine of the sixteen) may read as "the same, more". Each changes a rhythm rather than a size, but the playtest is where that shows or doesn't.
 - **The chaos exotics** (Midnight blade, Noonday mace, Everflame lantern) help the foes too. They may be taken once and never again, which is fine for an exotic and bad if all three read that way.
 - **Effigy of exchange and Tethered heart** move HP% around; against a boss at full HP the effigy may be the strongest piece in the game. Overpowered is allowed until the balance pass.
 - **"+N% while…" is the conditional pieces' easiest form.** The spine varies the payoff where it could (a scaling stat, a draw, a speed, a swing); the fill should keep doing so, and the counting tool counts the form like any other shape.
@@ -627,6 +624,6 @@ Read these first: the best and the least sure together.
 - **Exotics:** Echoing wand, Owing mail, Effigy of exchange, Diffusion orb, Idol of stillness, Mirror charm, Midnight blade (least sure).
 - **Conditional:** Twin dirk, Duellist's sword, Kinship charm, Conclave robes, Even-keel plate, Pavise of the line with Phalanx pike.
 - **Deeper threads:** Answering thunder (the Storm without Shock), Seeker's lantern (Bonfire without Burn), Miner's pick (Landslide without a Shield).
-- **Mythics:** the Stormcaller's Leyden jar, the Hexer's poppet, the Frostweaver's teeth, the Cleric's inverted halo (least sure: one of five turned to healing or the reverse).
+- **Mythics:** the Bard's grand chord, the Hexer's cauldron, the Assassin's unseen blade, the Knight's banner (least sure: the plainest of the sixteen).
 - **Versions:** Thornshield, Groundswell, Scything briar, Bare rock.
 - **Formations:** Glass and stone, Bannerman, The still hour, Vanguard and rear.
