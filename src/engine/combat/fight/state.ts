@@ -316,16 +316,18 @@ function finals(c: Content, base: Record<string, number>, flat: Record<string, n
   return out;
 }
 
-/** After any change to a unit's statuses: new stats, HP and MP follow their max, running timers rescale, and stats bring their statuses. */
+/**
+ * After any change to a unit's statuses: new stats, running timers rescale, and stats bring their statuses. A max HP or MP
+ * that rises leaves current HP and MP where they are (a bigger ceiling isn't a heal); one that falls caps them.
+ */
 export function refresh(w: W, u: CUnit) {
   const old = u.stats;
   const now = derive(w.c, u, u.statuses, w);
   u.stats = now;
   if (!u.ko) {
     const dh = now.max_hp - old.max_hp;
-    u.hp = dh > 0 ? u.hp + dh : Math.min(u.hp, Math.max(1, now.max_hp));
-    const dm = now.max_mp - old.max_mp;
-    u.mp = dm > 0 ? u.mp + dm : Math.min(u.mp, now.max_mp);
+    u.hp = Math.min(u.hp, Math.max(1, now.max_hp));
+    u.mp = Math.min(u.mp, now.max_mp);
     retime(w, u, old, now);
     if (dh) hpMoved(w, u);
   }

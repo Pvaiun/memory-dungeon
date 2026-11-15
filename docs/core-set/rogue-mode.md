@@ -29,7 +29,7 @@ The rules are `src/rogue.ts`, pure and deterministic: a run is plain data (`Rogu
 
 - **HP, MP and knockouts.** The fallen stay down until a campfire, a phoenix feather, an event or the next act raises them.
 - **Cooldowns**, across acts too, never reset. A member at camp keeps its cooldowns as it left them.
-- **Max, not current.** Gear, seats and formations change max HP and MP, never current: a +HP piece doesn't heal. A heal by share of max counts from no more than the max the last fight ended with.
+- **Max, not current.** Gear, seats and formations change max HP and MP, never current: a +HP piece doesn't heal. A heal by share of max counts from no more than the max the last fight ended with. The same holds inside a fight: a status that raises max HP or MP leaves current where it is, and when the fight ends current is cut back to the max the member has outside it.
 - **The bench's MP:** after each won fight, those who sat it out regain `benchMp` % of max MP. Their HP returns only at campfires and new acts.
 - **A new act** restores the whole roster: full HP and MP, the fallen up, cooldowns as they are.
 - Statuses and every other in-fight effect end with the fight.

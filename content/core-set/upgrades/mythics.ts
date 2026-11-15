@@ -144,7 +144,7 @@ const ready = (ability: string, to: ToT = "holder"): EffectT => ({ op: "cooldown
   helper(kit("the_unseen_blade_on", "UNSEEN", "Every hit it lands crits.", { stacking: "fizzle", crits: [{ chance: 100 }] }));
 }
 
-// Vampire: the drinker swells: what its healing would bring past full raises its max HP by as much, and its HP with it.
+// Vampire: the drinker swells: what its healing would bring past full raises its max HP by as much, for later healing to fill (a bigger max never heals).
 {
   const text = "Healing past full raises its max HP by as much, for the fight.";
   mythic({ name: "The crimson crown", slot: "amulet", rarity: "mythic", mythic: "vampire", statuses: ["the_crimson_crown"],
