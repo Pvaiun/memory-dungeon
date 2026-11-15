@@ -10,10 +10,12 @@ import { beginRecord, recordAbandon, recordResume } from "../../../src/rogue/rec
 import { BUILD } from "../update.js";
 import { canEquip } from "../../../src/validate.js";
 import { manifest } from "../art.js";
-import { c } from "../content.js";
+import { baseGearId, c } from "../content.js";
 
 const KEY = "memory-dungeon.rogue.v1";
-type Saved = { run: RogueRun | null; meta: RogueMeta; last?: { won: boolean; unlocked: string[]; heat: boolean } | null };
+/** A party as the home screen draws it: classes in slot order, their formation, and each one's weapon (its base piece). */
+export type ShownParty = { party: string[]; formation: string; weapons: Record<string, string | undefined> };
+type Saved = { run: RogueRun | null; meta: RogueMeta; last?: { won: boolean; unlocked: string[]; heat: boolean } | null; lastParty?: ShownParty | null };
 
 let s: Saved = load();
 function load(): Saved {
@@ -26,7 +28,7 @@ function load(): Saved {
     const run = v.run && v.run.v === ROGUE_VERSION && !stale(v.run) ? migrate(v.run) : null;
     // The record notes each time the run is picked up again, and under which build (the check lists the builds a run was played under).
     if (run) recordResume(run, BUILD);
-    return { run, meta, last: v.last ?? null };
+    return { run, meta, last: v.last ?? null, lastParty: v.lastParty ?? null };
   } catch {
     return { run: null, meta: freshMeta() };
   }
@@ -78,6 +80,13 @@ export function current(): RogueRun | null {
 }
 export const meta = (): RogueMeta => s.meta;
 export const lastRun = () => s.last ?? null;
+/** The party the last finished run ended with, for the home screen between runs. */
+export const lastParty = (): ShownParty | null => s.lastParty ?? null;
+/** A run's party as the home screen draws it. */
+export const shownParty = (run: RogueRun): ShownParty => ({
+  party: [...run.party], formation: run.formation,
+  weapons: Object.fromEntries(run.party.map((cls) => { const w = member(run, cls).gear.weapon; return [cls, w ? baseGearId(w) : undefined]; })),
+});
 
 /** Makes a run's items and upgrades lookups: content ids for its pieces, and each weapon's sprite from its base piece. */
 export function prepare(run: RogueRun) {
@@ -117,6 +126,7 @@ export function endRun(pick?: string): { won: boolean; unlocked: string[]; heat:
   const r = finish(s.meta, run, pick);
   const won = run.pending.kind === "over" && run.pending.won;
   s.last = { won, ...r };
+  s.lastParty = shownParty(run);
   s.run = null;
   saveRogue();
   return s.last;
