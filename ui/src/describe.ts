@@ -425,14 +425,14 @@ export function statusNumbers(d: StatusT): SizePart[] {
 
 /**
  * How a card names a status, as a pattern: its word in any form ("Bewilders", "a Chilled foe", "burning"). A status whose
- * name is also an everyday word (Slow, Guard, Shield, Might, Marked, Hidden, Rot, Doom, Haste) counts only capitalized, as
- * the cards write a status: "a slow weapon" isn't Slow.
+ * name is also an everyday word (Slow, Guard, Shield, Might, Marked, Hidden, Rot, Doom, Haste, Dodge) counts only capitalized,
+ * as the cards write a status: "a slow weapon" isn't Slow, and "on a dodge" is any evaded hit, not the Dodge status.
  */
 const STATUS_WORD: Record<string, RegExp> = {
   bewildered: /\bbewilder(?:s|ed|ing)?\b/i, fixated: /\bfixate[sd]?\b/i, owed: /\bowe[sd]?\b/i, brittle: /\bbrittle\b/i,
   stun: /\bstun(?:s|ned|ning)?\b/i, marked: /\bMark(?:s|ed|ing)?\b/, hidden: /\bHid(?:den|es?)\b/, bulwark_broken: /\bBroken\b/,
 };
-const PLAIN_WORDS = new Set(["slow", "guard", "shield", "might", "rot", "doom", "haste"]);
+const PLAIN_WORDS = new Set(["slow", "guard", "shield", "might", "rot", "doom", "haste", "dodge"]);
 const wordFor = (d: StatusT): RegExp => {
   if (STATUS_WORD[d.id]) return STATUS_WORD[d.id];
   const stem = d.name.toLowerCase().replace(/e$/, "");
