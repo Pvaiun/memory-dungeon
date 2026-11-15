@@ -45,8 +45,12 @@ export function mount(app: HTMLElement) {
   go("home");
 }
 
+/** The classes list's scroll, kept while a class's sheet is open so backing out lands where the player was. */
+let classesScroll = 0;
 export function go(s: Screen, arg?: unknown, keepScroll = false) {
   const scrolls = keepScroll && screenEl ? [...screenEl.querySelectorAll(".scroll")].map((el) => el.scrollTop) : [];
+  if (current === "classes" && s === "unit") classesScroll = screenEl?.querySelector(".scroll")?.scrollTop ?? 0;
+  const backToClasses = s === "classes" && current === "unit";
   stopBattle?.();
   stopBattle = null;
   strip?.stop();
@@ -74,6 +78,7 @@ export function go(s: Screen, arg?: unknown, keepScroll = false) {
   screenEl.append(...(screens[s](arg).filter(Boolean) as Node[]));
   settleBack();
   [...screenEl.querySelectorAll(".scroll")].forEach((el, i) => { if (scrolls[i]) el.scrollTop = scrolls[i]; });
+  if (backToClasses) { const el = screenEl.querySelector(".scroll"); if (el) el.scrollTop = classesScroll; }
 }
 /** Re-renders the current screen after a change, keeping the lists' scroll. */
 export const refresh = () => go(current, currentArg, true);
