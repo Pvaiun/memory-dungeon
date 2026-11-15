@@ -109,7 +109,7 @@ export const vocabulary: StatusT[] = [
     // The shatter.
     reactions: [{ on: { event: "status_capped", status: "chill" }, do: [{ op: "damage", type: "none", amount: { scale: [{ ratio: STATUS.chill.shatter, stacks: "chill", of: "holder" }] }, to: "holder" }, { op: "apply", status: "stun", to: "holder" }, { op: "remove", label: "debuff", status: "chill", to: "holder" }] }],
   },
-  { id: "shock", name: "SHOCK", text: "Hurts for each stack every time it acts.", label: "debuff", show: "icon", stacking: "intensity", cap: STATUS.shock.cap, trigger: { on: { event: "action_resolve" }, do: [{ op: "damage", type: "none", amount: STATUS.shock.perStack, to: "holder" }] }, drop: { fraction: STATUS.shock.drop } },
+  { id: "shock", name: "SHOCK", text: "Hurts for each stack every time it acts, and its hits deal less for each stack.", label: "debuff", show: "icon", stacking: "intensity", cap: STATUS.shock.cap, boosts: hits(STATUS.shock.hits), trigger: { on: { event: "action_resolve" }, do: [{ op: "damage", type: "none", amount: STATUS.shock.perStack, to: "holder" }] }, drop: { fraction: STATUS.shock.drop } },
   // A damage-taken ramp, not a Defense strip (foes carry too little Defense for a strip to show past two stacks): it reads on every
   // foe and gives the Hexer and the Monk a ramp.
   { id: "sunder", name: "SUNDER", text: "Takes more damage for each stack.", label: "debuff", show: "icon", stacking: "intensity", cap: STATUS.sunder.cap, taken: [{ pct: STATUS.sunder.perStack }], pulse: { every: STATUS.sunder.every }, drop: { count: 1 } },
@@ -129,6 +129,8 @@ export const vocabulary: StatusT[] = [
     trigger: { on: { event: "action_resolve", kind: "basic" } }, drop: "all",
   },
   { id: "brittle", name: "BRITTLE", text: "The next hit it takes is a crit.", label: "debuff", show: "icon", stacking: "intensity", cap: 1, critsTaken: "always", trigger: { on: { event: "hit_taken" } }, drop: "all" },
+  // Dodge: one-use, as Brittle, and it doesn't stack: the next hit misses, and the miss is a dodge.
+  { id: "dodge", name: "DODGE", text: "Dodges the next hit.", label: "buff", show: "icon", stacking: "intensity", cap: 1, dodge: true },
   { id: "fixated", name: "FIXATED", text: "Picks the unit that fixated it, unless a Taunt forces another.", label: "debuff", show: "icon", stacking: "refresh", duration: STATUS.fixated.duration, fixate: true },
   { id: "owed", name: "OWED", text: `Damage from hits waits here, and lands all at once ${OWED} ticks after the first.`, label: "marker", show: "icon", stacking: "intensity", duration: OWED, debt: true, unremovable: true },
   // Signature
