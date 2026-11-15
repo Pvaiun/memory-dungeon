@@ -19918,7 +19918,7 @@
   {
    "id": "banner_of_the_last_keep",
    "name": "Banner of the last keep",
-   "text": "Max HP ×1.5. Healing on it −50%.",
+   "text": "Max HP ×1.5. Healing on it −80%.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -19930,7 +19930,7 @@
     },
     {
      "stat": "healing_received",
-     "flat": -50
+     "flat": -80
     }
    ]
   },
@@ -43501,7 +43501,7 @@
   {
    "id": "banner_of_the_last_keep",
    "name": "Banner of the last keep",
-   "text": "Max HP ×1.5. Healing on it −50%.",
+   "text": "Max HP ×1.5. Healing on it −80%.",
    "slot": "armor",
    "tier": "powerful",
    "source": "unlock",
