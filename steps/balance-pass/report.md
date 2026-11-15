@@ -69,7 +69,7 @@ Bosses by build, now (rung 1 / 2 / 3); before the fixes, at the same targets, in
 | Landslide | 53 (44) / 69 / 93 (98) | best fight bosses, by its card; rung 3 too strong, its regular fights 4% |
 | Thousand Cuts | 83 / 52 / 44 (56) | |
 | Bonfire | 78 / 96 / 91 | best fight a lone boss; no worst fight shows (packs cost it 13–16%) |
-| Cold Snap | 81 / 59 / 24 (7) | rung 3 weak: its Rangers can't swing in The still hour (Neutral wins 80% of its fights); late mana |
+| Cold Snap | 81 / 59 / 24 (7) | rung 3 weak: its Rangers can't swing in The still hour; late mana. Its test parties no longer wear pieces that fight the formation (`AGAINST`), and The still hour now sits even with Neutral for them |
 | The Storm | 94 / 44 (41) / 26 (31) | worst fight a lone boss, by its card; rung 1 too strong |
 | The Hunt | 28 / 54 (50) / 70 | worst fight a lone boss; rung 1's two wall-less routes |
 | The Toll | 31 (19) / 35 (28) / 50 (17) | worst fight a boss that barely swings; rung 3's regular fights 5% |
