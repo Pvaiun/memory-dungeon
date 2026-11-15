@@ -228,7 +228,7 @@ One per class, shown in crimson and offered in the boss boons that open acts II 
 
 | Class | Mythic | Slot | The spike, and its cost |
 | --- | --- | --- | --- |
-| Knight | Banner of the last keep | armor (plate) | max HP half again; healing on it halved |
+| Knight | Banner of the last keep | armor (plate) | max HP half again; healing on it cut to a fifth |
 | Cleric | The saint's last breath | amulet | Last rites all fight; never healed above 30% HP |
 | Ranger | The long watch | armor (leather) | basic attacks stay on one foe until it falls, each harder; no cost |
 | Bramble knight | Heart of the briar | armor (plate) | its Thorns on every foe when hit; no cost |
