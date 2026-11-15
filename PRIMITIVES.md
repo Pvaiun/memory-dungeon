@@ -1,6 +1,6 @@
 # Engine primitives
 
-Generated from `src/schema.ts` (schema 0.13) by `npm run docs`. Do not edit by hand.
+Generated from `src/schema.ts` (schema 0.14) by `npm run docs`. Do not edit by hand.
 
 The engine runs the core set's combat system (`docs/core-set/rules-and-vocabulary.md`); where that document is silent, what the engine does stands. This is the closed set of building blocks it runs on. Each needs engine code, so adding one is a schema version bump plus an engine change. Stats, weapon kinds, armor types, offhand kinds, statuses, abilities and everything else are registries in the pack, and grow without touching the schema. The numbers in the content are first values, placeholders until the balance pass.
 
@@ -183,6 +183,7 @@ A scale's `count`:
 | `revives` | Every revive the holder makes, from its abilities and its statuses' reactions alike (Einherjar). |
 | `confuse` | The holder's basic attacks pick a random unit of its own side, itself aside (with nobody there, a foe as usual): Bewildered. |
 | `fixate` | The holder's basic attacks and its abilities aimed at a random foe pick the unit that applied this status while it can be picked, under the Taunt rule (Fixated). Statuses that know their source only. |
+| `dodge` | The next hit on the holder misses, whatever its Evasion and the attacker's Accuracy, and the status is spent with it (Dodge). The miss is a dodge: its events fire as any evaded hit's. |
 | `critsTaken` | Every hit on the holder crits (always: Brittle), or none does (never, which wins). |
 | `owe` | Damage from hits on the holder, after Defense and before its block and absorbs, isn't taken: it's added as stacks of this status (a `debt`) instead. |
 | `debt` | Intensity with a duration: stacks added don't renew it, and when it runs out its holder takes its stacks as damage of no type, from nobody, which a block and absorbs meet (Owed). |
@@ -240,6 +241,7 @@ Each change reaches the holder's own abilities, read each time one is used: when
 | `wait` | It also waits for these, as its own `if` does. |
 | `apply` | Statuses its hits apply as well, after its own. |
 | `spread` | Aimed at one foe, it lands on every foe instead, each hit dealing an even share of its damage (its share divided by the foes it lands on). |
+| `together` | The abilities this change reaches are cast as one: each waits until every one of them the holder has equipped is ready, and when one is cast the others are cast with it, free, and go on cooldown. |
 
 Its `of`:
 

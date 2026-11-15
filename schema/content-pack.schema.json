@@ -4,7 +4,7 @@
   "properties": {
     "schemaVersion": {
       "type": "string",
-      "const": "0.13"
+      "const": "0.14"
     },
     "id": {
       "type": "string",
@@ -1992,6 +1992,11 @@
                   "description": "Aimed at one foe, it lands on every foe instead, each hit dealing an even share of its damage (its share divided by the foes it lands on).",
                   "type": "boolean",
                   "const": true
+                },
+                "together": {
+                  "description": "The abilities this change reaches are cast as one: each waits until every one of them the holder has equipped is ready, and when one is cast the others are cast with it, free, and go on cooldown.",
+                  "type": "boolean",
+                  "const": true
                 }
               },
               "additionalProperties": false
@@ -2243,6 +2248,11 @@
           },
           "fixate": {
             "description": "The holder's basic attacks and its abilities aimed at a random foe pick the unit that applied this status while it can be picked, under the Taunt rule (Fixated). Statuses that know their source only.",
+            "type": "boolean",
+            "const": true
+          },
+          "dodge": {
+            "description": "The next hit on the holder misses, whatever its Evasion and the attacker's Accuracy, and the status is spent with it (Dodge). The miss is a dodge: its events fire as any evaded hit's.",
             "type": "boolean",
             "const": true
           },

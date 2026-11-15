@@ -100,7 +100,7 @@ The original design gave Poison as the Fundamental answer to Armored shell, Dodg
 | Executioner | Specialist | Puts Doom on a unit; an execute variant hits the lowest ally instead. | Cleanse, Shield; Aegis, Revive | Reaper |
 | Adds shield | Specialist | Takes no damage while any add lives; calls waves. | Area, Stun on the summon; Silence, lowest-HP targeting, burst between waves | – |
 | Feeding adds | Specialist | After a wind-up, consumes its living adds to heal or gain Might. | Area, Stun on the wind-up; Silence, spread Burn, Dispel | – |
-| Avenger | Specialist | Gains several Might when an add is knocked out; its adds are tough and Taunt. Area is the wrong pick. | Weaken, Shield; Seek that reaches the boss (Gale spear, Garrote, Pressure point), Hunter's eye, Dispel. Abilities without Seek are forced onto the adds by the Taunt rule. | Storm King |
+| Avenger | Specialist | Gains several Might when an add is knocked out; its adds are tough and Taunt. Area is the wrong pick. | Weaken, Shield; Seek that reaches the boss (Gale spear, Garrote, Pressure point), Dispel. Abilities without Seek are forced onto the adds by the Taunt rule. | Storm King |
 | Burrower | Specialist | Goes Hidden for stretches, leaving Taunting adds. | Area; Seek | – |
 
 ### Groups

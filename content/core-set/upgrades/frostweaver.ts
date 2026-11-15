@@ -2,7 +2,7 @@
 import { HIT, P, STACKS, stacks, STATUS } from "../scale.js";
 import { own } from "../pieces/kit.js";
 import type { EffectT, TargetRuleT } from "../../../src/schema.js";
-import { T } from "../classes.js";
+import { SHATTERPOINT_OPENING, SHATTERPOINT_SHIELD, T } from "../classes.js";
 import { abilityUp, apply, BLIZZARD_CHILL, helper, hitOf, kit, LANCE_CHILL, marker, ofHolder, passiveUp, phys, POWER, STILLNESS_CHILL } from "./kit.js";
 
 // ─── Frostweaver ─────────────────────────────────────────────────────────────
@@ -12,13 +12,14 @@ const RIME = 0.3;
 passiveUp({
   id: "shatterpoint", cls: "frostweaver",
   power: "+40% Sunder.",
-  a: { name: "Rime shield", text: "On a shatter: the ally with the lowest HP% gains a Shield of 30% of the Frostweaver's max HP, instead of the Sunder.", serves: "Snap 2 ●●, Toll ●● ⚙ frozen gate (half), detonation (half), brink (half)", plus: "+40% Shield." },
-  b: { name: "Rime edge", text: "Basic attacks add Sunder. No Sunder on a shatter.", serves: "Cuts 2 ●●, Landslide ● ◆ the ramp, swing-status" },
+  a: { name: "Rime shield", text: `At fight start: every ally gains a Shield of ${Math.round(SHATTERPOINT_SHIELD * 100)}% of the Frostweaver's max HP. On a shatter: the ally with the lowest HP% gains a Shield of 30% of the Frostweaver's max HP, instead of the Sunder.`, serves: "Snap 2 ●●, Toll ●● ⚙ frozen gate (half), detonation (half), brink (half)", plus: "+40% Shield." },
+  b: { name: "Rime edge", text: `At fight start: every ally gains a Shield of ${Math.round(SHATTERPOINT_SHIELD * 100)}% of the Frostweaver's max HP. Basic attacks add Sunder. No Sunder on a shatter.`, serves: "Cuts 2 ●●, Landslide ● ◆ the ramp, swing-status" },
+  // Every form keeps the opening Shield on every ally (SHATTERPOINT_OPENING), unscaled by the power step.
   form: (v, k) => v === "b" ? ({
     // Rime edge: the passive outside the shatter: Sunder on every swing, a rider, at the few word (the Monk's Iron palm's own).
-    reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [apply("sunder", { stacks: own("few", "attack", k), to: "other" })] }],
+    reactions: [SHATTERPOINT_OPENING, { on: { event: "hit_lands", kind: "basic" }, do: [apply("sunder", { stacks: own("few", "attack", k), to: "other" })] }],
   }) : ({
-    reactions: [{
+    reactions: [SHATTERPOINT_OPENING, {
       on: { event: "status_capped", status: "chill", whose: "foe" },
       do: v === "a" ? [apply("shield", { stacks: ofHolder(RIME * k, "max_hp"), to: T.lowestShareAlly })]
         : [

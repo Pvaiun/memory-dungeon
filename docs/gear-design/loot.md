@@ -253,7 +253,7 @@ At the director's word, the loot was made with no balancing rules: synergies may
 - **Half again in place of double** where a party can hold the condition all fight. In use on The Red Feast's hits, Twinfall's second landing and Hummingbird charm's swing.
 - **A counter gains at most a stack every couple of ticks,** however many triggers fire, so against a pack it grows at a fight's pace, not a swarm's.
 - **No triples** outside Worldbreaker.
-- **Locks that hold a lone boss all fight** (the Withering hex version): the design's own answer is bosses that resist repeated control, which is in, not shorter locks.
+- **Locks that hold a lone boss all fight:** the design's own answer is bosses that resist repeated control, which is in, not shorter locks.
 
 ## Decisions to know, and what's least sure
 

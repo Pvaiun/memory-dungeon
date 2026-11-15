@@ -119,7 +119,7 @@ The target phrases in ability descriptions each mean exactly this, and are used 
 
 - **One kind of hit.** Damage is a hit or a status's own; there are no elements and no subtypes of hit.
 - **Every hit** meets Evasion and Defense.
-  - **Evasion** is a chance to dodge it, from a basic attack or an ability alike.
+  - **Evasion** is a chance to dodge it, from a basic attack or an ability alike. A unit holding Dodge dodges the next hit outright, whatever its Evasion and the attacker's Accuracy.
   - **Defense** reduces each hit to hit² ÷ (hit + k × Defense) (`RULES.armorK`), the Path of Exile formula. That's nearly linear against big hits, takes a bigger share off small ones, and never blanks a hit. Every point of Defense helps, and many small hits do poorly against high Defense.
 - **Untyped** damage is a status's own (Burn, Shock, Chill's shatter, Bleed, Doom), and Thorns. It can't be dodged, and Defense doesn't reduce it. A foe's status can be given a hit's damage instead (see How statuses stack and end).
 - **Hits are also a tag** that gear, passives and statuses can hook into: a boost or a damage-taken modifier can name hits alone and leave a status's own damage out, as the Ghost's Incorporeal does.
@@ -136,7 +136,7 @@ The target phrases in ability descriptions each mean exactly this, and are used 
 
 Damage resolves in this order:
 
-1. Dodge check
+1. Dodge check (Dodge first: a unit holding it dodges, and the Dodge is spent)
 2. Base amount and scaling, including scaling from a condition instead of a stat (Judgement, Pyre)
 3. The attacker's boosts
 4. The target's damage-taken modifiers
@@ -231,11 +231,11 @@ The Fundamental pieces were chosen for how they interact: pieces that answer, un
 
 ## Vocabulary: statuses
 
-The vocabulary is 26 statuses, 10 special stats and 6 effects. The pieces add five counters (*Gear design: the loot*).
+The vocabulary is 27 statuses, 10 special stats and 6 effects. The pieces add five counters (*Gear design: the loot*).
 
 | Kind | Fundamental | Specialist | Enemy-only | Total |
 | --- | --- | --- | --- | --- |
-| Statuses | 10 | 14 | 2 | 26 |
+| Statuses | 10 | 15 | 2 | 27 |
 | Special stats | 1 | 9 | 0 | 10 |
 | Effects | 3 | 3 | 0 | 6 |
 
@@ -247,7 +247,7 @@ Ten staples make the Fundamental base, each useful from a single application. Th
 | Regen | Fundamental | Heals a share of its holder's max HP on a pulse, for a set time, big enough to see. Refresh. |
 | Shield | Fundamental | Soaks a pool of damage before HP, status damage included: a second health bar, shown over HP. One pool per unit. Each application adds to the pool, up to a cap of a share of the holder's max HP. How much an application adds scales from a stat the ability or effect names (Vanguard from max HP, Earthen shell from Defense). The pool has no timer, and Dispel removes the whole pool. If the pool proves too strong, a slow drain is the knob. |
 | Might | Fundamental | More damage per stack, up to a cap. Stacks; each action its holder takes spends one stack. |
-| Weaken | Fundamental | Deals less damage. Refresh. |
+| Weaken | Fundamental | Its hits deal much less damage. Refresh. With Shock on the same unit, the two cuts add. |
 | Guard | Fundamental | Raises Defense for a while. Refresh. Best against many small hits. |
 | Stun | Fundamental | Can't act. A wind-up under way waits it out, then carries on (Silence is the interrupt). Fizzle. |
 | Slow | Fundamental | Longer cooldowns, wind-ups and time between attacks. Refresh. |
@@ -255,7 +255,7 @@ Ten staples make the Fundamental base, each useful from a single application. Th
 | Taunt | Fundamental | Foes' single-target picks must go to a Taunting unit; with several, draw weights the pick. Refresh. Seek gets past it. |
 | Burn | Specialist | Stacks, with no cap. On a short pulse it deals damage per stack, then loses a share of its stacks, so it stays high only while someone keeps applying it. Each application is small against the ceiling that upkeep reaches. |
 | Chill | Specialist | Stacks up to a cap, each stack slowing its holder a little. It thaws a stack at a time, slowly, so it builds over a fight. At the cap it shatters: its holder takes damage for each stack and a Stun, and the Chill is spent. Near the cap it slows as much as Slow, and the two add. A chain of shatters dies down: Chill that one foe's shatter passes to another foe that has shattered lately is cut by about half for each time it has, never to nothing (Chill from swings and spells is untouched). |
-| Shock | Specialist | Stacks up to a cap. Each time its holder acts (when an action resolves: at the end of its wind-up, or at once for a basic attack), it takes damage per stack and loses half its stacks, so it hurts fast units most. |
+| Shock | Specialist | Stacks up to a cap. Each time its holder acts (when an action resolves: at the end of its wind-up, or at once for a basic attack), it takes damage per stack and loses half its stacks, so it hurts fast units most. Its holder's hits deal a little less for each stack it holds as it strikes (`STATUS.shock.hits`), so it softens slow units most: a slow foe kept charged swings at the cap. The cut adds to Weaken's. |
 | Marked | Specialist | A debuff on a foe: the party's basic attacks, and its abilities aimed at a random foe (a phrase's fallback to a random foe included), pick a Marked foe while it lasts, inside the Taunt rule (Seek follows it past a Taunting foe); an ability whose phrase finds its foe keeps its own targeting. With several Marks, the pick is by draw among them. Each applier keeps one Mark, so a new one it applies moves its old one. Refresh. The Paladin's Condemn applies it; so do the Hunt's pieces and seats, each only while no foe is Marked. |
 | Sunder | Specialist | Stacks up to a cap; each stack makes its holder take a little more damage of every kind. Loses a stack on a pulse. |
 | Silence | Specialist | Can't use abilities, only basic attacks; loses an ability's wind-up. Fizzle. |
@@ -265,6 +265,7 @@ Ten staples make the Fundamental base, each useful from a single application. Th
 | Aegis | Specialist | Blocks the next damage above a set share of max HP, from any source, then ends. Checked after mitigation, before Shields. Fizzle. Small hits pass; one big one doesn't. |
 | Bewildered | Specialist | A debuff on a foe: its next basic attack strikes a random unit of its own side, then it ends (alone, it strikes a foe as usual). It stops nothing it doesn't show. |
 | Brittle | Specialist | A debuff: the next hit its holder takes is a crit, then it ends. A crit the party sets up. |
+| Dodge | Specialist | A buff: the next hit on its holder misses, whatever its Evasion and the attacker's Accuracy, then it ends. The miss is a dodge, so whatever answers a dodge answers it. It doesn't stack: one Dodge waits at a time. |
 | Fixated | Specialist | A debuff on a foe: its basic attacks, and its abilities aimed at a random foe, pick the unit that fixated it while that unit can be picked, for a set time (`STATUS.fixated`); a Taunt still forces the pick. A Taunt on one foe. Refresh. |
 | Owed | Specialist | A marker on a unit whose piece owes its hits: the damage of each hit, after Defense, waits on the icon, adding up, and lands all at once a set time after the first (`OWED`), as damage of no type that a Shield present then soaks. |
 | Doom | Enemy-only | A visible countdown; at zero its holder takes untyped damage of a large share of its max HP, so a unit at full HP survives it and a hurt one doesn't. Fizzle. Cleanse removes it; Shield and Aegis soak it. |
@@ -274,7 +275,7 @@ Ten staples make the Fundamental base, each useful from a single application. Th
 
 | Kind | Statuses |
 | --- | --- |
-| Buff | Regen, Shield, Might, Guard, Haste, Taunt, Hidden, Clarity, Aegis, Bulwark |
+| Buff | Regen, Shield, Might, Guard, Haste, Taunt, Hidden, Clarity, Aegis, Dodge, Bulwark |
 | Debuff | Bleed, Weaken, Stun, Slow, Burn, Chill, Shock, Marked, Sunder, Silence, Rot, Doom, Bewildered, Brittle, Fixated |
 
 Owed is a marker, neither: nothing lifts it but its coming due. **An affliction** is one of the five debuffs that stack on a foe: Burn, Chill, Shock, Bleed and Sunder. A card that reaches every status road at once says "affliction", never two of the five.
@@ -321,10 +322,10 @@ Most Fundamentals have a partner that opposes or undoes them, and two have a bui
 
 | Pieces | How they play |
 | --- | --- |
-| Might, Weaken | Opposite sides of damage dealt. Dispel strips Might from a foe; Cleanse lifts Weaken from an ally. |
+| Might, Weaken | Opposite sides of damage dealt. Dispel strips Might from a foe; Cleanse lifts Weaken from an ally. Shock cuts hits too, a little a stack, and adds to Weaken. |
 | Haste, Slow | Opposite sides of tempo. Haste also feeds every built-up status, since a faster unit applies more stacks. |
 | Guard, Sunder | Guard raises Defense against hits; Sunder raises all the damage its holder takes. |
-| Evasion, Accuracy | A chance to dodge, and the stat that cancels it. |
+| Evasion, Accuracy | A chance to dodge, and the stat that cancels it. Dodge is the sure thing, once: Accuracy doesn't touch it. |
 | Bleed, Regen, Cleanse | Bleed bursts with every hit, Regen heals over time, Cleanse lifts Bleed outright. |
 | Shield, Heal, Rot | Shield prevents and Heal mends; under Rot, only Shield still works. |
 | Taunt, Seek, Area | Taunt decides who foes can pick, split by draw when several units taunt. Seek gets past it, and Area skips picking altogether. |

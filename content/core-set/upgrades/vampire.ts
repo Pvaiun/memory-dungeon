@@ -48,13 +48,14 @@ abilityUp({
   id: "blood_drain", cls: "vampire",
   power: "+40% damage.",
   shown: true,
-  a: { name: "Savage drain", text: "3 quick drains on a random foe, Weakening it.", serves: "Cuts 1 ●●●, Pact ●●" },
-  b: { name: "Drain the well", text: "Drains a random foe; the ally with the lowest MP% gains MP: 25% of the damage. No Weaken.", serves: "Barrage 1 ●●●" },
+  a: { name: "Savage drain", text: "3 quick drains on a random foe, adding Bleed.", serves: "Cuts 1 ●●●, Pact ●●" },
+  b: { name: "Drain the well", text: "Drains a random foe; the ally with the lowest MP% gains MP: 25% of the damage. No Bleed.", serves: "Barrage 1 ●●●" },
   form: (v, k) =>
-    v === "a" ? { do: [phys(from("max_hp", r6((0.4 * k) / 3)), { hits: 3, apply: [{ status: "weaken" }] })] }
+    // Savage drain lays the base's Bleed across its three hits, a third each.
+    v === "a" ? { do: [phys(from("max_hp", r6((0.4 * k) / 3)), { hits: 3, apply: [{ status: "bleed", stacks: stacks("few", "attack", 1 / 3) }] })] }
       // A one-tick marker on the Vampire hears the cast's own hit and drains as Siphon does.
       : v === "b" ? { do: [apply("drain_the_well", { to: "self" }), phys(from("max_hp", 0.4 * k))] }
-        : { do: [phys(from("max_hp", 0.4 * k), { apply: [{ status: "weaken" }] })] },
+        : { do: [phys(from("max_hp", 0.4 * k), { apply: [{ status: "bleed", stacks: stacks("few", "attack") }] })] },
 });
 helper(marker("drain_the_well", "DRAIN THE WELL", "Its hit gives MP to the ally with the lowest MP%.", {
   duration: 1,

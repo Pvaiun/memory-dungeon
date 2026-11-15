@@ -325,8 +325,8 @@ export const KIT = {
   choosing: 0.28,
   /** Skyfall: damage per Shock stack on its target, on top of a heavy hit. */
   skyfallPerShock: 150,
-  /** Hunter's eye: crit steps added to the Ranger's basic attacks. */
-  hunterCrit: 2,
+  /** Hunter's eye's power step: Crit chance added to the Ranger's hits, in percent (each crit is a Dodge). */
+  hunterCrit: 6,
   /** Gale spear: each of its 3 hits, a share of Attack (its versions' hits too). At 0.09 a cast dealt about one of the Valkyrie's
    * swings, under the balance sheet's band for an ability. */
   galeSpear: 0.12,
@@ -386,7 +386,7 @@ export const STATUS = {
   shield: { capShare: 0.5 },
   /** Might spends with action, not time: one stack each time the holder acts (vocabulary.ts). */
   might: { perStack: 6, cap: 15 },
-  weaken: { pct: -30, duration: 20 },
+  weaken: { pct: -50, duration: 20 },
   guard: { defense: pts(3), duration: 28 },
   /**
    * A Stun pauses a wind-up rather than cancelling it (Silence is the interrupt), and lasts long enough to take a foe out of
@@ -411,8 +411,11 @@ export const STATUS = {
    * ticks is cut to `pct` % for each time it has, in fractions of a stack (a rule of Chill's own, on no card).
    */
   chill: { cap: 12, perStack: -4, every: 14, shatter: 250, chain: { pct: 50, window: 10 } },
-  /** The cap is a safety: uncapped, a slow foe gathers enough Shock to pay a fight's worth of damage for one action. */
-  shock: { perStack: 80, drop: 0.5, cap: 40 },
+  /**
+   * The cap is a safety: uncapped, a slow foe gathers enough Shock to pay a fight's worth of damage for one action. `hits`: the
+   * holder's hits deal this % less for each stack, so a foe kept charged swings softer (a slow boss sits at the cap: `hits` × `cap`).
+   */
+  shock: { perStack: 80, drop: 0.5, cap: 40, hits: -1 },
   sunder: { perStack: 1.5, every: 4, cap: 20 }, // +1.5% damage taken a stack, +30% at the cap.
   /** Marked: the party's basic attacks go to its holder while it lasts (the Paladin's Condemn, the Hunt's pieces). */
   marked: { duration: 14 },
