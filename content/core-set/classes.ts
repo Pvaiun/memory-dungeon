@@ -346,7 +346,7 @@ export const classes: ClassDefT[] = [
   cls("cleric", "Cleric", "Healer. Heals the ally with the lowest HP% with quick, small heals, lifts a curse and wraps the ally in Regen, raises the fallen, and prays 100% faster when its own life is in danger.", {
     source: "starter", stats: stat(2, 5, 4, 3, 2, 1, 1), weapons: ["mace", "staff", "wand"], armor: ["robes", "mail"], offhands: ["relic", "lantern", "vial"], passive: p("last_rites", "Last rites"),
   }),
-  cls("ranger", "Ranger", "The marksman. Looses barbed, cold and rending arrows at whatever stands in front, crits for a living, and each crit leaves it ready to dodge the next blow.", {
+  cls("ranger", "Ranger", "The marksman. Its arrows bleed, chill and sunder what they hit, and it crits for a living: it starts each fight ready to dodge a blow, and every crit readies another.", {
     source: "starter", stats: { ...stat(3, 3, 3, 4, 2, 4, 2), ...special("accuracy", "medium"), ...special("evasion", "medium") }, weapons: ["bow", "dagger", "axe"], armor: ["leather"], offhands: ["trophy", "cloak", "horn"], passive: p("hunters_eye", "Hunter's eye"),
   }),
   cls("bramble_knight", "Bramble knight", "Thorns tank. Draws every foe onto its thorns, where each attacker is left bleeding for the party's blows, gives Regen to the ally with the lowest HP%, and lashes out with the thorns themselves.", {
@@ -364,7 +364,7 @@ export const classes: ClassDefT[] = [
   cls("bard", "Bard", "Party tempo. A caster at the back whose every basic attack heals an ally and gives another MP, with a ballad that steadies the party, an allegro that quickens it, and an encore that makes an ally's next spell sound 2 times.", {
     stats: { ...stat(3, 4, 3, 3, 2, 2, 1), ...special("cooldown", "medium") }, weapons: ["bow", "wand", "dagger"], armor: ["leather", "robes"], offhands: ["tome", "bell", "vial"], passive: p("refrain", "Refrain"),
   }),
-  cls("hexer", "Hexer", "The spellblade. A blade that carries curses: its swing chills, its curses deepen every affliction a foe already holds, it weakens every foe, and it silences a foe mid-cast and strips its buffs.", {
+  cls("hexer", "Hexer", "The spellblade. Its swing chills; its curse hits every foe harder for each different affliction it holds, and leaves it bleeding; it weakens every foe at once; and it silences a foe mid-cast and strips its buffs.", {
     stats: { ...stat(3, 4, 3, 4, 2, 2, 1), ...special("siphon", "medium") }, weapons: ["wand", "sword", "dagger"], armor: ["mail", "robes"], offhands: ["tome", "idol", "totem"], passive: p("cold_hex", "Cold hex"),
   }),
   cls("monk", "Monk", "Sunders with a blur of blows. Every blow adds Sunder, Flow keeps it fast, burning fists pile onto the foe with the most Burn, and a pressure point Stuns the foe with the most Attack.", {

@@ -52,7 +52,7 @@ The starters cover every Fundamental challenge between them: a wall, a healer an
 
 **Role:** protector. **Trunk:** starts behind stone, Guards the lowest, calls the fight onto itself, bashes with its own weight. Nothing in the trunk scales from Attack.
 
-**Weapons:** sword, hammer. **Armor:** Plate. **Offhands:** kite shield, horn. **Special stats:** none. **The line:** all body, no edge: HP and Aggro at the top, Attack and Crit at the bottom.
+**Weapons:** sword, hammer, spear. **Armor:** Plate. **Offhands:** kite shield, horn, trophy. **Special stats:** none. **The line:** all body, no edge: HP and Aggro at the top, Attack and Crit at the bottom.
 
 - **Passive – Vanguard.** It starts every fight behind a Shield that scales from its max HP: half a Shield's cap (`VANGUARD_SHIELD`).
 - **Fortify.** Applies Guard to the ally with the lowest share of max HP.
@@ -67,7 +67,7 @@ The starters cover every Fundamental challenge between them: a wall, a healer an
 
 **Role:** healer. **Trunk:** mends whoever is lowest with quick, small heals, lifts a curse and wraps the ally in Regen, raises the fallen, and prays twice as fast when its own life is in danger. An active healer that spends MP: it has no free heal.
 
-**Weapons:** mace, staff. **Armor:** Robes. **Offhands:** relic, lantern. **Special stats:** none. **The line:** frail, with average Attack, which its heals read; the mace takes a two-HP Cleric to four, and that's the point.
+**Weapons:** mace, staff, wand. **Armor:** Robes, Mail. **Offhands:** relic, lantern, vial. **Special stats:** none. **The line:** frail, with average Attack, which its heals read; the mace takes a two-HP Cleric to four, and that's the point.
 
 - **Passive – Last rites.** Below 30% of its max HP, its cooldowns are halved; healed back to 30% or more, they return to normal.
 - **Renew.** Cleanses an ally with a debuff and applies Regen to it; with no ally debuffed, Regen on the ally with the lowest share of max HP.
@@ -80,9 +80,9 @@ The starters cover every Fundamental challenge between them: a wall, a healer an
 
 ### Ranger
 
-**Role:** the marksman. **Trunk:** arrows that bleed, chill and sunder whatever stands in front; plain arrows that crit for a living, and each crit leaves it ready to dodge the next blow.
+**Role:** the marksman. **Trunk:** arrows that bleed, chill and sunder what they hit, and crits for a living: it starts each fight ready to dodge a blow, and every crit readies another.
 
-**Weapons:** bow, dagger. **Armor:** Leather. **Offhands:** trophy, cloak. **Special stats:** Accuracy medium, Evasion medium. **The line:** Attack and Crit high, a light body that slips aside rather than takes the blow.
+**Weapons:** bow, dagger, axe. **Armor:** Leather. **Offhands:** trophy, cloak, horn. **Special stats:** Accuracy medium, Evasion medium. **The line:** Attack and Crit high, a light body that slips aside rather than takes the blow.
 
 - **Passive – Hunter's eye.** At fight start, and on each of its crits, it gains Dodge: the next hit on it misses. It survives by its crits, a blow at a time; Dodge doesn't stack, so a crit while it holds one adds nothing. Its arrows and swings meet a Taunt like anyone's.
 - **Barbed arrow.** Deals light damage that scales from Attack to a random foe, and adds several Bleed; stacks scale from Attack.
@@ -101,7 +101,7 @@ Six classes that win through the party: a tank that punishes, a bruiser that hel
 
 **Role:** thorns tank. **Trunk:** draws every foe onto its thorns, where each attacker is left bleeding for the party's blows, regrows whoever is lowest, and lashes out with the thorns themselves.
 
-**Weapons:** hammer, mace. **Armor:** Plate, Mail. **Offhands:** totem, round shield. **Special stats:** Thorns high. **The line:** the thorn wall: HP and Aggro at the top, Attack and Crit at the bottom.
+**Weapons:** hammer, mace, great weapon. **Armor:** Plate, Mail. **Offhands:** totem, round shield, idol. **Special stats:** Thorns high. **The line:** the thorn wall: HP and Aggro at the top, Attack and Crit at the bottom.
 
 - **Passive – Briar.** Each time its Thorns damage a foe, that foe gets a few Bleed; stacks scale from Defense.
 - **Thicket.** Applies Taunt and Guard to itself.
@@ -116,7 +116,7 @@ Six classes that win through the party: a tank that punishes, a bruiser that hel
 
 **Role:** the bruiser. **Trunk:** slow double swings, a thrust that opens one foe up, a shove with the whole shield that sunders every foe, and an Aegis on the ally about to take the killing blow. Very tanky, big hits, team support; nothing it does draws fire, which is its weakness. The spear and the horn are where a run buys it the draw.
 
-**Weapons:** spear, great weapon. **Armor:** Plate. **Offhands:** round shield, horn. **Special stats:** none. **The line:** Attack and Defense at the top, average Aggro.
+**Weapons:** spear, great weapon, sword. **Armor:** Plate, Leather. **Offhands:** round shield, horn, cloak. **Special stats:** none. **The line:** Attack and Defense at the top, average Aggro.
 
 - **Passive – Phalanx.** Its basic attacks come half as often and deal double damage.
 - **Aspis.** Applies Aegis to the ally with the lowest share of max HP.
@@ -131,7 +131,7 @@ Six classes that win through the party: a tank that punishes, a bruiser that hel
 
 **Role:** the judge, helper of the righteous and killer of the wicked. **Trunk:** its hits land half again as hard on any foe that holds a buff or a debuff; it condemns one foe and the whole party strikes it; it lifts curses and heals; and it brings down a slow, heavy, burning Smite.
 
-**Weapons:** mace, great weapon. **Armor:** Mail, Plate. **Offhands:** kite shield, relic. **Special stats:** none. **The line:** a strong body, little finesse.
+**Weapons:** mace, great weapon, sword. **Armor:** Mail, Plate. **Offhands:** kite shield, relic, lantern. **Special stats:** none. **The line:** a strong body, little finesse.
 
 - **Passive – Judgement.** Its hits deal half again as much damage to foes with a buff or a debuff (a foe holding both isn't doubled).
 - **Condemn.** Marks the foe with the highest Attack, and every ally's next basic attack comes at once. Marked is a debuff, so Condemn turns Judgement on, and the party's volley lands on the judged. A medium cooldown.
@@ -146,7 +146,7 @@ Six classes that win through the party: a tank that punishes, a bruiser that hel
 
 **Role:** the shieldmaiden: a quick, survivable damage dealer, not a tank. **Trunk:** her spear builds her Shield as it strikes; three quick hits reach past any guard and shock what they hit; a heavy blow from above cashes the Shock in; and she chooses the slain: one ability mends the lowest ally or raises a fallen one.
 
-**Weapons:** spear, sword. **Armor:** Mail, Leather. **Offhands:** round shield, cloak. **Special stats:** Cooldown medium. **The line:** Attack high, Crit above average, Aggro low: she draws little, and her Cooldown is her "relatively fast".
+**Weapons:** spear, sword, rune sword. **Armor:** Mail, Leather. **Offhands:** round shield, cloak, horn. **Special stats:** Cooldown medium. **The line:** Attack high, Crit above average, Aggro low: she draws little, and her Cooldown is her "relatively fast".
 
 - **Passive – Shieldmaiden.** Each hit she lands gives her a Shield of a share of the damage dealt (`KIT.shieldmaiden`). Survivable by attacking: her Shield bar grows as she fights and is spent as she's hit, and it soaks a status's damage too. It reads Attack (bigger hits, bigger Shield) and max HP (the Shield's cap).
 - **Gale spear.** Has Seek. Three quick hits on a random foe that isn't Taunting; each deals damage that scales from Attack and adds a few Shock, with stacks that scale from Attack.
@@ -161,7 +161,7 @@ Six classes that win through the party: a tank that punishes, a bruiser that hel
 
 **Role:** party tempo. **Trunk:** every note mends an ally a little and gives another mana; a ballad steadies the party, an allegro quickens it, and an encore makes an ally's next spell sound twice. Pure support: it deals no damage of its own beyond its swings.
 
-**Weapons:** bow, wand. **Armor:** Leather, Robes. **Offhands:** tome, bell. **Special stats:** Cooldown medium. **The line:** average everything, Aggro at the bottom; its Cooldown is its tempo.
+**Weapons:** bow, wand, dagger. **Armor:** Leather, Robes. **Offhands:** tome, bell, vial. **Special stats:** Cooldown medium. **The line:** average everything, Aggro at the bottom; its Cooldown is its tempo.
 
 - **Passive – Refrain.** Each of its basic attacks that lands heals a random ally and gives a random ally MP, each a share of the damage the attack dealt. So its weapon is a choice: the bow's heavy swing is Refrain's hit size, and the wand's stats are the songs'.
 - **War ballad.** Adds a few Might to every ally; stacks scale from Attack.
@@ -174,9 +174,9 @@ Six classes that win through the party: a tank that punishes, a bruiser that hel
 
 ### Hexer
 
-**Role:** the spellblade. **Trunk:** a blade that carries curses: its swing chills, its curses deepen every affliction a foe already holds, it weakens every foe at once, and it silences a foe mid-cast and strips what it holds.
+**Role:** the spellblade. **Trunk:** its swing chills; its curse hits every foe harder for each different affliction it holds, and leaves it bleeding; it weakens every foe at once; and it silences a foe mid-cast and strips its buffs.
 
-**Weapons:** wand, sword. **Armor:** Mail. **Offhands:** tome, idol. **Special stats:** Siphon medium. **The line:** Attack high, a spellblade's body (HP and Defense average), Aggro at the bottom.
+**Weapons:** wand, sword, dagger. **Armor:** Mail, Robes. **Offhands:** tome, idol, totem. **Special stats:** Siphon medium. **The line:** Attack high, a spellblade's body (HP and Defense average), Aggro at the bottom.
 
 - **Passive – Cold hex.** Its basic attacks add a few Chill, whatever weapon it carries; stacks scale from Attack.
 - **Malison.** Curses every foe: a light hit from Attack, a fifth more for each different affliction the foe holds (Burn, Chill, Shock, Bleed, Sunder), then a few Bleed. The Hexer pays for breadth where the mages are the sources: a mixed party is what makes it big, and the hit and the Bleed mean it does something alone.
@@ -195,7 +195,7 @@ Three damage dealers, each beating Defense its own way: the Monk with Sunder, th
 
 **Role:** sunders with a blur of blows. **Trunk:** every blow leaves the foe a little more open, Flow keeps it fast, burning fists pile onto the hottest foe, and a pressure point drops the most dangerous one for a moment.
 
-**Weapons:** fist weapons, spear. **Armor:** Leather. **Offhands:** bell, cloak. **Special stats:** Evasion high, Double strike medium. **The line:** Attack high, Defense at the bottom: it dodges, it doesn't absorb.
+**Weapons:** fist weapons, spear, staff. **Armor:** Leather, Robes. **Offhands:** bell, cloak, relic. **Special stats:** Evasion high, Double strike medium. **The line:** Attack high, Defense at the bottom: it dodges, it doesn't absorb.
 
 - **Passive – Iron palm.** Its basic attacks, and the second strike of its Double strike, add a few Sunder; stacks scale from Attack.
 - **Flow.** Applies Haste to itself.
@@ -210,7 +210,7 @@ Three damage dealers, each beating Defense its own way: the Monk with Sunder, th
 
 **Role:** burst killer. **Trunk:** slips out of sight, picks off the weakest foe past any guard, leaves every crit a bleeding wound, and silences the back line.
 
-**Weapons:** dagger, axe. **Armor:** Leather. **Offhands:** vial, trophy. **Special stats:** Crit damage high, Evasion medium. **The line:** the glass dagger: Attack and Crit at the top, HP and Defense at the bottom.
+**Weapons:** dagger, axe, bow. **Armor:** Leather. **Offhands:** vial, trophy, cloak. **Special stats:** Crit damage high, Evasion medium. **The line:** the glass dagger: Attack and Crit at the top, HP and Defense at the bottom.
 
 - **Passive – Lacerate.** Each of its crits adds several Bleed to the foe; stacks scale from Attack.
 - **Vanish.** Applies Hidden to itself. Waits until it isn't Hidden.
@@ -225,7 +225,7 @@ Three damage dealers, each beating Defense its own way: the Monk with Sunder, th
 
 **Role:** drains to outlast. **Trunk:** feeds on everything it hits: the harder it hits, the more it heals, its prey is left bleeding, and it bleeds its own life into an ally's wounds and mana. An exotic class, at the director's word. Its identity is healing back from the brink, not sustain all fight.
 
-**Weapons:** fist weapons, axe. **Armor:** Mail. **Offhands:** vial, idol. **Special stats:** Lifesteal medium. **The line:** body as fuel: HP above average, Attack high.
+**Weapons:** fist weapons, axe, rune sword. **Armor:** Mail, Plate. **Offhands:** vial, idol, relic. **Special stats:** Lifesteal medium. **The line:** body as fuel: HP above average, Attack high.
 
 - **Passive – Bloodlust.** While it's below half of its max HP, its Lifesteal is doubled.
 - **Blood drain.** Deals damage that scales from max HP to a random foe, and adds a few Bleed; stacks scale from Attack. The one MP cost off the ladder: very cheap.
@@ -244,7 +244,7 @@ Four mages, and they share no template: fire is the long cast, ice the wall that
 
 **Role:** the glass cannon of long casts. **Trunk:** every spell it casts stokes the fire on the hottest foe, bolts pile more onto it, a fireball spreads it, and a pyre lands. Cast speed is its stat, in its line and on its staff, so the long casts land.
 
-**Weapons:** staff, wand. **Armor:** Robes. **Offhands:** lantern, orb. **Special stats:** Cast speed medium. **The line:** Attack at the top, HP and Defense at the bottom.
+**Weapons:** staff, wand, mace. **Armor:** Robes. **Offhands:** lantern, orb, totem. **Special stats:** Cast speed medium. **The line:** Attack at the top, HP and Defense at the bottom.
 
 - **Passive – Stoke.** Each ability it casts adds a few Burn to the foe with the most Burn; stacks scale from Attack. The caster: its swings carry no fire unless a version says so.
 - **Firebolt.** Deals damage that scales from Attack to the foe with the most Burn, and adds several Burn; stacks scale from Attack.
@@ -259,7 +259,7 @@ Four mages, and they share no template: fire is the long cast, ice the wall that
 
 **Role:** the ice wall: a chunky supporting mage, and the Chill applier. **Trunk:** it opens each fight with a Shield on every ally, lays Chill on the field and on the most-chilled foe until the Chill itself shatters, leaves the shattered foe sundered for the party, and keeps an ally's mana flowing while the frost builds. Nothing in its kit triggers a shatter and nothing applies Slow: Chill is its slow, and Chill detonates itself at its cap. Shattering reliably is a matter of stacks (`LANCE_CHILL`, `BLIZZARD_CHILL`, `STILLNESS_CHILL` against `STATUS.chill`).
 
-**Weapons:** staff, rune sword. **Armor:** Robes, Mail. **Offhands:** tome, orb. **Special stats:** none. **The line:** HP and Defense average, Attack average: its power is in the field's Chill and the shelter it gives, and its body is its stat.
+**Weapons:** staff, rune sword, spear. **Armor:** Robes, Mail. **Offhands:** tome, orb, kite shield. **Special stats:** none. **The line:** HP and Defense average, Attack average: its power is in the field's Chill and the shelter it gives, and its body is its stat.
 
 - **Passive – Shatterpoint.** At fight start every ally, itself included, gains a Shield of a share of the Frostweaver's max HP (`SHATTERPOINT_SHIELD`): the ice wall's cover for a party with no wall, kept by every version and unscaled by the power step. When a foe's Chill shatters, that foe takes several Sunder; stacks scale from Attack.
 - **Frost lance.** Deals damage that scales from Attack to the foe with the most Chill, and adds several Chill; stacks scale from Attack.
@@ -274,7 +274,7 @@ Four mages, and they share no template: fire is the long cast, ice the wall that
 
 **Role:** the striker among the mages. **Trunk:** everything it does is quick and spreads: each swing arcs to a second foe, lightning chains, a storm puts Shock on every ally's swings, and it charges itself to swing faster.
 
-**Weapons:** fist weapons, rune sword. **Armor:** Robes, Leather. **Offhands:** totem, bell. **Special stats:** Attack speed medium. **The line:** Attack high, HP and Defense at the bottom: it swings often and takes hits badly.
+**Weapons:** fist weapons, rune sword, hammer. **Armor:** Robes, Leather. **Offhands:** totem, bell, orb. **Special stats:** Attack speed medium. **The line:** Attack high, HP and Defense at the bottom: it swings often and takes hits badly.
 
 - **Passive – Arc.** Each of its basic attacks also hits a second, random foe, and adds a few Shock to both; stacks scale from Attack.
 - **Chain lightning.** Deals damage that scales from Attack to a random foe, then to up to three other random foes, and adds a few Shock to each; stacks scale from Attack.
@@ -289,7 +289,7 @@ Four mages, and they share no template: fire is the long cast, ice the wall that
 
 **Role:** hits hardest behind stone. **Trunk:** wraps itself and an ally in stone; while its own Shield holds, its rocks crit far more often and far harder, and a tremor drops a foe now and then. Defense is its spell stat; the great weapon is where its Attack comes from.
 
-**Weapons:** hammer, great weapon. **Armor:** Plate. **Offhands:** kite shield, trophy. **Special stats:** Crit damage high. **The line:** Defense at the top, Crit high, Attack average.
+**Weapons:** hammer, great weapon, axe. **Armor:** Plate, Robes. **Offhands:** kite shield, trophy, idol. **Special stats:** Crit damage high. **The line:** Defense at the top, Crit high, Attack average.
 
 - **Passive – Bedrock.** While its Shield pool is above zero, its crit chance is doubled.
 - **Earthen shell.** Applies Shield to itself and to the other ally with the lowest share of max HP; the amount scales from Defense, about half a Shield's cap a cast (`EARTHEN_SHELL`), so a full Shield takes two.
