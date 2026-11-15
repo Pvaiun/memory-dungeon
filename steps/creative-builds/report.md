@@ -81,7 +81,7 @@ The tool's word patterns are broader than the kickoff's hand count on two rows: 
 
 ## 3. Waiting for art
 
-**Weapons:** all 40 have first sheets from the weapon art kit, and the 41 left-over drawings are gone. The director's picks among the 22 uncommon and up are open.
+**Weapons:** all 40 have sheets from the weapon art kit, the 22 uncommon and up as the director picked them; the 41 left-over drawings are gone.
 
 **Statuses without an icon (25):**
 - **The four new ones:** Bewildered, Brittle, Fixated, Owed.
