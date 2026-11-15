@@ -64,7 +64,8 @@ const rosterOrder = (run: RogueRun) => [...run.party, ...bench(run)];
 /**
  * A run's item as a gear card (its rarity, kind and numbers, `gearRow`), with who wears it at the right. With `who` (the
  * default), the line of who can wear it, the roster first; never what it's for, which would spoil the discovery. With
- * `wears` (an offer), the roster's faces beside what they wear in its slot now, under everything (`wearsLine`). The
+ * `wears` (an offer), the roster's faces beside what they wear in its slot now, under everything but the FITS line, which
+ * moves under them (`wearsLine`). The
  * stacks it lays are shown for its wearer, else the first of the roster who can wear it.
  */
 export function itemRow(run: RogueRun, it: Item, onClick?: () => void, opts: { arrow?: boolean; stats?: Record<string, number> | null; right?: HTMLElement | null; who?: boolean; brief?: boolean; wears?: boolean } = {}): HTMLElement {
@@ -72,7 +73,12 @@ export function itemRow(run: RogueRun, it: Item, onClick?: () => void, opts: { a
   const by = wearer(run, it.uid) ?? rosterOrder(run).find((cls) => canEquip(classOf(cls), g));
   const r = gearRow(g, g.slot, opts.stats ?? (by ? fighter(run, by).stats : null), onClick, opts.arrow ?? false, opts.who === false || opts.brief ? undefined : rosterOrder(run), opts.brief);
   const wears = opts.wears ? wearsLine(run, g) : null;
-  if (wears) r.querySelector(".grow")?.append(wears);
+  if (wears) {
+    const grow = r.querySelector(".grow");
+    const who = grow?.querySelector(":scope > .who");
+    grow?.append(wears);
+    if (who) grow?.append(who); // FITS under the faces on an offer
+  }
   const w = wearer(run, it.uid);
   const right = "right" in opts ? opts.right : w ? h("span", { class: "tag" }, shortName(w)) : null;
   if (right) r.querySelector(".grow .line")?.append(right);
