@@ -47948,7 +47948,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 150
+      "knob": 166
      },
      {
       "id": "snake_pit",
@@ -47960,7 +47960,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 57
+      "knob": 75
      },
      {
       "id": "bandit_camp",
@@ -47971,7 +47971,7 @@
        "archer",
        "bandit"
       ],
-      "knob": 4
+      "knob": 12
      },
      {
       "id": "night_wolves",
@@ -47985,7 +47985,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 142
+      "knob": 158
      },
      {
       "id": "archers_nest",
@@ -47996,7 +47996,7 @@
        "archer",
        "archer"
       ],
-      "knob": 4
+      "knob": 8
      },
      {
       "id": "viper_den",
@@ -48009,7 +48009,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 29
+      "knob": 48
      },
      {
       "id": "bandit_horde",
@@ -48021,7 +48021,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 28
+      "knob": 47
      }
     ],
     "elite": [
@@ -48033,7 +48033,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 45
+      "knob": 63
      },
      {
       "id": "twin_ogres",
@@ -48042,7 +48042,7 @@
        "ogre",
        "ogre"
       ],
-      "knob": 26
+      "knob": 41
      },
      {
       "id": "war_camp",
@@ -48053,7 +48053,7 @@
        "archer",
        "ogre"
       ],
-      "knob": -15
+      "knob": -7
      }
     ],
     "bosses": [
@@ -48065,7 +48065,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 75
+      "knob": 97
      },
      {
       "id": "packmaster",
@@ -48077,7 +48077,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 66
+      "knob": 104
      },
      {
       "id": "chiefs_return",
@@ -48086,7 +48086,7 @@
        "ogre_chief",
        "ogre"
       ],
-      "knob": 32
+      "knob": 61
      }
     ]
    },
@@ -48095,8 +48095,8 @@
     "name": "The Crypt",
     "act": 2,
     "knob": {
-     "mob": -43,
-     "elite": -26,
+     "mob": -60,
+     "elite": -43,
      "boss": 0
     },
     "text": "Armored bones, wyrms you can't hit, ghosts your blows pass through, and Death with a bell.",
@@ -48142,7 +48142,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 184
+      "knob": 279
      },
      {
       "id": "dark_hall",
@@ -48153,7 +48153,7 @@
        "bat",
        "bat"
       ],
-      "knob": 149
+      "knob": 243
      },
      {
       "id": "curse_room",
@@ -48163,7 +48163,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 136
+      "knob": 222
      },
      {
       "id": "haunted_hall",
@@ -48174,7 +48174,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 134
+      "knob": 208
      },
      {
       "id": "bone_wall",
@@ -48186,7 +48186,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 153
+      "knob": 240
      },
      {
       "id": "dead_watch",
@@ -48197,7 +48197,7 @@
        "witch",
        "ghost"
       ],
-      "knob": 102
+      "knob": 192
      }
     ],
     "elite": [
@@ -48210,7 +48210,7 @@
        "ghoul",
        "ghoul"
       ],
-      "knob": 151
+      "knob": 209
      },
      {
       "id": "lich_lair",
@@ -48219,7 +48219,7 @@
        "lich",
        "mummy"
       ],
-      "knob": 253
+      "knob": 338
      },
      {
       "id": "grave_watch",
@@ -48229,7 +48229,7 @@
        "troll",
        "troll"
       ],
-      "knob": 50
+      "knob": 102
      }
     ],
     "bosses": [
@@ -48241,7 +48241,7 @@
        "bat",
        "bat"
       ],
-      "knob": 94
+      "knob": 201
      },
      {
       "id": "reapers_court",
@@ -48251,7 +48251,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 85
+      "knob": 183
      }
     ]
    },
@@ -48260,8 +48260,8 @@
     "name": "The Fire Mine",
     "act": 2,
     "knob": {
-     "mob": 57,
-     "elite": 31,
+     "mob": 83,
+     "elite": 50,
      "boss": 0
     },
     "text": "Everything here burns, and the lord of the furnace casts a fire that ends parties.",
@@ -48309,7 +48309,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": -4
+      "knob": 56
      },
      {
       "id": "bomb_room",
@@ -48320,7 +48320,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": -134
+      "knob": -87
      },
      {
       "id": "imp_kennel",
@@ -48331,7 +48331,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": -19
+      "knob": 49
      },
      {
       "id": "hound_run",
@@ -48344,7 +48344,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": -31
+      "knob": 28
      },
      {
       "id": "slag_heap",
@@ -48354,7 +48354,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 56
+      "knob": 149
      },
      {
       "id": "miners",
@@ -48365,7 +48365,7 @@
        "bandit",
        "bomb_bug"
       ],
-      "knob": -35
+      "knob": 41
      }
     ],
     "elite": [
@@ -48376,7 +48376,7 @@
        "lava_slime",
        "lava_slime"
       ],
-      "knob": 151
+      "knob": 228
      },
      {
       "id": "imp_court",
@@ -48388,7 +48388,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 55
+      "knob": 123
      },
      {
       "id": "powder_room",
@@ -48398,7 +48398,7 @@
        "bomb_bug",
        "ogre"
       ],
-      "knob": -72
+      "knob": -27
      },
      {
       "id": "bomb_nest",
@@ -48408,7 +48408,7 @@
        "bomb_bug",
        "bomb_bug"
       ],
-      "knob": -88
+      "knob": -1
      }
     ],
     "bosses": [
@@ -48418,7 +48418,7 @@
       "enemies": [
        "fire_giant"
       ],
-      "knob": 95
+      "knob": 190
      },
      {
       "id": "giants_forge",
@@ -48428,7 +48428,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 62
+      "knob": 143
      },
      {
       "id": "giants_wrath",
@@ -48438,7 +48438,7 @@
        "fire_imp",
        "fire_imp"
       ],
-      "knob": 54
+      "knob": 120
      }
     ]
    },
@@ -48447,8 +48447,8 @@
     "name": "The Ice Pass",
     "act": 2,
     "knob": {
-     "mob": -16,
-     "elite": -1,
+     "mob": -24,
+     "elite": -3,
      "boss": 0
     },
     "text": "Every fight asks what kind of hit you make, and a Titan of ice waits at the top.",
@@ -48495,7 +48495,7 @@
        "snow_wolf",
        "snow_wolf"
       ],
-      "knob": 296
+      "knob": 363
      },
      {
       "id": "ice_heart",
@@ -48505,7 +48505,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 65
+      "knob": 123
      },
      {
       "id": "whiteout",
@@ -48515,7 +48515,7 @@
        "ice_ghost",
        "ice_spirit"
       ],
-      "knob": 72
+      "knob": 146
      },
      {
       "id": "ghost_lights",
@@ -48525,7 +48525,7 @@
        "ice_ghost",
        "ice_ghost"
       ],
-      "knob": 102
+      "knob": 179
      },
      {
       "id": "long_pack",
@@ -48539,7 +48539,7 @@
        "snow_wolf",
        "snow_wolf"
       ],
-      "knob": 220
+      "knob": 302
      },
      {
       "id": "drift",
@@ -48550,7 +48550,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 89
+      "knob": 154
      }
     ],
     "elite": [
@@ -48561,7 +48561,7 @@
        "ice_golem",
        "ice_golem"
       ],
-      "knob": 156
+      "knob": 245
      },
      {
       "id": "golem_gate",
@@ -48571,7 +48571,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 87
+      "knob": 145
      },
      {
       "id": "frost_trolls",
@@ -48582,7 +48582,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": -5
+      "knob": 35
      }
     ],
     "bosses": [
@@ -48592,7 +48592,7 @@
       "enemies": [
        "ice_titan"
       ],
-      "knob": 144
+      "knob": 286
      },
      {
       "id": "glacier_king",
@@ -48602,7 +48602,7 @@
        "snow_wolf",
        "snow_wolf"
       ],
-      "knob": 107
+      "knob": 253
      }
     ]
    },
@@ -48611,8 +48611,8 @@
     "name": "The Storm Tower",
     "act": 3,
     "knob": {
-     "mob": 35,
-     "elite": 21,
+     "mob": 54,
+     "elite": 38,
      "boss": 0
     },
     "text": "Clouds of sparks, leeches that drink mana, and a queen behind a wall of drones.",
@@ -48665,7 +48665,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 6
+      "knob": 71
      },
      {
       "id": "wisp_nest",
@@ -48678,7 +48678,7 @@
        "leech",
        "leech"
       ],
-      "knob": 27
+      "knob": 97
      },
      {
       "id": "leech_den",
@@ -48689,7 +48689,7 @@
        "leech",
        "leech"
       ],
-      "knob": 157
+      "knob": 249
      },
      {
       "id": "drone_wall",
@@ -48702,7 +48702,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": -18
+      "knob": 45
      },
      {
       "id": "storm_front",
@@ -48715,7 +48715,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": -8
+      "knob": 61
      }
     ],
     "elite": [
@@ -48728,7 +48728,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 301
+      "knob": 388
      },
      {
       "id": "sniper_ridge",
@@ -48740,7 +48740,7 @@
        "archer",
        "archer"
       ],
-      "knob": 33
+      "knob": 93
      },
      {
       "id": "lich_pair",
@@ -48750,7 +48750,7 @@
        "lich",
        "lich"
       ],
-      "knob": 162
+      "knob": 258
      }
     ],
     "bosses": [
@@ -48762,7 +48762,7 @@
        "drone",
        "drone"
       ],
-      "knob": 207
+      "knob": 371
      },
      {
       "id": "hive_queen",
@@ -48774,7 +48774,7 @@
        "drone",
        "drone"
       ],
-      "knob": 135
+      "knob": 311
      }
     ]
    },
@@ -48783,8 +48783,8 @@
     "name": "The Deep Crypt",
     "act": 3,
     "knob": {
-     "mob": -38,
-     "elite": 2,
+     "mob": -45,
+     "elite": 8,
      "boss": 0
     },
     "text": "Beneath the Crypt, something takes every voice. Power that isn't an ability is the key.",
@@ -48828,7 +48828,7 @@
        "troll",
        "troll"
       ],
-      "knob": 60
+      "knob": 119
      },
      {
       "id": "lich_lair",
@@ -48837,7 +48837,7 @@
        "lich",
        "mummy"
       ],
-      "knob": 255
+      "knob": 341
      },
      {
       "id": "silent_hall",
@@ -48848,7 +48848,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 97
+      "knob": 164
      },
      {
       "id": "quiet_hall",
@@ -48859,7 +48859,7 @@
        "ghost",
        "ghost"
       ],
-      "knob": 86
+      "knob": 144
      },
      {
       "id": "coven",
@@ -48870,7 +48870,7 @@
        "wraith",
        "wraith"
       ],
-      "knob": 68
+      "knob": 123
      },
      {
       "id": "ghoul_feast",
@@ -48881,7 +48881,7 @@
        "ghoul",
        "ghoul"
       ],
-      "knob": 165
+      "knob": 229
      }
     ],
     "elite": [
@@ -48893,7 +48893,7 @@
        "bone_priest",
        "troll"
       ],
-      "knob": 128
+      "knob": 207
      },
      {
       "id": "lich_court",
@@ -48904,7 +48904,7 @@
        "lich",
        "lich"
       ],
-      "knob": 101
+      "knob": 167
      },
      {
       "id": "tomb_lords",
@@ -48914,7 +48914,7 @@
        "mummy",
        "witch"
       ],
-      "knob": 147
+      "knob": 194
      }
     ],
     "bosses": [
@@ -48924,7 +48924,7 @@
       "enemies": [
        "silent_one"
       ],
-      "knob": 109
+      "knob": 305
      },
      {
       "id": "silent_court",
@@ -48934,7 +48934,7 @@
        "bone_priest",
        "bone_priest"
       ],
-      "knob": 51
+      "knob": 225
      }
     ]
    },
@@ -48943,8 +48943,8 @@
     "name": "The Tower Top",
     "act": 3,
     "knob": {
-     "mob": 8,
-     "elite": -22,
+     "mob": 0,
+     "elite": -39,
      "boss": 0
     },
     "text": "Above the storm: the queen's drones, the king's soldiers, and the king who rages when they fall.",
@@ -48995,7 +48995,7 @@
        "leech",
        "leech"
       ],
-      "knob": 2
+      "knob": 62
      },
      {
       "id": "wisp_nest",
@@ -49008,7 +49008,7 @@
        "leech",
        "leech"
       ],
-      "knob": 35
+      "knob": 116
      },
      {
       "id": "barracks",
@@ -49018,7 +49018,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 364
+      "knob": 468
      },
      {
       "id": "drone_wall",
@@ -49031,7 +49031,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 7
+      "knob": 63
      },
      {
       "id": "watch",
@@ -49042,7 +49042,7 @@
        "drone",
        "drone"
       ],
-      "knob": 199
+      "knob": 276
      }
     ],
     "elite": [
@@ -49054,7 +49054,7 @@
        "drone",
        "drone"
       ],
-      "knob": 131
+      "knob": 200
      },
      {
       "id": "honour_guard",
@@ -49065,7 +49065,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 371
+      "knob": 443
      },
      {
       "id": "leech_den",
@@ -49077,7 +49077,7 @@
        "leech",
        "leech"
       ],
-      "knob": 270
+      "knob": 352
      }
     ],
     "bosses": [
@@ -49087,7 +49087,7 @@
       "enemies": [
        "storm_king"
       ],
-      "knob": 175
+      "knob": 367
      },
      {
       "id": "kings_guard",
@@ -49097,7 +49097,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 107
+      "knob": 276
      }
     ]
    }
