@@ -21,6 +21,7 @@ import { TUNER_FIGHT } from "./battle/tuner.js";
 import { music, setMusic, setSound, sfx } from "./battle/audio.js";
 import { bindRogue, rbossScreen, rclassScreen, rgearScreen, rogueMenuLine, rogueScreen, rpartyScreen, runitScreen } from "./rogue-screens.js";
 import { abandonRun, current as rogueRun, resetRogue } from "./rogue/state.js";
+import { member as rogueMember } from "../../src/rogue.js";
 
 export type Screen = "home" | "fight" | "party" | "formation" | "unit" | "gear" | "classes" | "bestiary" | "enemy" | "settings" | "battle" | "rogue" | "rparty" | "runit" | "rgear" | "rboss" | "rclass";
 
@@ -99,10 +100,18 @@ function ask(title: string, text: string, yes: string, onYes: () => void) {
   nav.overlay = close;
 }
 
+/** The party the mode plays: in rogue mode the run's (none between runs), else free play's. */
+function modeParty(): { party: string[]; formation: string; weapons: Record<string, string | undefined> } {
+  if (!onRogue()) return { party: setup.party, formation: setup.formation, weapons: Object.fromEntries(setup.party.map((id) => [id, gearFor(id).weapon])) };
+  const run = rogueRun();
+  if (!run) return { party: [], formation: "", weapons: {} };
+  return { party: run.party, formation: run.formation, weapons: Object.fromEntries(run.party.map((id) => [id, rogueMember(run, id).gear.weapon ?? undefined])) };
+}
 function stripEl(pick: number | null = null): HTMLCanvasElement {
   const cv = h("canvas", { class: "strip" });
   cv.style.height = `${STRIP_H / 8}rem`;
-  strip = new Strip(cv, setup.party, setup.formation, Object.fromEntries(setup.party.map((id) => [id, gearFor(id).weapon])), pick).start();
+  const p = modeParty();
+  strip = new Strip(cv, p.party, p.formation, p.weapons, pick).start();
   return cv;
 }
 /** Designer view only: the seed every fight plays while it's locked (Settings → SEED). Players never see a seed. */
@@ -307,9 +316,13 @@ function unit(arg?: unknown): Child[] {
   const back = () => { orderPick = null; go(unitFrom); };
   // Four slots, the offhand locked under a two-handed weapon.
   const gearRows = SLOTS.map((s) => (s === "offhand" && twoHanded(g) ? lockedRow(s) : gearRow(g[s] ? gearOf(g[s]) : null, s, member.stats, () => go("gear", { cls: id, slot: s }))));
-  const where = slot >= 0 ? h("span", { class: "hi small" }, `IN SLOT ${slot + 1}`) : setup.party.length < 3 ? button("ADD TO PARTY", () => { setup.party.push(id); save(); go("party"); }, "sm hi") : h("span", { class: "dim small" }, "PARTY FULL");
+  // In rogue mode the sheet is a reference: where the class stands in the run, and free play's party left alone.
+  const run = onRogue() ? rogueRun() : null;
+  const where = onRogue()
+    ? run?.party.includes(id) ? h("span", { class: "hi small" }, "IN PARTY") : run?.roster.some((m) => m.cls === id) ? h("span", { class: "dim small" }, "AT CAMP") : null
+    : slot >= 0 ? h("span", { class: "hi small" }, `IN SLOT ${slot + 1}`) : setup.party.length < 3 ? button("ADD TO PARTY", () => { setup.party.push(id); save(); go("party"); }, "sm hi") : h("span", { class: "dim small" }, "PARTY FULL");
   return [
-    header(k.name, back, slot >= 0 ? button("REMOVE", () => { setup.party.splice(slot, 1); save(); go("party"); }, "sm") : null),
+    header(k.name, back, slot >= 0 && !onRogue() ? button("REMOVE", () => { setup.party.splice(slot, 1); save(); go("party"); }, "sm") : null),
     win("", classHead(id, h("div", { class: "line", style: "min-height:1.75rem" }, where))),
     win("", statGrid(member.stats, k.stats, designer), sp.length ? h("div", { class: "text up small wrap", style: "margin-top:.25rem" }, ...sp.flatMap((s, i) => (i ? [" · ", s] : [s]))) : null),
     win("scroll",
@@ -367,7 +380,7 @@ function classesScreen(): Child[] {
   return [
     header("CLASSES", () => go("home")),
     win("list scroll",
-      ...classes.map((k) => row([h("div", { class: "portrait" }, portraitEl(k.id)), h("div", { class: "grow trunc" }, h("div", { class: "line" }, k.name), h("div", { class: "text dim small" }, role(k.id)))], () => { orderPick = null; go("unit", k.id); }, { cursor: false, cur: setup.party.includes(k.id), cls: "tall" })),
+      ...classes.map((k) => row([h("div", { class: "portrait" }, portraitEl(k.id)), h("div", { class: "grow trunc" }, h("div", { class: "line" }, k.name), h("div", { class: "text dim small" }, role(k.id)))], () => { orderPick = null; go("unit", k.id); }, { cursor: false, cur: modeParty().party.includes(k.id), cls: "tall" })),
     ),
   ];
 }
