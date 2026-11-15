@@ -148,7 +148,7 @@ export const ROGUE_CONFIG: RogueConfigT = {
    * alone (HP k %, damage k ÷ 2.5 %) made act III's bosses slogs that the enrage decided.
    */
   shape: { fight: { hp: -20, power: 30 }, elite: { hp: -20, power: 30 }, boss: { hp: -40, power: 30 } },
-  /** Heat: each level adds this to every knob (about 6 points of the simulated player's wins a level). Won runs open the next. */
+  /** Heat: each level adds this to every knob (under a point of the simulated player's 5% wins a level). Won runs open the next. */
   heat: { per: 4, max: 10 },
   /**
    * Later floors' fights grow: from this floor, each pack of two or more may gain one more (to the cap of 8). From floor 9, the
