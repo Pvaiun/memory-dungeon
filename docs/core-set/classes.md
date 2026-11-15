@@ -80,7 +80,7 @@ The starters cover every Fundamental challenge between them: a wall, a healer an
 
 ### Ranger
 
-**Role:** the marksman. **Trunk:** arrows that bleed, chill and sunder whatever stands in front; plain arrows that crit for a living, and each crit leaves it ready to dodge the next blow.
+**Role:** the marksman. **Trunk:** arrows that bleed, chill and sunder what they hit, and crits for a living: it starts each fight ready to dodge a blow, and every crit readies another.
 
 **Weapons:** bow, dagger. **Armor:** Leather. **Offhands:** trophy, cloak. **Special stats:** Accuracy medium, Evasion medium. **The line:** Attack and Crit high, a light body that slips aside rather than takes the blow.
 
@@ -174,7 +174,7 @@ Six classes that win through the party: a tank that punishes, a bruiser that hel
 
 ### Hexer
 
-**Role:** the spellblade. **Trunk:** a blade that carries curses: its swing chills, its curses deepen every affliction a foe already holds, it weakens every foe at once, and it silences a foe mid-cast and strips what it holds.
+**Role:** the spellblade. **Trunk:** its swing chills; its curse hits every foe harder for each different affliction it holds, and leaves it bleeding; it weakens every foe at once; and it silences a foe mid-cast and strips its buffs.
 
 **Weapons:** wand, sword. **Armor:** Mail. **Offhands:** tome, idol. **Special stats:** Siphon medium. **The line:** Attack high, a spellblade's body (HP and Defense average), Aggro at the bottom.
 
