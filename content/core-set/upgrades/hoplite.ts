@@ -1,6 +1,6 @@
 /** The Hoplite's upgrades: a power step and two versions (A and B) for each ability and the passive. Written with kit.ts. */
 import type { AbilityT, ReactionT, StatusT } from "../../../src/schema.js";
-import { from, HIT, KIND_SPEED, stacks, SWING_REF } from "../scale.js";
+import { from, HIT, KIND_SPEED, KIT, stacks, SWING_REF } from "../scale.js";
 import { T } from "../classes.js";
 import { abilityUp, apply, cd, helper, kit, passiveUp, phys, r6, removeMine } from "./kit.js";
 
@@ -53,9 +53,9 @@ import { abilityUp, apply, cd, helper, kit, passiveUp, phys, r6, removeMine } fr
     a: { name: "Locked shields", text: "Shoves every foe, adding Sunder; Guards itself and the ally with the lowest HP%.", builds: ["toll", "storm"] },
     b: { name: "Breach", text: "Shoves only the foe with the most Defense, adding Sunder.", builds: ["landslide", "hunt"] },
     form: (v, k) =>
-      v === "a" ? { do: [shove(HIT.light, "few", k), apply("guard", { to: "self" }), apply("guard", { to: T.lowestShareAlly })] }
+      v === "a" ? { do: [shove(HIT.light * KIT.othismos, "few", k), apply("guard", { to: "self" }), apply("guard", { to: T.lowestShareAlly })] }
         : v === "b" ? { target: { side: "foes", pick: "highest", by: { stat: "defense" } }, do: [shove(HIT.light * 3, "several", k)] }
-          : { do: [shove(HIT.light, "few", k)] },
+          : { do: [shove(HIT.light * KIT.othismos, "few", k)] },
   });
 }
 

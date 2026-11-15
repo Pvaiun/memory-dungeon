@@ -152,6 +152,8 @@ export type Rec = {
   read?: {
     q: number[]; dealt: number; top10: number; kills: number; firstKill: number | null; spread: number | null; taken: number[]; takenTotal: number;
     low: number; foesLeft: number; src: Record<string, number>; mp: number; mpMax: number; paid: number; hpMax: number;
+    /** The bosses' own HP left, as a share of theirs (null when no boss fought). */
+    bossLeft: number | null;
   };
 };
 
@@ -216,9 +218,9 @@ export function play(c: Content, party: EParty, f: FightSpec, seed: number, log:
 
 /** The rhythm read of one fight's log (as `tools/rhythm-read.ts` reads it), plus what the party spent. */
 function readLog(c: Content, log: Entry[], T0: number, mpMax: number) {
-  type U = { id: string; side: string; max: number; hp: number };
-  const side = new Map<string, string>(), max = new Map<string, number>(), hp = new Map<string, number>();
-  const meet = (u: U) => { side.set(u.id, u.side); max.set(u.id, u.max); hp.set(u.id, u.hp); };
+  type U = { id: string; ref?: string; side: string; max: number; hp: number };
+  const side = new Map<string, string>(), max = new Map<string, number>(), hp = new Map<string, number>(), bosses: string[] = [];
+  const meet = (u: U) => { side.set(u.id, u.side); max.set(u.id, u.max); hp.set(u.id, u.hp); if (u.side === "enemy" && u.ref && c.enemies.get(u.ref)?.rank === "boss") bosses.push(u.id); };
   for (const u of (log.find((e) => e.t === "fight_start")?.units ?? []) as U[]) meet(u);
   const party = [...side].filter(([, s]) => s === "party").map(([id]) => id);
   const T = Math.max(1, T0);
@@ -258,9 +260,10 @@ function readLog(c: Content, log: Entry[], T0: number, mpMax: number) {
   const top10 = hits.slice(0, Math.max(1, Math.ceil(hits.length / 10))).reduce((s, x) => s + x, 0);
   const foes = [...side].filter(([, s]) => s === "enemy").map(([id]) => id);
   const foesLeft = foes.reduce((s, id) => s + Math.max(0, hp.get(id) ?? 0), 0) / Math.max(1, foes.reduce((s, id) => s + (max.get(id) ?? 0), 0));
+  const bossLeft = bosses.length ? bosses.reduce((s, id) => s + Math.max(0, hp.get(id) ?? 0), 0) / Math.max(1, bosses.reduce((s, id) => s + (max.get(id) ?? 0), 0)) : null;
   return {
     q, dealt, top10, kills: kills.length, firstKill: kills.length >= 2 ? kills[0] / T : null, spread: kills.length >= 2 ? (kills[kills.length - 1] - kills[0]) / T : null,
-    taken, takenTotal: taken.reduce((s, x) => s + x, 0), low, foesLeft, src, mp, mpMax, paid, hpMax: party.reduce((s, id) => s + (max.get(id) ?? 0), 0),
+    taken, takenTotal: taken.reduce((s, x) => s + x, 0), low, foesLeft, bossLeft, src, mp, mpMax, paid, hpMax: party.reduce((s, id) => s + (max.get(id) ?? 0), 0),
   };
 }
 
@@ -608,6 +611,22 @@ async function main() {
   L.push("", "**All or nothing** (formation parties, own act): clean wins (nobody fell, under a quarter of HP lost) / close fights (won with half the HP lost or someone down, or lost with the foes under a quarter of theirs) / wipes (lost with more left).", "");
   L.push(`| Build | ${rungs.map((r) => `Rung ${r}`).join(" | ")} |`, `| --- | ${rungs.map(() => "---").join(" | ")} |`);
   for (const b of buildIds) L.push(`| ${name(b)} | ${rungs.map((r) => { const s = strength[b][r]?.formation; return s ? `${pct(s.clean)} / ${pct(s.close)} / ${pct(s.wipe)}` : "-"; }).join(" | ")} |`);
+  // By tier: what the knobs' baseline aims at. Regular fights won but not freely; elites not always won; bosses not always
+  // won, and close when lost (the foes' HP left in a loss, as a share of theirs).
+  const tierOf = new Map([...sets.values()].flat().map((f) => [f.key, f.tier]));
+  const byTier = (ps: BParty[], tier: FightTier) => ps.flatMap((p) => Object.entries(byParty.get(p.id)?.get(p.rung) ?? {}).filter(([k]) => tierOf.get(k) === tier).flatMap(([, rs]) => rs)).filter((r) => !r.err);
+  const tierCell = (rs: Rec[], boss: boolean) => {
+    if (!rs.length) return "-";
+    const s = strengthOf(rs), lost = rs.filter((r) => !r.won);
+    const left = mean(lost.map((r) => r.read?.bossLeft ?? r.read?.foesLeft ?? 1));
+    return boss ? `${pct(s.win)}%, left ${lost.length ? pct(left) + "%" : "-"}` : `${pct(s.win)}%, ${pct(s.cost)}%`;
+  };
+  L.push("", "**By tier** (formation parties, own act): regular fights and elites as win rate and mean cost (a loss 1); bosses as win rate and the boss's own HP left in a loss.", "");
+  L.push(`| Build | ${rungs.flatMap((r) => [`R${r} regular`, `R${r} elite`, `R${r} boss`]).join(" | ")} |`, `| --- | ${rungs.flatMap(() => ["---", "---", "---"]).join(" | ")} |`);
+  const tierRow = (label: string, ps: BParty[]) => `| ${label} | ${rungs.flatMap((r) => (["fight", "elite", "boss"] as FightTier[]).map((t) => tierCell(byTier(ps.filter((p) => p.rung === r), t), t === "boss"))).join(" | ")} |`;
+  const formParties = parties.filter((p) => p.version === "formation");
+  for (const b of buildIds) L.push(tierRow(name(b), formParties.filter((p) => p.build === b)));
+  L.push(tierRow("**All**", formParties));
   L.push("");
 
   if (ABLATE) {

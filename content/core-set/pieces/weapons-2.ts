@@ -259,10 +259,10 @@ weapon("mace", "common", "Flanged mace", { stats: [st("attack", 2)], serves: "La
   });
 }
 {
-  const name = "Mender's mace", effect = `Every ${SO_OFTEN} ticks: heals the ally with the lowest HP% for 20% of the wearer's max HP.`;
+  const name = "Mender's mace", effect = `Every ${SO_OFTEN} ticks: heals the ally with the lowest HP% for 12% of the wearer's max HP.`;
   weapon("mace", "uncommon", name, {
     effect, stats: [st("mp_regen", 1), st("aggro", -1), critStep(1)],
-    statuses: [own_(name, effect, { pulse: { every: SO_OFTEN, do: [{ op: "heal", amount: share(0.2, "max_hp"), to: TO.lowestAlly }] } })],
+    statuses: [own_(name, effect, { pulse: { every: SO_OFTEN, do: [{ op: "heal", amount: share(0.12, "max_hp"), to: TO.lowestAlly }] } })],
     serves: "Pact 1 ●● ⚙ brink (half) ◆ the net",
   });
 }

@@ -327,6 +327,11 @@ export const KIT = {
   skyfallPerShock: 150,
   /** Hunter's eye: crit steps added to the Ranger's basic attacks. */
   hunterCrit: 2,
+  /** Gale spear: each of its 3 hits, a share of Attack (its versions' hits too). At 0.09 a cast dealt about one of the Valkyrie's
+   * swings, under the balance sheet's band for an ability. */
+  galeSpear: 0.12,
+  /** Othismos: its shove on every foe, the light word times this, from Defense (at the plain light word, 1.2 swings a cast). */
+  othismos: 1.3,
   /** Thunderstorm: how long the party's swings carry the storm's Shock. */
   storm: { duration: 20 },
   /** Static charge: Attack speed for a while (Haste is 40 in all three speeds; this is one of them, higher). */

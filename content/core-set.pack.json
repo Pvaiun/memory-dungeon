@@ -2379,7 +2379,7 @@
   {
    "id": "shared_cup",
    "name": "Shared cup",
-   "text": "Healing past full goes to the ally with the lowest HP%.",
+   "text": "50% of healing past full goes to the ally with the lowest HP%.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -2412,7 +2412,7 @@
        "amount": {
         "scale": [
          {
-          "ratio": 1,
+          "ratio": 0.5,
           "amount": true
          }
         ]
@@ -3539,7 +3539,7 @@
   {
    "id": "tidal",
    "name": "Tidal",
-   "text": "Every 22 ticks the party turns. Surge: every ally Hasted, hits +20%. Ebb: every ally Guarded, 30% slower.",
+   "text": "Every 22 ticks the party turns. Surge: every ally Hasted, hits +10%. Ebb: every ally Guarded, 40% slower.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -3562,7 +3562,7 @@
   {
    "id": "tidal_surge",
    "name": "SURGE",
-   "text": "Hits +20%.",
+   "text": "Hits +10%.",
    "label": "buff",
    "show": "icon",
    "stacking": "refresh",
@@ -3571,7 +3571,7 @@
    "boosts": [
     {
      "tag": "physical",
-     "pct": 20
+     "pct": 10
     }
    ],
    "reactions": [
@@ -3609,7 +3609,7 @@
   {
    "id": "tidal_ebb",
    "name": "EBB",
-   "text": "30% slower.",
+   "text": "40% slower.",
    "label": "buff",
    "show": "icon",
    "stacking": "refresh",
@@ -3618,15 +3618,15 @@
    "stats": [
     {
      "stat": "attack_speed",
-     "flat": -30
+     "flat": -40
     },
     {
      "stat": "cooldown_reduction",
-     "flat": -30
+     "flat": -40
     },
     {
      "stat": "cast_time_reduction",
-     "flat": -30
+     "flat": -40
     }
    ],
    "reactions": [
@@ -3671,7 +3671,12 @@
    "unremovable": true,
    "lockout": {
     "covers": "basic"
-   }
+   },
+   "mods": [
+    {
+     "mp": -40
+    }
+   ]
   },
   {
    "id": "the_hundred_hands",
@@ -3843,7 +3848,7 @@
   {
    "id": "the_cathedral_soloist",
    "name": "Soloist",
-   "text": "Its first-slotted ability has no cooldown.",
+   "text": "Its first-slotted ability's cooldown is 75% shorter.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -3853,7 +3858,7 @@
      "of": {
       "first": true
      },
-     "cooldown": -100
+     "cooldown": -75
     }
    ]
   },
@@ -4680,7 +4685,7 @@
   {
    "id": "lamprey_claws",
    "name": "Lamprey claws",
-   "text": "Each extra strike heals it for 10% of max HP.",
+   "text": "Each extra strike heals it for 5% of max HP.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -4697,7 +4702,7 @@
        "amount": {
         "scale": [
          {
-          "ratio": 0.1,
+          "ratio": 0.05,
           "stat": "max_hp",
           "of": "holder"
          }
@@ -5417,7 +5422,7 @@
   {
    "id": "mercys_edge",
    "name": "Mercy's edge",
-   "text": "Basic attacks heal the ally with the lowest HP% for 33% of the damage.",
+   "text": "Basic attacks heal the ally with the lowest HP% for 20% of the damage.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -5434,7 +5439,7 @@
        "amount": {
         "scale": [
          {
-          "ratio": 0.3333333333333333,
+          "ratio": 0.2,
           "amount": true
          }
         ]
@@ -7091,7 +7096,7 @@
   {
    "id": "menders_mace",
    "name": "Mender's mace",
-   "text": "Every 22 ticks: heals the ally with the lowest HP% for 20% of the wearer's max HP.",
+   "text": "Every 22 ticks: heals the ally with the lowest HP% for 12% of the wearer's max HP.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -7104,7 +7109,7 @@
       "amount": {
        "scale": [
         {
-         "ratio": 0.2,
+         "ratio": 0.12,
          "stat": "max_hp",
          "of": "holder"
         }
@@ -8082,7 +8087,7 @@
   {
    "id": "thornheart_plate",
    "name": "Thornheart plate",
-   "text": "When hit: gains a Spite (up to 20) and sends back 33% of the blow, +5% per Spite.",
+   "text": "When hit: gains a Spite (up to 20) and sends back 25% of the blow, +2% per Spite.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -8112,11 +8117,11 @@
        "amount": {
         "scale": [
          {
-          "ratio": 0.3333333333333333,
+          "ratio": 0.25,
           "event": "raw"
          },
          {
-          "ratio": 0.05,
+          "ratio": 0.02,
           "event": "raw",
           "times": {
            "stacks": "spite",
@@ -11539,7 +11544,7 @@
   {
    "id": "goading_totem",
    "name": "Goading totem",
-   "text": "When it Taunts: every foe attacks at once.",
+   "text": "When it Taunts: every foe is Weakened and attacks at once.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -11551,6 +11556,14 @@
       "status": "taunt"
      },
      "do": [
+      {
+       "op": "apply",
+       "status": "weaken",
+       "to": {
+        "side": "foes",
+        "pick": "all"
+       }
+      },
       {
        "op": "cooldown",
        "which": "basic",
@@ -11986,7 +11999,7 @@
   {
    "id": "wick",
    "name": "Wick",
-   "text": "When a burning foe falls: its Burn passes to the foe with the most Burn.",
+   "text": "When a burning foe falls: 50% of its Burn passes to the foe with the most Burn.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -12016,7 +12029,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 1,
+          "ratio": 0.5,
           "amount": true
          }
         ]
@@ -16577,7 +16590,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "No Shield. Hits deal +20% to foes below 50% HP.",
+   "text": "No Shield. Hits deal +40% to foes below 50% HP.",
    "reactions": [],
    "boosts": [
     {
@@ -16585,7 +16598,7 @@
      "pct": {
       "scale": [
        {
-        "ratio": 20,
+        "ratio": 40,
         "when": {
          "hpBelow": 50
         },
@@ -16603,7 +16616,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "On a hit: Shields the ally with the lowest HP% instead, for 25% of the damage.",
+   "text": "On a hit: Shields the ally with the lowest HP% instead, for 35% of the damage.",
    "reactions": [
     {
      "on": {
@@ -16616,7 +16629,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.25,
+          "ratio": 0.35,
           "amount": true
          }
         ]
@@ -16638,7 +16651,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "No Shield. Hits deal +20% to foes below 50% HP. +28%, not +20%.",
+   "text": "No Shield. Hits deal +40% to foes below 50% HP. +56%, not +40%.",
    "reactions": [],
    "boosts": [
     {
@@ -16646,7 +16659,7 @@
      "pct": {
       "scale": [
        {
-        "ratio": 28,
+        "ratio": 56,
         "when": {
          "hpBelow": 50
         },
@@ -16664,7 +16677,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "On a hit: Shields the ally with the lowest HP% instead, for 25% of the damage. Shield +40%.",
+   "text": "On a hit: Shields the ally with the lowest HP% instead, for 35% of the damage. Shield +40%.",
    "reactions": [
     {
      "on": {
@@ -16677,7 +16690,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.35,
+          "ratio": 0.49,
           "amount": true
          }
         ]
@@ -19905,7 +19918,7 @@
   {
    "id": "banner_of_the_last_keep",
    "name": "Banner of the last keep",
-   "text": "Max HP ×2. Healing on it −50%.",
+   "text": "Max HP ×1.5. Healing on it −50%.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -19913,7 +19926,7 @@
    "stats": [
     {
      "stat": "max_hp",
-     "pct": 100
+     "pct": 50
     },
     {
      "stat": "healing_received",
@@ -21976,7 +21989,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.29,
+        "ratio": 0.377,
         "stat": "defense"
        }
       ]
@@ -22192,7 +22205,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.09,
+        "ratio": 0.12,
         "stat": "attack"
        }
       ]
@@ -22362,6 +22375,10 @@
    "cooldown": 32.7,
    "cast": 1,
    "mp": 450,
+   "if": {
+    "side": "others",
+    "where": {}
+   },
    "target": {
     "side": "others",
     "pick": "highest",
@@ -22936,7 +22953,7 @@
    "text": "Burns down the foe with the most Burn.",
    "cooldown": 33.7,
    "cast": 6,
-   "mp": 1000,
+   "mp": 800,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -23161,7 +23178,7 @@
    "text": "For 20 ticks, every ally's basic attacks add Shock.",
    "cooldown": 27.9,
    "cast": 3,
-   "mp": 650,
+   "mp": 450,
    "target": {
     "side": "allies",
     "pick": "all"
@@ -23180,7 +23197,7 @@
    "text": "Basic attacks come 50% faster for 20 ticks.",
    "cooldown": 31.1,
    "cast": 1,
-   "mp": 650,
+   "mp": 325,
    "target": "self",
    "do": [
     {
@@ -26166,7 +26183,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.29,
+        "ratio": 0.377,
         "stat": "defense"
        }
       ]
@@ -26206,7 +26223,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.29,
+        "ratio": 0.377,
         "stat": "defense"
        }
       ]
@@ -26303,7 +26320,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.29,
+        "ratio": 0.377,
         "stat": "defense"
        }
       ]
@@ -27260,7 +27277,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.126,
+        "ratio": 0.168,
         "stat": "attack"
        }
       ]
@@ -27305,7 +27322,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.09,
+        "ratio": 0.12,
         "stat": "attack"
        }
       ]
@@ -27330,7 +27347,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.09,
+        "ratio": 0.12,
         "stat": "attack"
        }
       ]
@@ -27378,7 +27395,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.09,
+        "ratio": 0.12,
         "stat": "attack"
        }
       ]
@@ -27425,7 +27442,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.126,
+        "ratio": 0.168,
         "stat": "attack"
        }
       ]
@@ -27450,7 +27467,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.126,
+        "ratio": 0.168,
         "stat": "attack"
        }
       ]
@@ -27498,7 +27515,7 @@
      "amount": {
       "scale": [
        {
-        "ratio": 0.126,
+        "ratio": 0.168,
         "stat": "attack"
        }
       ]
@@ -28316,6 +28333,10 @@
    "cooldown": 24,
    "cast": 1,
    "mp": 450,
+   "if": {
+    "side": "others",
+    "where": {}
+   },
    "target": {
     "side": "others",
     "pick": "highest",
@@ -28340,6 +28361,10 @@
    "cooldown": 32.7,
    "cast": 1,
    "mp": 450,
+   "if": {
+    "side": "others",
+    "where": {}
+   },
    "target": {
     "side": "others",
     "pick": "highest",
@@ -28382,6 +28407,10 @@
    "cooldown": 24,
    "cast": 1,
    "mp": 450,
+   "if": {
+    "side": "others",
+    "where": {}
+   },
    "target": {
     "side": "others",
     "pick": "highest",
@@ -30948,7 +30977,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0052,
+          "ratio": 0.0039,
           "stat": "attack"
          }
         ]
@@ -31035,7 +31064,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.00728,
+          "ratio": 0.00546,
           "stat": "attack"
          }
         ]
@@ -31159,7 +31188,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0046,
+          "ratio": 0.0026,
           "stat": "attack"
          }
         ]
@@ -31231,7 +31260,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.0046,
+          "ratio": 0.0026,
           "stat": "attack"
          }
         ]
@@ -31280,7 +31309,7 @@
    "text": "Burns down the foe with the most Burn.",
    "cooldown": 33.7,
    "cast": 6,
-   "mp": 1000,
+   "mp": 800,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -31315,7 +31344,7 @@
    "text": "Burns down every foe, each harder for its Burn.",
    "cooldown": 33.7,
    "cast": 6,
-   "mp": 1000,
+   "mp": 800,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -31347,7 +31376,7 @@
    "text": "Waits for a foe with 20+ Burn, then burns down the foe with the most.",
    "cooldown": 33.7,
    "cast": 6,
-   "mp": 1000,
+   "mp": 800,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -31391,7 +31420,7 @@
    "text": "Burns down every foe, each harder for its Burn.",
    "cooldown": 33.7,
    "cast": 6,
-   "mp": 1000,
+   "mp": 800,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -31423,7 +31452,7 @@
    "text": "Waits for a foe with 20+ Burn, then burns down the foe with the most.",
    "cooldown": 33.7,
    "cast": 6,
-   "mp": 1000,
+   "mp": 800,
    "target": {
     "side": "foes",
     "pick": "highest",
@@ -31730,7 +31759,7 @@
    "text": "Guards every ally. While the Guard lasts, foes that hit them gain Chill. No damage.",
    "cooldown": 26.5,
    "cast": 6,
-   "mp": 1000,
+   "mp": 650,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -31793,7 +31822,7 @@
    "text": "Guards every ally. While the Guard lasts, foes that hit them gain Chill. No damage. +40% Chill.",
    "cooldown": 26.5,
    "cast": 6,
-   "mp": 1000,
+   "mp": 650,
    "target": {
     "side": "foes",
     "pick": "all"
@@ -32453,7 +32482,7 @@
    "text": "For 20 ticks, every ally's basic attacks add Shock. +40% Shock.",
    "cooldown": 27.9,
    "cast": 3,
-   "mp": 650,
+   "mp": 450,
    "target": {
     "side": "allies",
     "pick": "all"
@@ -32472,7 +32501,7 @@
    "text": "For 20 ticks, foes that hit an ally gain Shock. None on the swings.",
    "cooldown": 27.9,
    "cast": 3,
-   "mp": 650,
+   "mp": 450,
    "target": {
     "side": "allies",
     "pick": "all"
@@ -32491,7 +32520,7 @@
    "text": "For 20 ticks, every ally's basic attacks add ×3 Shock to the foe with the most Shock.",
    "cooldown": 27.9,
    "cast": 3,
-   "mp": 650,
+   "mp": 450,
    "target": {
     "side": "allies",
     "pick": "all"
@@ -32510,7 +32539,7 @@
    "text": "For 20 ticks, foes that hit an ally gain Shock. None on the swings. +40% Shock.",
    "cooldown": 27.9,
    "cast": 3,
-   "mp": 650,
+   "mp": 450,
    "target": {
     "side": "allies",
     "pick": "all"
@@ -32529,7 +32558,7 @@
    "text": "For 20 ticks, every ally's basic attacks add ×3 Shock to the foe with the most Shock. +40% Shock.",
    "cooldown": 27.9,
    "cast": 3,
-   "mp": 650,
+   "mp": 450,
    "target": {
     "side": "allies",
     "pick": "all"
@@ -32548,7 +32577,7 @@
    "text": "Basic attacks come 50% faster for 20 ticks.",
    "cooldown": 22.8,
    "cast": 1,
-   "mp": 650,
+   "mp": 325,
    "target": "self",
    "do": [
     {
@@ -32564,7 +32593,7 @@
    "text": "Its basic attacks come 50% faster for 20 ticks, and its next 3 abilities in that time cost no MP.",
    "cooldown": 31.1,
    "cast": 1,
-   "mp": 650,
+   "mp": 325,
    "target": "self",
    "do": [
     {
@@ -32584,7 +32613,7 @@
    "text": "Thorns up and +40 Aggro for 20 ticks. No speed.",
    "cooldown": 31.1,
    "cast": 1,
-   "mp": 650,
+   "mp": 325,
    "target": "self",
    "do": [
     {
@@ -32600,7 +32629,7 @@
    "text": "Its basic attacks come 50% faster for 20 ticks, and its next 3 abilities in that time cost no MP.",
    "cooldown": 22.8,
    "cast": 1,
-   "mp": 650,
+   "mp": 325,
    "target": "self",
    "do": [
     {
@@ -32620,7 +32649,7 @@
    "text": "Thorns up and +40 Aggro for 20 ticks. No speed.",
    "cooldown": 22.8,
    "cast": 1,
-   "mp": 650,
+   "mp": 325,
    "target": "self",
    "do": [
     {
@@ -33464,11 +33493,11 @@
    "power": "Shield +40%.",
    "a": {
     "name": "Chooser of the slain",
-    "text": "No Shield. Hits deal +20% to foes below 50% HP."
+    "text": "No Shield. Hits deal +40% to foes below 50% HP."
    },
    "b": {
     "name": "Shield-sister",
-    "text": "On a hit: Shields the ally with the lowest HP% instead, for 25% of the damage."
+    "text": "On a hit: Shields the ally with the lowest HP% instead, for 35% of the damage."
    }
   },
   {
@@ -34776,7 +34805,7 @@
   {
    "id": "lamprey_claws",
    "name": "Lamprey claws",
-   "text": "Each extra strike heals it for 10% of max HP.",
+   "text": "Each extra strike heals it for 5% of max HP.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -35520,7 +35549,7 @@
   {
    "id": "mercys_edge",
    "name": "Mercy's edge",
-   "text": "Basic attacks heal the ally with the lowest HP% for 33% of the damage.",
+   "text": "Basic attacks heal the ally with the lowest HP% for 20% of the damage.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -37382,7 +37411,7 @@
   {
    "id": "menders_mace",
    "name": "Mender's mace",
-   "text": "Every 22 ticks: heals the ally with the lowest HP% for 20% of the wearer's max HP.",
+   "text": "Every 22 ticks: heals the ally with the lowest HP% for 12% of the wearer's max HP.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",
@@ -38543,7 +38572,7 @@
   {
    "id": "thornheart_plate",
    "name": "Thornheart plate",
-   "text": "When hit: gains a Spite (up to 20) and sends back 33% of the blow, +5% per Spite.",
+   "text": "When hit: gains a Spite (up to 20) and sends back 25% of the blow, +2% per Spite.",
    "slot": "armor",
    "tier": "powerful",
    "source": "unlock",
@@ -41412,7 +41441,7 @@
   {
    "id": "goading_totem",
    "name": "Goading totem",
-   "text": "When it Taunts: every foe attacks at once.",
+   "text": "When it Taunts: every foe is Weakened and attacks at once.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -41774,7 +41803,7 @@
   {
    "id": "wick",
    "name": "Wick",
-   "text": "When a burning foe falls: its Burn passes to the foe with the most Burn.",
+   "text": "When a burning foe falls: 50% of its Burn passes to the foe with the most Burn.",
    "slot": "offhand",
    "tier": "ordinary",
    "source": "drop",
@@ -43472,7 +43501,7 @@
   {
    "id": "banner_of_the_last_keep",
    "name": "Banner of the last keep",
-   "text": "Max HP ×2. Healing on it −50%.",
+   "text": "Max HP ×1.5. Healing on it −50%.",
    "slot": "armor",
    "tier": "powerful",
    "source": "unlock",
@@ -44436,7 +44465,7 @@
   {
    "id": "shared_cup",
    "name": "Shared cup",
-   "text": "Nobody's healing is wasted. The party: Healing past full goes to the ally with the lowest HP%.",
+   "text": "Nobody's healing is wasted. The party: 50% of healing past full goes to the ally with the lowest HP%.",
    "rarity": "common",
    "source": "unlock",
    "positions": [
@@ -45367,7 +45396,7 @@
   {
    "id": "tidal",
    "name": "Tidal",
-   "text": "The party rises and falls together. The party: Every 22 ticks the party turns. Surge: every ally Hasted, hits +20%. Ebb: every ally Guarded, 30% slower.",
+   "text": "The party rises and falls together. The party: Every 22 ticks the party turns. Surge: every ally Hasted, hits +10%. Ebb: every ally Guarded, 40% slower.",
    "rarity": "legendary",
    "source": "unlock",
    "positions": [
@@ -45635,7 +45664,7 @@
     {
      "id": "soloist",
      "name": "Soloist",
-     "text": "Its first-slotted ability has no cooldown.",
+     "text": "Its first-slotted ability's cooldown is 75% shorter.",
      "layout": {
       "line": "front",
       "column": 0
@@ -47390,12 +47419,12 @@
    ],
    "shape": {
     "fight": {
-     "hp": 40,
-     "power": -10
+     "hp": -20,
+     "power": 30
     },
     "elite": {
-     "hp": 15,
-     "power": -10
+     "hp": -20,
+     "power": 30
     },
     "boss": {
      "hp": -40,
@@ -47475,7 +47504,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 214
+      "knob": 150
      },
      {
       "id": "snake_pit",
@@ -47487,7 +47516,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 105
+      "knob": 57
      },
      {
       "id": "bandit_camp",
@@ -47498,7 +47527,7 @@
        "archer",
        "bandit"
       ],
-      "knob": 27
+      "knob": 4
      },
      {
       "id": "night_wolves",
@@ -47512,7 +47541,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 180
+      "knob": 142
      },
      {
       "id": "archers_nest",
@@ -47523,7 +47552,7 @@
        "archer",
        "archer"
       ],
-      "knob": 22
+      "knob": 4
      },
      {
       "id": "viper_den",
@@ -47536,7 +47565,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 74
+      "knob": 29
      },
      {
       "id": "bandit_horde",
@@ -47548,7 +47577,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 84
+      "knob": 28
      }
     ],
     "elite": [
@@ -47560,7 +47589,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 92
+      "knob": 45
      },
      {
       "id": "twin_ogres",
@@ -47569,7 +47598,7 @@
        "ogre",
        "ogre"
       ],
-      "knob": 39
+      "knob": 26
      },
      {
       "id": "war_camp",
@@ -47580,7 +47609,7 @@
        "archer",
        "ogre"
       ],
-      "knob": 12
+      "knob": -15
      }
     ],
     "bosses": [
@@ -47592,7 +47621,7 @@
        "bandit",
        "bandit"
       ],
-      "knob": 84
+      "knob": 75
      },
      {
       "id": "packmaster",
@@ -47604,7 +47633,7 @@
        "wolf",
        "wolf"
       ],
-      "knob": 87
+      "knob": 66
      },
      {
       "id": "chiefs_return",
@@ -47613,7 +47642,7 @@
        "ogre_chief",
        "ogre"
       ],
-      "knob": 52
+      "knob": 32
      }
     ]
    },
@@ -47669,7 +47698,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 257
+      "knob": 184
      },
      {
       "id": "dark_hall",
@@ -47680,7 +47709,7 @@
        "bat",
        "bat"
       ],
-      "knob": 233
+      "knob": 149
      },
      {
       "id": "curse_room",
@@ -47690,7 +47719,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 240
+      "knob": 136
      },
      {
       "id": "haunted_hall",
@@ -47701,7 +47730,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 187
+      "knob": 134
      },
      {
       "id": "bone_wall",
@@ -47713,7 +47742,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 222
+      "knob": 153
      },
      {
       "id": "dead_watch",
@@ -47724,7 +47753,7 @@
        "witch",
        "ghost"
       ],
-      "knob": 172
+      "knob": 102
      }
     ],
     "elite": [
@@ -47737,7 +47766,7 @@
        "ghoul",
        "ghoul"
       ],
-      "knob": 219
+      "knob": 151
      },
      {
       "id": "lich_lair",
@@ -47746,7 +47775,7 @@
        "lich",
        "mummy"
       ],
-      "knob": 318
+      "knob": 253
      },
      {
       "id": "grave_watch",
@@ -47756,7 +47785,7 @@
        "troll",
        "troll"
       ],
-      "knob": 96
+      "knob": 50
      }
     ],
     "bosses": [
@@ -47768,7 +47797,7 @@
        "bat",
        "bat"
       ],
-      "knob": 161
+      "knob": 94
      },
      {
       "id": "reapers_court",
@@ -47778,7 +47807,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 137
+      "knob": 85
      }
     ]
    },
@@ -47836,7 +47865,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 93
+      "knob": -4
      },
      {
       "id": "bomb_room",
@@ -47847,7 +47876,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 14
+      "knob": -134
      },
      {
       "id": "imp_kennel",
@@ -47858,7 +47887,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 102
+      "knob": -19
      },
      {
       "id": "hound_run",
@@ -47871,7 +47900,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 26
+      "knob": -31
      },
      {
       "id": "slag_heap",
@@ -47881,7 +47910,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 168
+      "knob": 56
      },
      {
       "id": "miners",
@@ -47892,7 +47921,7 @@
        "bandit",
        "bomb_bug"
       ],
-      "knob": 157
+      "knob": -35
      }
     ],
     "elite": [
@@ -47903,7 +47932,7 @@
        "lava_slime",
        "lava_slime"
       ],
-      "knob": 274
+      "knob": 151
      },
      {
       "id": "imp_court",
@@ -47915,7 +47944,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 165
+      "knob": 55
      },
      {
       "id": "powder_room",
@@ -47925,7 +47954,7 @@
        "bomb_bug",
        "ogre"
       ],
-      "knob": 54
+      "knob": -72
      },
      {
       "id": "bomb_nest",
@@ -47935,7 +47964,7 @@
        "bomb_bug",
        "bomb_bug"
       ],
-      "knob": 87
+      "knob": -88
      }
     ],
     "bosses": [
@@ -47945,7 +47974,7 @@
       "enemies": [
        "fire_giant"
       ],
-      "knob": 143
+      "knob": 95
      },
      {
       "id": "giants_forge",
@@ -47955,7 +47984,7 @@
        "hellhound",
        "hellhound"
       ],
-      "knob": 106
+      "knob": 62
      },
      {
       "id": "giants_wrath",
@@ -47965,7 +47994,7 @@
        "fire_imp",
        "fire_imp"
       ],
-      "knob": 101
+      "knob": 54
      }
     ]
    },
@@ -48022,7 +48051,7 @@
        "snow_wolf",
        "snow_wolf"
       ],
-      "knob": 361
+      "knob": 296
      },
      {
       "id": "ice_heart",
@@ -48032,7 +48061,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 127
+      "knob": 65
      },
      {
       "id": "whiteout",
@@ -48042,7 +48071,7 @@
        "ice_ghost",
        "ice_spirit"
       ],
-      "knob": 167
+      "knob": 72
      },
      {
       "id": "ghost_lights",
@@ -48052,7 +48081,7 @@
        "ice_ghost",
        "ice_ghost"
       ],
-      "knob": 191
+      "knob": 102
      },
      {
       "id": "long_pack",
@@ -48066,7 +48095,7 @@
        "snow_wolf",
        "snow_wolf"
       ],
-      "knob": 311
+      "knob": 220
      },
      {
       "id": "drift",
@@ -48077,7 +48106,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 172
+      "knob": 89
      }
     ],
     "elite": [
@@ -48088,7 +48117,7 @@
        "ice_golem",
        "ice_golem"
       ],
-      "knob": 250
+      "knob": 156
      },
      {
       "id": "golem_gate",
@@ -48098,7 +48127,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 185
+      "knob": 87
      },
      {
       "id": "frost_trolls",
@@ -48109,7 +48138,7 @@
        "ice_spirit",
        "ice_spirit"
       ],
-      "knob": 52
+      "knob": -5
      }
     ],
     "bosses": [
@@ -48119,7 +48148,7 @@
       "enemies": [
        "ice_titan"
       ],
-      "knob": 211
+      "knob": 144
      },
      {
       "id": "glacier_king",
@@ -48129,7 +48158,7 @@
        "snow_wolf",
        "snow_wolf"
       ],
-      "knob": 188
+      "knob": 107
      }
     ]
    },
@@ -48192,7 +48221,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 158
+      "knob": 6
      },
      {
       "id": "wisp_nest",
@@ -48205,7 +48234,7 @@
        "leech",
        "leech"
       ],
-      "knob": 175
+      "knob": 27
      },
      {
       "id": "leech_den",
@@ -48216,7 +48245,7 @@
        "leech",
        "leech"
       ],
-      "knob": 336
+      "knob": 157
      },
      {
       "id": "drone_wall",
@@ -48229,7 +48258,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 151
+      "knob": -18
      },
      {
       "id": "storm_front",
@@ -48242,7 +48271,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 156
+      "knob": -8
      }
     ],
     "elite": [
@@ -48255,7 +48284,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 459
+      "knob": 301
      },
      {
       "id": "sniper_ridge",
@@ -48267,7 +48296,7 @@
        "archer",
        "archer"
       ],
-      "knob": 149
+      "knob": 33
      },
      {
       "id": "lich_pair",
@@ -48277,7 +48306,7 @@
        "lich",
        "lich"
       ],
-      "knob": 303
+      "knob": 162
      }
     ],
     "bosses": [
@@ -48289,7 +48318,7 @@
        "drone",
        "drone"
       ],
-      "knob": 360
+      "knob": 207
      },
      {
       "id": "hive_queen",
@@ -48301,7 +48330,7 @@
        "drone",
        "drone"
       ],
-      "knob": 300
+      "knob": 135
      }
     ]
    },
@@ -48355,7 +48384,7 @@
        "troll",
        "troll"
       ],
-      "knob": 116
+      "knob": 60
      },
      {
       "id": "lich_lair",
@@ -48364,7 +48393,7 @@
        "lich",
        "mummy"
       ],
-      "knob": 316
+      "knob": 255
      },
      {
       "id": "silent_hall",
@@ -48375,7 +48404,7 @@
        "skeleton",
        "skeleton"
       ],
-      "knob": 207
+      "knob": 97
      },
      {
       "id": "quiet_hall",
@@ -48386,7 +48415,7 @@
        "ghost",
        "ghost"
       ],
-      "knob": 159
+      "knob": 86
      },
      {
       "id": "coven",
@@ -48397,7 +48426,7 @@
        "wraith",
        "wraith"
       ],
-      "knob": 126
+      "knob": 68
      },
      {
       "id": "ghoul_feast",
@@ -48408,7 +48437,7 @@
        "ghoul",
        "ghoul"
       ],
-      "knob": 224
+      "knob": 165
      }
     ],
     "elite": [
@@ -48420,7 +48449,7 @@
        "bone_priest",
        "troll"
       ],
-      "knob": 221
+      "knob": 128
      },
      {
       "id": "lich_court",
@@ -48431,7 +48460,7 @@
        "lich",
        "lich"
       ],
-      "knob": 208
+      "knob": 101
      },
      {
       "id": "tomb_lords",
@@ -48441,7 +48470,7 @@
        "mummy",
        "witch"
       ],
-      "knob": 246
+      "knob": 147
      }
     ],
     "bosses": [
@@ -48451,7 +48480,7 @@
       "enemies": [
        "silent_one"
       ],
-      "knob": 262
+      "knob": 109
      },
      {
       "id": "silent_court",
@@ -48461,7 +48490,7 @@
        "bone_priest",
        "bone_priest"
       ],
-      "knob": 195
+      "knob": 51
      }
     ]
    },
@@ -48522,7 +48551,7 @@
        "leech",
        "leech"
       ],
-      "knob": 99
+      "knob": 2
      },
      {
       "id": "wisp_nest",
@@ -48535,7 +48564,7 @@
        "leech",
        "leech"
       ],
-      "knob": 170
+      "knob": 35
      },
      {
       "id": "barracks",
@@ -48545,7 +48574,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 523
+      "knob": 364
      },
      {
       "id": "drone_wall",
@@ -48558,7 +48587,7 @@
        "wisp",
        "wisp"
       ],
-      "knob": 128
+      "knob": 7
      },
      {
       "id": "watch",
@@ -48569,7 +48598,7 @@
        "drone",
        "drone"
       ],
-      "knob": 336
+      "knob": 199
      }
     ],
     "elite": [
@@ -48581,7 +48610,7 @@
        "drone",
        "drone"
       ],
-      "knob": 181
+      "knob": 131
      },
      {
       "id": "honour_guard",
@@ -48592,7 +48621,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 485
+      "knob": 371
      },
      {
       "id": "leech_den",
@@ -48604,7 +48633,7 @@
        "leech",
        "leech"
       ],
-      "knob": 360
+      "knob": 270
      }
     ],
     "bosses": [
@@ -48614,7 +48643,7 @@
       "enemies": [
        "storm_king"
       ],
-      "knob": 308
+      "knob": 175
      },
      {
       "id": "kings_guard",
@@ -48624,7 +48653,7 @@
        "soldier",
        "soldier"
       ],
-      "knob": 222
+      "knob": 107
      }
     ]
    }

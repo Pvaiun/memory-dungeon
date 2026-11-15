@@ -282,7 +282,7 @@ export function derive(c: Content, u: Pick<CUnit, "base" | "flat" | "pct">, stat
     const saved = h?.stats;
     if (h) h.stats = out;
     const who: Who = (of) => (of === "holder" || of === "self" ? h : null);
-    const read = (n: S.NumT | undefined) => (h && n !== undefined ? scalesOf(n).reduce((v, s) => (role(s, true) === "source" ? v : v + term(w!, s, h, 0, who)), 0) : 0);
+    const read = (n: S.NumT | undefined) => (h && n !== undefined ? scalesOf(n).reduce((v, s) => (role(s, true) === "source" && s.seat === undefined ? v : v + term(w!, s, h, 0, who)), 0) : 0);
     for (const { s, d, ch, i } of live) {
       const per = perOf(d, s);
       flat[ch.stat] = (flat[ch.stat] ?? 0) + (s.nums[i] + read(ch.flat)) * per;

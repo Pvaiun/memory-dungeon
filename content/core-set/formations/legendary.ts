@@ -34,17 +34,18 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
   );
 }
 {
-  // Each ally turns on its own clock, together: Surge for 22 ticks (Haste as it begins, hits +20%), then Ebb (Guard as it begins, 30% slower), and back.
-  const party = `Every ${SO_OFTEN} ticks the party turns. Surge: every ally Hasted, hits +20%. Ebb: every ally Guarded, 30% slower.`;
-  const slower = ["attack_speed", "cooldown_reduction", "cast_time_reduction"].map((stat) => ({ stat, flat: -30 }));
+  // Each ally turns on its own clock, together: Surge for 22 ticks (Haste as it begins, hits +10%), then Ebb (Guard as it begins, 40% slower:
+  // Haste's own size), and back. At +20% and 30% slower the tide only rose: 23 points over Neutral on the balance sheet's probe.
+  const party = `Every ${SO_OFTEN} ticks the party turns. Surge: every ally Hasted, hits +10%. Ebb: every ally Guarded, 40% slower.`;
+  const slower = ["attack_speed", "cooldown_reduction", "cast_time_reduction"].map((stat) => ({ stat, flat: -40 }));
   const tide = (id: string, name: string, text: string, next: string, body: Partial<StatusT>): StatusT =>
     ({ id, name, text, label: "buff", show: "icon", stacking: "refresh", unremovable: true, duration: SO_OFTEN, ...body, reactions: [...(body.reactions ?? []), react(on("status_ended", { status: id, cause: ["expired"] }), give(next))] }) as StatusT;
   add(
     formation("Tidal", "legendary", "The party rises and falls together.", thrice({ name: "Wave", text: NOTHING }), { text: party, statuses: ["tidal"] }),
     [
       held("tidal", "Tidal", party, { reactions: [atStart(give("tidal_surge"))] }),
-      tide("tidal_surge", "SURGE", "Hits +20%.", "tidal_ebb", { boosts: hits(20), reactions: [react(on("status_gained", { status: "tidal_surge" }), give("haste"))] }),
-      tide("tidal_ebb", "EBB", "30% slower.", "tidal_surge", { stats: slower, reactions: [react(on("status_gained", { status: "tidal_ebb" }), give("guard"))] }),
+      tide("tidal_surge", "SURGE", "Hits +10%.", "tidal_ebb", { boosts: hits(10), reactions: [react(on("status_gained", { status: "tidal_surge" }), give("haste"))] }),
+      tide("tidal_ebb", "EBB", "40% slower.", "tidal_surge", { stats: slower, reactions: [react(on("status_gained", { status: "tidal_ebb" }), give("guard"))] }),
     ],
     "Cuts 3 ●●, Landslide ●● ◆ tempo, the beat",
   );
@@ -53,7 +54,7 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
   const party = "No ally makes a basic attack. Abilities come round 40% faster.";
   add(
     formation("The still hour", "legendary", "Nobody swings; every spell comes round.", thrice({ name: "Watcher", text: NOTHING }), { text: party, stats: [{ stat: "cooldown_reduction", flat: 40 }], statuses: ["the_still_hour"] }),
-    [held("the_still_hour", "The still hour", "Makes no basic attack.", { lockout: { covers: "basic" } })],
+    [held("the_still_hour", "The still hour", "Makes no basic attack.", { lockout: { covers: "basic" }, mods: [{ mp: -40 }] })],
     "Barrage 3 ●●, Snap ● ◆ the spell's beat",
   );
 }
@@ -100,15 +101,16 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
       ...twice({ name: "Bearer", text: bearer, statuses: ["bannerman_bearer"] }),
     ]),
     [
-      held("bannerman_banner", "Banner", banner, { lockout: { covers: "all" } }),
+      held("bannerman_banner", "Banner", "Never acts.", { lockout: { covers: "all" } }),
       held("bannerman_bearer", "Bearer", bearer, { stats: [seatStat("attack"), seatStat("defense")] }),
     ],
     "exotic ◆ the trade",
   );
 }
 {
-  // The Soloist's own mana is the brake.
-  const soloist = "Its first-slotted ability has no cooldown.";
+  // The Soloist's own mana is the brake. A cooldown cut short, not gone: with none, a cast every tick or two fed a Crescendo
+  // to its cap in a few ticks, and Siphon on the swollen hits paid the mana back (fights over in 9 ticks).
+  const soloist = "Its first-slotted ability's cooldown is 75% shorter.";
   const voice = "Draws more.";
   add(
     formation("The cathedral", "legendary", "Two give their mana; one never stops singing.", [
@@ -116,7 +118,7 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
       ...twice({ name: "Voice", text: voice, stats: [st("aggro", 1)] }),
     ]),
     [
-      held("the_cathedral_soloist", "Soloist", soloist, { mods: [{ of: { first: true }, cooldown: -100 }] }),
+      held("the_cathedral_soloist", "Soloist", soloist, { mods: [{ of: { first: true }, cooldown: -75 }] }),
     ],
     "Barrage 3 ●●● ⚙ crescendo (half)",
   );

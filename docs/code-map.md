@@ -129,10 +129,10 @@ tools/                       the Node command lines; each header says how to run
     builds.ts                its build mode: the build test's parties on their fights or named ones, the packs picked, the cards gathered
   rogue-play.ts              the rogue mode as a command line, for an AI playtester
   play-summary.ts            a fight as a player remembers it, for rogue-play
-  build-test.ts              the nine builds side by side, from rolled starts (START); its fights and starts serve rogue-feel's build mode
+  build-test.ts              the nine builds side by side, from rolled starts (START), by tier too (regular, elite, boss); its fights and starts serve rogue-feel's build mode and build-calibrate
   build-parties.ts           the nine builds' 27 routes (builds.md's classes, a formation a rung), gathered (ROUTES, BUILD_PARTIES, ALL_PARTIES); each build's formations (FORMS)
   build-parties/
-    kit.ts                   their types, the builds' names, formation seats, mythics, and route(): each rung's gear, versions, mythics and seats from the loot's tags
+    kit.ts                   their types, the builds' names, formation seats, mythics, and route(): each rung's gear, versions, mythics and seats from the loot's tags; the placements a good player wouldn't make (MISFIT)
   rhythm-read.ts             does a party play the fight its build says it does?
   piece-check.ts             does every item do what its card says?
   gear-slots.ts              the gear slots' counts: who wears which kinds

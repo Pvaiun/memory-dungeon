@@ -324,10 +324,11 @@ offhand("totem", "common", "Twin-fang fetish", { stats: [sp("double_strike", "me
   });
 }
 {
-  const name = "Goading totem", effect = "When it Taunts: every foe attacks at once.";
+  // The swings it calls come Weakened (the goad's own price paid down: without Weaken on the field it lost every tier).
+  const name = "Goading totem", effect = "When it Taunts: every foe is Weakened and attacks at once.";
   offhand("totem", "rare", name, {
     effect, stats: [st("max_hp", 1), sp("double_strike", "medium"), sp("cooldown", "medium")],
-    statuses: [own_(name, effect, { reactions: [react(on("status_gained", { status: "taunt" }), swingNow(TO.everyFoe))] })],
+    statuses: [own_(name, effect, { reactions: [react(on("status_gained", { status: "taunt" }), give("weaken", TO.everyFoe), swingNow(TO.everyFoe))] })],
     serves: "conditional, Storm 2 ●●●, Toll 2 ●●● ⚙ goad (key) ◆ draw",
   });
 }
@@ -451,10 +452,10 @@ offhand("lantern", "common", "Hooded lantern", { stats: [sp("evasion", "medium")
 {
   // A fallen foe's fire moves once: every piece and seat that moves it shares it.
   const name = "Wick";
-  const effect = "When a burning foe falls: its Burn passes to the foe with the most Burn.";
+  const effect = "When a burning foe falls: 50% of its Burn passes to the foe with the most Burn.";
   offhand("lantern", "rare", name, {
     effect, stats: [st("attack", 1), st("mp_regen", 1), st("defense", 1)],
-    statuses: [own_(name, effect, { reactions: [{ on: on("status_ended", { status: "burn", cause: ["ko"], whose: "foe" }), split: "fire", do: [give("burn", TO.mostFoe("burn"), ofAmount())] }] })],
+    statuses: [own_(name, effect, { reactions: [{ on: on("status_ended", { status: "burn", cause: ["ko"], whose: "foe" }), split: "fire", do: [give("burn", TO.mostFoe("burn"), ofAmount(0.5))] }] })],
     serves: "Bonfire 2 ●●●, Hunt ●● ⚙ fuse (key)",
   });
 }

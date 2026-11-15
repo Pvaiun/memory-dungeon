@@ -191,3 +191,9 @@ test("abilities cast as one wait for each other, and the others come free with t
   assert.deepEqual(a.acts("P", "s2"), [12]);
   assert.equal(a.unit("P").mp, 95, "the one cast with it is free");
 });
+
+test("a live stat change read off the unit in a seat: the holder gains it", () => {
+  const bearer = buff("bearer", { stats: [{ stat: "attack", flat: { scale: [{ ratio: 1, stat: "attack", seat: "banner" }] }, live: true }] });
+  const a = arena({ party: [{ name: "Banner", seat: "banner", stats: { attack: 70, max_hp: 1e6 } }, { name: "Bearer", stats: { attack: 5, max_hp: 1e6 }, statuses: ["bearer"] }], enemies: [BAG], statuses: [bearer] }).to(1);
+  assert.equal(a.unit("Bearer").stats.attack, 75);
+});

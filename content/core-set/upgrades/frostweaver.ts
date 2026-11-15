@@ -56,7 +56,9 @@ abilityUp({
   a: { name: "Frost armor", text: "Guards every ally. While the Guard lasts, foes that hit them gain Chill. No damage.", serves: "Snap 2 ●●, Toll 2 ●●● ⚙ frozen gate (key)", plus: "+40% Chill." },
   b: { name: "Avalanche", text: "Hits every foe, each harder for its Chill. No Chill.", builds: ["snap", "storm"] },
   form: (v, k) =>
-    v === "a" ? { do: [apply("guard", { to: T.everyAlly }), apply(k > 1 ? "frost_armor_plus" : "frost_armor", { to: T.everyAlly })] }
+    // Frost armor at a support spell's 650 MP, not Blizzard's 1,000: a Guard on the party that deals nothing, it starved the
+    // Frostweaver's damaging casts late in long fights.
+    v === "a" ? { mp: 650, do: [apply("guard", { to: T.everyAlly }), apply(k > 1 ? "frost_armor_plus" : "frost_armor", { to: T.everyAlly })] }
       : v === "b" ? { do: [phys({ scale: [{ ratio: HIT.touch * k, stat: "attack" }, { ratio: 150 * k, stacks: "chill", of: "target" }] })] }
         : { do: [phys(hitOf("attack", "light", k), { apply: [{ status: "chill", stacks: stacks("few", "attack", BLIZZARD_CHILL) }] })] },
 });

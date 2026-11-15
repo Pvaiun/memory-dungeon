@@ -179,7 +179,7 @@ Every card the player reads (an ability, a passive, an upgrade, a piece, a mythi
 - **"All fight" means renewed as it runs out:** a Taunt laid again each time it ends, at its own length.
 - **The last drink:** The Red Feast heals its wearer up to half its HP when a fight is won.
 - **Chains end.** A repeat isn't repeated: what a piece lands, casts, copies, passes on or carries a second time is never repeated again unless its card says it runs on (Overrun, and Flurry wraps up to its count). A redirect is final: a hit taken for an ally, and a Shield, MP or healing sent on, isn't sent on again. A fallen foe's fire moves once: where two pieces or seats move the same Burn, it's split evenly between them. A chain of shatters dies down by Chill's own rule.
-- **Healing past full goes one place:** the healed unit's own piece first (Red stone mail), then the healer's (Phylactery), then the formation's (Shared cup).
+- **Healing past full goes one place:** the healed unit's own piece first (Red stone mail), then the healer's (Phylactery), then the formation's (Shared cup, which passes half of it on).
 - **Crit:** a card that sets a chance on some hits wins over Gambler's coin; The king's head stops at 80%. Brittle (a foe's next hit taken crits) and a piece that says its holder can't be crit (Steadfast buckler) read the unit hit, and "can't" wins.
 - **Kept:** extra strikes that chain (Flurry wraps); a hit taken for an ally (Oathbound shield); effects after a won fight, before statuses end; Taunt ends Hidden.
 - **Added for the engines,** each one rule on a card: a foe's swing called early; retaliation sized by the blow as it was struck; damage carried past a kill; damage taken from MP; an ability cast by a count of swings; start-of-fight effects that happen again; a status passed on by its holder; an ability brought back by the foes it hit; a swing that carries another unit's riders; a gift to oneself shared with an ally.
@@ -228,7 +228,7 @@ One per class, shown in crimson and offered in the boss boons that open acts II 
 
 | Class | Mythic | Slot | The spike, and its cost |
 | --- | --- | --- | --- |
-| Knight | Banner of the last keep | armor (plate) | max HP doubled; healing on it halved |
+| Knight | Banner of the last keep | armor (plate) | max HP half again; healing on it halved |
 | Cleric | The saint's last breath | amulet | Last rites all fight; never healed above 30% HP |
 | Ranger | The long watch | armor (leather) | basic attacks stay on one foe until it falls, each harder; no cost |
 | Bramble knight | Heart of the briar | armor (plate) | its Thorns on every foe when hit; no cost |
@@ -273,7 +273,7 @@ At the director's word, the loot was made with no balancing rules: synergies may
 - **Heat as speed** feeds every status road at once.
 - **The Toll is over-served:** it sits on the most doors, so it has the most second rungs.
 - **The party-rule formations.** Five legendary formations and First light are a rule for the party with three plain seats; play fought in formations whose seats had roles.
-- **The cathedral** is the boldest formation: a spell with no cooldown, its Soloist's own mana the only brake now that the Voices give none.
+- **The cathedral** is the boldest formation: a spell on a quarter of its cooldown, its Soloist's own mana the main brake now that the Voices give none. With no cooldown at all, a Crescendo reached its cap in a few ticks and Siphon on the swollen hits paid the mana back.
 - **Loops,** each with what stops it: the emptied quiver (a crit that fails) and the resonance (a pack that thins, a pool that empties); Provoking blade with Tempest cloak (the dodge that fails); Matador's cape with a copied Taunt and Goading totem (a round with no dodge); the resonance and The cathedral with their mana price gone (wind-up and recovery); Seesaw's two Ends readying each other (mana and wind-ups); the witch's cauldron (mana, and a foe already holding every affliction); Heart of the deep winter (the Chill to rebuild between shatters); Everflame lantern with Bellows wraps on a fast Monk (the fight ending); The covenant with Bloodstone reliquary (cooldowns); the kill chains (the foes run out).
 - **Damage sent back** is untyped, as Thorns is, so six pieces deal damage Defense doesn't touch.
 - **Two cards act on what they can't tell apart:** Shatterstone charm sends back the damage when a foe's Burn empties the Shield, not only a blow; Accuser's relic counts its holder's Lifesteal as a heal it gives.

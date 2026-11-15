@@ -141,12 +141,13 @@ export const ROGUE_CONFIG: RogueConfigT = {
     { mob: 0, step: 4.5, elite: 0, boss: 0 },
   ],
   /**
-   * Regular fights and elites are longer and softer than the knob alone makes them: their foes have this much more HP and deal
-   * this much less damage (percent), and the calibration sets each fight's knob on top, so a fight keeps its cost and lasts
-   * longer. Bosses go the other way, shorter and harder: at the knobs whole runs ask of them, the knob alone (HP k %, damage
-   * k ÷ 2.5 %) made act III's bosses slogs that the enrage decided.
+   * The foes' HP and damage on top of the knob (percent), by tier; the calibration sets each fight's knob on top, so a fight keeps
+   * its cost. Regular fights and elites a little harder and shorter than the knob alone makes them, on the director's word:
+   * longer and softer (+40% HP, −10% damage), a party with two healing sources undid every blow of act I, since heals are sized
+   * by the healer and don't grow with the act. Bosses shorter and harder still: at the knobs whole runs ask of them, the knob
+   * alone (HP k %, damage k ÷ 2.5 %) made act III's bosses slogs that the enrage decided.
    */
-  shape: { fight: { hp: 40, power: -10 }, elite: { hp: 15, power: -10 }, boss: { hp: -40, power: 30 } },
+  shape: { fight: { hp: -20, power: 30 }, elite: { hp: -20, power: 30 }, boss: { hp: -40, power: 30 } },
   /** Heat: each level adds this to every knob (about 6 points of the simulated player's wins a level). Won runs open the next. */
   heat: { per: 4, max: 10 },
   /**

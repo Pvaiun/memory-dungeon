@@ -31,7 +31,7 @@ abilityUp({
   a: { name: "Slow burn", text: "A bolt at the foe with the most Burn, trading hit for Burn.", builds: ["bonfire"] },
   b: { name: "Searing light", text: "Waits for a foe to cast, then a bolt at the casting foe with the most Attack, Silencing it. No Burn.", serves: "Toll 2 ●●, Hunt ● ◆ stops a cast", plus: "+40% damage." },
   form: (v, k) =>
-    v === "a" ? { do: [phys(from("attack", HIT.light / 2), { apply: fireboltBurn(2 * k) })] }
+    v === "a" ? { do: [phys(from("attack", HIT.light / 2), { apply: fireboltBurn(1.5 * k) })] }
       // The disabler: a quick wind-up, so the bolt lands inside the foe's.
       : v === "b" ? { cast: WINDUP.quick, if: { side: "foes", where: { casting: true } }, target: { side: "foes", where: { casting: true }, pick: "highest", by: { stat: "attack" } }, do: [phys(hitOf("attack", "light", k), { apply: [{ status: "silence" }] })] }
         : { do: [phys(hitOf("attack", "light"), { apply: fireboltBurn(k) })] },
@@ -45,7 +45,7 @@ abilityUp({
   b: { name: "Smoke", text: "Hits every foe and Weakens them. No Burn.", serves: "Toll 2 ●●, Landslide ● ◆ foes do less" },
   form: (v, k) =>
     // The ritualist's cast: the long wind-up is the cost, which Cast speed pays down.
-    v === "a" ? { cast: WINDUP.very_long, do: [phys(hitOf("attack", "touch", k), { apply: [{ status: "burn", stacks: stacks("many", "attack", BURN_STACKS) }] })] }
+    v === "a" ? { cast: WINDUP.very_long, do: [phys(hitOf("attack", "touch", k), { apply: [{ status: "burn", stacks: stacks("several", "attack", BURN_STACKS) }] })] }
       : v === "b" ? { do: [phys(hitOf("attack", "touch", k), { apply: [{ status: "weaken" }] })] }
         : { do: [phys(hitOf("attack", "touch", k), { apply: [{ status: "burn", stacks: stacks("few", "attack", BURN_STACKS) }] })] },
 });

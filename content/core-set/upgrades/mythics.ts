@@ -25,10 +25,10 @@ const ready = (ability: string, to: ToT = "holder"): EffectT => ({ op: "cooldown
 
 // Knight: its body, which Vanguard's Shield and Shield bash already read, doubled; it lives on its own stone, not on heals.
 {
-  const text = "Max HP ×2. Healing on it −50%.";
+  const text = "Max HP ×1.5. Healing on it −50%.";
   mythic({ name: "Banner of the last keep", slot: "armor", rarity: "mythic", kind: "plate", mythic: "knight", statuses: ["banner_of_the_last_keep"],
     stats: [st("aggro", 1), st("defense", 1), sp("cooldown", "medium")], text }, "Toll 3 ●●, Landslide ●● ◆ draw, the wall");
-  own_("banner_of_the_last_keep", "Banner of the last keep", text, { stats: [{ stat: "max_hp", pct: 100 }, { stat: "healing_received", flat: -50 }] });
+  own_("banner_of_the_last_keep", "Banner of the last keep", text, { stats: [{ stat: "max_hp", pct: 50 }, { stat: "healing_received", flat: -50 }] });
 }
 
 // Cleric: Last rites (its state, whichever form trains it) put on at the start and put back whenever anything lifts it; a
