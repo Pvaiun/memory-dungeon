@@ -375,15 +375,12 @@ WEAPON_IDS = {
     "rune_sword": "plain_rune_sword", "great_weapon": "plain_great_weapon", "hammer": "plain_hammer", "mace": "plain_mace",
     "wand": "plain_wand", "staff": "plain_staff", "fist_weapons": "plain_fist",
 }
-# Sheets used in place of the pack's own of the same name: the haloed axes drawn bigger than their wearer, made smaller;
-# Spellbinder, redrawn by the director; and Eye of the tempest, a rune sword the pack drew as a sceptre, which takes the
-# pack's Spellbinder (its forked-lightning blade) in the Eye's own gold. They keep the pack's format, so once the pack holds the sheet a game
-# should use, its file here is deleted.
+# Sheets used in place of the pack's own of the same name: the haloed axes drawn bigger than their wearer, made smaller.
+# They keep the pack's format, so once the pack holds the sheet the game should use, its file here is deleted.
 FITTED = Path(__file__).parent / "weapons-fitted"
-# Drawn for gear lists only, never in a hand (the fists are the sprite's own): the fist weapons, and the mythic that is
-# one (the pack files the mythics under a kind of their own).
+# Drawn for gear lists only, never in a hand (the fists are the sprite's own): the fist weapons, mythics included.
 UNHELD_KINDS = {"Fist weapons"}
-UNHELD = {"ember_palms"}
+UNHELD = set()
 
 if WEAPON_ART:
     pack = json.load(open(WEAPON_ART / "weapons.json"))

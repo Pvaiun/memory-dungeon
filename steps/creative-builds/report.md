@@ -1,6 +1,6 @@
 # Creative builds: the report
 
-Built from `design.md` and the kickoff, step by step, each its own commit (the ladder, pieces and mythics as one: see *What changed*). Nothing is balanced. `npm test` passes but for the two art tests, as the kickoff expects. Typecheck and the validator are clean, and the piece check finds no crash, loop or wrong-way item.
+Built from `design.md` and the kickoff, step by step, each its own commit (the ladder, pieces and mythics as one: see *What changed*). Nothing is balanced. `npm test` passes but for the status-icon art test, as the kickoff expects. Typecheck and the validator are clean, and the piece check finds no crash, loop or wrong-way item.
 
 ## 1. Decisions needed
 
@@ -81,24 +81,7 @@ The tool's word patterns are broader than the kickoff's hand count on two rows: 
 
 ## 3. Waiting for art
 
-**Weapons without a drawing (40):**
-- **Commons:** Brawler's dirk, Sidestep claws, Brazen talons, Leechwood wand, Lifewood wand, Ceremonial sword, Bident, Stout hatchet, Bodkin bow, Iron-backed bow, Honed runeblade, Spiked hammer, Votive hammer, Flanged mace, Beacon staff, Ringed staff, Clarion glaive, Guardsman's halberd.
-- **Others:** Follow-up dirk, Letter opener, Twin dirk, Knuckle-dusters, Weaver's wraps, Heckler's wand, Echoing wand, Duellist's sword, Kingmaker, Avenger's spear, Phalanx pike, Woodsman's axe, Miner's pick, Whistling bow, Patient bow, Hindering blade, Wardblade, Midnight blade, Sparring staff.
-- **Mythics:** Valhalla's spear, Thousand-palm wraps, Eye of the gale.
-
-**Drawings left over (41),** whose weapons were renamed or retired:
-- keen_dirk, sleet_dirk, marking_knife, bloodscent_knife
-- gilded_sword, rimed_blade, stormbrand
-- boar_spear, victors_spear, squall_lance
-- hand_axe, reavers_axe, thirsting_axe
-- war_bow, short_bow, broadhead_bow, opening_shot
-- barrow_blade, sleet_blade, frostward_blade, glacier_blade
-- war_hammer, horsemans_hammer, friars_mace
-- rowan_staff, willow_staff, canopy_staff
-- quickbeam_wand, hazel_wand, jolt_wand, chain_wand
-- bardiche, halberd
-- stormspear, the_witch_blade, eye_of_the_tempest, ember_palms
-- mantis_claws, red_talons, cinder_wraps, rime_knuckles
+**Weapons:** all 40 have first sheets from the weapon art kit, and the 41 left-over drawings are gone. The director's picks among the 22 uncommon and up are open.
 
 **Statuses without an icon (25):**
 - **The four new ones:** Bewildered, Brittle, Fixated, Owed.
