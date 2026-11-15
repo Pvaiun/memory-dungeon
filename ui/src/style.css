@@ -148,10 +148,20 @@ button.mid { padding: .625rem .5rem; }
 .gear-row .go { align-self: center; flex: 0 0 auto; }
 .gear-row .line.name { min-height: 1.5rem; row-gap: 0; }
 .gear-row .effect { line-height: 1.25rem; margin-top: .125rem; }
+.gear-row .gloss { display: flex; align-items: flex-start; gap: .375rem; margin-top: .25rem; }
+.gear-row .gloss .sticon { margin-top: .125rem; flex: 0 0 auto; }
 .gear-row.equipped { background: var(--sel); box-shadow: inset 0 0 0 .125rem var(--hi); }
 .gear-row.locked { cursor: default; }
 .gear-row.locked .art { opacity: .4; }
 .gear-row .tag { margin-left: auto; color: var(--hi); padding-left: .5rem; }
+/* junk: the piece greyed out, its button not */
+.gear-row.junk .art, .gear-row.junk .grow > .line:not(:first-child), .gear-row.junk .grow > .line:first-child > :not(button) { filter: grayscale(1); opacity: .45; }
+.gear-row.junk { min-height: 0; }
+.gear-row.junk .art { min-height: 0; }
+/* a piece put on from the bag: each who could wear it, with what they wear now */
+.wear { display: flex; flex-direction: column; margin-top: .375rem; padding-top: .375rem; border-top: .125rem solid var(--win2); }
+.section + .wear { margin-top: 0; padding-top: 0; border-top: 0; }
+.wear > .line:first-child { gap: .5rem; text-transform: uppercase; }
 .gear-row .codes { color: var(--dim); column-gap: .5rem; row-gap: 0; line-height: 1.25rem; min-height: 1.25rem; }
 .wcode { display: inline-flex; align-items: center; gap: .375rem; white-space: nowrap; }
 .ab { display: flex; flex-direction: column; gap: 0; padding: .375rem .25rem; border-radius: .25rem; margin-top: .25rem; }
@@ -169,15 +179,28 @@ button.mid { padding: .625rem .5rem; }
 .ab .head .chip.on { color: var(--hi); border-color: var(--hi); }
 .ab .size.changes { display: flex; flex-wrap: wrap; column-gap: .75rem; }
 .gear-row .who { column-gap: .5rem; row-gap: 0; line-height: 1.25rem; min-height: 1.25rem; }
+/* Under an offered piece: the roster's faces, each beside what it wears in the piece's slot now (the slot's faded icon for nothing). */
+.gear-row .wears { column-gap: .5rem; row-gap: .125rem; margin-top: .25rem; }
+.gear-row .wear-of { display: inline-flex; align-items: center; gap: .125rem; }
+.gear-row .wear-of .slot { display: inline-flex; justify-content: center; align-items: center; min-width: 2rem; height: 2rem; }
 /* step 5i: a formation's seats on an offer, each with what its statuses do under it */
 .seat { margin-top: .25rem; }
 .seat-text { padding-left: 1rem; }
+.seat-block { cursor: pointer; }
+.seat-block > .section { margin-top: .75rem; border-top: .125rem solid var(--win2); padding-top: .375rem; }
+.seat-more > :first-child { margin-top: .375rem; }
 .ab .cost { text-transform: uppercase; white-space: nowrap; line-height: 1.25rem; }
 .ab .body { color: var(--dim); text-transform: none; white-space: normal; overflow-wrap: anywhere; line-height: 1.25rem; padding-left: 2.25rem; margin-top: .125rem; }
 
 /* the bestiary: an enemy's likeness */
 .beast-art { display: flex; justify-content: center; align-items: flex-end; padding: .5rem 0; min-height: 6rem; }
 .row.beast { min-height: 3.75rem; }
+/* a fight's foes in its preview: likeness, name and line; a tap opens the sheet */
+.foe-row { display: flex; align-items: center; gap: .5rem; padding: .25rem; border-radius: .25rem; cursor: pointer; }
+.foe-row:active { background: var(--sel); }
+.foe-row + .foe-row { margin-top: .25rem; }
+.foe-icon { flex: 0 0 7.25rem; height: 7.25rem; display: flex; align-items: center; justify-content: center; }
+canvas.strip.tap { cursor: pointer; }
 
 /* battle */
 .win.msg { min-height: 7.25rem; flex: 0 0 auto; position: relative; cursor: pointer; padding: .5rem .75rem .5rem; }
@@ -245,6 +268,10 @@ table.sum th { color: var(--dim); }
 .portrait.locked { width: 4.5rem; height: 4.5rem; min-height: 0; align-items: center; border: .125rem dashed var(--dim); border-radius: .25rem; color: var(--dim); font-size: 2rem; line-height: 2rem; }
 .overlay.dialog { justify-content: center; }
 .overlay.dialog > .win { flex: 0 0 auto; }
+.overlay.dialog > .win.scroll { flex: 0 1 auto; }
+/* a hidden result, held until ONWARD; it appears at once */
+.outcome { display: flex; flex-direction: column; gap: .5rem; max-height: 100%; overflow-y: auto; scrollbar-width: none; }
+.outcome > .actions { margin-top: .25rem; }
 
 /* the rogue's end: windows that pop in, one at a time */
 .overlay.cele { justify-content: center; z-index: 6; background: rgba(0, 0, 0, .75); cursor: pointer; }
@@ -290,3 +317,22 @@ table.sum th { color: var(--dim); }
 .art.glow-rare > * { filter: drop-shadow(0 0 .125rem var(--buff)); }
 .art.glow-legendary > * { filter: drop-shadow(0 0 .1875rem var(--gold)); }
 .art.glow-mythic > * { filter: drop-shadow(0 0 .1875rem var(--mythic)); }
+
+/* the fight's recap (battle/recap.ts): every bar one width, so one scale reads across the screen */
+.sum-tap { cursor: pointer; }
+.sum-tap th:first-child { color: var(--hi); }
+.recap .rc-unit { display: grid; grid-template-columns: auto 1fr; column-gap: .5rem; align-items: center; cursor: pointer; border-radius: .25rem; padding: .125rem .25rem .25rem 0; }
+.recap .rc-unit.open { background: var(--sel); }
+.recap .rc-unit.ko .portrait { opacity: .4; }
+.recap .rc-body { min-width: 0; }
+.recap .rc-meter { display: flex; align-items: center; gap: .375rem; min-height: 1.5rem; text-transform: uppercase; white-space: nowrap; }
+.recap .rc-meter .lbl { flex: 1 1 auto; min-width: 0; color: var(--dim); display: flex; align-items: center; gap: .375rem; overflow: hidden; }
+.recap .rc-meter.st { min-height: 2rem; }
+.recap .rc-meter.st .lbl { color: var(--ink); }
+.recap .rc-meter .val { flex: 0 0 4.5rem; text-align: right; }
+.bar.rc { flex: 0 0 11rem; min-width: 0; }
+.recap .rc-more { grid-column: 1 / -1; padding: .25rem 0 .125rem .5rem; }
+.recap .rc-src { display: flex; align-items: center; gap: .375rem; min-height: 2rem; text-transform: uppercase; white-space: nowrap; }
+.recap .rc-src .ic { flex: 0 0 2rem; display: inline-flex; justify-content: center; }
+.recap .rc-src .nums { flex: 0 0 auto; min-width: 4.5rem; text-align: right; display: flex; gap: .5rem; justify-content: flex-end; }
+.recap .rc-laid { display: flex; flex-wrap: wrap; align-items: center; gap: .25rem .75rem; min-height: 2rem; text-transform: uppercase; }

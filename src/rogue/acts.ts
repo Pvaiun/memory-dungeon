@@ -4,7 +4,7 @@
 import type { Content } from "../engine/run.js";
 import { int, next, type Rng, rngFor, shuffle } from "../engine/rng.js";
 import type { RarityT, RogueFightT, RogueNodeKindT } from "../schema.js";
-import { canEquip } from "../validate.js";
+import { canEquip, startingWeapon } from "../validate.js";
 import { cfg, type Item, type MapNode, type Member, note, type Pending, r, regionOf, rogue, ROGUE_VERSION, type RogueRun, type Slot } from "./state.js";
 import { roomForRecruit } from "./offers.js";
 import { registerGear } from "./fights.js";
@@ -35,9 +35,9 @@ export const seatsOf = (c: Content, run: RogueRun) => run.seats ?? cfg(c).bench;
 export function freshCooldown(c: Content, ability: string): number {
   return Math.round(c.abilities.get(ability)!.cooldown * (100 - (cfg(c).fresh ?? 0))) / 100;
 }
+/** The plain weapon a class arrives with: its first one-handed kind's (startingWeapon). */
 export function plainWeapon(c: Content, cls: string): string {
-  const kind = c.classes.get(cls)!.weapons[0];
-  return c.pack.gear.find((g) => g.slot === "weapon" && g.source === "starter" && g.weapon?.kind === kind)!.id;
+  return startingWeapon(c.pack, c.classes.get(cls)!)!.id;
 }
 /** A new item of a piece, at its rarity (the piece's own: `pieceRarity`). */
 export function newItem(run: RogueRun, base: string, rarity: RarityT): Item {
@@ -222,7 +222,7 @@ export function beginAct(c: Content, run: RogueRun, region: string, restore: boo
   // A seat at camp comes with each new act (never fewer than the run already has).
   const by = cfg(c).benchByAct;
   const seats = by?.[Math.min(run.act, by.length) - 1];
-  if (seats !== undefined && seats > seatsOf(c, run)) (run.seats = seats), note(run, `Room for one more at camp: ${seats} seats.`);
+  if (seats !== undefined && seats > seatsOf(c, run)) (run.seats = seats), note(run, `Room for 1 more at camp: ${seats} seats.`);
   note(run, `Act ${run.act}: ${reg.name}. ${run.boss.name} waits at the end.`);
 }
 

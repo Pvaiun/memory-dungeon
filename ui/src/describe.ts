@@ -25,7 +25,7 @@ export function evalNum(n: NumT, stats: Stats | null, target: Stats | null = nul
     } else if (s.stacks) extra.push(`+${disp(s.ratio)} per ${status(s.stacks).name} stack on the target`);
     else if (s.hp) extra.push(`${fmtRatio(s.ratio)} × ${s.hp} HP`);
     else if (s.amount) extra.push(`${Math.round(s.ratio * 100)}% of the amount${s.times ? ` × ${s.times.stat ? statWord(s.times.stat) : status(s.times.stacks!).name}` : ""}`);
-    else if (s.when) extra.push("doubled when the condition holds");
+    else if (s.when) extra.push("×2 when the condition holds");
   }
   return { value: v, extra };
 }
@@ -214,32 +214,77 @@ export function scalesOf(n: NumT | undefined, stacks = false): Scale[] {
 const short = (v: number) => (v >= 10 ? String(Math.round(v)) : String(Math.round(v * 10) / 10));
 
 /** One part of an ability's size: a number, what it is (a damage type, a heal, a status), and what it grows with. */
-export type SizePart = { value?: string; word: string; tone?: string; scales: Scale[]; chance?: number };
+export type SizePart = { value?: string; word: string; tone?: string; scales: Scale[]; chance?: number; or?: boolean };
+
+/** Stacks a unit adds, as a sheet shows them: rounded, never past the status's cap. */
+function stackCount(n: NumT | undefined, id: string, stats: Stats): string {
+  const v = n === undefined ? 1 : evalNum(n, stats).value;
+  const cap = status(id).cap;
+  const r = v >= 10 ? Math.round(v) : Math.round(v * 10) / 10;
+  return String(typeof cap === "number" && r > cap ? cap : r);
+}
+/** One status an action or a card lays: a Shield's points, a stacking status's count, or just its name. */
+function statusPart(id: string, n: NumT | undefined, stats: Stats, chance?: number): SizePart {
+  const d = status(id);
+  if (id === "shield") return { value: String(disp(evalNum(n ?? 0, stats).value)), word: "SHIELD", tone: "sh", scales: scalesOf(n), chance };
+  return { value: d.stacking === "intensity" ? stackCount(n, id, stats) : undefined, word: d.name.toUpperCase(), tone: d.label === "buff" ? "buff" : "debuff", scales: d.stacking === "intensity" ? scalesOf(n, true) : [], chance };
+}
+/** Stacks that grow with a stat of the unit that holds the card (or laid it, with `source`), so a number for this unit means something. */
+const scaledStacks = (n: NumT | undefined, source: boolean): n is Exclude<NumT, number> =>
+  typeof n === "object" && n.scale.length > 0 && n.scale.every((t) => !!t.stat && !t.when && !t.times && (!t.of || t.of === "self" || t.of === "holder" || (source && t.of === "source")));
+/**
+ * The stacks a card's statuses lay that grow with a stat, as numbers for one unit ("3.6 CHILL (ATK)"): what a piece, a
+ * passive or a state gives, which its words leave to this line. It follows a state the card lays to what that state lays;
+ * a flat count is the card's own words, and a counter's stack is its bracket's. `source`: the unit is the one that laid them.
+ */
+export function heldParts(ids: readonly string[], stats: Stats, source = false, seen = new Set<string>()): SizePart[] {
+  const out: SizePart[] = [];
+  for (const id of ids) {
+    if (seen.has(id)) continue;
+    seen.add(id);
+    const d = c.statuses.get(id);
+    if (!d) continue;
+    const lays = (id: string, n: NumT | undefined) => {
+      if (status(id).stacking === "intensity" && id !== "shield") { if (scaledStacks(n, source)) out.push(statusPart(id, n, stats)); }
+      else if (id !== "shield") out.push(...heldParts([id], stats, source, seen));
+    };
+    // What its holder's abilities add (an ability change's statuses).
+    for (const m of d.mods ?? []) for (const ap of m.apply ?? []) lays(ap.status, ap.stacks);
+    for (const e of [...(d.reactions ?? []).flatMap((r) => r.do), ...(d.trigger?.do ?? []), ...(d.pulse?.do ?? [])]) {
+      if (e.op === "apply") lays(e.status, e.stacks);
+      // One status of several, at random or the one the target holds most: the statuses joined by "/".
+      else if (e.op === "one" && e.of.length && e.of.every((o) => scaledStacks(o.stacks, source))) {
+        const all = e.of.map((o) => statusPart(o.status, o.stacks, stats));
+        // The same count for each reads once, first; the stat once, last.
+        const same = all.every((p) => p.value === all[0].value);
+        out.push(...all.map((p, i) => ({ ...p, value: same && i ? undefined : p.value, scales: i === all.length - 1 ? p.scales : [], or: i > 0 })));
+      }
+      // A blow the card calls, sized by its holder's stats (a strike with its weapon has no amount of its own), and what it adds.
+      else if ((e.op === "strike" || e.op === "damage") && typeof e.amount === "object" && e.amount.scale.some((t) => t.stat && (!t.of || t.of === "self" || t.of === "holder")) && e.amount.scale.every((t) => (t.stat && (!t.of || t.of === "self" || t.of === "holder")) || (t.stacks && !t.when))) {
+        out.push({ value: disp(evalNum(e.amount, stats).value).toString(), word: TYPE_WORD.physical, tone: TYPE_TONE.physical, scales: scalesOf(e.amount) });
+        for (const ap of e.apply ?? []) lays(ap.status, ap.stacks);
+      }
+    }
+  }
+  // The same stacks laid by two reactions (a swing and an extra strike) read once.
+  return out.filter((p, i) => p.or || out.findIndex((q) => !q.or && q.word === p.word && q.value === p.value) === i);
+}
 /**
  * An ability's size for one unit, in parts: what each hit deals and its kind, a heal, a shield, the stacks it adds,
- * and the stats each grows with. Slay the Spire prints a card's numbers; this also shows what to gear for.
+ * and the stats each grows with, and what a state it lays adds. Slay the Spire prints a card's numbers; this also shows
+ * what to gear for.
  */
 export function sizeParts(a: AbilityT, stats: Stats, dmgMult = 1): SizePart[] {
   const out: SizePart[] = [];
-  const count = (n: NumT | undefined, id: string) => {
-    const v = n === undefined ? 1 : evalNum(n, stats).value;
-    const cap = status(id).cap;
-    const r = v >= 10 ? Math.round(v) : Math.round(v * 10) / 10;
-    return String(typeof cap === "number" && r > cap ? cap : r);
-  };
-  const statusPart = (id: string, n: NumT | undefined, chance?: number): SizePart => {
-    const d = status(id);
-    if (id === "shield") return { value: String(disp(evalNum(n ?? 0, stats).value)), word: "SHIELD", tone: "sh", scales: scalesOf(n), chance };
-    return { value: d.stacking === "intensity" ? count(n, id) : undefined, word: d.name.toUpperCase(), tone: d.label === "buff" ? "buff" : "debuff", scales: d.stacking === "intensity" ? scalesOf(n, true) : [], chance };
-  };
   for (const e of a.do) {
     if (e.op === "damage") {
       const value = evalNum(e.amount, stats).value * dmgMult;
       out.push({ value: `${e.hits && e.hits > 1 ? `${e.hits}×` : ""}${disp(value)}`, word: TYPE_WORD[e.type], tone: TYPE_TONE[e.type], scales: scalesOf(e.amount) });
-      for (const ap of e.apply ?? []) out.push(statusPart(ap.status, ap.stacks, ap.chance !== undefined && ap.chance < 100 ? ap.chance : undefined));
+      for (const ap of e.apply ?? []) out.push(statusPart(ap.status, ap.stacks, stats, ap.chance !== undefined && ap.chance < 100 ? ap.chance : undefined));
     } else if (e.op === "heal") out.push({ value: String(disp(evalNum(e.amount, stats).value)), word: "HEAL", tone: "good", scales: scalesOf(e.amount) });
     else if (e.op === "mp") out.push({ value: String(disp(evalNum(e.amount, stats).value)), word: "MP", tone: "mp", scales: scalesOf(e.amount) });
-    else if (e.op === "apply" && (e.status === "shield" || status(e.status).stacking === "intensity")) out.push(statusPart(e.status, e.stacks));
+    else if (e.op === "apply" && (e.status === "shield" || status(e.status).stacking === "intensity")) out.push(statusPart(e.status, e.stacks, stats));
+    else if (e.op === "apply") out.push(...heldParts([e.status], stats, true));
   }
   return out;
 }
@@ -299,7 +344,7 @@ export function statusText(d: StatusT): string[] {
   }
   for (const b of d.boosts ?? []) out.push(`${tagWord(b.tag)} damage ${typeof b.pct === "number" ? `${b.pct >= 0 ? "+" : ""}${b.pct}%` : "scaled"}${d.stacking === "intensity" ? " per stack" : ""}`);
   for (const t of d.taken ?? []) out.push(`${tagWord(t.tag)} damage taken ${typeof t.pct === "number" ? `${t.pct >= 0 ? "+" : ""}${t.pct}%` : "changed"}`);
-  if (d.absorb) out.push(`Soaks damage, one point per stack, before HP${typeof d.cap === "object" ? `; cap ${Math.round((d.cap.scale[0]?.ratio ?? 0) * 100)}% of max HP` : ""}.`);
+  if (d.absorb) out.push(`Soaks damage, 1 point per stack, before HP${typeof d.cap === "object" ? `; cap ${Math.round((d.cap.scale[0]?.ratio ?? 0) * 100)}% of max HP` : ""}.`);
   if (d.block) out.push(`Blocks the next damage above ${d.block.share}% of max HP, then ends.`);
   if (d.lockout) out.push(`Locks out ${d.lockout.covers === "all" ? "every action" : `${d.lockout.covers} actions`}${d.lockout.interrupt ? ", cancelling a wind-up" : ""}.`);
   if (d.pulse) {
@@ -313,6 +358,102 @@ export function statusText(d: StatusT): string[] {
   if (d.unremovable) out.push("Can't be removed.");
   return out;
 }
+/** The three speed stats Haste, Slow, Chill and Heat move together read as one: SPEED. */
+const SPEED_STATS = ["attack_speed", "cooldown_reduction", "cast_time_reduction"];
+/** Stats that are a switch, not a size (Taunt's and Hidden's): their words say it all. */
+const FLAG_STATS = new Set(["forced", "forbidden"]);
+const signed = (v: number, unit = "") => `${v >= 0 ? "+" : "-"}${short(Math.abs(v))}${unit}`;
+/** What a boost's tag covers, as a size line names it. */
+const boostWord = (tag: string) =>
+  tag === "physical" ? "DMG" : tag === "basic" ? "BASIC ATTACK DMG" : tag === "ability" ? "ABILITY DMG" : tag === "healing" ? "HEALING" : tag === "shield" ? "SHIELDS" : c.statuses.has(tag) ? `${status(tag).name.toUpperCase()} ADDED` : tag.toUpperCase();
+/** An amount a status deals or gives each time, in plain numbers: a flat amount, a share of its holder's max HP or MP, or so much per stack of itself. */
+function statusAmount(n: NumT, self: string): { value: string; perStack?: boolean } | null {
+  if (typeof n === "number") return { value: short(n / DISPLAY_DIV) };
+  if (n.base || n.scale.length !== 1) return null;
+  const t = n.scale[0];
+  if (t.when || t.times || t.amount || t.hp) return null;
+  if ((t.stat === "max_hp" || t.stat === "max_mp") && (!t.of || t.of === "holder" || t.of === "self")) return { value: `${short(t.ratio * 100)}% MAX` };
+  if (t.stacks === self) return { value: short(t.ratio / DISPLAY_DIV), perStack: true };
+  return null;
+}
+/** When a status's trigger or reaction goes off, as a size line says it; unknown events aren't sized. */
+function whenWord(on: { event: string; status?: string; cause?: string[] }, self: string): string | null {
+  if (on.event === "hit_taken") return "EACH HIT TAKEN";
+  if (on.event === "action_resolve") return "EACH ACTION";
+  if (on.event === "status_capped" && on.status === self) return "AT FULL STACKS";
+  if (on.event === "status_ended" && on.status === self && on.cause?.length === 1 && on.cause[0] === "expired") return "WHEN IT RUNS OUT";
+  return null;
+}
+/**
+ * A status's own numbers, for the fight's sheet under its words: what one stack does to its holder (or the whole status, when
+ * it doesn't stack): a stat it moves, the damage it deals or takes more or less of, what it deals or heals and when. Not the
+ * total for the stacks held; the icon's count is beside it. A size its words carry alone (a condition, a counter) isn't sized.
+ */
+export function statusNumbers(d: StatusT): SizePart[] {
+  const out: SizePart[] = [];
+  const each = d.stacking === "intensity" && !d.absorb;
+  const notes = (...n: (string | null | false | undefined)[]): Scale[] => n.filter((x): x is string => !!x).map((text) => ({ text }));
+  const per = each ? "PER STACK" : null;
+  const stats = (d.stats ?? []).filter((s) => !FLAG_STATS.has(s.stat));
+  // Haste, Slow, Chill: the speed stats moved alike are one line.
+  const speed = stats.filter((s) => SPEED_STATS.includes(s.stat));
+  const together = speed.length === SPEED_STATS.length && speed.every((s) => typeof s.flat === "number" && s.flat === speed[0].flat && s.pct === undefined);
+  for (const s of together ? [speed[0], ...stats.filter((x) => !SPEED_STATS.includes(x.stat))] : stats) {
+    const word = together && s === speed[0] ? "SPEED" : statCode(s.stat);
+    const kind = c.stats.get(s.stat)?.kind;
+    if (typeof s.flat === "number") out.push({ value: kind === "points" ? signed(s.flat, "%") : s.stat === "aggro" ? signed(s.flat) : signed(s.flat / DISPLAY_DIV), word, scales: notes(per) });
+    // A share of the holder's own stat: Bloodlust's doubled Lifesteal.
+    else if (s.flat && !s.flat.base && s.flat.scale.length === 1 && s.flat.scale[0].stat === s.stat && !s.flat.scale[0].when) out.push({ value: `×${short(1 + s.flat.scale[0].ratio)}`, word, scales: notes(per) });
+    if (typeof s.pct === "number") out.push({ value: signed(s.pct, "%"), word, scales: notes(per) });
+  }
+  for (const b of d.boosts ?? []) if (typeof b.pct === "number") out.push({ value: signed(b.pct, "%"), word: boostWord(b.tag), scales: notes(per) });
+  for (const t of d.taken ?? []) if (typeof t.pct === "number") out.push({ value: signed(t.pct, "%"), word: t.tag === "physical" ? "HIT DMG TAKEN" : "DMG TAKEN", scales: notes(per) });
+  if (d.block) out.push({ word: `BLOCKS A BLOW OVER ${d.block.share}% MAX HP`, scales: [] });
+  // What it deals or gives each time it goes off.
+  const sized = (e: EffectT, when: string, perStack: boolean) => {
+    if (e.op !== "damage" && e.op !== "heal" && e.op !== "mp") return;
+    const a = statusAmount(e.amount, d.id);
+    if (!a) return;
+    const word = e.op === "damage" ? (a.value.endsWith("MAX") ? "HP DMG" : "DMG") : e.op === "heal" ? "HP" : "MP";
+    out.push({ value: a.value, word, tone: e.op === "heal" ? "good" : e.op === "mp" ? "mp" : undefined, scales: notes(perStack || a.perStack ? "PER STACK" : null, when) });
+  };
+  if (d.pulse) for (const e of d.pulse.do ?? []) sized(e, `EVERY ${d.pulse.every}T`, each);
+  if (d.trigger) { const w = whenWord(d.trigger.on, d.id); if (w) for (const e of d.trigger.do ?? []) sized(e, w, each); }
+  for (const r of d.reactions ?? []) { const w = whenWord(r.on, d.id); if (w) for (const e of r.do) sized(e, w, false); }
+  return out;
+}
+
+/**
+ * How a card names a status, as a pattern: its word in any form ("Bewilders", "a Chilled foe", "burning"). A status whose
+ * name is also an everyday word (Slow, Guard, Shield, Might, Marked, Hidden, Rot, Doom, Haste) counts only capitalized, as
+ * the cards write a status: "a slow weapon" isn't Slow.
+ */
+const STATUS_WORD: Record<string, RegExp> = {
+  bewildered: /\bbewilder(?:s|ed|ing)?\b/i, fixated: /\bfixate[sd]?\b/i, owed: /\bowe[sd]?\b/i, brittle: /\bbrittle\b/i,
+  stun: /\bstun(?:s|ned|ning)?\b/i, marked: /\bMark(?:s|ed|ing)?\b/, hidden: /\bHid(?:den|es?)\b/, bulwark_broken: /\bBroken\b/,
+};
+const PLAIN_WORDS = new Set(["slow", "guard", "shield", "might", "rot", "doom", "haste"]);
+const wordFor = (d: StatusT): RegExp => {
+  if (STATUS_WORD[d.id]) return STATUS_WORD[d.id];
+  const stem = d.name.toLowerCase().replace(/e$/, "");
+  const forms = `${stem.slice(1)}(?:e|es|s|ed|d|ing)?\\b`;
+  return PLAIN_WORDS.has(d.id) ? new RegExp(`\\b${stem[0].toUpperCase()}${forms}`) : new RegExp(`\\b${stem[0]}${forms}`, "i");
+};
+/**
+ * The statuses a card's words name, in the order they first appear, for the glossary under it: each status the player
+ * sees as an icon and has words for. A card says what happens and leaves what a status is to its own line ("Bewilders
+ * the target" → BEWILDERED: its next basic attack strikes one of its own side).
+ */
+export function namedStatuses(text: string): StatusT[] {
+  const found: { d: StatusT; at: number }[] = [];
+  for (const d of c.statuses.values()) {
+    if (d.show !== "icon" || d.label === "marker" || !d.text) continue;
+    const m = wordFor(d).exec(text);
+    if (m) found.push({ d, at: m.index });
+  }
+  return found.sort((a, b) => a.at - b.at).map((f) => f.d);
+}
+
 /** A damage tag in words: the physical tag is every hit (Ward's and Incorporeal's cut), no tag all damage, statuses' own included. */
 const tagWord = (tag: string | undefined) => (tag === "physical" ? "hit" : tag ?? "all");
 const dropText = (drop: NonNullable<StatusT["drop"]>) => (drop === "all" ? "ends" : "fraction" in drop ? `loses ${Math.round(drop.fraction * 100)}% of its stacks` : `loses ${drop.count} stack${drop.count === 1 ? "" : "s"}`);

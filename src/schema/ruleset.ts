@@ -50,7 +50,7 @@ export const PerkOffer = z.strictObject({
 export const Ruleset = z.strictObject({
   basicRecovery: z.number().gt(0).max(1).describe("A basic attack's recovery, as a share of the weapon's base cooldown. Sets the Attack Speed ceiling."),
   abilityCast: Ticks.describe("An ability's cast time unless it states one."),
-  abilityRecovery: Ticks.describe("An ability's recovery unless it states one: about a sword's."),
+  abilityRecovery: Ticks.describe("An ability's recovery unless it states one."),
   armorRatio: z.number().min(0).describe("Each physical hit loses armorRatio × the target's Defense, as a flat amount."),
   armorFloor: z.number().min(0).max(100).optional().describe("Defense can't take a physical hit below this % of its size. Absent or 0: enough Defense blanks a hit. Ignored when armorK is set."),
   armorK: z.number().min(0).optional().describe("Defense by the Path of Exile formula: a physical hit deals hit² ÷ (hit + armorK × Defense), so Defense is nearly linear against big hits and never blanks one. Replaces armorRatio and armorFloor when above 0; absent or 0, the flat cut."),

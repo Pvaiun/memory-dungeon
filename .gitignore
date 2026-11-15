@@ -3,3 +3,4 @@ fixtures/by-type/
 out/
 ui/dist/
 ui/node_modules/
+__pycache__/

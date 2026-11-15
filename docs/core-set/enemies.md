@@ -100,7 +100,7 @@ The original design gave Poison as the Fundamental answer to Armored shell, Dodg
 | Executioner | Specialist | Puts Doom on a unit; an execute variant hits the lowest ally instead. | Cleanse, Shield; Aegis, Revive | Reaper |
 | Adds shield | Specialist | Takes no damage while any add lives; calls waves. | Area, Stun on the summon; Silence, lowest-HP targeting, burst between waves | – |
 | Feeding adds | Specialist | After a wind-up, consumes its living adds to heal or gain Might. | Area, Stun on the wind-up; Silence, spread Burn, Dispel | – |
-| Avenger | Specialist | Gains several Might when an add is knocked out; its adds are tough and Taunt. Area is the wrong pick. | Weaken, Shield; Seek that reaches the boss (Gale spear, Garrote, Pressure point), Hunter's eye, Dispel. Abilities without Seek are forced onto the adds by the Taunt rule. | Storm King |
+| Avenger | Specialist | Gains several Might when an add is knocked out; its adds are tough and Taunt. Area is the wrong pick. | Weaken, Shield; Seek that reaches the boss (Gale spear, Garrote, Pressure point), Dispel. Abilities without Seek are forced onto the adds by the Taunt rule. | Storm King |
 | Burrower | Specialist | Goes Hidden for stretches, leaving Taunting adds. | Area; Seek | – |
 
 ### Groups
@@ -128,6 +128,10 @@ The original design gave Poison as the Fundamental answer to Armored shell, Dodg
 ## The enemies
 
 By region. In the rogue mode each region is an act, its fight pools made from these foes (`ROGUE_REGIONS` in `content/core-set/rogue.ts`). In free play the regions are seven dungeons, played in order (`dungeons.ts`). The challenge each enemy is built on is in italics; a passive or ability is in bold, and what it does follows.
+
+Each enemy also has a line, its `text` in `content/core-set/enemies.ts`: the flavour a fight's preview shows under its name, beside its likeness, with its whole sheet a tap away. A line says what the foe does through what it is ("Big, slow, and swings a tree"), never as a rule, and fits in three short lines. It's written for the name the screen shows: four foes show under another name, to match their sprite (the Archer as the Centaur Archer, the Shieldman as the Shield Knight, the Bat as the Night Wyrm, the Mummy as the Crypt Guard).
+
+A foe's passive shows on its status bar from the start of a fight, first and always on, with no count and no timer: about three foes in ten have one, so the bar signposts it. A class's doesn't, as every class has one.
 
 ### Old Road
 

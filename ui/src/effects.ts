@@ -269,7 +269,7 @@ export const downFx = (ref: string): Keyed => (DOWN_FX[ref] ? { key: `down:${ref
 
 // ─── Sizes: the designer's own, look by look ───
 /*
- * A look's size, chosen on the FX SIZES screen (Settings, with DESIGNER on): one whole scale for all of a look's effects,
+ * A look's size, chosen on the FX SIZES screen (Settings, with DESIGNER on): one scale (1, 1.5, 2 or 3) for all of a look's effects,
  * in place of the field's own choice (scene.ts). SIZES are the committed choices. A device's own, chosen since, are kept
  * in its browser and win over them; 0 there means "the field's own" over a committed one. The screen's EXPORT writes
  * them all out, to be committed here.

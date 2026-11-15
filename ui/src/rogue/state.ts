@@ -110,11 +110,11 @@ export function startRun(leader: string, heat: number): RogueRun {
   saveRogue();
   return s.run;
 }
-/** Ends the run: a won run adds its party to the classes a run can start with. Returns what it unlocked. */
-export function endRun(): { won: boolean; unlocked: string[]; heat: boolean } {
+/** Ends the run: a won run adds the class picked from its party to the classes a run can start with. Returns what it unlocked. */
+export function endRun(pick?: string): { won: boolean; unlocked: string[]; heat: boolean } {
   const run = s.run;
   if (!run) return { won: false, unlocked: [], heat: false };
-  const r = finish(s.meta, run);
+  const r = finish(s.meta, run, pick);
   const won = run.pending.kind === "over" && run.pending.won;
   s.last = { won, ...r };
   s.run = null;

@@ -113,6 +113,15 @@ export function listeners(w: W, event: string): Set<string> | undefined {
   return m.get(event);
 }
 
+/** The holder's own action of a kind its `spare` names doesn't set off that status's trigger (basic attacks that keep their Might). */
+function spared(w: W, h: CUnit, d: S.StatusT, e: Ev): boolean {
+  if (!feats(w.c).spare || e.owner !== h || (e.e !== "action_resolve" && e.e !== "action_start")) return false;
+  return h.statuses.some((s) => {
+    const x = def(w, s.id).spare;
+    return !!x && x.status === d.id && x.kind === e.kind;
+  });
+}
+
 /** Of the units on a side that hold a `party` status, only the first standing in slot order answers. */
 function speaksFor(w: W, h: CUnit, d: S.StatusT): boolean {
   if (!d.party) return true;
@@ -144,7 +153,7 @@ export function fire(w: W, e: Ev) {
       if (!ids.has(s.id)) continue;
       const d = def(w, s.id);
       if (!speaksFor(w, h, d)) continue;
-      if (d.trigger && s !== e.ending && h.statuses.includes(s) && matches(w, d.trigger.on, e, h)) trigger(w, h, s, d, e);
+      if (d.trigger && s !== e.ending && h.statuses.includes(s) && matches(w, d.trigger.on, e, h) && !spared(w, h, d, e)) trigger(w, h, s, d, e);
       d.reactions?.forEach((r, k) => {
         let ridersOnly = false;
         if (!matches(w, r.on, e, h)) {

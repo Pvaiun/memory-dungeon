@@ -1,6 +1,6 @@
 /** The legendary formations. Each adds itself to kit.ts's lists. */
 import type { StatusT, UnitCondT } from "../../../src/schema.js";
-import { EV, FEW_TICKS, NO_MARK, SO_OFTEN, TAUNTS_ALL_FIGHT, TO, against, atStart, give, hits, ofAmount, on, react, reactIf, share } from "../pieces/kit.js";
+import { EV, FEW_TICKS, NO_MARK, SO_OFTEN, TAUNTS_ALL_FIGHT, TO, against, atStart, give, hits, lift, ofAmount, on, react, reactIf, share } from "../pieces/kit.js";
 import { OVERHEAL } from "../pieces/shared.js";
 import { COOLDOWN, FLAT_STACKS } from "../scale.js";
 import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTEAL_HIGH, NOTHING, STRONGER_HEALS, THIRD_FASTER, THIRD_SOONER, THORNS, add, critSt, formation, held, st, thrice, twice } from "./kit.js";
@@ -9,138 +9,136 @@ import { CRITS_FAR_MORE, EVASION, FIFTH_FASTER, FIFTH_SOONER, LIFESTEAL, LIFESTE
 
 {
   // The Foothills' larger Shields: every ally's Shields on a Foothill are a third bigger, its own included.
-  const peak = "While every ally holds a Shield, itself included, each blow it lands, swing or ability, lands a second time: the same damage again on the same foe, at once. Nothing repeats the second landing.";
-  const foothill = "Starts each fight behind a Shield: a fifth of its max HP. Every Shield it gains, that one included, is a third bigger.";
+  const peak = "While every ally holds a Shield, each hit lands 2 times.";
+  const foothill = "At fight start: a Shield of 20% of its max HP. Shields on it are 33% bigger.";
   add(
-    formation("The mountain", "legendary", "While the whole party's stone holds, the Peak's blows land twice.", [
+    formation("The mountain", "legendary", "A peak that stands on the party's stone.", [
       { name: "Peak", text: peak, statuses: ["the_mountain_peak"] },
       ...twice({ name: "Foothill", text: foothill, statuses: ["the_mountain_foothill"] }),
     ], { statuses: ["the_mountain"] }),
     [
       held("the_mountain_peak", "Peak", peak, { reactions: [reactIf(on("hit_lands", { notTags: ["bare"] }), { side: "allies", where: { lacks: "shield" }, atMost: 0 }, { op: "strike", of: "dealt", to: "other" })] }),
-      held("the_mountain_foothill", "Foothill", "Starts each fight behind a Shield: a fifth of its max HP.", { reactions: [atStart(give("shield", "holder", share(0.2, "max_hp")))] }),
-      held("the_mountain", "The mountain", "Its Shields on a Foothill are a third bigger.", { boosts: [{ tag: "shield", pct: against(33, { has: "the_mountain_foothill" }) }] }),
+      held("the_mountain_foothill", "Foothill", foothill, { reactions: [atStart(give("shield", "holder", share(0.2, "max_hp")))] }),
+      held("the_mountain", "The mountain", "Its Shields on a Foothill are 33% bigger.", { boosts: [{ tag: "shield", pct: against(33, { has: "the_mountain_foothill" }) }] }),
     ],
     "Landslide 3 ●●● ⚙ detonation (half)",
   );
 }
 {
-  // Each ally keeps its own copy of the party's count, fed by every ally's hits (one Cut an event).
-  const party = "The party keeps one count of Cuts (a Cut for each hit it lands, kept for the fight, up to 25), and every ally's hits add to it. Every ally's hits start a fifth softer, and deal 3% more for each Cut.";
+  // Each ally keeps its own copy of the party's count, fed by every ally's hits (one Edge an event).
+  const party = "Every ally's hits add to one count of Edge (up to 25). Hits deal −20%, then +3% per Edge.";
   add(
     formation("The whetstone", "legendary", "Every hit the party lands sharpens the next.", thrice({ name: "Blade", text: NOTHING }), { text: party, statuses: ["the_whetstone"] }),
-    [held("the_whetstone", "The whetstone", party, { reactions: [react(on("hit_lands", { whose: "team" }), give("cuts", "holder", 1))], boosts: hits({ base: -20, scale: [{ ratio: 3, stacks: "cuts", of: "holder" }] }) })],
+    [held("the_whetstone", "The whetstone", party, { reactions: [react(on("hit_lands", { whose: "team" }), give("edge", "holder", 1))], boosts: hits({ base: -20, scale: [{ ratio: 3, stacks: "edge", of: "holder" }] }) })],
     "Cuts 3 ●●●, Storm ●●",
   );
 }
 {
-  const party = "While any foe burns, every ally gains a Heat every 4 ticks (each acts 5% faster in everything for each Heat, up to 10, for the rest of the fight). Whenever an ally is Stunned or Silenced, the foe with the most Burn gains many Burn.";
-  const stoke = (status: string) => react(on("status_gained", { status, whose: "team" }), give("burn", TO.mostFoe("burn"), FLAT_STACKS.many));
+  // Each ally turns on its own clock, together: Surge for 22 ticks (Haste as it begins, hits +10%), then Ebb (Guard as it begins, 40% slower:
+  // Haste's own size), and back. At +20% and 30% slower the tide only rose: 23 points over Neutral on the balance sheet's probe.
+  const party = `Every ${SO_OFTEN} ticks the party turns. Surge: every ally Hasted, hits +10%. Ebb: every ally Guarded, 40% slower.`;
+  const slower = ["attack_speed", "cooldown_reduction", "cast_time_reduction"].map((stat) => ({ stat, flat: -40 }));
+  const tide = (id: string, name: string, text: string, next: string, body: Partial<StatusT>): StatusT =>
+    ({ id, name, text, label: "buff", show: "icon", stacking: "refresh", unremovable: true, duration: SO_OFTEN, ...body, reactions: [...(body.reactions ?? []), react(on("status_ended", { status: id, cause: ["expired"] }), give(next))] }) as StatusT;
   add(
-    formation("The forge", "legendary", "The longer the fire is kept, the faster the party feeds it.", thrice({ name: "Forgehand", text: NOTHING }), { text: party, statuses: ["the_forge", "the_forge_bellows"] }),
+    formation("Tidal", "legendary", "The party rises and falls together.", thrice({ name: "Wave", text: NOTHING }), { text: party, statuses: ["tidal"] }),
     [
-      held("the_forge", "The forge", "While any foe burns, a Heat every 4 ticks.", { pulse: { every: FEW_TICKS, if: { side: "foes", where: { has: "burn" } }, do: [give("heat", "holder", 1)] } }),
-      held("the_forge_bellows", "The forge's bellows", "Whenever an ally is Stunned or Silenced, the foe with the most Burn gains many Burn.", { party: true, reactions: [stoke("stun"), stoke("silence")] }),
+      held("tidal", "Tidal", party, { reactions: [atStart(give("tidal_surge"))] }),
+      tide("tidal_surge", "SURGE", "Hits +10%.", "tidal_ebb", { boosts: hits(10), reactions: [react(on("status_gained", { status: "tidal_surge" }), give("haste"))] }),
+      tide("tidal_ebb", "EBB", "40% slower.", "tidal_surge", { stats: slower, reactions: [react(on("status_gained", { status: "tidal_ebb" }), give("guard"))] }),
     ],
-    "Bonfire 3 ●●●",
+    "Cuts 3 ●●, Landslide ●● ◆ tempo, the beat",
   );
 }
 {
-  // Held once by the side: the cold reads the Cascades before this shatter's, then every ally counts it. Passed, so a chain dies down.
-  const party = "When a foe's Chill shatters, every other foe gains a Chill, and one more for every two Cascades the party held before it (a Cascade for each shatter this fight, up to 10).";
+  const party = "No ally makes a basic attack. Abilities come round 40% faster.";
   add(
-    formation("The long winter", "legendary", "Every shatter sends its cold down the line, and each sends more than the last.", thrice({ name: "Winterer", text: NOTHING }), { text: party, statuses: ["the_long_winter"] }),
-    [held("the_long_winter", "The long winter", party, {
-      party: true,
-      reactions: [
-        react(EV.shatter, give("chill", TO.otherFoes("owner"), { base: FLAT_STACKS.one, scale: [{ ratio: FLAT_STACKS.one / 2, stacks: "cascade", of: "holder" }] }, { passed: true })),
-        react(EV.shatter, give("cascade", TO.everyAlly, 1)),
-      ],
-    })],
-    "Snap 3 ●●● ⚙ firecracker (key)",
+    formation("The still hour", "legendary", "Nobody swings; every spell comes round.", thrice({ name: "Watcher", text: NOTHING }), { text: party, stats: [{ stat: "cooldown_reduction", flat: 40 }], statuses: ["the_still_hour"] }),
+    [held("the_still_hour", "The still hour", "Makes no basic attack.", { lockout: { covers: "basic" }, mods: [{ mp: -40 }] })],
+    "Barrage 3 ●●, Snap ● ◆ the spell's beat",
   );
 }
 {
-  const bolt = "Its abilities deal 3% more for each Shock the foes hold. The Shock stays.", party = "Every ally's basic attacks add a few Shock, for the whole fight.";
+  const party = "Every ally's basic attacks come 100% faster, for 45% of the damage.";
   add(
-    formation("Eye of the storm", "legendary", "The storm doesn't lift.", [
-      { name: "Bolt", text: bolt, statuses: ["eye_of_the_storm_bolt"] },
-      ...twice({ name: "Squall", text: NOTHING }),
-    ], { text: party, statuses: ["eye_of_the_storm"] }),
-    [
-      held("eye_of_the_storm_bolt", "Bolt", bolt, { boosts: [{ tag: "ability", pct: { scale: [{ ratio: 3, count: { side: "foes", stacks: "shock" } }] } }] }),
-      held("eye_of_the_storm", "Eye of the storm", party, { reactions: [react(EV.basic, give("shock", "other", FLAT_STACKS.few))] }),
-    ],
-    "Storm 3 ●●● ⚙ held charge (key), lead's colour (half)",
+    formation("The hundred hands", "legendary", "A blur of small blows.", thrice({ name: "Hand", text: NOTHING }), { text: party, stats: [{ stat: "attack_speed", flat: 100 }], statuses: ["the_hundred_hands"] }),
+    [held("the_hundred_hands", "The hundred hands", "Basic attacks deal 45% of the damage.", { boosts: [{ tag: "basic", pct: -55 }] })],
+    "Cuts 3 ●●, Storm ●● ◆ quick strikes, extra strikes",
   );
 }
 {
-  // Held once by the side: the Mark stands on the lowest foe, and the volley is called at the start and at each Marked foe's fall.
-  const party = "While no foe is Marked, the foe with the lowest current HP is Marked. When each fight starts, and whenever a Marked foe falls, every ally's next basic attack comes at once. A swing already called gains nothing from a second call.";
-  const mark = give("marked", TO.lowestHpFoe), volley = { op: "cooldown" as const, which: "basic" as const, set: "ready" as const, to: TO.everyAlly };
+  // The Rear can't be picked (its own state, not Hidden) while both Vanguards stand: lifted when one falls, given back when one stands up again beside the other.
+  const vanguard = "Draws far more. Acts 25% faster.", rear = "Abilities come round 50% faster. Can't be picked while both Vanguards stand.";
+  const fast = ["attack_speed", "cooldown_reduction", "cast_time_reduction"].map((stat) => ({ stat, flat: 25 }));
+  const both = { side: "allies" as const, where: { has: "vanguard_and_rear_vanguard" }, atLeast: 2 };
   add(
-    formation("Open season", "legendary", "Every kill calls the party's weapons down again.", thrice({ name: "Hunter", text: NOTHING }), { text: party, statuses: ["open_season"] }),
-    [held("open_season", "Open season", party, {
-      party: true,
-      reactions: [
-        react(on("status_ended", { status: "marked", cause: ["ko"], whose: "foe" }), volley),
-        reactIf(on("fight_start"), NO_MARK, mark),
-        reactIf(on("status_ended", { status: "marked", whose: "foe" }), NO_MARK, mark),
-        atStart(volley),
-      ],
-    })],
-    "Hunt 3 ●●●, Landslide ●●, Bonfire ● ⚙ judge's drum (key)",
-  );
-}
-{
-  const wall = "Taunts all fight: its Taunt is laid again each time it runs out. Holds Spite (a Spite for each hit it takes, kept for the fight, up to 20).";
-  const reaper = "Its hits deal 4% more for each Spite the Wall holds.";
-  add(
-    formation("The palisade", "legendary", "One is struck, two profit, more with every blow.", [
-      { name: "Wall", text: wall, statuses: ["the_palisade_wall"] },
-      ...twice({ name: "Reaper", text: reaper, statuses: ["the_palisade_reaper"] }),
+    formation("Vanguard and rear", "legendary", "Two in front, quick and loud; one unseen behind them.", [
+      ...twice({ name: "Vanguard", text: vanguard, stats: [st("aggro", 2), ...fast], statuses: ["vanguard_and_rear_vanguard"] }),
+      { name: "Rear", text: rear, stats: [{ stat: "cooldown_reduction", flat: 50 }], statuses: ["vanguard_and_rear_rear"] },
     ]),
     [
-      held("the_palisade_wall", "Wall", wall, { reactions: [...TAUNTS_ALL_FIGHT, react(EV.struck, give("spite", "holder", 1))] }),
-      held("the_palisade_reaper", "Reaper", reaper, { boosts: hits({ scale: [{ ratio: 4, stacks: "spite", seat: "wall" }] }) }),
-    ],
-    "Toll 3 ●●●, Landslide ●",
-  );
-}
-{
-  const soloist = "Its first-slotted ability has no cooldown: it's cast again whenever there's the MP for it. Its wind-up, its cost and whatever it waits for stay.";
-  const voice = "All MP it would regain in a fight goes to the Soloist instead, and isn't sent on again. Each cast the Soloist finishes gives this seat a Shield: a twentieth of its max HP.";
-  add(
-    formation("The cathedral", "legendary", "Two voices give all their mana to one, and it never stops singing.", [
-      { name: "Soloist", text: soloist, statuses: ["the_cathedral_soloist"] },
-      ...twice({ name: "Voice", text: voice, statuses: ["the_cathedral_voice"] }),
-    ]),
-    [
-      held("the_cathedral_soloist", "Soloist", soloist, { mods: [{ of: { first: true }, cooldown: -100 }] }),
-      held("the_cathedral_voice", "Voice", voice, {
-        divert: { what: "mp", to: TO.seat("soloist") },
-        reactions: [react(on("action_resolve", { kind: "ability", whose: "team", seat: "soloist" }), give("shield", "holder", share(0.05, "max_hp")))],
+      held("vanguard_and_rear_vanguard", "Vanguard", "Marks a Vanguard's seat, for the Rear.", { label: "marker" }),
+      held("vanguard_and_rear_rear", "Rear", "Can't be picked while both Vanguards stand.", {
+        reactions: [
+          reactIf(on("fight_start"), both, give("vanguard_and_rear_unseen")),
+          react(on("ko", { whose: "ally", seat: "vanguard_a" }), lift("vanguard_and_rear_unseen")),
+          react(on("ko", { whose: "ally", seat: "vanguard_b" }), lift("vanguard_and_rear_unseen")),
+          reactIf(on("revived", { whose: "ally" }), both, give("vanguard_and_rear_unseen")),
+        ],
       }),
+      { id: "vanguard_and_rear_unseen", name: "UNSEEN", text: "Can't be picked.", label: "buff", show: "icon", stacking: "fizzle", stats: [{ stat: "forbidden", flat: 1 }] } as StatusT,
     ],
-    "Barrage 3 ●●● ⚙ mana as armour (half), crescendo (half)",
+    "Barrage 3 ●●, Hunt ● ◆ draw, the soloist's safety",
+  );
+}
+{
+  // The Banner's own Attack and Defense, read live off its seat: gone while it's down.
+  const banner = "Never acts.", bearer = "Gains the Banner's Attack and Defense.";
+  const seatStat = (stat: string) => ({ stat, flat: { scale: [{ ratio: 1, stat, seat: "banner" }] }, live: true as const });
+  add(
+    formation("Bannerman", "legendary", "One carries the colours; the others fight under them.", [
+      { name: "Banner", text: banner, statuses: ["bannerman_banner"] },
+      ...twice({ name: "Bearer", text: bearer, statuses: ["bannerman_bearer"] }),
+    ]),
+    [
+      held("bannerman_banner", "Banner", "Never acts.", { lockout: { covers: "all" } }),
+      held("bannerman_bearer", "Bearer", bearer, { stats: [seatStat("attack"), seatStat("defense")] }),
+    ],
+    "exotic ◆ the trade",
+  );
+}
+{
+  // The Soloist's own mana is the brake. A cooldown cut short, not gone: with none, a cast every tick or two fed a Crescendo
+  // to its cap in a few ticks, and Siphon on the swollen hits paid the mana back (fights over in 9 ticks).
+  const soloist = "Its first-slotted ability's cooldown is 75% shorter.";
+  const voice = "Draws more.";
+  add(
+    formation("The cathedral", "legendary", "Two give their mana; one never stops singing.", [
+      { name: "Soloist", text: soloist, statuses: ["the_cathedral_soloist"] },
+      ...twice({ name: "Voice", text: voice, stats: [st("aggro", 1)] }),
+    ]),
+    [
+      held("the_cathedral_soloist", "Soloist", soloist, { mods: [{ of: { first: true }, cooldown: -75 }] }),
+    ],
+    "Barrage 3 ●●● ⚙ crescendo (half)",
   );
 }
 {
   // Lifesteal at the medium step: high, on every ally and every swing, besides casting free of MP, put it 20 points over Neutral.
-  const party = "Every ally's abilities cost HP in place of MP: half the share of its max HP that they'd cost of its max MP. No ally casts one that would leave it below a tenth of its max HP. Every ally has Lifesteal.";
+  const party = "Every ally's abilities cost HP, not MP, and none casts below 10% HP. Every ally has Lifesteal.";
   add(
     formation("The covenant", "legendary", "Life is the party's one currency.", thrice({ name: "Sworn", text: NOTHING }), { text: party, stats: [LIFESTEAL], statuses: ["the_covenant"] }),
-    [held("the_covenant", "The covenant", "Its abilities cost HP in place of MP: half the share, never below a tenth.", { mods: [{ hp: { pct: 50, share: true, floor: 10, instead: true } }] })],
+    [held("the_covenant", "The covenant", "Its abilities cost HP, not MP; it never casts below 10% HP.", { mods: [{ hp: { pct: 50, share: true, floor: 10, instead: true } }] })],
     "Pact 3 ●●●, Barrage ●● ⚙ blood mage (key), brink (half)",
   );
 }
 {
   // What one Twin gives itself, shared with the other (a copy, so it isn't shared back).
-  const twin = "Whatever status it gives itself, the other Twin gains too, in the same stacks: a status laid on it at a moment (a Taunt, a Haste, a Shield, a counter a card gives), not a state it holds while something is true of it. A status passed on this way isn't passed on again.";
+  const twin = "Statuses it gives itself, the other Twin gains too.";
   add(
-    formation("Twins", "legendary", "Two are bound; what one gives itself, the other has too.", [
+    formation("Twins", "legendary", "Two are bound as one.", [
       ...twice({ name: "Twin", text: twin, statuses: ["twins_twin"] }),
-      { name: "Odd one out", text: "Attack up two steps.", stats: [st("attack", 2)] },
+      { name: "Odd one out", text: "Attack up 2 steps.", stats: [st("attack", 2)] },
     ]),
     [held("twins_twin", "Twin", twin, { reactions: [react(on("status_gained", { other: "holder", repeat: false }), { op: "share", to: { side: "others", where: { has: "twins_twin" }, pick: "all" } })] })],
     "exotic ⚙ borrowed gift (key), two in the dark (half)",

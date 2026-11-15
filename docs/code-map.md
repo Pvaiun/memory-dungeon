@@ -46,9 +46,9 @@ src/
       fight/                 the fight, one file a part
         state.ts             the fight's data, the world (W), shared helpers, stats after statuses, HP lines, numbers
         actions.ts           abilities as actions: their changes, costs and HP prices, availability, start, resolution, casts made again, extra strikes
-        targeting.ts         picks: draw, Taunt, Hidden, Seek, focus, target rules, conditions, seats
-        effects.ts           every effect op but damage and healing: targets, numbers, MP, cooldowns, HP prices, strikes out of turn, riders laid, the opening again, revives
-        damage.ts            damage and healing: the resolution order, evasion, crits, Shield, Aegis, MP as armour, floors, cover, healing caps
+        targeting.ts         picks: draw, Taunt, Hidden, Seek, focus, Fixated and Bewildered, target rules, conditions (what a unit wears among them), seats
+        effects.ts           every effect op but damage and healing: targets, numbers, MP, cooldowns, HP prices, strikes out of turn, riders laid, the opening again, revives, HP traded and rewound
+        damage.ts            damage and healing: the resolution order, evasion, crits (taken too), Shield, Aegis, MP as armour, floors, cover, debts owed, healing caps and shared healing
         statuses.ts          applying, ending, removing, moving, spending and pulsing statuses; diverts, damping; control resistance; lockouts
         events.ts            events, their filters, reactions and Intensity triggers; riders, carried and borrowed; shared amounts
         units.ts             knockouts, the fight's end, revives, summons and splits
@@ -61,16 +61,17 @@ src/
       synergy-w.test.ts      tests: the building blocks for who and when
       loot-h.test.ts         tests: the loot pass's building blocks for what happens (hits out of turn, riders, HP lines, MP, healing caps)
       loot-w.test.ts         tests: the loot pass's building blocks for who and when (party rules, ability changes, casts again, sight)
+      creative.test.ts       tests: the creative-builds pass's building blocks (Bewildered, Fixated, crits taken, Owed, covers by tag, shared heals, HP traded and rewound, spreads, rescales, what a unit wears)
       coreset.test.ts        tests: the core set's own rules (Taunt and Hidden, Seek, revive, summons)
       dungeon.test.ts        tests: a run's rules (foes modifier, lost casts, stagger, enrage, Stun, campfires)
   rogue.ts                   the rogue mode's public face; lists its parts
   rogue/                     the rogue mode: a run as data, moved on one decision at a time
     state.ts                 the run's data (RogueRun, Member, Offer, Pending), shared helpers, the meta
-    fights.ts                the run's items as content, the party a fight takes, starting and ending a fight, knobs, foes
+    fights.ts                the run's items as content, the party a fight takes, starting and ending a fight, a boss's Destiny Shard, a shard's return, knobs, foes
     acts.ts                  a new run (leader, draft, known abilities); each act's map and rooms
     offers.ts                the stock and every offer: gear, mythics, tomes, recruits, formations, supplies, prices, the shop
     training.ts              learning abilities; power steps and versions
-    party.ts                 free actions between rooms: gear, formation, seats, order, swaps, supplies
+    party.ts                 free actions between rooms: gear, formation, seats, order, swaps, supplies, junk
     decisions.ts             what the pending decision offers, and choose()
     rooms.ts                 entering a room, a campfire, the next region, an event's effects
     record.ts                a run's record for balancing: every choice and free action (interface runs only)
@@ -92,12 +93,12 @@ src/
     combat.ts                the combat rule language: numbers, conditions, targeting, effects, statuses, actions
     content.ts               classes, upgrades, gear, formations, enemies, perks
     dungeons.ts              dungeons, loot, challenges, the starter, progression, the rogue block, totals, unused entries
-    party.ts                 party loadouts, challenge constraints, canEquip, handsOf
+    party.ts                 party loadouts, challenge constraints, canEquip, handsOf, the weapon a class arrives with
   sim/                       the simulation library (the interface uses content.ts and parties.ts)
     content.ts               content with patches (variants), and single fights as one-stage dungeons
     parties.ts               parties: building and listing them, plain weapons, what fits a slot
     kits.ts                  sensible kits from the pack by class profile, seating, ability order
-    rogue-ai.ts              the simulated rogue player, with dials
+    rogue-ai.ts              the simulated rogue player, with dials; it spends Destiny Shards and retries a fight prepared at random
     study.ts                 a study: the data file that says what to run
     combat.ts                a study's combat level: many parties against dungeons and fights
     measure.ts               probes watching each fight's HP, MP and pace
@@ -122,19 +123,21 @@ tools/                       the Node command lines; each header says how to run
   swing-rate.ts              a stat step against a swing step, class by class: the weapon kinds' exchange rate
   rogue-bosses.ts            how bosses fight in runs: casts, interrupts, held wind-ups
   rogue-acts.ts              the act road and the MP economy, on the rosters
+  road-read.ts               what the road's regular fights and elites cost each roster at today's knobs: cost, fights nearly free, losses, MP spent, the lowest a member falls; --without prices a class
   rogue-feel.ts              fight logs for a feel read (the reader's brief: docs/feel-reader.md); --builds for the build parties
   rogue-feel/
     builds.ts                its build mode: the build test's parties on their fights or named ones, the packs picked, the cards gathered
   rogue-play.ts              the rogue mode as a command line, for an AI playtester
   play-summary.ts            a fight as a player remembers it, for rogue-play
-  build-test.ts              the nine builds side by side, from rolled starts (START); its fights and starts serve rogue-feel's build mode
+  build-test.ts              the nine builds side by side, from rolled starts (START), by tier too (regular, elite, boss); its fights and starts serve rogue-feel's build mode and build-calibrate
   build-parties.ts           the nine builds' 27 routes (builds.md's classes, a formation a rung), gathered (ROUTES, BUILD_PARTIES, ALL_PARTIES); each build's formations (FORMS)
   build-parties/
-    kit.ts                   their types, the builds' names, formation seats, mythics, and route(): each rung's gear, versions, mythics and seats from the loot's tags
+    kit.ts                   their types, the builds' names, formation seats, mythics, and route(): each rung's gear, versions, mythics and seats from the loot's tags; the placements a good player wouldn't make (MISFIT) and the pieces that fight a formation (AGAINST)
   rhythm-read.ts             does a party play the fight its build says it does?
   piece-check.ts             does every item do what its card says?
   gear-slots.ts              the gear slots' counts: who wears which kinds
   loot-list.ts               today's loot as one line per item: its cards, and the builds it was tagged for
+  loot-count.ts              the loot's shapes counted, one measure for a pass's before and after: repeated effect shapes, exotics, conditional pieces, keyword share per build, keyword formations; and pairs of pieces one class can wear together whose cards share a sentence
   smoke.ts                   npm run smoke: the documents' own test trios
   dungeon.ts                 npm run dungeon: print one run
   study.ts                   npm run study: run a combat study
@@ -159,15 +162,15 @@ content/
     tests.ts                 the documents' own test trios, for npm run smoke
     pack.ts                  assembles the pack
     build.ts                 npm run content: validates and writes the pack
-    pieces/                  the 322 pieces, in six shares
-      kit.ts                 the helpers pieces, formations and upgrades are written with; the swing trade, the budget check, the plain card of a piece that is only its stats, and the Serves line's reader
-      shared.ts              statuses several files use: the six counters and the order of healing past full (Marked is the vocabulary's)
+    pieces/                  the 324 pieces, in six shares
+      kit.ts                 the helpers pieces, formations and upgrades are written with; the swing trade, the step down, the budget check (every miss gathered), the plain card of a piece that is only its stats, and the Serves line's reader
+      shared.ts              statuses several files use: the five counters, the afflictions, and the order of healing past full (Marked is the vocabulary's)
       weapons-1.ts           dagger, fist weapons, wand, sword, spear and axe: 60 pieces
       weapons-2.ts           bow, rune sword, hammer, mace, staff and great weapon: 53 pieces
       armor.ts               plate, mail, leather and robes: 55 pieces
       amulets.ts             the 37 amulets
-      offhands-1.ts          kite shield, round shield, horn, totem, relic and lantern: 54 pieces
-      offhands-2.ts          tome, orb, idol, vial, trophy, bell and cloak: 63 pieces
+      offhands-1.ts          kite shield, round shield, horn, totem, relic and lantern: 55 pieces
+      offhands-2.ts          tome, orb, idol, vial, trophy, bell and cloak: 64 pieces
       index.ts               every item gathered, for the pack and the tools
     upgrades/                each ability's and passive's power step and two versions, and the mythics
       index.ts               gathers them, in order
@@ -183,22 +186,24 @@ ui/
     content.ts               the pack as the interface shows it: names, single fights, the number scale
     state.ts                 free play's setup and the settings, saved
     mode.ts                  free play or the rogue mode, saved
+    filter.ts                Settings → FILTER: the colour filters over the whole screen (green, grey, sepia, invert and the rest)
     screens.ts               the menus and free play's screens; go() switches screens
-    sheet.ts                 unit sheets: a class or an enemy, its stats, abilities and gear
-    describe.ts              plain-language descriptions of abilities, effects and statuses
+    sheet.ts                 unit sheets: a class or an enemy, its stats, abilities and gear; a piece's card, with a line under it for each status its words name; a party member's seat in a fight, unfolding to the whole formation
+    describe.ts              plain-language descriptions of abilities, effects and statuses; the sizes cards show, an ability's and the stacks a piece or a passive lays; a status's own numbers, a stack's worth; the statuses a card's words name
+    upgrades.ts              an ability's or a passive's power step and two versions as cards, with what each changes; every upgrade a class has, for its sheet from the class list
     bestiary.ts              the bestiary's record: enemies met and looked at
     dom.ts                   DOM helpers: h(), windows, rows, buttons, the back gesture
     art.ts                   art tables: which sprite, icon or look shows what
     effects.ts               the effects tables: which VFX strip each action, status and event plays; the designer's sizes; the catalogue
-    pixel.ts                 graphics: the pixel scale, sprites, icons, the font, effects enlarged by Scale2x and Scale3x
+    pixel.ts                 graphics: the pixel scale, sprites, icons (the Destiny Shard's among them), the font, effects enlarged by Scale2x and Scale3x
     update.ts                reloading onto a newer build
     rogue-screens.ts         the rogue screens' public face; lists them
     rogue/
-      parts.ts               the navigation, small parts and scenes the rogue screens share
-      run.ts                 the dispatcher, the leader, the draft, the map, a fight in waiting
+      parts.ts               the navigation, small parts and scenes the rogue screens share (the standoff, whose foes open on a tap); under an offered piece, the roster's faces beside what they wear in its slot; a pick's answer, and a result the player couldn't see held over its screen until ONWARD
+      run.ts                 the dispatcher, the leader, the draft, the map, a boss's Destiny Shard, a fight in waiting: its foes by likeness, name and line, each opening its whole sheet
       rooms.ts               spoils, a captive, the shop and training, the campfire, events, choices, Muster and Drill, level up, the next region
-      end.ts                 the run's end, its record, a won run's moment
-      party.ts               managing the party: seats, a unit's sheet and order, its gear
+      end.ts                 a lost fight's Destiny Shard offer, the run's end, its record, a won run's moment
+      party.ts               managing the party: seats, the bag and its junk, a piece put on from the bag, a unit's sheet and order, its gear
       state.ts               the run and the rogue meta, saved
     battle/
       battle.ts              the battle screen: the field, messages, the party, controls, a fight's end
@@ -206,13 +211,17 @@ ui/
       effects.ts             plays the effects in step with the story: missiles, blows that follow, statuses that land with them
       tuner.ts               the FX SIZES screen: a sample fight where each look plays again and again, sized by the designer
       narrate.ts             turns the log into messages
-      scene.ts               the field, backdrops, the campfire, the menus' stages and party strip; drawing the effects
+      tally.ts               a fight's numbers from its log: each unit's damage dealt and taken, healing, actions and statuses laid, and what each status did for the side it served
+      recap.ts               the fight's recap, opened from the summary at a fight's end: each member's numbers on one scale, its actions on a tap, and what each status did
+      scene.ts               the field, backdrops, the campfire, the menus' stages and party strip, and which foe stands at a point of a stage; drawing the effects
       audio.ts               sound effects and music
   tools/
-    assets.py                builds ui/public/assets/ from the director's art packs
+    assets.py                builds ui/public/assets/ from the director's art packs (all but the skill and status icons)
+    weapons-fitted/          weapon sheets used in place of the pack's own of the same name (resized, redrawn or moved)
     gear_icons.py            builds the gear icons (gear.png): every piece but the weapons, from the gear icon pack and icons drawn in its style
+    skill_icons.py           builds the classes' ability and passive icons, the basic attacks' by weapon kind and every status's, from the director's picks in three packs, all on one tile
 tests/                       the pack's own tests
-  content.test.ts            the committed pack matches its sources; the tools' party files are valid
+  content.test.ts            the committed pack matches its sources; the tools' party files are valid; every weapon has its strip in the interface's art
   json-schema.test.ts        the exported JSON schema accepts and rejects what the zod schema does
   validate.test.ts           the validator, check by check, on the worked example
   code-map.test.ts           this map lists every source file, and nothing that's gone

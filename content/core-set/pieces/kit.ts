@@ -32,23 +32,39 @@ export function weaponHit(kind: string, o: Partial<KindWords> & { trade?: Trade;
 export type Trade = "heavy" | "light";
 /** The stat steps a kind's pieces carry at a rarity (scale.ts KIND_BUDGET), a step fewer for a heavy piece and one more for a light one. */
 export const budgetOf = (kind: string, rarity: Rarity, trade?: Trade): number =>
-  rarity === "mythic" ? 0 : Math.max(0, KIND_BUDGET[KIND_WORDS[kind].budget][rarity] + (trade === "heavy" ? -1 : trade === "light" ? 1 : 0));
+  Math.max(0, KIND_BUDGET[KIND_WORDS[kind].budget][rarity] + (trade === "heavy" ? -1 : trade === "light" ? 1 : 0));
 /**
  * How many steps a piece's stats are: an amount stat's steps (HP's half points, Aggro's tens, MP regen's own), Crit chance's
  * table, a special stat at its medium word one and at its high word two. A stat that shapes a piece (the Worldbreaker's slow
  * swing, the Hummingbird charm's fast one: a special at any other value) or a price (the Phoenix ember's HP) counts none; Aggro
- * down counts, since the casters want it.
+ * down counts, since the casters want it. A step down (`downOf`) counts against the rest: a piece may give one stat up a step
+ * for one step more elsewhere, as the swing trade does.
  */
 export function stepsOf(stats: readonly Change[] = []): number {
   let n = 0;
   for (const c of stats) {
-    if (c.stat === "crit_chance") n += c.flat >= crit(2) ? 2 : c.flat > 0 ? 1 : 0;
-    else if (c.stat in SPECIAL_LEVELS) n += c.flat === SPECIAL_LEVELS[c.stat].high ? 2 : c.flat === SPECIAL_LEVELS[c.stat].medium ? 1 : 0;
+    if (c.stat === "crit_chance") n += c.flat >= crit(2) ? 2 : c.flat > 0 ? 1 : c.flat <= -crit(1) ? -1 : 0;
+    else if (c.stat in SPECIAL_LEVELS) n += c.flat === SPECIAL_LEVELS[c.stat].high ? 2 : c.flat === SPECIAL_LEVELS[c.stat].medium ? 1 : c.flat === -SPECIAL_LEVELS[c.stat].medium ? -1 : 0;
     else if (c.stat === "aggro") n += Math.round(Math.abs(c.flat) / stepFor(c.stat)); // Aggro down is a step the casters want.
-    else if (["max_hp", "max_mp", "mp_regen", "attack", "defense"].includes(c.stat) && c.flat > 0) n += Math.round(c.flat / stepFor(c.stat));
+    else if (["max_hp", "max_mp", "mp_regen", "attack", "defense"].includes(c.stat)) n += Math.round(c.flat / stepFor(c.stat));
   }
   return n;
 }
+/** The steps a piece's stats give up: a stat a step below nothing (Crit chance's first step, a special's medium word down). */
+export function downOf(stats: readonly Change[] = []): number {
+  let n = 0;
+  for (const c of stats) {
+    if (c.stat === "crit_chance") n += c.flat <= -crit(1) ? 1 : 0;
+    else if (c.stat in SPECIAL_LEVELS) n += c.flat === -SPECIAL_LEVELS[c.stat].medium ? 1 : 0;
+    else if (["max_hp", "max_mp", "mp_regen", "attack", "defense"].includes(c.stat) && c.flat < 0) n += Math.round(-c.flat / stepFor(c.stat));
+  }
+  return n;
+}
+/**
+ * Every piece whose stats miss its budget, gathered as the pieces are written, so a build lists them all at once. pack.ts
+ * fails on any (LOOT_LAX=1 builds the pack anyway, warning, while a pass rewrites the shares one at a time).
+ */
+export const BUDGET_ERRORS: string[] = [];
 const SPECIAL_LEVELS: Record<string, { medium: number; high: number }> = Object.fromEntries((Object.keys(SPECIAL) as SpecialStat[]).map((s) => [SPECIAL_KEY[s], PIECE_SPECIAL[s] ?? SPECIAL[s]]));
 
 /** Stacks from the holder's stat, read when a piece's status fires (a passive's words: a few 0.7 a point, several 1.3, many 2.3). */
@@ -110,7 +126,7 @@ export const PLAIN_CARD = "Nothing beyond its stats.";
 
 type PieceOpts = {
   name: string;
-  /** The card's effect, as the player reads it: what the piece does beyond its stats, or nothing for a common. The card is the swing trade, then this. */
+  /** The card's effect, as the player reads it: what the piece does beyond its stats, or nothing for a common. */
   effect?: string;
   /** The whole card, in place of the trade and `effect` (a mythic's). */
   text?: string;
@@ -123,7 +139,7 @@ type PieceOpts = {
   statuses?: string[];
   /** Weapons: the hit (default: its kind's swing by its words), and anything else the weapon states (riders, apply, a mythic's own cooldown). */
   weapon?: Partial<WeaponT>;
-  /** Weapons: a step along the trade. heavy: a harder swing for a stat step fewer; light: a lighter swing for one more. The card says it. */
+  /** Weapons: a step along the trade. heavy: a harder swing for a stat step fewer; light: a lighter swing for one more. The swing's values show it. */
   trade?: Trade;
   /** A mythic: the one class it fits. */
   mythic?: string;
@@ -131,9 +147,8 @@ type PieceOpts = {
 };
 /** One piece of gear, fixed: its rarity is its own (no affixes at any rarity). */
 export function piece(o: PieceOpts): GearT {
-  const trade = o.trade === "heavy" ? "A heavier swing." : o.trade === "light" ? "A lighter swing." : "";
-  // The card is the swing trade and the effect. The stats are the interface's (shown as values beside the name), never words on the card.
-  const text = o.text ?? ([trade, o.effect ?? ""].filter(Boolean).join(" ") || PLAIN_CARD);
+  // The card is the effect. The stats and the swing (its trade included) are the interface's, shown as values beside the name, never words on the card.
+  const text = o.text ?? (o.effect || PLAIN_CARD);
   const g: GearT = {
     id: idOf(o.name), name: o.name, text, slot: o.slot,
     // The validator's tiers: an ordinary piece drops, a powerful one (legendary, mythic) is an unlock. Neither changes play in the rogue.
@@ -149,23 +164,25 @@ export function piece(o: PieceOpts): GearT {
     const kind = o.weapon?.kind ?? o.kind;
     g.weapon = { ...(kind ? { kind } : {}), amount: kind ? weaponHit(kind, { trade: o.trade }) : 0, ...o.weapon } as WeaponT;
     // Every piece carries its kind's steps at its rarity (the director's rule: stats at every rarity, and the kind's budget says how many).
-    if (kind && o.rarity !== "mythic" && stepsOf(o.stats) !== budgetOf(kind, o.rarity, o.trade)) {
-      throw new Error(`${o.name}: a ${o.rarity} ${kind} carries ${budgetOf(kind, o.rarity, o.trade)} stat steps, not ${stepsOf(o.stats)}`);
+    if (kind && stepsOf(o.stats) !== budgetOf(kind, o.rarity, o.trade)) {
+      BUDGET_ERRORS.push(`${o.name}: a ${o.rarity} ${kind} carries ${budgetOf(kind, o.rarity, o.trade)} stat steps, not ${stepsOf(o.stats)}`);
     }
-  } else if (o.rarity !== "mythic") {
-    // An offhand, armor or amulet has no swing to trade against: the standard budget, exact for an offhand's kind and a common or
-    // uncommon of any slot; a rare or legendary armor or amulet carries at least its step beside the effect that is its shape.
+  } else {
+    // An offhand, armor or amulet has no swing to trade against: the standard budget, exact for an offhand and a common or
+    // uncommon of any slot; a rare, legendary or mythic armor or amulet carries at least its steps beside the effect that is its shape.
     const want = KIND_BUDGET.standard[o.rarity], have = stepsOf(o.stats);
     const exact = o.slot === "offhand" || o.rarity === "common" || o.rarity === "uncommon";
-    if (exact ? have !== want : have < want) throw new Error(`${o.name}: a ${o.rarity} ${o.slot} carries ${exact ? "" : "at least "}${want} stat steps, not ${have}`);
+    if (exact ? have !== want : have < want) BUDGET_ERRORS.push(`${o.name}: a ${o.rarity} ${o.slot} carries ${exact ? "" : "at least "}${want} stat steps, not ${have}`);
   }
-  // A special stat on gear is medium, or high on a legendary (the loot's rule).
+  // A step down buys one step more elsewhere, once: a piece gives up one stat a step at most.
+  if (downOf(o.stats) > 1) BUDGET_ERRORS.push(`${o.name}: gives up ${downOf(o.stats)} steps; a piece gives up one at most`);
+  // A special stat on gear is medium, or high on a legendary or a mythic (the loot's rule).
   if (o.rarity !== "legendary" && o.rarity !== "mythic") {
     const high = o.stats?.find((c) => c.stat in SPECIAL_LEVELS && c.flat === SPECIAL_LEVELS[c.stat].high);
     if (high) throw new Error(`${o.name}: a ${o.rarity} with ${SPECIAL_NAME[high.stat]} high; high is a legendary's`);
   }
   // A max MP step brings HP beside it (scale.ts MP_STEP_HP), over the budget the checks above counted.
-  const mp = o.rarity === "mythic" ? 0 : (o.stats ?? []).filter((c) => c.stat === "max_mp" && (c.flat ?? 0) > 0).reduce((n, c) => n + Math.round((c.flat ?? 0) / stepFor("max_mp")), 0);
+  const mp = (o.stats ?? []).filter((c) => c.stat === "max_mp" && (c.flat ?? 0) > 0).reduce((n, c) => n + Math.round((c.flat ?? 0) / stepFor("max_mp")), 0);
   if (mp && g.stats) {
     const add = mp * MP_STEP_HP * HP_STEP, hp = g.stats.find((c) => c.stat === "max_hp");
     g.stats = hp ? g.stats.map((c) => (c === hp ? { ...c, flat: (c.flat ?? 0) + add } : c)) : [...g.stats, { stat: "max_hp", flat: add }];
@@ -327,7 +344,7 @@ export function beatHalfway(pid: string, name: string, effects: EffectT[]): { re
     reactions: [atStart(give(wait)), react(on("revived"), give(wait)), react(on("status_ended", { status: wait, cause: ["expired"] }), ...effects, give(pulse))],
     statuses: [
       marker(wait, `${name} (waiting)`, "Its first beat comes when this runs out.", { duration: SO_OFTEN / 2 }),
-      marker(pulse, `${name} (beating)`, "Its beat, every so often.", { pulse: { every: SO_OFTEN, do: effects } }),
+      marker(pulse, `${name} (beating)`, `Its beat, every ${SO_OFTEN} ticks.`, { pulse: { every: SO_OFTEN, do: effects } }),
     ],
   };
 }

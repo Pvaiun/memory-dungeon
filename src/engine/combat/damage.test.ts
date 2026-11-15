@@ -33,13 +33,14 @@ test("stats: final values drop fractions, then meet the stat's floor and cap", (
   assert.equal(a.unit("A").stats.evasion, 75, "Evasion's cap in the worked example");
 });
 
-test("stats: a status raising max HP by 100 raises current HP by 100; when it ends, current HP is capped at the new max, and that never KOs", () => {
+test("stats: a status raising max HP by 100 leaves current HP where it is; when it ends, current HP is capped at the new max, and that never KOs", () => {
   const vigor = status("vigor", { duration: 5, stats: [{ stat: "max_hp", flat: 100 }] });
   const pump = { id: "pump", cast: 0, cooldown: 1, target: "self", do: [{ op: "apply", status: "vigor" }] };
   const a = arena({ party: [{ name: "A", stats: { max_hp: 100 }, hp: 80, abilities: ["pump"] }], enemies: [BAG], statuses: [vigor], abilities: [pump] });
   a.unit("A").acts[0].ready = 1000;
   a.to(1);
-  assert.deepEqual([a.unit("A").hp, a.unit("A").stats.max_hp], [180, 200]);
+  assert.deepEqual([a.unit("A").hp, a.unit("A").stats.max_hp], [80, 200], "a bigger ceiling isn't a heal");
+  a.unit("A").hp = 150; // healed into the room the status made
   a.unit("A").acts[0].ready = 1e9;
   a.to(6);
   assert.deepEqual([a.unit("A").hp, a.unit("A").stats.max_hp], [100, 100]);

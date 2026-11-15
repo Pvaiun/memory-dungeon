@@ -7,7 +7,7 @@ import { weaponKinds } from "./vocabulary.js";
 
 /**
  * One plain weapon per kind: its kind's swing by its words (scale.ts KIND_WORDS), from Attack, nothing carried. Each class
- * arrives with its first kind's.
+ * arrives with its first one-handed kind's (startingWeapon in src/validate/party.ts).
  */
 const plain: GearT[] = weaponKinds.map((k) => ({
   id: `plain_${k.id}`, name: k.name, slot: "weapon", tier: "ordinary", source: "starter",

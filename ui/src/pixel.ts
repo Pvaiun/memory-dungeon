@@ -17,7 +17,7 @@
  */
 import { c } from "./content.js";
 import type { GearT } from "../../src/schema.js";
-import { gearCell, gearIcon, image, manifest, POSE, SLOT_ICON, slotCell, statusStyle, TAG_ICON, weaponArt, type Pose } from "./art.js";
+import { gearCell, gearIcon, image, manifest, POSE, SLOT_ICON, slotCell, statusStyle, TAG_ICON, weaponArt, weaponHeld, type Pose } from "./art.js";
 
 export const FRAME_W = 270;
 export const OUTLINE = "#14141e";
@@ -267,13 +267,15 @@ export function drawActor(ctx: CanvasRenderingContext2D, cls: string, pose: Pose
   ctx.drawImage(src, sx, sy, fw, fh, -Math.round((fw * scale) / 2), -fh * scale, fw * scale, fh * scale);
   const wf = weapon ? weaponFrame(pose, frame, c.gear.get(weapon)?.weapon?.kind === "bow") : null;
   const art = weaponArt(weapon);
-  const strip = art && wf !== null ? image(art) : undefined;
+  const strip = art && wf !== null && weaponHeld(art) ? image(art) : undefined;
   if (strip) {
-    // The pack's anchor: the 48×32 frame's bottom centre sits 12 pixels in front of the feet. While winding up the
+    // The battlers' anchor: the 48×32 frame's bottom centre sits 12 pixels in front of the feet. While winding up the
     // figure steps back, so the weapon goes with it (by how far the chant pose's figure sits from the waiting one).
+    // The sheets face left and the strips right, so the strip is turned to its figure's side before the figure's own flip.
     const w = flash ? silhouette(spriteOf(art!, 1)) : strip;
     const step = pose === "chant" ? Math.round(((actorBBox(cls, "chant").left + actorBBox(cls, "chant").right) - (actorBBox(cls).left + actorBBox(cls).right)) / 2) : 0;
-    ctx.drawImage(w, wf! * 48, 0, 48, 32, Math.round((step - 36) * scale), -32 * scale, 48 * scale, 32 * scale);
+    ctx.scale(-1, 1);
+    ctx.drawImage(w, wf! * 48, 0, 48, 32, -Math.round((step - 36) * scale) - 48 * scale, -32 * scale, 48 * scale, 32 * scale);
   }
   ctx.restore();
 }
@@ -307,11 +309,17 @@ export function drawEnemy(ctx: CanvasRenderingContext2D, ref: string, k: number,
   ctx.drawImage(flash ? silhouette(s) : s, Math.round(x - s.width / 2), Math.round(y - s.height));
 }
 export const enemyEl = (ref: string, k = 3, scale = 1) => canvasEl(enemySprite(ref, k), scale);
-/** A small likeness for lists: the sprite shrunk to fit `size`. */
+/**
+ * A likeness for lists and sheets: the sprite, trimmed and outlined, at the largest size that fits `size` (outline
+ * included). The art's own pixels (a third of the committed sheets, the pack's 1×) wherever they fit, so a foe's icon
+ * is drawn as on the field; only a sprite bigger than `size` is shrunk further.
+ */
 export function enemyThumb(ref: string, size = 24, shadowed = false): HTMLCanvasElement {
   const art = manifest.enemies[ref];
-  const k = art ? Math.max(3, Math.ceil(Math.max(art.w, art.h) / size)) : 3;
-  const s = spriteOf(art?.file ?? "", k, { align: k === 3, outline: true, trim: true });
+  const of = (k: number) => spriteOf(art?.file ?? "", k, { align: k === 3, outline: true, trim: true });
+  let k = 3;
+  while (art && k < 16 && Math.max(of(k).width, of(k).height) > size + 2) k++;
+  const s = of(k);
   // Not met yet: only its shape, as a Pokédex shows it.
   return canvasEl(shadowed ? silhouette(s, "#3a4260") : s, 1, "thumb");
 }
@@ -320,10 +328,11 @@ export function enemyThumb(ref: string, size = 24, shadowed = false): HTMLCanvas
 /*
  * An effect drawn bigger is enlarged here by Scale2x and Scale3x (the EPX family, 4× as Scale2x twice), not by
  * stretching: they round a shape's stair-steps as they enlarge it, so a big fire keeps pixels the size of the sprites'
- * instead of showing blocks. Each frame is scaled on its own, cached by strip and scale.
+ * instead of showing blocks. 1.5× is Scale3x halved, each 2×2 block its commonest colour: still one screen pixel a
+ * pixel, the art's pixels one or two wide. Each frame is scaled on its own, cached by strip and scale.
  */
 const scaledFx = new Map<string, HTMLCanvasElement>();
-/** A strip at `scale` times its art (1 to 4), frames side by side. */
+/** A strip at `scale` times its art (1, 1.5, 2, 3 or 4), frames side by side. */
 export function vfxSprite(strip: string, scale = 1): HTMLCanvasElement {
   const base = spriteOf(manifest.vfx[strip]?.file ?? "", 1, { align: false, threshold: 0.3 });
   const def = manifest.vfx[strip];
@@ -335,20 +344,42 @@ export function vfxSprite(strip: string, scale = 1): HTMLCanvasElement {
   // Every fully clear pixel is the same clear pixel, so the scalers see one background.
   const px = new Uint32Array(src.data.buffer).slice();
   for (let i = 0; i < px.length; i++) if (src.data[i * 4 + 3] === 0) px[i] = 0;
-  cv = cv2d(base.width * scale, base.height * scale);
-  const out = cv.getContext("2d")!.createImageData(cv.width, cv.height);
-  const dst = new Uint32Array(out.data.buffer);
+  const frames: Px[] = [];
   for (let f = 0; f < def.frames; f++) {
     let frame: Px = { w: def.w, h: def.h, px: Uint32Array.from({ length: def.w * def.h }, (_, i) => px[Math.floor(i / def.w) * base.width + f * def.w + (i % def.w)]) };
-    if (scale === 3) frame = scale3x(frame);
+    if (scale === 1.5) frame = halve(scale3x(frame));
+    else if (scale === 3) frame = scale3x(frame);
     else for (let k = 1; k < scale; k *= 2) frame = scale2x(frame);
-    for (let y = 0; y < frame.h; y++) for (let x = 0; x < frame.w; x++) dst[y * cv.width + f * frame.w + x] = frame.px[y * frame.w + x];
+    frames.push(frame);
   }
+  const fw = frames[0].w;
+  cv = cv2d(fw * def.frames, frames[0].h);
+  const out = cv.getContext("2d")!.createImageData(cv.width, cv.height);
+  const dst = new Uint32Array(out.data.buffer);
+  frames.forEach((frame, f) => {
+    for (let y = 0; y < frame.h; y++) for (let x = 0; x < frame.w; x++) dst[y * cv!.width + f * fw + x] = frame.px[y * frame.w + x];
+  });
   cv.getContext("2d")!.putImageData(out, 0, 0);
   scaledFx.set(key, cv);
   return cv;
 }
 type Px = { w: number; h: number; px: Uint32Array };
+/** Halves a frame: each 2×2 block becomes its commonest colour, a shape's over the clear around it when they tie. */
+function halve(s: Px): Px {
+  const w = Math.ceil(s.w / 2), h = Math.ceil(s.h / 2);
+  const o = new Uint32Array(w * h);
+  const at = (x: number, y: number) => (x < s.w && y < s.h ? s.px[y * s.w + x] : 0);
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const q = [at(2 * x, 2 * y), at(2 * x + 1, 2 * y), at(2 * x, 2 * y + 1), at(2 * x + 1, 2 * y + 1)];
+    let best = q[0], most = 0;
+    for (const v of q) {
+      const n = q.filter((u) => u === v).length;
+      if (n > most || (n === most && best === 0 && v !== 0)) (best = v), (most = n);
+    }
+    o[y * w + x] = best;
+  }
+  return { w, h, px: o };
+}
 /** Scale2x (AdvMAME2x): each pixel becomes four, taking an edge neighbour's colour where two edges meet at a corner. */
 function scale2x(s: Px): Px {
   const { w, h, px } = s;
@@ -440,9 +471,25 @@ export function abilityIconOf(id: string): HTMLCanvasElement | undefined {
   }
   return cv ?? undefined;
 }
-/** An action's icon: an ability's own (32 square), else its look's iconset cell (16 square). */
+/** A basic attack's icon by weapon kind (32 square), or undefined when the kind has none. */
+const basicIcons = new Map<string, HTMLCanvasElement | null>();
+function basicIconOf(kind: string): HTMLCanvasElement | undefined {
+  let cv = basicIcons.get(kind);
+  if (cv === undefined) {
+    const file = manifest.basic?.[kind];
+    const img = file ? image(file) : undefined;
+    cv = null;
+    if (img?.complete && img.naturalWidth) {
+      cv = cv2d(img.naturalWidth, img.naturalHeight);
+      cv.getContext("2d")!.drawImage(img, 0, 0);
+    }
+    basicIcons.set(kind, cv);
+  }
+  return cv ?? undefined;
+}
+/** An action's icon: an ability's own (32 square), a basic attack's by its weapon kind ("kind:<kind>"), else its look's iconset cell (16 square). */
 export function actionIconOf(tag: string, act?: string): HTMLCanvasElement {
-  const own = act && act !== "basic" ? abilityIconOf(act) : undefined;
+  const own = act && act !== "basic" ? abilityIconOf(act) : tag.startsWith("kind:") ? basicIconOf(tag.slice(5)) : undefined;
   if (own) return own;
   const cell = TAG_ICON[tag] ?? TAG_ICON.physical;
   return iconOf(cell[0], cell[1]);
@@ -510,6 +557,17 @@ export function statusEl(id: string, count?: number | null, scale = 1): HTMLCanv
   return canvasEl(cv, scale, "sticon");
 }
 
+// ─── The Destiny Shard: one 16×16 icon ───
+let shardCv: HTMLCanvasElement | null = null;
+export function shardIcon(): HTMLCanvasElement {
+  if (shardCv) return shardCv;
+  const img = manifest.shard ? image(manifest.shard) : undefined;
+  const cv = cv2d(16, 16);
+  if (img) cv.getContext("2d")!.drawImage(img, 0, 0, 16, 16);
+  return (shardCv = cv);
+}
+export const shardEl = (scale = 1) => canvasEl(shardIcon(), scale, "icon");
+
 // ─── The campfire: an animated strip of square frames ───
 export function drawCampfire(ctx: CanvasRenderingContext2D, x: number, feet: number, wall: number) {
   const cf = manifest.campfire;
@@ -571,13 +629,13 @@ export function canvasEl(cv: HTMLCanvasElement, scale = 1, cls = ""): HTMLCanvas
   return el;
 }
 export const faceEl = (cls: string, scale = 1) => canvasEl(faceOf(cls), scale, "face");
-/** The weapon strip's held frame, trimmed: the weapon on its own, for gear lists and loot on a stage. */
+/** The weapon on its own as drawn, trimmed, for gear lists and loot on a stage: the strip's held frame, or a bow's drawn one, whose arrow tells the bows apart. */
 export function weaponIcon(gearId: string): HTMLCanvasElement | null {
   const file = weaponArt(gearId);
   if (!file) return null;
   const strip = spriteOf(file, 1);
-  const cv = cv2d(32, 32);
-  cv.getContext("2d")!.drawImage(strip, 96, 0, 48, 32, -8, 0, 48, 32);
+  const cv = cv2d(48, 32);
+  cv.getContext("2d")!.drawImage(strip, c.gear.get(gearId)?.weapon?.kind === "bow" ? 0 : 96, 0, 48, 32, 0, 0, 48, 32);
   return trimCanvas(cv);
 }
 /** The weapon as a DOM element, for gear lists. */

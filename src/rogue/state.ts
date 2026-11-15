@@ -15,9 +15,10 @@ export const SLOT_LIST: Slot[] = ["weapon", "armor", "offhand", "amulet"];
 
 /**
  * A piece of gear in a run: a piece of the content (`base`) and its rarity, the piece's own (every piece is fixed, with no
- * affixes at any rarity; a plain weapon is common). Its id in the content is `uid`.
+ * affixes at any rarity; a plain weapon is common). Its id in the content is `uid`. `junk`: the player's mark on a piece in
+ * the bag, to sell (it changes nothing in play; equipping the piece takes it off).
  */
-export type Item = { uid: string; base: string; rarity: RarityT };
+export type Item = { uid: string; base: string; rarity: RarityT; junk?: boolean };
 /** A version of an upgrade. */
 export type Version = "a" | "b";
 /** What a member has trained on one ability or its passive: the power step, a version, or both (in either order). */
@@ -82,6 +83,10 @@ export type Pending =
   | { kind: "choose"; what: "learn" | "upgrade" | "temper"; why: string; from?: RarityT[]; risk?: number }
   | { kind: "levelup"; queue: string[] }
   | { kind: "region"; options: string[] }
+  /** A boss's Destiny Shard, to take; `then` follows. */
+  | { kind: "shard"; then: Pending }
+  /** A lost fight with a Destiny Shard held: spend one to go back to the moment before the fight (`retry`), or end the run. */
+  | { kind: "fate"; fight: string }
   | { kind: "over"; won: boolean };
 
 /** One line of what happened, for the run's summary and the playtest's diary. */
@@ -116,6 +121,10 @@ export type RogueRun = {
   supplies: SupplyIdT[];
   gold: number;
   pending: Pending;
+  /** Destiny Shards held (a boss gives one): a lost fight can spend one to return to `retry`. */
+  shards?: number;
+  /** The whole run as the pending fight's preview opened (without itself or the record), kept until the fight ends: a shard returns to it. */
+  retry?: RogueRun;
   uid: number;
   /** Counters for the summary and the simulations. */
   stats: { fights: number; elites: number; bosses: number; gold: number; spent: number; events: number; shops: number; campfires: number; picks: Record<string, number> };
@@ -150,13 +159,19 @@ export const between = (rng: Rng, [a, b]: readonly [number, number] | number[]) 
 
 // ─── Meta: what a run leaves behind ────────────────────────────────────────
 
-/** A finished run: a win adds its final party to the classes a run can start with, and opens the next heat. */
-export function finish(meta: RogueMeta, run: RogueRun): { unlocked: string[]; heat: boolean } {
+/** The classes a won run can add to the leaders: those in its final party (the three seated) not yet owned. */
+export const unlockable = (meta: RogueMeta, run: RogueRun): string[] => run.party.filter((cls) => !meta.owned.includes(cls));
+
+/**
+ * A finished run: a win adds the one class the player picks from its final party (`pick`, one of `unlockable`) to the
+ * classes a run can start with, and opens the next heat. A pick outside `unlockable` adds nothing.
+ */
+export function finish(meta: RogueMeta, run: RogueRun, pick?: string): { unlocked: string[]; heat: boolean } {
   meta.runs++;
   if (run.act > meta.best.act || (run.act === meta.best.act && run.floor > meta.best.floor)) meta.best = { act: run.act, floor: run.floor };
   if (run.pending.kind !== "over" || !run.pending.won) return { unlocked: [], heat: false };
   meta.wins++;
-  const unlocked = run.party.filter((cls) => !meta.owned.includes(cls));
+  const unlocked = pick && unlockable(meta, run).includes(pick) ? [pick] : [];
   meta.owned.push(...unlocked);
   const heat = run.heat >= meta.maxHeat;
   if (heat) meta.maxHeat = run.heat + 1;

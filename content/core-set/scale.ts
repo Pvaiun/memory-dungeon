@@ -63,9 +63,14 @@ export function jitter(cooldown: number, id: string): number {
 export const STUN_COOLDOWN: keyof typeof COOLDOWN = "medium";
 export const WINDUP = { quick: 1, normal: 3, long: 6, very_long: 8 } as const;
 export const RULES = {
-  basicRecovery: 0.25,
+  /**
+   * The recoveries, the moment after an action when the unit can start nothing else: a basic attack's a tenth of its weapon's
+   * base cooldown, an ability's a tick. Short, so an action that comes ready just after another goes almost at once and the
+   * battle screen's action pips don't sit full while nothing happens; the fight's pace is the cooldowns'.
+   */
+  basicRecovery: 0.1,
   abilityCast: WINDUP.normal,
-  abilityRecovery: 2,
+  abilityRecovery: 1,
   /**
    * Each action starts a fight between min and max charged, by its own roll, so nothing lines up on the first ticks. A party
    * unit's abilities instead carry their cooldowns between fights, and `slots` takes a flat head start off that by the slot
@@ -143,14 +148,15 @@ export const SWING_SCALING = { base_heavy: 0.3, even: 0.5, attack_heavy: 0.7 } a
 /** A piece's step along the trade: a heavy piece swings this much harder for a stat step fewer, a light piece this much lighter for one more. */
 export const SWING_TRADE = 1.2;
 /**
- * Stat steps a piece carries, by rarity: every piece has stats, and each rarity carries more than the last (the director's rule).
+ * Stat steps a piece carries, by rarity: every piece has stats, and a rare carries more than an uncommon, an uncommon more
+ * than a common. Legendaries and mythics carry a rare's: above rare, rarity is strangeness, not power (the director's word).
  * A weapon kind's budget word moves the ladder a step down (lean, never below one) or up (rich); every other slot takes the standard.
- * A piece's step along the swing trade moves it once more (kit.ts).
+ * A piece's step along the swing trade moves it once more, and a step down on one stat buys one more elsewhere (kit.ts).
  */
 export const KIND_BUDGET = {
-  lean: { common: 1, uncommon: 1, rare: 2, legendary: 3 },
-  standard: { common: 1, uncommon: 2, rare: 3, legendary: 4 },
-  rich: { common: 2, uncommon: 3, rare: 4, legendary: 5 },
+  lean: { common: 1, uncommon: 1, rare: 2, legendary: 2, mythic: 2 },
+  standard: { common: 1, uncommon: 2, rare: 3, legendary: 3, mythic: 3 },
+  rich: { common: 2, uncommon: 3, rare: 4, legendary: 4, mythic: 4 },
 } as const;
 export type SwingWordK = keyof typeof SWING_POWER;
 export type ScalingWord = keyof typeof SWING_SCALING;
@@ -319,8 +325,13 @@ export const KIT = {
   choosing: 0.28,
   /** Skyfall: damage per Shock stack on its target, on top of a heavy hit. */
   skyfallPerShock: 150,
-  /** Hunter's eye: crit steps added to the Ranger's basic attacks. */
-  hunterCrit: 2,
+  /** Hunter's eye's power step: Crit chance added to the Ranger's hits, in percent (each crit is a Dodge). */
+  hunterCrit: 6,
+  /** Gale spear: each of its 3 hits, a share of Attack (its versions' hits too). At 0.09 a cast dealt about one of the Valkyrie's
+   * swings, under the balance sheet's band for an ability. */
+  galeSpear: 0.12,
+  /** Othismos: its shove on every foe, the light word times this, from Defense (at the plain light word, 1.2 swings a cast). */
+  othismos: 1.3,
   /** Thunderstorm: how long the party's swings carry the storm's Shock. */
   storm: { duration: 20 },
   /** Static charge: Attack speed for a while (Haste is 40 in all three speeds; this is one of them, higher). */
@@ -375,7 +386,7 @@ export const STATUS = {
   shield: { capShare: 0.5 },
   /** Might spends with action, not time: one stack each time the holder acts (vocabulary.ts). */
   might: { perStack: 6, cap: 15 },
-  weaken: { pct: -30, duration: 20 },
+  weaken: { pct: -50, duration: 20 },
   guard: { defense: pts(3), duration: 28 },
   /**
    * A Stun pauses a wind-up rather than cancelling it (Silence is the interrupt), and lasts long enough to take a foe out of
@@ -400,8 +411,11 @@ export const STATUS = {
    * ticks is cut to `pct` % for each time it has, in fractions of a stack (a rule of Chill's own, on no card).
    */
   chill: { cap: 12, perStack: -4, every: 14, shatter: 250, chain: { pct: 50, window: 10 } },
-  /** The cap is a safety: uncapped, a slow foe gathers enough Shock to pay a fight's worth of damage for one action. */
-  shock: { perStack: 80, drop: 0.5, cap: 40 },
+  /**
+   * The cap is a safety: uncapped, a slow foe gathers enough Shock to pay a fight's worth of damage for one action. `hits`: the
+   * holder's hits deal this % less for each stack, so a foe kept charged swings softer (a slow boss sits at the cap: `hits` × `cap`).
+   */
+  shock: { perStack: 80, drop: 0.5, cap: 40, hits: -1 },
   sunder: { perStack: 1.5, every: 4, cap: 20 }, // +1.5% damage taken a stack, +30% at the cap.
   /** Marked: the party's basic attacks go to its holder while it lasts (the Paladin's Condemn, the Hunt's pieces). */
   marked: { duration: 14 },
@@ -414,8 +428,16 @@ export const STATUS = {
   /** Doom's blow is this share of the doomed unit's max HP: from full nobody dies to it; hurt, anyone does. */
   doom: { countdown: 10, share: 0.6 },
   bulwark: { stacks: 6, broken: 5, takenPct: 100 },
+  /** Fixated: its holder's picks go to the unit that fixated it for this long. */
+  fixated: { duration: 16 },
   ice_crust: { perStack: pts(1), duration: 6, cap: 6 },
 } as const;
+
+/**
+ * Owed: damage from hits on a unit that owes it waits, adding up, and lands all at once this many ticks after the first
+ * (`debt`): long enough for a heal or a Shield to arrive first, short enough to be one beat of a fight.
+ */
+export const OWED = 10;
 
 /**
  * The campfire in the middle of each run: REST gives back this % of max HP to everyone standing, FOCUS this % of max MP,

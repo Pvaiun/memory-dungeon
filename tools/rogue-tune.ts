@@ -1,13 +1,14 @@
 /**
- * The rogue mode's run-level tuning: the calibration (tools/rogue-calibrate.ts) gives each fight its knob against
- * snapshots of parties; this checks the result where it counts, in whole runs, and corrects it. Each round plays many
+ * The rogue mode's run-level tuning: the calibration (tools/build-calibrate.ts) gives each fight its knob against
+ * the build parties; this checks the result where it counts, in whole runs, and corrects it. Each round plays many
  * runs with the simulated player, then moves:
- *   - each boss's knob toward its act's target share of the parties that reach it (as they arrive),
+ *   - each boss's knob toward its act's target share of the tries it wins (a lost try saved by a Destiny Shard counts, and
+ *     so does the retry, which the simulated player prepares at random),
  *   - each region's knob for its regular fights (region/<id>/mob) and for its elites (region/<id>/elite) toward its act's other
  *     regions: the share of the runs entering it that end in its regular fights, or in its elites, toward the act's mean. The
- *     act's level stays where the calibration put it (a regular fight costs about a fifth of a careful party's HP, an elite a
- *     third): the simulated player's losses between bosses come mostly from weak parties, so a target for them would make
- *     the fights free for every other party. The regions an act forks into should be about as hard as each other.
+ *     act's level stays where the calibration put it (`TARGETS` in tools/build-calibrate.ts): the simulated player's losses
+ *     between bosses come mostly from weak parties, so a target for them would make the fights free for every other party.
+ *     The regions an act forks into should be about as hard as each other.
  * rebuilds the pack, and goes again.
  *
  *   npm run rogue:tune [-- --rounds 3 --runs 1500]
@@ -20,8 +21,11 @@ import { availableParallelism } from "node:os";
 import { isMainThread } from "node:worker_threads";
 import { Pool, many, digest, type RunRec } from "./rogue-sim.js";
 
-/** Targets by act: a boss beats this share of the parties that reach it. */
-export const RUN_TARGETS = { boss: [22, 35, 45] };
+/**
+ * Targets by act: a boss wins this share of its tries. Set so the simulated player wins about 5% of runs at heat 0, the
+ * director's aim; act II's and III's are high because a run there usually holds a Destiny Shard or two.
+ */
+export const RUN_TARGETS = { boss: [35, 72, 82] };
 /** Knob points per point of loss rate: how far a miss moves a knob (damped). */
 const GAIN = { boss: 1.0, road: 1.5 };
 const KNOBS = "content/core-set/rogue-knobs.json";

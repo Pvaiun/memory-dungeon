@@ -5,7 +5,7 @@
 import type { Content } from "../engine/run.js";
 import { next, type Rng } from "../engine/rng.js";
 import { SLOTS, type Party } from "../schema.js";
-import { canEquip, unmetConstraints } from "../validate.js";
+import { canEquip, startingWeapon, unmetConstraints } from "../validate.js";
 
 /** What a player owns. Gear is a count per item. */
 export type Owned = { classes: string[]; formations: string[]; gear: Record<string, number> };
@@ -51,7 +51,7 @@ export function make(c: Content, owned: Owned, classes: readonly string[], forma
     const old = keep?.units.find((u) => u.class === cls);
     return { class: cls, position: f.positions[i].id, abilities: old?.abilities ?? c.classes.get(cls)!.abilities.slice(0, c.pack.design.abilitiesEquipped), gear: {} as Record<string, string> };
   });
-  // Units kept from `keep` keep their gear. New units get their class's starting kit: the plain weapon of its first kind
+  // Units kept from `keep` keep their gear. New units get their class's starting kit: the plain weapon of its first one-handed kind
   // (or the first owned weapon it can use), and empty armor and amulet slots.
   const kept = (cls: string) => keep?.units.find((v) => v.class === cls);
   for (const u of units) for (const [slot, g] of Object.entries(kept(u.class)?.gear ?? {})) if ((left[g] ?? 0) > 0) (u.gear[slot] = g), left[g]--;
@@ -64,10 +64,9 @@ export function make(c: Content, owned: Owned, classes: readonly string[], forma
   return { formation, units };
 }
 
-/** The plain weapon of a class's first kind, which it arrives with. */
+/** The plain weapon a class arrives with: its first one-handed kind's (startingWeapon). */
 export function plainWeapon(c: Content, cls: string): string | undefined {
-  const kind = c.classes.get(cls)!.weapons[0];
-  return c.pack.gear.find((g) => g.slot === "weapon" && g.source === "starter" && g.weapon?.kind === kind)?.id;
+  return startingWeapon(c.pack, c.classes.get(cls)!)?.id;
 }
 
 export function slotsOf(_c: Content, _cls: string): string[] {

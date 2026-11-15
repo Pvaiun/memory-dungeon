@@ -10,6 +10,7 @@ import { ev, fire } from "./events.js";
 import { actDef, cooldownOf, covers } from "./actions.js";
 import { hasKind, holds, lastInSight, randomIndex } from "./targeting.js";
 import { type Ctx, divertOf, firstFor, run } from "./effects.js";
+import { debtLands } from "./damage.js";
 
 // ─── Statuses ───────────────────────────────────────────────────────────────
 
@@ -82,8 +83,21 @@ export function applyStatus(w: W, by: CUnit, to: CUnit, d: S.StatusT, o: ApplyOp
   }
   const cur = to.statuses.find((s) => s.id === d.id && (!d.perSource || s.src === by.id));
   if (cur && d.stacking === "fizzle") return;
-  // An Intensity status exists only at 1 stack or more, and an application that adds no stacks does nothing at
-  // all: no log, no event, no fresh duration (Frostbite bow's Sunder, whose count is 0 below 8 Chill).
+  // An Intensity status exists only at 1 stack or more. On a unit that doesn't hold it, an application under one stack
+  // waits on the unit, adding up with the next, and lands with the one that brings them to a stack: the first
+  // fraction counts as the ones on a unit that holds it do. Waiting stacks do nothing and never fade. (A Shield's
+  // stacks are points: it doesn't wait.)
+  if (isIntensity(d) && !d.absorb && !cur && add > 0) {
+    const key = d.perSource ? `${d.id}:${by.id}` : d.id;
+    const waiting = (to.pending ??= {});
+    add += waiting[key] ?? 0;
+    if (add < SUBTICKS) {
+      waiting[key] = add;
+      return;
+    }
+    delete waiting[key];
+  }
+  // An application that adds no stacks does nothing at all: no log, no event, no fresh duration.
   if (isIntensity(d) && (add <= 0 || (!cur && Math.min(add, capOf(w, d, nums, to)) < SUBTICKS))) return;
   // Each applier keeps one copy of a `single` status: this one ends the copy it gave anywhere else.
   if (d.single) for (const o2 of f.units) if (o2 !== to) for (const s of o2.statuses.slice()) if (s.id === d.id && s.src === by.id) endStatus(w, o2, s, "removed", { other: by });
@@ -98,7 +112,8 @@ export function applyStatus(w: W, by: CUnit, to: CUnit, d: S.StatusT, o: ApplyOp
       cur.src = by.id;
     } else {
       cur.stacks = Math.min(capOf(w, d, cur.nums, to), cur.stacks + add);
-      if (dur !== "permanent") cur.end = end;
+      // A debt keeps the time it came due on: stacks added to it don't renew it.
+      if (dur !== "permanent" && !d.debt) cur.end = end;
     }
     gained(w, to, d, cur, by, cur.stacks - before, o);
     return;
@@ -144,12 +159,12 @@ export function drain(w: W, it: Extract<Item, { k: "drain" }>) {
 /** Whether a unit's stats read its statuses' stacks live (a stat for each Cut, Thorns for each Spite), so a change of stacks reworks them. */
 const readsStacks = (w: W, u: CUnit) => feats(w.c).live && u.statuses.some((s) => def(w, s.id).stats?.some((ch) => ch.live));
 
-/** An application landed. `added`: the stacks it added, in thousandths (Intensity only), which the event reports. */
+/** An application landed. `added`: the stacks it added, in thousandths (Intensity only), which the event and the log report. */
 function gained(w: W, to: CUnit, d: S.StatusT, s: SInst, by?: CUnit, added = 0, o: Partial<ApplyOpts> = {}) {
   if (d.absorb) s.peak = Math.max(s.peak ?? 0, s.stacks);
   w.log?.({
     t: "status", vis: d.show === "icon" ? "player" : "hidden", at: w.f.now, unit: to.id, status: d.id, name: d.name, ...(by ? { by: by.id } : {}),
-    total: isIntensity(d) ? s.stacks / SUBTICKS : null, end: s.end,
+    total: isIntensity(d) ? s.stacks / SUBTICKS : null, ...(isIntensity(d) ? { added: added / SUBTICKS } : {}), end: s.end,
   });
   if (d.stats || d.swap || (isIntensity(d) && readsStacks(w, to))) refresh(w, to);
   // A cap on healing takes what the unit has above it as it lands: not damage, and not a price.
@@ -198,6 +213,8 @@ export function endStatus(w: W, u: CUnit, s: SInst, cause: S.CauseT, by: Ending 
   if (d.stats || d.swap || (isIntensity(d) && readsStacks(w, u)) || w.c.pack.stats.some((x) => x.brings === d.id)) refresh(w, u);
   const amount = by.amount ?? (cause === "stacks" && d.absorb ? (s.peak ?? s.stacks) : s.stacks) / SUBTICKS;
   fire(w, ev("status_ended", u, by.other ?? null, { status: d.id, cause, ending: s, amount, src: s.src }));
+  // A debt that runs out comes due (Owed).
+  if (d.debt && cause === "expired") debtLands(w, u, d, s.stacks / SUBTICKS);
 }
 
 /**

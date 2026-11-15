@@ -17,7 +17,7 @@
  *   combat.ts    the combat rule language: numbers, conditions, targeting, effects, statuses, actions
  *   content.ts   classes, upgrades, gear, formations, enemies and perks
  *   dungeons.ts  dungeons, loot and challenges, the starter and progression, the rogue block, totals, unused entries
- *   party.ts     party loadouts and challenge constraints, and who can wear what (canEquip, handsOf)
+ *   party.ts     party loadouts and challenge constraints, and who can wear what and what a class arrives with (canEquip, handsOf, startingWeapon)
  */
 export { type Issue, type Pack, Index, type ValidateOptions, type ValidateResult, validatePack } from "./validate/core.js";
-export { type Owned, canEquip, handsOf, checkParty, unmetConstraints, type Teaser, teaser } from "./validate/party.js";
+export { type Owned, canEquip, handsOf, startingKind, startingWeapon, checkParty, unmetConstraints, type Teaser, teaser } from "./validate/party.js";

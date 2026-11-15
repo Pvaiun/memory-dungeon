@@ -6,8 +6,8 @@ Builds ui/public/assets from the director's sprite packs.
 
 The packs are found by name anywhere under the input dir, so they can be
 unzipped as they come: the "Simple 8-bit Sideview Battlers" (its Style 2
-sv_actors are the class sheets, its Weapon_Pack the weapons), the sideview
-enemies, the 400 "Status effect and various icons", Willibab's Iconset,
+sv_actors are the class sheets), the director's weapon art (weapons.json and
+its sheets), the sideview enemies, the 400 "Status effect and various icons", Willibab's Iconset,
 humanoid faces (Willi_HFP), the overworld / dungeon / castle / town tilesets
 (1x), and the "VFX Spells" pack. A pack that isn't there is skipped and its output kept
 as committed, so the output can be rebuilt one pack at a time.
@@ -16,8 +16,8 @@ The output is committed, so the interface runs without the packs: one actor
 sheet per class at its art size (with two fixes to the pack: the "chant" pose
 is drawn turned around, so it's mirrored back; the "item" pose is a
 placeholder sprite, so it's replaced by "spell"), one sprite per enemy, one
-weapon strip per piece of gear that shows in a hand, one face per class, one
-recoloured 16px icon per status, the iconset, VFX frame strips, one backdrop
+weapon strip per weapon (facing right, as drawn), one face per class, the foes'
+ability icons (the statuses' and the classes' icons are ui/tools/skill_icons.py's), the iconset, VFX frame strips, one backdrop
 per dungeon composed from the tiles, and manifest.json, which maps content ids
 to files and holds the enemy renames.
 """
@@ -41,15 +41,12 @@ def find_file(name):
     return None
 
 ACTORS = find_dir("Style 2", "sv_actors") or find_dir("sv_actors")
-WEAPONS = find_dir("Style 2", "weapons") or find_dir("Weapon_Pack", "weapons")
-# The standalone weapon pack has more sheets (blades past 19, maces, scythes, halberds) than the battlers' own copy.
-WEAPONS_MORE = next((p for p in sorted(SRC.rglob("weapons")) if p.is_dir() and (p / "SCYTHE_01.png").exists()), None)
+# The director's weapon art: the folder that holds weapons.json and its sheets.
+WEAPON_ART = next((p.parent for p in sorted(SRC.rglob("weapons.json")) if (p.parent / "sheets").is_dir()), None)
 # The enemies: the "Sideview Enemies" folder, or the same sprites as the Retro 8-bit Monster Pack's 300% Style 2.
 ENEMIES = find_dir("Sideview Enemies") or find_dir("300%", "Style 2")
 CAMPFIRE = find_file("Small_sheet.png")
 CHESTS = find_file("!D_CHEST.png")
-STATUS = find_file("Status_effect1_1_01.png")
-STATUS = STATUS.parent if STATUS else None
 ICONSET = find_file("Iconset.png")
 HFACES = find_file("Humanoid_Faces_1x.png")
 OW = find_dir("Tileset 1x")
@@ -192,7 +189,7 @@ if ENEMIES:
 else:
     print("enemies: pack not found, kept")
 
-# ─── Statuses → (icon number in the 400-icon set, colour ramp) ───
+# ─── Colour ramps, darkest to lightest: the foes' ability icons are recoloured onto them ───
 RAMPS = {
     "orange": None,
     "green": [(10, 40, 15), (15, 70, 25), (30, 130, 40), (90, 210, 70), (225, 255, 200)],
@@ -208,97 +205,8 @@ RAMPS = {
     "crimson": [(25, 5, 10), (60, 10, 20), (130, 15, 40), (220, 40, 80), (255, 205, 220)],
     "sick": [(20, 30, 10), (40, 60, 15), (90, 120, 30), (160, 200, 70), (235, 250, 200)],
 }
-STATUSES = {
-    "bleed": (283, "red"), "regen": (83, "green"), "shield": (41, "ice"), "might": (102, "orange"), "weaken": (162, "purple"),
-    "guard": (48, "steel"), "stun": (322, "yellow"), "slow": (13, "blue"), "haste": (341, "yellow"), "taunt": (35, "red"),
-    "burn": (301, "orange"), "chill": (193, "ice"), "shock": (382, "yellow"), "ward": (46, "purple"), "sunder": (263, "brown"),
-    "silence": (372, "gray"), "hidden": (129, "gray"), "rot": (183, "sick"), "clarity": (311, "blue"), "aegis": (50, "gold"),
-    "doom": (16, "crimson"), "bulwark": (45, "steel"), "bulwark_broken": (269, "red"), "ice_crust": (194, "ice"),
-    "bloodlust_on": (85, "crimson"), "bedrock_on": (326, "gold"),
-    # passives and formation effects, for sheets
-    "sworn": (35, "steel"), "mercy": (2, "gold"), "hunters_eye": (124, "green"), "briar": (118, "green"), "phalanx": (47, "brown"),
-    "judgement": (206, "gold"), "encore": (373, "yellow"), "cold_hex": (191, "ice"), "iron_palm": (212, "brown"), "lacerate": (169, "crimson"),
-    "bloodlust": (85, "crimson"), "kindling": (303, "orange"), "brittle": (197, "ice"), "arc": (384, "yellow"), "bedrock": (326, "gold"),
-    "blitz_charge": (341, "yellow"), "caravan_pace": (83, "green"), "last_stand_spur": (102, "red"), "escort_insurance": (41, "ice"),
-    "venom": (94, "red"), "fire_bite": (301, "orange"), "split": (123, "orange"), "volatile": (164, "orange"), "rime": (191, "ice"),
-    "ice_crust_passive": (194, "ice"), "frozen_core": (45, "ice"), "static": (382, "yellow"), "vengeance": (102, "red"),
-    "mp_regen": (311, "blue"), "thorns": (118, "green"), "lifesteal": (85, "crimson"), "siphon": (313, "purple"), "double_strike": (209, "gray"),
-    "refrain": (285, "blue"),
-    # the rogue mode's legendary pieces, shown on sheets and as their amulets' art
-    "lg_ember": (303, "orange"), "lg_cleave": (209, "steel"), "lg_rime": (195, "ice"), "lg_wounds": (286, "red"), "lg_sunder": (293, "brown"),
-    "lg_song": (391, "gold"), "lg_judge": (207, "gold"), "lg_lantern": (57, "gold"), "lg_soul": (54, "blue"), "lg_banner": (60, "red"),
-    "lg_hourglass": (14, "gold"), "lg_horn": (82, "green"), "lg_bell": (132, "steel"), "lg_fury": (233, "red"), "lg_idol": (326, "gold"),
-    "lg_idol_on": (326, "gold"), "lg_brittle": (198, "ice"), "lg_coil": (383, "yellow"), "lg_frost": (196, "ice"), "lg_briar": (119, "green"),
-    "lg_spikes": (296, "steel"), "lg_shade": (130, "purple"), "lg_execute": (181, "crimson"), "lg_storm": (384, "yellow"), "lg_hunter": (125, "red"),
-    "lg_grave": (184, "purple"), "lg_cinder": (304, "orange"),
-}
-# Step 5i: stand-ins for the statuses the new pieces, formations and upgrades show as icons, from icons already drawn
-# above in another colour, until the director's art pass ("Reuse the art assets we already have, I'll do a full art pass
-# later"). Built from the pack when it's there; without it, recoloured from the committed icon of the same number.
-STAND_INS = {
-    # Marked and the seven counters
-    "marked": (125, "red"), "cuts": (286, "steel"), "heat": (303, "red"), "spite": (296, "crimson"), "tempo": (14, "blue"),
-    "surge": (383, "purple"), "fervor": (391, "gold"), "charge": (384, "ice"),
-    # formations
-    "vigil_mourning": (184, "purple"), "the_wheel_wall": (47, "steel"), "the_wheel_wall_opening": (47, "steel"),
-    "the_wheel_blade": (209, "gold"), "the_wheel_blade_opening": (209, "gold"), "the_wheel_well": (285, "ice"),
-    "the_wheel_well_opening": (285, "ice"), "the_hurricane_count": (313, "green"), "the_mountain_strength": (102, "brown"),
-    # weapons, armor, amulets
-    "gorged_claws_on": (341, "red"), "spellbound": (54, "purple"), "sunburst": (326, "orange"), "portcullis_on": (132, "steel"),
-    "last_bastion_on": (60, "red"), "silvered_hauberk_on": (46, "steel"), "bloodsworn_mail_on": (269, "crimson"),
-    "sanguine_mail_on": (83, "crimson"), "mottled_hide_on": (129, "brown"), "frostwalkers_furs_on": (196, "ice"),
-    "matins_robe_on": (57, "gold"), "wallflowers_robe_on": (129, "purple"), "weavers_robes_on": (118, "purple"),
-    "urchin_shell_on": (296, "brown"), "wasp_charm_on": (209, "yellow"),
-    # upgrades and mythics
-    "last_rites_on": (16, "purple"), "hold_the_line": (118, "steel"), "rite_of_passage": (14, "crimson"),
-    "battle_prayer": (206, "purple"), "battle_prayer_plus": (206, "purple"), "bloodroot": (119, "crimson"),
-    "overgrowth": (119, "green"), "deep_roots": (119, "brown"), "opening_thrust": (207, "steel"),
-    "chooser_of_the_slain": (181, "gold"), "flow_state_count": (285, "green"), "stillness_of_mind": (130, "blue"),
-    "shadow_step_strike": (130, "purple"), "bloodlust_on_plus": (85, "crimson"), "shared_feast_on": (85, "gold"),
-    "shared_feast_on_plus": (85, "gold"), "undying_thirst": (181, "crimson"), "undying_thirst_plus": (181, "crimson"),
-    "feeding_frenzy": (233, "red"), "deep_calm_free": (311, "purple"), "static_field": (383, "yellow"),
-    "static_field_plus": (383, "yellow"), "overcharge_charges": (384, "purple"), "storm_shield": (45, "yellow"),
-    "bedrock_on_plus": (326, "gold"), "faultline": (293, "brown"), "rampart": (50, "steel"),
-    "the_witch_blade_swings": (286, "purple"), "nights_edge_strike": (207, "purple"), "thralls_chalice_debt": (94, "purple"),
-    "crown_of_embers_aura": (304, "orange"),
-}
-DRAWN = dict(STATUSES)
-STATUSES.update(STAND_INS)
+# The statuses' icons, the classes' passives among them, are skill_icons.py's.
 SOURCE_RAMP = [(48, 15, 10), (85, 15, 10), (155, 26, 10), (239, 105, 47), (239, 216, 161)]
-
-def recolor(im, ramp, source=SOURCE_RAMP):
-    if ramp is None:
-        return im
-    px = im.load()
-    lut = {source[i]: ramp[i] for i in range(5)}
-    for y in range(im.height):
-        for x in range(im.width):
-            r, g, b, a = px[x, y]
-            if a == 0:
-                continue
-            key = min(lut, key=lambda c: (c[0] - r) ** 2 + (c[1] - g) ** 2 + (c[2] - b) ** 2)
-            nr, ng, nb = lut[key]
-            px[x, y] = (nr, ng, nb, a)
-    return im
-
-if STATUS:
-    ensure(OUT / "status")
-    for sid, (n, ramp) in STATUSES.items():
-        im = Image.open(STATUS / f"Status_effect1_1_{n:02d}.png").convert("RGBA")
-        recolor(im, RAMPS[ramp]).save(OUT / "status" / f"{sid}.png")
-        manifest["statuses"][sid] = f"status/{sid}.png"
-    print(f"statuses: {len(STATUSES)} icons")
-else:
-    print("statuses: pack not found, kept")
-    # The stand-ins, from the committed icons: each from one already drawn with the same icon number, its ramp swapped.
-    for sid, (n, ramp) in STAND_INS.items():
-        src = next((k for k, (m, _) in DRAWN.items() if m == n and (OUT / "status" / f"{k}.png").exists()), None)
-        if not src:
-            raise SystemExit(f"no committed icon {n} for the stand-in {sid}")
-        im = Image.open(OUT / "status" / f"{src}.png").convert("RGBA")
-        recolor(im, RAMPS[ramp] or SOURCE_RAMP, RAMPS[DRAWN[src][1]] or SOURCE_RAMP).save(OUT / "status" / f"{sid}.png")
-        manifest["statuses"][sid] = f"status/{sid}.png"
-    print(f"statuses: {len(STAND_INS)} stand-ins from the committed icons")
 
 # ─── The director's skill and status pack (Oct 31, 2026): 64×64 icons, 32×32 art at 2×; its skill icons for the abilities ───
 SKILLS = find_dir("elemental_skill_icon_variants")
@@ -306,40 +214,9 @@ SKILLS = find_dir("elemental_skill_icon_variants")
 # 107, tan (earth, steel and plain blows) from 173, fire from 247. A theme the pack doesn't draw (ice, lightning, magic,
 # steel, nature, wind) is the gold one recoloured. A motif is its number in the gold row, 41 to 94.
 THEME_BASE = {"gold": 41, "crimson": 107, "tan": 173, "fire": 247}
-# An ability (its base id: a trained form shows its base's) → (motif, theme).
+# An ability (its base id: a trained form shows its base's) → (motif, theme). The foes' only: the classes' icons are
+# skill_icons.py's.
 ABILITY_ICON = {
-    # Knight
-    "fortify": (46, "steel"), "stand_fast": (44, "steel"), "shield_bash": (48, "tan"),
-    # Cleric
-    "renew": (52, "gold"), "cure": (60, "gold"), "raise": (71, "gold"),
-    # Ranger
-    "barbed_arrow": (54, "crimson"), "frost_arrow": (94, "ice"), "rending_arrow": (92, "tan"),
-    # Bramble knight
-    "thicket": (46, "green"), "regrowth": (76, "green"), "bramble_lash": (63, "green"),
-    # Hoplite
-    "aspis": (46, "gold"), "paired_guard": (48, "steel"), "spear_thrust": (55, "tan"),
-    # Paladin
-    "sanctuary": (73, "purple"), "absolve": (79, "gold"), "smite": (67, "gold"),
-    # Valkyrie
-    "gale_spear": (87, "purple"), "rally": (77, "gold"), "valhalla": (69, "gold"),
-    # Bard
-    "war_ballad": (51, "fire"), "allegro": (64, "cyan"), "thunder_chord": (88, "yellow"),
-    # Hexer
-    "malison": (65, "purple"), "unmake": (83, "purple"), "enfeeble": (66, "purple"),
-    # Monk
-    "flow": (75, "cyan"), "burning_fist": (82, "fire"), "pressure_point": (51, "tan"),
-    # Assassin
-    "vanish": (86, "purple"), "backstab": (74, "crimson"), "garrote": (68, "crimson"),
-    # Vampire
-    "blood_drain": (50, "crimson"), "blood_gift": (84, "crimson"), "frenzy": (80, "crimson"),
-    # Pyromancer
-    "firebolt": (91, "fire"), "fireball": (90, "fire"), "pyre": (69, "fire"),
-    # Frostweaver
-    "frost_lance": (87, "ice"), "blizzard": (52, "ice"), "stillness": (50, "ice"),
-    # Stormcaller
-    "chain_lightning": (78, "yellow"), "thunderstorm": (57, "yellow"), "static_charge": (94, "yellow"),
-    # Geomancer
-    "earthen_shell": (73, "tan"), "rockfall": (90, "tan"), "tremor": (72, "tan"),
     # the foes'
     "shield_up": (48, "steel"), "brace": (46, "steel"), "take_aim": (83, "tan"), "dark_ward": (73, "purple"),
     "shield_slam": (48, "tan"), "flatten": (59, "tan"), "crush": (57, "tan"), "mend": (60, "purple"), "curse": (85, "purple"),
@@ -377,7 +254,7 @@ def recolor_lum(im, ramp):
 if SKILLS:
     ensure(OUT / "abilities")
     pre = next(SKILLS.glob("*_001.png")).name[:-8]
-    manifest["abilities"] = {}
+    manifest.setdefault("abilities", {})
     for aid, (motif, theme) in ABILITY_ICON.items():
         native = theme in THEME_BASE
         n = THEME_BASE[theme if native else "gold"] + motif - 41
@@ -491,70 +368,41 @@ if VFX:
 else:
     print("vfx: pack not found, kept")
 
-# ─── Weapons: the pack's sheets (3 frames of 48×32 at art size) by gear id; staffs recoloured by element ───
-# Fist weapons show nothing: the fists are the sprite's own.
-WEAPON_SPRITES = {
-    "plain_dagger": "DAGGER_02", "fang": "DAGGER_05", "stiletto": "DAGGER_03", "bodkin": "DAGGER_04", "needle": "DAGGER_06",
-    "plain_sword": "BLADE_01", "wardens_blade": "BLADE_19", "oathblade": "BLADE_18", "duellists_sword": "BLADE_02", "crusader_sword": "BLADE_17",
-    "plain_bow": "BOW_01", "warbow": "BOW_05", "longbow": "BOW_02", "minstrels_bow": "BOW_04",
-    "plain_spear": "SPEAR_01", "pike": "SPEAR_03", "sentinel_spear": "SPEAR_NEW3", "skyspear": "SPEAR_02",
-    "plain_axe": "AXE_01", "rune_axe": "AXE_07", "splitter": "AXE_08", "cornerstone_axe": "AXE_04",
-    "plain_fire_staff": ("STAFF_01", "fire"), "brand_staff": ("STAFF_02", "fire"), "ember_staff": ("STAFF_06", "fire"),
-    "plain_lightning_staff": ("STAFF_01", "lightning"), "storm_rod": ("STAFF_02", "lightning"), "grounding_rod": ("STAFF_03", "lightning"),
-    "plain_wind_staff": ("STAFF_01", "wind"), "zephyr_staff": ("STAFF_05", "wind"), "tailwind_staff": ("STAFF_03", "wind"),
-    "plain_earth_staff": ("STAFF_01", "earth"), "granite_staff": ("STAFF_03", "earth"), "rootstaff": ("STAFF_02", "earth"), "heartwood_staff": ("STAFF_06", "earth"),
-    "plain_ice_staff": ("STAFF_01", "ice"), "rime_staff": ("STAFF_05", "ice"), "hoarfrost_staff": ("STAFF_03", "ice"), "glacier_staff": ("STAFF_06", "ice"),
-    "plain_light_staff": ("STAFF_01", "light"), "sunstaff": ("STAFF_04", "light"), "dawn_staff": ("STAFF_06", "light"), "chapel_staff": ("STAFF_03", "light"), "templar_staff": ("STAFF_04", "light"),
-    "plain_dark_staff": ("STAFF_01", "dark"), "nightstaff": ("STAFF_05", "dark"), "leech_staff": ("STAFF_03", "dark"), "sanguine_staff": ("STAFF_02", "dark"),
-    # the rogue mode's own pieces (a run's items show their base piece's art)
-    "headsman_axe": "SCYTHE_02", "stormbrand": "BLADE_05", "frostfang": "BLADE_24", "hunters_bow": "BOW_03", "brand_of_kings": "SPEAR_05",
-    "gravecaller": ("STAFF_06", "dark"), "cinder_rod": ("STAFF_04", "lightning"), "earthshaker": ("STAFF_05", "earth"),
+# ─── Weapons: the director's weapon art, one sheet a weapon (3 frames of 48×32 at art size, drawn at 3×), by gear id ───
+# The pack names its sheets by the weapon's name; the game's plain pieces are "plain_<kind>".
+WEAPON_IDS = {
+    "dagger": "plain_dagger", "sword": "plain_sword", "spear": "plain_spear", "axe": "plain_axe", "bow": "plain_bow",
+    "rune_sword": "plain_rune_sword", "great_weapon": "plain_great_weapon", "hammer": "plain_hammer", "mace": "plain_mace",
+    "wand": "plain_wand", "staff": "plain_staff", "fist_weapons": "plain_fist",
 }
-# Four-step ramps, darkest first, for the staffs' gems and glow; the wooden shaft keeps its colour.
-ELEMENT_RAMPS = {
-    "fire": [(120, 30, 10), (220, 80, 30), (255, 150, 60), (255, 230, 160)],
-    "ice": [(20, 70, 130), (50, 140, 210), (130, 220, 255), (235, 250, 255)],
-    "lightning": [(130, 100, 0), (220, 180, 20), (255, 225, 70), (255, 250, 200)],
-    "wind": [(30, 110, 50), (70, 180, 90), (150, 240, 150), (230, 255, 230)],
-    "earth": [(90, 55, 20), (160, 110, 50), (220, 175, 110), (250, 235, 200)],
-    "light": [(170, 140, 40), (230, 210, 90), (255, 245, 180), (255, 255, 240)],
-    "dark": [(50, 15, 90), (120, 50, 180), (200, 140, 255), (240, 220, 255)],
-}
+# Sheets used in place of the pack's own of the same name: the haloed axes drawn bigger than their wearer, made smaller;
+# Spellbinder, redrawn by the director; and Eye of the tempest, a rune sword the pack drew as a sceptre, which takes the
+# pack's Spellbinder (its forked-lightning blade) in the Eye's own gold. They keep the pack's format, so once the pack holds the sheet a game
+# should use, its file here is deleted.
+FITTED = Path(__file__).parent / "weapons-fitted"
+# Drawn for gear lists only, never in a hand (the fists are the sprite's own): the fist weapons, and the mythic that is
+# one (the pack files the mythics under a kind of their own).
+UNHELD_KINDS = {"Fist weapons"}
+UNHELD = {"ember_palms"}
 
-def is_wood(r, g, b):
-    """The staffs' shafts are brown or grey: low saturation, or orange-brown. Everything else is the gem and its glow."""
-    mx, mn = max(r, g, b), min(r, g, b)
-    sat = 0 if mx == 0 else (mx - mn) / mx
-    return sat < 0.35 or (r > g > b and mx < 200)
-
-def recolor_staff(im, element):
-    ramp = ELEMENT_RAMPS[element]
-    px = im.load()
-    for y in range(im.height):
-        for x in range(im.width):
-            r, g, b, a = px[x, y]
-            if a == 0 or is_wood(r, g, b):
-                continue
-            l = (r * 299 + g * 587 + b * 114) / 1000
-            step = 0 if l < 90 else 1 if l < 150 else 2 if l < 215 else 3
-            px[x, y] = ramp[step] + (a,)
-    return im
-
-if WEAPONS:
+if WEAPON_ART:
+    pack = json.load(open(WEAPON_ART / "weapons.json"))
     ensure(OUT / "weapons")
-    manifest["weapons"] = {}
-    for gid, spec in WEAPON_SPRITES.items():
-        name, element = (spec, None) if isinstance(spec, str) else spec
-        src = WEAPONS / f"{name}.png"
-        if not src.exists() and WEAPONS_MORE:
-            src = WEAPONS_MORE / f"{name}.png"
-        im = mode_downscale(Image.open(src), 3)
-        if element:
-            im = recolor_staff(im, element)
+    for old in (OUT / "weapons").glob("*.png"):
+        old.unlink()
+    manifest["weapons"], manifest["weaponsUnheld"] = {}, []
+    for name, entry in pack.items():
+        gid = WEAPON_IDS.get(name, name)
+        sheet = WEAPON_ART / entry["sheet"]
+        fitted = FITTED / sheet.name
+        im = mode_downscale(Image.open(fitted if fitted.exists() else sheet), 3)
+        assert im.size == (144, 32), f"{name}: {im.size}, not three frames of 48×32"
         im.save(OUT / "weapons" / f"{gid}.png")
         manifest["weapons"][gid] = f"weapons/{gid}.png"
+        if entry["kind"] in UNHELD_KINDS or gid in UNHELD:
+            manifest["weaponsUnheld"].append(f"weapons/{gid}.png")
     manifest["weaponFrame"] = [48, 32]
-    print(f"weapons: {len(WEAPON_SPRITES)} strips")
+    print(f"weapons: {len(pack)} strips ({len(manifest['weaponsUnheld'])} for gear lists only, {len(list(FITTED.glob('*.png')))} from ui/tools/weapons-fitted)")
 else:
     print("weapons: pack not found, kept")
 

@@ -5,7 +5,8 @@
  * own ability or passive in classes.ts, so a form keeps everything of the base it doesn't name. A file writes one
  * function, `form(v, k, plus)`, for all five: `k` is POWER on a form with the power step, so "two fifths more" is `× k`;
  * a step that isn't a multiplier (a cooldown word shorter, a rung cheaper) reads `plus`. A form's card is its version's
- * (or the base's) with the power step's line added, the upgrade's own `power` or the version's `plus` where it differs.
+ * (or the base's) with the power step's line added, the upgrade's own `power` or the version's `plus` where it differs;
+ * a power step marked `shown` adds nothing, since the ability's card shows its numbers.
  * The hooks are the engine's primitives (PRIMITIVES.md).
  */
 import type { AbilityT, EffectT, GearT, NumT, StatusT, TargetRuleT, ToT, UpgradeT } from "../../../src/schema.js";
@@ -75,7 +76,7 @@ type Ver = {
   serves?: string;
   /** A version the loot pass didn't tag: the builds it serves, in order: the first is worth 2 to it, the rest 1. */
   builds?: Build[];
-  /** What the power step adds to this version's card, where it differs from the upgrade's own power card. */
+  /** What the power step adds to this version's card, where it differs from the upgrade's own (or, with `shown`, where the numbers don't show it); "" adds nothing. */
   plus?: string;
 };
 type Up<B> = {
@@ -83,6 +84,11 @@ type Up<B> = {
   cls: string;
   /** The power step's card. */
   power: string;
+  /**
+   * An ability's power step that only moves numbers its card already shows (MP, cooldown, wind-up, the size line): its card
+   * stays on the training screen, and isn't added to the trained ability's card.
+   */
+  shown?: boolean;
   a: Ver;
   b: Ver;
   /** A form's body: what differs from the base, for a version (or none) with or without the power step (k is 1 or POWER). */
@@ -106,7 +112,12 @@ function record(kind: "ability" | "passive", u: Up<unknown>) {
   }
 }
 const formName = (baseName: string, u: Up<unknown>, v: V, plus: boolean) => `${v ? u[v].name : baseName}${plus ? "+" : ""}`;
-const formText = (baseText: string, u: Up<unknown>, v: V, plus: boolean) => (v ? u[v].text : baseText) + (plus ? ` ${(v && u[v].plus) || u.power}` : "");
+function formText(baseText: string, u: Up<unknown>, v: V, plus: boolean): string {
+  const text = v ? u[v].text : baseText;
+  if (!plus) return text;
+  const more = v && u[v].plus !== undefined ? u[v].plus : u.shown ? "" : u.power;
+  return more ? `${text} ${more}` : text;
+}
 
 /** An ability's upgrade: five abilities of its class, each the base with the form's changes. */
 export function abilityUp(u: Up<AbilityT>) {

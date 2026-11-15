@@ -2,20 +2,24 @@
 import type { AbilityT, EffectT, ReactionT, StatusT } from "../../../src/schema.js";
 import { T } from "../classes.js";
 import { from, HIT, KIT, REVIVE, stacks } from "../scale.js";
-import { abilityUp, apply, both, helper, kit, passiveUp, phys } from "./kit.js";
+import { abilityUp, apply, both, helper, kit, passiveUp, phys, POWER } from "./kit.js";
 
 {
   /** The Shield from each hit landed: a share of the damage dealt, to the Valkyrie or (Shield-sister) to the ally lowest in HP share. */
+  /** Chooser of the slain's execute, and Shield-sister's share of each hit given to the ally. */
+  const CHOOSER = 40, SISTER = 0.35;
   const shieldOn = (ratio: number, to: "holder" | typeof T.lowestShareAlly): ReactionT => ({ on: { event: "hit_lands" }, do: [apply("shield", { stacks: { scale: [{ ratio, amount: true }] }, to })] });
   passiveUp({
     id: "shieldmaiden", cls: "valkyrie",
-    power: "A bigger share: two fifths more Shield from each hit.",
-    a: { name: "Chooser of the slain", text: "No Shield. Its hits deal a fifth more to foes below half their HP.", builds: ["hunt", "storm"], plus: "Its hits deal 28% more to such foes, not a fifth." },
-    b: { name: "Shield-sister", text: "Each hit it lands gives the ally with the lowest share of HP a Shield of a share of the damage dealt, instead of itself.", builds: ["toll", "pact"] },
-    // Chooser of the slain gives the Shield up: offence in place of defence, and the power step has nothing to grow.
+    power: "Shield +40%.",
+    a: { name: "Chooser of the slain", text: `No Shield. Hits deal +${CHOOSER}% to foes below 50% HP.`, builds: ["hunt", "storm"], plus: `+${Math.round(CHOOSER * POWER)}%, not +${CHOOSER}%.` },
+    b: { name: "Shield-sister", text: `On a hit: Shields the ally with the lowest HP% instead, for ${Math.round(SISTER * 100)}% of the damage.`, builds: ["toll", "pact"] },
+    // Chooser of the slain gives the Shield up: offence in place of defence, and the power step has nothing to grow. Each version
+    // pays more than the base where it points, since each gives up the Valkyrie's own Shield: at the base's sizes both were worse
+    // to have than the base in the builds they serve (the build test's ablation).
     form: (v, k) =>
-      v === "a" ? { reactions: [], boosts: both({ scale: [{ ratio: 20 * k, when: { hpBelow: 50 }, of: "target" }] }) as StatusT["boosts"] }
-        : { reactions: [shieldOn(KIT.shieldmaiden * k, v === "b" ? T.lowestShareAlly : "holder")] },
+      v === "a" ? { reactions: [], boosts: both({ scale: [{ ratio: CHOOSER * k, when: { hpBelow: 50 }, of: "target" }] }) as StatusT["boosts"] }
+        : { reactions: [shieldOn((v === "b" ? SISTER : KIT.shieldmaiden) * k, v === "b" ? T.lowestShareAlly : "holder")] },
   });
 }
 
@@ -24,13 +28,17 @@ import { abilityUp, apply, both, helper, kit, passiveUp, phys } from "./kit.js";
   const spear = (ratio: number, extra: object = {}) => phys(from("attack", ratio), { apply: [shock], ...extra });
   /** Gale storm: one hit past any guard, then one each on two other random foes; fewer foes, fewer hits. */
   const storm = (ratio: number): Partial<AbilityT> => ({ do: [spear(ratio), spear(ratio, { to: { side: "foes", pick: "random", count: 2, exclude: "targets" } })] });
-  const hunt = (ratio: number): Partial<AbilityT> => ({ target: T.lowestHpFoe, do: [spear(ratio, { hits: 3 })] });
+  /** Shieldbreaker: the spellbreaker: 3 quick hits on the foe with the most buffs, each lifting one (newest first). No Shock. */
+  const breaker = (ratio: number): Partial<AbilityT> => ({
+    target: { side: "foes", pick: "highest", by: "buffs" },
+    do: [phys(from("attack", ratio), { hits: 3 }), { op: "remove", label: "buff", count: 1 }, { op: "remove", label: "buff", count: 1 }, { op: "remove", label: "buff", count: 1 }],
+  });
   abilityUp({
     id: "gale_spear", cls: "valkyrie",
-    power: "Deals two fifths more damage.",
-    a: { name: "Gale storm", text: "Three quick hits on three different foes, the first past any guard, each adding a few Shock.", builds: ["storm", "cuts"] },
-    b: { name: "Spear of the hunt", text: "Three quick hits past any guard on the foe with the lowest HP, each adding a few Shock.", builds: ["hunt"] },
-    form: (v, k) => (v === "a" ? storm(0.09 * k) : v === "b" ? hunt(0.09 * k) : { do: [spear(0.09 * k, { hits: 3 })] }),
+    power: "+40% damage.", shown: true,
+    a: { name: "Gale storm", text: "3 hits on 3 different foes, each adding Shock. The first ignores Taunt.", builds: ["storm", "cuts"] },
+    b: { name: "Shieldbreaker", text: "3 hits on the foe with the most buffs, each lifting one of them. No Shock. Ignores Taunt.", serves: "Hunt 2 ●●, Toll ● ◆ spellbreaking" },
+    form: (v, k) => (v === "a" ? storm(KIT.galeSpear * k) : v === "b" ? breaker(KIT.galeSpear * k) : { do: [spear(KIT.galeSpear * k, { hits: 3 })] }),
   });
 }
 
@@ -47,9 +55,9 @@ import { abilityUp, apply, both, helper, kit, passiveUp, phys } from "./kit.js";
   });
   abilityUp({
     id: "choosing", cls: "valkyrie",
-    power: "Heals, or raises with, two fifths more.",
-    a: { name: "Einherjar", text: "Chooses one ally: a fallen one, raised with a tenth of its HP and every action ready; else the lowest, healed.", builds: ["hunt"] },
-    b: { name: "Over the fallen", text: "Waits until an ally is below 30% of its max HP or down. Chooses one: a fallen one, raised; else the ally with the lowest share of max HP, healed for double. The Valkyrie Taunts and is Guarded, standing over the one she chose.", serves: "Toll 2 ●●●, Pact ●● ⚙ riposte (half), brink (half)" },
+    power: "Heals or raises 40% more.",
+    a: { name: "Einherjar", text: "Raises a fallen ally at 10% HP, every action ready; else heals the ally with the lowest HP%.", builds: ["hunt"] },
+    b: { name: "Over the fallen", text: "Raises a fallen ally, or heals the ally with the lowest HP% once one is below 30% HP; then Taunts and is Guarded.", serves: "Toll 2 ●●●, Pact ●● ⚙ riposte (half), brink (half)" },
     form: (v, k) =>
       v === "a" ? { statuses: ["einherjar"], do: choose(KIT.choosing * k, REVIVE.tenth * k) }
         : v === "b" ? over(k)
@@ -67,9 +75,9 @@ import { abilityUp, apply, both, helper, kit, passiveUp, phys } from "./kit.js";
   });
   abilityUp({
     id: "skyfall", cls: "valkyrie",
-    power: "Deals two fifths more damage.",
-    a: { name: "Thunderclap", text: "Skyfall on every foe that holds Shock, half as hard on each, rising with each one's Shock. Waits until a foe holds Shock.", serves: "Storm 3 ●●● ⚙ held charge (key)" },
-    b: { name: "Valkyrie's descent", text: "Skyfall past any guard on the foe with the lowest HP, double below a quarter of its HP. No Shock bonus.", builds: ["hunt"] },
+    power: "+40% damage.", shown: true,
+    a: { name: "Thunderclap", text: "A blow from above on every foe that holds Shock.", serves: "Storm 3 ●●● ⚙ held charge (key)" },
+    b: { name: "Valkyrie's descent", text: "A blow on the foe with the least HP, ×2 below 25% HP. Ignores Taunt.", builds: ["hunt"] },
     form: (v, k) =>
       v === "a" ? { if: { side: "foes", where: { has: "shock" } }, target: { side: "foes", where: { has: "shock" }, pick: "all" }, do: [fall(0.5, k)] }
         : v === "b" ? descent(k)

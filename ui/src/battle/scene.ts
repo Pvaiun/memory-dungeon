@@ -16,6 +16,7 @@ import { fxSize, type Fx, type Missile } from "../effects.js";
 import { actorSpan, backdropImage, drawActor, drawCampfire, drawChest, drawEnemy, drawStatus, drawText, enemyK, enemySprite, FRAME_W, OUTLINE, STATUS_ICON, statusIconOf, vfxSprite } from "../pixel.js";
 import type { Driver } from "./driver.js";
 import type { BarShow } from "../state.js";
+import { shieldSpan } from "../dom.js";
 
 export const W = FRAME_W, H = 228;
 
@@ -520,10 +521,11 @@ export class Scene {
           ctx.fillRect(bx, by, bw, 2);
           ctx.fillStyle = hpColor(hp);
           ctx.fillRect(bx, by, Math.round(bw * hp), 2);
-          const sh = Math.min(1 - hp, v.shieldShown / max);
-          if (sh > 0.005) {
+          const sh = shieldSpan(hp, v.shieldShown / max);
+          if (sh.width > 0.005) {
             ctx.fillStyle = "#a8e8ff";
-            ctx.fillRect(bx + Math.round(bw * hp), by, Math.max(1, Math.round(bw * sh)), 2);
+            const sw = Math.max(1, Math.round(bw * sh.width));
+            ctx.fillRect(bx + Math.min(bw - sw, Math.round(bw * sh.left)), by, sw, 2);
           }
         }
         if (mpOn) {
@@ -548,7 +550,10 @@ export class Scene {
         else if (!v.stsGone.has(id)) v.stsGone.set(id, this.wall);
         else if (this.wall - v.stsGone.get(id)! > 1500) (v.stsTold.delete(id), v.stsGone.delete(id));
       }
-      const sts = [...v.stsTold].map((id) => ({ id, count: live.has(id) ? live.get(id)! : v.stsLast.get(id) ?? null })).slice(0, 4);
+      // A foe's passives first, always on while it holds them: few foes have one, so the bar signposts it (no count, no timer).
+      const held = new Set(u.statuses.map((x) => x.id));
+      const passives = v.side === "enemy" ? (c.enemies.get(v.ref)?.statuses ?? []).filter((id) => held.has(id)).map((id) => ({ id, count: null })) : [];
+      const sts = [...passives, ...[...v.stsTold].map((id) => ({ id, count: live.has(id) ? live.get(id)! : v.stsLast.get(id) ?? null }))].slice(0, 4);
       v.fades = v.fades.filter((f) => f.until > this.wall);
       const fading = v.fades.filter((f) => !sts.some((s) => s.id === f.id)).slice(0, 4 - sts.length);
       const n = sts.length + fading.length;
@@ -617,7 +622,7 @@ export class Scene {
       }
       // Enlarged by Scale2x and Scale3x (pixel.ts), drawn one to one.
       const img = vfxSprite(f.strip, f.scale);
-      const w = def.w * f.scale, h = def.h * f.scale;
+      const w = img.width / def.frames, h = img.height;
       ctx.save();
       ctx.translate(Math.round(x), Math.round(y));
       if (f.flip) ctx.scale(-1, 1);
@@ -852,6 +857,19 @@ export function foesOnStage(enemies: string[], h: number): StageActor[] {
     const w = enemySprite(ref, k).width;
     return { kind: "foe", ref, k, x: Math.max(w / 2 + 2, Math.min(W - w / 2 - 2, s.x)), y: Math.round(h - 4 - (204 - s.y) * squeeze) };
   });
+}
+
+/** The foe drawn at a point of a stage (stage pixels), the front one where two overlap, with a little room round each for a finger. */
+export function foeAt(actors: StageActor[], x: number, y: number): string | null {
+  const PAD = 4;
+  let hit: { ref: string; y: number } | null = null;
+  for (const a of actors) {
+    if (a.kind !== "foe") continue;
+    const s = enemySprite(a.ref, a.k);
+    const inside = Math.abs(x - a.x) <= s.width / 2 + PAD && y <= a.y + PAD && y >= a.y - s.height - PAD;
+    if (inside && (!hit || a.y >= hit.y)) hit = { ref: a.ref, y: a.y };
+  }
+  return hit?.ref ?? null;
 }
 
 /** A stage on a canvas, animated while it's on screen. */

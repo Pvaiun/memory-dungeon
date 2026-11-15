@@ -5,7 +5,7 @@
 import * as S from "../../../schema.js";
 import { compile } from "../stats.js";
 import { next } from "../../rng.js";
-import { type CUnit, def, healTop, hidden, hpBelow, isIntensity, living, stat, SUBTICKS, taunting, total, type W } from "./state.js";
+import { type CUnit, def, feats, healTop, hidden, hpBelow, isIntensity, living, stat, SUBTICKS, taunting, total, type W } from "./state.js";
 import { actDef, type ActDef, cooldownOf, type Target, weaponOf } from "./actions.js";
 import { capOf } from "./statuses.js";
 
@@ -37,6 +37,21 @@ export function passes(w: W, x: CUnit, c: S.UnitCondT, ref?: CUnit | null): bool
   if (c.atCap !== undefined && !atCap(w, x, c.atCap)) return false;
   if (c.belowCap !== undefined && atCap(w, x, c.belowCap)) return false;
   if (c.casting !== undefined && (x.cast !== null) !== c.casting) return false;
+  // What it wears: an offhand's kind (false: none), an armor's type; the reading unit's weapon kind.
+  if (c.offhand !== undefined && (c.offhand === false ? !!x.held?.offhand : !c.offhand.includes(x.held?.offhand ?? ""))) return false;
+  if (c.offhandNot !== undefined && c.offhandNot.includes(x.held?.offhand ?? "")) return false;
+  if (c.armor !== undefined && !c.armor.includes(x.held?.armor ?? "")) return false;
+  if (c.kin !== undefined && !(ref && ref !== x && (weaponOf(w.c, x.weapon).kind ?? "") !== "" && weaponOf(w.c, x.weapon).kind === weaponOf(w.c, ref.weapon).kind)) return false;
+  // One of its own stats against another.
+  if (c.above !== undefined && !(stat(w, x, c.above.stat) > (c.above.ratio ?? 1) * stat(w, x, c.above.over))) return false;
+  if (c.swing !== undefined) {
+    const mine = value(w, x, "swing");
+    if (w.f.units.some((u) => u.side === x.side && !u.ko && (c.swing === "fastest" ? value(w, u, "swing") < mine : value(w, u, "swing") > mine))) return false;
+  }
+  if (c.mostDebuffs !== undefined) {
+    const mine = value(w, x, "debuffs");
+    if (mine <= 0 || w.f.units.some((u) => u.side === x.side && !u.ko && value(w, u, "debuffs") > mine)) return false;
+  }
   return true;
 }
 
@@ -140,7 +155,9 @@ export function drawOf(r: Pick<S.ContentPack["ruleset"], "draw" | "partyDraw">, 
 }
 
 function weightedPick(w: W, u: CUnit, pool: CUnit[], what: string): CUnit {
-  const weights = pool.map((x) => drawOf(w.c.pack.ruleset, stat(w, x, "aggro"), x.side));
+  // A side that holds a rule to be picked by max HP (Lodestone plate) is weighed by it in place of its draw.
+  const byHp = feats(w.c).drawBy && pool.length > 0 && w.f.units.some((x) => x.side === pool[0].side && !x.ko && x.statuses.some((s) => def(w, s.id).drawBy === "max_hp"));
+  const weights = pool.map((x) => (byHp ? Math.max(1, x.stats.max_hp) : drawOf(w.c.pack.ruleset, stat(w, x, "aggro"), x.side)));
   const sum = weights.reduce((a, b) => a + b, 0);
   const r = next(u.rng) * sum;
   w.log?.({ t: "roll", vis: "hidden", at: w.f.now, by: u.id, what, roll: r, of: sum });
@@ -252,7 +269,7 @@ export function choose(w: W, u: CUnit, t: Target, seek: boolean, kind?: ActDef["
   }
   // An ability aimed at a random foe goes to a Marked one, as a basic attack does.
   const marks = kind === "ability" && w.c.pack.ruleset.focusAbilities !== false;
-  if (t === "foe") return kind === "basic" ? basicPick(w, u, seek) : ((marks ? focused(w, u, seek) : null) ?? defaultFoe(w, u, seek));
+  if (t === "foe") return kind === "basic" ? basicPick(w, u, seek) : (fixated(w, u, seek) ?? (marks ? focused(w, u, seek) : null) ?? defaultFoe(w, u, seek));
   return byRule(w, u, t, { seek, main: true, mark: marks, targets: [] });
 }
 
@@ -268,6 +285,13 @@ export const lastInSight = (w: W, x: CUnit) => !w.f.units.some((u) => u !== x &&
  * action's own (the Taunt rule applies, unless the attack has Seek), and an all-pick hits every unit it finds.
  */
 function basicPick(w: W, u: CUnit, seek: boolean): CUnit[] {
+  // Bewildered: a unit of its own side, itself aside; with nobody there, a foe as usual.
+  if (feats(w.c).confuse && u.statuses.some((s) => def(w, s.id).confuse)) {
+    const own = w.f.units.filter((x) => x.side === u.side && x !== u && !x.ko);
+    if (own.length) return [randomPick(w, u, own, "target")];
+  }
+  const fix = fixated(w, u, seek);
+  if (fix) return fix;
   const aims = u.statuses.flatMap((s) => def(w, s.id).aim ?? []);
   const aimed = (first: boolean) => {
     for (const a of aims) {
@@ -277,6 +301,18 @@ function basicPick(w: W, u: CUnit, seek: boolean): CUnit[] {
     return null;
   };
   return aimed(true) ?? focused(w, u, seek) ?? aimed(false) ?? defaultFoe(w, u, seek);
+}
+
+/** Fixated: the unit that fixated it, while it stands and can be picked; a Taunting foe still takes the pick unless the action has Seek. */
+function fixated(w: W, u: CUnit, seek: boolean): CUnit[] | null {
+  if (!feats(w.c).fixate) return null;
+  const s = u.statuses.find((x) => def(w, x.id).fixate && x.src);
+  if (!s) return null;
+  const seen = visibleFoes(w, u);
+  const src = seen.find((x) => x.id === s.src);
+  if (!src) return null;
+  if (!seek && !taunting(w, src) && seen.some((x) => taunting(w, x))) return null;
+  return [src];
 }
 
 /** A foe holding a focus status that can be picked, by draw among several; a Taunting foe still takes the pick unless the attack has Seek. */

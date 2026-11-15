@@ -2,6 +2,7 @@
 import * as S from "../schema.js";
 import type { Index, Pack, Report, Walker } from "./core.js";
 import { type Combat, RELATIVE_SEATS } from "./combat.js";
+import { startingKind, startingWeapon } from "./party.js";
 
 // ─── Classes ─────────────────────────────────────────────────────────────────
 
@@ -79,13 +80,13 @@ export function checkUpgrades(pack: Pack, ix: Index, w: Walker, r: Report) {
 export function checkGear(pack: Pack, ix: Index, w: Walker, r: Report, c: Combat) {
   pack.gear.forEach((g, i) => {
     const p = `gear[${i}]`;
-    // A mythic fits one class whatever its kind, so it may have none (a mythic weapon states its own speed, type and hands).
+    // A mythic fits one class whatever its kind; a mythic weapon still belongs to one, and its own speed, type and hands stand over the kind's.
     if (g.mythic) w.ref("classes", g.mythic, `${p}.mythic`, "class");
     // A piece's rarity is mythic exactly when it names its class.
     if (g.rarity && (g.rarity === "mythic") !== !!g.mythic) r.error("gear.rarity", `${p}.rarity`, g.mythic ? `a mythic piece's rarity is mythic` : `only a piece that names its class with 'mythic' is mythic`);
     if (g.slot === "weapon") {
       if (!g.weapon) r.error("gear.weapon", p, `a weapon sets the basic attack: give it 'weapon'`);
-      else if (!g.weapon.kind && !g.mythic) r.error("gear.weapon", `${p}.weapon`, `a weapon piece belongs to a kind`);
+      else if (!g.weapon.kind) r.error("gear.weapon", `${p}.weapon`, `a weapon piece belongs to a kind`);
     } else if (g.weapon) r.error("gear.weapon", `${p}.weapon`, `only the weapon slot sets a basic attack`);
     if (g.slot === "armor") {
       if (g.armor) w.ref("armorTypes", g.armor, `${p}.armor`, "armor type");
@@ -102,9 +103,8 @@ export function checkGear(pack: Pack, ix: Index, w: Walker, r: Report, c: Combat
   });
   const ids = new Set(pack.gear.map((g) => g.id));
   for (const cl of pack.classes) {
-    // Each class arrives with the plain weapon of its first kind: a starter piece of that kind must exist.
-    const plain = pack.gear.find((g) => g.slot === "weapon" && g.source === "starter" && g.weapon?.kind === cl.weapons[0]);
-    if (!plain) r.warn("gear.plain", "gear", `no starter weapon of kind '${cl.weapons[0]}' for the ${cl.id} to arrive with`);
+    // Each class arrives with the plain weapon of its first one-handed kind: a starter piece of that kind must exist.
+    if (!startingWeapon(pack, cl)) r.warn("gear.plain", "gear", `no starter weapon of kind '${startingKind(pack, cl)}' for the ${cl.id} to arrive with`);
   }
   pack.starter.gear.forEach((id, i) => {
     if (ids.has(id) && ix.get<S.GearT>("gear", id)!.source !== "starter") r.error("starter.source", `starter.gear[${i}]`, `'${id}' isn't starter gear`);

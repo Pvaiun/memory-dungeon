@@ -28,10 +28,13 @@ import { field, fightSeed, fightsById, play, type FightSpec } from "./build-test
 
 /** Each tier's target by act: the easy pool's, a regular fight's and an elite's mean cost; a boss's win rate. */
 export const TARGETS = {
-  easy: [0.12, 0.13, 0.14],
-  normal: [0.2, 0.22, 0.24],
-  elite: [0.35, 0.36, 0.38],
-  bosses: [0.7, 0.7, 0.7],
+  // The whole-run tuning's, on the director's word ("completely free fights"): a regular fight about a quarter of the party's
+  // HP in acts II and III and a sixth in act I; an elite over 40% in acts II and III (a loss counting whole) and nearly a
+  // third in act I. Bosses aren't set here: whole runs set them (`npm run rogue:tune`), and these 60% are only a start.
+  easy: [0.09, 0.1, 0.11],
+  normal: [0.16, 0.24, 0.27],
+  elite: [0.3, 0.42, 0.46],
+  bosses: [0.6, 0.6, 0.6],
 };
 type Pool = keyof typeof TARGETS;
 const KNOBS = "content/core-set/rogue-knobs.json";

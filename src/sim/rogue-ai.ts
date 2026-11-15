@@ -13,7 +13,7 @@ import { int, next, rngFor, type Rng } from "../engine/rng.js";
 import { PROFILES, scoreGear } from "./kits.js";
 import { canEquip, handsOf } from "../validate.js";
 import {
-  bench, choose, equip, formationRarity, trainPrice, itemGear, learnOptions, maxOf, member, options, parseTraining, registerGear, reachable, seat, setFormation, swap,
+  bench, choose, equip, formationRarity, trainPrice, itemGear, learnOptions, maxOf, member, options, parseTraining, registerGear, reachable, seat, setFormation, setOrder, swap,
   twoHanded, useSupply, wearer, type Item, type MapNode, type Offer, type RogueRun, type Slot, SLOT_LIST,
 } from "../rogue.js";
 import type { RarityT } from "../schema.js";
@@ -250,6 +250,21 @@ export function aiPlayer(dials: Partial<Dials> = {}, seed = 1): Player {
   const rng: Rng = rngFor(seed, "ai");
   const noisy = (kind: string) => d.noise > 0 && (!d.noisy.length || d.noisy.includes(kind)) && next(rng) < d.noise;
   const randomOf = (xs: string[]) => xs[int(rng, xs.length)];
+  const shuffled = <T>(xs: T[]) => { const o = [...xs]; for (let i = o.length - 1; i > 0; i--) { const j = int(rng, i + 1); [o[i], o[j]] = [o[j], o[i]]; } return o; };
+  /** A Destiny Shard was just spent: the fight's preparation is changed before it's tried again. */
+  let retrying = false;
+
+  /**
+   * Another try at a lost fight, prepared differently: for now at random. Maybe one at camp takes a seat, then a formation the
+   * run owns, the seat order and each member's ability order, all shuffled.
+   */
+  function shake(c: Content, run: RogueRun) {
+    const standing = bench(run).filter((x) => !member(run, x).ko);
+    if (standing.length && next(rng) < 0.5) swap(c, run, randomOf(run.party), randomOf(standing));
+    setFormation(c, run, randomOf(run.formations));
+    seat(c, run, shuffled(run.party));
+    for (const cls of run.party) setOrder(run, cls, shuffled(member(run, cls).known));
+  }
 
   function prepare(c: Content, run: RogueRun) {
     // The fallen trade places with the best standing at camp, if the rules allow it here.
@@ -281,12 +296,15 @@ export function aiPlayer(dials: Partial<Dials> = {}, seed = 1): Player {
       .map((m) => ({ cls: m.cls, s: 1 - (stat === "hp" ? m.missHp : m.missMp) / maxOf(c, run, m.cls, stat === "hp" ? "max_hp" : "max_mp") })).filter((x) => x.s < below).sort((a, b) => a.s - b.s);
     for (const x of need("hp", 0.5)) if (run.supplies.includes("potion")) useSupply(c, run, "potion", x.cls);
     for (const x of need("mp", 0.5)) if (run.supplies.includes("tonic")) useSupply(c, run, "tonic", x.cls);
+    if (retrying && run.pending.kind === "fight" && !run.pending.begun) (retrying = false), shake(c, run);
   }
 
   function decide(c: Content, run: RogueRun): string {
     const p = run.pending;
     const opts = options(c, run);
     if (opts.length === 1) return opts[0];
+    // A lost fight with a Destiny Shard held: always spend it, and try the fight another way (`shake`).
+    if (p.kind === "fate") return (retrying = true), "shard";
     if (noisy(p.kind)) {
       // A random pick, but never leaving a shop before looking (that's a pass, not a choice).
       return randomOf(opts);

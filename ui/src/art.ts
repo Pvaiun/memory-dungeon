@@ -16,10 +16,14 @@ export type Manifest = {
   statuses: Record<string, string>;
   /** An ability's own icon by base id: 32×32, one pixel per art pixel. */
   abilities?: Record<string, string>;
+  /** A basic attack's icon by weapon kind (and "bite"): 32×32, one pixel per art pixel (ui/tools/skill_icons.py). */
+  basic?: Record<string, string>;
   /** VFX strips by name: `frames` frames of w×h side by side, cropped from the pack's 64×64 at (ox, oy). */
   vfx: Record<string, { file: string; frames: number; w: number; h: number; ox: number; oy: number }>;
-  /** Weapon strips by gear id: three frames of 48×32, drawn in the hand of a party member. */
+  /** Weapon strips by gear id: three frames of 48×32, the weapon facing right, drawn in the hand of a party member. */
   weapons: Record<string, string>;
+  /** The strips that show in gear lists only, never in a hand: the fist weapons'. */
+  weaponsUnheld?: string[];
   /** A 36×36 face per class. */
   faces: Record<string, string>;
   /** A 270×224 scene per dungeon, and the home strip. */
@@ -34,6 +38,8 @@ export type Manifest = {
   /** Gear icons, 16×16 at art size in a 16-column sheet: a cell per piece that isn't a weapon, by id, and per "kind:<kind>" and "slot:<slot>". */
   gearSheet?: string;
   gear?: Record<string, number>;
+  /** The Destiny Shard's icon, 16×16 at art size (the director's own). */
+  shard?: string;
 };
 
 export let manifest: Manifest;
@@ -46,12 +52,13 @@ export async function loadArt(): Promise<void> {
   manifest.faces ??= {};
   manifest.backdrops ??= {};
   manifest.abilities ??= {};
+  manifest.basic ??= {};
   // The plain pieces of kinds with no art of their own borrow a strip.
-  for (const [id, from] of Object.entries(WEAPON_STAND_INS)) if (!manifest.weapons[id] && manifest.weapons[from]) manifest.weapons[id] = manifest.weapons[from];
+  unheld = new Set(manifest.weaponsUnheld ?? []);
   const files = [
     ...Object.values(manifest.classes), ...Object.values(manifest.enemies).map((e) => e.file), ...Object.values(manifest.vfx).map((v) => v.file), manifest.iconset,
-    ...Object.values(manifest.statuses), ...Object.values(manifest.abilities), ...Object.values(manifest.weapons), ...Object.values(manifest.faces), ...Object.values(manifest.backdrops),
-    ...(manifest.campfire ? [manifest.campfire.file] : []), ...(manifest.chest ? [manifest.chest.file] : []), ...(manifest.gearSheet ? [manifest.gearSheet] : []),
+    ...Object.values(manifest.statuses), ...Object.values(manifest.abilities), ...Object.values(manifest.basic), ...Object.values(manifest.weapons), ...Object.values(manifest.faces), ...Object.values(manifest.backdrops),
+    ...(manifest.campfire ? [manifest.campfire.file] : []), ...(manifest.chest ? [manifest.chest.file] : []), ...(manifest.gearSheet ? [manifest.gearSheet] : []), ...(manifest.shard ? [manifest.shard] : []),
   ];
   await Promise.all(files.map(load));
 }
@@ -78,16 +85,6 @@ export function enemyName(ref: string, unitName: string): string {
   return unitName.startsWith(base) ? art.name + unitName.slice(base.length) : art.name;
 }
 export const enemyDisplayName = (ref: string): string => manifest?.enemies[ref]?.name ?? c.enemies.get(ref)?.name ?? ref;
-/**
- * Stand-in strips for the plain pieces of kinds with no art of their own, from the strips the packs give: the great weapon and
- * the axe hold the axe; the hammer the Earthshaker's maul; the rune sword the Oathblade's glowing blade; the fist weapons the dagger's
- * strip; the mace, the wand and the staff the plain staffs whose look fits who carries them first (the Light staff for the mace;
- * the Bard's and Hexer's lightning wand, the Pyromancer's fire staff).
- */
-const WEAPON_STAND_INS: Record<string, string> = {
-  plain_great_weapon: "plain_axe", plain_axe: "plain_axe", plain_hammer: "earthshaker", plain_rune_sword: "oathblade", plain_fist: "plain_dagger", plain_mace: "plain_light_staff",
-  plain_wand: "plain_lightning_staff", plain_staff: "plain_fire_staff",
-};
 /** A weapon's strip: its own, or for a rogue run's item, its base piece's, or else its kind's plain piece's. */
 export function weaponArt(gearId: string | undefined): string | undefined {
   if (!gearId) return undefined;
@@ -96,6 +93,9 @@ export function weaponArt(gearId: string | undefined): string | undefined {
   const kind = c.gear.get(gearId)?.weapon?.kind;
   return kind ? manifest.weapons[`plain_${kind}`] : undefined;
 }
+let unheld = new Set<string>();
+/** Whether a strip shows in its wearer's hand: not the fist weapons', which are for gear lists (the fists are the sprite's own). */
+export const weaponHeld = (file: string): boolean => !unheld.has(file);
 
 // ─── Actor sheets: RPG Maker MV sideview layout, 18 poses × 3 frames ───
 export const POSE = { walk: 0, wait: 1, chant: 2, guard: 3, damage: 4, evade: 5, thrust: 6, swing: 7, missile: 8, skill: 9, spell: 10, item: 11, escape: 12, victory: 13, dying: 14, abnormal: 15, sleep: 16, dead: 17 } as const;
@@ -145,6 +145,22 @@ export const abilityLook = (id: string): string => ABILITY_LOOK[id.replace(/__\w
 /** The looks that are a theme, not a weapon's motion: a damaging ability with one is a spell (cast, with the spell's pose and sound). */
 const THEMES = new Set(["fire", "ice", "lightning", "wind", "earth", "light", "dark", "arcane"]);
 export const isTheme = (look: string): boolean => THEMES.has(look);
+/**
+ * A basic attack's icon, by the weapon it swings: its kind's, from a weapon's ref (a gear id, "enemy:<id>" or
+ * "unarmed"), or a foe's own. Beasts bite; a weaponless foe that throws bolts shows the wand's, one that bashes the fist's.
+ */
+export function basicIconKind(ref: string, enemy?: string): string {
+  const id = enemy ?? (ref.startsWith("enemy:") ? ref.slice(6) : undefined);
+  if (id) {
+    const look = ENEMY_LOOK[id];
+    if (look === "bite") return "bite";
+    const kind = c.enemies.get(id)?.weapon?.kind;
+    if (kind) return kind;
+    return look && THEMES.has(look) ? "wand" : "fist";
+  }
+  if (ref === "unarmed") return "fist";
+  return (c.gear.get(ref) ?? c.gear.get(baseGearId(ref)))?.weapon?.kind ?? "fist";
+}
 /** A basic attack's look, from its weapon's ref (a gear id, "enemy:<id>" or "unarmed"), or a foe's own. */
 export function weaponLook(ref: string, enemy?: string): string {
   if (enemy && ENEMY_LOOK[enemy]) return ENEMY_LOOK[enemy];
@@ -232,6 +248,16 @@ export const STATUS_STYLE: Record<string, { color: string; light?: string }> = {
   marked: { color: "#f05a4a" }, cuts: { color: "#c8d2e0" }, heat: { color: "#f05a4a" }, spite: { color: "#e8284e" }, wrath: { color: "#fad040" },
   crescendo: { color: "#c46ef0" }, cascade: { color: "#8ae6ff" },
 };
+/**
+ * Damage a status deals shows the look of the damage it is, not of the status that dealt it: a status with an icon its
+ * own, else Thorns' for a piece or version whose card says its Thorns strike, else none. Nothing else borrows a look.
+ */
+const DAMAGE_AS: Record<string, string> = { heart_of_the_briar: "thorns" };
+export function damageLook(src: string): string | undefined {
+  if (manifest.statuses[src]) return src;
+  const as = DAMAGE_AS[src];
+  return as && manifest.statuses[as] ? as : undefined;
+}
 /** A status's colour: its own, else a buff's cool or a debuff's warm. */
 export function statusStyle(id: string): { color: string; light?: string } {
   if (STATUS_STYLE[id]) return STATUS_STYLE[id];

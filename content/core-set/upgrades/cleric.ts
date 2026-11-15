@@ -1,8 +1,8 @@
 /** The Cleric's upgrades: a power step and two versions (A and B) for each ability and the passive. Written with kit.ts. */
 import type { AbilityT, EffectT, NumT, ReactionT } from "../../../src/schema.js";
-import { from, WINDUP } from "../scale.js";
+import { from, stacks, WINDUP } from "../scale.js";
 import { T } from "../classes.js";
-import { abilityUp, apply, DRAWN, helper, kit, ofHolder, passiveUp, removeMine } from "./kit.js";
+import { abilityUp, apply, baseAbility, helper, kit, ofHolder, passiveUp, removeMine } from "./kit.js";
 
 {
   const on = apply("last_rites_on", { to: "holder" });
@@ -27,12 +27,12 @@ import { abilityUp, apply, DRAWN, helper, kit, ofHolder, passiveUp, removeMine }
     ];
   };
   const rite: ReactionT = { on: { event: "ko", whose: "ally" }, do: [apply("rite_of_passage", { to: "holder" })] };
-  helper(kit("rite_of_passage", "RITE OF PASSAGE", "Cooldowns halved.", { duration: 20, stats: [{ stat: "cooldown_reduction", flat: 100 }] }));
+  helper(kit("rite_of_passage", "RITE OF PASSAGE", "Cooldowns 50% shorter.", { duration: 20, stats: [{ stat: "cooldown_reduction", flat: 100 }] }));
   passiveUp({
     id: "last_rites", cls: "cleric",
-    power: "The line is at 40% of max HP, not 30%.",
-    a: { name: "Shared rites", text: "While it or any ally is below 30% of max HP, its cooldowns are halved.", serves: "Pact 2 ●●● ⚙ brink (half)" },
-    b: { name: "Rite of passage", text: "Below 30% of its max HP, its cooldowns are halved. When an ally falls, they're halved for 20 ticks too.", builds: [] },
+    power: "At 40% HP, not 30%.",
+    a: { name: "Shared rites", text: "While any ally is below 30% HP: cooldowns 50% shorter.", serves: "Pact 2 ●●● ⚙ brink (half)" },
+    b: { name: "Rite of passage", text: "Below 30% HP, and for 20 ticks after an ally falls: cooldowns 50% shorter.", builds: [] },
     form: (v, _k, plus) => {
       const line = plus ? 40 : 30;
       return { reactions: v === "a" ? shared(line) : v === "b" ? [...own(line), rite] : own(line) };
@@ -42,13 +42,14 @@ import { abilityUp, apply, DRAWN, helper, kit, ofHolder, passiveUp, removeMine }
 
 {
   const font: Partial<AbilityT> = { do: [{ op: "remove", label: "debuff" }, apply("regen"), apply("clarity")] };
-  const anchor: Partial<AbilityT> = { target: DRAWN };
+  /** Champion's blessing: the ally with the most Attack, cleansed, with Regen and Might from the Cleric's Attack (Frenzy's word). */
+  const champion: Partial<AbilityT> = { target: T.highestAMAlly, do: [{ op: "remove", label: "debuff" }, apply("regen"), apply("might", { stacks: stacks("several", "attack") })] };
   abilityUp({
     id: "renew", cls: "cleric",
-    power: "Costs less MP.",
-    a: { name: "Font", text: "Cleanses an ally with a debuff and gives it Regen and Clarity; with nobody debuffed, the ally with the lowest share of HP.", builds: ["barrage"] },
-    b: { name: "Anchor's blessing", text: "Cleanses the ally foes are most drawn to and gives it Regen.", builds: ["toll"] },
-    form: (v, _k, plus) => ({ ...(v === "a" ? font : v === "b" ? anchor : {}), ...(plus ? { mp: 450 } : {}) }),
+    power: "Costs less MP.", shown: true,
+    a: { name: "Font", text: "Cleanses the ally with the lowest HP%, a debuffed one first, and gives it Regen and Clarity.", builds: ["barrage"] },
+    b: { name: "Champion's blessing", text: "Cleanses the ally with the most Attack and gives it Regen and Might.", builds: ["landslide", "hunt"] },
+    form: (v, _k, plus) => ({ ...(v === "a" ? font : v === "b" ? champion : {}), ...(plus ? { mp: 450 } : {}) }),
   });
 }
 
@@ -59,7 +60,7 @@ import { abilityUp, apply, DRAWN, helper, kit, ofHolder, passiveUp, removeMine }
   const triage = (k: number): Partial<AbilityT> => ({ if: { side: "allies", where: { hpBelow: 40 } }, do: [{ op: "heal", amount: from("max_hp", TRIAGE * k) }] });
   /** Battle prayer: the next basic attack carries the heal's amount again as damage, once (Refresh: a second Cure doesn't add a second). */
   const prayer = (id: string, ratio: number) =>
-    kit(id, "BATTLE PRAYER", "Its next basic attack deals extra damage.", {
+    kit(id, "BATTLE PRAYER", "Next basic attack deals extra damage.", {
       riders: [{ on: "basic", add: { type: "physical", amount: ofHolder(ratio, "attack") } }],
       reactions: [{ on: { event: "hit_lands", kind: "basic" }, do: [removeMine(id)] }],
     });
@@ -67,9 +68,9 @@ import { abilityUp, apply, DRAWN, helper, kit, ofHolder, passiveUp, removeMine }
   helper(prayer("battle_prayer_plus", 0.49));
   abilityUp({
     id: "cure", cls: "cleric",
-    power: "Heals two fifths more.",
-    a: { name: "Triage", text: "Waits until an ally is below 40% of its max HP, then heals it for twice as much, from the Cleric's own max HP.", builds: ["pact"] },
-    b: { name: "Battle prayer", text: "Heals the ally with the lowest share of HP. Its next basic attack deals the same amount again as extra damage.", builds: ["pact", "landslide"] },
+    power: "+40% healing.", shown: true,
+    a: { name: "Triage", text: "Heals the ally with the lowest HP%; waits until one is below 40% HP.", builds: ["pact"] },
+    b: { name: "Battle prayer", text: "Heals the ally with the lowest HP%. Its next basic attack deals that much extra.", builds: ["pact", "landslide"] },
     form: (v, k, plus) =>
       v === "a" ? triage(k)
         : v === "b" ? { do: [heal(0.35 * k), apply(plus ? "battle_prayer_plus" : "battle_prayer", { to: "self" })] }
@@ -79,14 +80,19 @@ import { abilityUp, apply, DRAWN, helper, kit, ofHolder, passiveUp, removeMine }
 
 {
   const raiseHp = (ratio: number): NumT => ({ scale: [{ ratio, stat: "max_hp", of: "target" }] });
-  /** Martyr's raise: the revive reads the Cleric's HP first, then the Cleric pays half its current HP (a price, not damage). No MP. */
+  /**
+   * Martyr's raise: the revive reads the Cleric's HP first, then the Cleric pays half its current HP (a price, not damage). No MP,
+   * and a cooldown 40% shorter than Raise's (MARTYR_COOLDOWN of it).
+   */
+  const MARTYR_COOLDOWN = 0.6;
   const martyr = (ratio: number): Partial<AbilityT> => ({
     mp: 0,
+    cooldown: Math.round(baseAbility("raise").cooldown * MARTYR_COOLDOWN * 10) / 10,
     do: [{ op: "revive", hp: { scale: [{ ratio, hp: "current", of: "self" }] } }, { op: "pay", hp: { scale: [{ ratio: 0.5, hp: "current", of: "self" }] }, to: "self" }],
   });
   /**
    * Ward of life: waits for either condition (`if: { any }`), a fallen ally or one below a third. Each part has its own target, and an
-   * effect has no condition of its own, so when both hold it does both: it raises the fallen and shields the lowest ally below a third.
+   * effect has no condition of its own, so when both hold it does both: it raises the fallen and shields the ally with the lowest HP% below a third.
    * The Shield reads the Cleric's own max HP (everything scales from the user).
    */
   const ward = (raise: number, shield: number): Partial<AbilityT> => ({
@@ -100,10 +106,9 @@ import { abilityUp, apply, DRAWN, helper, kit, ofHolder, passiveUp, removeMine }
   });
   abilityUp({
     id: "raise", cls: "cleric",
-    power: "The raised ally comes back with two fifths more HP.",
-    a: { name: "Martyr's raise", text: "Pays half its current HP to revive a random knocked-out ally with that much. Costs no MP.", builds: ["pact"] },
-    b: { name: "Ward of life", text: "Waits until an ally is knocked out or below a third of its max HP. Revives a random knocked-out ally with half its HP, and gives the lowest ally below a third a Shield of a third of the Cleric's max HP.", builds: ["toll", "pact"],
-      plus: "The raised ally comes back with two fifths more HP, and the Shield is two fifths bigger." },
+    power: "Raises at 70% HP, not 50%.",
+    a: { name: "Martyr's raise", text: "Pays 50% of its HP to raise a random fallen ally with that much.", builds: ["pact"], plus: "Raises with 40% more HP than it pays." },
+    b: { name: "Ward of life", text: "Raises a fallen ally at 50% HP, and Shields the ally with the lowest HP% below 33% HP.", builds: ["toll", "pact"] },
     form: (v, k) => (v === "a" ? martyr(0.5 * k) : v === "b" ? ward(0.5 * k, k / 3) : { do: [{ op: "revive", hp: raiseHp(0.5 * k) }] }),
   });
 }

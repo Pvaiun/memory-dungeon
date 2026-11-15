@@ -1,24 +1,29 @@
 /** The Hexer's upgrades: a power step and two versions (A and B) for each ability and the passive. Written with kit.ts. */
 import { own } from "../pieces/kit.js";
-import { BURN_STACKS, HIT, stacks } from "../scale.js";
+import { BURN_STACKS, HIT, SHOCK_STACKS, stacks } from "../scale.js";
 import { curse, T } from "../classes.js";
 import type { EffectT, TargetRuleT } from "../../../src/schema.js";
-import { abilityUp, apply, cd, COLD_HEX, helper, marker, passiveUp, phys } from "./kit.js";
+import { abilityUp, apply, cd, COLD_HEX, helper, marker, passiveUp, phys, POWER } from "./kit.js";
 
 // ─── Hexer ───────────────────────────────────────────────────────────────────
 
+/**
+ * Withering hex's Shock on every swing, on the few word at the Stormcaller's own multiple (SHOCK_STACKS, as Arc): the foe the
+ * Hexer keeps striking keeps a charge that softens its hits (`STATUS.shock.hits` a stack) and stings it each time it acts.
+ */
+export const WITHERING_SHOCK = SHOCK_STACKS;
 passiveUp({
   id: "cold_hex", cls: "hexer",
-  power: "Its basic attacks add 40% more.",
-  a: { name: "Hex of flames", text: "Its basic attacks add a few Burn, whatever weapon it carries; stacks scale from Attack.", serves: "Bonfire 1 ●●● ⚙ lead's colour (half)" },
-  b: { name: "Withering hex", text: "Its basic attacks Weaken their target in place of the Chill.", builds: ["toll"], plus: "" },
+  power: "+40% stacks.",
+  a: { name: "Hex of flames", text: "Basic attacks add Chill and Burn.", serves: "Bonfire 1 ●●● ⚙ lead's colour (half)" },
+  b: { name: "Withering hex", text: "Basic attacks add Chill and Shock.", builds: ["storm", "snap"] },
   form: (v, k) => ({
     reactions: [{
       on: { event: "hit_lands", kind: "basic" },
       do: [
-        v === "a" ? apply("burn", { stacks: own("few", "attack", BURN_STACKS * k), to: "other" }) // Kindling's own size: the Pyromancer's stays the bigger.
-          : v === "b" ? apply("weaken", { to: "other" }) // Weaken at its own length: a lock on the swing's target, nothing to grow.
-            : apply("chill", { stacks: own("few", "attack", COLD_HEX * k), to: "other" }),
+        apply("chill", { stacks: own("few", "attack", COLD_HEX * k), to: "other" }),
+        ...(v === "a" ? [apply("burn", { stacks: own("few", "attack", BURN_STACKS * k), to: "other" })] // Kindling's own size: the Pyromancer's stays the bigger.
+          : v === "b" ? [apply("shock", { stacks: own("few", "attack", WITHERING_SHOCK * k), to: "other" })] : []),
       ],
     }],
   }),
@@ -28,9 +33,10 @@ passiveUp({
 const cursed = (ratio: number) => phys(curse(ratio));
 abilityUp({
   id: "malison", cls: "hexer",
-  power: "40% more damage, and 40% more of every status it adds.",
-  a: { name: "Plague", text: "Curses every foe for three fifths of Malison's damage, scaling from Attack, a fifth more for each different affliction the foe holds (Burn, Chill, Shock, Bleed, Sunder), then a few Burn, a few Shock and a few Bleed; stacks scale from Attack.", serves: "Bonfire ●●, Storm ●●, Cuts ●● ⚙ every colour (key), red rain (half)" },
-  b: { name: "Focused curse", text: "Curses the foe with the highest Attack alone: three times Malison's damage, scaling from Attack, a fifth more for each different affliction it holds (Burn, Chill, Shock, Bleed, Sunder), then three times the Bleed; stacks scale from Attack.", serves: "Hunt ●● ⚙ every colour (half)" },
+  power: "+40% damage and stacks.",
+  shown: true,
+  a: { name: "Plague", text: "Curses every foe, adding Burn, Shock and Bleed. +20% damage for each of Burn, Chill, Shock, Bleed and Sunder a foe holds.", serves: "Bonfire ●●, Storm ●●, Cuts ●● ⚙ every colour (key), red rain (half)" },
+  b: { name: "Focused curse", text: "Curses only the foe with the most Attack, adding Bleed. +20% damage for each of Burn, Chill, Shock, Bleed and Sunder it holds.", serves: "Hunt ●● ⚙ every colour (half)" },
   form: (v, k) =>
     v === "b"
       ? { target: T.highestAMFoe, do: [cursed(3 * HIT.light * k), apply("bleed", { stacks: stacks("few", "attack", 3 * k) })] } // No Seek: a Taunting foe catches it first.
@@ -40,33 +46,41 @@ abilityUp({
       },
 });
 
-/** Mana burn: the share of the foe's MP it drains, which the Hexer gains (a marker on the foe pays its source, as a number read `of: target` can't reach the caster). */
-const MANA_BURN = 0.2;
+/** Rebind: the curse-breaker: waits for an ally to be Stunned or Silenced, lifts both from it, and Hastes it. */
+const BOUND = ["stun", "silence"];
+const rebind = { if: { side: "allies" as const, where: { hasAny: BOUND } }, target: { side: "allies", where: { hasAny: BOUND } } as TargetRuleT, do: [...BOUND.map((status) => ({ op: "remove", label: "debuff", status }) as EffectT), apply("haste")] };
 abilityUp({
   id: "unmake", cls: "hexer",
-  power: "A shorter cooldown.",
-  a: { name: "Silence all", text: "Silences every foe in a wind-up and strips their buffs. Waits until a foe is in a wind-up.", builds: [] },
-  b: { name: "Mana burn", text: "Silences the casting foe with the highest Attack and strips its buffs, and drains a fifth of its MP, which the Hexer gains. Waits until a foe is in a wind-up.", builds: ["barrage"] },
+  power: "Shorter cooldown.",
+  shown: true,
+  a: { name: "Silence all", text: "Waits for a foe to cast, then Silences every casting foe and strips their buffs.", builds: [] },
+  b: { name: "Rebind", text: "Waits for an ally to be Stunned or Silenced, then frees it and Hastes it.", serves: "Toll 2 ●●, Barrage ● ◆ the net" },
   form: (v, _k, plus) => ({
     ...(plus ? { cooldown: cd("short", "unmake") } : {}),
     ...(v === "a" ? { target: { side: "foes", where: { casting: true }, pick: "all" } as TargetRuleT } : {}), // An all-pick: the Taunt and Hidden rules don't apply.
-    ...(v === "b"
-      ? { do: [{ op: "mp", amount: { scale: [{ ratio: -MANA_BURN, stat: "max_mp", of: "target" }] } } as EffectT, apply("mana_burn"), apply("silence"), { op: "remove", label: "buff" } as EffectT] }
-      : {}),
+    ...(v === "b" ? rebind : {}),
   }),
 });
-helper(marker("mana_burn", "MANA BURN", "The Hexer that burned its mana gains a share of it.", {
-  perSource: {}, duration: 1,
-  reactions: [{ on: { event: "status_gained", status: "mana_burn" }, actor: "source", do: [{ op: "mp", amount: { scale: [{ ratio: MANA_BURN, stat: "max_mp", of: "holder" }] }, to: "source" }] }],
-}));
 
+/**
+ * Enfeeble's power step: a cooldown this share of its own and a rung cheaper, still longer than Weaken lasts (so the Weaken
+ * still lapses between casts; the short word, under Weaken's length here, would let it never lapse).
+ */
+const ENFEEBLE_PLUS = 0.85;
+/**
+ * Shackle's Shock on every foe, on the several word of an ability: Shock halves each time its holder acts, so one cast's charge is
+ * spent within a foe's few next actions; at the few word it was a token (about 4 stacks when the foes swung, a 4% cut).
+ */
+export const SHACKLE_SHOCK = { word: "several" as const, mult: 1 };
 abilityUp({
   id: "enfeeble", cls: "hexer",
-  power: "40% more Sunder; if it adds none, it costs less MP.",
-  a: { name: "Wither", text: "Weakens every foe.", builds: ["toll"], plus: "It costs less MP." },
-  b: { name: "Expose", text: "Adds many Sunder to the foe with the lowest HP; stacks scale from Attack.", builds: ["hunt", "cuts"], plus: "40% more Sunder." },
-  form: (v, k, plus) =>
-    v === "a" ? { target: T.everyFoe, cooldown: cd("medium", "enfeeble"), mp: plus ? 450 : 650, do: [apply("weaken")] }
-      : v === "b" ? { target: T.lowestHpFoe, do: [apply("sunder", { stacks: stacks("many", "attack", k) })] } // The lowest current HP, no Seek.
-        : { do: [apply("weaken"), apply("sunder", { stacks: stacks("few", "attack", k) })] },
+  power: "Shorter cooldown, and costs less MP.",
+  shown: true,
+  a: { name: "Wither", text: "Weakens every foe, and adds Sunder to every foe.", builds: ["toll", "cuts"] },
+  b: { name: "Shackle", text: "Weakens every foe, and adds Shock to every foe.", builds: ["toll", "storm"] },
+  form: (v, _k, plus) => ({
+    ...(plus ? { cooldown: Math.round(cd("medium", "enfeeble") * ENFEEBLE_PLUS * 10) / 10, mp: 450 } : {}),
+    // Wither's Sunder is the old power step's size: the few word, two fifths more.
+    do: [apply("weaken"), ...(v === "a" ? [apply("sunder", { stacks: stacks("few", "attack", POWER) })] : v === "b" ? [apply("shock", { stacks: stacks(SHACKLE_SHOCK.word, "attack", SHACKLE_SHOCK.mult) })] : [])],
+  }),
 });

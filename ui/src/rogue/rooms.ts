@@ -2,18 +2,18 @@
  * The rooms and what they offer: spoils, a boss's boon and a chest, a captive, the shop and its training, the campfire,
  * events, choices (learn, upgrade, temper), the Muster and the Drill ground, a level-up, the next region.
  */
-import { actRoll, bagRoom, bossFoes, eventView as eventOfRun, formOf, improveOptions, itemOf, learnOptions, member, type Member, options, parseTraining, passiveOf, rogue, type RogueRun, seatsOf, sellPrice, type Trained, type Training, trainingId, trainOptions, trainPrice, upgradeOf, wearer } from "../../../src/rogue.js";
+import { actRoll, bagRoom, bossFoes, eventView as eventOfRun, formOf, improveOptions, type Item, itemOf, learnOptions, member, type Member, options, parseTraining, passiveOf, rogue, type RogueRun, seatsOf, sellPrice, type Trained, type Training, trainingId, trainOptions, trainPrice, upgradeOf, wearer } from "../../../src/rogue.js";
 import { button, type Child, h, header, win } from "../dom.js";
-import { c, disp, shortName } from "../content.js";
+import { c, shortName } from "../content.js";
 import { faceEl, iconEl } from "../pixel.js";
 import { fighter } from "./state.js";
-import { abilityBlock, classHead, section, sizeEl, tk } from "../sheet.js";
+import { abilityBlock, classHead, classPassive, section } from "../sheet.js";
 import { setup } from "../state.js";
-import { abilityInfo, sizeParts, sizeText, type Stats } from "../describe.js";
-import type { AbilityT } from "../../../src/schema.js";
+import type { Stats } from "../describe.js";
+import { upgradeCards as sharedCards, type UpgradeChip } from "../upgrades.js";
 import { campEl, themeOf } from "../battle/scene.js";
-import { actions, choice, go, gold, ICON, itemRow, lootActors, offerBody, partyActors, partyStrip, pickOrSave, redraw, ROMAN, scene, standoff, trainWord } from "./parts.js";
-import { foeLines } from "./run.js";
+import { actions, choice, go, gold, ICON, itemRow, junkRow, lootActors, offerBody, partyActors, partyStrip, pickOrSave, redraw, ROMAN, scene, standoff, trainWord } from "./parts.js";
+import { foeLines, foeSheet } from "./run.js";
 
 // ─── Spoils, the boss's boon, a chest ──────────────────────────────────────
 
@@ -43,7 +43,7 @@ export function rewardView(run: RogueRun): Child[] {
     sceneEl,
     goldLine,
     // The choice is named where it's made, right over the cards.
-    win("scroll flat", trophy, p.kind === "treasure" ? null : h("div", { class: "section" }, "PICK ONE"), ...cards),
+    win("scroll flat", trophy, p.kind === "treasure" ? null : h("div", { class: "section" }, "PICK 1"), ...cards),
     actions(
       p.kind === "treasure"
         ? button("TAKE", () => { if (opts.includes("take")) pickOrSave(run, "take"); }, "hi")
@@ -97,9 +97,18 @@ export function shopView(run: RogueRun): Child[] {
     ];
     list.push(...trainPicker(run, entries));
   } else {
+    // Junk first, under its own heading, with a button that sells it all; then the rest of the bag.
     const items = run.items.filter((it) => !wearer(run, it.uid));
+    const junked = items.filter((it) => it.junk), kept = items.filter((it) => !it.junk);
+    const sell = (it: Item) => button(`SELL ${sellPrice(c, it)}G`, () => pickOrSave(run, `sell:${it.uid}`), "sm");
     if (!items.length) list.push(h("div", { class: "line dim" }, "NOTHING IN THE BAG"));
-    for (const it of items) list.push(itemRow(run, it, undefined, { right: button(`SELL ${sellPrice(c, it)}G`, () => pickOrSave(run, `sell:${it.uid}`), "sm") }));
+    if (junked.length) {
+      const all = junked.reduce((n, it) => n + sellPrice(c, it), 0);
+      list.push(section("JUNK", `${junked.length} PIECE${junked.length === 1 ? "" : "S"}`), h("div", { class: "btns" }, button(`SELL ALL JUNK ${all}G`, () => pickOrSave(run, "sell-junk"), "hi sm")));
+      for (const it of junked) list.push(junkRow(run, it, undefined, sell(it)));
+      if (kept.length) list.push(section("THE BAG"));
+    }
+    for (const it of kept) list.push(itemRow(run, it, undefined, { right: sell(it) }));
   }
   return [
     header("SHOP", () => go("home")),
@@ -155,12 +164,17 @@ function trainMember(run: RogueRun, cls: string, entries: TrainEntry[]): Child[]
   for (const a of k.abilities) {
     const known = m.known.includes(a);
     const now = c.abilities.get(formOf(m, a)) ?? c.abilities.get(a)!;
-    out.push(section(now.name.toUpperCase(), known ? null : "NOT LEARNED"));
+    out.push(section(c.abilities.get(a)!.name.toUpperCase(), known ? null : "NOT LEARNED"));
     if (!known) {
       const e = by.get(trainingId({ verb: "learn", cls, id: a }));
-      const el = abilityBlock(c.abilities.get(a)!, stats, setup.settings.designer);
+      const el = abilityBlock(c.abilities.get(a)!, stats);
       el.querySelector(".head")?.append(trainButton(e, false) ?? "");
       if (!e) el.classList.add("dimmed");
+      out.push(el);
+    } else {
+      // The base ability, untrained, so each upgrade below reads against the same card every time.
+      const el = abilityBlock(c.abilities.get(a)!, stats);
+      el.querySelector(".head")?.append(h("span", { class: "dim small" }, "BASE"));
       out.push(el);
     }
     if (upgradeOf(c, a)) out.push(...upgradeCards(m, a, known ? stats : null, by));
@@ -168,52 +182,27 @@ function trainMember(run: RogueRun, cls: string, entries: TrainEntry[]): Child[]
   const pid = passiveOf(c, cls);
   const pform = pid ? formOf(m, pid) : undefined;
   const pname = (pid && pform !== pid ? c.statuses.get(pform!)?.name : undefined) ?? k.passive?.name ?? (pid ? c.statuses.get(pid)?.name : undefined) ?? "";
-  out.push(section(pname.toUpperCase(), "PASSIVE"));
-  if (pid) out.push(...upgradeCards(m, pid, null, by));
+  out.push(section((k.passive?.name ?? pname).toUpperCase(), "PASSIVE"));
+  if (pid) out.push(...classPassive(cls, undefined, stats), ...upgradeCards(m, pid, stats, by));
   return out;
 }
 /** A training card's right end: its button, its price while it can't be bought, or TAKEN. */
 const trainButton = (e: TrainEntry | undefined, taken: boolean): HTMLElement | null =>
   taken ? h("span", { class: "hi small" }, "TAKEN") : e ? (e.onClick ? button(e.label, e.onClick, "sm hi") : h("span", { class: "dim small" }, e.label)) : null;
 /**
- * The power step and the two versions of an ability or a passive, as cards: a chip (+, A, B), the name of the form it leads
- * to, the upgrade's own text, and with `stats` (an ability the member knows) what it changes in this member's numbers.
+ * The power step and the two versions of an ability or a passive, as cards (upgrades.ts), with this member's training on
+ * them: what this opportunity offers has its button, what's taken says TAKEN, the rest is dimmed. An ability not learned
+ * yet shows what it can become by name only.
  */
 function upgradeCards(m: Member, id: string, stats: Stats | null, by: Map<string, TrainEntry>): HTMLElement[] {
-  const u = upgradeOf(c, id)!;
   const was: Trained = m.trained?.[id] ?? {};
-  const ability = u.kind === "ability";
-  const nameOf = (form: string) => (ability ? c.abilities.get(form)?.name : c.statuses.get(form)?.name) ?? form;
-  const after = (t: Trained) => formOf({ ...m, trained: { ...(m.trained ?? {}), [id]: t } }, id);
-  const now = formOf(m, id);
-  const cards: { chip: string; t: Training; text: string; taken: boolean; form: string }[] = [
-    { chip: "+", t: { verb: "power", cls: m.cls, id }, text: u.power, taken: !!was.power, form: after({ ...was, power: true }) },
-    { chip: "A", t: { verb: "version", cls: m.cls, id, version: "a" }, text: u.a.text, taken: was.version === "a", form: after({ ...was, version: "a" }) },
-    { chip: "B", t: { verb: "version", cls: m.cls, id, version: "b" }, text: u.b.text, taken: was.version === "b", form: after({ ...was, version: "b" }) },
-  ];
-  return cards.map(({ chip, t, text, taken, form }) => {
-    const e = by.get(trainingId(t));
-    const nums = e && ability && stats && !taken && form !== now ? changeLines(c.abilities.get(now)!, c.abilities.get(form)!, stats) : [];
-    // An ability not learned yet shows what it can become by name only; its cards open once it's known.
-    return h("div", { class: `ab${!e && !taken ? " dimmed" : ""}` },
-      h("div", { class: "head" }, h("span", { class: `chip${taken ? " on" : ""}` }, chip), h("span", { class: `grow trunc${e ? " hi" : ""}` }, nameOf(form).toUpperCase()), trainButton(e, taken)),
-      ability && !m.known.includes(id) ? null : h("div", { class: "body" }, text), ...nums);
+  const ability = upgradeOf(c, id)!.kind === "ability";
+  const training = (chip: UpgradeChip): Training => chip === "+" ? { verb: "power", cls: m.cls, id } : { verb: "version", cls: m.cls, id, version: chip === "A" ? "a" : "b" };
+  return sharedCards(id, stats, (chip) => {
+    const e = by.get(trainingId(training(chip)));
+    const taken = chip === "+" ? !!was.power : was.version === (chip === "A" ? "a" : "b");
+    return { right: trainButton(e, taken), dimmed: !e && !taken, hi: !!e, on: taken, bodyless: ability && !m.known.includes(id) };
   });
-}
-/** What an ability's form changes for this member: MP, cooldown and wind-up as "CD 28→21" (green better), then its new size. */
-function changeLines(was: AbilityT, now: AbilityT, stats: Stats): Child[] {
-  const a = abilityInfo(was, stats), b = abilityInfo(now, stats);
-  const cmp = (label: string, x: number, y: number, show: (n: number) => string) =>
-    show(x) !== show(y) ? h("span", { class: `nowrap ${y < x ? "good" : "bad"}` }, `${label} ${show(x)}→${show(y)}`) : null;
-  const cost = [cmp("MP", a.mp ?? 0, b.mp ?? 0, (n) => String(disp(n))), cmp("CD", a.cooldown, b.cooldown, tk), cmp("CAST", a.cast, b.cast, tk)].filter(Boolean);
-  const out: Child[] = cost.length ? [h("div", { class: "size changes" }, ...cost)] : [];
-  const sizeWas = sizeText(sizeParts(was, stats)), sizeNow = sizeText(sizeParts(now, stats));
-  if (sizeNow && sizeNow !== sizeWas) {
-    const el = sizeEl(sizeParts(now, stats));
-    el?.prepend(h("span", { class: "dim" }, "→ "));
-    out.push(el);
-  }
-  return out;
 }
 
 // ─── The campfire ──────────────────────────────────────────────────────────
@@ -311,7 +300,7 @@ export function roomView(run: RogueRun): Child[] {
     header(p.kind === "muster" ? "MUSTER" : "DRILL GROUND", () => go("home"), h("span", { class: "dim" }, p.kind === "muster" ? `ROSTER ${run.roster.length}/${rogue(c).config.party + seatsOf(c, run)}` : `${run.formations.length} OWNED`)),
     scene(run, `room:${p.kind}`, { h: 96, actors: [...partyActors(run, 96, "wait", { cx: 72 }), ...lootActors(run, p.offers, false, 96, 160, 248)] }),
     full ? h("div", { class: "line small bad wrap" }, "ROSTER FULL: SEND SOMEONE AT CAMP HOME FIRST (PARTY)") : null,
-    win("scroll flat", h("div", { class: "section" }, "PICK ONE"), ...cards),
+    win("scroll flat", h("div", { class: "section" }, "PICK 1"), ...cards),
     actions(take, opts.includes("train") ? button(`TRAIN ${rogue(c).config.drill?.train ?? 3}`, () => { roomPick = null; trainWho = null; pickOrSave(run, "train"); }) : null, button("SKIP", () => { roomPick = null; pickOrSave(run, "skip"); }), button("PARTY", () => go("rparty"))),
   ];
 }
@@ -359,12 +348,13 @@ export function regionView(run: RogueRun): Child[] {
   const seats = by?.[Math.min(run.act + 1, by.length) - 1] ?? 0;
   return [
     header(`ACT ${ROMAN[run.act + 1]}`, () => go("home")),
-    seats > seatsOf(c, run) ? h("div", { class: "line small hi wrap" }, iconEl(ICON.campfire), ` ROOM FOR ONE MORE AT CAMP: ${seats} SEATS`) : null,
+    seats > seatsOf(c, run) ? h("div", { class: "line small hi wrap" }, iconEl(ICON.campfire), ` ROOM FOR 1 MORE AT CAMP: ${seats} SEATS`) : null,
     win("scroll flat", ...p.options.map((id) => {
       const r = rogue(c).regions.find((x) => x.id === id)!;
       // The boss this way is already set by the act's dice: shown with its moves, so the fork is a choice with its eyes open.
       const boss = actRoll(c, run, id, run.act + 1).boss;
-      return [standoff(run, boss.enemies, `fork:${id}`, id, 112), win("roffer", h("div", { class: "line hi" }, r.name.toUpperCase()), h("div", { class: "text dim small wrap" }, r.text), h("div", { class: "line small" }, iconEl(ICON.boss), h("span", { class: "gold" }, `BOSS: ${boss.name.toUpperCase()}`)), ...foeLines(boss.enemies, bossFoes(c, run, { act: run.act + 1, region: id })), actions(button("GO THIS WAY", () => pickOrSave(run, id), "hi")))];
+      const foes = bossFoes(c, run, { act: run.act + 1, region: id });
+      return [standoff(run, boss.enemies, `fork:${id}`, { theme: id, h: 112, onFoe: (ref) => foeSheet(ref, foes) }), win("roffer", h("div", { class: "line hi" }, r.name.toUpperCase()), h("div", { class: "text dim small wrap" }, r.text), h("div", { class: "line small" }, iconEl(ICON.boss), h("span", { class: "gold" }, `BOSS: ${boss.name.toUpperCase()}`)), ...foeLines(boss.enemies, foes), actions(button("GO THIS WAY", () => pickOrSave(run, id), "hi")))];
     })),
   ];
 }

@@ -4,7 +4,7 @@
  * statuses that special stats bring, the ruleset and the design block.
  */
 import type { ContentPack, GearKindT, StatDefT, StatusT, WeaponKindT } from "../../src/schema.js";
-import { KIND_SPEED, MP_REGEN, P, RULES, SPEED, STATUS, pts } from "./scale.js";
+import { KIND_SPEED, MP_REGEN, OWED, P, RULES, SPEED, STATUS, pts } from "./scale.js";
 
 const TIMING = ["attack_speed", "cooldown_reduction", "cast_time_reduction"] as const;
 
@@ -87,7 +87,7 @@ export const vocabulary: StatusT[] = [
   // Fundamental
   // Nothing on its own and no duration; each hit the holder takes opens it.
   {
-    id: "bleed", name: "BLEED", text: "Each hit it takes deals damage for each stack, then a third of the stacks close.", label: "debuff", show: "icon", stacking: "intensity",
+    id: "bleed", name: "BLEED", text: `Each hit it takes deals damage for each stack, then ${Math.round(STATUS.bleed.drop * 100)}% of the stacks close.`, label: "debuff", show: "icon", stacking: "intensity",
     trigger: { on: { event: "hit_taken" }, do: [{ op: "damage", type: "none", amount: STATUS.bleed.perStack, to: "holder" }] }, drop: { fraction: STATUS.bleed.drop },
   },
   { id: "regen", name: "REGEN", text: "Recovers health over time.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.regen.duration, pulse: { every: STATUS.regen.every, do: [{ op: "heal", amount: { scale: [{ ratio: STATUS.regen.share, stat: "max_hp", of: "holder" }] } }] } },
@@ -109,7 +109,7 @@ export const vocabulary: StatusT[] = [
     // The shatter.
     reactions: [{ on: { event: "status_capped", status: "chill" }, do: [{ op: "damage", type: "none", amount: { scale: [{ ratio: STATUS.chill.shatter, stacks: "chill", of: "holder" }] }, to: "holder" }, { op: "apply", status: "stun", to: "holder" }, { op: "remove", label: "debuff", status: "chill", to: "holder" }] }],
   },
-  { id: "shock", name: "SHOCK", text: "Hurts for each stack every time it acts.", label: "debuff", show: "icon", stacking: "intensity", cap: STATUS.shock.cap, trigger: { on: { event: "action_resolve" }, do: [{ op: "damage", type: "none", amount: STATUS.shock.perStack, to: "holder" }] }, drop: { fraction: STATUS.shock.drop } },
+  { id: "shock", name: "SHOCK", text: "Hurts for each stack every time it acts, and its hits deal less for each stack.", label: "debuff", show: "icon", stacking: "intensity", cap: STATUS.shock.cap, boosts: hits(STATUS.shock.hits), trigger: { on: { event: "action_resolve" }, do: [{ op: "damage", type: "none", amount: STATUS.shock.perStack, to: "holder" }] }, drop: { fraction: STATUS.shock.drop } },
   // A damage-taken ramp, not a Defense strip (foes carry too little Defense for a strip to show past two stacks): it reads on every
   // foe and gives the Hexer and the Monk a ramp.
   { id: "sunder", name: "SUNDER", text: "Takes more damage for each stack.", label: "debuff", show: "icon", stacking: "intensity", cap: STATUS.sunder.cap, taken: [{ pct: STATUS.sunder.perStack }], pulse: { every: STATUS.sunder.every }, drop: { count: 1 } },
@@ -122,6 +122,17 @@ export const vocabulary: StatusT[] = [
   { id: "marked", name: "MARKED", text: "The party's basic attacks, and its abilities aimed at a random foe, go to it.", label: "debuff", show: "icon", stacking: "refresh", duration: STATUS.marked.duration, focus: true, single: true },
   { id: "rot", name: "ROT", text: "Heals less.", label: "debuff", show: "icon", stacking: "refresh", duration: STATUS.rot.duration, stats: [{ stat: "healing_received", flat: STATUS.rot.healing }] },
   { id: "clarity", name: "CLARITY", text: "Recovers MP over time.", label: "buff", show: "icon", stacking: "refresh", duration: STATUS.clarity.duration, pulse: { every: STATUS.clarity.every, do: [{ op: "mp", amount: { scale: [{ ratio: STATUS.clarity.share, stat: "max_mp", of: "holder" }] } }] } },
+  // Specialist, from the creative-builds pass: a foe turned on its own, a crit made by a set-up, a Taunt on one foe, hits that wait.
+  // Bewildered and Brittle are one-use: one stack, spent by the action or the hit they change.
+  {
+    id: "bewildered", name: "BEWILDERED", text: "Its next basic attack strikes one of its own side.", label: "debuff", show: "icon", stacking: "intensity", cap: 1, confuse: true,
+    trigger: { on: { event: "action_resolve", kind: "basic" } }, drop: "all",
+  },
+  { id: "brittle", name: "BRITTLE", text: "The next hit it takes is a crit.", label: "debuff", show: "icon", stacking: "intensity", cap: 1, critsTaken: "always", trigger: { on: { event: "hit_taken" } }, drop: "all" },
+  // Dodge: one-use, as Brittle, and it doesn't stack: the next hit misses, and the miss is a dodge.
+  { id: "dodge", name: "DODGE", text: "Dodges the next hit.", label: "buff", show: "icon", stacking: "intensity", cap: 1, dodge: true },
+  { id: "fixated", name: "FIXATED", text: "Picks the unit that fixated it, unless a Taunt forces another.", label: "debuff", show: "icon", stacking: "refresh", duration: STATUS.fixated.duration, fixate: true },
+  { id: "owed", name: "OWED", text: `Damage from hits waits here, and lands all at once ${OWED} ticks after the first.`, label: "marker", show: "icon", stacking: "intensity", duration: OWED, debt: true, unremovable: true },
   // Signature
   { id: "aegis", name: "AEGIS", text: "Blocks the next big blow.", label: "buff", show: "icon", stacking: "fizzle", block: { share: STATUS.aegis.share } },
   {
@@ -134,7 +145,7 @@ export const vocabulary: StatusT[] = [
     reactions: [{ on: { event: "status_ended", status: "bulwark", cause: ["stacks"] }, do: [{ op: "apply", status: "bulwark_broken", to: "holder" }] }],
   },
   {
-    id: "bulwark_broken", name: "BROKEN", text: "Stunned and takes double damage, until the Bulwark refills.", label: "debuff", show: "icon", stacking: "refresh", unremovable: true, duration: STATUS.bulwark.broken,
+    id: "bulwark_broken", name: "BROKEN", text: "Stunned and takes ×2 damage, until the Bulwark refills.", label: "debuff", show: "icon", stacking: "refresh", unremovable: true, duration: STATUS.bulwark.broken,
     lockout: { covers: "all", interrupt: true }, taken: [{ pct: STATUS.bulwark.takenPct }],
     reactions: [{ on: { event: "status_ended", status: "bulwark_broken", cause: ["expired"] }, do: [{ op: "apply", status: "bulwark", stacks: STATUS.bulwark.stacks, to: "holder" }] }],
   },

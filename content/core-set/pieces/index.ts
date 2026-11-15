@@ -16,7 +16,7 @@ import * as forms from "../formations.js";
 /** The six shares of pieces, by name. */
 export const SHARES = { "weapons-1": weapons1, "weapons-2": weapons2, armor, amulets, "offhands-1": offhands1, "offhands-2": offhands2 } as const;
 const shares = Object.values(SHARES);
-/** The 322 pieces: 113 weapons, 55 armor, 117 offhands, 37 amulets. */
+/** The 324 pieces: 113 weapons, 55 armor, 119 offhands, 37 amulets. */
 export const pieceGear: GearT[] = shares.flatMap((s) => s.gear);
 /** The 16 mythics. */
 export const mythicGear: GearT[] = ups.mythics;

@@ -2,16 +2,17 @@
  * What every rogue screen shares: the navigation screens.ts hands over, small parts (item rows, an offer's body, the
  * party strip, a confirm), and the scenes: each moment of the run drawn in its region.
  */
-import { bar, button, type Child, h, toast, win } from "../dom.js";
-import type { RogueNodeKindT } from "../../../src/schema.js";
+import { bar, button, type Child, h, nav, toast, win } from "../dom.js";
+import type { GearT, RogueNodeKindT } from "../../../src/schema.js";
 import { type Cell, type Pose } from "../art.js";
-import { bagRoom, bench, formationRarity, type Item, itemGear, member, type Offer, parseTraining, rogue, type RogueRun, seatsOf, wearer } from "../../../src/rogue.js";
+import { bagRoom, bench, eventView, formationRarity, type Item, itemGear, member, type Offer, parseTraining, type Pending, rogue, type RogueRun, seatsOf, type Slot, wearer } from "../../../src/rogue.js";
 import { c, cls as classOf, shortName } from "../content.js";
-import { abilityBlock, formationNote, gearRow, RARITY_TONE, role, seatLines } from "../sheet.js";
-import { actionIcon16, faceEl, gearIconOf, iconEl, iconOf, weaponIcon } from "../pixel.js";
-import { foesOnStage, partyInLine, partyOnStage, type StageActor, stageEl, type StageOpts, themeOf } from "../battle/scene.js";
+import { abilityBlock, gearRow, RARITY_TONE, role, seatLines, twoHanded } from "../sheet.js";
+import { actionIcon16, canvasEl, faceEl, gearIconEl, gearIconOf, iconEl, iconOf, slotIconEl, weaponIcon } from "../pixel.js";
+import { foeAt, foesOnStage, partyInLine, partyOnStage, type StageActor, stageEl, type StageOpts, themeOf, W } from "../battle/scene.js";
 import { abilityTag } from "../describe.js";
-import { saveRogue, vitals } from "./state.js";
+import { fighter, saveRogue, vitals } from "./state.js";
+import { canEquip } from "../../../src/validate.js";
 import { choose } from "../../../src/rogue/record.js";
 import { sfx } from "../battle/audio.js";
 
@@ -46,12 +47,12 @@ export const KIND_TEXT: Record<RogueNodeKindT, string> = {
   shop: "GEAR · RECRUITS · TRAINING · SUPPLIES",
   treasure: "A RARE OR LEGENDARY PIECE, OR A CAGED RECRUIT · GOLD",
   boss: "THE ACT'S END · EVERYONE RESTORED AND LEARNS",
-  muster: "PICK ONE OF TWO RECRUITS",
-  drill: `PICK ONE OF TWO FORMATIONS, OR TRAIN ${rogue(c).config.drill?.train ?? 3}`,
+  muster: "PICK 1 OF 2 RECRUITS",
+  drill: `PICK 1 OF 2 FORMATIONS, OR TRAIN ${rogue(c).config.drill?.train ?? 3}`,
 };
 // A potion heals one member, a tonic refills one member's MP.
 export const SUPPLY_ICON: Record<string, Cell> = { potion: [21, 7], tonic: [20, 7], phoenix: [21, 14] };
-export const SUPPLY_TEXT: Record<string, string> = { potion: "ONE MEMBER +30% HP", tonic: "ONE MEMBER +50% MP", phoenix: "A FALLEN MEMBER UP, 50% HP" };
+export const SUPPLY_TEXT: Record<string, string> = { potion: "1 MEMBER +30% HP", tonic: "1 MEMBER +50% MP", phoenix: "A FALLEN MEMBER UP, 50% HP" };
 export const held = (run: RogueRun, id: string) => run.supplies.filter((x) => x === id).length;
 /** Mythic in crimson (offered in the boss's boons that open acts II and III). */
 export const RARITY_CLASS = RARITY_TONE;
@@ -62,19 +63,54 @@ export const gold = (n: number) => h("span", { class: "gold" }, `${n}G`);
 const rosterOrder = (run: RogueRun) => [...run.party, ...bench(run)];
 /**
  * A run's item as a gear card (its rarity, kind and numbers, `gearRow`), with who wears it at the right. With `who` (the
- * default), the line of who can wear it, the roster first; never what it's for, which would spoil the discovery.
+ * default), the line of who can wear it, the roster first; never what it's for, which would spoil the discovery. With
+ * `wears` (an offer), the roster's faces beside what they wear in its slot now, under everything (`wearsLine`). The
+ * stacks it lays are shown for its wearer, else the first of the roster who can wear it.
  */
-export function itemRow(run: RogueRun, it: Item, onClick?: () => void, opts: { arrow?: boolean; stats?: Record<string, number> | null; right?: HTMLElement | null; who?: boolean } = {}): HTMLElement {
+export function itemRow(run: RogueRun, it: Item, onClick?: () => void, opts: { arrow?: boolean; stats?: Record<string, number> | null; right?: HTMLElement | null; who?: boolean; brief?: boolean; wears?: boolean } = {}): HTMLElement {
   const g = c.gear.get(it.uid) ?? itemGear(c, it);
-  const r = gearRow(g, g.slot, opts.stats ?? null, onClick, opts.arrow ?? false, opts.who === false ? undefined : rosterOrder(run));
+  const by = wearer(run, it.uid) ?? rosterOrder(run).find((cls) => canEquip(classOf(cls), g));
+  const r = gearRow(g, g.slot, opts.stats ?? (by ? fighter(run, by).stats : null), onClick, opts.arrow ?? false, opts.who === false || opts.brief ? undefined : rosterOrder(run), opts.brief);
+  const wears = opts.wears ? wearsLine(run, g) : null;
+  if (wears) r.querySelector(".grow")?.append(wears);
   const w = wearer(run, it.uid);
   const right = "right" in opts ? opts.right : w ? h("span", { class: "tag" }, shortName(w)) : null;
   if (right) r.querySelector(".grow .line")?.append(right);
   return r;
 }
+/** A piece marked junk: greyed, one short card (its name and codes), with `right` beside the name. */
+export function junkRow(run: RogueRun, it: Item, onClick?: () => void, right: HTMLElement | null = null): HTMLElement {
+  const r = itemRow(run, it, onClick, { right, brief: true });
+  r.classList.add("junk");
+  return r;
+}
+/**
+ * What everyone in the roster who could wear a piece wears in its slot now, in one line (the party first, then camp):
+ * each one's face beside the piece's icon in its rarity's glow, the slot's faded icon for an empty one (as the party
+ * screen shows it), or 2H for an offhand under a two-handed weapon. Nothing when nobody in the roster could wear it.
+ */
+export function wearsLine(run: RogueRun, g: GearT): HTMLElement | null {
+  const slot = g.slot as Slot;
+  const mine = rosterOrder(run).filter((cls) => canEquip(classOf(cls), g));
+  if (!mine.length) return null;
+  return h("div", { class: "line wrap wears" }, ...mine.map((cls) => {
+    const m = member(run, cls);
+    const now = m.gear[slot] ? c.gear.get(m.gear[slot]!) : undefined;
+    const glow = now?.rarity && now.rarity !== "common" ? ` glow-${now.rarity}` : "";
+    const what = slot === "offhand" && twoHanded(m.gear) ? h("span", { class: "slot dim small" }, "2H")
+      : now ? h("span", { class: `slot art${glow}` }, (now.slot === "weapon" ? smallWeapon(now.id) : null) ?? gearIconEl(now))
+      : h("span", { class: "slot" }, slotIconEl(slot));
+    return h("span", { class: "wear-of" }, faceEl(cls, 0.75), what);
+  }));
+}
+/** A weapon's icon made to sit beside a face: at most 3.5 by 2.5 rem, never enlarged. */
+function smallWeapon(id: string): HTMLCanvasElement | null {
+  const cv = weaponIcon(id);
+  return cv ? canvasEl(cv, Math.min(1, 28 / cv.width, 20 / cv.height), "weapon") : null;
+}
 /** A training's button: LEARN an ability, TRAIN a power step or a version. */
 export const trainWord = (opt: string) => (parseTraining(opt)?.verb === "learn" ? "LEARN" : "TRAIN");
-/** An offer as a card's body. */
+/** An offer as a card's body; a piece ends with what the roster who could wear it wear in its slot now. */
 export function offerBody(run: RogueRun, o: Offer): Child[] {
   // A sealed piece shows only its slot; a bundle, its piece and its supply.
   if (o.kind === "gear" && o.sealed) {
@@ -82,11 +118,11 @@ export function offerBody(run: RogueRun, o: Offer): Child[] {
     return [h("div", { class: "line" }, iconEl(ICON.treasure), h("span", { class: "grow hi" }, `SEALED ${g.slot.toUpperCase()}`)), h("div", { class: "line small dim wrap" }, "RARE OR BETTER · SHOWN WHEN TAKEN")];
   }
   if (o.kind === "bundle") {
-    return [h("div", { class: "line hi" }, "A BUNDLE"), itemRow(run, o.item, undefined, { right: null }), h("div", { class: "line small" }, iconEl(SUPPLY_ICON[o.supply]), h("span", null, ` AND A ${o.supply.toUpperCase()}`), bagRoom(c, run, o.supply) ? null : h("span", { class: "dim" }, " (BAG FULL)"))];
+    return [h("div", { class: "line hi" }, "A BUNDLE"), itemRow(run, o.item, undefined, { right: null, wears: true }), h("div", { class: "line small" }, iconEl(SUPPLY_ICON[o.supply]), h("span", null, ` AND A ${o.supply.toUpperCase()}`), bagRoom(c, run, o.supply) ? null : h("span", { class: "dim" }, " (BAG FULL)"))];
   }
-  if (o.kind === "gear") return [itemRow(run, o.item, undefined, { right: null })];
+  if (o.kind === "gear") return [itemRow(run, o.item, undefined, { right: null, wears: true })];
   if (o.kind === "tome") {
-    return [h("div", { class: "line" }, faceEl(o.cls), h("span", { class: "grow hi" }, `TOME: ${shortName(o.cls)} LEARNS`)), abilityBlock(c.abilities.get(o.ability)!, null, false)];
+    return [h("div", { class: "line" }, faceEl(o.cls), h("span", { class: "grow hi" }, `TOME: ${shortName(o.cls)} LEARNS`)), abilityBlock(c.abilities.get(o.ability)!, null)];
   }
   if (o.kind === "recruit") {
     const k = classOf(o.cls);
@@ -95,7 +131,7 @@ export function offerBody(run: RogueRun, o: Offer): Child[] {
     const rar = known.length >= 3 ? "legendary" : known.length === 2 ? "rare" : "common";
     // A tap on the face opens the class with what this one knows.
     const face = h("span", { style: "cursor:pointer", onClick: (e?: Event) => { e?.stopPropagation(); go("rclass", { cls: o.cls, known }); } }, faceEl(o.cls));
-    return [h("div", { class: "line" }, face, h("div", { class: "grow" }, h("div", { class: RARITY_CLASS[rar] || "hi" }, `RECRUIT: ${k.name.toUpperCase()}`), h("div", { class: "text dim small wrap" }, role(o.cls)))),
+    return [h("div", { class: "line" }, face, h("div", { class: "grow" }, h("div", { class: RARITY_CLASS[rar] ?? "hi" }, `RECRUIT: ${k.name.toUpperCase()}`), h("div", { class: "text dim small wrap" }, role(o.cls)))),
       h("div", { class: "line small wrap" }, h("span", { class: "dim" }, `KNOWS ${known.length}/3: `), known.map((a) => c.abilities.get(a)!.name.toUpperCase()).join(", ")),
       o.item ? itemRow(run, o.item, undefined, { right: h("span", { class: "dim small" }, "CARRIES"), who: false }) : null,
       run.party.length >= 3 ? h("div", { class: "line small dim" }, "JOINS AT CAMP") : null];
@@ -104,9 +140,9 @@ export function offerBody(run: RogueRun, o: Offer): Child[] {
     // A formation's rarity in the gear's colours (common, rare, legendary), and what each seat does.
     const f = c.formations.get(o.id)!;
     const rar = formationRarity(c, o.id);
-    return [h("div", { class: "line wrap" }, h("span", { class: RARITY_CLASS[rar] || "hi" }, `${rar === "legendary" ? "★" : ""}FORMATION: ${f.name.toUpperCase()}`), rar !== "common" ? h("span", { class: `small r ${RARITY_CLASS[rar]}` }, rar.toUpperCase()) : null), h("div", { class: "text dim small wrap" }, f.text, formationNote(f)), ...seatLines(f)];
+    return [h("div", { class: "line wrap" }, h("span", { class: RARITY_CLASS[rar] ?? "hi" }, `${rar === "legendary" ? "★" : ""}FORMATION: ${f.name.toUpperCase()}`), rar !== "common" ? h("span", { class: `small r ${RARITY_CLASS[rar]}` }, rar.toUpperCase()) : null), h("div", { class: "text dim small wrap" }, f.text), ...seatLines(f)];
   }
-  if (o.kind === "seat") return [h("div", { class: "line" }, iconEl(ICON.campfire), h("span", { class: "grow hi" }, "A SEAT AT CAMP")), h("div", { class: "line dim small wrap" }, `ROOM FOR ONE MORE IN THE ROSTER · ${seatsOf(c, run)} → ${seatsOf(c, run) + 1} AT CAMP`)];
+  if (o.kind === "seat") return [h("div", { class: "line" }, iconEl(ICON.campfire), h("span", { class: "grow hi" }, "A SEAT AT CAMP")), h("div", { class: "line dim small wrap" }, `ROOM FOR 1 MORE IN THE ROSTER · ${seatsOf(c, run)} → ${seatsOf(c, run) + 1} AT CAMP`)];
   return [h("div", { class: "line" }, iconEl(SUPPLY_ICON[o.id]), h("span", { class: "grow" }, o.id.toUpperCase())), h("div", { class: "line dim small" }, SUPPLY_TEXT[o.id])];
 }
 
@@ -154,7 +190,22 @@ const GOLD_SACK: Cell = [23, 11];
 const FORMATION_ICON: Cell = [23, 6];
 
 /** The party facing a fight's foes, as the battle will stand them. */
-export const standoff = (run: RogueRun, enemies: string[], key: string, theme?: string, h = 136) => scene(run, key, { theme, h, actors: [...partyActors(run, h), ...foesOnStage(enemies, h)] });
+/** The party facing a fight's foes; with `onFoe`, tapping a foe on the field opens it (its sheet). */
+export function standoff(run: RogueRun, enemies: string[], key: string, o: { theme?: string; h?: number; onFoe?: (ref: string) => void } = {}): HTMLCanvasElement {
+  const ht = o.h ?? 136;
+  const actors = [...partyActors(run, ht), ...foesOnStage(enemies, ht)];
+  const cv = scene(run, key, { theme: o.theme, h: ht, actors });
+  const onFoe = o.onFoe;
+  if (onFoe) {
+    cv.classList.add("tap");
+    cv.addEventListener("click", (e) => {
+      const r = cv.getBoundingClientRect();
+      const ref = foeAt(actors, ((e.clientX - r.left) / r.width) * W, ((e.clientY - r.top) / r.height) * ht);
+      if (ref) onFoe(ref);
+    });
+  }
+  return cv;
+}
 
 /** The party at a glance: faces, HP and MP bars, KO; tap for the party screen. */
 export function partyStrip(run: RogueRun, tap = true): HTMLElement {
@@ -172,15 +223,39 @@ export function partyStrip(run: RogueRun, tap = true): HTMLElement {
     h("div", { class: "line small" }, gold(run.gold), h("span", { class: "dim" }, ` · `, iconEl(SUPPLY_ICON.potion), `${held(run, "potion")}/${rogue(c).config.bag.potion} `, iconEl(SUPPLY_ICON.tonic), `${held(run, "tonic")}/${rogue(c).config.bag.tonic}`, held(run, "phoenix") ? h("span", null, " ", iconEl(SUPPLY_ICON.phoenix), `${held(run, "phoenix")}`) : null), camp.length ? h("span", { class: "dim r" }, `CAMP: ${camp.map(shortName).join(", ")}`) : null));
 }
 
+/** An event's verbs whose result can't be seen when it's picked: a gamble, and a piece, a recruit or a formation rolled. */
+const ROLLED = new Set(["chance", "gear", "recruit", "formation", "trade"]);
+/** Whether a pick's result was hidden when it was made: an event option that rolls, a sealed piece, a tempering. */
+function hidden(was: Pending, pick: string): boolean {
+  if (was.kind === "event") return !!eventView(c, was).options.find((o) => o.id === pick)?.do.some((op) => ROLLED.has(op.op));
+  if (was.kind === "spoils" || was.kind === "boon") { const o = was.offers[Number(pick.split(":")[1])]; return o?.kind === "gear" && !!o.sealed; }
+  return was.kind === "choose" && was.what === "temper";
+}
+/**
+ * Answers the run's decision, saves it and redraws. Only a result the player couldn't see when they picked (`hidden`) is
+ * told, and it holds the screen it was chosen on until they've read it and go on. A pick that keeps its screen (a sale, a
+ * rest, a training) confirms itself in a toast; any other already said what it does before it was picked.
+ */
 export function pickOrSave(run: RogueRun, pick: string) {
-  const before = run.notes.length;
+  const was = run.pending, unseen = hidden(was, pick), before = run.notes.length;
+  const bases = new Map(run.items.map((it) => [it.uid, it.base]));
   choose(c, run, pick);
   saveRogue();
   sfx.tap();
-  redraw();
-  // What the pick did, said once, so an event's gain isn't silent.
   const news = run.notes.slice(before).map((n) => n.text).filter((t) => !/^(Took|Bought|Act )/.test(t));
-  if (news.length && frameEl) toast(frameEl, news.join(" "), 2600);
+  if (unseen && news.length && frameEl) return outcome(run, news, run.items.filter((it) => bases.get(it.uid) !== it.base && c.gear.get(it.base)?.source !== "starter"));
+  redraw();
+  if (news.length && frameEl && run.pending === was) toast(frameEl, news.join(" "), 2600);
+}
+/** A hidden result, over the screen it was picked on: each line of news and the card of each piece it brought or changed (not a recruit's plain weapon); ONWARD goes on. */
+function outcome(run: RogueRun, news: string[], pieces: Item[]) {
+  const onward = () => { box.remove(); nav.overlay = null; redraw(); };
+  const box = h("div", { class: "overlay dialog" }, win("outcome",
+    ...news.map((t) => h("div", { class: "line wrap hi" }, t)),
+    ...pieces.map((it) => itemRow(run, it, undefined, { who: false })),
+    actions(button("ONWARD", onward, "hi"))));
+  frameEl!.append(box);
+  nav.overlay = onward;
 }
 
 /** A question over the screen, with a yes and a cancel. */

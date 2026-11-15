@@ -63,7 +63,7 @@ export const ROSTERS: Roster[] = [
   { id: "storm", build: "storm", note: "Shock on everything behind two spears.", classes: ["hoplite", "valkyrie", "stormcaller", "bard", "paladin"], legendaries: [] },
   { id: "bleed", build: "cuts", note: "Bleed from three sources: the Ranger's arrows, the thorns, the Assassin's crits.", classes: ["bramble_knight", "assassin", "ranger", "monk", "cleric"], legendaries: [] },
   { id: "holy", build: "landslide", note: "A shelter for the party, a healer and a Geomancer behind its stone.", classes: ["paladin", "geomancer", "cleric", "knight", "valkyrie"], legendaries: [] },
-  { id: "curse", build: "bonfire", note: "The Hexer burns and shocks every foe for the Pyromancer; a Knight holds the line.", classes: ["knight", "hexer", "pyromancer", "stormcaller", "bard"], legendaries: [] },
+  { id: "curse", build: "bonfire", note: "The Hexer curses every foe beside the Pyromancer; a Knight holds the line.", classes: ["knight", "hexer", "pyromancer", "stormcaller", "bard"], legendaries: [] },
   { id: "blood", build: "pact", note: "Sustain by hitting: the Vampire and Monk drain, the Valkyrie brings back whoever falls.", classes: ["vampire", "monk", "valkyrie", "bard", "assassin"], legendaries: [] },
   { id: "earth-wall", build: "landslide", note: "Defense everywhere: a Hoplite, a Geomancer whose rocks scale from Defense, a Ranger behind.", classes: ["hoplite", "geomancer", "ranger", "knight", "pyromancer"], legendaries: [] },
   { id: "tempo", build: "barrage", note: "Haste and Might from the Bard on a Stormcaller, all in.", classes: ["knight", "bard", "stormcaller", "frostweaver", "cleric"], legendaries: [] },

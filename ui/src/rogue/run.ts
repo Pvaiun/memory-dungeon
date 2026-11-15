@@ -1,18 +1,17 @@
 /** The rogue screen's dispatcher, and the run's way through an act: the leader, the draft, the map, a fight in waiting. */
-import { button, type Child, h, header, win } from "../dom.js";
+import { button, type Child, h, header, nav, win } from "../dom.js";
 import { current, lastRun, meta, nextSeed, saveRogue, setHeat, startRun, vitals } from "./state.js";
 import { bossFoes, canManage, leaderKnown, type MapNode, reachable, rogue, type RogueRun } from "../../../src/rogue.js";
 import { c, className, cls as classOf, disp, shortName } from "../content.js";
-import { enemyThumb, faceEl, iconEl } from "../pixel.js";
-import { abilityBlock, classHead, classPassive, ENEMY_STATS, enemyStats, section, sizeEl, statGrid } from "../sheet.js";
+import { enemyEl, enemyThumb, faceEl, iconEl, shardEl, shardIcon } from "../pixel.js";
+import { abilityBlock, classHead, classPassive, enemySheet, enemyStats, section } from "../sheet.js";
 import { plainWeapon } from "../../../src/sim/parties.js";
 import { setup } from "../state.js";
 import { sfx } from "../battle/audio.js";
 import { useSupply } from "../../../src/rogue/record.js";
-import { sizeParts } from "../describe.js";
 import { enemyDisplayName } from "../art.js";
 import { campView, captiveView, chooseView, eventScreen, levelView, regionView, rewardView, roomView, shopView, trainView } from "./rooms.js";
-import { overView } from "./end.js";
+import { fateView, overView } from "./end.js";
 import { actions, confirm, frameEl, go, held, ICON, KIND_NAME, KIND_TEXT, partyActors, partyStrip, pickOrSave, redraw, ROMAN, scene, standoff, SUPPLY_ICON, SUPPLY_TEXT } from "./parts.js";
 
 // ─── The dispatcher ────────────────────────────────────────────────────────
@@ -25,6 +24,7 @@ export function rogueScreen(): Child[] {
     case "map": return mapView(run);
     case "fight": return fightView(run);
     case "drop": return dropView(run);
+    case "shard": return shardView(run);
     case "spoils": case "boon": case "treasure": case "trophy": return rewardView(run);
     case "captive": return captiveView(run);
     case "shop": return shopView(run);
@@ -35,6 +35,7 @@ export function rogueScreen(): Child[] {
     case "choose": return chooseView(run);
     case "levelup": return levelView(run);
     case "region": return regionView(run);
+    case "fate": return fateView(run);
     case "over": return overView(run);
   }
 }
@@ -57,7 +58,7 @@ function startView(): Child[] {
     h("div", { class: "line hi" }, "CHOOSE YOUR LEADER"),
     win("roster", h("div", { class: "grid" }, ...owned.map((id) => h("div", { class: `cell${leaderPick === id ? " cur" : ""}`, onClick: () => { leaderPick = id; redraw(); } }, h("div", { class: "portrait" }, faceEl(id)), h("span", { class: "trunc", style: "max-width:100%" }, shortName(id)), h("span", { class: "trunc small dim", style: "max-width:100%" }, c.abilities.get(knows(id)[0])!.name.toUpperCase()))),
       ...(owned.length < c.pack.classes.length ? [h("div", { class: "cell static dim" }, h("div", { class: "portrait locked" }, "?"), h("span", null, `${c.pack.classes.length - owned.length} MORE`))] : []))),
-    win("", classHead(leaderPick, undefined, plainWeapon(c, leaderPick)), section("STARTS WITH"), ...knows(leaderPick).map((a) => abilityBlock(c.abilities.get(a)!, classOf(leaderPick!).stats, setup.settings.designer))),
+    win("", classHead(leaderPick, undefined, plainWeapon(c, leaderPick)), section("STARTS WITH"), ...knows(leaderPick).map((a) => abilityBlock(c.abilities.get(a)!, classOf(leaderPick!).stats))),
     heatRow,
     actions(button("SET OUT", () => { startRun(leaderPick!, m.heat); sfx.win(); redraw(); }, "hi"), button("CLASSES", () => go("classes"))),
   ];
@@ -78,8 +79,8 @@ function draftView(run: RogueRun): Child[] {
     partyStrip(run, false),
     h("div", { class: "cards" }, ...p.offers.map((id) => h("div", { class: `win card${draftPick === id ? " cur" : ""}`, onClick: () => { draftPick = id; redraw(); } },
       h("div", { class: "portrait" }, faceEl(id)), h("div", { class: "name" }, shortName(id)), h("div", { class: "codes small" }, knows(id).map((a) => c.abilities.get(a)!.name).join(", "))))),
-    win("scroll", classHead(draftPick, undefined, plainWeapon(c, draftPick)), section("PASSIVE"), ...classPassive(draftPick), section("STARTS WITH"), ...knows(draftPick).map((a) => abilityBlock(c.abilities.get(a)!, classOf(draftPick!).stats, setup.settings.designer)),
-      section("LEARNS LATER"), ...c.classes.get(draftPick)!.abilities.filter((a) => !knows(draftPick!).includes(a)).map((a) => abilityBlock(c.abilities.get(a)!, classOf(draftPick!).stats, false)),
+    win("scroll", classHead(draftPick, undefined, plainWeapon(c, draftPick)), section("PASSIVE"), ...classPassive(draftPick), section("STARTS WITH"), ...knows(draftPick).map((a) => abilityBlock(c.abilities.get(a)!, classOf(draftPick!).stats)),
+      section("LEARNS LATER"), ...c.classes.get(draftPick)!.abilities.filter((a) => !knows(draftPick!).includes(a)).map((a) => abilityBlock(c.abilities.get(a)!, classOf(draftPick!).stats)),
     ),
     actions(button(`TAKE ${shortName(draftPick)}`, () => pickOrSave(run, draftPick!), "hi")),
   ];
@@ -127,7 +128,7 @@ function mapView(run: RogueRun): Child[] {
   });
   const picked = mapPick ? run.map.find((n) => n.id === mapPick)! : null;
   return [
-    header(`ACT ${ROMAN[run.act]} · ${reg.name.toUpperCase()}`, () => go("home"), h("span", { class: "dim" }, run.floor ? `F${run.floor}` : "START")),
+    header(`ACT ${ROMAN[run.act]} · ${reg.name.toUpperCase()}`, () => go("home"), h("span", null, shardTag(run), h("span", { class: "dim" }, run.floor ? `F${run.floor}` : "START"))),
     h("div", { class: "line small", onClick: () => go("rboss"), style: "cursor:pointer" }, iconEl(ICON.boss), h("span", { class: "dim" }, "BOSS "), h("span", { class: "gold trunc grow" }, run.boss.name.toUpperCase()), h("span", { class: "dim" }, "LOOK ▶")),
     partyStrip(run),
     scroller,
@@ -167,59 +168,96 @@ function dropView(run: RogueRun): Child[] {
   const cards = p.options.map((id) => win("roffer", h("div", { class: "line" }, iconEl(SUPPLY_ICON[id]), h("span", { class: "grow hi" }, id.toUpperCase()), h("span", { class: "dim small" }, `${held(run, id)}/${rogue(c).config.bag[id]} HELD`)), h("div", { class: "line dim small" }, SUPPLY_TEXT[id]),
     h("div", { class: "btns" }, button("TAKE", () => pickOrSave(run, id), "hi sm"))));
   return [
-    header("FOUND SUPPLIES", () => go("home"), h("span", { class: "dim" }, "PICK ONE")),
+    header("FOUND SUPPLIES", () => go("home"), h("span", { class: "dim" }, "PICK 1")),
     scene(run, "drop", { h: 96, actors: partyActors(run, 96, "victory", { cx: 135 }) }),
     win("scroll flat", ...cards),
     actions(button("PARTY", () => go("rparty"))),
   ];
 }
 
+/** After act I's and act II's bosses: the Destiny Shard on the ground, taken by hand like the spoils. */
+function shardView(run: RogueRun): Child[] {
+  if (run.pending.kind !== "shard") return [];
+  const max = rogue(c).config.shards?.max ?? 0;
+  const actors = [...partyActors(run, 96, "victory", { cx: 100 }), { kind: "loot" as const, x: 200, y: 92, art: shardIcon() }];
+  return [
+    header("DESTINY SHARD", () => go("home")),
+    scene(run, "shard", { h: 96, actors }),
+    win("roffer", h("div", { class: "line" }, shardEl(), h("span", { class: "grow hi" }, " DESTINY SHARD"), h("span", { class: "dim small" }, `${run.shards ?? 0}/${max} HELD`)),
+      h("div", { class: "line dim small wrap" }, "IT RESONATES WITH SOME UNKNOWN POWER")),
+    actions(button("TAKE", () => pickOrSave(run, "take"), "hi")),
+  ];
+}
+
 // ─── A fight in waiting ────────────────────────────────────────────────────
 
+/** A fight's changes to its foes, in percent: HP, and damage (`power`). */
+type FoeMods = { hp?: number; power?: number };
+/** A foe's likeness in the list: the art's own pixels where they fit this box (logical pixels), the biggest a step smaller. */
+const FOE_ICON = 56;
+const rankTone = (rank: string) => (rank === "boss" ? "gold" : rank === "elite" ? "debuff" : "");
+
 /**
- * A fight's foes as the preview shows them, with this fight's changes to HP and damage: each kind's likeness, name and
- * count, its HP, ATK and DEF (and any special stat, such as Evasion), and its abilities with
- * their sizes, so a boss's big move can be planned for (Slay the Spire shows intents).
+ * A fight's foes as the preview shows them: one row a kind, its likeness, name and count, and its line, which says what
+ * it does through what it is. A tap on a row, or on the foe on the field, opens its whole sheet (`foeSheet`).
  */
-export function foeLines(enemies: string[], foes: { hp?: number; power?: number } = {}): Child[] {
+export function foeLines(enemies: string[], foes: FoeMods = {}): Child[] {
   const kinds = [...new Set(enemies)];
   const n = (id: string) => enemies.filter((e) => e === id).length;
-  const mult = 1 + (foes.power ?? 0) / 100;
   return kinds.map((id) => {
     const en = c.enemies.get(id)!;
-    const st = enemyStats(en);
-    st.max_hp = Math.round(st.max_hp * (1 + (foes.hp ?? 0) / 100));
-    const acts = (en.abilities ?? []).map((a) => { const ab = c.abilities.get(a)!; return h("div", { class: "foe-act" }, h("div", { class: "text small wrap" }, h("span", { class: "hi" }, `${ab.name.toUpperCase()} `), h("span", { class: "dim" }, ab.text)), sizeEl(sizeParts(ab, st, mult))); });
-    return h("div", { class: "foe" },
-      h("div", { class: "line" }, h("span", { class: "foe-art" }, enemyThumb(id, 24)), h("span", { class: `grow trunc ${en.rank === "boss" ? "gold" : en.rank === "elite" ? "debuff" : ""}` }, `${enemyDisplayName(id).toUpperCase()}${n(id) > 1 ? ` ×${n(id)}` : ""}`)),
-      statGrid(st, null, false, ENEMY_STATS),
-      ...acts);
+    return h("div", { class: "foe-row", onClick: () => foeSheet(id, foes) },
+      h("div", { class: "foe-icon" }, enemyThumb(id, FOE_ICON)),
+      h("div", { class: "grow" },
+        h("div", { class: "line" }, h("span", { class: `grow trunc ${rankTone(en.rank)}` }, `${enemyDisplayName(id).toUpperCase()}${n(id) > 1 ? ` ×${n(id)}` : ""}`), h("span", { class: "dim" }, "▶")),
+        en.text ? h("div", { class: "text dim small wrap" }, en.text) : null));
   });
+}
+/**
+ * A foe's whole sheet over the screen, with this fight's changes to its HP and damage: its likeness, line, stats, what
+ * it can't be given, its passives and its actions with their sizes, so a boss's big move can be planned for.
+ */
+export function foeSheet(id: string, foes: FoeMods = {}) {
+  if (!frameEl) return;
+  const en = c.enemies.get(id)!;
+  const stats = enemyStats(en);
+  stats.max_hp = Math.round(stats.max_hp * (1 + (foes.hp ?? 0) / 100));
+  const close = () => { box.remove(); nav.overlay = null; };
+  // The name and × inside the window, so the screen's own header doesn't show through them.
+  const box: HTMLElement = h("div", { class: "overlay", onClick: (e?: Event) => { if (e?.target === box) close(); } },
+    win("",
+      h("div", { class: "hdr" }, h("span", { class: "title" }, enemyDisplayName(id).toUpperCase()), h("span", { class: rankTone(en.rank) || "dim" }, en.rank === "boss" ? "★BOSS" : en.rank.toUpperCase()), button("×", close, "sm")),
+      h("div", { class: "scroll" }, h("div", { class: "beast-art" }, enemyEl(id, 3, 1)), ...enemySheet(en, setup.settings.designer, { stats, power: foes.power ?? 0 }))));
+  frameEl.append(box);
+  nav.overlay = close;
 }
 /** The act's boss, from the map: known from the act's start, so the party can be built and swapped toward it. */
 export function rbossScreen(): Child[] {
   const run = current();
   if (!run) return rogueScreen();
+  const foes = bossFoes(c, run);
   return [
     header("BOSS", () => go("rogue")),
-    standoff(run, run.boss.enemies, "boss"),
-    win("scroll", h("div", { class: "line gold" }, run.boss.name.toUpperCase()), ...foeLines(run.boss.enemies, bossFoes(c, run))),
+    standoff(run, run.boss.enemies, "boss", { onFoe: (ref) => foeSheet(ref, foes) }),
+    win("scroll", h("div", { class: "line gold" }, run.boss.name.toUpperCase()), ...foeLines(run.boss.enemies, foes)),
   ];
 }
 
 function fightView(run: RogueRun): Child[] {
   const p = run.pending;
   if (p.kind !== "fight") return [];
-  const foes = foeLines(p.fight.enemies, p.foes);
   return [
-    header(p.tier === "boss" ? "BOSS" : p.tier === "elite" ? "ELITE" : "FIGHT", () => go("home")),
-    standoff(run, p.fight.enemies, `fight:${p.fight.id}`),
+    header(p.tier === "boss" ? "BOSS" : p.tier === "elite" ? "ELITE" : "FIGHT", () => go("home"), shardTag(run)),
+    standoff(run, p.fight.enemies, `fight:${p.fight.id}`, { onFoe: (ref) => foeSheet(ref, p.foes) }),
     partyStrip(run),
-    win("scroll", h("div", { class: "line hi" }, p.fight.name.toUpperCase()), ...foes),
+    win("scroll", h("div", { class: "line hi" }, p.fight.name.toUpperCase()), ...foeLines(p.fight.enemies, p.foes)),
     supplyRow(run),
     actions(button("FIGHT", () => go("battle", { rogue: true }), "hi"), p.begun ? null : button("PARTY", () => go("rparty"))),
   ];
 }
+
+/** The Destiny Shards held, where a fight is near: a lost fight can spend one to come back to its preview. */
+const shardTag = (run: RogueRun) => (run.shards ? h("span", null, `${run.shards}`, shardEl(), " ") : null);
 
 /** The home menu's line for the rogue mode. */
 export function rogueMenuLine(): string {

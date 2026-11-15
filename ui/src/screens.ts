@@ -9,8 +9,10 @@ import { enemyDisplayName } from "./art.js";
 import { button, h, header, nav, row, settleBack, win, type Child } from "./dom.js";
 import { abilitiesFor, applyHeadStart, BAR_SHOWS, FX_SPEEDS, gearFor, HEAD_STARTS, HIT_PAUSES, SPEEDS, reset, save, setup } from "./state.js";
 import { onRogue, setMode } from "./mode.js";
+import { classUpgrades } from "./upgrades.js";
+import { FILTER_NAMES, FILTERS, setFilter } from "./filter.js";
 import { anyNewEnemy, known, look, metCount, newEnemy } from "./bestiary.js";
-import { aggShares, abilityBlock, basicLine, canUse, classHead, classPassive, enemySheet, formationNote, gearRow, lockedRow, memberFor, portraitEl, RARITY_TONE, role, seatCodes, seatNotes, section, SLOTS, specialLines, statGrid, twoHanded, type GearSlot } from "./sheet.js";
+import { aggShares, abilityBlock, basicLine, canUse, classHead, classPassive, enemySheet, gearRow, lockedRow, memberFor, portraitEl, RARITY_TONE, role, seatCodes, seatNotes, section, SLOTS, specialLines, statGrid, twoHanded, type GearSlot } from "./sheet.js";
 import { enemyEl, enemyThumb } from "./pixel.js";
 import { weaponOf } from "../../src/engine/combat/fight.js";
 import { foesOnStage, partyOnStage, stageEl, Strip, STRIP_H, themeOf } from "./battle/scene.js";
@@ -244,8 +246,8 @@ function party(): Child[] {
     header("PARTY", () => go("home"), `${setup.party.length}/3`),
     win("",
       // The formation's name in its rarity's colour (the gear's), and what its seats' own statuses do.
-      h("div", { class: "line" }, prev, h("span", { class: `grow center ${RARITY_TONE[f.rarity ?? "common"] || "hi"}`, onClick: () => go("formation") }, f.name), next),
-      h("div", { class: "text dim small wrap" }, f.text, formationNote(f), seatNotes(f) ? ` ${seatNotes(f)}` : ""),
+      h("div", { class: "line" }, prev, h("span", { class: `grow center ${RARITY_TONE[f.rarity ?? "common"] ?? "hi"}`, onClick: () => go("formation") }, f.name), next),
+      h("div", { class: "text dim small wrap" }, f.text, seatNotes(f) ? ` ${seatNotes(f)}` : ""),
     ),
     h("div", { class: "cards" }, ...cards),
     h("div", { class: "btns even" }, sheetBtn, removeBtn),
@@ -306,13 +308,15 @@ function unit(arg?: unknown): Child[] {
     win("", statGrid(member.stats, k.stats, designer), sp.length ? h("div", { class: "text up small wrap", style: "margin-top:.25rem" }, ...sp.flatMap((s, i) => (i ? [" · ", s] : [s]))) : null),
     win("scroll",
       section("PASSIVE"),
-      ...classPassive(id),
+      ...classPassive(id, undefined, member.stats),
       section("GEAR"),
       ...gearRows,
       canUse(id),
       section("ABILITIES", orderPick === null ? null : h("span", { class: "hi" }, "SWAP WITH?")),
-      ...order.map((a, i) => abilityBlock(c.abilities.get(a)!, member.stats, designer, { n: i + 1, onN: () => onN(i), cur: orderPick === i, target: orderPick !== null && orderPick !== i })),
+      ...order.map((a, i) => abilityBlock(c.abilities.get(a)!, member.stats, { n: i + 1, onN: () => onN(i), cur: orderPick === i, target: orderPick !== null && orderPick !== i })),
       basicLine(weaponOf(c, member.weapon), member.stats, { ref: member.weapon }),
+      // From the class list, everything each ability and the passive can be trained into in the rogue mode.
+      ...(unitFrom === "classes" ? classUpgrades(id, member.stats) : []),
     ),
   ];
 }
@@ -405,6 +409,7 @@ function settings(): Child[] {
     win("list scroll",
       row([h("span", { class: "grow" }, "MODE"), h("span", { class: onRogue() ? "hi" : "" }, onRogue() ? "ROGUE" : "FREE PLAY")], () => { setMode(onRogue() ? "free" : "rogue"); refresh(); }, { cursor: false }),
       row([h("span", { class: "grow" }, "THEME"), h("span", null, s.theme.toUpperCase())], () => { s.theme = s.theme === "night" ? "day" : "night"; setTheme(s.theme); save(); refresh(); }, { cursor: false }),
+      cycle("FILTER", FILTER_NAMES, s.filter, (v) => FILTERS[v].label, (v) => { s.filter = v; setFilter(v); }),
       cycle("SPEED", [...SPEEDS], s.speed, (v) => `${v}×`, (v) => (s.speed = v)),
       cycle("HIT PAUSE", HIT_PAUSES, s.hitPause as (typeof HIT_PAUSES)[number], (v) => `${Math.round(v * 100)}%`, (v) => (s.hitPause = v)),
       toggle("SOUND", "sound"),
@@ -422,7 +427,7 @@ function settings(): Child[] {
       s.designer && s.seedLock ? seedRow() : null,
       onRogue() && rogueRun() ? row([h("span", { class: "grow" }, "GIVE UP THE RUN")], () => ask("GIVE UP THE RUN?", "", "GIVE UP", () => { abandonRun(); go("home"); }), { cursor: false }) : null,
       onRogue() ? row([h("span", { class: "grow" }, "RESET ROGUE")], () => ask("RESET THE ROGUE MODE?", "", "RESET", () => { resetRogue(); go("home"); }), { cursor: false }) : null,
-      row([h("span", { class: "grow bad" }, "RESET ALL")], () => ask("RESET ALL?", "", "RESET", () => { reset(); setTheme(setup.settings.theme); setNumberScale(setup.settings.numbers); go("home"); }), { cursor: false }),
+      row([h("span", { class: "grow bad" }, "RESET ALL")], () => ask("RESET ALL?", "", "RESET", () => { reset(); setTheme(setup.settings.theme); setFilter(setup.settings.filter); setNumberScale(setup.settings.numbers); go("home"); }), { cursor: false }),
     ),
   ];
 }

@@ -2,7 +2,7 @@
 import { HIT, P, STACKS, stacks, STATUS } from "../scale.js";
 import { own } from "../pieces/kit.js";
 import type { EffectT, TargetRuleT } from "../../../src/schema.js";
-import { T } from "../classes.js";
+import { SHATTERPOINT_OPENING, SHATTERPOINT_SHIELD, T } from "../classes.js";
 import { abilityUp, apply, BLIZZARD_CHILL, helper, hitOf, kit, LANCE_CHILL, marker, ofHolder, passiveUp, phys, POWER, STILLNESS_CHILL } from "./kit.js";
 
 // ─── Frostweaver ─────────────────────────────────────────────────────────────
@@ -11,17 +11,19 @@ import { abilityUp, apply, BLIZZARD_CHILL, helper, hitOf, kit, LANCE_CHILL, mark
 const RIME = 0.3;
 passiveUp({
   id: "shatterpoint", cls: "frostweaver",
-  power: "A shatter adds 40% more Sunder.",
-  a: { name: "Rime shield", text: "When a foe's Chill shatters, the ally with the lowest share of max HP gains a Shield from the Frostweaver's max HP, in place of the Sunder.", serves: "Snap 2 ●●, Toll ●● ⚙ frozen gate (half), detonation (half), brink (half)", plus: "A Shield two fifths bigger." },
-  b: { name: "Splinters", text: "When a foe's Chill shatters, that foe takes several Sunder (stacks scale from Attack), and every other foe gains a third of the Chill it held.", serves: "Snap 2 ●●● ⚙ firecracker (key)" },
-  form: (v, k) => ({
-    reactions: [{
+  power: "+40% Sunder.",
+  a: { name: "Rime shield", text: `At fight start: every ally gains a Shield of ${Math.round(SHATTERPOINT_SHIELD * 100)}% of the Frostweaver's max HP. On a shatter: the ally with the lowest HP% gains a Shield of 30% of the Frostweaver's max HP, instead of the Sunder.`, serves: "Snap 2 ●●, Toll ●● ⚙ frozen gate (half), detonation (half), brink (half)", plus: "+40% Shield." },
+  b: { name: "Rime edge", text: `At fight start: every ally gains a Shield of ${Math.round(SHATTERPOINT_SHIELD * 100)}% of the Frostweaver's max HP. Basic attacks add Sunder. No Sunder on a shatter.`, serves: "Cuts 2 ●●, Landslide ● ◆ the ramp, swing-status" },
+  // Every form keeps the opening Shield on every ally (SHATTERPOINT_OPENING), unscaled by the power step.
+  form: (v, k) => v === "b" ? ({
+    // Rime edge: the passive outside the shatter: Sunder on every swing, a rider, at the few word (the Monk's Iron palm's own).
+    reactions: [SHATTERPOINT_OPENING, { on: { event: "hit_lands", kind: "basic" }, do: [apply("sunder", { stacks: own("few", "attack", k), to: "other" })] }],
+  }) : ({
+    reactions: [SHATTERPOINT_OPENING, {
       on: { event: "status_capped", status: "chill", whose: "foe" },
       do: v === "a" ? [apply("shield", { stacks: ofHolder(RIME * k, "max_hp"), to: T.lowestShareAlly })]
         : [
           apply("sunder", { stacks: own("several", "attack", k), to: "owner" }),
-          // Splinters: a third of the cold the foe held, passed on, so a chain of shatters dies down.
-          ...(v === "b" ? [apply("chill", { stacks: { scale: [{ ratio: 1 / 3, amount: true }] }, to: { side: "foes", pick: "all", exclude: "owner" }, passed: true }) as EffectT] : []),
         ],
     }],
   }),
@@ -30,9 +32,10 @@ passiveUp({
 const lanceChill = (word: "few" | "several", mult: number) => [{ status: "chill", stacks: stacks(word, "attack", mult) }];
 abilityUp({
   id: "frost_lance", cls: "frostweaver",
-  power: "40% more Chill.",
-  a: { name: "Ice spear", text: "Has Seek. Deals damage that scales from Attack to the foe with the highest Attack, adding several Chill; stacks scale from Attack.", builds: [] },
-  b: { name: "Icicles", text: "Three lances at the three foes with the most Chill: each deals smaller damage that scales from Attack and adds a few Chill; stacks scale from Attack.", builds: ["snap"] },
+  power: "+40% Chill.",
+  shown: true,
+  a: { name: "Ice spear", text: "A lance at the foe with the most Attack, adding Chill. Ignores Taunt.", builds: [] },
+  b: { name: "Icicles", text: "Lances at the 3 foes with the most Chill, each adding more.", builds: ["snap"] },
   form: (v, k) =>
     v === "a" ? { seek: true, target: T.highestAMFoe, do: [phys(hitOf("attack", "normal"), { apply: lanceChill("several", LANCE_CHILL * k) })] } // The Chill class doesn't Slow: Chill is its slow.
       : v === "b" ? { target: { side: "foes", pick: "highest", by: { stacks: "chill" }, count: 3 }, do: [phys(hitOf("attack", "light"), { apply: lanceChill("few", LANCE_CHILL * k) })] }
@@ -40,7 +43,7 @@ abilityUp({
 });
 
 /** Frost armor: for the Guard's length, a foe that hits its holder gains a few Chill, half again the passive's count, from the Frostweaver's Attack. */
-const frostArmor = (sid: string, k: number) => helper(kit(sid, "FROST ARMOR", "A foe that hits it gains a few Chill.", {
+const frostArmor = (sid: string, k: number) => helper(kit(sid, "FROST ARMOR", "Foes that hit it gain Chill.", {
   duration: STATUS.guard.duration,
   reactions: [{ on: { event: "hit_taken" }, do: [apply("chill", { stacks: { scale: [{ ratio: (1.5 * STACKS.few * k) / P, stat: "attack", of: "source" }] }, to: "other" })] }],
 }));
@@ -49,20 +52,24 @@ frostArmor("frost_armor_plus", POWER);
 
 abilityUp({
   id: "blizzard", cls: "frostweaver",
-  power: "40% more damage; if it deals none, 40% more Chill.",
-  a: { name: "Frost armor", text: "Guards every ally. For as long as that Guard, a foe that hits a Guarded ally gains a few Chill; stacks scale from the Frostweaver's Attack. Deals no damage.", serves: "Snap 2 ●●, Toll 2 ●●● ⚙ frozen gate (key)", plus: "40% more Chill." },
-  b: { name: "Avalanche", text: "Deals damage that scales from Attack to every foe, rising by 150 with each Chill stack on that foe. Adds no Chill.", builds: ["snap", "storm"], plus: "40% more damage." },
+  power: "+40% damage, or +40% Chill.",
+  shown: true,
+  a: { name: "Frost armor", text: "Guards every ally. While the Guard lasts, foes that hit them gain Chill. No damage.", serves: "Snap 2 ●●, Toll 2 ●●● ⚙ frozen gate (key)", plus: "+40% Chill." },
+  b: { name: "Avalanche", text: "Hits every foe, each harder for its Chill. No Chill.", builds: ["snap", "storm"] },
   form: (v, k) =>
-    v === "a" ? { do: [apply("guard", { to: T.everyAlly }), apply(k > 1 ? "frost_armor_plus" : "frost_armor", { to: T.everyAlly })] }
+    // Frost armor at a support spell's 650 MP, not Blizzard's 1,000: a Guard on the party that deals nothing, it starved the
+    // Frostweaver's damaging casts late in long fights.
+    v === "a" ? { mp: 650, do: [apply("guard", { to: T.everyAlly }), apply(k > 1 ? "frost_armor_plus" : "frost_armor", { to: T.everyAlly })] }
       : v === "b" ? { do: [phys({ scale: [{ ratio: HIT.touch * k, stat: "attack" }, { ratio: 150 * k, stacks: "chill", of: "target" }] })] }
         : { do: [phys(hitOf("attack", "light", k), { apply: [{ status: "chill", stacks: stacks("few", "attack", BLIZZARD_CHILL) }] })] },
 });
 
 abilityUp({
   id: "stillness", cls: "frostweaver",
-  power: "It costs less MP.",
-  a: { name: "Deep calm", text: "Applies Clarity to the ally with the least MP, and the Frostweaver's next ability costs nothing. No Chill.", serves: "Barrage 2 ●●● ⚙ crescendo (half), mana as armour (half)" },
-  b: { name: "Frozen moment", text: "Waits until a foe is in a wind-up. Applies Clarity as before, and adds Chill only to foes in a wind-up, three times as many; stacks scale from Attack.", builds: ["snap"] },
+  power: "Costs less MP.",
+  shown: true,
+  a: { name: "Deep calm", text: "Clarity on the ally with the lowest MP%; its own next ability costs nothing. No Chill.", serves: "Barrage 2 ●●● ⚙ crescendo (half), mana as armour (half)" },
+  b: { name: "Frozen moment", text: "Waits for a foe to cast. Chill on every casting foe, and Clarity on the ally with the lowest MP%.", builds: ["snap"] },
   form: (v, _k, plus) => ({
     ...(plus ? { mp: 450 } : {}),
     ...(v === "a" ? { target: T.lowestMpAlly, do: [apply("clarity"), apply("deep_calm", { to: "self" })] } : {}),
@@ -74,11 +81,11 @@ abilityUp({
   }),
 });
 // The free cast lands a sub-tick after Deep calm resolves (a cue), so the cast that gave it doesn't spend it.
-helper(marker("deep_calm", "DEEP CALM", "Its next ability costs nothing.", {
+helper(marker("deep_calm", "DEEP CALM", "Next ability costs nothing.", {
   duration: 1,
   reactions: [{ on: { event: "status_gained", status: "deep_calm" }, do: [apply("deep_calm_free", { stacks: 1, to: "holder" })] }],
 }));
-helper(kit("deep_calm_free", "DEEP CALM", "Its next ability costs nothing.", {
+helper(kit("deep_calm_free", "DEEP CALM", "Next ability costs nothing.", {
   stacking: "intensity", cap: 1, mods: [{ mp: -100 }],
   trigger: { on: { event: "action_resolve", kind: "ability" } }, drop: "all",
 }));

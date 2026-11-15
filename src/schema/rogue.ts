@@ -42,6 +42,7 @@ export const RogueConfig = z.strictObject({
   benchByAct: z.array(z.number().int().min(0)).min(1).optional().describe("Seats at camp by act; a new act brings the run up to its act's (never down)."),
   recruits: z.strictObject({ offers: PosInt, known: z.array(KnownOdds).min(1).describe("By act: how many abilities a recruit knows, rolled at random from its three.") }).optional(),
   benchMp: Pct.optional().describe("Share of max MP a member regains after each won fight it sat out (from the max it last fought with)."),
+  shards: z.strictObject({ max: z.number().int().min(0) }).optional().describe("Destiny Shards: every boss but the last act's gives one, up to `max` held; a lost fight can spend one to return to the moment before it began."),
   fresh: Pct.optional().describe("Share of its cooldown already run for a fresh ability: a starting unit's, a recruit's, one just learned."),
   muster: z.strictObject({ offers: PosInt }).optional().describe("The Muster's pick of recruits."),
   drill: z.strictObject({ offers: PosInt, train: PosInt }).optional().describe("The Drill ground's pick of formations, or this many members trained."),

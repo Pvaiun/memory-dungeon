@@ -9,7 +9,7 @@
 import type { CUnit } from "../../../src/engine/combat/fight.js";
 import { c, disp, shownAsIcon } from "../content.js";
 import { abilityTag, isSpell } from "../describe.js";
-import { enemyDisplayName, weaponLook } from "../art.js";
+import { basicIconKind, enemyDisplayName } from "../art.js";
 import type { Ev } from "./driver.js";
 
 export type Tone = "act" | "hit" | "crit" | "heal" | "buff" | "debuff" | "bad" | "good" | "sys" | "quiet";
@@ -78,7 +78,7 @@ export class Narrator {
   private sname(id: string): string {
     return c.statuses.get(id)?.name ?? id;
   }
-  /** What a unit's action looks like, for its icon and effect: the ability's look, or its weapon's (art.ts). */
+  /** A unit's action's icon: the ability's look, or a basic attack's weapon kind, "kind:<kind>" (art.ts). */
   tagOf(by: string, act: string): string {
     if (act !== "basic") {
       const ab = c.abilities.get(act);
@@ -86,12 +86,33 @@ export class Narrator {
     }
     const u = this.L.unit(by);
     if (!u) return "physical";
-    return weaponLook(u.weapon, u.side === "enemy" ? u.ref : undefined);
+    return `kind:${basicIconKind(u.weapon, u.side === "enemy" ? u.ref : undefined)}`;
   }
+
+  /** An HP price paid just before its action resolves: told on the action's own line, else on a line of its own. */
+  private price: Ev | null = null;
 
   push(ev: Ev) {
     const at = (ev.at as number | undefined) ?? 0;
+    const price = this.price;
+    if (price && !(ev.t === "act" && ev.by === price.unit && ev.at === price.at)) {
+      this.price = null;
+      this.add(price, { text: `${this.n(price.unit)} pays ${disp(price.amount as number)} HP.`, tone: "bad" });
+    }
     switch (ev.t) {
+      case "hp": {
+        // A trade of HP shares (Effigy of exchange, Tethered heart) or a rewind (Sandglass).
+        const n = disp(ev.amount as number);
+        if (!n) this.silent(ev);
+        else if (ev.why === "rewind") this.add(ev, { text: `${this.n(ev.unit)}'s wounds unwind: +${n} HP.`, tone: "buff" });
+        else this.add(ev, { text: `${this.n(ev.unit)} trades its life: ${n > 0 ? "+" : ""}${n} HP.`, tone: n > 0 ? "buff" : "bad" });
+        break;
+      }
+      case "pay":
+        // A drain (Blood oath's Bleeder) ticks on the bar only; any other price is told.
+        if (ev.drain || disp(ev.amount as number) <= 0) this.silent(ev);
+        else this.price = ev;
+        break;
       case "fight_start": {
         const b = this.start("intro", at);
         b.lines.push({ text: this.introText(ev), tone: "sys", events: [ev] });
@@ -115,7 +136,10 @@ export class Narrator {
       }
       case "act": {
         const b = this.start("act", at, String(ev.by));
-        b.lines.push({ text: this.actText(ev), tone: "act", tag: this.tagOf(String(ev.by), String(ev.act)), act: String(ev.act), events: [ev] });
+        const paid = this.price;
+        this.price = null;
+        const text = paid ? `${this.actText(ev).replace(/!$/, "")}, paying ${disp(paid.amount as number)} HP!` : this.actText(ev);
+        b.lines.push({ text, tone: "act", tag: this.tagOf(String(ev.by), String(ev.act)), act: String(ev.act), events: paid ? [paid, ev] : [ev] });
         b.weight += 1;
         break;
       }
@@ -175,7 +199,7 @@ export class Narrator {
         break;
       }
       case "leave":
-        this.add(ev, { text: `${this.n(ev.unit)} splits in two!`, tone: "sys" });
+        this.add(ev, { text: `${this.n(ev.unit)} splits in 2!`, tone: "sys" });
         break;
       case "strike":
         this.add(ev, { text: ev.status === "arc" ? `The arc jumps to ${this.n(ev.target)}!` : `${this.n(ev.by)} strikes again!`, tone: "act" }, "act");
@@ -216,7 +240,9 @@ export class Narrator {
     if (word === "AEGIS") return this.add(ev, { text: `${t}'s Aegis blocks the blow!`, tone: "buff" }, kind);
     if (word === "IMMUNE") return this.add(ev, { text: `${t} is immune.`, tone: "sys" }, kind);
     if (word === "BLOCKED") return this.add(ev, { text: `${t} blocks it.`, tone: "hit" }, kind);
-    const n = disp(ev.amount as number), s = disp((ev.soaked as number) || 0);
+    if (word === "OWED") return this.add(ev, { text: `${t} owes ${disp(ev.amount as number)}.`, tone: "hit" }, kind);
+    // A hit's amount includes what a Shield soaked of it: n is the rest, what reached HP.
+    const s = disp((ev.soaked as number) || 0), n = disp(ev.amount as number) - s;
     if (isStatus && n + s <= 0) return;
     const crit = !!ev.crit;
     let text: string;

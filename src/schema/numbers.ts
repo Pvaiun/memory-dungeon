@@ -32,6 +32,16 @@ export const UnitCond = z.strictObject({
   topHp: z.literal(true).optional().describe("No living unit on its side has more current HP; ties pass."),
   canHeal: z.boolean().optional().describe("true: can be healed: below its max HP, and under any cap on its healing. false: can't."),
   weapon: z.array(Id).min(1).optional().describe("Wields a weapon of one of these kinds (an enemy's weapon by its kind, if it names one)."),
+  offhand: z.union([z.array(Id).min(1), z.literal(false)]).optional().describe("Holds an offhand of one of these kinds; false: holds none (an offhand under a two-handed weapon is none)."),
+  offhandNot: z.array(Id).min(1).optional().describe("Holds no offhand of these kinds (an empty hand passes)."),
+  armor: z.array(Id).min(1).optional().describe("Wears armor of one of these types."),
+  kin: z.literal(true).optional().describe("Wields a weapon of the reading unit's kind; the reading unit itself never passes."),
+  above: z
+    .strictObject({ stat: StatKey, over: StatKey, ratio: z.number().positive().optional().describe("Default 1: a percent stat against an amount reads the amount in points (0.001).") })
+    .optional()
+    .describe("Its own `stat` is above `ratio` × its own `over` (\"while its Defense is above its Attack\")."),
+  swing: z.enum(["fastest", "slowest"]).optional().describe("No living unit on its side has a faster (slower) basic attack now; ties pass."),
+  mostDebuffs: z.literal(true).optional().describe("Holds a debuff, and no living unit on its side holds more."),
 }).meta({ id: "UnitCond" });
 export type UnitCondT = z.infer<typeof UnitCond>;
 

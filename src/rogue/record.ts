@@ -10,7 +10,7 @@
 import { ENGINE_VERSION, advance, type Content, type Run } from "../engine/run.js";
 import { combat, type Member as EngineMember } from "../engine/combat/rules.js";
 import {
-  ROGUE_VERSION, newRogue, registerGear, choose as chooseRaw, discard as discardRaw, dismiss as dismissRaw, endFight as endFightRaw, equip as equipRaw, eventView, member, options, reachable,
+  ROGUE_VERSION, newRogue, registerGear, choose as chooseRaw, discard as discardRaw, dismiss as dismissRaw, junk as junkRaw, endFight as endFightRaw, equip as equipRaw, eventView, member, options, reachable,
   seat as seatRaw, setFormation as setFormationRaw, setOrder as setOrderRaw, startFight as startFightRaw, swap as swapRaw, useSupply as useSupplyRaw, type RogueRun, type Slot,
 } from "../rogue.js";
 import type { SupplyIdT } from "../schema.js";
@@ -99,10 +99,9 @@ export function dismiss(c: Content, run: RogueRun, cls: string): boolean {
   if (ok) rec(run, "dismiss", { cls });
   return ok;
 }
-export function discard(run: RogueRun, uid: string): boolean {
-  const item = run.items.find((x) => x.uid === uid);
-  const ok = discardRaw(run, uid);
-  if (ok) rec(run, "discard", { uid, item: item ?? null });
+export function junk(run: RogueRun, uid: string, on: boolean): boolean {
+  const ok = junkRaw(run, uid, on);
+  if (ok) rec(run, "junk", { uid, on });
   return ok;
 }
 export function useSupply(c: Content, run: RogueRun, id: SupplyIdT, target?: string): boolean {
@@ -221,6 +220,7 @@ export function checkRecord(c: Content, run: RogueRun): RecordCheck {
         case "swap": if (!swapRaw(c, r, d.out, d.into)) fail(e, "the swap wasn't possible"); break;
         case "dismiss": if (!dismissRaw(c, r, d.cls)) fail(e, `sending ${d.cls} home wasn't possible`); break;
         case "discard": if (!discardRaw(r, d.uid)) fail(e, `dropping ${d.uid} wasn't possible`); break;
+        case "junk": if (!junkRaw(r, d.uid, d.on)) fail(e, `${d.on ? "junking" : "unjunking"} ${d.uid} wasn't possible`); break;
         case "supply": if (!useSupplyRaw(c, r, d.id, d.target ?? undefined)) fail(e, `the ${d.id} couldn't be used`); else if (firstDiff(r.roster.map((m) => ({ cls: m.cls, missHp: m.missHp, missMp: m.missMp, ko: m.ko })), d.after)) fail(e, `the ${d.id} did something else`); break;
         case "fight": {
           if (d.replay) {
