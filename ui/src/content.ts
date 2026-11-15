@@ -76,7 +76,7 @@ export const className = (id: string): string => c.classes.get(id)?.name ?? id;
 const TAGLINE: Record<string, string> = {
   knight: "Guards the weakest ally and pulls foes onto itself.",
   cleric: "Keeps the party standing with quick heals and Regen.",
-  ranger: "Arrows that bleed, chill and sunder; each crit readies a dodge.",
+  ranger: "Crits to dodge and shoots bleed, chill, and sunder arrows.",
   bramble_knight: "Draws foes onto its thorns and leaves them bleeding.",
   hoplite: "Slow, heavy blows that sunder; Aegis saves an ally.",
   paladin: "Heals the party, condemns the strongest foe and smites it.",
