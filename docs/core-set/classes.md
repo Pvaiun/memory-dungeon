@@ -80,18 +80,18 @@ The starters cover every Fundamental challenge between them: a wall, a healer an
 
 ### Ranger
 
-**Role:** the marksman. **Trunk:** arrows that bleed, chill and sunder whatever stands in front; plain arrows past any guard that crit for a living.
+**Role:** the marksman. **Trunk:** arrows that bleed, chill and sunder whatever stands in front; plain arrows that crit for a living, and each crit leaves it ready to dodge the next blow.
 
-**Weapons:** bow, dagger. **Armor:** Leather. **Offhands:** trophy, cloak. **Special stats:** Accuracy medium, Evasion medium. **The line:** Attack and Crit high, a light body that slips aside rather than takes the blow.
+**Weapons:** bow, dagger. **Armor:** Leather. **Offhands:** trophy, cloak. **Special stats:** Accuracy medium, Evasion medium. **The line:** Attack high and Crit at the top (the Assassin's word: its crits are its survival), a light body that slips aside rather than takes the blow.
 
-- **Passive – Hunter's eye.** Its basic attacks ignore Taunt (they go to a random foe, Taunting or not) and crit more often (`KIT.hunterCrit` steps).
+- **Passive – Hunter's eye.** At fight start, and on each of its crits, it gains Dodge: the next hit on it misses. It survives by its crits, a blow at a time; Dodge doesn't stack, so a crit while it holds one adds nothing. Its arrows and swings meet a Taunt like anyone's.
 - **Barbed arrow.** Deals light damage that scales from Attack to a random foe, and adds several Bleed; stacks scale from Attack.
 - **Frost arrow.** Deals light damage that scales from Attack to the foe with the most Chill, and adds a few Chill; stacks scale from Attack. A second source of Chill, so the Frostweaver and the Hexer reach a shatter sooner.
 - **Rending arrow.** Deals damage that scales from Attack to the foe with the most Sunder, and adds a few Sunder; stacks scale from Attack.
 
-**Identities.** The marksman (dagger, trophy): Quarry, Gutting arrow. The skirmisher (dagger, cloak): **Quick draw** (each crit makes its next basic attack come at once), Barbed volley (a light arrow at every foe, each adding a few Bleed). The trapper (bow, horn): Lure (an arrow that Fixates the foe with the most Attack on the Ranger: a second anchor beside a wall), Hail (a quick arrow, and a few Chill on every foe), Armor breaker, Deep barbs.
+**Identities.** Every version of Hunter's eye keeps its Dodge; its power step is more Crit chance on every hit (`KIT.hunterCrit` steps), so more Dodges. The marksman (dagger, trophy): Quarry (its basic attacks aim at the foe with the lowest share of max HP), Gutting arrow. The skirmisher (dagger, cloak): **Quick draw** (each crit makes its next basic attack come at once), Barbed volley (a light arrow at every foe, each adding a few Bleed). The trapper (bow, horn): Lure (an arrow that Fixates the foe with the most Attack on the Ranger: a second anchor beside a wall), Hail (a quick arrow, and a few Chill on every foe), Armor breaker, Deep barbs.
 
-*Test, Shield wall:* its arrows have no Seek, so they go to the Taunting, Guarded foe, which gets Bleed, Chill and Sunder, and the Sunder raises the damage it takes, offsetting some of its Guard. Its basic attacks ignore Taunt and land, often critting, on the fragile dealers behind. Against a lone boss, everything stacks on one target.
+*Test, Shield wall:* nothing it has Seeks, so its arrows and swings go to the Taunting, Guarded foe, which gets Bleed, Chill and Sunder, and the Sunder raises the damage it takes, offsetting some of its Guard. The dealers behind are the party's to reach. Against a lone boss, everything stacks on one target, and its crits keep a Dodge waiting for the boss's blows.
 
 ## Defenders and support
 
@@ -174,18 +174,18 @@ Six classes that win through the party: a tank that punishes, a bruiser that hel
 
 ### Hexer
 
-**Role:** the spellblade. **Trunk:** a blade that carries curses: its swing chills, its curses deepen every affliction a foe already holds, it weakens and sunders the most dangerous one, and it silences a foe mid-cast and strips what it holds.
+**Role:** the spellblade. **Trunk:** a blade that carries curses: its swing chills, its curses deepen every affliction a foe already holds, it weakens every foe at once, and it silences a foe mid-cast and strips what it holds.
 
 **Weapons:** wand, sword. **Armor:** Mail. **Offhands:** tome, idol. **Special stats:** Siphon medium. **The line:** Attack high, a spellblade's body (HP and Defense average), Aggro at the bottom.
 
 - **Passive – Cold hex.** Its basic attacks add a few Chill, whatever weapon it carries; stacks scale from Attack.
 - **Malison.** Curses every foe: a light hit from Attack, a fifth more for each different affliction the foe holds (Burn, Chill, Shock, Bleed, Sunder), then a few Bleed. The Hexer pays for breadth where the mages are the sources: a mixed party is what makes it big, and the hit and the Bleed mean it does something alone.
 - **Unmake.** Applies Silence to the casting foe with the highest Attack and strips its buffs. Waits until a foe is in a wind-up; a buff alone doesn't draw it.
-- **Enfeeble.** Applies Weaken and adds a few Sunder to the foe with the highest Attack; stacks scale from Attack.
+- **Enfeeble.** Applies Weaken to every foe, on a medium cooldown, longer than Weaken lasts: the Weaken lapses between casts, so its party is covered in beats, not all fight. Its power step is a shorter cooldown and a cheaper cast, still longer than Weaken lasts.
 
-**Identities.** The spellbreaker (sword, idol): Silence all, Rebind (waits for an ally to be Stunned or Silenced, frees it and Hastes it: a curse-breaker for the party), Focused curse. The curser (sword, Mail): Wither, Withering hex (its basic attacks Weaken in place of Chill), Culmination. The elemental blade (wand, tome): Hex of flames, Plague (a lighter curse on every foe, then a few Burn, Shock and Bleed), Focused curse (three times the curse and the Bleed, on the foe with the highest Attack alone).
+**Identities.** The spellbreaker (sword, idol): Silence all, Rebind (waits for an ally to be Stunned or Silenced, frees it and Hastes it: a curse-breaker for the party), Focused curse. The curser (sword, Mail): Wither (every foe Weakened and given a few Sunder, at the size the old power step gave), Shackle (every foe Weakened and given several Shock: a slow foe swings softer at once), Withering hex (its basic attacks add Shock beside the Chill: the foe it keeps striking hits softer), Culmination. The elemental blade (wand, tome): Hex of flames (its basic attacks add Burn beside the Chill), Plague (a lighter curse on every foe, then a few Burn, Shock and Bleed), Focused curse (three times the curse and the Bleed, on the foe with the highest Attack alone).
 
-*Test, Buffer:* Unmake waits for the Buffer's wind-up, silences it and strips what it has already given. Malison's curse grows with every affliction the party has laid on the Buffer's allies. Enfeeble's Weaken and Sunder go to the foe with the highest Attack, which may be the Buffer's guard rather than the Buffer.
+*Test, Buffer:* Unmake waits for the Buffer's wind-up, silences it and strips what it has already given. Malison's curse grows with every affliction the party has laid on the Buffer's allies. Enfeeble's Weaken reaches the Buffer and its guard alike.
 
 ## Fighters
 
@@ -223,16 +223,16 @@ Three damage dealers, each beating Defense its own way: the Monk with Sunder, th
 
 ### Vampire
 
-**Role:** drains to outlast. **Trunk:** feeds on everything it hits: the harder it hits, the more it heals, its prey is left weakened, and it bleeds its own life into an ally's wounds and mana. An exotic class, at the director's word. Its identity is healing back from the brink, not sustain all fight.
+**Role:** drains to outlast. **Trunk:** feeds on everything it hits: the harder it hits, the more it heals, its prey is left bleeding, and it bleeds its own life into an ally's wounds and mana. An exotic class, at the director's word. Its identity is healing back from the brink, not sustain all fight.
 
 **Weapons:** fist weapons, axe. **Armor:** Mail. **Offhands:** vial, idol. **Special stats:** Lifesteal medium. **The line:** body as fuel: HP above average, Attack high.
 
 - **Passive – Bloodlust.** While it's below half of its max HP, its Lifesteal is doubled.
-- **Blood drain.** Deals damage that scales from max HP to a random foe, and applies Weaken. The one MP cost off the ladder: very cheap.
+- **Blood drain.** Deals damage that scales from max HP to a random foe, and adds a few Bleed; stacks scale from Attack. The one MP cost off the ladder: very cheap.
 - **Blood gift.** Spends a fifth of its max HP to heal the other ally with the lowest share of max HP for as much, and gives it Clarity. Waits until another ally is below 80% of its max HP and the Vampire itself is at 35% of its max HP or more, so the price never kills it.
 - **Frenzy.** Adds several Might to itself; stacks scale from Attack.
 
-**Identities.** The drinker (fist weapons for more hits, the axe for the drinking; Plate for the dark lord): Shared feast, Shepherd's thirst (Lifesteal doubled while any ally is below half HP, not only itself), Feeding frenzy. The blood-well (idol): Drain the well, Blood for mana, Lifeblood. The frenzy (fist weapons, vial): Savage drain (three quick hits from max HP, a third each, each drinking; the foe is Weakened), Bloodthirst (while it holds Might, its basic attacks come a third faster), Feeding frenzy.
+**Identities.** The drinker (fist weapons for more hits, the axe for the drinking; Plate for the dark lord): Shared feast, Shepherd's thirst (Lifesteal doubled while any ally is below half HP, not only itself), Feeding frenzy. The blood-well (idol): Drain the well, Blood for mana, Lifeblood. The frenzy (fist weapons, vial): Savage drain (three quick hits from max HP, a third each, each drinking and each adding a third of the base's Bleed), Bloodthirst (while it holds Might, its basic attacks come a third faster), Feeding frenzy.
 
 *Test, Regenerator:* the Vampire out-heals the boss by hitting it. Blood drain's share of max HP and every basic attack feed its Lifesteal, Frenzy raises both, and Blood gift turns the surplus into an ally's HP and mana. Against Anti-heal it falters: Rot cuts its own Lifesteal, and Blood gift's price is still paid.
 
@@ -257,11 +257,11 @@ Four mages, and they share no template: fire is the long cast, ice the wall that
 
 ### Frostweaver
 
-**Role:** the ice wall: a chunky supporting mage, and the Chill applier. **Trunk:** it lays Chill on the field and on the most-chilled foe until the Chill itself shatters, leaves the shattered foe sundered for the party, and keeps an ally's mana flowing while the frost builds. Nothing in its kit triggers a shatter and nothing applies Slow: Chill is its slow, and Chill detonates itself at its cap. Shattering reliably is a matter of stacks (`LANCE_CHILL`, `BLIZZARD_CHILL`, `STILLNESS_CHILL` against `STATUS.chill`).
+**Role:** the ice wall: a chunky supporting mage, and the Chill applier. **Trunk:** it opens each fight with a Shield on every ally, lays Chill on the field and on the most-chilled foe until the Chill itself shatters, leaves the shattered foe sundered for the party, and keeps an ally's mana flowing while the frost builds. Nothing in its kit triggers a shatter and nothing applies Slow: Chill is its slow, and Chill detonates itself at its cap. Shattering reliably is a matter of stacks (`LANCE_CHILL`, `BLIZZARD_CHILL`, `STILLNESS_CHILL` against `STATUS.chill`).
 
 **Weapons:** staff, rune sword. **Armor:** Robes, Mail. **Offhands:** tome, orb. **Special stats:** none. **The line:** HP and Defense average, Attack average: its power is in the field's Chill and the shelter it gives, and its body is its stat.
 
-- **Passive – Shatterpoint.** When a foe's Chill shatters, that foe takes several Sunder; stacks scale from Attack.
+- **Passive – Shatterpoint.** At fight start every ally, itself included, gains a Shield of a share of the Frostweaver's max HP (`SHATTERPOINT_SHIELD`): the ice wall's cover for a party with no wall, kept by every version and unscaled by the power step. When a foe's Chill shatters, that foe takes several Sunder; stacks scale from Attack.
 - **Frost lance.** Deals damage that scales from Attack to the foe with the most Chill, and adds several Chill; stacks scale from Attack.
 - **Blizzard.** Deals damage that scales from Attack to every foe, and adds a few Chill to each; stacks scale from Attack.
 - **Stillness.** Applies Clarity to the ally with the least MP among those under half their max MP (with nobody under half, the ally with the least), and adds a few Chill to every foe; stacks scale from Attack.
@@ -310,7 +310,7 @@ Different trios win different fights, and Burn, Chill and Shock each have more t
 | Skirmisher | Hexer, Frostweaver, Knight | Cold hex, Frost lance and Stillness keep Chill high until it shatters; Fortify's Guard blunts the many small hits | Pyromancer: long wind-ups against fast foes |
 | Tank buster | Knight, Hoplite, Pyromancer | Aggro keeps the boss on the Knight, who becomes the lowest and so gets Aspis's Aegis; Guard and Shield soften what gets through; Burn ramps safely | Bramble knight: one big swing triggers Thorns once |
 | Stalker | Geomancer, Assassin, Stormcaller | Chain lightning reaches the Hidden Stalker; Vanish hides its usual prey; Earthen shell covers the lowest | Ranger: its arrows can't pick a Hidden foe |
-| Summoner | Valkyrie, Ranger, Frostweaver | Gale spear skips the Taunting adds to strike the summoner; the Ranger's basic attacks ignore Taunt; Blizzard thins the adds | Knight: nothing it does gets past the Taunting adds |
+| Summoner | Valkyrie, Ranger, Frostweaver | Gale spear skips the Taunting adds to strike the summoner; the Ranger's crits keep a Dodge up while its arrows clear the adds; Blizzard thins the adds and Shatterpoint's opening Shield covers the party | Knight: nothing it does gets past the Taunting adds |
 | Buffer | Hexer, Paladin, Knight | Unmake silences the Buffer mid-cast and strips its buffs; Judgement lands half again as hard on whatever is still buffed; Shield bash Stuns | Stormcaller: spreads damage instead of stopping the Buffer |
 | Hit counter (boss) | Geomancer, Knight, Ranger | Shielded, the Geomancer lands few hits that crit hard; Earthen shell keeps it shielded | Monk, Stormcaller: many small hits set off the counter |
 | Damage race (boss) | Bard, Monk, Pyromancer | War ballad's Might, Haste from Allegro and Flow, and Encore on the Pyromancer's casts; Burn comes from two sources | Hoplite: protects, but can't win a race |
