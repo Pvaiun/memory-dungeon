@@ -347,7 +347,7 @@ export const classes: ClassDefT[] = [
     source: "starter", stats: stat(2, 5, 4, 3, 2, 1, 1), weapons: ["mace", "staff", "wand"], armor: ["robes", "mail"], offhands: ["relic", "lantern", "vial"], passive: p("last_rites", "Last rites"),
   }),
   cls("ranger", "Ranger", "The marksman. Looses barbed, cold and rending arrows at whatever stands in front, crits for a living, and each crit leaves it ready to dodge the next blow.", {
-    source: "starter", stats: { ...stat(3, 3, 3, 4, 2, 5, 2), ...special("accuracy", "medium"), ...special("evasion", "medium") }, weapons: ["bow", "dagger", "axe"], armor: ["leather"], offhands: ["trophy", "cloak", "horn"], passive: p("hunters_eye", "Hunter's eye"),
+    source: "starter", stats: { ...stat(3, 3, 3, 4, 2, 4, 2), ...special("accuracy", "medium"), ...special("evasion", "medium") }, weapons: ["bow", "dagger", "axe"], armor: ["leather"], offhands: ["trophy", "cloak", "horn"], passive: p("hunters_eye", "Hunter's eye"),
   }),
   cls("bramble_knight", "Bramble knight", "Thorns tank. Draws every foe onto its thorns, where each attacker is left bleeding for the party's blows, gives Regen to the ally with the lowest HP%, and lashes out with the thorns themselves.", {
     stats: { ...stat(5, 2, 2, 2, 3, 1, 5), ...special("thorns", "high") }, weapons: ["hammer", "mace", "great_weapon"], armor: ["plate", "mail"], offhands: ["totem", "round_shield", "idol"], passive: p("briar", "Briar"),

@@ -1,23 +1,22 @@
 /** The Ranger's upgrades: a power step and two versions (A and B) for each ability and the passive. Written with kit.ts. */
 import type { AbilityT, StatusT } from "../../../src/schema.js";
 import { own } from "../pieces/kit.js";
-import { crit, from, KIT, stacks } from "../scale.js";
+import { from, KIT, stacks } from "../scale.js";
 import { HUNTERS_EYE, T } from "../classes.js";
 import { abilityUp, apply, cd, helper, hitOf, kit, passiveUp, phys, POWER, r6 } from "./kit.js";
 
 {
-  const crits = (n: number): Partial<StatusT> => ({ crits: [{ chance: crit(n) }] });
   const quarry: Partial<StatusT> = { aim: { rule: { side: "foes", pick: "lowest", by: "hp_share" } } };
   /** Quick draw: each crit readies its next basic attack at once; the swing's recovery still passes between two. */
   const quickDraw: Partial<StatusT> = { reactions: [{ on: { event: "hit_lands", tags: ["crit"] }, do: [{ op: "cooldown", which: "basic", set: "ready", to: "holder" }] }] };
   // Every form keeps the Dodge at fight start and on a crit (HUNTERS_EYE); the power step is more crits, so more Dodges.
   passiveUp({
     id: "hunters_eye", cls: "ranger",
-    power: `+${crit(KIT.hunterCrit)}% Crit chance.`,
+    power: `+${KIT.hunterCrit}% Crit chance.`,
     a: { name: "Quarry", text: "At fight start and on a crit: gains Dodge. Basic attacks aim at the foe with the lowest HP%.", serves: "Hunt 1 ●●●" },
     b: { name: "Quick draw", text: "At fight start and on a crit: gains Dodge, and its next basic attack is ready at once.", serves: "Cuts 2 ●●●, Hunt ●● ⚙ emptied quiver (key)" },
     form: (v, _k, plus) => ({
-      ...(plus ? crits(KIT.hunterCrit) : {}),
+      ...(plus ? { crits: [{ chance: KIT.hunterCrit }] } : {}),
       ...(v === "a" ? quarry : {}),
       reactions: [...HUNTERS_EYE, ...(v === "b" ? quickDraw.reactions! : [])],
     }),

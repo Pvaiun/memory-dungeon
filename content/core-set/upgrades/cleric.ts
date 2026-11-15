@@ -1,8 +1,8 @@
 /** The Cleric's upgrades: a power step and two versions (A and B) for each ability and the passive. Written with kit.ts. */
 import type { AbilityT, EffectT, NumT, ReactionT } from "../../../src/schema.js";
-import { from, WINDUP } from "../scale.js";
+import { from, stacks, WINDUP } from "../scale.js";
 import { T } from "../classes.js";
-import { abilityUp, apply, DRAWN, helper, kit, ofHolder, passiveUp, removeMine } from "./kit.js";
+import { abilityUp, apply, baseAbility, helper, kit, ofHolder, passiveUp, removeMine } from "./kit.js";
 
 {
   const on = apply("last_rites_on", { to: "holder" });
@@ -42,13 +42,14 @@ import { abilityUp, apply, DRAWN, helper, kit, ofHolder, passiveUp, removeMine }
 
 {
   const font: Partial<AbilityT> = { do: [{ op: "remove", label: "debuff" }, apply("regen"), apply("clarity")] };
-  const anchor: Partial<AbilityT> = { target: DRAWN };
+  /** Champion's blessing: the ally with the most Attack, cleansed, with Regen and Might from the Cleric's Attack (Frenzy's word). */
+  const champion: Partial<AbilityT> = { target: T.highestAMAlly, do: [{ op: "remove", label: "debuff" }, apply("regen"), apply("might", { stacks: stacks("several", "attack") })] };
   abilityUp({
     id: "renew", cls: "cleric",
     power: "Costs less MP.", shown: true,
     a: { name: "Font", text: "Cleanses the ally with the lowest HP%, a debuffed one first, and gives it Regen and Clarity.", builds: ["barrage"] },
-    b: { name: "Anchor's blessing", text: "Cleanses the ally with the most Aggro and gives it Regen.", builds: ["toll"] },
-    form: (v, _k, plus) => ({ ...(v === "a" ? font : v === "b" ? anchor : {}), ...(plus ? { mp: 450 } : {}) }),
+    b: { name: "Champion's blessing", text: "Cleanses the ally with the most Attack and gives it Regen and Might.", builds: ["landslide", "hunt"] },
+    form: (v, _k, plus) => ({ ...(v === "a" ? font : v === "b" ? champion : {}), ...(plus ? { mp: 450 } : {}) }),
   });
 }
 
@@ -79,9 +80,14 @@ import { abilityUp, apply, DRAWN, helper, kit, ofHolder, passiveUp, removeMine }
 
 {
   const raiseHp = (ratio: number): NumT => ({ scale: [{ ratio, stat: "max_hp", of: "target" }] });
-  /** Martyr's raise: the revive reads the Cleric's HP first, then the Cleric pays half its current HP (a price, not damage). No MP. */
+  /**
+   * Martyr's raise: the revive reads the Cleric's HP first, then the Cleric pays half its current HP (a price, not damage). No MP,
+   * and a cooldown 40% shorter than Raise's (MARTYR_COOLDOWN of it).
+   */
+  const MARTYR_COOLDOWN = 0.6;
   const martyr = (ratio: number): Partial<AbilityT> => ({
     mp: 0,
+    cooldown: Math.round(baseAbility("raise").cooldown * MARTYR_COOLDOWN * 10) / 10,
     do: [{ op: "revive", hp: { scale: [{ ratio, hp: "current", of: "self" }] } }, { op: "pay", hp: { scale: [{ ratio: 0.5, hp: "current", of: "self" }] }, to: "self" }],
   });
   /**

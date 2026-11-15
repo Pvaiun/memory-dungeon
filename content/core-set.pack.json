@@ -15466,7 +15466,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "At fight start and on a crit: gains Dodge. +5% Crit chance.",
+   "text": "At fight start and on a crit: gains Dodge. +6% Crit chance.",
    "reactions": [
     {
      "on": {
@@ -15498,7 +15498,7 @@
    ],
    "crits": [
     {
-     "chance": 5
+     "chance": 6
     }
    ]
   },
@@ -15608,7 +15608,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "At fight start and on a crit: gains Dodge. Basic attacks aim at the foe with the lowest HP%. +5% Crit chance.",
+   "text": "At fight start and on a crit: gains Dodge. Basic attacks aim at the foe with the lowest HP%. +6% Crit chance.",
    "reactions": [
     {
      "on": {
@@ -15640,7 +15640,7 @@
    ],
    "crits": [
     {
-     "chance": 5
+     "chance": 6
     }
    ],
    "aim": {
@@ -15658,7 +15658,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "At fight start and on a crit: gains Dodge, and its next basic attack is ready at once. +5% Crit chance.",
+   "text": "At fight start and on a crit: gains Dodge, and its next basic attack is ready at once. +6% Crit chance.",
    "reactions": [
     {
      "on": {
@@ -15706,7 +15706,7 @@
    ],
    "crits": [
     {
-     "chance": 5
+     "chance": 6
     }
    ]
   },
@@ -21392,7 +21392,7 @@
     "mp_regen": 0,
     "attack": 4000,
     "defense": 2000,
-    "crit_chance": 20,
+    "crit_chance": 16,
     "aggro": 90,
     "accuracy": 20,
     "evasion": 20
@@ -24902,20 +24902,18 @@
   {
    "id": "renew__b",
    "class": "cleric",
-   "name": "Anchor's blessing",
-   "text": "Cleanses the ally with the most Aggro and gives it Regen.",
+   "name": "Champion's blessing",
+   "text": "Cleanses the ally with the most Attack and gives it Regen and Might.",
    "cooldown": 29.3,
    "cast": 3,
    "mp": 650,
    "target": {
     "side": "allies",
-    "where": {
-     "has": "taunt"
-    },
-    "ifNone": "any",
     "pick": "highest",
     "by": {
-     "stat": "aggro"
+     "stats": [
+      "attack"
+     ]
     }
    },
    "do": [
@@ -24926,6 +24924,18 @@
     {
      "op": "apply",
      "status": "regen"
+    },
+    {
+     "op": "apply",
+     "status": "might",
+     "stacks": {
+      "scale": [
+       {
+        "ratio": 0.0026,
+        "stat": "attack"
+       }
+      ]
+     }
     }
    ]
   },
@@ -24964,20 +24974,18 @@
   {
    "id": "renew__bp",
    "class": "cleric",
-   "name": "Anchor's blessing+",
-   "text": "Cleanses the ally with the most Aggro and gives it Regen.",
+   "name": "Champion's blessing+",
+   "text": "Cleanses the ally with the most Attack and gives it Regen and Might.",
    "cooldown": 29.3,
    "cast": 3,
    "mp": 450,
    "target": {
     "side": "allies",
-    "where": {
-     "has": "taunt"
-    },
-    "ifNone": "any",
     "pick": "highest",
     "by": {
-     "stat": "aggro"
+     "stats": [
+      "attack"
+     ]
     }
    },
    "do": [
@@ -24988,6 +24996,18 @@
     {
      "op": "apply",
      "status": "regen"
+    },
+    {
+     "op": "apply",
+     "status": "might",
+     "stacks": {
+      "scale": [
+       {
+        "ratio": 0.0026,
+        "stat": "attack"
+       }
+      ]
+     }
     }
    ]
   },
@@ -25206,7 +25226,7 @@
    "class": "cleric",
    "name": "Martyr's raise",
    "text": "Pays 50% of its HP to raise a random fallen ally with that much.",
-   "cooldown": 55.9,
+   "cooldown": 33.5,
    "cast": 8,
    "mp": 0,
    "if": {
@@ -25321,7 +25341,7 @@
    "class": "cleric",
    "name": "Martyr's raise+",
    "text": "Pays 50% of its HP to raise a random fallen ally with that much. Raises with 40% more HP than it pays.",
-   "cooldown": 55.9,
+   "cooldown": 33.5,
    "cast": 8,
    "mp": 0,
    "if": {
@@ -33650,8 +33670,8 @@
     "text": "Cleanses the ally with the lowest HP%, a debuffed one first, and gives it Regen and Clarity."
    },
    "b": {
-    "name": "Anchor's blessing",
-    "text": "Cleanses the ally with the most Aggro and gives it Regen."
+    "name": "Champion's blessing",
+    "text": "Cleanses the ally with the most Attack and gives it Regen and Might."
    }
   },
   {
@@ -33686,7 +33706,7 @@
    "id": "hunters_eye",
    "class": "ranger",
    "kind": "passive",
-   "power": "+5% Crit chance.",
+   "power": "+6% Crit chance.",
    "a": {
     "name": "Quarry",
     "text": "At fight start and on a crit: gains Dodge. Basic attacks aim at the foe with the lowest HP%."

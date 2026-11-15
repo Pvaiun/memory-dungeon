@@ -33,14 +33,11 @@ Built from the director's list (`changes.md`, with the rulings of Nov 15). `desi
    - **(a) Leave the knobs (my pick):** the step is the weak builds' survival, and re-setting the knobs would take it back from everyone.
    - **(b) Re-set the bosses** with `rogue:tune` to bring the average back to target.
 
-4. **The Ranger's crit sits on the Assassin's word** (20%, the class line's 5). That's your ruling. Note it, since a stat line is a signpost. It's also the change that moves a class most. On the balance sheet's rogue set, parties with the Ranger win 8.0 points over parties without it, up from 4.1, at the band's edge (±8). The Hunt's and Thousand Cuts' Rangers are much of the bosses' gain above.
-   - Other classes moved less: the Frostweaver −4.4 → −1.6, the Stormcaller −6.5 → −5.3, the Hexer +0.2 → +1.1, and every other class within about 1.5 points.
-   - The Cleric was outside the band before (−8.7) and is now −9.3: the walls' new layers leave its heals less to do.
-   - If the Ranger reads too strong in play, its crit back at 16% is the first lever: Dodge rides on its crits.
+4. **Ruled after the first read:** the Ranger's crit stays at 16% (a stat line is a signpost), and Hunter's eye's power step gives +6% Crit chance. The numbers above were measured at 20%. The Ranger's 20% had moved its class line on the balance sheet's rogue set from +4.1 to +8.0, the band's edge, and was much of the Hunt's and Thousand Cuts' boss gain; expect some of that back. The Cleric, outside the band before (−8.7), was −9.3.
 
 ## What I chose where the list left it open
 
-- **Hunter's eye's power step:** +5% Crit chance on every hit (`KIT.hunterCrit`). More crits means more Dodges. Quarry keeps aiming at the foe with the lowest HP%; Quick draw keeps its ready swing. Both keep the Dodge, and neither ignores Taunt any more.
+- **Hunter's eye's power step:** +6% Crit chance on every hit (`KIT.hunterCrit`, your ruling). More crits means more Dodges. Quarry keeps aiming at the foe with the lowest HP%; Quick draw keeps its ready swing. Both keep the Dodge, and neither ignores Taunt any more.
 - **Enfeeble's power step:** its cooldown goes from 27.1 ticks to 23, and its cost from 650 MP to 450. The short word would give 19.8 ticks, under Weaken's 20, and the Weaken would never lapse. Wither's Sunder is the few word ×1.4, the old step's size.
 - **The Hexer's Shock** (decision-free, but you asked for it):
   - **Withering hex** (Cold hex B) lays Shock on every swing at the size the Stormcaller's Arc lays.
@@ -57,7 +54,10 @@ Built from the director's list (`changes.md`, with the rulings of Nov 15). `desi
 - **Weaken** is −50%. **Shock** cuts its holder's hits 1% a stack, read when the hit lands (before Shock drains for the action).
 - **Hexer:** Enfeeble Weakens every foe on a medium cooldown. Wither adds Sunder, and Shackle adds Shock. Hex of flames adds Chill and Burn, and Withering hex Chill and Shock.
 - **Vampire:** Blood drain and Savage drain add Bleed, and Drain the well says "No Bleed."
-- **Ranger:** Crit 20%. Hunter's eye gives Dodge at fight start and on a crit, and nothing ignores Taunt.
+- **Ranger:** Hunter's eye gives Dodge at fight start and on a crit, and nothing ignores Taunt. Its Crit stays at 16%.
+- **Cleric** (your rulings, after the first read):
+  - Renew's version B is Champion's blessing: the ally with the most Attack, cleansed, with Regen and several Might from the Cleric's Attack (about 8 stacks at Attack 3). It's tagged for Landslide and the Hunt.
+  - Martyr's raise has a cooldown 40% shorter than Raise's. Neither was measured.
 - **Frostweaver:** Shatterpoint opens each fight with the Shield on every ally.
 - **Documents:** the vocabulary (Weaken, Shock, Dodge, 27 statuses), the four classes, the primer, and two stray mentions of Hunter's eye's Taunt (the Summoner trio, the Avenger's answers).
 

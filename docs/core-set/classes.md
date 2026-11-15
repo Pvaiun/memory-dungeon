@@ -74,7 +74,7 @@ The starters cover every Fundamental challenge between them: a wall, a healer an
 - **Cure.** Heals the ally with the lowest share of max HP; the amount scales from Attack. A quick, small top-up. Waits until an ally is below 80% of its max HP.
 - **Raise.** Revives a random knocked-out ally with half of its max HP. Waits until an ally is knocked out.
 
-**Identities.** The mender (mace, lantern): **Triage** (heals from the Cleric's own max HP), Martyr's raise, Shared rites. The anchor's priest (mace, relic): Anchor's blessing, Ward of life (its Shield from the Cleric's max HP), Rite of passage. The font (staff, or the mace with the relic): Font, Battle prayer.
+**Identities.** The mender (mace, lantern): **Triage** (heals from the Cleric's own max HP), Martyr's raise (pays half its HP to raise with as much, for no MP, on a cooldown 40% shorter than Raise's), Shared rites. The anchor's priest (mace, relic): Ward of life (its Shield from the Cleric's max HP), Rite of passage. The font (staff, or the mace with the relic): Font, Battle prayer, Champion's blessing (Renew on the ally with the most Attack: cleansed, with Regen and several Might from the Cleric's Attack, so the party's striker hits hard while it mends).
 
 *Test, Raidwide:* every boss hit lands on all three. Cure keeps topping up whoever is lowest and Renew's Regen ticks on one ally at a time, both paid in MP, so a long fight can run it dry. Under Anti-heal, Rot cuts both, so there the Cleric is the wrong pick.
 
@@ -82,14 +82,14 @@ The starters cover every Fundamental challenge between them: a wall, a healer an
 
 **Role:** the marksman. **Trunk:** arrows that bleed, chill and sunder whatever stands in front; plain arrows that crit for a living, and each crit leaves it ready to dodge the next blow.
 
-**Weapons:** bow, dagger. **Armor:** Leather. **Offhands:** trophy, cloak. **Special stats:** Accuracy medium, Evasion medium. **The line:** Attack high and Crit at the top (the Assassin's word: its crits are its survival), a light body that slips aside rather than takes the blow.
+**Weapons:** bow, dagger. **Armor:** Leather. **Offhands:** trophy, cloak. **Special stats:** Accuracy medium, Evasion medium. **The line:** Attack and Crit high, a light body that slips aside rather than takes the blow.
 
 - **Passive – Hunter's eye.** At fight start, and on each of its crits, it gains Dodge: the next hit on it misses. It survives by its crits, a blow at a time; Dodge doesn't stack, so a crit while it holds one adds nothing. Its arrows and swings meet a Taunt like anyone's.
 - **Barbed arrow.** Deals light damage that scales from Attack to a random foe, and adds several Bleed; stacks scale from Attack.
 - **Frost arrow.** Deals light damage that scales from Attack to the foe with the most Chill, and adds a few Chill; stacks scale from Attack. A second source of Chill, so the Frostweaver and the Hexer reach a shatter sooner.
 - **Rending arrow.** Deals damage that scales from Attack to the foe with the most Sunder, and adds a few Sunder; stacks scale from Attack.
 
-**Identities.** Every version of Hunter's eye keeps its Dodge; its power step is more Crit chance on every hit (`KIT.hunterCrit` steps), so more Dodges. The marksman (dagger, trophy): Quarry (its basic attacks aim at the foe with the lowest share of max HP), Gutting arrow. The skirmisher (dagger, cloak): **Quick draw** (each crit makes its next basic attack come at once), Barbed volley (a light arrow at every foe, each adding a few Bleed). The trapper (bow, horn): Lure (an arrow that Fixates the foe with the most Attack on the Ranger: a second anchor beside a wall), Hail (a quick arrow, and a few Chill on every foe), Armor breaker, Deep barbs.
+**Identities.** Every version of Hunter's eye keeps its Dodge; its power step is more Crit chance on every hit (`KIT.hunterCrit`), so more Dodges. The marksman (dagger, trophy): Quarry (its basic attacks aim at the foe with the lowest share of max HP), Gutting arrow. The skirmisher (dagger, cloak): **Quick draw** (each crit makes its next basic attack come at once), Barbed volley (a light arrow at every foe, each adding a few Bleed). The trapper (bow, horn): Lure (an arrow that Fixates the foe with the most Attack on the Ranger: a second anchor beside a wall), Hail (a quick arrow, and a few Chill on every foe), Armor breaker, Deep barbs.
 
 *Test, Shield wall:* nothing it has Seeks, so its arrows and swings go to the Taunting, Guarded foe, which gets Bleed, Chill and Sunder, and the Sunder raises the damage it takes, offsetting some of its Guard. The dealers behind are the party's to reach. Against a lone boss, everything stacks on one target, and its crits keep a Dodge waiting for the boss's blows.
 
