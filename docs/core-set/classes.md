@@ -54,7 +54,7 @@ The starters cover every Fundamental challenge between them: a wall, a healer an
 
 **Weapons:** sword, hammer. **Armor:** Plate. **Offhands:** kite shield, horn. **Special stats:** none. **The line:** all body, no edge: HP and Aggro at the top, Attack and Crit at the bottom.
 
-- **Passive – Vanguard.** It starts every fight behind a Shield that scales from its max HP.
+- **Passive – Vanguard.** It starts every fight behind a Shield that scales from its max HP: half a Shield's cap (`VANGUARD_SHIELD`).
 - **Fortify.** Applies Guard to the ally with the lowest share of max HP.
 - **Stand fast.** Applies Taunt to itself, and Clarity to the ally with the least MP among those under half their max MP (with nobody under half, the ally with the least).
 - **Shield bash.** Deals damage that scales from max HP to a random foe, and applies Stun.
@@ -292,7 +292,7 @@ Four mages, and they share no template: fire is the long cast, ice the wall that
 **Weapons:** hammer, great weapon. **Armor:** Plate. **Offhands:** kite shield, trophy. **Special stats:** Crit damage high. **The line:** Defense at the top, Crit high, Attack average.
 
 - **Passive – Bedrock.** While its Shield pool is above zero, its crit chance is doubled.
-- **Earthen shell.** Applies Shield to itself and to the other ally with the lowest share of max HP; the amount scales from Defense.
+- **Earthen shell.** Applies Shield to itself and to the other ally with the lowest share of max HP; the amount scales from Defense, about half a Shield's cap a cast (`EARTHEN_SHELL`), so a full Shield takes two.
 - **Rockfall.** Deals heavy damage that scales from Defense to a random foe, on a medium cooldown: big, rarer rocks.
 - **Tremor.** Deals damage that scales from Defense to a random foe, and applies Stun.
 

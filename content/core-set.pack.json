@@ -1177,7 +1177,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "At fight start: a Shield of 33% of max HP.",
+   "text": "At fight start: a Shield of 25% of max HP.",
    "reactions": [
     {
      "on": {
@@ -1190,7 +1190,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.33,
+          "ratio": 0.25,
           "stat": "max_hp",
           "of": "holder"
          }
@@ -14592,7 +14592,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "At fight start: a Shield of 33% of max HP. Shield +40%.",
+   "text": "At fight start: a Shield of 25% of max HP. Shield +40%.",
    "reactions": [
     {
      "on": {
@@ -14605,7 +14605,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.462,
+          "ratio": 0.35,
           "stat": "max_hp",
           "of": "holder"
          }
@@ -14624,7 +14624,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "At fight start: a Shield of 33% of max HP, for itself and the other ally with the least Aggro.",
+   "text": "At fight start: a Shield of 25% of max HP, for itself and the other ally with the least Aggro.",
    "reactions": [
     {
      "on": {
@@ -14637,7 +14637,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.33,
+          "ratio": 0.25,
           "stat": "max_hp",
           "of": "holder"
          }
@@ -14651,7 +14651,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.33,
+          "ratio": 0.25,
           "stat": "max_hp",
           "of": "holder"
          }
@@ -14676,7 +14676,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "At fight start: a Shield of 33% of max HP. When it breaks: Taunts and is Guarded.",
+   "text": "At fight start: a Shield of 25% of max HP. When it breaks: Taunts and is Guarded.",
    "reactions": [
     {
      "on": {
@@ -14689,7 +14689,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.33,
+          "ratio": 0.25,
           "stat": "max_hp",
           "of": "holder"
          }
@@ -14729,7 +14729,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "At fight start: a Shield of 33% of max HP, for itself and the other ally with the least Aggro. Shield +40%.",
+   "text": "At fight start: a Shield of 25% of max HP, for itself and the other ally with the least Aggro. Shield +40%.",
    "reactions": [
     {
      "on": {
@@ -14742,7 +14742,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.462,
+          "ratio": 0.35,
           "stat": "max_hp",
           "of": "holder"
          }
@@ -14756,7 +14756,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.462,
+          "ratio": 0.35,
           "stat": "max_hp",
           "of": "holder"
          }
@@ -14781,7 +14781,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "At fight start: a Shield of 33% of max HP. When it breaks: Taunts and is Guarded. Shield +40%.",
+   "text": "At fight start: a Shield of 25% of max HP. When it breaks: Taunts and is Guarded. Shield +40%.",
    "reactions": [
     {
      "on": {
@@ -14794,7 +14794,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 0.462,
+          "ratio": 0.35,
           "stat": "max_hp",
           "of": "holder"
          }
@@ -19861,7 +19861,7 @@
        "stacks": {
         "scale": [
          {
-          "ratio": 1,
+          "ratio": 0.166666667,
           "stat": "defense",
           "of": "holder"
          }
@@ -20952,7 +20952,7 @@
    ],
    "passive": {
     "name": "Vanguard",
-    "text": "At fight start: a Shield of 33% of max HP.",
+    "text": "At fight start: a Shield of 25% of max HP.",
     "statuses": [
      "vanguard"
     ]
@@ -23243,7 +23243,7 @@
      "stacks": {
       "scale": [
        {
-        "ratio": 1,
+        "ratio": 0.16666666666666666,
         "stat": "defense"
        }
       ]
@@ -23261,7 +23261,7 @@
      "stacks": {
       "scale": [
        {
-        "ratio": 1,
+        "ratio": 0.16666666666666666,
         "stat": "defense"
        }
       ]
@@ -32695,7 +32695,7 @@
      "stacks": {
       "scale": [
        {
-        "ratio": 1,
+        "ratio": 0.166666667,
         "stat": "defense"
        }
       ]
@@ -32713,7 +32713,7 @@
      "stacks": {
       "scale": [
        {
-        "ratio": 1,
+        "ratio": 0.166666667,
         "stat": "defense"
        }
       ]
@@ -32757,7 +32757,7 @@
      "stacks": {
       "scale": [
        {
-        "ratio": 0.35,
+        "ratio": 0.058333333,
         "stat": "defense"
        }
       ]
@@ -32787,7 +32787,7 @@
      "stacks": {
       "scale": [
        {
-        "ratio": 1,
+        "ratio": 0.166666667,
         "stat": "defense"
        }
       ]
@@ -32831,7 +32831,7 @@
      "stacks": {
       "scale": [
        {
-        "ratio": 0.35,
+        "ratio": 0.058333333,
         "stat": "defense"
        }
       ]
@@ -32861,7 +32861,7 @@
      "stacks": {
       "scale": [
        {
-        "ratio": 1,
+        "ratio": 0.166666667,
         "stat": "defense"
        }
       ]
@@ -33172,11 +33172,11 @@
    "power": "Shield +40%.",
    "a": {
     "name": "Stonewall",
-    "text": "At fight start: a Shield of 33% of max HP, for itself and the other ally with the least Aggro."
+    "text": "At fight start: a Shield of 25% of max HP, for itself and the other ally with the least Aggro."
    },
    "b": {
     "name": "Grudge",
-    "text": "At fight start: a Shield of 33% of max HP. When it breaks: Taunts and is Guarded."
+    "text": "At fight start: a Shield of 25% of max HP. When it breaks: Taunts and is Guarded."
    }
   },
   {
