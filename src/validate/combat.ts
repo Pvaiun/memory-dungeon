@@ -513,7 +513,7 @@ export class Combat {
       const empty = !st.stats && !st.boosts && !st.taken && !st.absorb && !st.block && !st.lockout && !st.riders && !st.seek && !st.strike && !st.pulse && !st.trigger && !st.reactions
         && !st.focus && !st.aim && !st.mods && !st.crits && !st.echo && !st.set && !st.cover && !st.floor && !st.heals && !st.revives
         && !st.adds && !st.healCap && !st.soak && !st.divert && !st.swap && !st.tireless && !st.order && !st.borrow
-        && !st.confuse && !st.fixate && !st.critsTaken && !st.owe && !st.debt && !st.rescale && !st.sharesHeals && !st.drawBy && !st.spare;
+        && !st.confuse && !st.fixate && !st.critsTaken && !st.dodge && !st.owe && !st.debt && !st.rescale && !st.sharesHeals && !st.drawBy && !st.spare;
       // A marker is bookkeeping, read by name, so it may have no effects of its own.
       if (empty && st.label !== "marker") this.r.warn("status.empty", p, `status '${st.id}' has no effects`);
     });

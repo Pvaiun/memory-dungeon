@@ -25,6 +25,14 @@ const partTags = (kind: string | null, p: Part, extra: readonly string[] = []) =
 
 /** Hits only: one roll per hit (or rider) on the attacker's dice. */
 function evaded(w: W, a: CUnit, t: CUnit): boolean {
+  // A Dodge takes the next hit whatever the dice say, and is spent with it.
+  if (feats(w.c).dodge) {
+    const s = t.statuses.find((x) => def(w, x.id).dodge);
+    if (s) {
+      endStatus(w, t, s, "spent", { other: a });
+      return true;
+    }
+  }
   const cap = w.c.stats.get("evasion")?.cap ?? 100;
   const chance = Math.min(cap, Math.max(0, stat(w, t, "evasion") - stat(w, a, "accuracy")));
   if (chance <= 0) return false;

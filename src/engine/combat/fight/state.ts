@@ -154,7 +154,7 @@ export const world = (c: Content, f: CFight, log?: (e: Entry) => void): W => ({ 
 type Feats = {
   mods: boolean; crits: boolean; cover: boolean; floor: boolean; heals: boolean; revives: boolean; adds: boolean; soak: boolean; healCap: boolean; divert: boolean;
   party: boolean; borrow: boolean; tireless: boolean; order: boolean; swap: boolean; live: boolean;
-  confuse: boolean; fixate: boolean; critsTaken: boolean; owe: boolean; rescale: boolean; sharesHeals: boolean; drawBy: boolean; spare: boolean;
+  confuse: boolean; fixate: boolean; critsTaken: boolean; dodge: boolean; owe: boolean; rescale: boolean; sharesHeals: boolean; drawBy: boolean; spare: boolean;
   /** Some status's effects rewind HP, so units keep their HP's history. */
   rewind: boolean;
   /** The HP lines content watches (hp_low, hp_high), in percent of max HP. */
@@ -172,7 +172,7 @@ export function feats(c: Content): Feats {
       mods: any("mods"), crits: any("crits"), cover: any("cover"), floor: any("floor"), heals: any("heals"), revives: any("revives"), adds: any("adds"), soak: any("soak"),
       healCap: any("healCap"), divert: any("divert"), party: any("party"), borrow: any("borrow"), tireless: any("tireless"), order: any("order"), swap: any("swap"),
       live: ss.some((s) => s.stats?.some((ch) => ch.live)), lines: [...lines].sort((a, b) => a - b),
-      confuse: any("confuse"), fixate: any("fixate"), critsTaken: any("critsTaken"), owe: any("owe"), rescale: any("rescale"), sharesHeals: any("sharesHeals"), drawBy: any("drawBy"), spare: any("spare"),
+      confuse: any("confuse"), fixate: any("fixate"), critsTaken: any("critsTaken"), dodge: any("dodge"), owe: any("owe"), rescale: any("rescale"), sharesHeals: any("sharesHeals"), drawBy: any("drawBy"), spare: any("spare"),
       rewind: ss.some((s) => [...(s.pulse?.do ?? []), ...(s.trigger?.do ?? []), ...(s.reactions ?? []).flatMap((r) => r.do)].some((e) => e.op === "rewind")),
     };
     featCache.set(c, x);
