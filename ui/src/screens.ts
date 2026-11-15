@@ -9,6 +9,7 @@ import { enemyDisplayName } from "./art.js";
 import { button, h, header, nav, row, settleBack, win, type Child } from "./dom.js";
 import { abilitiesFor, applyHeadStart, BAR_SHOWS, FX_SPEEDS, gearFor, HEAD_STARTS, HIT_PAUSES, SPEEDS, reset, save, setup } from "./state.js";
 import { onRogue, setMode } from "./mode.js";
+import { classUpgrades } from "./upgrades.js";
 import { FILTER_NAMES, FILTERS, setFilter } from "./filter.js";
 import { anyNewEnemy, known, look, metCount, newEnemy } from "./bestiary.js";
 import { aggShares, abilityBlock, basicLine, canUse, classHead, classPassive, enemySheet, gearRow, lockedRow, memberFor, portraitEl, RARITY_TONE, role, seatCodes, seatNotes, section, SLOTS, specialLines, statGrid, twoHanded, type GearSlot } from "./sheet.js";
@@ -314,6 +315,8 @@ function unit(arg?: unknown): Child[] {
       section("ABILITIES", orderPick === null ? null : h("span", { class: "hi" }, "SWAP WITH?")),
       ...order.map((a, i) => abilityBlock(c.abilities.get(a)!, member.stats, { n: i + 1, onN: () => onN(i), cur: orderPick === i, target: orderPick !== null && orderPick !== i })),
       basicLine(weaponOf(c, member.weapon), member.stats, { ref: member.weapon }),
+      // From the class list, everything each ability and the passive can be trained into in the rogue mode.
+      ...(unitFrom === "classes" ? classUpgrades(id, member.stats) : []),
     ),
   ];
 }
