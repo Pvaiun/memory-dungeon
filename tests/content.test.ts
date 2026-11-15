@@ -49,3 +49,16 @@ test("the party files the command-line tools use are valid against the pack", ()
     assert.deepEqual(errors.map((i) => `${i.path}: ${i.message}`), [], `content/parties/${file}`);
   }
 });
+
+// A bigger max is never a heal (docs/core-set/rogue-mode.md, Max, not current): max HP a status adds in a fight sits outside
+// the sheet, so nothing outside a fight can fill it. A piece's own max HP is on its stats; a status that raises max HP in a
+// fight heals into the room itself.
+test("no status adds max HP unless it heals into the room it makes", () => {
+  const pack: ContentPack = JSON.parse(read("content/core-set.pack.json"));
+  const adds = pack.statuses.filter((s) => (s.stats ?? []).some((x) => x.stat === "max_hp")).map((s) => s.id);
+  const fills = (id: string) => pack.statuses.some((s) => (s.reactions ?? []).some((r) => {
+    const ops = JSON.stringify(r.do);
+    return ops.includes(`"status":"${id}"`) && ops.includes(`"op":"heal"`);
+  }));
+  assert.deepEqual(adds.filter((id) => !fills(id)), []);
+});

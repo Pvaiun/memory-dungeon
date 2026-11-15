@@ -28,8 +28,10 @@ export const BACKSTAB_HIT: HitWord = "heavy";
  * hits hardest behind its stone in big, rarer rocks (Boulder, its double hit, takes the next cooldown word again).
  */
 export const ROCKFALL = { hit: "heavy" as HitWord, cooldown: "medium" as const, boulder: "long" as const };
-/** Vanguard's Shield, a share of the Knight's max HP at each fight's start (Grudge and Stonewall read it too). */
-export const VANGUARD_SHIELD = 0.33;
+/** Vanguard's Shield, a share of the Knight's max HP at each fight's start (Grudge and Stonewall read it too): half the Shield's cap. */
+export const VANGUARD_SHIELD = 0.25;
+/** Earthen shell's Shield, a share of the Geomancer's Defense: about half a Shield's cap a cast, so a full one takes two (Rampart reads it too). */
+export const EARTHEN_SHELL = 1 / 6;
 const apply = (status: string, extra: object = {}) => ({ op: "apply", status, ...extra }) as const;
 
 /** The target phrases of the rules document, word for word. */
@@ -308,7 +310,7 @@ export const abilities: A[] = [
   // Geomancer
   a("geomancer", "earthen_shell", "Earthen shell", "Shields itself and the other ally with the lowest HP%.", {
     ...timing("medium", "normal"), mp: 650, ...waitsFor("allies", { belowCap: "shield" }), target: "self",
-    do: [apply("shield", { stacks: from("defense", 1.0), to: { side: "self", where: { belowCap: "shield" } } }), apply("shield", { stacks: from("defense", 1.0), to: { ...T.otherLowestShareAlly, where: { belowCap: "shield" } } })],
+    do: [apply("shield", { stacks: from("defense", EARTHEN_SHELL), to: { side: "self", where: { belowCap: "shield" } } }), apply("shield", { stacks: from("defense", EARTHEN_SHELL), to: { ...T.otherLowestShareAlly, where: { belowCap: "shield" } } })],
   }),
   a("geomancer", "rockfall", "Rockfall", "Drops a rock on a random foe.", { ...timing(ROCKFALL.cooldown, "long"), mp: 450, do: [phys(hit("defense", ROCKFALL.hit))] }),
   a("geomancer", "tremor", "Tremor", "Hits a random foe and Stuns it.", { ...timing("long", "long"), mp: 650, target: lacking({ side: "foes" }, "stun", true), do: [phys(hit("defense", "normal"), { apply: [{ status: "stun" }] })] }),

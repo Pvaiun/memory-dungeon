@@ -228,7 +228,7 @@ One per class, shown in crimson and offered in the boss boons that open acts II 
 
 | Class | Mythic | Slot | The spike, and its cost |
 | --- | --- | --- | --- |
-| Knight | Banner of the last keep | armor (plate) | max HP half again; healing on it cut to a fifth |
+| Knight | Banner of the last keep | armor (plate) | max HP doubled, on its sheet; healing on it cut to a fifth |
 | Cleric | The saint's last breath | amulet | Last rites all fight; never healed above 30% HP |
 | Ranger | The long watch | armor (leather) | basic attacks stay on one foe until it falls, each harder; no cost |
 | Bramble knight | Heart of the briar | armor (plate) | its Thorns on every foe when hit; no cost |
@@ -239,7 +239,7 @@ One per class, shown in crimson and offered in the boss boons that open acts II 
 | Hexer | The witch's cauldron | offhand (tome) | Malison ready on each new affliction; its mana is the brake |
 | Monk | Thousand-palm wraps | weapon (fist) | every basic attack strikes twice; no cost |
 | Assassin | The unseen blade | armor (leather) | every hit crits until it's first hit |
-| Vampire | The crimson crown | amulet | healing past full raises max HP; no cost |
+| Vampire | The crimson crown | amulet | healing past full raises max HP and heals into it; no cost |
 | Pyromancer | The pyre-heart | amulet | Pyre doubles its target's Burn; no cost |
 | Frostweaver | Heart of the deep winter | armor (robes) | each shatter readies a free Frost lance; the Chill to rebuild is the brake |
 | Stormcaller | Eye of the gale | weapon (fist) | Thunderstorm lasts all fight; no cost |

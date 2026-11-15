@@ -25,10 +25,13 @@ const ready = (ability: string, to: ToT = "holder"): EffectT => ({ op: "cooldown
 
 // Knight: its body, which Vanguard's Shield and Shield bash already read, doubled; it lives on its own stone, not on heals.
 {
-  const text = "Max HP ×1.5. Healing on it −80%.";
+  const text = "Max HP ×2. Healing on it −80%.";
   mythic({ name: "Banner of the last keep", slot: "armor", rarity: "mythic", kind: "plate", mythic: "knight", statuses: ["banner_of_the_last_keep"],
     stats: [st("aggro", 1), st("defense", 1), sp("cooldown", "medium")], text }, "Toll 3 ●●, Landslide ●● ◆ draw, the wall");
-  own_("banner_of_the_last_keep", "Banner of the last keep", text, { stats: [{ stat: "max_hp", pct: 50 }, { stat: "healing_received", flat: -80 }] });
+  // The doubled body is the piece's own stat, on the sheet with the rest: real HP that carries between fights and is healed
+  // outside them, never a pool a fight hands out. It's the effect, so it counts no step of the budget.
+  mythics.at(-1)!.stats!.push({ stat: "max_hp", pct: 100 });
+  own_("banner_of_the_last_keep", "Banner of the last keep", text, { stats: [{ stat: "healing_received", flat: -80 }] });
 }
 
 // Cleric: Last rites (its state, whichever form trains it) put on at the start and put back whenever anything lifts it; a
@@ -144,12 +147,15 @@ const ready = (ability: string, to: ToT = "holder"): EffectT => ({ op: "cooldown
   helper(kit("the_unseen_blade_on", "UNSEEN", "Every hit it lands crits.", { stacking: "fizzle", crits: [{ chance: 100 }] }));
 }
 
-// Vampire: the drinker swells: what its healing would bring past full raises its max HP by as much, and its HP with it.
+// Vampire: the drinker swells: what its healing would bring past full raises its max HP by as much, and is then healed into
+// the room it made (a heal of its own: a bigger max never heals).
 {
   const text = "Healing past full raises its max HP by as much, for the fight.";
   mythic({ name: "The crimson crown", slot: "amulet", rarity: "mythic", mythic: "vampire", statuses: ["the_crimson_crown"],
     stats: [st("max_hp", 2), st("attack", 1)], text }, "Pact 3 ●●● ◆ the drinker");
-  own_("the_crimson_crown", "The crimson crown", text, { reactions: [react(on("overhealed"), give("the_crimson_crown_blood", "holder", { scale: [{ ratio: 1 / P, amount: true }] }))] });
+  // The heal fills the room the stacks just made (it was at full to heal past it), so healing that waited as part of a stack lands with the stack.
+  const fill = { op: "heal", amount: { scale: [{ ratio: 1, stat: "max_hp", of: "holder" }, { ratio: -1, hp: "current", of: "holder" }] }, final: true, to: "holder" } as EffectT;
+  own_("the_crimson_crown", "The crimson crown", text, { reactions: [react(on("overhealed"), give("the_crimson_crown_blood", "holder", { scale: [{ ratio: 1 / P, amount: true }] }), fill)] });
   helper(kit("the_crimson_crown_blood", "CRIMSON CROWN", "Max HP up by its stacks.", { stacking: "intensity", unremovable: true, stats: [{ stat: "max_hp", flat: P }] }));
 }
 

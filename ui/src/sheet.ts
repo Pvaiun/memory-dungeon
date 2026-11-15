@@ -105,7 +105,8 @@ export function codeSpans(stats: { stat: string; flat?: number; pct?: number }[]
     const v = s.flat ?? 0;
     const sign = v >= 0 ? "+" : "";
     // Amounts at the display scale, as the stat sheet shows them; percent stats as they are.
-    const shown = s.stat === "crit_chance" || def?.kind === "points" ? `${sign}${v}%` : s.stat === "aggro" ? `${sign}${v}` : `${sign}${disp(v)}`;
+    // A change by share alone (the Banner's max HP) shows its share and no amount.
+    const shown = s.flat === undefined && s.pct ? "" : s.stat === "crit_chance" || def?.kind === "points" ? `${sign}${v}%` : s.stat === "aggro" ? `${sign}${v}` : `${sign}${disp(v)}`;
     const pct = s.pct ? `${s.pct > 0 ? "+" : ""}${s.pct}%` : "";
     return [i ? " " : null, h("span", { class: `nowrap ${v < 0 || (s.pct ?? 0) < 0 ? "bad" : "good"}` }, `${statCode(s.stat)}${shown}${pct}`)];
   });

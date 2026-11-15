@@ -1,7 +1,7 @@
 /** The Geomancer's upgrades: a power step and two versions (A and B) for each ability and the passive. Written with kit.ts. */
 import { from, HIT, SPECIAL, STATUS, WINDUP } from "../scale.js";
 import type { ReactionT, TargetRuleT } from "../../../src/schema.js";
-import { ROCKFALL, T } from "../classes.js";
+import { EARTHEN_SHELL, ROCKFALL, T } from "../classes.js";
 import { abilityUp, apply, cd, helper, hitOf, kit, marker, passiveUp, phys, removeMine } from "./kit.js";
 
 // ─── Geomancer ───────────────────────────────────────────────────────────────
@@ -48,14 +48,14 @@ abilityUp({
   b: { name: "Rampart", text: "Shields and Guards itself; while Guarded, the Shield is rebuilt once when it breaks. No ally Shield.", serves: "Landslide 2 ●●● ⚙ detonation (key)" },
   form: (v, _k, plus) => ({
     ...(plus ? { cooldown: cd("short", "earthen_shell") } : {}),
-    ...(v === "a" ? { target: { side: "allies", where: { belowCap: "shield" }, pick: "all" } as TargetRuleT, do: [apply("shield", { stacks: from("defense", 0.35) })] } : {}),
-    ...(v === "b" ? { target: "self" as const, do: [apply("shield", { stacks: from("defense", 1.0) }), apply("guard"), apply("rampart")] } : {}),
+    ...(v === "a" ? { target: { side: "allies", where: { belowCap: "shield" }, pick: "all" } as TargetRuleT, do: [apply("shield", { stacks: from("defense", 0.35 * EARTHEN_SHELL) })] } : {}),
+    ...(v === "b" ? { target: "self" as const, do: [apply("shield", { stacks: from("defense", EARTHEN_SHELL) }), apply("guard"), apply("rampart")] } : {}),
   }),
 });
 // One use, for the Guard's length: the first time the Shield breaks, it's built again from Defense (Guard's included), the cap untouched.
 helper(kit("rampart", "RAMPART", "Its Shield is rebuilt once when it breaks.", {
   duration: STATUS.guard.duration,
-  reactions: [{ on: { event: "status_ended", status: "shield", cause: ["stacks"] }, do: [apply("shield", { stacks: { scale: [{ ratio: 1.0, stat: "defense", of: "holder" }] }, to: "holder" }), removeMine("rampart")] }],
+  reactions: [{ on: { event: "status_ended", status: "shield", cause: ["stacks"] }, do: [apply("shield", { stacks: { scale: [{ ratio: EARTHEN_SHELL, stat: "defense", of: "holder" }] }, to: "holder" }), removeMine("rampart")] }],
 }));
 
 abilityUp({
