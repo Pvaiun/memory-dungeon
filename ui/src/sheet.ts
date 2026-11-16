@@ -14,7 +14,7 @@ import type { AbilityT, EnemyT, FormationT, GearT, WeaponT } from "../../src/sch
 import { combat, type Member } from "../../src/engine/combat/rules.js";
 import { drawOf, resolveWeapon, weaponOf } from "../../src/engine/combat/fight.js";
 import { armorName, c, cls, disp, DISPLAY_DIV, immuneTo, kindOf, offhandName, SHEET_STATS, shortName, SPECIAL_STATS, showStat, statCode, status, tagline } from "./content.js";
-import { abilityInfo, abilityTag, evalNum, heldParts, namedStatuses, rescaled, rescalesOf, scalesOf, sizeParts, statusNumbers, statusText, TYPE_TONE, TYPE_WORD, type Scale, type SizePart, type Stats } from "./describe.js";
+import { abilityInfo, abilityTag, evalNum, asRead, heldParts, namedStatuses, scalesOf, sizeParts, statusNumbers, statusText, TYPE_TONE, TYPE_WORD, type Ally, type Scale, type SizePart, type Stats } from "./describe.js";
 import { basicIconKind, weaponLook } from "./art.js";
 import { canEquip, handsOf } from "../../src/validate.js";
 import { h, type Child } from "./dom.js";
@@ -31,6 +31,12 @@ export function memberFor(id: string): Member {
   const p = inParty ? party() : soloParty(id);
   const members = combat.party(c, { dungeon: c.pack.progression.dungeonOrder[0], party: p, seed: 1 }) as Member[];
   return members.find((m) => m.ref === id)!;
+}
+/** The class's party mates, as an ability that reads an ally's stat sees them (Borrowed hand); none outside the party. */
+export function alliesFor(id: string): Ally[] {
+  if (!setup.party.includes(id)) return [];
+  const members = combat.party(c, { dungeon: c.pack.progression.dungeonOrder[0], party: party(), seed: 1 }) as Member[];
+  return members.filter((m) => m.ref !== id).map((m) => ({ name: shortName(m.ref), stats: m.stats }));
 }
 
 /** Each seat's share of the foes' picks (the draw rule on its unit's Aggro), as "AGG 40%"; null where the seat is empty or down. */
@@ -337,9 +343,10 @@ export function glossary(text: string): HTMLElement[] {
  * name (heals green), the MP, cooldown and wind-up ("CAST") in words and whole numbers; the documents' sentence; and
  * its size for this unit with what it grows with. Designer view adds nothing: every line would repeat one of these.
  */
-export function abilityBlock(a0: AbilityT, stats: Stats | null, opts: { n?: number; onN?: () => void; cur?: boolean; target?: boolean; dmgMult?: number; opening?: boolean; held?: readonly string[] } = {}): HTMLElement {
-  // `held`: the unit's statuses, so an ability that reads another stat in its place (Even-keel plate) shows it.
-  const a = stats && opts.held ? rescaled(a0, rescalesOf(opts.held, stats)) : a0;
+export function abilityBlock(a0: AbilityT, s0: Stats | null, opts: { n?: number; onN?: () => void; cur?: boolean; target?: boolean; dmgMult?: number; opening?: boolean; held?: readonly string[]; allies?: readonly Ally[] } = {}): HTMLElement {
+  // `held` and `allies`: the unit's statuses and its side, so an ability that reads another stat in its place (Even-keel
+  // plate) or an ally's (Borrowed hand) shows it.
+  const { a, stats } = s0 ? asRead(a0, s0, opts.held, opts.allies) : { a: a0, stats: s0 };
   const i = abilityInfo(a, stats);
   const tag = abilityTag(a);
   // An ability starts a fight charged by its slot (ruleset.opening.slots), so its first use is part of the plan.
@@ -406,7 +413,7 @@ export const canUse = (id: string) => {
 };
 
 /** Everything about a class, with its current build, read-only: for a fight's inspect window. */
-export function classSheet(id: string, designer: boolean, member: Member = memberFor(id), gear: Record<string, string> = gearFor(id), passive?: string, seat?: Child[]): Child[] {
+export function classSheet(id: string, designer: boolean, member: Member = memberFor(id), gear: Record<string, string> = gearFor(id), passive?: string, seat?: Child[], allies: readonly Ally[] = alliesFor(id)): Child[] {
   const k = cls(id);
   const out: Child[] = [statGrid(member.stats, k.stats, designer)];
   const sp = specialLines(member.stats);
@@ -418,7 +425,7 @@ export function classSheet(id: string, designer: boolean, member: Member = membe
   for (const slot of SLOTS) out.push(slot === "offhand" && twoHanded(gear) ? lockedRow(slot) : gearRow(gear[slot] ? c.gear.get(gear[slot]) ?? null : null, slot, member.stats, undefined, false));
   out.push(section("ABILITIES"));
   // In a fight the rows show each cooldown live: the sheet's icons stay plain.
-  member.abilities.forEach((a, i) => out.push(abilityBlock(c.abilities.get(a)!, member.stats, { n: i + 1, opening: false, held: member.start })));
+  member.abilities.forEach((a, i) => out.push(abilityBlock(c.abilities.get(a)!, member.stats, { n: i + 1, opening: false, held: member.start, allies })));
   out.push(basicLine(weaponOf(c, member.weapon), member.stats, { ref: member.weapon }));
   return out;
 }

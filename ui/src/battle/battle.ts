@@ -699,7 +699,9 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
       };
       const seat = f && pu ? seatSection(f, pu.position, sitter) : undefined;
       // A trained passive plays as its form (PartyUnit.passive).
-      body.append(...(classSheet(u.ref, designer, member, pu?.gear ?? {}, pu?.passive, seat).filter(Boolean) as Node[]));
+      // Its living mates, as Borrowed hand reads them now.
+      const allies = driver.units().filter((x) => x.side === "party" && !x.ko && x !== u).map((x) => ({ name: shortName(x.ref), stats: x.stats }));
+      body.append(...(classSheet(u.ref, designer, member, pu?.gear ?? {}, pu?.passive, seat, allies).filter(Boolean) as Node[]));
     } else {
       body.append(...(enemySheet(c.enemies.get(u.ref)!, designer, { stats: u.stats, power: u.stats.power ?? 0, hpAbove: true }).filter(Boolean) as Node[]));
     }

@@ -10,7 +10,7 @@ import { beginRecord, recordAbandon, recordResume } from "../../../src/rogue/rec
 import { BUILD } from "../update.js";
 import { canEquip } from "../../../src/validate.js";
 import { manifest } from "../art.js";
-import { c } from "../content.js";
+import { c, shortName } from "../content.js";
 
 const KEY = "memory-dungeon.rogue.v1";
 type Saved = { run: RogueRun | null; meta: RogueMeta; last?: { won: boolean; unlocked: string[]; heat: boolean } | null };
@@ -147,6 +147,13 @@ export function fighter(run: RogueRun, cls: string): EngineMember {
     : { formation: "neutral", units: [{ class: cls, position: c.formations.get("neutral")!.positions[0].id, abilities: [...member(run, cls).order], gear: Object.fromEntries(Object.entries(member(run, cls).gear)) as Record<string, string> }] };
   const units = combat.party(c, { dungeon: "rogue_fight", party: p, seed: 1 }) as EngineMember[];
   return units.find((u) => u.ref === cls)!;
+}
+/** A party member's mates, as an ability that reads an ally's stat sees them (Borrowed hand); none for a unit in camp. */
+export function alliesOf(run: RogueRun, cls: string): { name: string; stats: Record<string, number> }[] {
+  if (!run.party.includes(cls)) return [];
+  prepare(run);
+  const units = combat.party(c, { dungeon: "rogue_fight", party: partyOf(c, run), seed: 1 }) as EngineMember[];
+  return units.filter((u) => u.ref !== cls).map((u) => ({ name: shortName(u.ref), stats: u.stats }));
 }
 /** HP and MP as shown: current and max. */
 export function vitals(run: RogueRun, cls: string): { hp: number; maxHp: number; mp: number; maxMp: number; ko: boolean } {

@@ -12,7 +12,7 @@ import { onRogue, setMode } from "./mode.js";
 import { classUpgrades } from "./upgrades.js";
 import { FILTER_NAMES, FILTERS, setFilter } from "./filter.js";
 import { anyNewEnemy, known, look, metCount, newEnemy } from "./bestiary.js";
-import { aggShares, abilityBlock, basicLine, canUse, classHead, classPassive, enemySheet, gearRow, lockedRow, memberFor, portraitEl, RARITY_TONE, role, seatCodes, seatNotes, section, SLOTS, specialLines, statGrid, twoHanded, type GearSlot } from "./sheet.js";
+import { aggShares, abilityBlock, basicLine, canUse, classHead, classPassive, enemySheet, alliesFor, gearRow, lockedRow, memberFor, portraitEl, RARITY_TONE, role, seatCodes, seatNotes, section, SLOTS, specialLines, statGrid, twoHanded, type GearSlot } from "./sheet.js";
 import { enemyEl, enemyThumb } from "./pixel.js";
 import { weaponOf } from "../../src/engine/combat/fight.js";
 import { foesOnStage, partyOnStage, stageEl, Strip, STRIP_H, themeOf } from "./battle/scene.js";
@@ -287,7 +287,7 @@ function unit(arg?: unknown): Child[] {
   const id = String(arg);
   if (!c.classes.has(id)) return home();
   const k = classOf(id);
-  const member = memberFor(id);
+  const member = memberFor(id), allies = alliesFor(id);
   const slot = setup.party.indexOf(id);
   const designer = setup.settings.designer;
   const order = abilitiesFor(id);
@@ -319,7 +319,7 @@ function unit(arg?: unknown): Child[] {
       ...gearRows,
       canUse(id),
       section("ABILITIES", orderPick === null ? null : h("span", { class: "hi" }, "SWAP WITH?")),
-      ...order.map((a, i) => abilityBlock(c.abilities.get(a)!, member.stats, { n: i + 1, onN: () => onN(i), cur: orderPick === i, target: orderPick !== null && orderPick !== i, held: member.start })),
+      ...order.map((a, i) => abilityBlock(c.abilities.get(a)!, member.stats, { n: i + 1, onN: () => onN(i), cur: orderPick === i, target: orderPick !== null && orderPick !== i, held: member.start, allies })),
       basicLine(weaponOf(c, member.weapon), member.stats, { ref: member.weapon }),
       // From the class list, everything each ability and the passive can be trained into in the rogue mode.
       ...(unitFrom === "classes" ? classUpgrades(id, member.stats) : []),

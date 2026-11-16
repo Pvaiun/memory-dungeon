@@ -198,12 +198,14 @@ export function scalesOf(n: NumT | undefined, stacks = false): Scale[] {
   const out: Scale[] = [];
   for (const s of n.scale) {
     if (s.stat && s.of !== "target") {
-      const def = c.stats.get(s.stat);
-      const code = statCode(s.stat);
+      // A stat read from an ally (asRead) is named for it: "56% KNIGHT ATK".
+      const [key, ally] = s.stat.split("@");
+      const def = c.stats.get(key);
+      const code = ally ? `${ally} ${statCode(key)}` : statCode(key);
       // Stacks scale too (Burn from Attack), but a share of a stat means nothing for a count: just the stat.
-      if (stacks) out.push({ text: code, stat: s.stat });
-      else if (def?.kind === "points") out.push({ text: `${short(s.ratio / DISPLAY_DIV)}×${code}`, stat: s.stat });
-      else out.push({ text: `${Math.round(s.ratio * 100)}% ${code}`, stat: s.stat });
+      if (stacks) out.push({ text: code, stat: key });
+      else if (def?.kind === "points") out.push({ text: `${short(s.ratio / DISPLAY_DIV)}×${code}`, stat: key });
+      else out.push({ text: `${Math.round(s.ratio * 100)}% ${code}`, stat: key });
     }
     // A Shield's stacks are its points, so a share of it reads like a stat's ("58% SHIELD").
     else if (s.stacks && status(s.stacks).absorb) out.push({ text: `${Math.round(s.ratio * 100)}% ${status(s.stacks).name.toUpperCase()}` });
@@ -289,25 +291,35 @@ export function sizeParts(a: AbilityT, stats: Stats, dmgMult = 1): SizePart[] {
   return out;
 }
 
+/** Another living unit on a unit's side, for an ability that reads whoever has the most of a stat (Borrowed hand). */
+export type Ally = { name: string; stats: Stats };
+
 /**
- * The stats a unit's abilities read in place of others, from the statuses it holds (Even-keel plate: Defense for Attack),
- * as the engine reads them: only a rescale to another of its own stats, whose test these stats pass. One that reads
- * another unit (`best`), or a test a sheet can't tell, isn't shown.
+ * An ability as it reads for a unit, with the stats to size it by: wherever its statuses make its abilities read another
+ * stat (Even-keel plate: Defense for Attack, while its test holds) or another unit's (Borrowed hand: the ally with the most
+ * Attack), as the engine reads them, the first such status for a stat winning. A stat read from an ally is named for it
+ * ("56% KNIGHT ATK"); with no allies given (a unit in camp, a recruit), the unit reads its own. A test a sheet can't tell
+ * isn't shown.
  */
-export function rescalesOf(held: readonly string[], stats: Stats): Record<string, string> {
-  const out: Record<string, string> = {};
+export function asRead(a: AbilityT, stats: Stats, held: readonly string[] = [], allies: readonly Ally[] = []): { a: AbilityT; stats: Stats } {
+  const map: Record<string, string> = {};
+  const extra: Stats = {};
   for (const id of held) {
     const r = c.statuses.get(id)?.rescale;
-    if (!r || r.best || !r.to) continue;
+    if (!r || map[r.from] !== undefined) continue;
     const t = r.if;
     if (t && (Object.keys(t).some((k) => k !== "above") || !t.above || !((stats[t.above.stat] ?? 0) > (t.above.ratio ?? 1) * (stats[t.above.over] ?? 0)))) continue;
-    out[r.from] = r.to;
+    const to = r.to ?? r.from;
+    // The engine starts from the holder and takes a unit only with strictly more, in the side's order.
+    let from: Ally | null = null;
+    if (r.best) for (const x of allies) if ((x.stats[to] ?? 0) > (from ? from.stats[to] ?? 0 : stats[to] ?? 0)) from = x;
+    if (from) {
+      const key = `${to}@${from.name}`;
+      extra[key] = from.stats[to] ?? 0;
+      map[r.from] = key;
+    } else if (to !== r.from) map[r.from] = to;
   }
-  return out;
-}
-/** An ability as it reads for a unit with these rescales: every number that grows with its own `from` grows with `to`. */
-export function rescaled(a: AbilityT, map: Record<string, string>): AbilityT {
-  if (!Object.keys(map).length) return a;
+  if (!Object.keys(map).length) return { a, stats };
   const walk = (x: unknown): unknown => {
     if (Array.isArray(x)) return x.map(walk);
     if (!x || typeof x !== "object") return x;
@@ -316,7 +328,7 @@ export function rescaled(a: AbilityT, map: Record<string, string>): AbilityT {
       o.scale = (o.scale as { stat?: string; of?: string; seat?: unknown }[]).map((t) => (t.stat && map[t.stat] && t.of !== "target" && t.seat === undefined ? { ...t, stat: map[t.stat] } : t));
     return o;
   };
-  return { ...a, do: walk(a.do) as AbilityT["do"] };
+  return { a: { ...a, do: walk(a.do) as AbilityT["do"] }, stats: { ...stats, ...extra } };
 }
 
 /** An ability's size as plain words, for a before-and-after: "150 DMG + 10 BURN". */
