@@ -197,12 +197,13 @@ ui/
     effects.ts               the effects tables: which VFX strip each action, status and event plays; the designer's sizes; the catalogue
     pixel.ts                 graphics: the pixel scale, sprites, icons (the Destiny Shard's among them), the font, effects enlarged by Scale2x and Scale3x
     update.ts                reloading onto a newer build
+    folders.ts               the designer's runs and notes folders (Settings), kept in IndexedDB; saving files into them under one name, or downloading
     rogue-screens.ts         the rogue screens' public face; lists them
     rogue/
       parts.ts               the navigation, small parts and scenes the rogue screens share (the standoff, whose foes open on a tap); under an offered piece, the roster's faces beside what they wear in its slot; a pick's answer, and a result the player couldn't see held over its screen until ONWARD
       run.ts                 the dispatcher, the leader, the draft, the map, a boss's Destiny Shard, a fight in waiting: its foes by likeness, name and line, each opening its whole sheet
       rooms.ts               spoils, a captive, the shop and training, the campfire, events, choices, Muster and Drill, level up, the next region
-      end.ts                 a lost fight's Destiny Shard offer, the run's end, its record, a won run's moment
+      end.ts                 a lost fight's Destiny Shard offer, the run's end, its record and the note saved beside it, a won run's moment
       party.ts               managing the party: seats, the bag and its junk, a piece put on from the bag, a unit's sheet and order, its gear
       state.ts               the run and the rogue meta, saved
     battle/

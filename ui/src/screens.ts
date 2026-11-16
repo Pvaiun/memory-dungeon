@@ -21,6 +21,7 @@ import { TUNER_FIGHT } from "./battle/tuner.js";
 import { music, setMusic, setSound, sfx } from "./battle/audio.js";
 import { bindRogue, rbossScreen, rclassScreen, rgearScreen, rogueMenuLine, rogueScreen, rpartyScreen, runitScreen } from "./rogue-screens.js";
 import { abandonRun, current as rogueRun, resetRogue } from "./rogue/state.js";
+import { folderName, foldersWork, forgetFolder, pickFolder, type FolderKind } from "./folders.js";
 
 export type Screen = "home" | "fight" | "party" | "formation" | "unit" | "gear" | "classes" | "bestiary" | "enemy" | "settings" | "battle" | "rogue" | "rparty" | "runit" | "rgear" | "rboss" | "rclass";
 
@@ -405,6 +406,16 @@ function enemy(arg?: unknown): Child[] {
 }
 
 // ─── Settings ───
+/** Designer view: where SAVE RUN writes a run's record and its note. A tap picks a folder; a picked one, tapped, is forgotten. */
+function folderRows(): Child[] {
+  if (!foldersWork()) return [h("div", { class: "text small dim wrap" }, "RUNS AND NOTES DOWNLOAD: THIS BROWSER CAN'T PICK FOLDERS")];
+  const one = (kind: FolderKind, label: string) => {
+    const at = folderName(kind);
+    return row([h("span", { class: "grow" }, label), h("span", { class: `trunc${at ? "" : " dim"}`, style: "max-width:50%" }, at ? at.toUpperCase() : "DOWNLOADS")],
+      () => { if (at) ask(`FORGET THE ${label}?`, "SAVES GO TO DOWNLOADS INSTEAD.", "FORGET", () => void forgetFolder(kind).then(refresh)); else void pickFolder(kind).then(refresh); }, { cursor: false });
+  };
+  return [one("runs", "RUNS FOLDER"), one("notes", "NOTES FOLDER")];
+}
 function settings(): Child[] {
   const s = setup.settings;
   const toggle = (label: string, key: "sound" | "music" | "designer" | "autoContinue" | "seedLock") => row([h("span", { class: "grow" }, label), h("span", { class: s[key] ? "good" : "dim" }, s[key] ? "ON" : "OFF")], () => { s[key] = !s[key]; if (key === "sound") setSound(s.sound); if (key === "music") setMusic(s.music); save(); refresh(); }, { cursor: false });
@@ -431,6 +442,7 @@ function settings(): Child[] {
       s.designer ? row([h("span", { class: "grow" }, "FX SIZES"), h("span", { class: "dim" }, "▶")], () => go("battle", { dungeon: TUNER_FIGHT, seed: 1, tuner: true }), { cursor: false }) : null,
       s.designer ? toggle("SEED LOCK", "seedLock") : null,
       s.designer && s.seedLock ? seedRow() : null,
+      ...(s.designer ? folderRows() : []),
       onRogue() && rogueRun() ? row([h("span", { class: "grow" }, "GIVE UP THE RUN")], () => ask("GIVE UP THE RUN?", "", "GIVE UP", () => { abandonRun(); go("home"); }), { cursor: false }) : null,
       onRogue() ? row([h("span", { class: "grow" }, "RESET ROGUE")], () => ask("RESET THE ROGUE MODE?", "", "RESET", () => { resetRogue(); go("home"); }), { cursor: false }) : null,
       row([h("span", { class: "grow bad" }, "RESET ALL")], () => ask("RESET ALL?", "", "RESET", () => { reset(); setTheme(setup.settings.theme); setFilter(setup.settings.filter); setNumberScale(setup.settings.numbers); go("home"); }), { cursor: false }),
