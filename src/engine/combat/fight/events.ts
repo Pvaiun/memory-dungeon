@@ -48,7 +48,7 @@ type EvX = Partial<Omit<Ev, "e" | "owner" | "other">>;
 export const ev = (e: Ev["e"], owner: CUnit, other: CUnit | null, x: EvX = {}): Ev => ({
   e, owner, other, kind: x.kind ?? null, tags: x.tags ?? [], status: x.status ?? null, cause: x.cause ?? null, amount: x.amount ?? 0, ending: x.ending ?? null,
   src: x.src ?? null, raw: x.raw ?? 0, dtype: x.dtype ?? null, count: x.count ?? 0, ability: x.ability ?? null, repeat: x.repeat ?? 0,
-  stopped: x.stopped ?? 0, bare: x.bare ?? false, passed: x.passed ?? false, price: x.price ?? 0, carry: x.carry ?? false, was: x.was ?? 0, does: x.does ?? null, evt: 0,
+  stopped: x.stopped ?? 0, bare: x.bare ?? false, passed: x.passed ?? false, price: x.price ?? 0, laid: x.laid ?? 0, carry: x.carry ?? false, was: x.was ?? 0, does: x.does ?? null, evt: 0,
 });
 
 /** Who `x` is from the holder's side (for the `other` filter): any (there is one), the holder itself, an ally, a foe, its side. */
@@ -231,7 +231,7 @@ export function queueReaction(w: W, actor: CUnit, holder: CUnit, s: SInst, d: S.
 /** What a reaction keeps of its event. */
 export const carriedOf = (e: Ev, ridersOnly = false): Carried => ({
   raw: e.raw, dtype: e.dtype, count: e.count, ability: e.ability, repeat: e.repeat, on: e.e, evt: e.evt, kind: e.kind, about: e.status,
-  stopped: e.stopped, bare: e.bare, ridersOnly, passed: e.passed, price: e.price,
+  stopped: e.stopped, bare: e.bare, ridersOnly, passed: e.passed, price: e.price, laid: e.laid,
 });
 
 export function react(w: W, it: Extract<Item, { k: "react" }>) {
@@ -243,7 +243,7 @@ export function react(w: W, it: Extract<Item, { k: "react" }>) {
   const st: NonNullable<Ctx["st"]> = {
     d, nums: it.nums, holder: unit(w, it.holder)!, src: it.src, per: it.per, other: unit(w, it.other), owner: unit(w, it.owner), amount: it.amount, fixedBoost: it.which < 0,
     raw: it.raw, dtype: it.dtype, count: it.count, ability: it.ability, repeat: it.repeat, on: it.on, evt: it.evt, kind: it.kind, about: it.about,
-    stopped: it.stopped, bare: it.bare, ridersOnly: it.ridersOnly, passed: it.passed, price: it.price,
+    stopped: it.stopped, bare: it.bare, ridersOnly: it.ridersOnly, passed: it.passed, price: it.price, laid: it.laid,
   };
   // A reaction's tests are read as it resolves, not when its event fired; one that fails does nothing.
   if (r?.if && ![r.if].flat().every((t) => passesTest(w, actor, t, st))) return;

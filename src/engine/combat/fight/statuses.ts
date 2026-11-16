@@ -115,7 +115,7 @@ export function applyStatus(w: W, by: CUnit, to: CUnit, d: S.StatusT, o: ApplyOp
       // A debt keeps the time it came due on: stacks added to it don't renew it.
       if (dur !== "permanent" && !d.debt) cur.end = end;
     }
-    gained(w, to, d, cur, by, cur.stacks - before, o);
+    gained(w, to, d, cur, by, cur.stacks - before, o, add);
     return;
   }
   // A status with one applier at a time knows it; a shared Intensity total has no single source.
@@ -123,7 +123,7 @@ export function applyStatus(w: W, by: CUnit, to: CUnit, d: S.StatusT, o: ApplyOp
   inst.stacks = isIntensity(d) ? Math.min(capOf(w, d, nums, to), add) : 0;
   to.statuses.push(inst);
   if (d.pulse) push(w, { k: "pulse", at: f.now + sub(d.pulse.every), b: pulseBatch(to, d), g: 0, slot: to.slot, seq: f.seq++, unit: to.id, uid: inst.uid });
-  gained(w, to, d, inst, by, inst.stacks, o);
+  gained(w, to, d, inst, by, inst.stacks, o, add);
 }
 
 /** The status makes its holder unpickable (Hidden). */
@@ -159,8 +159,11 @@ export function drain(w: W, it: Extract<Item, { k: "drain" }>) {
 /** Whether a unit's stats read its statuses' stacks live (a stat for each Cut, Thorns for each Spite), so a change of stacks reworks them. */
 const readsStacks = (w: W, u: CUnit) => feats(w.c).live && u.statuses.some((s) => def(w, s.id).stats?.some((ch) => ch.live));
 
-/** An application landed. `added`: the stacks it added, in thousandths (Intensity only), which the event and the log report. */
-function gained(w: W, to: CUnit, d: S.StatusT, s: SInst, by?: CUnit, added = 0, o: Partial<ApplyOpts> = {}) {
+/**
+ * An application landed. `added`: the stacks it added, in thousandths (Intensity only), which the event and the log report;
+ * `laid`: the stacks it brought, which a status at its cap doesn't take (a Dodge on a unit that holds one).
+ */
+function gained(w: W, to: CUnit, d: S.StatusT, s: SInst, by?: CUnit, added = 0, o: Partial<ApplyOpts> = {}, laid = added) {
   if (d.absorb) s.peak = Math.max(s.peak ?? 0, s.stacks);
   w.log?.({
     t: "status", vis: d.show === "icon" ? "player" : "hidden", at: w.f.now, unit: to.id, status: d.id, name: d.name, ...(by ? { by: by.id } : {}),
@@ -175,7 +178,7 @@ function gained(w: W, to: CUnit, d: S.StatusT, s: SInst, by?: CUnit, added = 0, 
   if (d.lockout?.interrupt) interrupt(w, to, d.lockout.covers);
   if (d.lockout?.pause && s.end !== -1) hold(w, to, d.lockout.covers, s.end - w.f.now);
   // Other is the applier, and an Intensity application says how many stacks it added. A copy is a repeat.
-  fire(w, ev("status_gained", to, by ?? null, { status: d.id, amount: added / SUBTICKS, src: by?.id ?? null, tags: o.area ? ["area"] : [], repeat: o.copy ? 1 : 0, passed: !!o.passed }));
+  fire(w, ev("status_gained", to, by ?? null, { status: d.id, amount: added / SUBTICKS, src: by?.id ?? null, tags: o.area ? ["area"] : [], repeat: o.copy ? 1 : 0, passed: !!o.passed, laid: laid / SUBTICKS }));
   // An Intensity status that an application brings to its cap has capped (Chill shatters). Other: the applier. One that
   // added nothing, to a status already standing at its cap while what its capping does waits for the next sub-tick (the
   // Chill not yet spent), hasn't capped again: a chain of shatters can't go round on stacks that were never added.

@@ -331,6 +331,20 @@ test("damp: stacks passed on to a unit that has capped lately are halved for eac
   assert.equal(stacks(a, "A", "chill"), 7.5, "the chain is over: nothing is cut");
 });
 
+test("share copies what an application laid, though its holder's cap let none of it on (a Dodge laid on a unit holding one)", () => {
+  const tools = buff("tools", { reactions: [{ on: { event: "status_gained", other: "holder", repeat: false }, do: [{ op: "share", to: { side: "others", pick: "all" } }] }] });
+  const self = device("self", { target: "self", do: [{ op: "apply", status: "dodge", stacks: 1 }] });
+  const a = arena({
+    party: [{ name: "P", stats: { max_hp: 1e6 }, weapon: club(1, 100), abilities: ["self"], statuses: ["tools"] }, { name: "Twin", weapon: club(1, 100), statuses: ["tools"] }],
+    enemies: [{ ...BAG, weapon: club(1, 100) }], statuses: [tools, tally("dodge", { cap: 1 })], abilities: [self],
+  });
+  a.unit("P").statuses.push({ uid: 9001, id: "dodge", src: null, at: 0, end: -1, stacks: 1000, nums: [1] });
+  readyAt(a, "P", "self", 1);
+  a.to(2);
+  assert.equal(stacks(a, "P", "dodge"), 1, "at its cap: nothing added");
+  assert.equal(stacks(a, "Twin", "dodge"), 1, "but the other gains it");
+});
+
 test("spend takes whole stacks, pass hands the actor's debuffs on as fresh ones, share copies a status laid at a moment (and never a copy)", () => {
   const heat = tally("heat", { cap: 10 });
   const tools = buff("tools", {

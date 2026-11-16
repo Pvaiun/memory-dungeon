@@ -340,8 +340,8 @@ function pass(w: W, a: CUnit, t: CUnit, e: Extract<S.EffectT, { op: "pass" }>) {
 }
 
 /**
- * A reaction to status_gained: the target gains the same status in the same stacks, as a copy (its status_gained is a
- * repeat). Only a status laid at a moment is shared: one with an icon that has a duration, stacks or a block; never a marker,
+ * A reaction to status_gained: the target gains the same status in the stacks the application laid, as a copy (its
+ * status_gained is a repeat), even where the holder's cap let none of them on: a Dodge laid on a unit that holds one is shared. Only a status laid at a moment is shared: one with an icon that has a duration, stacks or a block; never a marker,
  * and never a state its holder keeps while something is true of it.
  */
 function share(w: W, ctx: Ctx, t: CUnit, ratio: number) {
@@ -349,8 +349,9 @@ function share(w: W, ctx: Ctx, t: CUnit, ratio: number) {
   if (!st?.about || st.on !== "status_gained") return;
   const d = def(w, st.about);
   if (d.label === "marker" || d.show !== "icon" || !(d.duration !== undefined || isIntensity(d) || d.block)) return;
-  if (isIntensity(d) && st.amount <= 0) return;
-  applyStatus(w, ctx.actor, t, d, { stacks: isIntensity(d) ? st.amount * ratio : 1, rng: ctx.actor, copy: true });
+  const laid = st.laid ?? 0;
+  if (isIntensity(d) && laid <= 0) return;
+  applyStatus(w, ctx.actor, t, d, { stacks: isIntensity(d) ? laid * ratio : 1, rng: ctx.actor, copy: true });
 }
 
 /** HP set to a share of max, not damage and not healing: logged as a move of the bar, and heard only by HP lines. Never below 1. */
