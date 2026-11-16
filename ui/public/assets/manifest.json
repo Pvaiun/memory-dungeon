@@ -385,7 +385,7 @@
   "incorporeal": "status/incorporeal.png",
   "bewildered": "status/bewildered.png",
   "brittle": "status/brittle.png",
-  "dodge": "status/dodge.png",
+  "blur": "status/blur.png",
   "fixated": "status/fixated.png",
   "owed": "status/owed.png",
   "relay_count": "status/relay_count.png",

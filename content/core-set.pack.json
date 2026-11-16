@@ -886,8 +886,8 @@
    "drop": "all"
   },
   {
-   "id": "dodge",
-   "name": "DODGE",
+   "id": "blur",
+   "name": "BLUR",
    "text": "Dodges the next hit.",
    "label": "buff",
    "show": "icon",
@@ -1225,7 +1225,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "At fight start and on a crit: gains Dodge.",
+   "text": "At fight start and on a crit: gains Blur.",
    "reactions": [
     {
      "on": {
@@ -1234,7 +1234,7 @@
      "do": [
       {
        "op": "apply",
-       "status": "dodge",
+       "status": "blur",
        "to": "holder"
       }
      ]
@@ -1249,7 +1249,7 @@
      "do": [
       {
        "op": "apply",
-       "status": "dodge",
+       "status": "blur",
        "to": "holder"
       }
      ]
@@ -6150,7 +6150,7 @@
   {
    "id": "miners_pick",
    "name": "Miner's pick",
-   "text": "Basic attacks that land steal 1 Defense from the foe for the fight, up to 5.",
+   "text": "Basic attacks that land steal Defense from the foe for the fight, up to 5 times.",
    "label": "buff",
    "show": "sheet",
    "stacking": "refresh",
@@ -6199,7 +6199,7 @@
   {
    "id": "miners_pick_mined",
    "name": "MINED",
-   "text": "1 Defense less for each stack, for the fight.",
+   "text": "Less Defense for each stack, for the fight.",
    "label": "debuff",
    "show": "icon",
    "stacking": "intensity",
@@ -6214,7 +6214,7 @@
   {
    "id": "miners_pick_ore",
    "name": "ORE",
-   "text": "1 Defense more for each stack, for the fight.",
+   "text": "More Defense for each stack, for the fight.",
    "label": "buff",
    "show": "icon",
    "stacking": "intensity",
@@ -15466,7 +15466,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "At fight start and on a crit: gains Dodge. +6% Crit chance.",
+   "text": "At fight start and on a crit: gains Blur. +6% Crit chance.",
    "reactions": [
     {
      "on": {
@@ -15475,7 +15475,7 @@
      "do": [
       {
        "op": "apply",
-       "status": "dodge",
+       "status": "blur",
        "to": "holder"
       }
      ]
@@ -15490,7 +15490,7 @@
      "do": [
       {
        "op": "apply",
-       "status": "dodge",
+       "status": "blur",
        "to": "holder"
       }
      ]
@@ -15509,7 +15509,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "At fight start and on a crit: gains Dodge. Basic attacks aim at the foe with the lowest HP%.",
+   "text": "At fight start and on a crit: gains Blur. Basic attacks aim at the foe with the lowest HP%.",
    "reactions": [
     {
      "on": {
@@ -15518,7 +15518,7 @@
      "do": [
       {
        "op": "apply",
-       "status": "dodge",
+       "status": "blur",
        "to": "holder"
       }
      ]
@@ -15533,7 +15533,7 @@
      "do": [
       {
        "op": "apply",
-       "status": "dodge",
+       "status": "blur",
        "to": "holder"
       }
      ]
@@ -15554,7 +15554,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "At fight start and on a crit: gains Dodge, and its next basic attack is ready at once.",
+   "text": "At fight start and on a crit: gains Blur, and its next basic attack is ready at once.",
    "reactions": [
     {
      "on": {
@@ -15563,7 +15563,7 @@
      "do": [
       {
        "op": "apply",
-       "status": "dodge",
+       "status": "blur",
        "to": "holder"
       }
      ]
@@ -15578,7 +15578,7 @@
      "do": [
       {
        "op": "apply",
-       "status": "dodge",
+       "status": "blur",
        "to": "holder"
       }
      ]
@@ -15608,7 +15608,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "At fight start and on a crit: gains Dodge. Basic attacks aim at the foe with the lowest HP%. +6% Crit chance.",
+   "text": "At fight start and on a crit: gains Blur. Basic attacks aim at the foe with the lowest HP%. +6% Crit chance.",
    "reactions": [
     {
      "on": {
@@ -15617,7 +15617,7 @@
      "do": [
       {
        "op": "apply",
-       "status": "dodge",
+       "status": "blur",
        "to": "holder"
       }
      ]
@@ -15632,7 +15632,7 @@
      "do": [
       {
        "op": "apply",
-       "status": "dodge",
+       "status": "blur",
        "to": "holder"
       }
      ]
@@ -15658,7 +15658,7 @@
    "show": "sheet",
    "stacking": "refresh",
    "unremovable": true,
-   "text": "At fight start and on a crit: gains Dodge, and its next basic attack is ready at once. +6% Crit chance.",
+   "text": "At fight start and on a crit: gains Blur, and its next basic attack is ready at once. +6% Crit chance.",
    "reactions": [
     {
      "on": {
@@ -15667,7 +15667,7 @@
      "do": [
       {
        "op": "apply",
-       "status": "dodge",
+       "status": "blur",
        "to": "holder"
       }
      ]
@@ -15682,7 +15682,7 @@
      "do": [
       {
        "op": "apply",
-       "status": "dodge",
+       "status": "blur",
        "to": "holder"
       }
      ]
@@ -21412,7 +21412,7 @@
    ],
    "passive": {
     "name": "Hunter's eye",
-    "text": "At fight start and on a crit: gains Dodge.",
+    "text": "At fight start and on a crit: gains Blur.",
     "statuses": [
      "hunters_eye"
     ]
@@ -33709,11 +33709,11 @@
    "power": "+6% Crit chance.",
    "a": {
     "name": "Quarry",
-    "text": "At fight start and on a crit: gains Dodge. Basic attacks aim at the foe with the lowest HP%."
+    "text": "At fight start and on a crit: gains Blur. Basic attacks aim at the foe with the lowest HP%."
    },
    "b": {
     "name": "Quick draw",
-    "text": "At fight start and on a crit: gains Dodge, and its next basic attack is ready at once."
+    "text": "At fight start and on a crit: gains Blur, and its next basic attack is ready at once."
    }
   },
   {
@@ -36727,7 +36727,7 @@
   {
    "id": "miners_pick",
    "name": "Miner's pick",
-   "text": "Basic attacks that land steal 1 Defense from the foe for the fight, up to 5.",
+   "text": "Basic attacks that land steal Defense from the foe for the fight, up to 5 times.",
    "slot": "weapon",
    "tier": "ordinary",
    "source": "drop",

@@ -3,7 +3,7 @@
 Builds the game's skill and status icons: every class ability (abilities/<id>.png, 32x32), the basic attack's icon for
 each weapon kind (basic/<kind>.png, 32x32), and every status that shows, the class passives among them
 (status/<id>.png, 16x16), with their entries in manifest.json's "abilities", "basic" and "statuses" maps. A status icon
-no status uses any more is deleted.
+no status uses any more is deleted. A few status icons are the director's own (OWN_ART), kept as drawn.
 
     python3 -I ui/tools/skill_icons.py <dir with the packs extracted> ui/public/assets
 
@@ -87,6 +87,9 @@ KINDS = {
 KIND_GREY = {"great_weapon": (0, .4)}
 KIND_HAFT = {"great_weapon": [(10, 5), (9, 6), (8, 7), (7, 8), (6, 9), (5, 10), (4, 11), (3, 12)]}
 
+# Status icons the director drew, kept as they are in status/<id>.png: never drawn here, never deleted.
+OWN_ART = {"blur"}
+
 STATUS_ICONS = {  # status id(s) → (icon, the status's colour: its rim, and the symbol's for a recoloured pick)
     # The statuses
     'bleed': ('s:283:red', 'red'),
@@ -143,7 +146,6 @@ STATUS_ICONS = {  # status id(s) → (icon, the status's colour: its rim, and th
     # Added with later content: the new vocabulary, then gear, formation and mythic effects
     'bewildered': ('s:323:purple', 'purple'),
     'brittle': ('s:198:gold', 'gold'),
-    'dodge': ('s:334:cyan', 'cyan'),
     'fixated': ('s:122:orange', 'orange'),
     'owed': ('s:18:red', 'red'),
     'relay_count': ('s:343:cyan', 'cyan'),
@@ -472,7 +474,9 @@ def main():
     with open(OUT / "manifest.json", "w") as f:
         json.dump(manifest, f, indent=1)
     # the statuses last: some show a class icon or a weapon kind's, built above
-    shown = set(PASSIVES)
+    shown = set(PASSIVES) | OWN_ART
+    for sid in OWN_ART:
+        manifest["statuses"][sid] = f"status/{sid}.png"
     for ids, (key, colour) in STATUS_ICONS.items():
         icon = status_icon(key, colour)
         for sid in ids.split():
