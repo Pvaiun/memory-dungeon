@@ -26,12 +26,10 @@ from pathlib import Path
 from PIL import Image
 
 SRC = OUT = None  # set by main(), or by a tool that borrows the drawing below
-OWN_ART = Path(__file__).parent / "status-art"  # the director's own symbols, beside this tool
 
 # Each icon: "<pack>:<number>[:<colour>]". k KURAI, s a status icon, v the skill pack's framed motifs (by their number
-# in its gold row, 41 to 94, or "-" for an icon drawn in its own colours), e and c its loose effect and combat sprites;
-# or "own:<name>[:<colour>]", the director's own symbol, 16x16 on a clear ground, in OWN_ART (status-art/<name>.png).
-# A colour recolours the icon by brightness onto that ramp; none keeps the pack's (or the drawing's).
+# in its gold row, 41 to 94, or "-" for an icon drawn in its own colours), e and c its loose effect and combat sprites.
+# A colour recolours the icon by brightness onto that ramp; none keeps the pack's.
 ICONS = {
     # Knight
     "vanguard": "s:44:ice", "fortify": "s:48:steel", "stand_fast": "k:24:blue", "shield_bash": "v:53:steel",
@@ -145,7 +143,7 @@ STATUS_ICONS = {  # status id(s) → (icon, the status's colour: its rim, and th
     # Added with later content: the new vocabulary, then gear, formation and mythic effects
     'bewildered': ('s:323:purple', 'purple'),
     'brittle': ('s:198:gold', 'gold'),
-    'blur': ('own:blur', 'ice'),
+    'blur': ('s:380:ice', 'ice'),
     'fixated': ('s:122:orange', 'orange'),
     'owed': ('s:18:red', 'red'),
     'relay_count': ('s:343:cyan', 'cyan'),
@@ -313,10 +311,7 @@ def swap(im, ramp):
 
 def source(key):
     """The picked icon at art size, the pack it came from, and the colour to give it after lifting (or None)."""
-    p = key.split(":"); colour = p[2] if len(p) == 3 and p[2] != "-" else None
-    if p[0] == "own":
-        return Image.open(OWN_ART / f"{p[1]}.png").convert("RGBA"), "own", colour
-    n = int(p[1])
+    p = key.split(":"); n = int(p[1]); colour = p[2] if len(p) == 3 and p[2] != "-" else None
     if p[0] == "k":
         return art16(need(f"Icon{n:03d}.png")), "kurai", colour
     if p[0] == "s":
@@ -333,8 +328,6 @@ def source(key):
 
 def lift(im, pack, override=None):
     """The symbol alone: the icon's tile, hatching, halo and the outline against them cleared, by a flood from the edge."""
-    if pack == "own":
-        return im.copy()  # drawn as the symbol alone
     px = im.load()
     depth = lambda x, y: min(x, y, 15 - x, 15 - y)
     if override:
