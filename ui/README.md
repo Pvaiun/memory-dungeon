@@ -59,4 +59,4 @@ python3 -I ui/tools/assets.py <folder with the packs extracted> ui/public/assets
   - `window.__scene` and `window.__driver` are a running fight's field and engine side;
   - `window.__gallery()` shows every sprite, face and status icon as drawn;
   - `window.__look("fireball", by, [targets])` plays an action's effects on a running fight, its hits of 0 (`"basic"` a basic attack; `"status:burn"` and `"tick:burn"` a status's), for checking the art.
-- **SAVE RUN**, on a rogue run's end screen, downloads the run's record as JSON: every choice with what was offered beside it, and every free action. It's for balancing from real play.
+- **SAVE RUN**, on a rogue run's end screen, asks for a name and a note, then downloads the run's record as JSON (every choice with what was offered beside it, and every free action; for balancing from real play) and the note as Markdown (a line on the run, then the player's words), named alike after a prefix: `RUNS-2026-11-16-14h-ember-combo.json` and `NOTES-2026-11-16-14h-ember-combo.md` (the local date and hour, then the name). An empty note saves no note.

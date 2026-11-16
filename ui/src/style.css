@@ -269,6 +269,8 @@ table.sum th { color: var(--dim); }
 .overlay.dialog { justify-content: center; }
 .overlay.dialog > .win { flex: 0 0 auto; }
 .overlay.dialog > .win.scroll { flex: 0 1 auto; }
+.field { font: inherit; font-size: .75rem; line-height: 1.25rem; color: var(--ink); background: var(--win2); border: .25rem solid var(--line); border-radius: .5rem; padding: .375rem .5rem; width: 100%; box-sizing: border-box; user-select: text; -webkit-user-select: text; resize: none; font-variant-ligatures: none; }
+.field::placeholder { color: var(--dim); }
 /* a hidden result, held until ONWARD; it appears at once */
 .outcome { display: flex; flex-direction: column; gap: .5rem; max-height: 100%; overflow-y: auto; scrollbar-width: none; }
 .outcome > .actions { margin-top: .25rem; }

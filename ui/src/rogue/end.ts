@@ -1,6 +1,6 @@
-/** The run's end: a Destiny Shard's offer after a lost fight, the run's summary, its record (SAVE RUN), and a won run's moment. */
+/** The run's end: a Destiny Shard's offer after a lost fight, the run's summary, its record and a note beside it (SAVE RUN), and a won run's moment. */
 import { rogue, type RogueRun, unlockable } from "../../../src/rogue.js";
-import { button, type Child, h, header, toast, win } from "../dom.js";
+import { button, type Child, h, header, nav, toast, win } from "../dom.js";
 import { c, cls as classOf, shortName } from "../content.js";
 import { section } from "../sheet.js";
 import { current, endRun, meta } from "./state.js";
@@ -56,7 +56,7 @@ export function overView(run: RogueRun): Child[] {
     choice,
     win("scroll", section("THE ROAD"), ...run.notes.map((n) => h("div", { class: "text small wrap" }, h("span", { class: "dim" }, `${ROMAN[n.act]}.${n.floor} `), n.text))),
     recordLine(run),
-    actions(button("DONE", () => { const r = endRun(choice ? leadPick ?? undefined : undefined); leadPick = null; go("rogue"); if (r.won) cheer(r.unlocked, r.heat); }, "hi"), button("SAVE RUN", () => saveRunFile(run))),
+    actions(button("DONE", () => { const r = endRun(choice ? leadPick ?? undefined : undefined); leadPick = null; go("rogue"); if (r.won) cheer(r.unlocked, r.heat); }, "hi"), button("SAVE RUN", () => savePrompt(run))),
   ];
 }
 /** The record's check (a replay of the whole run from its record), once per finished run: it takes a moment, so it runs after the screen is drawn. */
@@ -77,16 +77,55 @@ function recordLine(run: RogueRun) {
     ch && ch.builds.length > 1 ? h("div", { class: "line small dim wrap" }, `PLAYED ACROSS ${ch.builds.length} BUILDS`) : null,
     ch && ch.reloads ? h("div", { class: "line small dim wrap" }, `${ch.reloads} FIGHT${ch.reloads > 1 ? "S" : ""} RESTARTED AFTER A RELOAD (COUNTED ONCE)`) : null);
 }
-/** The run's record (every choice, what was offered, the party before every fight) downloaded as a file, for balancing. */
-function saveRunFile(run: RogueRun) {
-  const blob = new Blob([exportRecord(c, run, BUILD, recordCheck(run) ?? undefined)], { type: "application/json" });
+/** A file name's date: the local date and hour, so saved runs sort in the order they were played. */
+const stamp = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}-${String(d.getHours()).padStart(2, "0")}h`;
+/** The player's name for the run, as a file name: no characters a file system refuses, spaces as dashes. */
+const fileSafe = (s: string) => s.trim().replace(/[\\/:*?"<>|\u0000-\u001f]+/g, "").replace(/\s+/g, "-").replace(/^[.-]+|[.-]+$/g, "").slice(0, 60);
+
+/** SAVE RUN's prompt: a name and a note, then the run's record and the note saved under one name (`saveRun`). */
+function savePrompt(run: RogueRun) {
+  if (!frameEl) return;
+  const won = run.pending.kind === "over" && run.pending.won;
+  const name = h("input", { class: "field", type: "text", maxlength: 60, placeholder: won ? "WON" : "LOST", autocomplete: "off" }) as HTMLInputElement;
+  const note = h("textarea", { class: "field", rows: 6, placeholder: "HOW IT FELT, WHAT STOOD OUT" }) as HTMLTextAreaElement;
+  const close = () => { box.remove(); nav.overlay = null; };
+  const box = h("div", { class: "overlay dialog" }, win("",
+    h("div", { class: "line hi" }, "SAVE RUN"),
+    h("div", { class: "line small dim" }, "NAME"), name,
+    h("div", { class: "line small dim" }, "NOTE"), note,
+    h("div", { class: "btns", style: "margin-top:.75rem" }, button("SAVE", () => { close(); saveRun(run, name.value.trim() || (won ? "won" : "lost"), note.value.trim()); }, "hi"), button("CANCEL", close)),
+  ));
+  frameEl.append(box);
+  nav.overlay = close;
+  name.focus();
+}
+
+/** The note's file: what the run was, in a line, then the player's words. */
+function noteText(run: RogueRun, name: string, at: Date, text: string) {
+  const won = run.pending.kind === "over" && run.pending.won;
+  const party = run.party.map((id) => classOf(id).name).join(", ");
+  return `# ${name}\n\n${at.toLocaleString()} · ${won ? "won" : `lost in act ${run.act}, floor ${run.floor}`} · heat ${run.heat} · ${party} · build ${BUILD}\n\n${text}\n`;
+}
+
+function download(name: string, blob: Blob) {
   const url = URL.createObjectURL(blob);
-  const a = h("a", { href: url, download: `rogue-run-${new Date().toISOString().slice(0, 16).replace(/[:T]/g, "-")}-${run.pending.kind === "over" && run.pending.won ? "won" : "lost"}.json` }) as HTMLAnchorElement;
+  const a = h("a", { href: url, download: name }) as HTMLAnchorElement;
   document.body.append(a);
   a.click();
   a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 10_000);
-  if (frameEl) toast(frameEl, "RUN SAVED");
+}
+
+/**
+ * The run's record (every choice, what was offered, the party before every fight), for balancing, and the note beside it,
+ * downloaded under one name: `RUNS-<date and hour>-<name>.json` and `NOTES-<date and hour>-<name>.md`. An empty note saves no note.
+ */
+function saveRun(run: RogueRun, name: string, text: string) {
+  const at = new Date();
+  const base = `${stamp(at)}-${fileSafe(name) || "run"}`;
+  download(`RUNS-${base}.json`, new Blob([exportRecord(c, run, BUILD, recordCheck(run) ?? undefined)], { type: "application/json" }));
+  if (text) download(`NOTES-${base}.md`, new Blob([noteText(run, name, at, text)], { type: "text/markdown" }));
+  if (frameEl) toast(frameEl, `${text ? "RUN AND NOTE" : "RUN"} SAVED: ${base.toUpperCase()}`, 2600);
 }
 
 /** A won run's moment: one card for the win, then the class picked to lead, then the heat opened. A tap goes on. */
