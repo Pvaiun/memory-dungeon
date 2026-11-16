@@ -309,7 +309,7 @@ export function gearRow(g: GearT | null, slot: string, stats: Stats | null, onCl
       who ? wearersLine(g, who) : null,
       effect ? h("div", { class: `text small wrap ${tone === "gold" || tone === "mythic" ? tone : "ink"} effect` }, effect) : null,
       size,
-      ...(effect ? glossary(effect) : []),
+      ...(effect ? glossary(effect, g) : []),
     ),
     onClick && arrow ? h("span", { class: "dim go" }, "▶") : null,
   );
@@ -319,8 +319,8 @@ export function gearRow(g: GearT | null, slot: string, stats: Stats | null, onCl
  * What each status a card names is, under the card: its icon, its name in its colour, its words and a stack's numbers,
  * as a fight's sheet shows a status. The card says what happens; this says what the word means.
  */
-export function glossary(text: string): HTMLElement[] {
-  return namedStatuses(text).map((d) => {
+export function glossary(text: string, of?: unknown): HTMLElement[] {
+  return namedStatuses(text, of).map((d) => {
     const nums = statusNumbers(d);
     return h("div", { class: "gloss" },
       statusEl(d.id),

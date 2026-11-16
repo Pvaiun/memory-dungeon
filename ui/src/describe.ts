@@ -424,34 +424,71 @@ export function statusNumbers(d: StatusT): SizePart[] {
 }
 
 /**
- * How a card names a status, as a pattern: its word in any form ("Bewilders", "a Chilled foe", "burning"). A status whose
- * name is also an everyday word (Slow, Guard, Shield, Might, Marked, Hidden, Rot, Doom, Haste) counts only capitalized, as
- * the cards write a status: "a slow weapon" isn't Slow.
+ * How a card names a status, as a pattern: its word in any form ("Bewilders", "a Chilled foe", "burning"), never less than
+ * the whole name ("Ore" isn't "or"). A status whose name is also an everyday word (Slow, Guard, Shield, Might, Marked,
+ * Hidden, Rot, Doom, Haste, Blur, Charged) counts only capitalized, as the cards write a status: "a slow weapon" isn't
+ * Slow, "a blur of blows" isn't Blur, and an ability "50% charged" isn't Charged.
  */
 const STATUS_WORD: Record<string, RegExp> = {
   bewildered: /\bbewilder(?:s|ed|ing)?\b/i, fixated: /\bfixate[sd]?\b/i, owed: /\bowe[sd]?\b/i, brittle: /\bbrittle\b/i,
   stun: /\bstun(?:s|ned|ning)?\b/i, marked: /\bMark(?:s|ed|ing)?\b/, hidden: /\bHid(?:den|es?)\b/, bulwark_broken: /\bBroken\b/,
 };
-const PLAIN_WORDS = new Set(["slow", "guard", "shield", "might", "rot", "doom", "haste"]);
+const PLAIN_WORDS = new Set(["slow", "guard", "shield", "might", "rot", "doom", "haste", "blur", "charged"]);
 const wordFor = (d: StatusT): RegExp => {
   if (STATUS_WORD[d.id]) return STATUS_WORD[d.id];
-  const stem = d.name.toLowerCase().replace(/e$/, "");
-  const forms = `${stem.slice(1)}(?:e|es|s|ed|d|ing)?\\b`;
-  return PLAIN_WORDS.has(d.id) ? new RegExp(`\\b${stem[0].toUpperCase()}${forms}`) : new RegExp(`\\b${stem[0]}${forms}`, "i");
+  const name = d.name.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  // "Haste": Hastes, Hasted, Hasting; "Burn": Burns, Burned, Burning. The name's own letters always.
+  const forms = name.endsWith("e") ? `${name.slice(1, -1)}(?:e|es|ed|ing)\\b` : `${name.slice(1)}(?:s|es|ed|ing)?\\b`;
+  return PLAIN_WORDS.has(d.name.toLowerCase()) ? new RegExp(`\\b${name[0].toUpperCase()}${forms}`) : new RegExp(`\\b${name[0]}${forms}`, "i");
 };
+
+/** Every status id a piece of content reaches: the ids it names, and theirs in turn. */
+function reach(root: unknown): Set<string> {
+  const out = new Set<string>();
+  const walk = (o: unknown): void => {
+    if (typeof o === "string") {
+      if (!out.has(o) && c.statuses.has(o)) { out.add(o); walk(c.statuses.get(o)); }
+    } else if (Array.isArray(o)) o.forEach(walk);
+    else if (o && typeof o === "object") for (const v of Object.values(o)) walk(v);
+  };
+  walk(root);
+  return out;
+}
+/**
+ * The statuses only one thing in the content reaches (a piece's Ore, a formation's Wall, an ability's own buff): a
+ * card names one of those only if it's that thing's card. Any other card that says the word means the word.
+ */
+let privateTo: Map<string, unknown> | null = null;
+function ownerOf(id: string): unknown {
+  if (!privateTo) {
+    const roots = new Map<string, unknown[]>();
+    const p = c.pack as unknown as Record<string, unknown>;
+    for (const key of ["classes", "abilities", "upgrades", "gear", "formations", "enemies", "dungeons"])
+      for (const r of (p[key] as unknown[] | undefined) ?? []) for (const s of reach(r)) roots.set(s, [...(roots.get(s) ?? []), r]);
+    privateTo = new Map([...roots].filter(([, rs]) => rs.length === 1).map(([s, rs]) => [s, rs[0]]));
+  }
+  return privateTo.get(id);
+}
 /**
  * The statuses a card's words name, in the order they first appear, for the glossary under it: each status the player
  * sees as an icon and has words for. A card says what happens and leaves what a status is to its own line ("Bewilders
- * the target" → BEWILDERED: its next basic attack strikes one of its own side).
+ * the target" → BEWILDERED: its next basic attack strikes one of its own side). `of` is the card's own piece: the only
+ * card that can name a status private to it.
  */
-export function namedStatuses(text: string): StatusT[] {
+export function namedStatuses(text: string, of?: unknown): StatusT[] {
   const found: { d: StatusT; at: number }[] = [];
+  const own = of ? reach(of) : new Set<string>();
   for (const d of c.statuses.values()) {
     if (d.show !== "icon" || d.label === "marker" || !d.text) continue;
+    if (ownerOf(d.id) && !own.has(d.id)) continue;
     const m = wordFor(d).exec(text);
     if (m) found.push({ d, at: m.index });
   }
-  return found.sort((a, b) => a.at - b.at).map((f) => f.d);
+  // One line a name: an ability's versions each have their own Thunderstorm, and the card's own comes first.
+  const named = new Map<string, StatusT>();
+  for (const { d } of found.sort((a, b) => a.at - b.at || Number(own.has(b.d.id)) - Number(own.has(a.d.id))))
+    if (!named.has(d.name)) named.set(d.name, d);
+  return [...named.values()];
 }
 
 /** A damage tag in words: the physical tag is every hit (Ward's and Incorporeal's cut), no tag all damage, statuses' own included. */

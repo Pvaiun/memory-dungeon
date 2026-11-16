@@ -325,7 +325,7 @@ export const KIT = {
   choosing: 0.28,
   /** Skyfall: damage per Shock stack on its target, on top of a heavy hit. */
   skyfallPerShock: 150,
-  /** Hunter's eye's power step: Crit chance added to the Ranger's hits, in percent (each crit is a Dodge). */
+  /** Hunter's eye's power step: Crit chance added to the Ranger's hits, in percent (each crit is a Blur). */
   hunterCrit: 6,
   /** Gale spear: each of its 3 hits, a share of Attack (its versions' hits too). At 0.09 a cast dealt about one of the Valkyrie's
    * swings, under the balance sheet's band for an ability. */

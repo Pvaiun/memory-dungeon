@@ -8,7 +8,7 @@ The list to build, with the director's rulings of Nov 15 in it. Sizes are first 
 | --- | --- | --- |
 | **Weaken** | −30% damage | **−50% damage.** Same length. |
 | **Shock** | Hurts for each stack every time its holder acts. | The same, and **its holder's hits deal less for each stack.** First value 1% a stack; see the notes. |
-| **Dodge** (new) | | **Automatically dodges the next incoming hit,** then it's gone. It doesn't stack. Its miss counts as a dodge. |
+| **Blur** (new) | | **Automatically dodges the next incoming hit,** then it's gone. It doesn't stack. Its miss counts as a dodge. |
 
 ## Hexer
 
@@ -32,7 +32,7 @@ The list to build, with the director's rulings of Nov 15 in it. Sizes are first 
 | | Today | Change |
 | --- | --- | --- |
 | **Crit chance** | 16% | **20%** (+4%), on the class itself. |
-| **Hunter's eye** (passive) | Basic attacks ignore Taunt and have +5% Crit chance. | **At fight start and on a crit: gains Dodge.** Nothing else. |
+| **Hunter's eye** (passive) | Basic attacks ignore Taunt and have +5% Crit chance. | **At fight start and on a crit: gains Blur.** Nothing else. |
 
 ## Frostweaver
 
@@ -44,7 +44,7 @@ The list to build, with the director's rulings of Nov 15 in it. Sizes are first 
 
 - **Test several sizes of Shock's damage reduction.** The worry is that it makes boss fights irrelevant: a slow boss sits at Shock's cap. Report boss results at each size, and what happens when Weaken and Shock sit on the same foe (today the two would add up).
 - **Tune the Hexer's Shock sources** (Enfeeble's version B, Cold hex's version B) so they're a real help to its party's survival, not a token stack.
-- **Each changed passive's versions keep the new part:** Shatterpoint's keep the opening Shield, Hunter's eye's keep Dodge.
+- **Each changed passive's versions keep the new part:** Shatterpoint's keep the opening Shield, Hunter's eye's keep Blur.
 - Nothing else changes: no piece, formation or mythic, and not the Stormcaller, Pyromancer or Bard.
 
 ## additional details

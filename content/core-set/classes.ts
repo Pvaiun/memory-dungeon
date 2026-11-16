@@ -95,10 +95,10 @@ const bothKinds = (pct: StatusT["boosts"] extends (infer B)[] | undefined ? (B e
 
 // ─── Passives ────────────────────────────────────────────────────────────────
 
-/** Hunter's eye's Dodge, at fight start and on each crit (its versions keep it). */
+/** Hunter's eye's Blur, at fight start and on each crit (its versions keep it). */
 export const HUNTERS_EYE: ReactionT[] = [
-  { on: { event: "fight_start" }, do: [apply("dodge", { to: "holder" })] },
-  { on: { event: "hit_lands", tags: ["crit"] }, do: [apply("dodge", { to: "holder" })] },
+  { on: { event: "fight_start" }, do: [apply("blur", { to: "holder" })] },
+  { on: { event: "hit_lands", tags: ["crit"] }, do: [apply("blur", { to: "holder" })] },
 ];
 /** Shatterpoint's opening Shield on every ally (its versions keep it). */
 export const SHATTERPOINT_OPENING: ReactionT = { on: { event: "fight_start" }, do: [apply("shield", { stacks: { scale: [{ ratio: SHATTERPOINT_SHIELD, stat: "max_hp", of: "holder" }] }, to: T.everyAlly })] };
@@ -106,7 +106,7 @@ export const SHATTERPOINT_OPENING: ReactionT = { on: { event: "fight_start" }, d
 export const passives: StatusT[] = [
   passive("vanguard", "Vanguard", { text: `At fight start: a Shield of ${Math.round(VANGUARD_SHIELD * 100)}% of max HP.`, reactions: [{ on: { event: "fight_start" }, do: [apply("shield", { stacks: { scale: [{ ratio: VANGUARD_SHIELD, stat: "max_hp", of: "holder" }] }, to: "holder" })] }] }),
   // The marksman survives by its crits: each one, and the fight's start, leaves it ready to dodge the next blow.
-  passive("hunters_eye", "Hunter's eye", { text: "At fight start and on a crit: gains Dodge.", reactions: HUNTERS_EYE }),
+  passive("hunters_eye", "Hunter's eye", { text: "At fight start and on a crit: gains Blur.", reactions: HUNTERS_EYE }),
   // Survivable by attacking: the Shield grows as she fights and is spent as she's hit. It reads Attack (bigger hits) and max HP (the cap).
   passive("shieldmaiden", "Shieldmaiden", { text: `On a hit: a Shield of ${Math.round(KIT.shieldmaiden * 100)}% of the damage.`, reactions: [{ on: { event: "hit_lands" }, do: [apply("shield", { stacks: { scale: [{ ratio: KIT.shieldmaiden, amount: true }] }, to: "holder" })] }] }),
   passive("briar", "Briar", { text: "Its Thorns add Bleed.", reactions: [{ on: { event: "damage_dealt", status: "thorns" }, do: [apply("bleed", { stacks: own("few", "defense"), to: "other" })] }] }),

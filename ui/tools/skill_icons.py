@@ -143,7 +143,7 @@ STATUS_ICONS = {  # status id(s) → (icon, the status's colour: its rim, and th
     # Added with later content: the new vocabulary, then gear, formation and mythic effects
     'bewildered': ('s:323:purple', 'purple'),
     'brittle': ('s:198:gold', 'gold'),
-    'dodge': ('s:334:cyan', 'cyan'),
+    'blur': ('s:380:ice', 'ice'),
     'fixated': ('s:122:orange', 'orange'),
     'owed': ('s:18:red', 'red'),
     'relay_count': ('s:343:cyan', 'cyan'),

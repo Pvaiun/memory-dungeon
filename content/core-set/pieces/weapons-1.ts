@@ -7,7 +7,7 @@
  * `gear` joins the pack's gear and the rogue's stock; `statuses` the pack's statuses; `served` is designer data, never in the pack.
  */
 import type { GearT, NumT, StatusT, TargetRuleT } from "../../../src/schema.js";
-import { FLAT_STACKS, P, PIECE_SPECIAL, STEP } from "../scale.js";
+import { FLAT_STACKS, PIECE_SPECIAL, STEP } from "../scale.js";
 import { EV, NO_MARK, TO, against, critStep, give, hits, lift, marker, ofAmount, on, own, piece, pieceStatus, react, reactIf, share, shelf, sp, st, stacksOf, state, swingNow, weaponHit, whileHolding, whileHp, whileIt, count, countAt, type Change, type Rarity, type Trade } from "./kit.js";
 import { AFFLICTIONS } from "./shared.js";
 
@@ -535,14 +535,14 @@ weapon("axe", "common", "Cleaver", { stats: [critStep(2), down(sp("cooldown", "m
   // Each landing moves a step of Defense, for the fight: a debuff on the foe and a buff on the wearer, until the wearer holds
   // five, and only from a foe with Defense left (its Defense above a sliver of its max HP: above none).
   const name = "Miner's pick", mined = `${id(name)}_mined`, ore = `${id(name)}_ore`, most = 5;
-  const effect = `Basic attacks that land steal ${STEP / P} Defense from the foe for the fight, up to ${most}.`;
+  const effect = `Basic attacks that land steal Defense from the foe for the fight, up to ${most} times.`;
   const hasDefense = { unit: "other" as const, where: { above: { stat: "defense", over: "max_hp", ratio: 1e-6 } } };
   weapon("axe", "rare", name, {
     effect, stats: [st("max_hp", 1), st("mp_regen", 1)],
     statuses: [
       own_(name, effect, { reactions: [reactIf(EV.basic, [{ side: "self", where: { belowCap: ore } }, hasDefense], give(mined, "other", 1), give(ore, "holder", 1))] }),
-      { id: mined, name: "MINED", text: `${STEP / P} Defense less for each stack, for the fight.`, label: "debuff", show: "icon", stacking: "intensity", cap: most, stats: [{ stat: "defense", flat: -STEP }] } as StatusT,
-      { id: ore, name: "ORE", text: `${STEP / P} Defense more for each stack, for the fight.`, label: "buff", show: "icon", stacking: "intensity", cap: most, unremovable: true, stats: [{ stat: "defense", flat: STEP }] } as StatusT,
+      { id: mined, name: "MINED", text: "Less Defense for each stack, for the fight.", label: "debuff", show: "icon", stacking: "intensity", cap: most, stats: [{ stat: "defense", flat: -STEP }] } as StatusT,
+      { id: ore, name: "ORE", text: "More Defense for each stack, for the fight.", label: "buff", show: "icon", stacking: "intensity", cap: most, unremovable: true, stats: [{ stat: "defense", flat: STEP }] } as StatusT,
     ],
     serves: "Landslide 2 ●●, Toll 2 ● ◆ Landslide (Defense as damage), Toll (the wall)",
   });

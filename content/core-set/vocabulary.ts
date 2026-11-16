@@ -129,8 +129,8 @@ export const vocabulary: StatusT[] = [
     trigger: { on: { event: "action_resolve", kind: "basic" } }, drop: "all",
   },
   { id: "brittle", name: "BRITTLE", text: "The next hit it takes is a crit.", label: "debuff", show: "icon", stacking: "intensity", cap: 1, critsTaken: "always", trigger: { on: { event: "hit_taken" } }, drop: "all" },
-  // Dodge: one-use, as Brittle, and it doesn't stack: the next hit misses, and the miss is a dodge.
-  { id: "dodge", name: "DODGE", text: "Dodges the next hit.", label: "buff", show: "icon", stacking: "intensity", cap: 1, dodge: true },
+  // Blur: one-use, as Brittle, and it doesn't stack: the next hit misses, and the miss is a dodge.
+  { id: "blur", name: "BLUR", text: "Dodges the next hit.", label: "buff", show: "icon", stacking: "intensity", cap: 1, dodge: true },
   { id: "fixated", name: "FIXATED", text: "Picks the unit that fixated it, unless a Taunt forces another.", label: "debuff", show: "icon", stacking: "refresh", duration: STATUS.fixated.duration, fixate: true },
   { id: "owed", name: "OWED", text: `Damage from hits waits here, and lands all at once ${OWED} ticks after the first.`, label: "marker", show: "icon", stacking: "intensity", duration: OWED, debt: true, unremovable: true },
   // Signature

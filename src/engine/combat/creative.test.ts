@@ -63,14 +63,14 @@ test("crits taken: always on a Brittle holder, never on a holder that takes none
   assert.deepEqual(amounts(b, "Bag"), [100]);
 });
 
-test("Dodge: the next hit on its holder misses whatever the dice say, fires as a dodge, and the Dodge is spent", () => {
+test("Blur: the next hit on its holder misses whatever the dice say, fires as a dodge, and the Blur is spent", () => {
   const dodge = buff("dodge", { stacking: "intensity", cap: 1, dodge: true });
   const heard = buff("heard", { reactions: [{ on: { event: "hit_evaded" }, do: [{ op: "apply", status: "mark", to: "holder" }] }] });
   const mark = tally("mark");
   const a = arena({ party: [{ name: "P", stats: { max_hp: 1_000_000, evasion: 0 }, statuses: ["dodge", "heard"] }], enemies: [{ name: "F", stats: { accuracy: 100 }, weapon: club(100, 5) }], statuses: [dodge, heard, mark] }).to(12);
   const words = a.hits("P").map((e) => e.word);
   assert.equal(words[0], "MISS", "the first hit is dodged, though the attacker can't miss by the dice");
-  assert.ok(words.length >= 2 && words.slice(1).every((x) => x !== "MISS"), "the Dodge is spent: the hits after land");
+  assert.ok(words.length >= 2 && words.slice(1).every((x) => x !== "MISS"), "the Blur is spent: the hits after land");
   assert.equal(stacks(a, "P", "mark"), 1, "its miss is a dodge: the holder's dodge reactions hear it");
   assert.equal(a.has("P", "dodge").length, 0);
 });

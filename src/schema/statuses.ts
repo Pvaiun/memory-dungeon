@@ -276,7 +276,7 @@ export const Status = z.strictObject({
     .describe("Every revive the holder makes, from its abilities and its statuses' reactions alike (Einherjar)."),
   confuse: z.literal(true).optional().describe("The holder's basic attacks pick a random unit of its own side, itself aside (with nobody there, a foe as usual): Bewildered."),
   fixate: z.literal(true).optional().describe("The holder's basic attacks and its abilities aimed at a random foe pick the unit that applied this status while it can be picked, under the Taunt rule (Fixated). Statuses that know their source only."),
-  dodge: z.literal(true).optional().describe("The next hit on the holder misses, whatever its Evasion and the attacker's Accuracy, and the status is spent with it (Dodge). The miss is a dodge: its events fire as any evaded hit's."),
+  dodge: z.literal(true).optional().describe("The next hit on the holder misses, whatever its Evasion and the attacker's Accuracy, and the status is spent with it (Blur). The miss is a dodge: its events fire as any evaded hit's."),
   critsTaken: z.enum(["always", "never"]).optional().describe("Every hit on the holder crits (always: Brittle), or none does (never, which wins)."),
   owe: Id.optional().describe("Damage from hits on the holder, after Defense and before its block and absorbs, isn't taken: it's added as stacks of this status (a `debt`) instead."),
   debt: z

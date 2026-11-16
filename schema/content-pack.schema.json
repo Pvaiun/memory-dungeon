@@ -2252,7 +2252,7 @@
             "const": true
           },
           "dodge": {
-            "description": "The next hit on the holder misses, whatever its Evasion and the attacker's Accuracy, and the status is spent with it (Dodge). The miss is a dodge: its events fire as any evaded hit's.",
+            "description": "The next hit on the holder misses, whatever its Evasion and the attacker's Accuracy, and the status is spent with it (Blur). The miss is a dodge: its events fire as any evaded hit's.",
             "type": "boolean",
             "const": true
           },

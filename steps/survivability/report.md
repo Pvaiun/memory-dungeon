@@ -37,7 +37,7 @@ Built from the director's list (`changes.md`, with the rulings of Nov 15). `desi
 
 ## What I chose where the list left it open
 
-- **Hunter's eye's power step:** +6% Crit chance on every hit (`KIT.hunterCrit`, your ruling). More crits means more Dodges. Quarry keeps aiming at the foe with the lowest HP%; Quick draw keeps its ready swing. Both keep the Dodge, and neither ignores Taunt any more.
+- **Hunter's eye's power step:** +6% Crit chance on every hit (`KIT.hunterCrit`, your ruling). More crits means more Blurs. Quarry keeps aiming at the foe with the lowest HP%; Quick draw keeps its ready swing. Both keep the Blur, and neither ignores Taunt any more.
 - **Enfeeble's power step:** its cooldown goes from 27.1 ticks to 23, and its cost from 650 MP to 450. The short word would give 19.8 ticks, under Weaken's 20, and the Weaken would never lapse. Wither's Sunder is the few word ×1.4, the old step's size.
 - **The Hexer's Shock** (decision-free, but you asked for it):
   - **Withering hex** (Cold hex B) lays Shock on every swing at the size the Stormcaller's Arc lays.
@@ -50,21 +50,21 @@ Built from the director's list (`changes.md`, with the rulings of Nov 15). `desi
 
 ## Built
 
-- **Dodge,** a new status (`dodge` on a status in the schema; engine 0.28, schema 0.14). The next hit on its holder misses whatever its Evasion and the attacker's Accuracy, and the Dodge is spent. Its miss fires as a dodge, so whatever answers a dodge answers it. It doesn't stack. It has a test in `creative.test.ts`.
+- **Blur,** a new status (`dodge` on a status in the schema; engine 0.28, schema 0.14). The next hit on its holder misses whatever its Evasion and the attacker's Accuracy, and the Blur is spent. Its miss fires as a dodge, so whatever answers a dodge answers it. It doesn't stack. It has a test in `creative.test.ts`.
 - **Weaken** is −50%. **Shock** cuts its holder's hits 1% a stack, read when the hit lands (before Shock drains for the action).
 - **Hexer:** Enfeeble Weakens every foe on a medium cooldown. Wither adds Sunder, and Shackle adds Shock. Hex of flames adds Chill and Burn, and Withering hex Chill and Shock.
 - **Vampire:** Blood drain and Savage drain add Bleed, and Drain the well says "No Bleed."
-- **Ranger:** Hunter's eye gives Dodge at fight start and on a crit, and nothing ignores Taunt. Its Crit stays at 16%.
+- **Ranger:** Hunter's eye gives Blur at fight start and on a crit, and nothing ignores Taunt. Its Crit stays at 16%.
 - **Cleric** (your rulings, after the first read):
   - Renew's version B is Champion's blessing: the ally with the most Attack, cleansed, with Regen and several Might from the Cleric's Attack (about 8 stacks at Attack 3). It's tagged for Landslide and the Hunt.
   - Martyr's raise has a cooldown 40% shorter than Raise's. Neither was measured.
 - **Frostweaver:** Shatterpoint opens each fight with the Shield on every ally.
-- **Documents:** the vocabulary (Weaken, Shock, Dodge, 27 statuses), the four classes, the primer, and two stray mentions of Hunter's eye's Taunt (the Summoner trio, the Avenger's answers).
+- **Documents:** the vocabulary (Weaken, Shock, Blur, 27 statuses), the four classes, the primer, and two stray mentions of Hunter's eye's Taunt (the Summoner trio, the Avenger's answers).
 
 ## Side effects to know
 
 - Foes use these statuses too. The enemy Curse now Weakens the party for −50%, and foes that Shock (Static, Tempest) soften the party's hits a little a stack.
-- **Dodge has no icon yet.** It joins the statuses waiting for the art pass, and the icon test lists it.
+- **Blur has the director's icon.**
 - The piece check passes: every changed form fires. The balance sheet's other flags are unchanged in kind: the free-play class lines, the never-worn kinds and the statuses that never fire.
 
 ## How sure
@@ -77,4 +77,4 @@ Built from the director's list (`changes.md`, with the rulings of Nov 15). `desi
 ## Worth looking at
 
 - A Storm boss fight with the Hexer: Weaken and Shock together on one boss (`npx tsx tools/rogue-feel.ts --builds storm`).
-- A Hunt rung 1 boss: the Ranger's Dodges against a slow, heavy hitter (`--builds hunt`).
+- A Hunt rung 1 boss: the Ranger's Blurs against a slow, heavy hitter (`--builds hunt`).
