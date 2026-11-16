@@ -158,7 +158,7 @@ function trainPicker(run: RogueRun, entries: TrainEntry[]): Child[] {
 function trainMember(run: RogueRun, cls: string, entries: TrainEntry[]): Child[] {
   const m = member(run, cls);
   const k = c.classes.get(cls)!;
-  const stats = fighter(run, cls).stats;
+  const fm = fighter(run, cls), stats = fm.stats;
   const by = new Map(entries.map((e) => [e.opt, e]));
   const out: Child[] = [];
   for (const a of k.abilities) {
@@ -167,17 +167,17 @@ function trainMember(run: RogueRun, cls: string, entries: TrainEntry[]): Child[]
     out.push(section(c.abilities.get(a)!.name.toUpperCase(), known ? null : "NOT LEARNED"));
     if (!known) {
       const e = by.get(trainingId({ verb: "learn", cls, id: a }));
-      const el = abilityBlock(c.abilities.get(a)!, stats);
+      const el = abilityBlock(c.abilities.get(a)!, stats, { held: fm.start });
       el.querySelector(".head")?.append(trainButton(e, false) ?? "");
       if (!e) el.classList.add("dimmed");
       out.push(el);
     } else {
       // The base ability, untrained, so each upgrade below reads against the same card every time.
-      const el = abilityBlock(c.abilities.get(a)!, stats);
+      const el = abilityBlock(c.abilities.get(a)!, stats, { held: fm.start });
       el.querySelector(".head")?.append(h("span", { class: "dim small" }, "BASE"));
       out.push(el);
     }
-    if (upgradeOf(c, a)) out.push(...upgradeCards(m, a, known ? stats : null, by));
+    if (upgradeOf(c, a)) out.push(...upgradeCards(m, a, known ? stats : null, by, fm.start));
   }
   const pid = passiveOf(c, cls);
   const pform = pid ? formOf(m, pid) : undefined;
@@ -194,7 +194,7 @@ const trainButton = (e: TrainEntry | undefined, taken: boolean): HTMLElement | n
  * them: what this opportunity offers has its button, what's taken says TAKEN, the rest is dimmed. An ability not learned
  * yet shows what it can become by name only.
  */
-function upgradeCards(m: Member, id: string, stats: Stats | null, by: Map<string, TrainEntry>): HTMLElement[] {
+function upgradeCards(m: Member, id: string, stats: Stats | null, by: Map<string, TrainEntry>, held: readonly string[] = []): HTMLElement[] {
   const was: Trained = m.trained?.[id] ?? {};
   const ability = upgradeOf(c, id)!.kind === "ability";
   const training = (chip: UpgradeChip): Training => chip === "+" ? { verb: "power", cls: m.cls, id } : { verb: "version", cls: m.cls, id, version: chip === "A" ? "a" : "b" };
@@ -202,7 +202,7 @@ function upgradeCards(m: Member, id: string, stats: Stats | null, by: Map<string
     const e = by.get(trainingId(training(chip)));
     const taken = chip === "+" ? !!was.power : was.version === (chip === "A" ? "a" : "b");
     return { right: trainButton(e, taken), dimmed: !e && !taken, hi: !!e, on: taken, bodyless: ability && !m.known.includes(id) };
-  });
+  }, held);
 }
 
 // ─── The campfire ──────────────────────────────────────────────────────────

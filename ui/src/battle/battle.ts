@@ -688,7 +688,8 @@ export function startBattle(frame: HTMLElement, screen: HTMLElement, args: Battl
       ));
     }
     if (isParty) {
-      const member = { ...u, abilities: u.acts.filter((a) => a.id !== "basic").map((a) => a.id) } as unknown as Member;
+      // What it holds now, so an ability that reads another stat in its place (Even-keel plate) shows it.
+      const member = { ...u, abilities: u.acts.filter((a) => a.id !== "basic").map((a) => a.id), start: u.statuses.map((s) => s.id) } as unknown as Member;
       const pu = driver.input.party.units.find((x) => x.class === u.ref);
       // Its seat, what the formation does for the party, and on a tap who sits in the other seats.
       const f = c.formations.get(driver.input.party.formation);

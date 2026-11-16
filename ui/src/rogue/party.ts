@@ -176,12 +176,12 @@ export function runitScreen(arg?: unknown): Child[] {
       }),
       canUse(cls),
       section("ABILITIES", manage && orderPick !== null ? h("span", { class: "hi" }, "SWAP · SAME: LEAVE OUT") : null),
-      ...m.order.map((a, i) => abilityBlock(formAb(a), fm.stats, { n: i + 1, onN: () => onN(i), cur: orderPick === i, target: orderPick !== null })),
+      ...m.order.map((a, i) => abilityBlock(formAb(a), fm.stats, { n: i + 1, onN: () => onN(i), cur: orderPick === i, target: orderPick !== null, held: fm.start })),
       basicLine(weaponOf(c, fm.weapon), fm.stats, { ref: fm.weapon }),
       out.length ? section("LEFT OUT") : null,
-      ...out.map((a) => { const el = abilityBlock(formAb(a), fm.stats); el.classList.add("dimmed"); el.addEventListener("click", () => bringBack(a)); return el; }),
+      ...out.map((a) => { const el = abilityBlock(formAb(a), fm.stats, { held: fm.start }); el.classList.add("dimmed"); el.addEventListener("click", () => bringBack(a)); return el; }),
       locked.length ? section("NOT LEARNED YET") : null,
-      ...locked.map((a) => { const el = abilityBlock(c.abilities.get(a)!, fm.stats); el.classList.add("dimmed"); return el; }),
+      ...locked.map((a) => { const el = abilityBlock(c.abilities.get(a)!, fm.stats, { held: fm.start }); el.classList.add("dimmed"); return el; }),
     ),
   ];
 }

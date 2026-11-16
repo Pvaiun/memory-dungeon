@@ -6,7 +6,7 @@
 import { formId, type AbilityT } from "../../src/schema.js";
 import { passiveOf, upgradeOf } from "../../src/rogue.js";
 import { c, disp } from "./content.js";
-import { abilityInfo, heldParts, sizeParts, sizeText, type Stats } from "./describe.js";
+import { abilityInfo, heldParts, rescaled, rescalesOf, sizeParts, sizeText, type Stats } from "./describe.js";
 import { h, type Child } from "./dom.js";
 import { classPassive, section, sizeEl, tk } from "./sheet.js";
 
@@ -18,7 +18,7 @@ export type CardLook = { right?: Child; dimmed?: boolean; hi?: boolean; on?: boo
  * The power step and the two versions of `id` (an ability or a passive), each card the upgrade alone on the base. With
  * `stats`, an ability's card shows what it changes in those numbers, a passive's the stacks it lays.
  */
-export function upgradeCards(id: string, stats: Stats | null, look: (chip: UpgradeChip) => CardLook = () => ({})): HTMLElement[] {
+export function upgradeCards(id: string, stats: Stats | null, look: (chip: UpgradeChip) => CardLook = () => ({}), held: readonly string[] = []): HTMLElement[] {
   const u = upgradeOf(c, id);
   if (!u) return [];
   const ability = u.kind === "ability";
@@ -30,7 +30,9 @@ export function upgradeCards(id: string, stats: Stats | null, look: (chip: Upgra
   ];
   return cards.map(({ chip, text, form }) => {
     const o = look(chip);
-    const nums = !stats ? [] : ability ? changeLines(c.abilities.get(id)!, c.abilities.get(form)!, stats) : [passiveSize(form, stats)];
+    // `held`: the unit's statuses, so a form reads the stat its abilities read (Even-keel plate).
+    const rs = stats ? rescalesOf(held, stats) : {};
+    const nums = !stats ? [] : ability ? changeLines(rescaled(c.abilities.get(id)!, rs), rescaled(c.abilities.get(form)!, rs), stats) : [passiveSize(form, stats)];
     return h("div", { class: `ab${o.dimmed ? " dimmed" : ""}` },
       h("div", { class: "head" }, h("span", { class: `chip${o.on ? " on" : ""}` }, chip), h("span", { class: `grow trunc${o.hi ? " hi" : ""}` }, nameOf(form).toUpperCase()), o.right ?? null),
       o.bodyless ? null : h("div", { class: "body" }, text), ...(o.bodyless ? [] : nums));

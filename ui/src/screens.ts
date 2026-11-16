@@ -319,7 +319,7 @@ function unit(arg?: unknown): Child[] {
       ...gearRows,
       canUse(id),
       section("ABILITIES", orderPick === null ? null : h("span", { class: "hi" }, "SWAP WITH?")),
-      ...order.map((a, i) => abilityBlock(c.abilities.get(a)!, member.stats, { n: i + 1, onN: () => onN(i), cur: orderPick === i, target: orderPick !== null && orderPick !== i })),
+      ...order.map((a, i) => abilityBlock(c.abilities.get(a)!, member.stats, { n: i + 1, onN: () => onN(i), cur: orderPick === i, target: orderPick !== null && orderPick !== i, held: member.start })),
       basicLine(weaponOf(c, member.weapon), member.stats, { ref: member.weapon }),
       // From the class list, everything each ability and the passive can be trained into in the rogue mode.
       ...(unitFrom === "classes" ? classUpgrades(id, member.stats) : []),

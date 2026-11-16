@@ -289,6 +289,36 @@ export function sizeParts(a: AbilityT, stats: Stats, dmgMult = 1): SizePart[] {
   return out;
 }
 
+/**
+ * The stats a unit's abilities read in place of others, from the statuses it holds (Even-keel plate: Defense for Attack),
+ * as the engine reads them: only a rescale to another of its own stats, whose test these stats pass. One that reads
+ * another unit (`best`), or a test a sheet can't tell, isn't shown.
+ */
+export function rescalesOf(held: readonly string[], stats: Stats): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const id of held) {
+    const r = c.statuses.get(id)?.rescale;
+    if (!r || r.best || !r.to) continue;
+    const t = r.if;
+    if (t && (Object.keys(t).some((k) => k !== "above") || !t.above || !((stats[t.above.stat] ?? 0) > (t.above.ratio ?? 1) * (stats[t.above.over] ?? 0)))) continue;
+    out[r.from] = r.to;
+  }
+  return out;
+}
+/** An ability as it reads for a unit with these rescales: every number that grows with its own `from` grows with `to`. */
+export function rescaled(a: AbilityT, map: Record<string, string>): AbilityT {
+  if (!Object.keys(map).length) return a;
+  const walk = (x: unknown): unknown => {
+    if (Array.isArray(x)) return x.map(walk);
+    if (!x || typeof x !== "object") return x;
+    const o = Object.fromEntries(Object.entries(x).map(([k, v]) => [k, walk(v)])) as Record<string, unknown>;
+    if (Array.isArray(o.scale))
+      o.scale = (o.scale as { stat?: string; of?: string; seat?: unknown }[]).map((t) => (t.stat && map[t.stat] && t.of !== "target" && t.seat === undefined ? { ...t, stat: map[t.stat] } : t));
+    return o;
+  };
+  return { ...a, do: walk(a.do) as AbilityT["do"] };
+}
+
 /** An ability's size as plain words, for a before-and-after: "150 DMG + 10 BURN". */
 export const sizeText = (parts: SizePart[]) => parts.map((p) => `${p.value ? `${p.value} ` : ""}${p.word}`).join(" + ");
 

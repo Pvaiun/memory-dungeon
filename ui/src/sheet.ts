@@ -14,7 +14,7 @@ import type { AbilityT, EnemyT, FormationT, GearT, WeaponT } from "../../src/sch
 import { combat, type Member } from "../../src/engine/combat/rules.js";
 import { drawOf, resolveWeapon, weaponOf } from "../../src/engine/combat/fight.js";
 import { armorName, c, cls, disp, DISPLAY_DIV, immuneTo, kindOf, offhandName, SHEET_STATS, shortName, SPECIAL_STATS, showStat, statCode, status, tagline } from "./content.js";
-import { abilityInfo, abilityTag, evalNum, heldParts, namedStatuses, scalesOf, sizeParts, statusNumbers, statusText, TYPE_TONE, TYPE_WORD, type Scale, type SizePart, type Stats } from "./describe.js";
+import { abilityInfo, abilityTag, evalNum, heldParts, namedStatuses, rescaled, rescalesOf, scalesOf, sizeParts, statusNumbers, statusText, TYPE_TONE, TYPE_WORD, type Scale, type SizePart, type Stats } from "./describe.js";
 import { basicIconKind, weaponLook } from "./art.js";
 import { canEquip, handsOf } from "../../src/validate.js";
 import { h, type Child } from "./dom.js";
@@ -337,7 +337,9 @@ export function glossary(text: string): HTMLElement[] {
  * name (heals green), the MP, cooldown and wind-up ("CAST") in words and whole numbers; the documents' sentence; and
  * its size for this unit with what it grows with. Designer view adds nothing: every line would repeat one of these.
  */
-export function abilityBlock(a: AbilityT, stats: Stats | null, opts: { n?: number; onN?: () => void; cur?: boolean; target?: boolean; dmgMult?: number; opening?: boolean } = {}): HTMLElement {
+export function abilityBlock(a0: AbilityT, stats: Stats | null, opts: { n?: number; onN?: () => void; cur?: boolean; target?: boolean; dmgMult?: number; opening?: boolean; held?: readonly string[] } = {}): HTMLElement {
+  // `held`: the unit's statuses, so an ability that reads another stat in its place (Even-keel plate) shows it.
+  const a = stats && opts.held ? rescaled(a0, rescalesOf(opts.held, stats)) : a0;
   const i = abilityInfo(a, stats);
   const tag = abilityTag(a);
   // An ability starts a fight charged by its slot (ruleset.opening.slots), so its first use is part of the plan.
@@ -416,7 +418,7 @@ export function classSheet(id: string, designer: boolean, member: Member = membe
   for (const slot of SLOTS) out.push(slot === "offhand" && twoHanded(gear) ? lockedRow(slot) : gearRow(gear[slot] ? c.gear.get(gear[slot]) ?? null : null, slot, member.stats, undefined, false));
   out.push(section("ABILITIES"));
   // In a fight the rows show each cooldown live: the sheet's icons stay plain.
-  member.abilities.forEach((a, i) => out.push(abilityBlock(c.abilities.get(a)!, member.stats, { n: i + 1, opening: false })));
+  member.abilities.forEach((a, i) => out.push(abilityBlock(c.abilities.get(a)!, member.stats, { n: i + 1, opening: false, held: member.start })));
   out.push(basicLine(weaponOf(c, member.weapon), member.stats, { ref: member.weapon }));
   return out;
 }
