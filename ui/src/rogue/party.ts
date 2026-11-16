@@ -1,6 +1,6 @@
 /** Managing the party outside a fight: seats and the camp, the bag and its junk, a piece put on from the bag, a unit's sheet and ability order, its gear. */
 import { bar, button, type Child, h, header, nav, toast, win } from "../dom.js";
-import { current, fighter, saveRogue, vitals } from "./state.js";
+import { alliesOf, current, fighter, saveRogue, vitals } from "./state.js";
 import { bag, bench, canManage, formationRarity, formOf, type Item, itemGear, itemOf, member, passiveOf, rogue, type RogueRun, seatsOf, type Slot, SLOT_LIST, wearer } from "../../../src/rogue.js";
 import { c, cls as classOf, disp, shortName } from "../content.js";
 import { dismiss, equip, junk, seat, setFormation, setOrder, swap } from "../../../src/rogue/record.js";
@@ -132,7 +132,7 @@ export function runitScreen(arg?: unknown): Child[] {
   if (!run || !run.roster.some((m) => m.cls === cls)) return rpartyScreen();
   const m = member(run, cls);
   const k = classOf(cls);
-  const fm = fighter(run, cls);
+  const fm = fighter(run, cls), allies = alliesOf(run, cls);
   const manage = canManage(run);
   const sp = specialLines(fm.stats);
   const locked = c.classes.get(cls)!.abilities.filter((a) => !m.known.includes(a));
@@ -176,12 +176,12 @@ export function runitScreen(arg?: unknown): Child[] {
       }),
       canUse(cls),
       section("ABILITIES", manage && orderPick !== null ? h("span", { class: "hi" }, "SWAP · SAME: LEAVE OUT") : null),
-      ...m.order.map((a, i) => abilityBlock(formAb(a), fm.stats, { n: i + 1, onN: () => onN(i), cur: orderPick === i, target: orderPick !== null })),
+      ...m.order.map((a, i) => abilityBlock(formAb(a), fm.stats, { n: i + 1, onN: () => onN(i), cur: orderPick === i, target: orderPick !== null, held: fm.start, allies })),
       basicLine(weaponOf(c, fm.weapon), fm.stats, { ref: fm.weapon }),
       out.length ? section("LEFT OUT") : null,
-      ...out.map((a) => { const el = abilityBlock(formAb(a), fm.stats); el.classList.add("dimmed"); el.addEventListener("click", () => bringBack(a)); return el; }),
+      ...out.map((a) => { const el = abilityBlock(formAb(a), fm.stats, { held: fm.start, allies }); el.classList.add("dimmed"); el.addEventListener("click", () => bringBack(a)); return el; }),
       locked.length ? section("NOT LEARNED YET") : null,
-      ...locked.map((a) => { const el = abilityBlock(c.abilities.get(a)!, fm.stats); el.classList.add("dimmed"); return el; }),
+      ...locked.map((a) => { const el = abilityBlock(c.abilities.get(a)!, fm.stats, { held: fm.start, allies }); el.classList.add("dimmed"); return el; }),
     ),
   ];
 }

@@ -148,7 +148,7 @@ export const Effect = z
       .describe("Every status of this label the actor holds passes to each target: the actor is rid of it, and it lands as a fresh application at its own length, with the stacks the actor held. Unremovable statuses stay."),
     z
       .strictObject({ op: z.literal("share"), ratio: z.number().gt(0).max(1).optional().describe("A share of the stacks (default 1: the same)."), to: To })
-      .describe("Reactions to status_gained only: each target gains the same status in the same stacks, as a copy. Only a status laid at a moment is shared: one with an icon that has a duration, stacks or a block; not a state its holder keeps while something is true of it."),
+      .describe("Reactions to status_gained only: each target gains the same status in the stacks the application laid, as a copy, even where the holder's cap took none of them. Only a status laid at a moment is shared: one with an icon that has a duration, stacks or a block; not a state its holder keeps while something is true of it."),
     z
       .strictObject({ op: z.literal("riders"), plain: z.literal(true).optional().describe("Only the riders every swing adds: none that waits for a crit, a tag or a test, and none borrowed."), to: To })
       .describe("Reactions only: each target gains what the actor's basic attacks carry, in the stacks one swing adds. Two units answering one event add a status from one source once."),

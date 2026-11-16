@@ -102,8 +102,10 @@ export type Carried = {
   passed: boolean;
   /** action_resolve: what the action paid as an HP price. */
   price: number;
+  /** status_gained: the stacks the application laid, Intensity only: what it brought, though its cap may have let fewer on. */
+  laid: number;
 };
-export const CARRIED_NONE: Carried = { raw: 0, dtype: null, count: 0, ability: null, repeat: 0, on: "", evt: 0, kind: null, about: null, stopped: 0, bare: false, ridersOnly: false, passed: false, price: 0 };
+export const CARRIED_NONE: Carried = { raw: 0, dtype: null, count: 0, ability: null, repeat: 0, on: "", evt: 0, kind: null, about: null, stopped: 0, bare: false, ridersOnly: false, passed: false, price: 0, laid: 0 };
 
 type ItemBase = { at: number; b: number; g: number; slot: number; seq: number; unit: string };
 export type Item =
