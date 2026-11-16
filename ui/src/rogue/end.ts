@@ -6,7 +6,8 @@ import { section } from "../sheet.js";
 import { current, endRun, meta } from "./state.js";
 import { checkRecord, exportRecord, type RecordCheck } from "../../../src/rogue/record.js";
 import { BUILD } from "../update.js";
-import { type FolderKind, saveFiles } from "../folders.js";
+import { download, type FolderKind, saveFiles } from "../folders.js";
+import { keepRun, nameTaken, savedRuns, stamp } from "../saved-runs.js";
 import { actorEl, faceEl, shardEl } from "../pixel.js";
 import { sfx } from "../battle/audio.js";
 import { actions, confirm, frameEl, go, partyActors, pickOrSave, redraw, ROMAN, scene } from "./parts.js";
@@ -78,8 +79,6 @@ function recordLine(run: RogueRun) {
     ch && ch.builds.length > 1 ? h("div", { class: "line small dim wrap" }, `PLAYED ACROSS ${ch.builds.length} BUILDS`) : null,
     ch && ch.reloads ? h("div", { class: "line small dim wrap" }, `${ch.reloads} FIGHT${ch.reloads > 1 ? "S" : ""} RESTARTED AFTER A RELOAD (COUNTED ONCE)`) : null);
 }
-/** A file name's start: the local date and hour, so saved runs sort in the order they were played. */
-const stamp = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}-${String(d.getHours()).padStart(2, "0")}h`;
 /** The player's name for the run, as a file name: no characters a file system refuses, spaces as dashes. */
 const fileSafe = (s: string) => s.trim().replace(/[\\/:*?"<>|\u0000-\u001f]+/g, "").replace(/\s+/g, "-").replace(/^[.-]+|[.-]+$/g, "").slice(0, 60);
 
@@ -109,20 +108,30 @@ function noteText(run: RogueRun, name: string, at: Date, text: string) {
 }
 
 /**
- * The run's record (every choice, what was offered, the party before every fight), for balancing, and the note beside it:
- * one name for both, the date and hour first, the record into the runs folder and the note into the notes folder picked
- * in Settings (designer view), or downloaded where there's no folder. An empty note saves no note.
+ * The run's record (every choice, what was offered, the party before every fight), for balancing, and the note beside it,
+ * under one name: the date and hour first. Both are kept in the app until Settings' EXPORT, and written into the runs and
+ * notes folders too where the designer picked them. An empty note saves no note. If the app can't keep them (its storage
+ * full or refused), both download, so nothing is lost.
  */
 function saveRun(run: RogueRun, name: string, text: string) {
   const at = new Date();
-  const base = `${stamp(at)}-${fileSafe(name) || "run"}`;
-  const files: { kind: FolderKind; ext: string; blob: Blob }[] = [{ kind: "runs", ext: ".json", blob: new Blob([exportRecord(c, run, BUILD, recordCheck(run) ?? undefined)], { type: "application/json" }) }];
-  if (text) files.push({ kind: "notes", ext: ".md", blob: new Blob([noteText(run, name, at, text)], { type: "text/markdown" }) });
-  void saveFiles(base, files).then(({ name: used, where }) => {
-    if (!frameEl) return;
-    const to = where.every((w) => w === null) ? "DOWNLOADED" : where.every((w) => w !== null) ? "SAVED" : "SAVED (PART DOWNLOADED)";
-    toast(frameEl, `${text ? "RUN AND NOTE" : "RUN"} ${to}: ${used.toUpperCase()}`, 2600);
-  });
+  const record = exportRecord(c, run, BUILD, recordCheck(run) ?? undefined);
+  const note = text ? noteText(run, name, at, text) : null;
+  const files: { kind: FolderKind; ext: string; blob: Blob }[] = [{ kind: "runs", ext: ".json", blob: new Blob([record], { type: "application/json" }) }];
+  if (note !== null) files.push({ kind: "notes", ext: ".md", blob: new Blob([note], { type: "text/markdown" }) });
+  void (async () => {
+    const { name: used, where } = await saveFiles(`${stamp(at)}-${fileSafe(name) || "run"}`, files, nameTaken);
+    let msg: string;
+    try {
+      await keepRun(used, at, record, note);
+      const waiting = savedRuns().filter((s) => !s.exported).length;
+      msg = `SAVED: ${used.toUpperCase()}${where.some((w) => w !== null) ? " (AND TO THE FOLDERS)" : ""} · ${waiting} TO EXPORT`;
+    } catch {
+      for (const f of files) download(`${used}${f.ext}`, f.blob);
+      msg = `THE APP COULDN'T KEEP IT: DOWNLOADED ${used.toUpperCase()}`;
+    }
+    if (frameEl) toast(frameEl, msg, 2600);
+  })();
 }
 
 /** A won run's moment: one card for the win, then the class picked to lead, then the heat opened. A tap goes on. */

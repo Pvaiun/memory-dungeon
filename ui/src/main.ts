@@ -7,6 +7,7 @@ import { go, mount, screen, setTheme } from "./screens.js";
 import { checkForUpdate } from "./update.js";
 import { setFilter } from "./filter.js";
 import { loadFolders } from "./folders.js";
+import { loadSaved } from "./saved-runs.js";
 
 fitScale();
 setTheme(setup.settings.theme);
@@ -18,7 +19,7 @@ initBack();
 
 const app = document.getElementById("app")!;
 app.append(h("div", { class: "frame" }, h("div", { class: "screen" }, h("div", { class: "win" }, "LOADING…"))));
-Promise.all([loadArt(), document.fonts.load(`8px ${FONT}`), loadFolders()])
+Promise.all([loadArt(), document.fonts.load(`8px ${FONT}`), loadFolders(), loadSaved()])
   .then(() => {
     buildFont();
     app.replaceChildren();

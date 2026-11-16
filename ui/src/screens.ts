@@ -6,7 +6,7 @@
 import { gearFor as gearThatFits } from "../../src/sim/parties.js";
 import { c, className, classes, cls as classOf, dungeons, enemies, fightName, formations, gearOf, NUMBER_SCALES, runName, setNumberScale, shortName } from "./content.js";
 import { enemyDisplayName } from "./art.js";
-import { button, h, header, nav, row, settleBack, win, type Child } from "./dom.js";
+import { button, h, header, nav, row, settleBack, toast, win, type Child } from "./dom.js";
 import { abilitiesFor, applyHeadStart, BAR_SHOWS, FX_SPEEDS, gearFor, HEAD_STARTS, HIT_PAUSES, SPEEDS, reset, save, setup } from "./state.js";
 import { onRogue, setMode } from "./mode.js";
 import { classUpgrades } from "./upgrades.js";
@@ -22,6 +22,7 @@ import { music, setMusic, setSound, sfx } from "./battle/audio.js";
 import { bindRogue, rbossScreen, rclassScreen, rgearScreen, rogueMenuLine, rogueScreen, rpartyScreen, runitScreen } from "./rogue-screens.js";
 import { abandonRun, current as rogueRun, resetRogue } from "./rogue/state.js";
 import { folderName, foldersWork, forgetFolder, pickFolder, type FolderKind } from "./folders.js";
+import { clearExported, exportSaved, savedRuns, storageIsKept } from "./saved-runs.js";
 
 export type Screen = "home" | "fight" | "party" | "formation" | "unit" | "gear" | "classes" | "bestiary" | "enemy" | "settings" | "battle" | "rogue" | "rparty" | "runit" | "rgear" | "rboss" | "rclass";
 
@@ -406,13 +407,30 @@ function enemy(arg?: unknown): Child[] {
 }
 
 // ─── Settings ───
-/** Designer view: where SAVE RUN writes a run's record and its note. A tap picks a folder; a picked one, tapped, is forgotten. */
+/**
+ * The runs SAVE RUN keeps in the app: how many, EXPORT (two zips, runs and notes; the new ones or all), and CLEAR EXPORTED.
+ * Shown with DESIGNER on, or whenever a run is kept.
+ */
+function savedRows(): Child[] {
+  const all = savedRuns();
+  const fresh = all.filter((r) => !r.exported).length;
+  const done = all.length - fresh;
+  const send = (every: boolean) => void exportSaved(every).then((n) => { toast(frame, n ? `EXPORTED ${n} RUN${n > 1 ? "S" : ""}` : "NOTHING TO EXPORT", 2000); refresh(); }, () => toast(frame, "EXPORT FAILED", 2000));
+  return [
+    row([h("span", { class: "grow" }, "SAVED RUNS"), h("span", { class: fresh ? "hi" : "dim" }, all.length ? `${all.length} · ${fresh} NEW` : "NONE")], undefined, { cursor: false }),
+    fresh ? row([h("span", { class: "grow hi" }, `EXPORT ${fresh} NEW`), h("span", { class: "dim" }, "▶")], () => send(false), { cursor: false }) : null,
+    done ? row([h("span", { class: "grow" }, `EXPORT ALL ${all.length}`), h("span", { class: "dim" }, "▶")], () => send(true), { cursor: false }) : null,
+    done ? row([h("span", { class: "grow" }, `CLEAR ${done} EXPORTED`)], () => ask(`CLEAR ${done} EXPORTED RUN${done > 1 ? "S" : ""}?`, "THEY LEAVE THE APP. THE ZIPS YOU EXPORTED KEEP THEM.", "CLEAR", () => void clearExported().then(refresh)), { cursor: false }) : null,
+    all.length && !storageIsKept() ? h("div", { class: "text small dim wrap" }, "THE BROWSER MAY CLEAR THEM IF THE PHONE RUNS SHORT OF SPACE: EXPORT NOW AND THEN.") : null,
+  ];
+}
+/** Designer view, where the browser can pick folders: SAVE RUN also writes the run and its note into these. A picked one, tapped, is forgotten. */
 function folderRows(): Child[] {
-  if (!foldersWork()) return [h("div", { class: "text small dim wrap" }, "RUNS AND NOTES DOWNLOAD: THIS BROWSER CAN'T PICK FOLDERS")];
+  if (!foldersWork()) return [];
   const one = (kind: FolderKind, label: string) => {
     const at = folderName(kind);
-    return row([h("span", { class: "grow" }, label), h("span", { class: `trunc${at ? "" : " dim"}`, style: "max-width:50%" }, at ? at.toUpperCase() : "DOWNLOADS")],
-      () => { if (at) ask(`FORGET THE ${label}?`, "SAVES GO TO DOWNLOADS INSTEAD.", "FORGET", () => void forgetFolder(kind).then(refresh)); else void pickFolder(kind).then(refresh); }, { cursor: false });
+    return row([h("span", { class: "grow" }, label), h("span", { class: `trunc${at ? "" : " dim"}`, style: "max-width:50%" }, at ? at.toUpperCase() : "NONE")],
+      () => { if (at) ask(`FORGET THE ${label}?`, "SAVED RUNS STAY IN THE APP ALONE.", "FORGET", () => void forgetFolder(kind).then(refresh)); else void pickFolder(kind).then(refresh); }, { cursor: false });
   };
   return [one("runs", "RUNS FOLDER"), one("notes", "NOTES FOLDER")];
 }
@@ -442,6 +460,7 @@ function settings(): Child[] {
       s.designer ? row([h("span", { class: "grow" }, "FX SIZES"), h("span", { class: "dim" }, "▶")], () => go("battle", { dungeon: TUNER_FIGHT, seed: 1, tuner: true }), { cursor: false }) : null,
       s.designer ? toggle("SEED LOCK", "seedLock") : null,
       s.designer && s.seedLock ? seedRow() : null,
+      ...(s.designer || savedRuns().length ? savedRows() : []),
       ...(s.designer ? folderRows() : []),
       onRogue() && rogueRun() ? row([h("span", { class: "grow" }, "GIVE UP THE RUN")], () => ask("GIVE UP THE RUN?", "", "GIVE UP", () => { abandonRun(); go("home"); }), { cursor: false }) : null,
       onRogue() ? row([h("span", { class: "grow" }, "RESET ROGUE")], () => ask("RESET THE ROGUE MODE?", "", "RESET", () => { resetRogue(); go("home"); }), { cursor: false }) : null,

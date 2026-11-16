@@ -1,6 +1,6 @@
 /**
  * The designer's two save folders (runs and notes), picked in Settings, and writing a file into one. Folders need the
- * browser's folder picker (desktop Chrome and Edge); without it, or with no folder picked, a file is downloaded instead.
+ * browser's folder picker (desktop Chrome and Edge); a saved run is kept in the app either way (`saved-runs.ts`).
  * A folder's handle can't go in localStorage, so the two are kept in IndexedDB and read once at start-up: a save then
  * asks for write permission straight from the tap, as the browser requires.
  */
@@ -72,7 +72,8 @@ export async function forgetFolder(kind: FolderKind) {
   try { await put(kind, null); } catch { /* already gone */ }
 }
 
-function download(name: string, blob: Blob) {
+/** Hands a file to the browser as a download. */
+export function download(name: string, blob: Blob) {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
@@ -96,29 +97,28 @@ async function ready(kind: FolderKind): Promise<Dir | null> {
 const exists = (dir: Dir, name: string) => dir.getFileHandle(name).then(() => true, () => false);
 
 /**
- * Saves files that share one name, each into its kind's folder, or downloads it when there's no folder or the write
- * fails. If the name is taken in any of the folders, every file takes the same `-2` (and on), so a run and its note
- * always match. Returns the name used and where each file went: the folder's name, or null for a download.
+ * Writes files that share one name, each into its kind's folder where one is picked and writable. If the name is taken
+ * in any of the folders, or by `taken` (the runs kept in the app), every file takes the same `-2` (and on), so a run and
+ * its note always match. Returns the name used and where each file went: the folder's name, or null for none.
  */
-export async function saveFiles(base: string, files: { kind: FolderKind; ext: string; blob: Blob }[]): Promise<{ name: string; where: (string | null)[] }> {
+export async function saveFiles(base: string, files: { kind: FolderKind; ext: string; blob: Blob }[], taken: (name: string) => boolean): Promise<{ name: string; where: (string | null)[] }> {
   const dirs: (Dir | null)[] = [];
   for (const f of files) dirs.push(await ready(f.kind));
   let name = base;
-  for (let n = 2; (await Promise.all(files.map((f, i) => (dirs[i] ? exists(dirs[i], `${name}${f.ext}`) : false)))).some(Boolean); n++) name = `${base}-${n}`;
+  for (let n = 2; taken(name) || (await Promise.all(files.map((f, i) => (dirs[i] ? exists(dirs[i], `${name}${f.ext}`) : false)))).some(Boolean); n++) name = `${base}-${n}`;
   const where: (string | null)[] = [];
   for (const [i, f] of files.entries()) {
     const dir = dirs[i];
+    let to: string | null = null;
     if (dir) {
       try {
         const w = await (await dir.getFileHandle(`${name}${f.ext}`, { create: true })).createWritable();
         await w.write(f.blob);
         await w.close();
-        where.push(dir.name);
-        continue;
-      } catch { /* fall back to a download */ }
+        to = dir.name;
+      } catch { /* kept in the app all the same */ }
     }
-    download(`${name}${f.ext}`, f.blob);
-    where.push(null);
+    where.push(to);
   }
   return { name, where };
 }

@@ -197,7 +197,9 @@ ui/
     effects.ts               the effects tables: which VFX strip each action, status and event plays; the designer's sizes; the catalogue
     pixel.ts                 graphics: the pixel scale, sprites, icons (the Destiny Shard's among them), the font, effects enlarged by Scale2x and Scale3x
     update.ts                reloading onto a newer build
-    folders.ts               the designer's runs and notes folders (Settings), kept in IndexedDB; saving files into them under one name, or downloading
+    saved-runs.ts            runs saved with SAVE RUN, and their notes, kept in the app (IndexedDB) until Settings' EXPORT downloads them as two zips
+    zip.ts                   a zip file from named text files, deflated where the browser can
+    folders.ts               the designer's runs and notes folders (Settings, where the browser can pick folders), kept in IndexedDB; writing files into them under one name; a download
     rogue-screens.ts         the rogue screens' public face; lists them
     rogue/
       parts.ts               the navigation, small parts and scenes the rogue screens share (the standoff, whose foes open on a tap); under an offered piece, the roster's faces beside what they wear in its slot; a pick's answer, and a result the player couldn't see held over its screen until ONWARD
