@@ -21,13 +21,13 @@ The reasoning behind this step is in `brief.md`; read that first. This page hold
 
 ## The page
 
-`https://claude.ai/artifact/EBRC2rs3Tw6JW2AWMgxZDf`. **The page is built, and a batch never changes it.** Everything a batch needs goes through the page's store, with the ArtifactData tool on that address:
+`https://claude.ai/artifact/EBRC2rs3Tw6JW2AWMgxZDf`. **The page is built: use it as it stands, and never make it again.** A session's whole flow goes through the page's store, with the ArtifactData tool on that address:
 
 - **Seed a batch:** write its cards to `requests/<id>` with the next batch number, in one batch write. The page shows them by itself.
 - **Read the answers:** query `answers` for the batch, once the director says they're done.
-- **Write the reads:** write each to `replies/<id>`.
+- **Write the reads and questions:** write each to `replies/<id>`; the director answers a question in its reply box.
 
-Don't read `requests-page.html`, read the page back, load a design skill or republish, for any of these. The page's source is touched only when the director asks for a change to the page itself; then edit `requests-page.html` and republish it to the same address.
+None of these needs the page's source read, the page read back, a design skill loaded or anything republished. Where the flow needs something the page can't do yet, or the director asks for a change, edit the existing `requests-page.html` in place and republish it to the same address. Don't write a new page, and don't rewrite this one from scratch.
 
 The store holds the requests (`requests/<id>`: batch, order, kind, title, ask, why, near) the director's answers (`answers/<id>`: text, status, reply, batch) and the agent's read of each (`replies/<id>`: kind, text; kind is placed, question, withdrawn or again). A new batch is seeded into `requests` with the next batch number, and the answers are read back from `answers`.
 

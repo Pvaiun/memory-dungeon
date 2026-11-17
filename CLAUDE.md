@@ -20,7 +20,6 @@ An agent that reads everything does worse work, not safer work: what it needs ge
 - **Everything else is reference.** The detailed documents are long. List a document's headings (`grep -n '^##' <file>`), and read the one section a specific question needs. Don't read a document whole because the work is about its subject, or to be safe.
 - **The director's rulings** are the first section of each subject's document: combat, vocabulary, gear, classes, the rogue mode, builds, loot, balance. They win over the rest of their page. Before designing or tuning in a subject, read that subject's rulings, and only that subject's.
 - **Code:** find a file's line in `docs/code-map.md` by searching it, before opening code or listing folders.
-- **Read a section yourself; hand a subagent only a big read.** A subagent starts with tens of thousands of tokens of its own, and its answer comes back without the detail, so for one section it costs more and knows less. Use one when answering means going through a lot the lead won't need again (a whole long document, the loot list, code across files): one call for the whole question, asking for the answer and the lines it rests on.
 - **A brief carries a closed reading list.** Opening a step means writing one: the sections every session of the step needs, what to open only when a named case comes up, and what to leave alone. What the step needs from a long document goes into the brief in a few lines, so later sessions don't each read the document.
 
 ## How to work
