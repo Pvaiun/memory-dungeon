@@ -1,7 +1,6 @@
-# Authored gaps: first report
+# Authored gaps: rulings and handoff
 
-The reasoning behind this step is in `brief.md`; read that first. This page is the rulings, the page and the handoff.
-For the director, Nov 17. Nothing in the game has changed: this is the first map of the web (`web.md`), made from the triage (`triage.md`) and today's loot, with the decisions it needs and a first batch of requests.
+The reasoning behind this step is in `brief.md`; read that first. This page holds the director's rulings, how the request page works, and what the next session does. Nothing in the game has changed.
 
 ## Ruled by the director (Nov 17)
 
