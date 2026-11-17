@@ -1,6 +1,6 @@
 # Authored gaps: the brief
 
-Read this first. It says what this step is trying to do and why, how the work is split between the director and the agent, what was tried and dropped on the way here, and what one batch has taught. `intent.md` is the director's intent in their words; `report.md` is their rulings and the handoff; this page is the reasoning behind both, written by the agent that ran the first session. Where the director's word differs, theirs wins.
+Read this first. It says what this step is trying to do and why, how the work is split between the director and the agent, what was tried and dropped on the way here, and what two batches have taught. `intent.md` is the director's intent in their words; `report.md` is their rulings and the handoff; this page is the reasoning behind both, written by the agent that ran the first session. Where the director's word differs, theirs wins.
 
 ## What to read
 
@@ -8,7 +8,7 @@ Read this first. It says what this step is trying to do and why, how the work is
 
 - **Every session:** `docs/primer.md`; this brief; `report.md` (the rulings and Next); `intent.md`; `web.md`.
 - **To write a batch:** in `docs/gear-design/builds.md`, The director's rulings, The frame and The builds (the nine roads). In `docs/gear-design/loot.md`, The director's rulings only.
-- **To read answers:** `batch-1-answers.md`, for how the director answers and pushes back; the rulings in `docs/core-set/vocabulary.md` and `docs/gear-design/loot.md`.
+- **To read answers:** `batch-1-answers.md` and `batch-2-answers.md`, for how the director answers and pushes back; the rulings in `docs/core-set/vocabulary.md` and `docs/gear-design/loot.md`.
 - **Only when a card or an answer needs it, and only that section:**
   - a status's entry in `docs/core-set/vocabulary.md`, when an answer names or leans on one;
   - a class's section of `docs/core-set/classes.md`, when a request names a class or to see what a kit already supplies;
@@ -30,7 +30,8 @@ Read this first. It says what this step is trying to do and why, how the work is
 
 - **The agent's:** the web (what connects to what, where it's thin, and whether a mechanic is overused), finding the gaps, turning each answer into a piece, checking it against the rules, sizing it, running it, and the plain parts nobody needs to author.
 - **The director's:** every creative decision. What a gap is filled with, and any call on a build's structure or goal.
-- **The director is never asked for** data entry, volume, or ideas from nothing. They said plainly that they can't write good questions or pieces with no context. Every request gives them a frame: one job, and what already sits near it.
+- **Many requests are welcome:** "I don't mind answering hundreds of these... I enjoy it." What they aren't for is the other kind of volume: data entry and mass content.
+- **The director is never asked for** data entry or ideas from nothing. They said plainly that they can't write good questions or pieces with no context. Every request gives them a frame: one job, and what already sits near it.
 - **The agent doesn't model the director's taste.** Workflows that rest on the agent learning what they like from their reactions were set aside by them: they've tried versions of that, and it depends on the agent parsing taste. So don't generate candidates for approval. Ask, and let them write.
 
 ## Tried in conversation and dropped
@@ -43,6 +44,10 @@ So they aren't proposed again. Each was the agent's idea.
 - **An abstract frame** (the player's state, the decision, the kind of pull). It lost them: "I don't understand what you're proposing anymore."
 - **A size on every request.** Added only because they asked, and removed when they asked whether it really helped. A constraint goes in the ask itself, and only where the request needs one.
 
+- **Gaps taken from the earlier loot** (what each cut piece's slot was for). The director: "the loot we had before is not relevant to this at all". The web is built from the roads and the classes.
+- **A skeleton of what each road and class needs,** each need marked met, plain or a gap, drawn up before the next batch. The director approved it, then asked whether it was a mistake, and the agent agreed. It's the top-down structure that reached its ceiling before: it turns every unmet need into a request for coverage, it sorts pieces by road when the director's answers serve many roads at once, and the agent reached for it because it had been told it was wrong, not because the batches had stopped working. The best of the web has come from placing answers and seeing what they do together.
+- **A share of the set to reach** (the director offered 70% authored). No share is set; the set's size is the target (`report.md`, ruling 15).
+
 What stuck was the director's own formulation: a skeleton, gaps where the agent is unsure, and each gap brought to them as an objective.
 
 ## What a good request is
@@ -53,11 +58,14 @@ Six of the first fifteen came back marked as the wrong question, and the directo
 - **Asking for what they cut.** What's in today's loot (`npx tsx tools/loot-list.ts`) and in neither triage pile was cut. An ask whose plain answer is a cut effect is a wrong question too: two formations whose seats aimed the party were cut, so batch 2 didn't ask for one.
 - **Abstractions.** An ask in figures of speech can't be answered. Name the job in the game's own terms, and say what kind of thing is wanted back: an applier, a payoff, a seat, a link between two named things.
 - **Levers the player doesn't have.** Preparation is the whole game: who fights, what they wear, where they sit, the order of their abilities. The party's aim is steered only by a Mark and by an ability's own target phrase. A request that assumes another lever is wrong before it's asked.
+- **Asking for what the game does by itself.** Three of batch 2's thirteen were this: a way to make the foes act (they act anyway, and faster foes hurt the party), a link between swings and casts (every unit does both, so it's good on every unit and a thought for none), a piece for a unit with one ability (one ability is still a full cast rate). Before asking, say what a party lacks without the piece. If the answer is "nothing, but two groups aren't joined", it's coverage.
+- **Near lines that aren't about the job.** Twice the director couldn't see why a card's near lines were there. List only what does the job or touches it. Where nothing does, the card says nothing is near it and lists nothing.
 - **What worked:** links between two named things, a formation with a stated job, a function with a plain constraint. The director's own example requests in `intent.md` are the model for the form.
 - **"Near it"** on a card is the Greats, starred seats and their own placed answers that sit closest to the gap. It's context, never a constraint. No Fines: listed there, they read as things to fit around, and most won't be in the game. A card with little near it is showing a real hole.
 - **No numbers and no sizes from the director.** They write whatever they find most interesting. The agent sizes afterwards, and says plainly when an answer is too small or too big for where it has to sit.
 - **They won't colour-code.** An answer to a road's request may never name that road's status and may serve many roads. That's what the game needs. Place it by what it does, not by the card that asked.
 - **Ask from an underused mechanic where the job allows it.** A card still needs a job the web lacks. Where the count shows a mechanic the web needs more of, the ask names it in one plain sentence (The count, below).
+- **An answer they struggle to write is a wrong question too.** Asked for a formation about the kill, the director wrote one they didn't believe in and then couldn't find another: felling foes is every party's aim, so there was nothing to change. When they say they can't find it, withdraw the card; don't ask again.
 - **"Wrong question" is the most useful button on the page.** Treat it as correct until shown otherwise, withdraw or re-ask in plain words, and say which.
 
 ## Reading the answers
@@ -65,6 +73,7 @@ Six of the first fifteen came back marked as the wrong question, and the directo
 - **Read each one against the rules:** the director's rulings on vocabulary, loot and builds, and the section of `docs/core-set/vocabulary.md` for any status it names (What to read, above). Say what it conflicts with, what was assumed where the words are open, and what it does once it's placed beside the rest.
 - **Push back.** The director asks for it and uses it: one pushback in the first batch made them replace a piece with a better one that broke no rule. They also overrule, and then that's the ruling.
 - **Check a claim before pushing back with it.** One pushback in the first batch was wrong: the agent trusted a test's name over the rule's own text, and the director knew the game better than the note did. Where a pushback rests on how the engine behaves, read the rule or the code first.
+- **Count its partners.** A run shows about a fifth of the loot, so two named pieces meet in about one run in 25 (`report.md`, ruling 15). Say how many things in the web an answer works with. One that needs a single particular partner is told so, plainly; one with many is what the game is for.
 - **Say what placing them found.** Interactions nobody wrote down are the point of the web, and the director wants to hear them.
 - **Check each answer against the count** (below). A phrase many pieces share and a few pieces multiply is how the first failure came about, and the director can't see it forming from where they write.
 - **Be honest about your own additions.** Asked whether the sizes really helped or were only a response to their question, the true answer was the second, and saying so got a better page.
@@ -98,20 +107,20 @@ The agent's reading, for seeing where the web is thick. It isn't the director's 
 
 ## Where it goes
 
-1. More batches, until the web is thick enough to play: the gaps in `web.md`, then what placing the answers shows.
-2. The plain parts, written by the agent and shown by sample.
+1. More batches, toward the set's size in `report.md`, ruling 15 (450 pieces of gear, 50 formations), then a look at the whole web with the director. Few thin spots among the kept effects doesn't mean the web is full: cards also come from what placing found, from pairs of classes and from whole directions (`report.md`, Next). The earlier loot is never where a card comes from.
+2. The plain parts, written by the agent and shown by sample, at the end and only where something needs one.
 3. Sizing and slotting what's placed: kinds, rarities, who wears it, numbers.
 4. Formations beyond those kept or written, then mythics, on the director's word.
 5. Build and measure. Until then the game stays on today's loot, and nothing in it changes.
 
-Not decided: how many pieces the set should hold (the agent's view is fewer and better than today's count), and whether upgrades and mythics join.
+Not decided: how many of the 450 are authored, and whether upgrades and mythics join.
 
 ## The files
 
 - `intent.md`: the director's intent, recorded short.
 - `report.md`: their rulings, how the page and its store work, and the next steps.
 - `triage.md`, `triage-formations.md`: what they kept, in their two piles.
-- `web.md`: where the kept effects sit, what the first batch added, the count of what every effect is set off by, reads and changes, and the gaps seen.
+- `web.md`: where the kept effects sit, what each batch added, the count of what every effect is set off by, reads and changes, and the thin spots seen.
 - `batch-1.md`, `batch-1-answers.md`: the first requests as sent, and their answers with the agent's reads. The second is the best record of how they answer and push back.
-- `batch-2.md`: the second requests as sent. Their answers aren't in yet.
+- `batch-2.md`, `batch-2-answers.md`: the second requests as sent, and their answers with the agent's reads. The batch is closed.
 - `requests-page.html`: the page's source.

@@ -25,6 +25,14 @@ The reasoning behind this step is in `brief.md`; read that first. This page hold
     - **A card may ask for its job to be done from a named underused mechanic,** in one plain sentence in the ask.
     - **How this fits ruling 9.** Ruling 9 is about whether to ask: a card needs a job the web lacks, and "nothing names this mechanic" is never that job. This ruling is about how to ask once there's a job: the card may name the underused mechanic it wants the job done from. An underused mechanic with no job waits in `web.md`, Gaps seen, until one turns up.
 
+13. **The agent builds the web; the director fills its gaps, or originates the sections it doesn't have.** The classes and the roads are fair things to ask from. The earlier loot is no part of it and no decision rests on it ("not relevant to this at all").
+14. **The web grows by batches, from what it holds, and is what it ends up being.** The director: "this batch thing of building based on what we have is working really well". No skeleton of each road's and class's needs is drawn up first: the agent proposed one, the director asked whether it was a mistake, and the agent agreed it was (`brief.md`, Tried and dropped).
+15. **The set's size is the target: "I'd like to reach 450 pieces of gear and 50 formations."** All loot, commons and plain pieces included. A plain number, not a share and not a gap count (the director: "a number quota and letting the web be what it ends up being"). It stops the agent calling the web done early, as it did at 81.
+    - **Where the number comes from:** a finished run should have shown its player about a quarter of all the loot (`intent.md`, What it's for). The agent's rough count from the rogue mode's settings, not yet simulated: a run shows about 90 pieces, about 65 of them with an effect. That's about a fifth of 450, a little under the director's quarter, on the side they lean ("perhaps that number is low"). Measure it with whole runs at build.
+    - **What it asks of every piece:** with a fifth of the loot shown, two named pieces meet in about one run in 25. A piece that needs one particular partner almost never works; a piece with many partners works every run, with a different one each time. That's the director's "as cross-build as possible", and the agent checks each answer for it (`brief.md`, Reading the answers).
+    - **How many of the 450 are authored isn't set.** By the loot's rarity rules a common is stats and an uncommon a simple effect, so the authored pieces are mostly rares and legendaries. The agent's estimate: about 225 if half the set is rare or above, about 315 at the 70% the director first offered. The web holds 62 gear effects, so 160 to 250 are still to come: 16 to 25 batches at ten placed a batch. The director is glad to answer that many.
+    - **Formations are the long way round:** the web has about 15 (7 Great, 3 written, and the Fine formations that hold a starred seat), and two a batch brings 35 more only after 17 batches. The agent suggested more formation cards a batch, or a batch of formations alone; not ruled, so a batch carries two until it is.
+
 ## The page
 
 `https://claude.ai/artifact/EBRC2rs3Tw6JW2AWMgxZDf`. **The page is built: use it as it stands, and never make it again.** A session's whole flow goes through the page's store, with the ArtifactData tool on that address:
@@ -40,35 +48,28 @@ The store holds the requests (`requests/<id>`: batch, order, kind, title, ask, w
 - **A request's kind** is road, link, capstone, supply, function, pair (a piece two classes would both want), formation or open.
 - **A near line's tag** is great, fine, seat (a seat the director starred), gform or fform (a Great or a Fine formation), or yours (an effect the director wrote in an earlier batch).
 - **The page opens on a batch newer than any its device has shown,** and after that on the batch last picked.
-- **Batch 1** is `batch-1.md`: six roads with no Great of their own, four links between the Greats' clusters, a change of target, two formations, a wall-less party, and an open card. **Batch 2** is `batch-2.md`: four roads, three links, two functions, two pairs of classes, two formations, and an open card. One of the pairs asks for a Burn piece (ruling 12).
+- **Batch 1** is `batch-1.md`: six roads with no Great of their own, four links between the Greats' clusters, a change of target, two formations, a wall-less party, and an open card. **Batch 2** is `batch-2.md`: four roads, three links, two functions, two pairs of classes, two formations, and an open card. One of the pairs asks for a Burn piece (ruling 12). **What batch 2 taught about asking:** three of thirteen came back as the wrong question, each for a job the game already does by itself (foes act, every unit swings and casts, one ability is still a full cast rate), and two cards' near lines were called irrelevant. A card with nothing near it says so and lists nothing.
 
 ## What the triage shows
 
 - **The Greats are about a unit's own body and rhythm:** its HP bar (seven), its Shield (five), its MP and casts (seven), how its basic attacks come (six), its dodge (four), a stat read from somewhere else (four). Nearly all either move something to a place it doesn't normally go, or change how a unit acts at a price.
-- **Today's loot keeps under half its effects.** Of 252 pieces with an effect below mythic, about 117 hold a kept effect (37 a Great) and about 135 are holes: about 52 uncommons, 55 rares, 28 legendaries.
-- **Seven Greats have no piece today,** and about 70 Fines don't either.
-- **Every road loses about half its pieces;** the Toll, Landslide and the Hunt lose about six in ten.
 - **The Greats by road:** Landslide 9, the Toll 8, Thousand Cuts 8, Barrage 7, Blood Pact 7, the Hunt 4, the Storm 3, Bonfire 2, Cold Snap 2. Bonfire's two are a caster's pieces, not the fire's.
-
-**How sure.** The counts come from matching the triage's lines to today's cards by their words. Edited lines match loosely, so each count is near, not exact. The slot-by-slot skeleton checks every piece.
-
-## First requests
-
-A trial of the format: six, each with the kept effects near it.
-
-1. **Bonfire.** Nothing kept is about the fire beyond laying it, and the road's idea is a fire that dies unless it's fed. I need one piece about keeping something up that a player would stop for. Near it: Crescendo, Heat that's lost when hit, more Burn every 3 ticks on the hottest foe, Burn passed on when its foe falls.
-2. **Cold Snap.** Everything kept on a shatter pays something small: MP, an ability ready, half a wait, half the cold moving on. I need a shatter that changes what the party does next. Near it: the ×3 swing that Stuns, Chill from max HP.
-3. **The Hunt.** Nothing Great is about choosing who dies. I need a reason to care which foe falls first. Near it: both openings that happen again, ×2 while Hidden, every ally attacking at once when a Marked foe falls, foes below 50% HP falling with the first.
-4. **The dodge and the hit that lands.** Four Greats fire on a dodge and none helps with the blow that gets through, which is why a dodger didn't hold as a front in play. I need the link from the dodge to cover: a Shield, HP or MP. The plain version (a Shield on each dodge) isn't in the kept lists, so I won't guess. Near it: the four dodge Greats, damage that hits MP, overheal as a Shield.
-5. **A debuff held on purpose.** Three kept effects want a unit that carries one: its hits move its debuffs onto the target, a status it gives itself is shared with the lowest ally, and statuses hurt it 50% less. Nothing kept puts a debuff on its own wearer. I need a way to hold one on purpose.
-6. **The crit.** Two Greats: crits heal the lowest ally, and +50% Crit chance with every other hit halved. I need one more thing a crit does that isn't damage or a status on its target. Near it, in the Fines: a crit adds Bleed, Marks, Slows or lands again; another ally's crit gives Might.
 
 ## Next: for the session that picks this up
 
-Batch 1 is closed: every answer is placed or withdrawn (`web.md`, Added by batch 1; their words in `batch-1-answers.md`). Batch 2 is on the page and unanswered: thirteen cards and an open one (`batch-2.md`; `web.md`, Asked in batch 2, says where each came from and what was changed or dropped on the way out). Nothing else waits on the director.
+Batches 1 and 2 are closed: every answer is placed, left out or withdrawn (`web.md`, Added by batch 1 and Added by batch 2; the director's words and each read in `batch-1-answers.md` and `batch-2-answers.md`). The web holds 81 effects. Nothing on the page waits on the director. The target is set (ruling 15: 450 pieces of gear and 50 formations, all loot). One thing in that ruling isn't ruled: how many formation cards a batch carries. Record the director's word there if it comes.
 
-1. Read `brief.md` first: what this step is for, how the work is split, what was tried and dropped, and what the first batch taught. Its reading list (What to read) is closed: read what it names for the job in hand, and nothing else whole.
-2. Wait for the director to say they're done with batch 2. Don't read `answers` before that.
-3. Then read the answers whose `batch` is 2 and write a read of each into `replies` (kind and text), as `brief.md` says under Reading the answers. Check each against the count (`web.md`, The count): an answer that names an overused mechanic gets an `overused` read and isn't placed until the director replies. Put only the summary and the decisions in the chat. When the batch closes, copy it to `batch-2-answers.md`, fold what's placed into `web.md`, and add each placed answer to the count.
-4. Write batch 3 from what placing the answers shows and from `web.md`, Gaps seen, by rulings 9 and 12. Before a card goes out, check that nothing kept does its job and that its plain answer isn't something the director cut. Where its job can be done from a mechanic the count shows as underused, the ask names it.
-5. Still to come, in the director's order: the basic pieces (the agent's, shown by sample), sizing and slotting what's placed, formations beyond those kept or written, mythics, then build.
+**What went wrong at the end of batch 2, so it isn't repeated.** At 81 effects the agent said the gaps were few and offered to move to the plain parts; the director "felt like we were barely getting started". What had run thin was one way of finding cards (thin spots among the kept effects). The agent then reached for structure twice: the holes in the earlier loot (against ruling 4), and a skeleton of needs by road and class (ruling 14). Neither is the method. The method is the batches.
+
+1. **Read `brief.md` first.** Its reading list (What to read) is closed.
+2. **Write batch 3,** about fifteen cards, and seed it to the page with batch number 3. Put only a short summary in the chat. Where the cards come from, roughly in this order of how well each has worked:
+   - **What placing the last answers found** (`web.md`, Found by placing them, and Gaps seen): something the web now supplies with nothing to do with it, or a set of parts one short of working.
+   - **Two classes that share a kind,** asked for a piece both would want, each for its own reason. Placed both times it was asked. Read each class's section of `docs/core-set/classes.md` before naming it.
+   - **A road's thin spot,** asked as a named job with the kind of thing wanted back. Half of these have come back as the wrong question, so say what a party on that road lacks without the piece before sending one.
+   - **A formation with a stated job.**
+   - **A whole direction,** where the web has almost nothing for a road's own lever. The director's intent names this kind of request, and it hasn't been asked yet.
+   - **The open card,** every batch.
+3. **Every card passes ruling 9,** and a batch is as long as its real jobs: if fifteen can't be found, send fewer and say so. Two short batches running is the sign to stop and talk, whatever the target says.
+4. **Recount before treating a mechanic as closed.** The overused line moves as the web grows (one effect in twelve is 7 of 81).
+5. **After the answers:** read them, place them, update the count, and tell the director where the web stands against the target: gear effects placed, and formations.
+6. Still to come, in the director's order, once the authored pieces are in and they've looked at the whole web: the plain parts (the agent's, shown by sample), sizing and slotting what's placed, formations beyond those kept or written, mythics, then build. Slotting is where a class with too little to wear shows up; what it finds comes back as cards.
