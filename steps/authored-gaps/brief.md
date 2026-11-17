@@ -6,8 +6,7 @@ Read this first. It says what this step is trying to do and why, how the work is
 
 **Read little.** The work is judgement: writing a request that isn't the wrong question, and reading an answer against the rules. The director found that the judgement gets worse as the reading piles up, so this list is closed. What isn't on it is reference: open one section when a specific card or answer needs it, and not before.
 
-- **Every session:** `docs/primer.md`; this brief; `report.md` (the rulings and Next); `intent.md`; `web.md`; `skeleton.md`, once it exists.
-- **To build the skeleton:** in `docs/gear-design/builds.md`, The director's rulings, The frame and The builds (the nine roads). In `docs/core-set/classes.md`, each class's section, for its role, trunk, the kinds it wears and its identities; skip the tests. This is the one session that reads the classes through: what the skeleton needs from them goes into `skeleton.md`, so later sessions don't.
+- **Every session:** `docs/primer.md`; this brief; `report.md` (the rulings and Next); `intent.md`; `web.md`.
 - **To write a batch:** in `docs/gear-design/builds.md`, The director's rulings, The frame and The builds (the nine roads). In `docs/gear-design/loot.md`, The director's rulings only.
 - **To read answers:** `batch-1-answers.md` and `batch-2-answers.md`, for how the director answers and pushes back; the rulings in `docs/core-set/vocabulary.md` and `docs/gear-design/loot.md`.
 - **Only when a card or an answer needs it, and only that section:**
@@ -29,7 +28,7 @@ Read this first. It says what this step is trying to do and why, how the work is
 
 ## The split
 
-- **The agent's:** the web (a skeleton of what each road and class needs, what connects to what, and whether a mechanic is overused), finding the gaps, turning each answer into a piece, checking it against the rules, sizing it, running it, and the plain parts nobody needs to author.
+- **The agent's:** the web (what connects to what, where it's thin, and whether a mechanic is overused), finding the gaps, turning each answer into a piece, checking it against the rules, sizing it, running it, and the plain parts nobody needs to author.
 - **The director's:** every creative decision. What a gap is filled with, and any call on a build's structure or goal.
 - **The director is never asked for** data entry, volume, or ideas from nothing. They said plainly that they can't write good questions or pieces with no context. Every request gives them a frame: one job, and what already sits near it.
 - **The agent doesn't model the director's taste.** Workflows that rest on the agent learning what they like from their reactions were set aside by them: they've tried versions of that, and it depends on the agent parsing taste. So don't generate candidates for approval. Ask, and let them write.
@@ -45,7 +44,8 @@ So they aren't proposed again. Each was the agent's idea.
 - **A size on every request.** Added only because they asked, and removed when they asked whether it really helped. A constraint goes in the ask itself, and only where the request needs one.
 
 - **Gaps taken from the earlier loot** (what each cut piece's slot was for). The director: "the loot we had before is not relevant to this at all". The web is built from the roads and the classes.
-- **A share of the set to reach.** The director offered 70% authored and asked whether the agent agreed; it didn't, and the count of the skeleton's gaps stands in its place (`report.md`, ruling 14).
+- **A skeleton of what each road and class needs,** each need marked met, plain or a gap, drawn up before the next batch. The director approved it, then asked whether it was a mistake, and the agent agreed. It's the top-down structure that reached its ceiling before: it turns every unmet need into a request for coverage, it sorts pieces by road when the director's answers serve many roads at once, and the agent reached for it because it had been told it was wrong, not because the batches had stopped working. The best of the web has come from placing answers and seeing what they do together.
+- **A share of the set to reach** (the director offered 70% authored). No share is set; a plain number of authored effects is, as a checkpoint (`report.md`, ruling 15).
 
 What stuck was the director's own formulation: a skeleton, gaps where the agent is unsure, and each gap brought to them as an objective.
 
@@ -105,14 +105,13 @@ The agent's reading, for seeing where the web is thick. It isn't the director's 
 
 ## Where it goes
 
-1. The skeleton: the web built from the roads and the classes, each need marked as met, plain or a gap (`report.md`, Next). Few thin spots among the kept effects doesn't mean the web is full, and the earlier loot is never where a gap comes from.
-2. More batches, from the skeleton's gaps, until it has none. No share is set for how much of the set that makes (`report.md`, ruling 14).
-3. The plain parts, written by the agent and shown by sample, at the end and only where something needs one.
-4. Sizing and slotting what's placed: kinds, rarities, who wears it, numbers.
-5. Formations beyond those kept or written, then mythics, on the director's word.
-6. Build and measure. Until then the game stays on today's loot, and nothing in it changes.
+1. More batches, to the number in `report.md`, ruling 15, then a look at the whole web with the director. Few thin spots among the kept effects doesn't mean the web is full: cards also come from what placing found, from pairs of classes and from whole directions (`report.md`, Next). The earlier loot is never where a card comes from.
+2. The plain parts, written by the agent and shown by sample, at the end and only where something needs one.
+3. Sizing and slotting what's placed: kinds, rarities, who wears it, numbers.
+4. Formations beyond those kept or written, then mythics, on the director's word.
+5. Build and measure. Until then the game stays on today's loot, and nothing in it changes.
 
-Not decided: how many pieces the set should hold (the skeleton's count is the first real figure for it), and whether upgrades and mythics join.
+Not decided: how many pieces the set should hold, and whether upgrades and mythics join.
 
 ## The files
 
@@ -120,7 +119,6 @@ Not decided: how many pieces the set should hold (the skeleton's count is the fi
 - `report.md`: their rulings, how the page and its store work, and the next steps.
 - `triage.md`, `triage-formations.md`: what they kept, in their two piles.
 - `web.md`: where the kept effects sit, what each batch added, the count of what every effect is set off by, reads and changes, and the thin spots seen.
-- `skeleton.md`: to be built next. What each road and class needs, each need marked as met, plain or a gap.
 - `batch-1.md`, `batch-1-answers.md`: the first requests as sent, and their answers with the agent's reads. The second is the best record of how they answer and push back.
 - `batch-2.md`, `batch-2-answers.md`: the second requests as sent, and their answers with the agent's reads. The batch is closed.
 - `requests-page.html`: the page's source.

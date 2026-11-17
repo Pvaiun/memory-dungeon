@@ -25,8 +25,9 @@ The reasoning behind this step is in `brief.md`; read that first. This page hold
     - **A card may ask for its job to be done from a named underused mechanic,** in one plain sentence in the ask.
     - **How this fits ruling 9.** Ruling 9 is about whether to ask: a card needs a job the web lacks, and "nothing names this mechanic" is never that job. This ruling is about how to ask once there's a job: the card may name the underused mechanic it wants the job done from. An underused mechanic with no job waits in `web.md`, Gaps seen, until one turns up.
 
-13. **The agent builds the web; the director fills its gaps, or originates the sections it doesn't have.** The web is a skeleton built from the roads and the classes: what each needs, and which of those needs are met, plain or a gap. The earlier loot is no part of it and no decision rests on it ("not relevant to this at all"). The batches run until the skeleton has no gaps.
-14. **No share is set for the authored pieces.** The director offered 70% and didn't want it ruled unless the agent agreed. The agent didn't: nothing says 70 and not 60 or 80, the plain parts are what the authored pieces act on and ruling 3 already sets how many there are, and a share to reach would turn the batches into a quota. The director accepted the skeleton's count of gaps in its place. The plain parts come last, and only where something needs one.
+13. **The agent builds the web; the director fills its gaps, or originates the sections it doesn't have.** The classes and the roads are fair things to ask from. The earlier loot is no part of it and no decision rests on it ("not relevant to this at all").
+14. **The web grows by batches, from what it holds, and is what it ends up being.** The director: "this batch thing of building based on what we have is working really well". No skeleton of each road's and class's needs is drawn up first: the agent proposed one, the director asked whether it was a mistake, and the agent agreed it was (`brief.md`, Tried and dropped).
+15. **A number of authored effects to reach, not a share and not a gap count.** The director's proposal ("a number quota and letting the web be what it ends up being"), agreed by the agent as a checkpoint: it stops the agent calling the web done early, as it did at 81. **The number is the director's to set and isn't set yet.** The agent suggested about 150, then a look at the whole web together before going further. The plain parts come after, and only where something needs one (ruling 3).
 
 ## The page
 
@@ -52,19 +53,19 @@ The store holds the requests (`requests/<id>`: batch, order, kind, title, ask, w
 
 ## Next: for the session that picks this up
 
-Batches 1 and 2 are closed: every answer is placed, left out or withdrawn (`web.md`, Added by batch 1 and Added by batch 2; the director's words and each read in `batch-1-answers.md` and `batch-2-answers.md`). The web holds 81 effects. Nothing on the page waits on the director, and nothing is open with them. They've approved the plan below.
+Batches 1 and 2 are closed: every answer is placed, left out or withdrawn (`web.md`, Added by batch 1 and Added by batch 2; the director's words and each read in `batch-1-answers.md` and `batch-2-answers.md`). The web holds 81 effects. Nothing on the page waits on the director. **One thing is open with them: the number in ruling 15.** If they've given it, record it there; if not, ask once, in the chat, and write the batch meanwhile.
 
-**What went wrong before it, so it isn't repeated.** At 81 effects the agent said the gaps were few and offered to move to the plain parts. What had run thin was its way of finding gaps (thin spots among the kept effects), not the web: the director "felt like we were barely getting started". It then offered to draw cards from the holes in the earlier loot, against ruling 4. Rulings 13 and 14 are what came of it.
+**What went wrong at the end of batch 2, so it isn't repeated.** At 81 effects the agent said the gaps were few and offered to move to the plain parts; the director "felt like we were barely getting started". What had run thin was one way of finding cards (thin spots among the kept effects). The agent then reached for structure twice: the holes in the earlier loot (against ruling 4), and a skeleton of needs by road and class (ruling 14). Neither is the method. The method is the batches.
 
-1. **Read `brief.md` first.** Its reading list (What to read) is closed, and has a line for this job.
-2. **Build the skeleton,** in a new `skeleton.md`, from the roads and the classes.
-   - **For each of the nine roads** (`docs/gear-design/builds.md`, The builds): what it needs to work, across its range (from what most runs find to its most specific pieces) and its routes.
-   - **For each of the sixteen classes** (`docs/core-set/classes.md`, its section): what each of its three identities would wear for its own reason.
-   - **Against every need, one of three marks:** met, naming what in the web does it (`web.md`); plain, a simple part the agent will write at the end; or a gap, with what the agent was trying to do and didn't know how to choose. "Whenever you're even a little bit unsure", it's a gap.
-   - **A road or a class with nothing at all** is a section for the director to originate, asked as a whole direction.
-   - **Carry over** what's in `web.md`, Gaps seen, under the road or class each belongs to.
-   - Keep it words, in the scale's terms, and short enough to read every session: a line a need.
-3. **Tell the director what the skeleton shows,** short, in the chat: how many needs, how many met, how many plain, how many gaps, and which sections are empty. That count is how far along the web is. Show them the road and the class you're least sure of, as samples.
-4. **Write batch 3 from the gaps,** about fifteen cards, seeded to the page with batch number 3, and put only a short summary in the chat. Ruling 9 holds for every card: say what a party lacks without the piece. Recount before treating a mechanic as closed: the overused line moves as the web grows (one effect in twelve is 7 of 81). If building the skeleton has filled the session, stop after step 3 and let the next one write the batch.
-5. **After each batch:** read the answers, place them, update the count, and mark the skeleton's gaps as met.
-6. Still to come, in the director's order, once the skeleton has no gaps: the plain parts (the agent's, shown by sample), sizing and slotting what's placed, formations beyond those kept or written, mythics, then build.
+1. **Read `brief.md` first.** Its reading list (What to read) is closed.
+2. **Write batch 3,** about fifteen cards, and seed it to the page with batch number 3. Put only a short summary in the chat. Where the cards come from, roughly in this order of how well each has worked:
+   - **What placing the last answers found** (`web.md`, Found by placing them, and Gaps seen): something the web now supplies with nothing to do with it, or a set of parts one short of working.
+   - **Two classes that share a kind,** asked for a piece both would want, each for its own reason. Placed both times it was asked. Read each class's section of `docs/core-set/classes.md` before naming it.
+   - **A road's thin spot,** asked as a named job with the kind of thing wanted back. Half of these have come back as the wrong question, so say what a party on that road lacks without the piece before sending one.
+   - **A formation with a stated job.**
+   - **A whole direction,** where the web has almost nothing for a road's own lever. The director's intent names this kind of request, and it hasn't been asked yet.
+   - **The open card,** every batch.
+3. **Every card passes ruling 9,** and a batch is as long as its real jobs: if fifteen can't be found, send fewer and say so. Two short batches running is the sign to stop and talk, whatever the number in ruling 15 says.
+4. **Recount before treating a mechanic as closed.** The overused line moves as the web grows (one effect in twelve is 7 of 81).
+5. **After the answers:** read them, place them, update the count, and tell the director where the web stands against the number.
+6. Still to come, in the director's order, once the number is reached and they've looked at the whole web: the plain parts (the agent's, shown by sample), sizing and slotting what's placed, formations beyond those kept or written, mythics, then build. Slotting is where a class with too little to wear shows up; what it finds comes back as cards.

@@ -1,6 +1,6 @@
 # The web: what's kept, what's placed, and the count
 
-The effects the web holds so far: the director's Greats (`triage.md`, `triage-formations.md`), the seats they starred, and what their answers to batches 1 and 2 added, with the count of what every effect is set off by, reads and changes. No piece is written here, and nothing is sized or slotted. The skeleton (what each road and class needs, and where the gaps are) is `skeleton.md`, once it's built.
+The effects the web holds so far: the director's Greats (`triage.md`, `triage-formations.md`), the seats they starred, and what their answers to batches 1 and 2 added, with the count of what every effect is set off by, reads and changes. No piece is written here, and nothing is sized or slotted.
 
 ## Where the Greats sit
 
@@ -41,7 +41,7 @@ Where the Greats sit by road, from what each does. A Great can sit on more than 
 | Bonfire | 2 | both are a caster's (the growing spell, every debuff) | everything about the fire |
 | Cold Snap | 2 | both are readers of other things (every debuff, the charge); Chill laid from max HP is the one Great of its own | the shatter |
 
-Nine Greats sit on no road (exotics). The last column is as the triage left it: batches 1 and 2 have since added to several (Added by batch 1, Added by batch 2), and the skeleton is where each road's needs are checked.
+Nine Greats sit on no road (exotics). The last column is as the triage left it: batches 1 and 2 have since added to several (Added by batch 1, Added by batch 2), so check a road's line against them before asking from it.
 
 ## Links
 
@@ -260,7 +260,7 @@ What sets each effect in the web off, what it reads, and what it changes or move
 
 ## Gaps seen, not yet asked
 
-Thin spots seen among the kept effects while placing answers. They aren't the list of gaps: that's the skeleton's (`skeleton.md`), and each of these goes into it under the road or class it belongs to. Each has to pass the check in `report.md` (ruling 9) before it's a card.
+Thin spots seen while placing answers: candidates for a later batch, and only one of the places cards come from (`report.md`, Next). Each has to pass the check in `report.md` (ruling 9) before it goes out.
 
 - **The Mark and Sunder,** underused by the count: one effect names the Mark and none names Sunder. Each still needs a job before it's a card. For the Mark, the Hunt has nothing above Fine on its own lever; for Sunder, Landslide wants its target opened before the blow.
 - **A way to hide a unit that isn't an Assassin.** Hidden has two payoffs (×2, and mana), and only the Assassin's kit and the knockout survived at 1 HP hide anyone. Two Fines hide a unit (below 33% HP; at the fight's start and on a kill), so this may be a Fine brought in, not a card.
