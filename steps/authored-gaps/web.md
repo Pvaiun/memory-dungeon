@@ -73,7 +73,7 @@ Nine Greats sit on no road (exotics).
 The director's answers, placed by what they do, with their replies folded in (`batch-1-answers.md` has their words). Words only: nothing is sized or slotted yet.
 
 - **Mana from the foes' debuffs:** a little MP regen for each stack of any debuff on the foes. Pays most where stacks pile up fast. Ties casting to every status road.
-- **The pile:** damage statuses the wearer lays (Burn, Bleed, Shock) go to the foe holding the most of that status, unless that foe is at its cap. Wide appliers become one foe's pile. The agent reads it as the wearer's own applications.
+- **The pile:** damage statuses the wearer lays (Burn, Bleed, Shock, and Chill at the director's word) go to the foe holding the most of that status, unless that foe is at its cap. Wide appliers become one foe's pile. The agent reads it as the wearer's own applications.
 - **Shock from casting:** every tick of a wind-up lays Shock on every foe. Long casts become the Storm's source; it pulls against Cast speed.
 - **Shock from wide abilities:** any ability that lands on more than one unit, allies included, lays Shock on every foe.
 - **A dodge heals:** a share of the blow it would have been. With overheal as a Shield, a dodger builds a Shield by dodging.
@@ -105,26 +105,58 @@ The director's answers, placed by what they do, with their replies folded in (`b
 - The one-Shield formation with the Shield that sends back ×2 and the piece that takes every ally's Shield.
 - The pile with Shock from casting: a long cast puts the whole field's charge on one foe.
 
+## Added by batch 2
+
+Placed by what they do (`batch-2-answers.md` has the director's words and each read). Words only: nothing is sized or slotted. Three cards wait on the director's reply and aren't in the count: Hidden (the agent would place mana while Hidden and leave Might out), the formation about the kill, and the formation that drains two seats.
+
+- **Extra strikes set off what a basic attack sets off:** the statuses the swing carries and anything worded "on a basic attack". The Fine "Extra strikes carry the swing's effects", a little wider, brought in because Thousand Cuts needs it. It doesn't roll Double strike again by itself: the Great does, to its own limit.
+- **Chill from statuses laid on its own side:** each status its wearer lays on itself or an ally adds Chill to the foe with the most Chill. Read as its wearer's own applications, once for each ally a buff lands on, and to a random foe when none holds Chill. Cold Snap's way in without a wall.
+- **Cooldowns from an ally's cast:** when another ally casts, a fixed amount comes off its own cooldowns, split evenly over the abilities it has slotted. What the two who serve a caster get for themselves, and the one thing that pays for slotting fewer.
+- **Might when a foe is Stunned:** any Stun that lands, a shatter's included, whoever caused it.
+- **A Stun it lands leaves Slow behind:** its wearer's own Stuns. On a boss both count toward its resistance to control, so the party's Stuns run out twice as fast.
+- **HP into MP when a fight is won:** its wearer gives up half the HP it has left and gains that share of its max MP, as far as its MP has room.
+- **Burn from the first-slotted ability:** on every foe it hits. The first thing in the web that lays Burn.
+- **Attack for HP missing,** counted in points, not as a share, so a unit with a lot of HP gains most.
+
+**Left out, and the director told why:** Chill turned into Bleed (two roads' statuses on one card, against the builds ruling); a Shield when a foe is Stunned (Shield is overused).
+
+**Threads the director settled:**
+- **The Storm's two patterns, in their words:** one holds the foes slow or still so the charge reaches its cap and is read; the other stands under their attacks while the charge spends itself. Nothing makes the foes act sooner: they act by themselves, and faster foes hurt the party first.
+- **The swing and the cast need no link.** Every unit does both, so a link is good on every unit and a thought for none.
+- **Nothing asks a player to slot fewer abilities.** One ability doesn't mean fewer casts. The cooldowns piece is the one thing that tilts that way.
+- **Chill is a damage status** for the pile.
+- **Thousand Cuts' piece is about its extra strikes.** Asked twice, nothing Great names Bleed: it comes from the kits and the plain pieces.
+
+**Found by placing them:**
+- The pile with Chill: a wearer's wide Chill gathers on the coldest foe, so foes shatter one after another.
+- Chill from statuses with overheal as a Shield: every heal past full is a Shield laid, so a healer freezes foes by healing.
+- Chill from statuses with Might when a foe is Stunned, on one unit: a shatter Stuns, the Stun gives Might, the Might lays more Chill.
+- Cooldowns from an ally's cast, on two units: each readies the other, and only mana stops them. Beside the Conductor: its casts feed the Soloist's mana, and the Soloist's casts ready it. In the Cathedral, the Voices are readied with no mana to cast.
+- Burn from the first-slotted ability in the Soloist's seat: Burn on every cast. With the pile, a wide first ability's Burn lands on one foe; with mana from the foes' debuffs, the fire helps pay for itself.
+- Attack for HP missing with more max HP as the fight starts: current HP stays put, so the gap is missing HP and becomes Attack at once, and again on each kill when the opening repeats. With the knockout survived at 1 HP: Hidden, with nearly all of the bonus.
+- HP into MP with damage that hits MP in place of HP: the mana is the body, so the trade costs little. It also sends its wearer into the next fight hurt, which Attack for HP missing reads.
+
 ## The count
 
-What sets each effect in the web off, what it reads, and what it changes or moves. It holds 71 effects: the 42 Greats, 10 from the Great formations (a formation's plain seats are folded into its line), the 6 starred seats and batch 1's 13. An effect can sit in two rows of a table. **Every time an answer is placed, add its line to the ledger and bump the counts.** The test for overused and underused is in `brief.md`, The count; the verdicts below are the agent's.
+What sets each effect in the web off, what it reads, and what it changes or moves. It holds 79 effects: the 42 Greats, 10 from the Great formations (a formation's plain seats are folded into its line), the 6 starred seats, batch 1's 13 and batch 2's 8. An effect can sit in two rows of a table. **Every time an answer is placed, add its line to the ledger and bump the counts.** The test for overused and underused is in `brief.md`, The count; the verdicts below are the agent's.
 
 | Set off by | Effects | Reads | Effects | Changes or moves | Effects |
 | --- | --- | --- | --- | --- | --- |
-| its cast | 12 | nothing | 26 | its damage | 16 |
-| its swing | 11 | a stat | 13 | how often it swings or hits | 9 |
-| always on | 9 | the size of a blow, heal or price | 8 | a status on the foes | 9 |
-| the fight's start | 8 | stacks on the foes | 6 | a status on itself or allies | 8 |
-| an ally's action or blow | 6 | HP or MP as it stands | 5 | who is hit | 7 |
-| a blow taken | 5 | gear slots or ability order | 5 | a stat | 7 |
-| a dodge | 5 | a status on itself | 5 | a heal | 6 |
-| its hit or crit | 4 | Shield held | 4 | MP | 6 |
-| a status gained, laid or shattering | 4 | a foe's HP | 2 | a Shield | 5 |
-| a heal | 3 | | | cooldowns | 4 |
-| a state held | 3 | | | an effect happening again | 4 |
-| a foe falling | 3 | | | HP spent or capped | 3 |
+| its cast | 13 | nothing | 29 | its damage | 16 |
+| its swing | 12 | a stat | 13 | a status on the foes | 12 |
+| always on | 10 | the size of a blow, heal or price | 8 | how often it swings or hits | 9 |
+| the fight's start | 8 | stacks on the foes | 7 | a status on itself or allies | 9 |
+| an ally's action or blow | 7 | HP or MP as it stands | 7 | a stat | 8 |
+| a status gained, laid or shattering | 7 | gear slots or ability order | 7 | who is hit | 7 |
+| a blow taken | 5 | a status on itself | 5 | MP | 7 |
+| a dodge | 5 | Shield held | 4 | a heal | 6 |
+| its hit or crit | 4 | a foe's HP | 2 | a Shield | 5 |
+| a heal | 3 | | | cooldowns | 5 |
+| a state held | 3 | | | an effect happening again | 5 |
+| a foe falling | 3 | | | HP spent or capped | 4 |
 | HP paid | 1 | | | | |
 | a foe acting | 1 | | | | |
+| a fight won | 1 | | | | |
 
 **By the word a player would collect** (every effect that names it, sources and payoffs together):
 
@@ -133,18 +165,21 @@ What sets each effect in the web off, what it reads, and what it changes or move
 | The fight's start | 10 (8 openers, and the 2 that repeat them) | Overused: they all fire together, and a kill fires them again |
 | Shield | 8 | Overused: five sit on one holder and two more feed it; only the Peak pulls the other way |
 | The dodge | 7 (5 "on a dodge", 2 that make dodges) | Overused: all five stack on one dodger |
-| MP | 8 | Common, and fine: every caster needs it, and the eight pull three ways (cheaper casts, mana passed on, MP as a body) |
-| Max HP | 7 | Watch: a stat, but five effects scale from it and one raises it on every kill |
-| Chill, Shock, cooldowns, HP paid or held low | 4 each | Fine |
-| A crit, a kill, the draw | 3 each | Fine |
-| Hidden, Stun, Might, an empty slot | 2 each | Hidden and Stun are underused: supplied, with one payoff and none (batch 2 asks for both) |
-| Burn, the Mark | 1 each | Underused: a road's own status, and the player's one way to aim |
-| Bleed, Sunder | 0 | Underused: Thousand Cuts' status (asked in batch 2), and a thread of two roads |
+| MP | 9 | Common, and fine: every caster needs it, and the nine pull three ways (cheaper casts, mana passed on, MP as a body) |
+| Max HP | 8 | Watch: a stat, but five effects scale from it, one raises it on every kill, and Attack for HP missing counts in points, so it grows with it too. No more asked from it |
+| Chill | 6 (the pile now takes it) | Watch: near the line, and every one of them moves a foe toward the shatter. The next answer that names it is flagged |
+| HP paid or held low | 6 | Watch: near the line, and four of them add up on one low unit; what pulls against them is dying. The formation that drains two seats would make seven |
+| Cooldowns | 5 | Fine |
+| Shock, Stun | 4 each | Fine. Stun has its payoffs now: Might, and Slow left behind |
+| A crit, a kill, the draw, Might, the first-slotted ability, extra strikes | 3 each | Fine. The three on the first-slotted ability stack on one cast, which is an engine a player finds, not yet a habit |
+| Hidden, Burn, an empty slot | 2 each | Hidden waits on the director's reply (mana while Hidden would make three). Burn has a source now and is still underused |
+| The Mark, Slow, a fight won | 1 each | The Mark is underused: the player's one way to aim |
+| Bleed, Sunder | 0 | Underused. Bleed was asked twice and brought no piece that names it; Sunder is a thread of two roads |
 | Taunt, Thorns, Guard, and the statuses no build leans on | 0 | Left alone: the Toll has its payoff, and a rare status is allowed to stay rare |
 
 - **Swings, casts, hits and plain stats top every table and aren't overused:** every unit has them, and the swing effects pull against each other (never, half as often, only when a foe acts).
 - **Overused means no more for now, not too many kept.** Nothing placed is taken out. A new answer that names one of the three is flagged on its card, and the share falls as the web grows.
-- **Set off by nearly nothing:** a foe acting (1) and HP paid (1), each with several effects that supply it. Batch 2 asks for both jobs.
+- **Set off by nearly nothing:** a foe acting (1) and HP paid (1). Batch 2 asked for both jobs and brought neither: the director withdrew the first (foes act by themselves), and the formation that drains two seats is a drain, which by the loot's words isn't a price paid.
 
 **The ledger.**
 
@@ -221,38 +256,24 @@ What sets each effect in the web off, what it reads, and what it changes or move
 | A Mark on the foe with the least max HP as the fight starts | Batch 1 | the fight's start | a foe's HP | a status on the foes |
 | Formation: two seats swing the third | Batch 1 | an ally's action or blow | nothing | how often it swings or hits |
 | Formation: one Shield | Batch 1 | always on | nothing | a Shield, who is hit |
-
-## Asked in batch 2
-
-Thirteen cards and an open one (`batch-2.md`). Each was checked against ruling 9, and against what the director cut: what's in today's loot (`npx tsx tools/loot-list.ts`) and in neither triage pile.
-
-- **From the gaps seen after batch 1:**
-  - a Bleed piece, asked plainly and skippable;
-  - between fights: a piece that reads what its wearer walked in with, or acts when a fight is won, and isn't a refill;
-  - Cold Snap's second shatter, asked as a second way to the Chill cap, for a party with no wall to lay Chill from max HP;
-  - something of their own for the two who serve a caster, with "they only serve" offered as an answer;
-  - a piece two classes would both want, twice: the Pyromancer and the Bramble knight (the totem), the Assassin and the Cleric (the vial).
-- **From a thread the director settled:** the Storm's second pattern (make the enemies attack quickly) has plenty that pays when a foe acts and one Fine that makes one act, so: a way to make the foes act sooner or more often.
-- **Where the web has a supply and nothing to do with it:**
-  - a Stunned foe: three kept effects, every shatter and three kits Stun, and nothing kept pays for it;
-  - Hidden: three kept effects and the Assassin's kit hide a unit, and one effect pays for it;
-  - a unit's swings and its casts: the web's two biggest clusters, joined by two Fines.
-- **A lever nothing reads:** a unit that knows, or slots, only one ability.
-- **Formations:** one about the moment a foe falls (no kept formation does anything on a kill but the Torch), and one about a unit that pays HP or sits low.
-- **Asked from an underused mechanic** (ruling 12): the Pyromancer and Bramble knight card asks for a Burn piece. Cards 1, 5, 6, 8 and 9 already name theirs (Bleed, a Stunned foe, Hidden, what a fight leaves, a unit with one ability).
-
-**Changed before it went out:**
-- **"A formation where life moves between seats"** became the formation about HP paid or held low. The Lifeline and the Warden, both starred, already move life to an anchor; nothing kept is about the unit that spends its own.
-- **"A formation where one seat picks the party's target"** wasn't asked. The pack (a Fine) does it with a Mark, and a Fine piece Marks whatever its holder's ability hits. The two formations in today's loot whose seats aimed the party without a Mark (Crossfire, Wedge) were cut. The Hunt's formation is asked by the kill instead.
+| Extra strikes set off what a basic attack sets off | Batch 2 | its swing | nothing | an effect happening again |
+| Chill from statuses laid on its own side | Batch 2 | a status gained, laid or shattering | stacks on the foes | a status on the foes |
+| Cooldowns from an ally's cast | Batch 2 | an ally's action or blow | gear slots or ability order | cooldowns |
+| Might when a foe is Stunned | Batch 2 | a status gained, laid or shattering | nothing | a status on itself or allies |
+| A Stun it lands leaves Slow behind | Batch 2 | a status gained, laid or shattering | nothing | a status on the foes |
+| HP into MP when a fight is won | Batch 2 | a fight won | HP or MP as it stands | MP, HP spent or capped |
+| Burn from the first-slotted ability | Batch 2 | its cast | gear slots or ability order | a status on the foes |
+| Attack for HP missing | Batch 2 | always on | HP or MP as it stands | a stat |
 
 ## Gaps seen, not yet asked
 
 Candidates for a later batch. Each has to pass the check in `report.md` (ruling 9) before it goes out.
 
-- **A Burn applier,** if batch 2's Burn card (the Pyromancer and the Bramble knight) doesn't bring one. Batch 1's Bonfire card brought upkeep and the pile, not a source.
 - **The Mark and Sunder,** underused by the count: one effect names the Mark and none names Sunder. Each still needs a job before it's a card. For the Mark, the Hunt has nothing above Fine on its own lever; for Sunder, Landslide wants its target opened before the blow.
-- **The Shield and the cast.** Greats on both sides, and only Fines between them (a Shield from a cast, or from max MP). The Peak's doubled hits reach abilities, so it may need nothing.
-- **A formation for the dodge.** Skirmish line (a Fine) is three plain dodgers. With party Blur and the dodge Greats it may be enough as it is.
+- **A way to hide a unit that isn't an Assassin,** if mana while Hidden is placed: two payoffs then, and only the Assassin's kit and the knockout survived at 1 HP to hide anyone. Two Fines hide a unit (below 33% HP; at the fight's start and on a kill), so this may be a Fine brought in, not a card.
+- **The Shield and the cast,** and **a formation for the dodge:** both sit on overused mechanics, so neither is asked until the web has grown.
+- **The formation about the kill,** again, if the director drops theirs.
+- **Not to ask:** a third Bleed card; anything that makes the foes act; a link between swings and casts; a piece for a unit with one ability; more from max HP, Chill, or HP held low while they're on watch.
 - **Mythics:** sixteen, one batch, from scratch, once the gear is placed. Upgrades stay as part of the kits. Neither is ruled yet.
 
 ## Asked of the director

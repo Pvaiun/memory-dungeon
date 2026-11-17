@@ -40,7 +40,7 @@ The store holds the requests (`requests/<id>`: batch, order, kind, title, ask, w
 - **A request's kind** is road, link, capstone, supply, function, pair (a piece two classes would both want), formation or open.
 - **A near line's tag** is great, fine, seat (a seat the director starred), gform or fform (a Great or a Fine formation), or yours (an effect the director wrote in an earlier batch).
 - **The page opens on a batch newer than any its device has shown,** and after that on the batch last picked.
-- **Batch 1** is `batch-1.md`: six roads with no Great of their own, four links between the Greats' clusters, a change of target, two formations, a wall-less party, and an open card. **Batch 2** is `batch-2.md`: four roads, three links, two functions, two pairs of classes, two formations, and an open card. One of the pairs asks for a Burn piece (ruling 12).
+- **Batch 1** is `batch-1.md`: six roads with no Great of their own, four links between the Greats' clusters, a change of target, two formations, a wall-less party, and an open card. **Batch 2** is `batch-2.md`: four roads, three links, two functions, two pairs of classes, two formations, and an open card. One of the pairs asks for a Burn piece (ruling 12). **What batch 2 taught about asking:** three of thirteen came back as the wrong question, each for a job the game already does by itself (foes act, every unit swings and casts, one ability is still a full cast rate), and two cards' near lines were called irrelevant. A card with nothing near it says so and lists nothing.
 
 ## What the triage shows
 
@@ -65,10 +65,13 @@ A trial of the format: six, each with the kept effects near it.
 
 ## Next: for the session that picks this up
 
-Batch 1 is closed: every answer is placed or withdrawn (`web.md`, Added by batch 1; their words in `batch-1-answers.md`). Batch 2 is on the page and unanswered: thirteen cards and an open one (`batch-2.md`; `web.md`, Asked in batch 2, says where each came from and what was changed or dropped on the way out). Nothing else waits on the director.
+Batch 1 is closed. Batch 2 is answered and read: every card has the agent's read on the page (`batch-2-answers.md`), eight effects are placed and counted (`web.md`, Added by batch 2), three cards were withdrawn, and the open card came back empty. **Three cards wait on the director's reply, under Needs you on the page:**
 
-1. Read `brief.md` first: what this step is for, how the work is split, what was tried and dropped, and what the first batch taught. Its reading list (What to read) is closed: read what it names for the job in hand, and nothing else whole.
-2. Wait for the director to say they're done with batch 2. Don't read `answers` before that.
-3. Then read the answers whose `batch` is 2 and write a read of each into `replies` (kind and text), as `brief.md` says under Reading the answers. Check each against the count (`web.md`, The count): an answer that names an overused mechanic gets an `overused` read and isn't placed until the director replies. Put only the summary and the decisions in the chat. When the batch closes, copy it to `batch-2-answers.md`, fold what's placed into `web.md`, and add each placed answer to the count.
-4. Write batch 3 from what placing the answers shows and from `web.md`, Gaps seen, by rulings 9 and 12. Before a card goes out, check that nothing kept does its job and that its plain answer isn't something the director cut. Where its job can be done from a mechanic the count shows as underused, the ask names it.
-5. Still to come, in the director's order: the basic pieces (the agent's, shown by sample), sizing and slotting what's placed, formations beyond those kept or written, mythics, then build.
+- **Hidden (`b2-06`):** the agent would place mana while Hidden and leave out Might while Hidden (the unit's own damage, on top of ×2 while Hidden). Asked: agree, or Might?
+- **The formation about the kill (`b2-12`):** the director invited a challenge and got one (it adds and doesn't change; it pays by the number of foes; two seats sit on the dodge and max HP). Asked: keep it as a plain common formation, or write another?
+- **The formation that drains two seats (`b2-13`):** the agent would place it. Asked: does the HP the seats took come back when the fight ends, or does it carry? The agent's view is that it comes back.
+
+1. Read `brief.md` first: what this step is for, how the work is split, what was tried and dropped, and what the batches taught. Its reading list (What to read) is closed: read what it names for the job in hand, and nothing else whole.
+2. Wait for the director to say they've replied. Then read `answers` for `b2-06`, `b2-12` and `b2-13` (the `reply` field), and any reply they left on another card's read. Settle each: update its read in `replies`, its entry in `batch-2-answers.md`, and `web.md` (Added by batch 2, the ledger and the counts). A reply that says "as written" is the ruling.
+3. Write batch 3 from what placing the answers shows and from `web.md`, Gaps seen, by rulings 9 and 12. Before a card goes out, check that nothing kept does its job and that its plain answer isn't something the director cut. Where its job can be done from a mechanic the count shows as underused, the ask names it. The gaps are few now: say so if the web looks thick enough to move to the plain parts, and let the director decide.
+4. Still to come, in the director's order: the basic pieces (the agent's, shown by sample), sizing and slotting what's placed, formations beyond those kept or written, mythics, then build.

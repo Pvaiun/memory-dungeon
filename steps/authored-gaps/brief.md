@@ -8,7 +8,7 @@ Read this first. It says what this step is trying to do and why, how the work is
 
 - **Every session:** `docs/primer.md`; this brief; `report.md` (the rulings and Next); `intent.md`; `web.md`.
 - **To write a batch:** in `docs/gear-design/builds.md`, The director's rulings, The frame and The builds (the nine roads). In `docs/gear-design/loot.md`, The director's rulings only.
-- **To read answers:** `batch-1-answers.md`, for how the director answers and pushes back; the rulings in `docs/core-set/vocabulary.md` and `docs/gear-design/loot.md`.
+- **To read answers:** `batch-1-answers.md` and `batch-2-answers.md`, for how the director answers and pushes back; the rulings in `docs/core-set/vocabulary.md` and `docs/gear-design/loot.md`.
 - **Only when a card or an answer needs it, and only that section:**
   - a status's entry in `docs/core-set/vocabulary.md`, when an answer names or leans on one;
   - a class's section of `docs/core-set/classes.md`, when a request names a class or to see what a kit already supplies;
@@ -53,6 +53,8 @@ Six of the first fifteen came back marked as the wrong question, and the directo
 - **Asking for what they cut.** What's in today's loot (`npx tsx tools/loot-list.ts`) and in neither triage pile was cut. An ask whose plain answer is a cut effect is a wrong question too: two formations whose seats aimed the party were cut, so batch 2 didn't ask for one.
 - **Abstractions.** An ask in figures of speech can't be answered. Name the job in the game's own terms, and say what kind of thing is wanted back: an applier, a payoff, a seat, a link between two named things.
 - **Levers the player doesn't have.** Preparation is the whole game: who fights, what they wear, where they sit, the order of their abilities. The party's aim is steered only by a Mark and by an ability's own target phrase. A request that assumes another lever is wrong before it's asked.
+- **Asking for what the game does by itself.** Three of batch 2's thirteen were this: a way to make the foes act (they act anyway, and faster foes hurt the party), a link between swings and casts (every unit does both, so it's good on every unit and a thought for none), a piece for a unit with one ability (one ability is still a full cast rate). Before asking, say what a party lacks without the piece. If the answer is "nothing, but two groups aren't joined", it's coverage.
+- **Near lines that aren't about the job.** Twice the director couldn't see why a card's near lines were there. List only what does the job or touches it. Where nothing does, the card says nothing is near it and lists nothing.
 - **What worked:** links between two named things, a formation with a stated job, a function with a plain constraint. The director's own example requests in `intent.md` are the model for the form.
 - **"Near it"** on a card is the Greats, starred seats and their own placed answers that sit closest to the gap. It's context, never a constraint. No Fines: listed there, they read as things to fit around, and most won't be in the game. A card with little near it is showing a real hole.
 - **No numbers and no sizes from the director.** They write whatever they find most interesting. The agent sizes afterwards, and says plainly when an answer is too small or too big for where it has to sit.
@@ -113,5 +115,5 @@ Not decided: how many pieces the set should hold (the agent's view is fewer and 
 - `triage.md`, `triage-formations.md`: what they kept, in their two piles.
 - `web.md`: where the kept effects sit, what the first batch added, the count of what every effect is set off by, reads and changes, and the gaps seen.
 - `batch-1.md`, `batch-1-answers.md`: the first requests as sent, and their answers with the agent's reads. The second is the best record of how they answer and push back.
-- `batch-2.md`: the second requests as sent. Their answers aren't in yet.
+- `batch-2.md`, `batch-2-answers.md`: the second requests as sent, and their answers with the agent's reads. Three of its cards wait on the director's reply.
 - `requests-page.html`: the page's source.
