@@ -219,7 +219,8 @@ textarea.small{ min-height:4rem; }
       c.read.appendChild(rh);
       rp.text.split("\n").forEach(function(line){ if (line.trim()) c.read.appendChild(el("p", "", line)); });
     }
-    var askYou = (!!rp && rp.kind === "question") || !!s.reply;
+    var askYou = !!rp || !!s.reply;
+    c.rta.placeholder = rp && rp.kind === "question" ? "Answer my question here. Your answer above stays as it is." : "Comment on my read, if you like.";
     c.rlab.hidden = !askYou; c.rta.hidden = !askYou;
     if (document.activeElement !== c.rta && !s.dirty && c.rta.value !== s.reply) c.rta.value = s.reply;
     c.body.hidden = s.folded; c.head.setAttribute("aria-expanded", String(!s.folded));
