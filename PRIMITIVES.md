@@ -2,7 +2,7 @@
 
 Generated from `src/schema.ts` (schema 0.14) by `npm run docs`. Do not edit by hand.
 
-The engine runs the core set's combat system (`docs/core-set/rules-and-vocabulary.md`); where that document is silent, what the engine does stands. This is the closed set of building blocks it runs on. Each needs engine code, so adding one is a schema version bump plus an engine change. Stats, weapon kinds, armor types, offhand kinds, statuses, abilities and everything else are registries in the pack, and grow without touching the schema. The numbers in the content are first values, placeholders until the balance pass.
+The engine runs the core set's combat system (`docs/core-set/combat.md`); where that document is silent, what the engine does stands. This is the closed set of building blocks it runs on. Each needs engine code, so adding one is a schema version bump plus an engine change. Stats, weapon kinds, armor types, offhand kinds, statuses, abilities and everything else are registries in the pack, and grow without touching the schema. The numbers in the content are first values, placeholders until the balance pass.
 
 ## How a fight runs
 

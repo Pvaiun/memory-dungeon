@@ -51,7 +51,7 @@ A trial of the format: six, each with the kept effects near it.
 
 Batch 1 is closed: every answer is placed or withdrawn (`web.md`, Added by batch 1; their words in `batch-1-answers.md`). Batch 2 is on the page and unanswered: thirteen cards and an open one (`batch-2.md`; `web.md`, Asked in batch 2, says where each came from and what was changed or dropped on the way out). Nothing else waits on the director.
 
-1. Read `brief.md` first: what this step is for, how the work is split, what was tried and dropped, and what the first batch taught. Then `intent.md`, this report's rulings, `web.md` and `batch-1-answers.md`.
+1. Read `brief.md` first: what this step is for, how the work is split, what was tried and dropped, and what the first batch taught. Its reading list (Where this lives, and what to read) is closed: read what it names for the job in hand, and nothing else whole.
 2. Wait for the director to say they're done with batch 2. Don't read `answers` before that.
 3. Then read the answers whose `batch` is 2 and write a read of each into `replies` (kind and text), as `brief.md` says under Reading the answers. Put only the summary and the decisions in the chat. When the batch closes, copy it to `batch-2-answers.md` and fold what's placed into `web.md`.
 4. Write batch 3 from what placing the answers shows and from `web.md`, Gaps seen, by ruling 9. Before a card goes out, check that nothing kept does its job and that its plain answer isn't something the director cut.

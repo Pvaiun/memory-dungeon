@@ -1,5 +1,5 @@
 /**
- * The gear slots' counts (docs/core-set/rules-and-vocabulary.md, Gear): who wears which kind of loot, and how much classes share.
+ * The gear slots' counts (docs/core-set/gear.md, Gear): who wears which kind of loot, and how much classes share.
  * The proposal is written below as data. It prints, for each slot, its kinds, classes per kind and kinds per class; for each
  * class, its kinds, the classes it shares any with, its closest neighbour's share of its kinds and its weapon pattern; how many
  * pairs of classes share 0, 1, 2 or more kinds; how many pairs of kinds from different slots can meet on one unit (a two-hander
@@ -90,7 +90,7 @@ for (const c of CLASSES) {
     `${`${near.o} ${Math.round(share * 100)}%`.padEnd(24)}${share > 0.5 ? "!" : " "} ${pattern}`);
 }
 
-// The weapon and offhand rules (docs/core-set/rules-and-vocabulary.md, Gear): three kinds a class, at least one weapon kind one-handed, up to about five wearers a kind.
+// The weapon and offhand rules (docs/core-set/gear.md, Gear): three kinds a class, at least one weapon kind one-handed, up to about five wearers a kind.
 for (const [slot, kinds] of [["weapon", WEAPONS], ["offhand", OFFHANDS]] as const) {
   const bad: string[] = [];
   for (const [id, k] of Object.entries(kinds)) if (k.classes.length < 2 || k.classes.length > 5) bad.push(`${id} has ${k.classes.length} wearers`);

@@ -82,7 +82,7 @@ Bosses by build, now (rung 1 / 2 / 3); before the fixes, at the same targets, in
 
 ## 4. For the next agent
 
-- **Start from here:** the knobs are this pass's baseline (`content/core-set/rogue-knobs.json`, `TARGETS` in `tools/build-calibrate.ts`). The whole-run tuning sets the bosses and evens the regions (`npm run rogue`, `rogue:tune`); `docs/rules.md` has the director's rulings (fights by cost; difficulty aims hard).
+- **Start from here:** the knobs are this pass's baseline (`content/core-set/rogue-knobs.json`, `TARGETS` in `tools/build-calibrate.ts`). The whole-run tuning sets the bosses and evens the regions (`npm run rogue`, `rogue:tune`); the director's rulings has the director's rulings (fights by cost; difficulty aims hard).
 - **The spread is the problem, not the mean.** Every tier is on target on average, but bosses run from 20% to 96% by build. The cards make some of that by design (Bonfire, Landslide and Cuts best against bosses; the Storm, the Hunt and the Toll worst), but not this much.
 - **Least sure:** the Tidal and Shieldmaiden changes (small, by the sheet and the ablation, not read); the goad (decision 1); Cold Snap's rung 3, which is partly the test party's formation.
 - **Cost counts a fight-start cap.** Halved heart and The saint's last breath read as worse to have (−10.5, −9.4) because the build test counts the HP they cut at a fight's start as its cost; in a run that's paid once and carried.

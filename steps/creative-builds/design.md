@@ -512,7 +512,7 @@ Commons in every kind are written by the commons rule and not listed. Each kind'
 | Bloodlust (Vampire) | itself below half | B Undying thirst → **Shepherd's thirst**: Lifesteal doubled while any ally is below half HP |
 | Arc (Stormcaller) | Shock | B Static grip → **Grounded arc**: basic attacks also hit a second foe, adding Sunder to both in place of Shock |
 
-- **The kits still read as the classes' own:** every new version keeps the ability's or passive's name, target style and cost; the trunk is untouched, and each identity keeps at least two versions (`docs/rules.md`).
+- **The kits still read as the classes' own:** every new version keeps the ability's or passive's name, target style and cost; the trunk is untouched, and each identity keeps at least two versions (the director's rulings).
 - **Engines touched:** Splinters was the firecracker string's kit part (the string keeps Winter's chain and the fill's cold-spreading pieces); Rupture was the cull's (the cull keeps Opening wound, Lacerate and Coup de grâce); Undying thirst and Static grip were no engine's.
 - **No version copies a piece:** Dirge and the Slow on Hindering blade differ in who and when; Rebind and Warding bell differ in trigger and in the Haste.
 
@@ -585,12 +585,12 @@ Each added plainly; `ENGINE_VERSION` and the schema bump once, with the statuses
 
 ## Documents
 
-Rewritten as the kickoff lists (`docs/rules.md`; `philosophy.md`, `builds.md`, `loot.md`; `classes.md`; the Gear section of `rules-and-vocabulary.md`), and the primer's lines that state the retired rules. The lines that change:
+Rewritten as the kickoff lists (the director's rulings; `philosophy.md`, `builds.md`, `loot.md`; `classes.md`; the Gear section of `docs/core-set/vocabulary.md`), and the primer's lines that state the retired rules. The lines that change:
 - **The kinds:** three weapon kinds and three offhand kinds a class, up to about five wearers a kind, a leaning in place of a signature, classes' gear rows in `classes.md` (and its frame's "a weapon kind whose signature stat leans to it", which becomes "loot that leans to it").
 - **The ladder:** legendaries and mythics at a rare's steps; rarity above rare is strangeness; the "best gear in the game" line for mythics goes.
 - **Stats:** every piece's stats its own; commons by rule; a step down.
 - **The pieces:** exotics, conditional pieces and deeper threads as the loot's three shapes; keyword share as a check; the uncommon's "first rung" line softened to "a simple effect"; the signposting requirement retired (the philosophy's "Signposting and power at each phase", each build's first-rung *sign*, "a first step that's seen the first time it fires" kept only as *an effect is big enough to be seen*).
-- **Mythics:** one a class, each taking its trunk to an extreme, a cost only where it's the identity; the director's reading of the kickoff's "doing what it was doing better is not interesting" (an extreme that changes how the fight plays, never only a bigger number) goes into `rules.md`; the table in `loot.md`.
+- **Mythics:** one a class, each taking its trunk to an extreme, a cost only where it's the identity; the director's reading of the kickoff's "doing what it was doing better is not interesting" (an extreme that changes how the fight plays, never only a bigger number) goes into the director's rulings; the table in `loot.md`.
 - **Upgrades:** roughly two reorienting versions a class; no passive held to one lane.
 - **Formations:** a shape and a rhythm; keyword formations a minority, kept plain, and the shapes as strong as they are, so a keyword formation isn't the only pick.
 - **New words:** the four statuses in the vocabulary; Cascade retired; Edge.

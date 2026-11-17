@@ -6,7 +6,7 @@
  * Whose a number is:
  * - a hit, a rider or an extra strike is its attacker's, under the action (or piece, or passive) it came from;
  * - a status that shows as an icon (Burn, Regen, Shield) keeps its own: an Intensity status's stacks have no single
- *   applier, and its damage is its holder's (docs/rules.md). It serves the side it helps: damage to the foes, and healing
+ *   applier, and its damage is its holder's (docs/core-set/vocabulary.md, The director's rulings). It serves the side it helps: damage to the foes, and healing
  *   and soaking on the party, are the party's;
  * - a hidden status (Thorns, a piece's or a passive's working) is part of a unit's kit: its applier's, else its actor's;
  * - a hit's amount includes what a Shield soaked: it counts in the damage dealt and taken, and the soak again under Shield.

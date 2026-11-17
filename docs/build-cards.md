@@ -13,7 +13,7 @@ What each of the nine builds should look like in a fight, in a form a reader or 
   4. **By rung:** what each rung should add. A later rung should look like more of the build, not just bigger numbers.
   5. **Engines** are reference, not a checklist (see below).
   6. **Wrong looks like:** the failures the design expects or fears.
-- **What any build does wrong.** These hold for every card (*Gear design: philosophy*; `docs/rules.md`):
+- **What any build does wrong.** These hold for every card (*Gear design: philosophy*; *Gear design: the builds*, The director's rulings):
   - a member that's a passenger: it acts, but nothing it does changes the fight;
   - a status or ability that's slotted and never seen, or a piece worn whose effect never shows;
   - a loop that doesn't stop, or a fight that stalls until the enrage;

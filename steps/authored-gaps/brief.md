@@ -4,15 +4,24 @@ Read this first. It says what this step is trying to do and why, how the work is
 
 ## Where this lives, and what to read
 
-**The branch.** Until it's merged, this folder exists only on `claude/game-design-workflow-h8ouxj`. A new session starts from main, where it's missing: fetch that branch and merge it before anything else.
+**The branch.** Until it's merged to main, the newest copy of this folder is on `ccr-4cc0d6ea-c80agw`. A new session starts from main, where the folder is missing: fetch that branch and merge it before anything else.
 
-**Read for judgement.** The director cares about the quality of the work before its cost, and the work is judgement: writing a request that isn't the wrong question, and reading an answer against the rules. That takes the design documents, so read them. Skip only what doesn't inform a judgement.
+**Read little.** The work is judgement: writing a request that isn't the wrong question, and reading an answer against the rules. The director found that the judgement gets worse as the reading piles up, so this list is closed. What isn't on it is reference: open one section when a specific card or answer needs it, and not before.
 
-- **In full:** this brief, `report.md`, `intent.md`, `web.md`, `batch-1-answers.md`; then `docs/primer.md`, `docs/rules.md`, `docs/gear-design/philosophy.md`, `docs/gear-design/builds.md`, `docs/gear-design/loot.md` and `docs/core-set/rules-and-vocabulary.md`. In `builds.md`, the engines were written for today's loot, which isn't the skeleton here: read them for what they say play showed, not as pieces to keep.
-- **When a request needs it:** the two triage files (for a card's "near it" lines), a class's section of `docs/core-set/classes.md` (for a request that names a class, or to see what a kit already supplies), `docs/core-set/rogue-mode.md` (for anything between fights).
-- **Leave alone:** `requests-page.html` unless the page itself has to change (how its store is laid out is in `report.md`), and `batch-1.md` beyond a glance at one card's shape.
+- **Every session:** `docs/primer.md`; this brief; `report.md` (the rulings and Next); `intent.md`; `web.md`.
+- **To write a batch:** in `docs/gear-design/builds.md`, The director's rulings, The frame and The builds (the nine roads). In `docs/gear-design/loot.md`, The director's rulings only.
+- **To read answers:** `batch-1-answers.md`, for how the director answers and pushes back; the rulings in `docs/core-set/vocabulary.md` and `docs/gear-design/loot.md`.
+- **Only when a card or an answer needs it, and only that section:**
+  - a status's entry in `docs/core-set/vocabulary.md`, when an answer names or leans on one;
+  - a class's section of `docs/core-set/classes.md`, when a request names a class or to see what a kit already supplies;
+  - the triage files, searched for a card's "near it" lines and for whether something kept already does a job;
+  - one engine in `docs/gear-design/engines.md`, for what play showed (they were written for today's loot, which isn't the skeleton here);
+  - `docs/core-set/rogue-mode.md`, for anything between fights; `docs/core-set/combat.md`, where a claim rests on how a fight runs.
+- **Leave alone:** `requests-page.html` and the page's own source unless the page itself has to change (how its store is laid out is in `report.md`; a batch is seeded and read through the store, with no design skill and no read of the page); `batch-1.md` and `batch-2.md` beyond the cards in hand; `docs/gear-design/philosophy.md` (its rulings are on the pages above); the code.
 
-**When to hand over.** At a batch's end, with the folder brought up to date, not at a token count. What wears a long session down is what piles up in it: superseded versions of a plan, old copies of files, and at the far end an automatic summary that drops the director's exact words. A fresh session reading the current files has none of that.
+**Hand the checks over.** Whether an answer breaks a rule, and whether something kept already does a card's job, are checks against a reference. Give each to a subagent with the answer's or the card's words and the one document to check it against; take back a verdict and the line it rests on. Keep this session for the director's words and the web.
+
+**When to hand over.** At a batch's end, with the folder brought up to date. What wears a session down is what piles up in it: documents read whole, superseded versions of a plan, old copies of files, and at the far end an automatic summary that drops the director's exact words. A fresh session reading the current files has none of that.
 
 ## What the game needs
 
@@ -56,7 +65,7 @@ Six of the first fifteen came back marked as the wrong question, and the directo
 
 ## Reading the answers
 
-- **Read each one against the rules** (`docs/rules.md`, `docs/core-set/rules-and-vocabulary.md`, `docs/gear-design/loot.md`). Say what it conflicts with, what was assumed where the words are open, and what it does once it's placed beside the rest.
+- **Read each one against the rules:** the director's rulings on vocabulary, loot and builds, and the section of `docs/core-set/vocabulary.md` for any status it names (What to read, above). Say what it conflicts with, what was assumed where the words are open, and what it does once it's placed beside the rest.
 - **Push back.** The director asks for it and uses it: one pushback in the first batch made them replace a piece with a better one that broke no rule. They also overrule, and then that's the ruling.
 - **Check a claim before pushing back with it.** One pushback in the first batch was wrong: the agent trusted a test's name over the rule's own text, and the director knew the game better than the note did. Where a pushback rests on how the engine behaves, read the rule or the code first.
 - **Say what placing them found.** Interactions nobody wrote down are the point of the web, and the director wants to hear them.

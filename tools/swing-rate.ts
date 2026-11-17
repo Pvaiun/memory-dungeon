@@ -1,5 +1,5 @@
 /**
- * The exchange rate between a stat step and a swing step, class by class (docs/core-set/rules-and-vocabulary.md, Weapons): what
+ * The exchange rate between a stat step and a swing step, class by class (docs/core-set/gear.md, Weapons): what
  * "a step fewer" buys in swing. For each class, its plain weapon alone against the same weapon carrying one stat step (Attack,
  * HP, Defense, and its first kind's signature stat where that's a special stat), and against the same weapon swinging a step
  * harder (scale.ts SWING_TRADE) or a tenth harder, on the balance sheet's probe fights (free play's runs and the rogue's bosses

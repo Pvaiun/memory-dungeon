@@ -4,7 +4,7 @@ The philosophy behind the game's gear, formations, ability upgrades and mythics,
 
 This folder has three documents:
 - **This page:** the director's intent, the philosophy, and how loot gets made.
-- ***Gear design: the builds*** (`builds.md`): the nine builds the loot is designed from, their rhythms, what each asks of the loot, and the web between them: roads, doors and engines.
+- ***Gear design: the builds*** (`builds.md`): the nine builds the loot is designed from, their rhythms, what each asks of the loot, and the doors between them. The engines on them are in *Gear design: the engines* (`engines.md`).
 - ***Gear design: the loot*** (`loot.md`): what each rarity is, the stock, the rules for writing pieces, formations, upgrades and mythics, and what's open.
 
 The game's combat rules are in *Core set: rules and vocabulary* (its Gear section has the slots and who wears what), and how loot is offered in a run is in *Core set: the rogue mode*.

@@ -2,6 +2,13 @@
 
 The 16 classes: what each one is for, and what each passive and ability does. The numbers live in `content/core-set/classes.ts`: stats, MP pools (`MP_POOL`), cooldown and wind-up words, MP costs and stack sizes; the kits' own words are in `scale.ts` (`KIT`). The rules and the words used here (target phrases, Fizzle, firing) are in *Core set: rules and vocabulary*; the challenges named in the tests are in *Core set: enemies*; each class's upgrades (a power step and two versions an ability) are in `content/core-set/upgrades/`.
 
+## The director's rulings
+
+The director's standing direction on this page's subject. Direction is guidance, not law: challenge any of it with evidence. Until a line is changed here, it stands, and it wins over the rest of this page: where they differ, fix the page. When the director changes a ruling, rewrite its line; don't add history.
+
+- **A class is a unit:** a party holds at most one of each, three to a party.
+- **A class has a trunk and three identities, and each identity is viable:** its versions split toward them, every identity has at least two, and no identity is the class. No two classes share a base ability, and a passive works in every fight.
+
 ## The frame
 
 **A class has a trunk and three identities.** The trunk is its base kit, what every build of it does. Its identities are the ways a run can build it, each a way to play you can watch, and each has a payoff inside the kit (in the base or a version) and loot that leans to it. The design never picks one identity over another.

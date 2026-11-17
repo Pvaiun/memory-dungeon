@@ -1,5 +1,5 @@
 /**
- * The core set's vocabulary (docs/core-set/rules-and-vocabulary.md): the stat
+ * The core set's vocabulary (docs/core-set/vocabulary.md): the stat
  * registry, weapon kinds, armor types and offhand kinds, the 22 statuses, the
  * statuses that special stats bring, the ruleset and the design block.
  */
@@ -33,7 +33,7 @@ export const stats: StatDefT[] = [
   { id: "power", name: "Power", kind: "points", default: 0, floor: -90, note: "Damage dealt by hits and reactions, +%. Only a dungeon's foes modifier sets it: how a fight's knob makes its foes hit harder." },
 ];
 
-/** Twelve weapon kinds, each a speed, a damage type and hands (rules-and-vocabulary.md, Weapons); their swing words are scale.ts's KIND_WORDS. */
+/** Twelve weapon kinds, each a speed, a damage type and hands (docs/core-set/gear.md, Weapons); their swing words are scale.ts's KIND_WORDS. */
 export const weaponKinds: WeaponKindT[] = [
   { id: "dagger", name: "Dagger", type: "physical", cooldown: KIND_SPEED.dagger, hands: 1 },
   { id: "fist", name: "Fist weapons", type: "physical", cooldown: KIND_SPEED.fist, hands: 1, note: "Knuckles, claws, cestus." },
@@ -49,7 +49,7 @@ export const weaponKinds: WeaponKindT[] = [
   { id: "great_weapon", name: "Great weapon", type: "physical", cooldown: KIND_SPEED.great_weapon, hands: 2, note: "Greataxes, mauls, pikes and scythes." },
 ];
 
-/** Four armor types; a class wears only its own (rules-and-vocabulary.md, Gear). */
+/** Four armor types; a class wears only its own (docs/core-set/gear.md, Gear). */
 export const armorTypes: GearKindT[] = [
   { id: "plate", name: "Plate" },
   { id: "mail", name: "Mail" },
@@ -57,7 +57,7 @@ export const armorTypes: GearKindT[] = [
   { id: "robes", name: "Robes" },
 ];
 
-/** Thirteen offhand kinds, of two or three classes each, by the weapon rules (rules-and-vocabulary.md, Gear). */
+/** Thirteen offhand kinds, of two or three classes each, by the weapon rules (docs/core-set/gear.md, Gear). */
 export const offhandKinds: GearKindT[] = [
   { id: "kite_shield", name: "Kite shield" },
   { id: "round_shield", name: "Round shield" },
