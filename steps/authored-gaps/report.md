@@ -65,13 +65,12 @@ A trial of the format: six, each with the kept effects near it.
 
 ## Next: for the session that picks this up
 
-Batch 1 is closed. Batch 2 is answered and read: every card has the agent's read on the page (`batch-2-answers.md`), eight effects are placed and counted (`web.md`, Added by batch 2), three cards were withdrawn, and the open card came back empty. **Three cards wait on the director's reply, under Needs you on the page:**
+Batches 1 and 2 are closed: every answer is placed, left out or withdrawn (`web.md`, Added by batch 1 and Added by batch 2; the director's words and each read in `batch-1-answers.md` and `batch-2-answers.md`). The web holds 81 effects. Nothing on the page waits on the director.
 
-- **Hidden (`b2-06`):** the agent would place mana while Hidden and leave out Might while Hidden (the unit's own damage, on top of ×2 while Hidden). Asked: agree, or Might?
-- **The formation about the kill (`b2-12`):** the director invited a challenge and got one (it adds and doesn't change; it pays by the number of foes; two seats sit on the dodge and max HP). Asked: keep it as a plain common formation, or write another?
-- **The formation that drains two seats (`b2-13`):** the agent would place it. Asked: does the HP the seats took come back when the fight ends, or does it carry? The agent's view is that it comes back.
+**One thing the director may still correct:** the agent's three readings of their second formation for HP paid (`b2-13`: the price can knock the first seat out, the second seat raises it once a fight, a fallen ally counts for nothing in the third). They're on the card and were told in the chat. If a reply turns up on that card, it wins: update the read, `batch-2-answers.md` and the formation's line in `web.md`.
+
+**Asked of the director in the chat, and not answered yet:** a short batch 3, or on to the plain parts. The agent's view: the gaps left are few (`web.md`, Gaps seen: the Mark, Sunder, a way to hide a unit), three mechanics are overused and three on watch, so a batch 3 would be five cards or fewer, and the plain parts can start beside it.
 
 1. Read `brief.md` first: what this step is for, how the work is split, what was tried and dropped, and what the batches taught. Its reading list (What to read) is closed: read what it names for the job in hand, and nothing else whole.
-2. Wait for the director to say they've replied. Then read `answers` for `b2-06`, `b2-12` and `b2-13` (the `reply` field), and any reply they left on another card's read. Settle each: update its read in `replies`, its entry in `batch-2-answers.md`, and `web.md` (Added by batch 2, the ledger and the counts). A reply that says "as written" is the ruling.
-3. Write batch 3 from what placing the answers shows and from `web.md`, Gaps seen, by rulings 9 and 12. Before a card goes out, check that nothing kept does its job and that its plain answer isn't something the director cut. Where its job can be done from a mechanic the count shows as underused, the ask names it. The gaps are few now: say so if the web looks thick enough to move to the plain parts, and let the director decide.
-4. Still to come, in the director's order: the basic pieces (the agent's, shown by sample), sizing and slotting what's placed, formations beyond those kept or written, mythics, then build.
+2. Do what the director chose. For a batch 3: write it from `web.md`, Gaps seen, by rulings 9 and 12; before a card goes out, check that nothing kept does its job, that its plain answer isn't something the director cut, and say what a party lacks without the piece. Seed it to the page with batch number 3.
+3. Still to come, in the director's order: the basic pieces (the agent's, shown by sample), sizing and slotting what's placed, formations beyond those kept or written, mythics, then build.

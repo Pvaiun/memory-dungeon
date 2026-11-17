@@ -1,6 +1,6 @@
 # Batch 2: the director's answers and the agent's read
 
-Copied from the page's store on Nov 17, after the agent's reads went on. Each card: what was asked, the director's answer, and the agent's read. Three cards wait on the director's reply (Hidden and the two formations); their reads change when it comes. The open card wasn't answered.
+Copied from the page's store when the batch closed (Nov 17). Each card: what was asked, the director's answer, their reply to the agent's read where they gave one, and the agent's read as it stands after that reply. Where a reply changed the agent's read, the first read is in git. The open card wasn't answered.
 
 ## Thousand Cuts: a Bleed piece
 
@@ -78,7 +78,11 @@ Copied from the page's store on Nov 17, after the agent's reads went on. Each ca
 >
 > A hidden unit regens 5% of mana per tick while it's hidden. - this one tried to connect hidden with the cast spam type builds, but that might not work
 
-**The agent's read (Asked, waiting on the director):** I'd place the mana one and leave Might out. Might is the unit's own damage, which the card set aside. It also sits straight on top of ×2 while Hidden, on the same unit: a player takes both and is right every time. Mana does what the card asked. It's narrow, and I think that's fine: it's weak until a party finds a way to hide a caster. Then your knockout survived at 1 HP becomes a second wind, with the unit out of reach and its mana coming back. With damage that hits MP in place of HP, the mana it regains is also its body. As written it's half a mana bar each time a unit hides (Hidden lasts 10 ticks), so I'd size it down. Do you agree, or do you want Might?
+**The director's reply to the read:**
+
+> I agree
+
+**The agent's read (Placed):** Settled: mana while Hidden is placed, and Might is left out. It's narrow on purpose: weak until a party finds a way to hide a caster. Then your knockout survived at 1 HP becomes a second wind, with the unit out of reach and its mana coming back. With damage that hits MP in place of HP, the mana it regains is also its body. As written it's half a mana bar each time a unit hides (Hidden lasts 10 ticks), so I'll size it down.
 
 ## The swing and the cast
 
@@ -122,7 +126,11 @@ Copied from the page's store on Nov 17, after the agent's reads went on. Each ca
 >
 > The ability in the first slot applies X burn to all its targets. - capitalizing on the low cooldown of bramble lash and firebolt
 
-**The agent's read (Placed):** Placed, and it's the first thing in the web that lays Burn. I'm assuming it lays Burn only on foes, so a first-slotted heal or buff lays nothing. Fair on the near lines. Nothing in the web sits near these two classes, and the card should have shown that instead of three caster pieces. What placing it found. In the Soloist's seat, where the first-slotted ability has no cooldown, it lays Burn on every cast. With the pile, a wide first ability's Burn all lands on one foe. With mana from the foes' debuffs, the Burn helps pay for the casts that lay it. And it gives the knight's lash a second job, which is why a wall would want it.
+**The director's reply to the read:**
+
+> I was imagining it would also affect allies you would just not put in your first slot as supportive ability I feel like that kind of decision making for the player is just like a nice little bonus
+
+**The agent's read (Placed):** Settled, your way: it lays Burn on every target of the first-slotted ability, allies included, so what goes first is a real choice. A heal or a buff slotted first burns whoever it lands on. It's the first thing in the web that lays Burn. And fair on the near lines: nothing in the web sits near these two classes, and the card should have shown that instead of three caster pieces. I'm reading the pile as moving only Burn laid on foes, so an ally's Burn stays on the ally. What placing it found. Burn on an ally is a status laid on its own side, so with your Chill piece (card 2) a first-slotted buff burns an ally and chills a foe. In the Soloist's seat, where the first-slotted ability has no cooldown, it lays Burn on every cast. With the pile, a wide first ability's Burn all lands on one foe. With mana from the foes' debuffs, the Burn helps pay for the casts that lay it. And it gives the knight's lash a second job, which is why a wall would want it.
 
 ## The Assassin and the Cleric
 
@@ -146,7 +154,11 @@ Copied from the page's store on Nov 17, after the agent's reads went on. Each ca
 >
 > Challenge me if you need to.  Possible too good all around. Doesn't change how the party fights as much as is useful in many parties.
 
-**The agent's read (Asked, waiting on the director):** You asked for a challenge, so here it is. It adds and doesn't change, as you say. It also pays by how many foes there are: nothing against a lone boss, the most against a swarm, and most of it once the fight is nearly won. Your formation ruling says a shape is chosen for what the party is, not the next foe. Two of its seats also sit where the web is already thick. Evasion makes dodges, and five effects already reward a dodge on one unit. Max HP is the stat I'm watching. I can keep it as a plain common formation, sized small. Or you can write another for the same job. Which?
+**The director's reply to the read:**
+
+> I agree that mine isn't worth keeping but I'm struggling to find this because I can't find a way to modify how a party fights when they down a foe. I can find ways to reward downing info or find ways to make downing a single foe easier but I'm not sure how to make it so that we find a new way for them to play since downing is the whole point anyways.
+
+**The agent's read (Withdrawn):** Dropped, as you say. And I think your trouble with it is the answer. Felling foes is what every party is already trying to do, so a formation about the kill can only reward it or make it easier. That makes this another wrong question of mine, and I'm withdrawing the card. The web isn't short here either. Your two Greats that repeat the opening already make any formation with start-of-fight seats do something each time a foe falls.
 
 ## A formation about HP paid or held low
 
@@ -160,4 +172,12 @@ Copied from the page's store on Nov 17, after the agent's reads went on. Each ca
 > Seat 2: lose 1% HP per tick, can't be killed by this 
 > Seat 3: Gains 150 attack per 1% of health below max of each party member.
 
-**The agent's read (Asked, waiting on the director):** I'd place this: it changes how the party fights. Two units run down on a clock and the third grows as they do. Healing the two takes Attack from the third, so the party's healer pulls against its hitter. One thing I need from you first. HP carries between fights. In a fight of 40 ticks each of the two leaves about 40% lower, so after two or three fights they start at 1 HP. As written, a party can't wear it for long, and it becomes a formation put on for one big fight, which your formation ruling doesn't want. Does the HP the seats took come back when the fight ends (never past what the unit walked in with), or is carrying it the price? I'd have it come back. Two smaller things. By the loot's words a drain isn't a price paid, so your Great that heals an ally when another pays HP doesn't hear these seats. And I'll size the Attack down a long way: seat 3 counts its own missing HP too.
+**The director's reply to the read:**
+
+> K you pointed out some good flaws. Try 2:
+>
+> Seat 1: basic attacks and abilities cost 10% of HP
+> Seat 2: if still standing, revive seat 1 with 10% hp when it dies
+> Seat 3: Gains 150 attack per 1% of health below max of each party member.
+
+**The agent's read (Placed):** Placed, try 2. One unit pays for everything it does, one catches it when it falls, and one grows as the party bleeds. This time it's a real price, so your Great that heals an ally when another pays HP hears every action: with it, seat 1 heals the party by acting. I've read three things into it. Correct any that's wrong. 1. The price is 10% of max HP, like your other prices, and paying it can knock the unit out. That's what seat 2 is for. 2. Seat 2 raises seat 1 once a fight. If it were every time, a unit that draws the foes in seat 1 could never be put down while seat 2 stands, and a seat 1 that falls to its own price would stand up, act once and fall again without end. 3. A fallen ally counts for nothing in seat 3. Otherwise the party would want seat 1 down. What it costs: seat 1 leaves most fights low or down, and both carry. So it wants a unit that heals itself by acting, like the Vampire, or a healer behind it. I think that price is the shape, so I've left it. Healing seat 1 still takes Attack from seat 3. This brings HP paid or held low to 7 effects, which is my line for overused. I won't ask for more on it, and a new answer that names it gets flagged.

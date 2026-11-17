@@ -60,6 +60,7 @@ Six of the first fifteen came back marked as the wrong question, and the directo
 - **No numbers and no sizes from the director.** They write whatever they find most interesting. The agent sizes afterwards, and says plainly when an answer is too small or too big for where it has to sit.
 - **They won't colour-code.** An answer to a road's request may never name that road's status and may serve many roads. That's what the game needs. Place it by what it does, not by the card that asked.
 - **Ask from an underused mechanic where the job allows it.** A card still needs a job the web lacks. Where the count shows a mechanic the web needs more of, the ask names it in one plain sentence (The count, below).
+- **An answer they struggle to write is a wrong question too.** Asked for a formation about the kill, the director wrote one they didn't believe in and then couldn't find another: felling foes is every party's aim, so there was nothing to change. When they say they can't find it, withdraw the card; don't ask again.
 - **"Wrong question" is the most useful button on the page.** Treat it as correct until shown otherwise, withdraw or re-ask in plain words, and say which.
 
 ## Reading the answers
@@ -115,5 +116,5 @@ Not decided: how many pieces the set should hold (the agent's view is fewer and 
 - `triage.md`, `triage-formations.md`: what they kept, in their two piles.
 - `web.md`: where the kept effects sit, what the first batch added, the count of what every effect is set off by, reads and changes, and the gaps seen.
 - `batch-1.md`, `batch-1-answers.md`: the first requests as sent, and their answers with the agent's reads. The second is the best record of how they answer and push back.
-- `batch-2.md`, `batch-2-answers.md`: the second requests as sent, and their answers with the agent's reads. Three of its cards wait on the director's reply.
+- `batch-2.md`, `batch-2-answers.md`: the second requests as sent, and their answers with the agent's reads. The batch is closed.
 - `requests-page.html`: the page's source.
