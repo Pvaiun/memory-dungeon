@@ -2,6 +2,18 @@
 
 Read this first. It says what this step is trying to do and why, how the work is split between the director and the agent, what was tried and dropped on the way here, and what one batch has taught. `intent.md` is the director's intent in their words; `report.md` is their rulings and the handoff; this page is the reasoning behind both, written by the agent that ran the first session. Where the director's word differs, theirs wins.
 
+## Where this lives, and what to read
+
+**The branch.** Until it's merged, this folder exists only on `claude/game-design-workflow-h8ouxj`. A new session starts from main, where it's missing: fetch that branch and merge it before anything else.
+
+**Read for judgement.** The director cares about the quality of the work before its cost, and the work is judgement: writing a request that isn't the wrong question, and reading an answer against the rules. That takes the design documents, so read them. Skip only what doesn't inform a judgement.
+
+- **In full:** this brief, `report.md`, `intent.md`, `web.md`, `batch-1-answers.md`; then `docs/primer.md`, `docs/rules.md`, `docs/gear-design/philosophy.md`, `docs/gear-design/builds.md`, `docs/gear-design/loot.md` and `docs/core-set/rules-and-vocabulary.md`. In `builds.md`, the engines were written for today's loot, which isn't the skeleton here: read them for what they say play showed, not as pieces to keep.
+- **When a request needs it:** the two triage files (for a card's "near it" lines), a class's section of `docs/core-set/classes.md` (for a request that names a class, or to see what a kit already supplies), `docs/core-set/rogue-mode.md` (for anything between fights).
+- **Leave alone:** `requests-page.html` unless the page itself has to change (how its store is laid out is in `report.md`), and `batch-1.md` beyond a glance at one card's shape.
+
+**When to hand over.** At a batch's end, with the folder brought up to date, not at a token count. What wears a long session down is what piles up in it: superseded versions of a plan, old copies of files, and at the far end an automatic summary that drops the director's exact words. A fresh session reading the current files has none of that.
+
 ## What the game needs
 
 - **The value is the building of the builds.** The fun is each pick: a player facing a choice and working out what to do with it, toward something powerful. Played hundreds of times, the game should keep surprising its player with what gets made. Distinct, strong builds at the end aren't the point; the nine builds exist as context for making content that works together, and they do that job.
