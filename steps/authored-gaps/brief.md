@@ -6,12 +6,13 @@ Read this first. It says what this step is trying to do and why, how the work is
 
 **The branch.** Until it's merged, this folder exists only on `claude/game-design-workflow-h8ouxj`. A new session starts from main, where it's missing: fetch that branch and merge it before anything else.
 
-**Read little, on purpose.** A session carries everything it reads into every later turn, and the first session to pick this up read every design document whole before writing a word: more than the whole step needs. Read by this list.
+**Read for judgement.** The director cares about the quality of the work before its cost, and the work is judgement: writing a request that isn't the wrong question, and reading an answer against the rules. That takes the design documents, so read them. Skip only what doesn't inform a judgement.
 
-- **In full:** this brief, `report.md`, `intent.md`, `web.md`, `batch-1-answers.md`, then `docs/primer.md` and `docs/rules.md`.
-- **In part:** `docs/gear-design/builds.md` up to Engines (the rhythm space and the nine builds). Its engines were written for today's loot, which isn't the skeleton here. `docs/core-set/rules-and-vocabulary.md`: the Damage section and the two vocabulary tables, when reading the director's answers against the rules.
-- **Only when a request needs it:** the two triage files (for a card's "near it" lines), one class's section of `docs/core-set/classes.md` (for a request that names a class), `docs/gear-design/loot.md`'s Writing cards and Words the cards lean on (when an answer becomes a piece), `docs/core-set/rogue-mode.md` (for anything between fights).
-- **Leave alone:** `requests-page.html` unless the page itself has to change (how its store is laid out is in `report.md`), `batch-1.md` beyond a glance at one card's shape, and `docs/gear-design/philosophy.md`, whose intent this step's `intent.md` and rulings carry forward.
+- **In full:** this brief, `report.md`, `intent.md`, `web.md`, `batch-1-answers.md`; then `docs/primer.md`, `docs/rules.md`, `docs/gear-design/philosophy.md`, `docs/gear-design/builds.md`, `docs/gear-design/loot.md` and `docs/core-set/rules-and-vocabulary.md`. In `builds.md`, the engines were written for today's loot, which isn't the skeleton here: read them for what they say play showed, not as pieces to keep.
+- **When a request needs it:** the two triage files (for a card's "near it" lines), a class's section of `docs/core-set/classes.md` (for a request that names a class, or to see what a kit already supplies), `docs/core-set/rogue-mode.md` (for anything between fights).
+- **Leave alone:** `requests-page.html` unless the page itself has to change (how its store is laid out is in `report.md`), and `batch-1.md` beyond a glance at one card's shape.
+
+**When to hand over.** At a batch's end, with the folder brought up to date, not at a token count. What wears a long session down is what piles up in it: superseded versions of a plan, old copies of files, and at the far end an automatic summary that drops the director's exact words. A fresh session reading the current files has none of that.
 
 ## What the game needs
 
