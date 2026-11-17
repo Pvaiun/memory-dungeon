@@ -76,6 +76,13 @@ textarea::placeholder{ color:var(--muted); opacity:.8; }
 .act[aria-pressed="true"]{ background:var(--ink); color:var(--bg); border-color:var(--ink); }
 .sr{ position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
 .tail{ color:var(--muted); font-size:.85rem; }
+.read{ background:var(--field); border:1px solid var(--line); border-radius:8px; padding:.7rem .8rem; display:flex; flex-direction:column; gap:.4rem; }
+.read .rh{ display:flex; flex-wrap:wrap; gap:.5rem; align-items:center; color:var(--muted); }
+.read p{ margin:0; }
+.verdict{ font-size:.75rem; font-weight:600; padding:.1rem .55rem; border-radius:999px; background:var(--fine-bg); color:var(--fine); }
+.verdict.you{ background:var(--accent); color:var(--accent-ink); }
+.replylab{ color:var(--muted); }
+textarea.small{ min-height:4rem; }
 </style>
 
 <div class="wrap">
@@ -98,6 +105,7 @@ textarea::placeholder{ color:var(--muted); opacity:.8; }
       <button class="chipbtn" data-f="all" aria-pressed="true">All</button>
       <button class="chipbtn" data-f="open" aria-pressed="false">Open</button>
       <button class="chipbtn" data-f="done" aria-pressed="false">Done</button>
+      <button class="chipbtn" data-f="you" aria-pressed="false">Needs you</button>
     </div>
   </div>
 
@@ -111,9 +119,10 @@ textarea::placeholder{ color:var(--muted); opacity:.8; }
   "use strict";
   var KIND = { road:"Road", link:"Link", capstone:"Capstone", supply:"Supply", "function":"Function", formation:"Formation", open:"Open" };
   var TAG = { great:["Great",true], fine:["Fine",false], seat:["★ Seat",true], gform:["Formation",true], fform:["Formation",false] };
+  var VERDICT = { placed:"Placed", question:"Placed, with a question", withdrawn:"Withdrawn", again:"Asked again" };
   var PILL = { open:"Open", answered:"Answered", skipped:"Skipped", wrong:"Wrong question" };
 
-  var db = null, reqs = new Map(), remote = new Map(), local = new Map(), cards = new Map();
+  var db = null, reqs = new Map(), remote = new Map(), local = new Map(), cards = new Map(), replies = new Map();
   var batch = null, filter = "all", gotReqs = false, gotAns = false, orderKey = "";
   var $ = function(id){ return document.getElementById(id); };
   var listEl = $("list"), statusEl = $("status");
@@ -126,15 +135,16 @@ textarea::placeholder{ color:var(--muted); opacity:.8; }
   function stateOf(id){
     var s = local.get(id);
     if (!s){
-      s = { text:"", flag:"", dirty:false, saving:false, again:false, error:"", folded:false, autoFolded:false, timer:0, retried:false };
+      s = { text:"", flag:"", reply:"", readOpened:false, dirty:false, saving:false, again:false, error:"", folded:false, autoFolded:false, timer:0, retried:false };
       var d = lsGet("draft:" + id);
-      if (d){ try { var o = JSON.parse(d); s.text = str(o.text); s.flag = str(o.flag); s.dirty = true; } catch (e) {} }
+      if (d){ try { var o = JSON.parse(d); s.text = str(o.text); s.flag = str(o.flag); s.reply = str(o.reply); s.dirty = true; } catch (e) {} }
       local.set(id, s);
     }
     return s;
   }
   function statusOf(s){ return s.flag === "skipped" || s.flag === "wrong" ? s.flag : (s.text.trim() ? "answered" : "open"); }
   function isDone(s){ return statusOf(s) !== "open"; }
+  function needsYou(id){ var rp = replies.get(id); return !!rp && rp.kind === "question" && !stateOf(id).reply.trim(); }
 
   function setNote(title, text, bad){
     statusEl.hidden = false; statusEl.className = bad ? "note bad" : "note"; statusEl.textContent = "";
@@ -173,19 +183,24 @@ textarea::placeholder{ color:var(--muted); opacity:.8; }
     var skip = el("button", "act", "Skip for now"); skip.type = "button";
     var wrong = el("button", "act", "Wrong question"); wrong.type = "button";
     acts.appendChild(skip); acts.appendChild(wrong); foot.appendChild(save); foot.appendChild(acts);
-    body.appendChild(lab); body.appendChild(ta); body.appendChild(foot);
+    var read = el("div", "read"); read.hidden = true;
+    var rlab = el("label", "replylab px", "Your reply"); rlab.htmlFor = "rep-" + id;
+    var rta = el("textarea", "small"); rta.id = "rep-" + id; rta.rows = 2; rta.value = s.reply; rta.placeholder = "Answer my question here. Your answer above stays as it is.";
+    body.appendChild(lab); body.appendChild(ta); body.appendChild(read); body.appendChild(rlab); body.appendChild(rta); body.appendChild(foot);
     card.appendChild(head); card.appendChild(body);
 
     head.addEventListener("click", function(){ s.folded = !s.folded; paint(id); if (!s.folded) grow(ta); });
     ta.addEventListener("input", function(){ s.text = ta.value; grow(ta); touch(id); });
     ta.addEventListener("blur", function(){ if (s.dirty){ clearTimeout(s.timer); save_(id); } });
+    rta.addEventListener("input", function(){ s.reply = rta.value; grow(rta, 64); touch(id); });
+    rta.addEventListener("blur", function(){ if (s.dirty){ clearTimeout(s.timer); save_(id); } });
     skip.addEventListener("click", function(){ s.flag = s.flag === "skipped" ? "" : "skipped"; touch(id, true); });
     wrong.addEventListener("click", function(){ s.flag = s.flag === "wrong" ? "" : "wrong"; touch(id, true); if (s.flag) ta.focus(); });
 
-    var c = { card:card, head:head, num:num, pill:pill, peek:peek, body:body, ta:ta, save:save, skip:skip, wrong:wrong };
+    var c = { card:card, head:head, num:num, pill:pill, peek:peek, body:body, ta:ta, save:save, skip:skip, wrong:wrong, read:read, rlab:rlab, rta:rta };
     cards.set(id, c); return c;
   }
-  function grow(ta){ ta.style.height = "auto"; ta.style.height = Math.max(ta.scrollHeight + 2, 104) + "px"; }
+  function grow(ta, min){ ta.style.height = "auto"; ta.style.height = Math.max(ta.scrollHeight + 2, min || 104) + "px"; }
 
   function paint(id){
     var c = cards.get(id), s = stateOf(id), r = reqs.get(id); if (!c || !r) return;
@@ -195,6 +210,18 @@ textarea::placeholder{ color:var(--muted); opacity:.8; }
     c.wrong.setAttribute("aria-pressed", String(s.flag === "wrong"));
     c.ta.placeholder = s.flag === "wrong" ? "What should I have asked instead?" : s.flag === "skipped" ? "A note on why, if you like." : "Write the effect as you'd say it. Rough is fine.";
     if (document.activeElement !== c.ta && !s.dirty && c.ta.value !== s.text) c.ta.value = s.text;
+    var rp = replies.get(id);
+    c.read.hidden = !rp;
+    if (rp && c.read.dataset.v !== rp.v){
+      c.read.dataset.v = rp.v; c.read.textContent = "";
+      var rh = el("div", "rh"); rh.appendChild(el("span", "px", "Claude's read"));
+      rh.appendChild(el("span", "verdict" + (rp.kind === "question" ? " you" : ""), VERDICT[rp.kind] || "Read"));
+      c.read.appendChild(rh);
+      rp.text.split("\n").forEach(function(line){ if (line.trim()) c.read.appendChild(el("p", "", line)); });
+    }
+    var askYou = (!!rp && rp.kind === "question") || !!s.reply;
+    c.rlab.hidden = !askYou; c.rta.hidden = !askYou;
+    if (document.activeElement !== c.rta && !s.dirty && c.rta.value !== s.reply) c.rta.value = s.reply;
     c.body.hidden = s.folded; c.head.setAttribute("aria-expanded", String(!s.folded));
     c.peek.hidden = !s.folded; c.peek.textContent = s.text.trim() || str(r.ask);
     var msg = "", cls = "save";
@@ -205,13 +232,14 @@ textarea::placeholder{ color:var(--muted); opacity:.8; }
     else if (s.dirty) msg = "Typing…";
     else if (st !== "open") { msg = "Saved"; cls += " ok"; }
     c.save.textContent = msg; c.save.className = cls;
-    var show = filter === "all" || (filter === "open" ? st === "open" || document.activeElement === c.ta : st !== "open");
+    var show = filter === "all" ? true : filter === "open" ? st === "open" || document.activeElement === c.ta
+      : filter === "you" ? needsYou(id) || document.activeElement === c.rta : st !== "open";
     c.card.hidden = !(show && r.batch === batch);
   }
 
   function touch(id, now){
     var s = stateOf(id); s.dirty = true; s.error = ""; s.retried = false;
-    lsSet("draft:" + id, JSON.stringify({ text:s.text, flag:s.flag }));
+    lsSet("draft:" + id, JSON.stringify({ text:s.text, flag:s.flag, reply:s.reply }));
     clearTimeout(s.timer);
     if (now) save_(id); else s.timer = setTimeout(function(){ save_(id); }, 900);
     paint(id); progress();
@@ -221,18 +249,18 @@ textarea::placeholder{ color:var(--muted); opacity:.8; }
     if (!db){ s.error = "local"; paint(id); return; }
     if (s.saving){ s.again = true; return; }
     s.saving = true; paint(id);
-    var sent = s.text + "\u0000" + s.flag;
-    var bodyDoc = { text:s.text, status:statusOf(s), batch:r ? r.batch : 0, updatedAt:new Date().toISOString() };
+    var key = function(){ return s.text + "\u0000" + s.flag + "\u0000" + s.reply; }, sent = key();
+    var bodyDoc = { text:s.text, status:statusOf(s), reply:s.reply, batch:r ? r.batch : 0, updatedAt:new Date().toISOString() };
     db.doc("answers/" + id).set(bodyDoc).then(function(){
       s.error = "";
-      if (s.text + "\u0000" + s.flag === sent){ s.dirty = false; lsSet("draft:" + id, null); }
+      if (key() === sent){ s.dirty = false; lsSet("draft:" + id, null); }
     }, function(e){
       var code = e && e.code;
       if (code === "unavailable" && !s.retried){ s.retried = true; s.again = true; }
       else s.error = code === "invalid_argument" || code === "revoked" || code === "not_granted" ? "readonly" : "failed";
     }).then(function(){
       s.saving = false;
-      var more = s.again || (!s.error && s.text + "\u0000" + s.flag !== sent);
+      var more = s.again || (!s.error && key() !== sent);
       s.again = false; paint(id); progress();
       if (more) setTimeout(function(){ save_(id); }, s.retried ? 1500 : 0);
     });
@@ -265,7 +293,7 @@ textarea::placeholder{ color:var(--muted); opacity:.8; }
       });
       cards.forEach(function(c, id){ if (ids.indexOf(id) < 0 && c.card.parentNode) c.card.remove(); });
     }
-    ids.forEach(function(id){ paint(id); var c = cards.get(id); if (!c.body.hidden) grow(c.ta); });
+    ids.forEach(function(id){ paint(id); var c = cards.get(id); if (!c.body.hidden){ grow(c.ta); if (!c.rta.hidden) grow(c.rta, 64); } });
     progress();
   }
   function progress(){
@@ -275,7 +303,8 @@ textarea::placeholder{ color:var(--muted); opacity:.8; }
       var st = statusOf(stateOf(id)); if (st === "answered") a++; else if (st === "open") o++; else p++;
     });
     var pr = $("progress"); pr.textContent = "";
-    pr.appendChild(el("b", "", String(a))); pr.appendChild(document.createTextNode(" answered · " + p + " passed · " + o + " open"));
+    var y = inBatch().filter(needsYou).length;
+    pr.appendChild(el("b", "", String(a))); pr.appendChild(document.createTextNode(" answered · " + p + " passed · " + o + " open" + (y ? " · " + y + " need you" : "")));
   }
   $("filters").addEventListener("click", function(ev){
     var b = ev.target.closest("button[data-f]"); if (!b) return;
@@ -283,7 +312,7 @@ textarea::placeholder{ color:var(--muted); opacity:.8; }
     Array.prototype.forEach.call(this.children, function(x){ x.setAttribute("aria-pressed", String(x === b)); });
     inBatch().forEach(paint);
   });
-  (function(){ var f = lsGet("filter"); if (f === "open" || f === "done"){ filter = f;
+  (function(){ var f = lsGet("filter"); if (f === "open" || f === "done" || f === "you"){ filter = f;
     Array.prototype.forEach.call($("filters").children, function(x){ x.setAttribute("aria-pressed", String(x.dataset.f === f)); }); } })();
 
   /* ---------- store ---------- */
@@ -292,17 +321,27 @@ textarea::placeholder{ color:var(--muted); opacity:.8; }
     gotAns = true; reqs.forEach(function(_, id){ adopt(id); });
     inBatch().forEach(paint); progress(); flushDrafts();
   }
+  function openForRead(id){
+    var s = stateOf(id), rp = replies.get(id); if (!rp || s.readOpened) return; s.readOpened = true;
+    if (needsYou(id) || lsGet("seen:" + id) !== rp.v){ s.folded = false; s.keepOpen = true; lsSet("seen:" + id, rp.v); }
+  }
+  function onReplies(snap){
+    replies = new Map();
+    snap.docs.forEach(function(d){ var x = d.data() || {}; replies.set(d.id, { kind:str(x.kind), text:str(x.text), v:str(x.kind) + "|" + str(x.text) }); });
+    reqs.forEach(function(_, id){ openForRead(id); });
+    if (gotReqs) layout();
+  }
   function flushDrafts(){ if (gotReqs && gotAns && db) reqs.forEach(function(_, id){ var s = stateOf(id); if (s.dirty && !s.saving && !s.timer) save_(id); }); }
   function adopt(id){
     var s = stateOf(id), a = remote.get(id), c = cards.get(id);
     if (s.dirty || s.saving || (c && document.activeElement === c.ta)) return;
-    s.text = a ? str(a.text) : ""; s.flag = a && (a.status === "skipped" || a.status === "wrong") ? a.status : "";
-    if (!s.autoFolded && gotReqs && gotAns){ s.autoFolded = true; s.folded = isDone(s); }
+    s.text = a ? str(a.text) : ""; s.flag = a && (a.status === "skipped" || a.status === "wrong") ? a.status : ""; s.reply = a ? str(a.reply) : "";
+    if (!s.autoFolded && gotReqs && gotAns){ s.autoFolded = true; s.folded = isDone(s) && !needsYou(id) && !s.keepOpen; }
   }
   function onRequests(snap){
     reqs = new Map();
     snap.docs.forEach(function(d){ var r = d.data() || {}; reqs.set(d.id, { batch:Number(r.batch) || 1, order:Number(r.order) || 0, kind:str(r.kind), title:str(r.title), ask:str(r.ask), why:str(r.why), size:str(r.size), near:r.near }); });
-    gotReqs = true; reqs.forEach(function(_, id){ adopt(id); }); layout(); flushDrafts();
+    gotReqs = true; reqs.forEach(function(_, id){ adopt(id); openForRead(id); }); layout(); flushDrafts();
   }
   var slow = setTimeout(function(){ if (!gotReqs) setNote("The requests can't be reached yet.", "Keep this page open: they appear as soon as the store answers."); }, 10000);
   function fail(e){ clearTimeout(slow); setNote("The requests couldn't be loaded.", "Open this page in Claude while signed in as its owner. Anything you typed is kept on this device.", true); }
@@ -314,6 +353,7 @@ textarea::placeholder{ color:var(--muted); opacity:.8; }
     db = d;
     db.collection("requests").onSnapshot(function(s){ if (!s.metadata.fromCache || s.size) clearTimeout(slow); onRequests(s); }, fail);
     db.collection("answers").onSnapshot(onAnswers, function(){});
+    db.collection("replies").onSnapshot(onReplies, function(){});
   }, fail);
 })();
 </script>

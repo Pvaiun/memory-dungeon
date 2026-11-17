@@ -68,6 +68,40 @@ Nine Greats sit on no road (exotics).
 
 **Links I'd leave out:** two status roads on one card (already ruled) · a status road's own payoff on its own status as a rare (a keyword piece, the pattern matching the pass is to end) · a Great made bigger at a higher rarity.
 
+## Added by batch 1
+
+The director's answers, placed by what they do. Words only: no piece is sized or slotted yet, and five wait on a reply (`batch-1-answers.md`).
+
+- **Mana from the foes' debuffs:** MP regen for each different debuff the foes hold. Ties casting to every status road. Read as kinds, not stacks.
+- **Hot statuses:** damage statuses deal ×2 and drain half again as fast. Breaks "a status runs its own course" and "no piece resizes a status": waits on the director's ruling.
+- **Shock from casting:** every tick of a wind-up lays Shock on every foe. Long casts become the Storm's source; it pulls against Cast speed.
+- **Shock from wide abilities:** any ability that lands on more than one unit, allies included, lays Shock on every foe.
+- **A dodge heals:** a share of the blow it would have been. With overheal as a Shield, a dodger builds a Shield by dodging.
+- **Crits lay a hit's statuses 4 times.** Crit chance becomes a stat for every status road. Read as the statuses the hit carries.
+- **More max HP as the fight starts.** Sits with everything that reads max HP. By the max HP rule it heals into the room it makes, so repeated it's a heal that carries: waits on the director's ruling.
+- **Start-of-fight effects happen 2 times,** repeats included. Read as its wearer's own.
+- **Blur for the whole party as the fight starts.** A Blur's miss is a dodge, so the dodge Greats work on units with no Evasion.
+- **Defense for wearing no armor** (an amulet). With "no offhand", a family: paid for an empty slot.
+- **A Mark on the foe with the least max HP as the fight starts** (if the director meant a foe): a plain part that brings the first kill early.
+- **A formation where two seats swing the third:** the third takes no action of its own and basic attacks whenever either of the others does. The agent's ruling: these are real basic attacks, and "never makes a basic attack" still stops them.
+- **A formation with one Shield:** one seat holds triple the Shield and draws more; the others can't hold any.
+
+**Threads the director settled:**
+- **Shock has two patterns:** keep the charge high and read it, or make the foes act and spend it.
+- **Shield has two patterns:** one unit holding all of it, or everyone holding some (the Peak).
+- **The unit that doesn't act is there to benefit the others.** Nothing is asked to make it strong itself.
+- **Cold Snap is about reaching the shatter.** Nothing pays for a foe left half-frozen.
+- **No thread for debuffs held on purpose.**
+- **The Toll has its payoff** (the Shield that sends back ×2). The plain openers come in because the pieces that repeat the opening need them.
+
+**Found by placing them** (nobody wrote these down):
+- Party Blur, the opening again on a kill, and any "on a dodge" Great: every kill re-Blurs the party, and each Blur spent sets off a dodge.
+- Crits ×4 with Chill from max HP: a wall's crits freeze.
+- The two-seats-swing-the-third formation with the ×3 swing that Stuns: its "50% as often" costs nothing there.
+- The one-Shield formation with the Shield that sends back ×2 and the piece that takes every ally's Shield.
+
+**To watch:** "at fight start" now has three multipliers and about twenty plain effects, and could become a phrase a player collects, as Shield was.
+
 ## Asked of the director
 
 The decisions and the first requests are in `report.md`; the director's answers get folded into this page.

@@ -14,9 +14,12 @@ For the director, Nov 17. Nothing in the game has changed: this is the first map
 7. **No size on a request unless it needs one.** The director writes whatever they find most interesting, with no numbers; where a request needs a particular size, its ask says so. The agent sizes afterwards, and says plainly when an answer is too small or too big.
 8. **Answers won't be colour-coded.** The director's answer to a road's request may not name that road's status, and may serve many roads. It's placed by what it does, not by the card that asked.
 
+9. **How the agent asks,** after batch 1 (six of fifteen marked as the wrong question): a request names a job in the game's own terms and says what kind of thing is wanted back (an applier, a payoff, a seat, a link between two named things). No request for coverage: before asking, check that nothing the director kept already does the job. No abstractions in the ask.
+10. **The agent's read of each answer goes on the page,** on its card, with a reply box where it asks something. The chat carries only the summary and the decisions.
+
 ## The page
 
-`https://claude.ai/artifact/EBRC2rs3Tw6JW2AWMgxZDf` (source: `requests-page.html`; republish that file to the same address). Its store holds the requests (`requests/<id>`: batch, order, kind, title, ask, why, near) and the director's answers (`answers/<id>`: text, status, batch). A new batch is seeded into `requests` with the next batch number, and the answers are read back from `answers`. Batch 1 is `batch-1.md`: six roads with no Great of their own, four links between the Greats' clusters, a change of target, two formations, a wall-less party, and an open card.
+`https://claude.ai/artifact/EBRC2rs3Tw6JW2AWMgxZDf` (source: `requests-page.html`; republish that file to the same address). Its store holds the requests (`requests/<id>`: batch, order, kind, title, ask, why, near) the director's answers (`answers/<id>`: text, status, reply, batch) and the agent's read of each (`replies/<id>`: kind, text; kind is placed, question, withdrawn or again). A new batch is seeded into `requests` with the next batch number, and the answers are read back from `answers`. Batch 1 is `batch-1.md`: six roads with no Great of their own, four links between the Greats' clusters, a change of target, two formations, a wall-less party, and an open card.
 
 ## What the triage shows
 
@@ -41,4 +44,4 @@ A trial of the format: six, each with the kept effects near it.
 
 ## Next
 
-On the director's answers to batch 1: each answer turned into a piece or a seat in words, shown where it lands in the web (`web.md`), with what it opens and what it closes; then batch 2.
+On the director's replies to batch 1 (the cards marked with a question: hot statuses, the Mark, what a crit repeats, max HP gained in a fight, the opening's multipliers): batch 2, written by ruling 9, with the two asks that are put again (a kill reward that depends on who died; a Bleed piece).
