@@ -263,7 +263,7 @@ What sets each effect in the web off, what it reads, and what it changes or move
 
 Thin spots seen while placing answers: candidates for a later batch, and only one of the places cards come from (`report.md`, Next). Each has to pass the check in `report.md` (ruling 9) before it goes out.
 
-- **Asked in batch 3, waiting on answers:** the Mark (as a whole direction), Sunder (in a pair of classes), a way to hide a unit that isn't an Assassin, a second thing a wind-up does, the bench, a third count that grows over a fight, the Hunt in a fight with one foe, and formations about who acts often and about crits.
+- **Asked in batch 3, waiting on answers:** the Mark (as a whole direction), Sunder (in a pair of classes), a way to hide a unit that isn't an Assassin, a second thing a wind-up does, the bench, a third count that grows over a fight, the Hunt in a fight with one foe, and formations about who acts often, crits, what the seats wear, and wide and narrow actions.
 - **Burn** is still underused (two effects name it, one lays it) and has no job to ask from. Bonfire's keeper can't feed the fire from the web, but the plain answer is fire on a swing or on whoever strikes it: a plain part, the agent's to write, not a card.
 - **Haste** is named once, and three roads run on it. A payoff for being Hasted wasn't asked: Haste already pays by itself on every unit, so the card would have asked for what the game does.
 - **The Shield and the cast,** **a formation for the dodge** and **a formation about heals:** each sits on an overused or watched mechanic, so none is asked until the web has grown.

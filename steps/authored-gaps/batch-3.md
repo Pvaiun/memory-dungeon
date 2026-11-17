@@ -105,6 +105,22 @@ Three classes live by their crits (the Ranger, the Assassin, the Geomancer), and
 - Great: Crits heal the ally with the lowest HP% for 10% of the damage.
 - Great: +50% Crit chance. Hits that don't crit deal −50%.
 
+## 13. A formation about what the seats wear (Formation)
+
+I need a formation where a piece one seat wears does something for another seat. It should change how the party fights, not add to it.
+
+A run shows about a fifth of the loot, so a piece needs many partners. A formation that lets one unit's gear work for another makes every piece a partner of every class. The Standard does it for what a swing adds. Nothing does it for anything else a unit wears.
+
+- Great formation: The standard: the Followers' basic attacks add what the Lead's basic attacks add, sized by their own stats.
+
+## 14. A formation about wide and narrow (Formation)
+
+I need a formation about how many units an action lands on: abilities that reach every foe or every ally, against those that land on one. It should change how the party fights, not add to it.
+
+Some kits are wide (the Bard's songs, the Hexer's curses, the Hoplite's shove, the Stormcaller's chain) and some put everything on one foe. In the gear, your Shock from abilities that land on more than one unit is the one effect that cares which. No formation does, so a wide party and a narrow one sit in the same shapes.
+
+- yours: Any ability that lands on more than one unit, allies included, lays Shock on every foe.
+
 ## Open. Something I didn't ask (Open)
 
 Any piece, seat or rule you want in the web that no card asked for.
