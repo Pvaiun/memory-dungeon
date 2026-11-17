@@ -33,6 +33,7 @@ What stuck was the director's own formulation: a skeleton, gaps where the agent 
 Six of the first fifteen came back marked as the wrong question, and the director was right about all six. The causes, and the rule they left:
 
 - **Asking for coverage.** "This road has no Great on X" isn't a gap if something they kept already does the job. Check what's kept before asking. The loot's philosophy already says not to ask for coverage of every mechanic.
+- **Asking for what they cut.** What's in today's loot (`npx tsx tools/loot-list.ts`) and in neither triage pile was cut. An ask whose plain answer is a cut effect is a wrong question too: two formations whose seats aimed the party were cut, so batch 2 didn't ask for one.
 - **Abstractions.** An ask in figures of speech can't be answered. Name the job in the game's own terms, and say what kind of thing is wanted back: an applier, a payoff, a seat, a link between two named things.
 - **Levers the player doesn't have.** Preparation is the whole game: who fights, what they wear, where they sit, the order of their abilities. The party's aim is steered only by a Mark and by an ability's own target phrase. A request that assumes another lever is wrong before it's asked.
 - **What worked:** links between two named things, a formation with a stated job, a function with a plain constraint. The director's own example requests in `intent.md` are the model for the form.
@@ -84,4 +85,5 @@ Not decided: how many pieces the set should hold (the agent's view is fewer and 
 - `triage.md`, `triage-formations.md`: what they kept, in their two piles.
 - `web.md`: where the kept effects sit, what the first batch added, and the gaps seen.
 - `batch-1.md`, `batch-1-answers.md`: the first requests as sent, and their answers with the agent's reads. The second is the best record of how they answer and push back.
+- `batch-2.md`: the second requests as sent. Their answers aren't in yet.
 - `requests-page.html`: the page's source.

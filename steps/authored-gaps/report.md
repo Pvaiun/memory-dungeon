@@ -19,7 +19,12 @@ The reasoning behind this step is in `brief.md`; read that first. This page hold
 
 ## The page
 
-`https://claude.ai/artifact/EBRC2rs3Tw6JW2AWMgxZDf` (source: `requests-page.html`; republish that file to the same address). Its store holds the requests (`requests/<id>`: batch, order, kind, title, ask, why, near) the director's answers (`answers/<id>`: text, status, reply, batch) and the agent's read of each (`replies/<id>`: kind, text; kind is placed, question, withdrawn or again). A new batch is seeded into `requests` with the next batch number, and the answers are read back from `answers`. Batch 1 is `batch-1.md`: six roads with no Great of their own, four links between the Greats' clusters, a change of target, two formations, a wall-less party, and an open card.
+`https://claude.ai/artifact/EBRC2rs3Tw6JW2AWMgxZDf` (source: `requests-page.html`; republish that file to the same address). Its store holds the requests (`requests/<id>`: batch, order, kind, title, ask, why, near) the director's answers (`answers/<id>`: text, status, reply, batch) and the agent's read of each (`replies/<id>`: kind, text; kind is placed, question, withdrawn or again). A new batch is seeded into `requests` with the next batch number, and the answers are read back from `answers`.
+
+- **A request's kind** is road, link, capstone, supply, function, pair (a piece two classes would both want), formation or open.
+- **A near line's tag** is great, fine, seat (a seat the director starred), gform or fform (a Great or a Fine formation), or yours (an effect the director wrote in an earlier batch).
+- **The page opens on a batch newer than any its device has shown,** and after that on the batch last picked.
+- **Batch 1** is `batch-1.md`: six roads with no Great of their own, four links between the Greats' clusters, a change of target, two formations, a wall-less party, and an open card. **Batch 2** is `batch-2.md`: four roads, three links, two functions, two pairs of classes, two formations, and an open card.
 
 ## What the triage shows
 
@@ -44,9 +49,10 @@ A trial of the format: six, each with the kept effects near it.
 
 ## Next: for the session that picks this up
 
-Batch 1 is closed: every answer is placed or withdrawn and nothing waits on the director (`web.md`, Added by batch 1; their words in `batch-1-answers.md`).
+Batch 1 is closed: every answer is placed or withdrawn (`web.md`, Added by batch 1; their words in `batch-1-answers.md`). Batch 2 is on the page and unanswered: thirteen cards and an open one (`batch-2.md`; `web.md`, Asked in batch 2, says where each came from and what was changed or dropped on the way out). Nothing else waits on the director.
 
 1. Read `brief.md` first: what this step is for, how the work is split, what was tried and dropped, and what the first batch taught. Then `intent.md`, this report's rulings, `web.md` and `batch-1-answers.md`.
-2. Write batch 2 from `web.md`, Gaps seen, by ruling 9. About fifteen cards, plus an open card. Seed them into the page's `requests` collection with `batch: 2` (the shape is under The page; `batch-1.md` shows a batch as seeded).
-3. Tell the director in the chat only that the batch is out. When they say they're done, read `answers`, write a read of each into `replies` (kind and text), and put only the summary and the decisions in the chat. Don't read their answers before they say so.
-4. Still to come, in the director's order: the basic pieces (the agent's, shown by sample), sizing and slotting what's placed, formations beyond the nine kept or written, mythics, then build.
+2. Wait for the director to say they're done with batch 2. Don't read `answers` before that.
+3. Then read the answers whose `batch` is 2 and write a read of each into `replies` (kind and text), as `brief.md` says under Reading the answers. Put only the summary and the decisions in the chat. When the batch closes, copy it to `batch-2-answers.md` and fold what's placed into `web.md`.
+4. Write batch 3 from what placing the answers shows and from `web.md`, Gaps seen, by ruling 9. Before a card goes out, check that nothing kept does its job and that its plain answer isn't something the director cut.
+5. Still to come, in the director's order: the basic pieces (the agent's, shown by sample), sizing and slotting what's placed, formations beyond those kept or written, mythics, then build.

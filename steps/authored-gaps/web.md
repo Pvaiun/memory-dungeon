@@ -105,17 +105,35 @@ The director's answers, placed by what they do, with their replies folded in (`b
 - The one-Shield formation with the Shield that sends back ×2 and the piece that takes every ally's Shield.
 - The pile with Shock from casting: a long cast puts the whole field's charge on one foe.
 
+## Asked in batch 2
+
+Thirteen cards and an open one (`batch-2.md`). Each was checked against ruling 9, and against what the director cut: what's in today's loot (`npx tsx tools/loot-list.ts`) and in neither triage pile.
+
+- **From the gaps seen after batch 1:**
+  - a Bleed piece, asked plainly and skippable;
+  - between fights: a piece that reads what its wearer walked in with, or acts when a fight is won, and isn't a refill;
+  - Cold Snap's second shatter, asked as a second way to the Chill cap, for a party with no wall to lay Chill from max HP;
+  - something of their own for the two who serve a caster, with "they only serve" offered as an answer;
+  - a piece two classes would both want, twice: the Pyromancer and the Bramble knight (the totem), the Assassin and the Cleric (the vial).
+- **From a thread the director settled:** the Storm's second pattern (make the enemies attack quickly) has plenty that pays when a foe acts and one Fine that makes one act, so: a way to make the foes act sooner or more often.
+- **Where the web has a supply and nothing to do with it:**
+  - a Stunned foe: three kept effects, every shatter and three kits Stun, and nothing kept pays for it;
+  - Hidden: three kept effects and the Assassin's kit hide a unit, and one effect pays for it;
+  - a unit's swings and its casts: the web's two biggest clusters, joined by two Fines.
+- **A lever nothing reads:** a unit that knows, or slots, only one ability.
+- **Formations:** one about the moment a foe falls (no kept formation does anything on a kill but the Torch), and one about a unit that pays HP or sits low.
+
+**Changed before it went out:**
+- **"A formation where life moves between seats"** became the formation about HP paid or held low. The Lifeline and the Warden, both starred, already move life to an anchor; nothing kept is about the unit that spends its own.
+- **"A formation where one seat picks the party's target"** wasn't asked. The pack (a Fine) does it with a Mark, and a Fine piece Marks whatever its holder's ability hits. The two formations in today's loot whose seats aimed the party without a Mark (Crossfire, Wedge) were cut. The Hunt's formation is asked by the kill instead.
+
 ## Gaps seen, not yet asked
 
-Candidates for the next batch. Each has to pass the check in `report.md` (ruling 9) before it goes out: a job in the game's terms, the kind of thing wanted back, and nothing kept that already does it.
+Candidates for a later batch. Each has to pass the check in `report.md` (ruling 9) before it goes out.
 
-- **A Bleed piece the director would call Great,** asked plainly (a new way to apply Bleed, or something that happens when a bleeding foe is hit), and skippable.
-- **Between fights.** HP, MP, knockouts and cooldowns carry from fight to fight, and one kept effect touches that (a fallen ally stands up after a won fight). A piece whose effect happens after a fight, or reads what the unit carried into it.
-- **A second shatter in one fight** (Cold Snap's line between the sign and the build): what brings a foe back to its cap after it shattered.
-- **Something of their own for the two who serve a caster** (Barrage's need): the seats and pieces kept feed the soloist and do nothing else.
-- **A formation where life moves between seats** (near the Lifeline and the piece that heals an ally when another pays).
-- **A formation where one seat picks the party's target** (near the Mark at fight start and The pack, a Fine).
-- **A piece two named classes on different roads would both want,** through a kind they share (the director's own request form).
+- **A Burn applier,** if the Bleed and Chill cards come back with Greats: Bonfire would then be the one status road with only plain ways to lay its status. Batch 1's Bonfire card brought upkeep and the pile, not a source.
+- **The Shield and the cast.** Greats on both sides, and only Fines between them (a Shield from a cast, or from max MP). The Peak's doubled hits reach abilities, so it may need nothing.
+- **A formation for the dodge.** Skirmish line (a Fine) is three plain dodgers. With party Blur and the dodge Greats it may be enough as it is.
 - **Mythics:** sixteen, one batch, from scratch, once the gear is placed. Upgrades stay as part of the kits. Neither is ruled yet.
 
 ## Asked of the director

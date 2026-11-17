@@ -95,6 +95,7 @@ textarea.small{ min-height:4rem; }
       <span><i class="tag g">Great</i> you marked it Great</span>
       <span><i class="tag">Fine</i> you marked it Fine</span>
       <span><i class="tag g">★ Seat</i> a seat you starred</span>
+      <span><i class="tag g">Yours</i> you wrote it in an earlier batch</span>
     </div>
   </div>
 
@@ -117,13 +118,14 @@ textarea.small{ min-height:4rem; }
 <script>
 (function(){
   "use strict";
-  var KIND = { road:"Road", link:"Link", capstone:"Capstone", supply:"Supply", "function":"Function", formation:"Formation", open:"Open" };
-  var TAG = { great:["Great",true], fine:["Fine",false], seat:["★ Seat",true], gform:["Formation",true], fform:["Formation",false] };
+  var KIND = { road:"Road", link:"Link", capstone:"Capstone", supply:"Supply", "function":"Function", pair:"Two classes", formation:"Formation", open:"Open" };
+  var TAG = { great:["Great",true], fine:["Fine",false], seat:["★ Seat",true], gform:["Formation",true], fform:["Formation",false], yours:["Yours",true] };
   var VERDICT = { placed:"Placed", question:"Placed, with a question", withdrawn:"Withdrawn", again:"Asked again" };
   var PILL = { open:"Open", answered:"Answered", skipped:"Skipped", wrong:"Wrong question" };
 
   var db = null, reqs = new Map(), remote = new Map(), local = new Map(), cards = new Map(), replies = new Map();
   var batch = null, filter = "all", gotReqs = false, gotAns = false, orderKey = "";
+  var topSeen = 0;
   var $ = function(id){ return document.getElementById(id); };
   var listEl = $("list"), statusEl = $("status");
 
@@ -277,7 +279,11 @@ textarea.small{ min-height:4rem; }
     if (!all.length){ $("bar").hidden = true; $("tail").hidden = true; listEl.textContent = ""; orderKey = "";
       setNote("No requests have landed yet.", "They appear here in batches of about fifteen. Nothing for you to do until they do."); return; }
     statusEl.hidden = true; $("bar").hidden = false; $("tail").hidden = false;
-    if (all.indexOf(batch) < 0){ var saved = Number(lsGet("batch")); batch = all.indexOf(saved) >= 0 ? saved : all[all.length - 1]; }
+    /* A batch newer than any this device has shown opens first; after that the last one picked. */
+    var top = all[all.length - 1];
+    if (!topSeen) topSeen = Number(lsGet("batchTop")) || 0;
+    if (top > topSeen){ topSeen = top; batch = top; lsSet("batchTop", String(top)); lsSet("batch", String(top)); }
+    else if (all.indexOf(batch) < 0){ var saved = Number(lsGet("batch")); batch = all.indexOf(saved) >= 0 ? saved : top; }
     var bt = $("batches"); bt.textContent = "";
     all.forEach(function(b){
       var bn = el("button", "chipbtn", "Batch " + b); bn.type = "button"; bn.setAttribute("aria-pressed", String(b === batch));
