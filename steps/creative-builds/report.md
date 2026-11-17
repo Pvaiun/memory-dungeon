@@ -128,7 +128,7 @@ Armor and offhand icons fall back to their kind's for every renamed piece (`ui/t
 - The keystones table is rebuilt from the content's own tags.
 
 **Documents.**
-- Rewritten: `docs/rules.md`, `philosophy.md`, `builds.md`, `loot.md`, `classes.md` (kinds and every changed version), the vocabulary page (the four statuses, affliction, the Gear section) and the primer.
+- Rewritten: the director's rulings, `philosophy.md`, `builds.md`, `loot.md`, `classes.md` (kinds and every changed version), the vocabulary page (the four statuses, affliction, the Gear section) and the primer.
 - Signposting is retired: each build's first rung is now *the first step*.
 
 ## 5. Samples

@@ -1,4 +1,4 @@
-/** The combat rule language: what's valid in numbers, conditions, targeting, effects, statuses and actions (docs/core-set/rules-and-vocabulary.md). */
+/** The combat rule language: what's valid in numbers, conditions, targeting, effects, statuses and actions (docs/core-set/combat.md). */
 import * as S from "../schema.js";
 import type { Index, Pack, Report, Walker } from "./core.js";
 

@@ -135,7 +135,7 @@ export const MP_REGEN = { every: 4, share: 0.007 };
 // ─── Damage ──────────────────────────────────────────────────────────────────
 
 /**
- * A kind's swing, in three words (docs/core-set/rules-and-vocabulary.md, Weapons). SWING.full is what a full swing deals per SWING_REF ticks
+ * A kind's swing, in three words (docs/core-set/gear.md, Weapons). SWING.full is what a full swing deals per SWING_REF ticks
  * at the reference Attack; the swing word scales it (SWING_POWER), the scaling word says what share of it is the wearer's Attack at
  * that reference (SWING_SCALING: a base-heavy swing works for any wearer, an Attack-heavy one rewards stacking Attack), and the
  * budget word says how many stat steps the kind's pieces carry at each rarity (KIND_BUDGET). A kind pays for its swing in budget

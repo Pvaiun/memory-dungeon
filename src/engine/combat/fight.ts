@@ -1,5 +1,5 @@
 /**
- * The fight: the core set's combat system (docs/core-set/rules-and-vocabulary.md),
+ * The fight: the core set's combat system (docs/core-set/combat.md),
  * run on sub-ticks. Where the core set is silent, what this code does stands.
  *
  * A fight is plain data, so a run can be saved mid-fight. Each `step` plays one

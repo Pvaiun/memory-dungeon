@@ -1,5 +1,5 @@
 /**
- * The core set's rules, as functionality tests (docs/core-set/rules-and-vocabulary.md):
+ * The core set's rules, as functionality tests (docs/core-set/combat.md):
  * the Taunt and Hidden rules on stated targeting, Seek, extra strikes, revive,
  * summoning and replacing, Aegis, absorption, the MP fizzle, reactions to a unit's
  * own KO, event filters by tag and status, dispel immunity, Defense's ratio, scales

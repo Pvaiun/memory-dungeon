@@ -35,7 +35,7 @@ The director's aim (`intent.md`): the simulated player wins 5% of runs. It does:
 
   Every regular fight's and elite's knob was set again against the build parties. The easy pools (each act's first floors) are as they were.
 - **The bosses:** `RUN_TARGETS` in `tools/rogue-tune.ts` is now 35%, 72% and 82% of the tries they win (was 22%, 35% and 45%). Seven rounds of 2,000 runs (`npm run rogue:tune`) set each boss and evened out the regions within each act. Bosses rose by about 30 knob points in act I, 70–150 in act II and 165–195 in act III.
-- **The documents:** `docs/rules.md` (fights by cost; difficulty aims hard, the 5%), `docs/core-set/rogue-mode.md` (knobs are measured), and the tools' and heat's comments.
+- **The documents:** the director's rulings (fights by cost; difficulty aims hard, the 5%), `docs/core-set/rogue-mode.md` (knobs are measured), and the tools' and heat's comments.
 - **No engine change and no new behaviour:** the knobs and the pack only.
 
 ## Where it stands

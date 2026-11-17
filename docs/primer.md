@@ -1,6 +1,6 @@
 # Primer
 
-The least you need to know to work on the game. Read it first, then open a detailed document only when the work needs it (the map at the end says which). It describes; it doesn't decide. `docs/rules.md` (the director's standing direction) and the detailed documents win where they differ, and no number is given here: numbers live in the data.
+The least you need to know to work on the game. Read it first. Everything else is reference: open the section the work needs (the map at the end says where), not the whole document. It describes; it doesn't decide. The detailed documents win where they differ, and each opens with **The director's rulings** on its subject, which win over the rest of its page, and no number is given here: numbers live in the data.
 
 ## What this is
 
@@ -114,17 +114,21 @@ The least you need to know to work on the game. Read it first, then open a detai
 
 | To work on | Read |
 | --- | --- |
-| Anything about design or tuning | `docs/rules.md`, always: the director's direction, one page |
-| Exact combat rules: timing, targeting phrases, the damage order, what each status does | `docs/core-set/rules-and-vocabulary.md` |
+| The director's standing direction on a subject | The director's rulings, the first section of that subject's document below |
+| How a fight runs: timing, targeting phrases, the damage order | `docs/core-set/combat.md` |
+| What each status, special stat and effect does; how statuses stack and end; the tiers | `docs/core-set/vocabulary.md` |
+| Weapon kinds, who wears what, and what a formation is, as rules | `docs/core-set/gear.md` |
 | A class's design: its plan, kit, tests, and which parties beat what | `docs/core-set/classes.md`; its numbers in `content/core-set/classes.ts` |
 | An enemy's design, and the list of challenges | `docs/core-set/enemies.md`; numbers in `content/core-set/enemies.ts`; free play's encounters and dungeons in `dungeons.ts`; their test trios in `tests.ts` |
 | How a run works | `docs/core-set/rogue-mode.md`; numbers in `content/core-set/rogue.ts` and `rogue-knobs.json` |
 | Designing or changing gear, formations, upgrades or mythics | `docs/gear-design/philosophy.md` first: the director's intent, rhythm, what makes a piece good, and how loot is made |
-| The nine builds: rhythm, threads, routes, rungs, needs, and the web between them (doors, engines) | `docs/gear-design/builds.md`; the build test's parties in `tools/build-parties.ts` |
+| The nine builds: rhythm, threads, routes, rungs, needs, and the doors between them | `docs/gear-design/builds.md`; the build test's parties in `tools/build-parties.ts` |
+| The engines: each found synergy, what combines and what the player sees | `docs/gear-design/engines.md` |
 | What each build should look like in a fight, for reading or checking one; the standing targets for a fight's shape | `docs/build-cards.md`; the bands in `tools/balance/sheet.ts` (`BANDS`); the feel reader's brief in `docs/feel-reader.md` |
 | The loot's rules: each rarity, the stock, writing pieces, formations, upgrades, mythics, levers held back | `docs/gear-design/loot.md`; each item and its card text in `content/core-set/pieces/`, `formations.ts` and `upgrades/`, or as one line each from `npx tsx tools/loot-list.ts` |
 | Any number | `content/core-set/scale.ts` |
 | What content can express | `PRIMITIVES.md` (generated from `src/schema.ts`) |
 | The interface | `ui/README.md` |
 | The code: what each file is, and where to start | `docs/code-map.md` |
-| The tools, and what's open right now | `CLAUDE.md` (Status) |
+| Balance and tuning: the director's rulings, the measuring tools, what to watch | `docs/balance.md` |
+| What's built and waiting on the director, and the open questions | `docs/open.md` |

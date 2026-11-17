@@ -2,6 +2,16 @@
 
 The rogue mode is the game: a roguelite run of three acts on Slay the Spire's structure, a party of three around a leader, fights that play themselves, and preparation between rooms as the player's whole job. HP, MP, knockouts and cooldowns carry from fight to fight, so a run is a party kept going and built up from the gear, formations, recruits and training found on the way. The classes, gear pieces, enemies and combat rules have their own documents; this one is how a run works.
 
+## The director's rulings
+
+The director's standing direction on this page's subject. Direction is guidance, not law: challenge any of it with evidence. Until a line is changed here, it stands, and it wins over the rest of this page: where they differ, fix the page. When the director changes a ruling, rewrite its line; don't add history.
+
+- **No control during fights.** Preparation is the game: a team wins or loses as a team, not because a button was pressed at the right moment. A lost fight can be tried again only with a Destiny Shard, won from act I's and act II's bosses: it returns the run to the moment the fight's preview opened, so the second try is a new preparation, not a reroll. More potion types, a test fight and more abilities per class are for later, at the director's word.
+- **The rogue mode is the game** (*Core set: the rogue mode*). Free play is the sandbox.
+- **A knockout keeps carrying:** the fallen don't stand up after a won fight.
+- **Bad choices are part of a roguelike.** Weak options (Raise, a revive learned first) are rolled like any other.
+- **Offers aren't aimed** by the designer's tags for the first playtest.
+
 ## Where it lives
 
 The rules are `src/rogue.ts`, pure and deterministic: a run is plain data (`RogueRun`) moved one decision at a time (`options`, `choose`), with free actions between. The content is `content/core-set/rogue.ts` (`ROGUE_CONFIG`, `ROGUE_REGIONS`, `ROGUE_EVENTS`) and each fight's knob in `content/core-set/rogue-knobs.json`, shaped by the schema's `Rogue`. The screens are `ui/src/rogue-screens.ts`. Names in backticks below are fields of `ROGUE_CONFIG` unless the text says otherwise.

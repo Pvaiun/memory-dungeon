@@ -1,6 +1,6 @@
 # Kickoff: unique pieces, creative builds
 
-**For the agent who runs it.** Read `CLAUDE.md`, `docs/primer.md` and `docs/rules.md` first, then this page. This page is the step's intent and its approved design, so start at build: run the whole pass, then stop for the director's playtest. There's no gate in between. Where this page is silent, choose, and list the choice in the report.
+**For the agent who runs it.** Read `CLAUDE.md`, `docs/primer.md` and the director's rulings first, then this page. This page is the step's intent and its approved design, so start at build: run the whole pass, then stop for the director's playtest. There's no gate in between. Where this page is silent, choose, and list the choice in the report.
 
 ## Intent
 
@@ -97,7 +97,7 @@ The director, Nov 14, after playing the game the loot pass made:
 
 - **Roughly two of each class's three abilities have a version that reorients the ability.** Reorienting means pointing the ability at a different job: one of the class's other identities, or a direction the class doesn't have yet. A different flavour of the job it already does doesn't count. The reorienting versions needn't turn the same way.
 - **A passive that works only inside one lane gets a version that works outside it,** so no class's passive holds it to one lane.
-- **The kit still reads as the class's own:** a trunk and three identities, each viable (`docs/rules.md`).
+- **The kit still reads as the class's own:** a trunk and three identities, each viable (the director's rulings).
 
 ### 6. Formations
 
@@ -109,10 +109,10 @@ The director, Nov 14, after playing the game the loot pass made:
 ### 7. Documents, Status and report
 
 - **Documents:** rewrite the lines these changes replace in:
-  - `docs/rules.md`;
+  - the director's rulings;
   - `docs/gear-design/philosophy.md`, `builds.md` and `loot.md`;
   - `docs/core-set/classes.md`;
-  - the Gear section of `docs/core-set/rules-and-vocabulary.md`.
+  - the Gear section of `docs/core-set/combat.md` and `vocabulary.md`.
 - **Retire the signposting requirement** wherever the documents state it, among them the philosophy's intent and the builds' first rungs.
 - **Engines aren't protected.** Where a change removes an engine's part, rewrite or drop the engine's entry in `builds.md`.
 - **Status:** update `CLAUDE.md`'s Status to what's true now. Write the report to this folder as `report.md`, commit, and stop.
