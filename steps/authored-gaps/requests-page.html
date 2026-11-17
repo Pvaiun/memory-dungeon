@@ -60,8 +60,6 @@ h1{ font-family:var(--display); font-weight:600; font-size:1.7rem; line-height:1
 .body{ padding:0 1rem 1rem; display:flex; flex-direction:column; gap:.8rem; min-width:0; }
 .ask{ font-size:1.02rem; font-weight:500; margin:0; }
 .why{ margin:0; color:var(--muted); }
-.size{ margin:0; font-size:.92rem; }
-.size b{ font-weight:600; }
 .near{ display:flex; flex-direction:column; gap:.35rem; margin:0; padding:0; list-style:none; }
 .near-title{ color:var(--muted); }
 .near li{ display:grid; grid-template-columns:5.6rem 1fr; gap:.6rem; align-items:start; font-size:.92rem; min-width:0; }
@@ -85,7 +83,7 @@ textarea::placeholder{ color:var(--muted); opacity:.8; }
     <span class="px" style="color:var(--muted)">Memory Dungeon · the web</span>
     <h1>Authored gaps</h1>
     <p>Each card is a gap in the web that I didn't want to guess at. Write the effect the way you'd say it out loud. Rough is fine, and so is more than one idea. It saves as you type, and I read your answers from here.</p>
-    <p>Each card names a size. Don't set numbers: I do that after. An answer doesn't have to name its road's status, or belong to one road.</p>
+    <p>Write whatever you find most interesting, at any size. Don't set numbers: I do that after. Where a card needs a particular size, it says so.</p>
     <div class="legend">
       <span><i class="tag g">Great</i> you marked it Great</span>
       <span><i class="tag">Fine</i> you marked it Fine</span>
@@ -113,7 +111,6 @@ textarea::placeholder{ color:var(--muted); opacity:.8; }
   "use strict";
   var KIND = { road:"Road", link:"Link", capstone:"Capstone", supply:"Supply", "function":"Function", formation:"Formation", open:"Open" };
   var TAG = { great:["Great",true], fine:["Fine",false], seat:["★ Seat",true], gform:["Formation",true], fform:["Formation",false] };
-  var SIZE = { simple:["Simple", "A plain effect a run finds early. One clause."], designed:["Designed", "Specific: worth a lot in the right party and little elsewhere."], bending:["Rule-bending", "It changes how a unit or the party works. A price is welcome."] };
   var PILL = { open:"Open", answered:"Answered", skipped:"Skipped", wrong:"Wrong question" };
 
   var db = null, reqs = new Map(), remote = new Map(), local = new Map(), cards = new Map();
@@ -159,7 +156,6 @@ textarea::placeholder{ color:var(--muted); opacity:.8; }
     var body = el("div", "body");
     body.appendChild(el("p", "ask", str(r.ask)));
     if (str(r.why)) body.appendChild(el("p", "why", str(r.why)));
-    if (SIZE[r.size]){ var sz = el("p", "size"); sz.appendChild(el("b", "", "Size: " + SIZE[r.size][0] + ". ")); sz.appendChild(document.createTextNode(SIZE[r.size][1])); body.appendChild(sz); }
     var near = Array.isArray(r.near) ? r.near : [];
     if (near.length){
       body.appendChild(el("span", "near-title px", "Near it"));

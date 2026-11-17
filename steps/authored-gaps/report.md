@@ -11,12 +11,12 @@ For the director, Nov 17. Nothing in the game has changed: this is the first map
 5. **Requests come in batches of about fifteen, on a page the director types into,** never in the chat. Requests and conversation don't share a message.
 6. **Formations are in the pass,** triaged the same way (`triage-formations.md`: 7 Great, 19 Fine, with the seats the director liked starred). Upgrades and mythics weren't triaged; the agent's recommendation (upgrades stay as part of the kits, mythics last and from scratch) hasn't been ruled on.
 
-7. **The agent names each request's size; the director doesn't.** Simple (a plain effect a run finds early), designed (specific) or rule-bending. No numbers from the director: the agent sizes after.
+7. **No size on a request unless it needs one.** The director writes whatever they find most interesting, with no numbers; where a request needs a particular size, its ask says so. The agent sizes afterwards, and says plainly when an answer is too small or too big.
 8. **Answers won't be colour-coded.** The director's answer to a road's request may not name that road's status, and may serve many roads. It's placed by what it does, not by the card that asked.
 
 ## The page
 
-`https://claude.ai/artifact/EBRC2rs3Tw6JW2AWMgxZDf` (source: `requests-page.html`; republish that file to the same address). Its store holds the requests (`requests/<id>`: batch, order, kind, size, title, ask, why, near) and the director's answers (`answers/<id>`: text, status, batch). A new batch is seeded into `requests` with the next batch number, and the answers are read back from `answers`. Batch 1 is `batch-1.md`: six roads with no Great of their own, four links between the Greats' clusters, a change of target, two formations, a wall-less party, and an open card.
+`https://claude.ai/artifact/EBRC2rs3Tw6JW2AWMgxZDf` (source: `requests-page.html`; republish that file to the same address). Its store holds the requests (`requests/<id>`: batch, order, kind, title, ask, why, near) and the director's answers (`answers/<id>`: text, status, batch). A new batch is seeded into `requests` with the next batch number, and the answers are read back from `answers`. Batch 1 is `batch-1.md`: six roads with no Great of their own, four links between the Greats' clusters, a change of target, two formations, a wall-less party, and an open card.
 
 ## What the triage shows
 

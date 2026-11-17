@@ -116,7 +116,7 @@ Four Greats make a unit that doesn't act, or gives itself away. Each one pays in
 
 ## 11. An opening worth repeating (Supply)
 
-I need a start-of-fight effect you'd want to happen three times a fight.
+I need a start-of-fight effect you'd want to happen three times a fight. Keep it plain: the pieces that repeat it are the strange half.
 
 Two Greats make the opening happen again on a kill. Only one opening effect you kept is a Great (the readied ability). The rest are Fines: a Shield, Haste, Might, a Taunt, a status on every foe.
 
@@ -138,7 +138,7 @@ You've said triggers and targets are undervalued. One gear Great changes a targe
 
 ## 13. A formation about the swing (Formation)
 
-I need a formation about how the party's basic attacks come.
+I need a formation about how the party's basic attacks come. It should change how the party fights, not add to it.
 
 Seven gear Greats change a unit's swing, and no formation you marked Great is about it.
 
@@ -150,7 +150,7 @@ Seven gear Greats change a unit's swing, and no formation you marked Great is ab
 
 ## 14. A formation about who holds the Shield (Formation)
 
-I need a formation about where the party's Shield sits.
+I need a formation about where the party's Shield sits. It should change how the party fights, not add to it.
 
 Five gear Greats move Shield around, and they pull against each other: one puts all of it on one unit, and the seat you starred wants everyone holding one.
 
