@@ -120,7 +120,7 @@ textarea.small{ min-height:4rem; }
   "use strict";
   var KIND = { road:"Road", link:"Link", capstone:"Capstone", supply:"Supply", "function":"Function", pair:"Two classes", formation:"Formation", open:"Open" };
   var TAG = { great:["Great",true], fine:["Fine",false], seat:["★ Seat",true], gform:["Formation",true], fform:["Formation",false], yours:["Yours",true] };
-  var VERDICT = { placed:"Placed", question:"Placed, with a question", withdrawn:"Withdrawn", again:"Asked again" };
+  var VERDICT = { placed:"Placed", question:"Placed, with a question", overused:"Too much of this in the web", withdrawn:"Withdrawn", again:"Asked again" };
   var PILL = { open:"Open", answered:"Answered", skipped:"Skipped", wrong:"Wrong question" };
 
   var db = null, reqs = new Map(), remote = new Map(), local = new Map(), cards = new Map(), replies = new Map();
@@ -146,7 +146,8 @@ textarea.small{ min-height:4rem; }
   }
   function statusOf(s){ return s.flag === "skipped" || s.flag === "wrong" ? s.flag : (s.text.trim() ? "answered" : "open"); }
   function isDone(s){ return statusOf(s) !== "open"; }
-  function needsYou(id){ var rp = replies.get(id); return !!rp && rp.kind === "question" && !stateOf(id).reply.trim(); }
+  function asks(rp){ return !!rp && (rp.kind === "question" || rp.kind === "overused"); }
+  function needsYou(id){ return asks(replies.get(id)) && !stateOf(id).reply.trim(); }
 
   function setNote(title, text, bad){
     statusEl.hidden = false; statusEl.className = bad ? "note bad" : "note"; statusEl.textContent = "";
@@ -217,12 +218,12 @@ textarea.small{ min-height:4rem; }
     if (rp && c.read.dataset.v !== rp.v){
       c.read.dataset.v = rp.v; c.read.textContent = "";
       var rh = el("div", "rh"); rh.appendChild(el("span", "px", "Claude's read"));
-      rh.appendChild(el("span", "verdict" + (rp.kind === "question" ? " you" : ""), VERDICT[rp.kind] || "Read"));
+      rh.appendChild(el("span", "verdict" + (asks(rp) ? " you" : ""), VERDICT[rp.kind] || "Read"));
       c.read.appendChild(rh);
       rp.text.split("\n").forEach(function(line){ if (line.trim()) c.read.appendChild(el("p", "", line)); });
     }
     var askYou = !!rp || !!s.reply;
-    c.rta.placeholder = rp && rp.kind === "question" ? "Answer my question here. Your answer above stays as it is." : "Comment on my read, if you like.";
+    c.rta.placeholder = rp && rp.kind === "overused" ? "Something else for the same job, or say you want it as written." : asks(rp) ? "Answer my question here. Your answer above stays as it is." : "Comment on my read, if you like.";
     c.rlab.hidden = !askYou; c.rta.hidden = !askYou;
     if (document.activeElement !== c.rta && !s.dirty && c.rta.value !== s.reply) c.rta.value = s.reply;
     c.body.hidden = s.folded; c.head.setAttribute("aria-expanded", String(!s.folded));
