@@ -2,12 +2,15 @@
 
 For the director, Nov 17. Nothing in the game has changed: this is the first map of the web (`web.md`), made from the triage (`triage.md`) and today's loot, with the decisions it needs and a first batch of requests.
 
-## Decisions needed
+## Ruled by the director (Nov 17)
 
-1. **Status effects stay plain?** Three of the 42 Greats name a status road's status, and none names Burn, Bleed, the Mark, Taunt or Thorns. I'd build on that: status effects stay at uncommon as the plain Fines, I don't ask for "a great Burn piece", and each status road is tied to the rest of the web by pieces shaped like the one Chill Great (the status comes from somewhere unexpected: max HP). It also removes the keyword rares a player collects by matching. The other way is a few status Greats a road, written by the director.
-2. **Uncommons from the Fines, without asking?** About 52 uncommon slots are holes and about 70 Fines have no piece today. I'd place them and show a sample.
-3. **Rares and legendaries: about 76 open slots.** That's where the requests come from. I'd bring them in batches of about fifteen, the most structural first. The other way is a smaller stock. My view: don't decide yet, and see how two batches go.
-4. **Were mythics, formations and upgrades in the pass?** The list reads as gear only (one mythic of sixteen matches a kept line). I've treated all three as outside it.
+1. **Status effects don't stay plain as a rule.** A road may have Greats on its own status.
+2. **No filling from the Fines.** They were the bare minimum acceptable: the pool isn't started with mediocre pieces. Some basic pieces will exist, later.
+3. **A clean slate.** Today's pieces aren't the skeleton: "What's in the build now is not better than what is in the list." A piece keeps nothing for holding an effect today.
+4. **Requests come in batches of about fifteen, on a page the director types into,** never in the chat. Requests and conversation don't share a message.
+5. **Mythics, formations and upgrades weren't in the triage.** Open: whether they join this pass (the agent's recommendation is in the session's reply of Nov 17).
+
+So the counts below describe today's loot against the triage, and no longer size the work: the web is rebuilt from the 42 Greats alone, and a Fine comes in only where something needs it.
 
 ## What the triage shows
 
@@ -32,4 +35,4 @@ A trial of the format: six, each with the kept effects near it.
 
 ## Next
 
-On the answers to the decisions: the slot-by-slot skeleton (every hole with what its slot was for), the uncommons placed, and the next batch of requests.
+The web rebuilt from the Greats alone (`web.md`), the page, and the first batch on it.

@@ -2,7 +2,9 @@
 
 Built from the director's triage (`triage.md`) and today's loot (`npx tsx tools/loot-list.ts`). It's a map to correct, not a design: no piece is written here. Counts marked "about" come from matching the triage's lines to today's cards by their words, and some lines were edited, so they're near, not exact.
 
-## The skeleton: today's loot with its holes
+## Today's loot against the triage
+
+The director has ruled a clean slate (`report.md`): today's pieces aren't the skeleton, so this section is a record of what the triage left standing, not a plan. The web is to be rebuilt from the Greats alone.
 
 Today's loot has 252 pieces with an effect below mythic: 93 uncommons, 99 rares, 60 legendaries.
 
@@ -14,7 +16,6 @@ Today's loot has 252 pieces with an effect below mythic: 93 uncommons, 99 rares,
 
 - **35 of the 42 Greats sit on a piece today** (two of them on two pieces each, so 37 pieces). Seven have no piece: the Shield that every other ally's Shields go to, the opening that happens again for the whole party when a foe falls, a healer's overheal as a Shield on the healed ally, the half-HP start with Lifesteal ×2, basic attacks paid by Shock on the target, a heal on every cast, and Chill laid from max HP.
 - **About 70 Fines have no piece today** (they come from earlier loot). Most are an uncommon's shape: a status on a swing, a status as the fight starts, a small reaction.
-- **So the uncommons can be filled from the Fines,** and the open slots are the rares and legendaries: about 83 holes, about 76 once the homeless Greats are placed.
 - **The mythics** weren't matched: one of sixteen reads like a kept line. Whether they were in the pass is asked below.
 - **Every hole has its old purpose.** Each cut piece keeps its Serves line (its roads, rungs and engines), which is what the slot was trying to do. A gap is written from that.
 
