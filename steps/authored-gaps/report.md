@@ -27,7 +27,11 @@ The reasoning behind this step is in `brief.md`; read that first. This page hold
 
 13. **The agent builds the web; the director fills its gaps, or originates the sections it doesn't have.** The classes and the roads are fair things to ask from. The earlier loot is no part of it and no decision rests on it ("not relevant to this at all").
 14. **The web grows by batches, from what it holds, and is what it ends up being.** The director: "this batch thing of building based on what we have is working really well". No skeleton of each road's and class's needs is drawn up first: the agent proposed one, the director asked whether it was a mistake, and the agent agreed it was (`brief.md`, Tried and dropped).
-15. **A number of authored effects to reach, not a share and not a gap count.** The director's proposal ("a number quota and letting the web be what it ends up being"), agreed by the agent as a checkpoint: it stops the agent calling the web done early, as it did at 81. **The number is the director's to set and isn't set yet.** The agent suggested about 150, then a look at the whole web together before going further. The plain parts come after, and only where something needs one (ruling 3).
+15. **The set's size is the target: "I'd like to reach 450 pieces of gear and 50 formations."** A plain number, not a share and not a gap count (the director: "a number quota and letting the web be what it ends up being"). It stops the agent calling the web done early, as it did at 81.
+    - **The agent reads it as the whole set,** commons and plain pieces included, and has said so to the director. If they meant 450 authored pieces, that reading is wrong and the work is about twice as long.
+    - **How many of the 450 are authored isn't set.** By the loot's rarity rules a common is stats and an uncommon a simple effect, so the authored pieces are mostly rares and legendaries. The agent's estimate, given to the director: about 225 if half the set is rare or above, about 315 at the 70% they first offered. The web holds 62 gear effects, so 160 to 250 are still to come, which is 16 to 25 batches at ten placed a batch.
+    - **Formations are the long way round:** the web has about 15 (7 Great, 3 written, and the Fine formations that hold a starred seat), and two a batch brings 35 more only after 17 batches. The agent suggested more formation cards a batch, or a batch of formations alone; not ruled.
+    - **Two things the agent flagged, to watch and not to argue now.** A bigger pool makes it rarer for two parts of a found synergy to meet in one run; that's measured with whole runs at build, and it's less of a risk while the director's pieces keep serving many roads at once. And the plain parts come after, only where something needs one (ruling 3).
 
 ## The page
 
@@ -53,7 +57,7 @@ The store holds the requests (`requests/<id>`: batch, order, kind, title, ask, w
 
 ## Next: for the session that picks this up
 
-Batches 1 and 2 are closed: every answer is placed, left out or withdrawn (`web.md`, Added by batch 1 and Added by batch 2; the director's words and each read in `batch-1-answers.md` and `batch-2-answers.md`). The web holds 81 effects. Nothing on the page waits on the director. **One thing is open with them: the number in ruling 15.** If they've given it, record it there; if not, ask once, in the chat, and write the batch meanwhile.
+Batches 1 and 2 are closed: every answer is placed, left out or withdrawn (`web.md`, Added by batch 1 and Added by batch 2; the director's words and each read in `batch-1-answers.md` and `batch-2-answers.md`). The web holds 81 effects. Nothing on the page waits on the director. The target is set (ruling 15: 450 pieces of gear, 50 formations). Two things in that ruling are the agent's reading and may be corrected: that 450 is the whole set, and how many formation cards a batch carries. Record a correction there if one comes.
 
 **What went wrong at the end of batch 2, so it isn't repeated.** At 81 effects the agent said the gaps were few and offered to move to the plain parts; the director "felt like we were barely getting started". What had run thin was one way of finding cards (thin spots among the kept effects). The agent then reached for structure twice: the holes in the earlier loot (against ruling 4), and a skeleton of needs by road and class (ruling 14). Neither is the method. The method is the batches.
 
@@ -65,7 +69,7 @@ Batches 1 and 2 are closed: every answer is placed, left out or withdrawn (`web.
    - **A formation with a stated job.**
    - **A whole direction,** where the web has almost nothing for a road's own lever. The director's intent names this kind of request, and it hasn't been asked yet.
    - **The open card,** every batch.
-3. **Every card passes ruling 9,** and a batch is as long as its real jobs: if fifteen can't be found, send fewer and say so. Two short batches running is the sign to stop and talk, whatever the number in ruling 15 says.
+3. **Every card passes ruling 9,** and a batch is as long as its real jobs: if fifteen can't be found, send fewer and say so. Two short batches running is the sign to stop and talk, whatever the target says.
 4. **Recount before treating a mechanic as closed.** The overused line moves as the web grows (one effect in twelve is 7 of 81).
-5. **After the answers:** read them, place them, update the count, and tell the director where the web stands against the number.
-6. Still to come, in the director's order, once the number is reached and they've looked at the whole web: the plain parts (the agent's, shown by sample), sizing and slotting what's placed, formations beyond those kept or written, mythics, then build. Slotting is where a class with too little to wear shows up; what it finds comes back as cards.
+5. **After the answers:** read them, place them, update the count, and tell the director where the web stands against the target: gear effects placed, and formations.
+6. Still to come, in the director's order, once the authored pieces are in and they've looked at the whole web: the plain parts (the agent's, shown by sample), sizing and slotting what's placed, formations beyond those kept or written, mythics, then build. Slotting is where a class with too little to wear shows up; what it finds comes back as cards.
