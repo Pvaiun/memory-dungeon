@@ -6,7 +6,7 @@ The requests on the director's page, as seeded. The page's store holds the live 
 
 Do you want a Bleed piece you'd call Great? It could be a new way to apply Bleed, or something that happens when a bleeding foe is hit. If Thousand Cuts doesn't need one, skip it.
 
-Asked again from batch 1, in plain words this time. Nothing you marked Great names Bleed; the Greats on this road are about hitting more. The Bleed effects you kept are all Fines, and anything you write here replaces them.
+Asked again from batch 1, in plain words this time. Nothing in the web names Bleed: the Greats on this road are about hitting more.
 
 - yours, batch 1: The damage statuses it lays (Burn, Bleed, Shock) go to the foe holding the most of that status, unless that foe is at its cap.
 - yours, batch 1: Crits set off a hit's triggers 4 times.
@@ -16,7 +16,7 @@ Asked again from batch 1, in plain words this time. Nothing you marked Great nam
 
 I need a second way to get a foe to its Chill cap, for a party with no wall to lay Chill from max HP. An applier.
 
-You said Cold Snap is about reaching the shatter. What you marked Great reaches it one way: a wall whose swings Chill from its max HP. For casters and quick hitters there are Icefall's two frost seats and nothing else Great. The plain Chill riders are Fines, and anything you write here replaces them. A stronger way in is also what would make the same foe shatter a second time in one fight.
+You said Cold Snap is about reaching the shatter. The web reaches it one way: a wall whose swings Chill from its max HP. For casters and quick hitters there are only Icefall's two frost seats. A stronger way in is also what would make the same foe shatter a second time in one fight.
 
 - Great: Basic attacks add Chill, from max HP.
 - Great formation: Icefall: one seat's abilities add +50% Chill, one's basic attacks add a Chill, and any shatter readies the Breaker's first-slotted ability.
@@ -25,7 +25,7 @@ You said Cold Snap is about reaching the shatter. What you marked Great reaches 
 
 I need a way the party makes the foes act sooner or more often.
 
-You named two patterns for Shock: keep the stacks up, or make the enemies attack quickly. The first has its sources and its readers now. For the second, plenty pays when a foe acts or strikes, and nothing Great makes a foe act. One Fine does (a foe hit by a basic attack takes its own next one at once); it's replaceable.
+You named two patterns for Shock: keep the stacks up, or make the enemies attack quickly. The first has its sources and its readers now. For the second, plenty pays when a foe acts or strikes, and nothing in the web makes a foe act.
 
 - Great: Basic attacks come only when a foe acts: once ready, each waits for one, then strikes it at once.
 - Great: When a foe breaks its Shield: sends back 200% of the most it held.
@@ -46,7 +46,7 @@ Everything Great or starred for the two who serve is a way to give: their mana, 
 
 I need one thing that happens because a foe is Stunned, beyond the foe not acting. A payoff.
 
-The ×3 swing Stuns, every shatter does, and three kits do. Nothing you kept, Great or Fine, does anything with a foe that's held still. Cold Snap ends in a Stun, so this is also what a shatter buys the party.
+The ×3 swing Stuns, every shatter does, and three kits do. Nothing in the web does anything with a foe that's held still. Cold Snap ends in a Stun, so this is also what a shatter buys the party.
 
 - Great: Basic attacks come 50% as often, deal ×3 and Stun their target.
 - starred seat: Breaker (Icefall): any shatter readies its first-slotted ability.
@@ -64,7 +64,7 @@ The Assassin's kit hides a unit, and so does your knockout survived at 1 HP. One
 
 I need the link between a unit's basic attacks and its abilities: what a swing does for its next cast, or what a cast does for its next swing.
 
-Six Greats change how a unit swings and seven change how it casts. Every unit does both, and nothing Great joins them. Two Fines do (a basic attack restores MP, or brings the first-slotted ability closer); both are replaceable.
+Six Greats change how a unit swings and seven change how it casts. Every unit does both, and nothing in the web joins them. If they don't need joining, skip this.
 
 - Great: Never makes a basic attack. Defense ×2.
 - Great: Every other ability it casts is free.
