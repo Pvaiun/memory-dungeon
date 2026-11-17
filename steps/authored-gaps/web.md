@@ -1,22 +1,6 @@
-# The web: first map
+# The web: what's kept, what's placed, and the count
 
-Built from the director's triage (`triage.md`) and today's loot (`npx tsx tools/loot-list.ts`). It's a map to correct, not a design: no piece is written here. Counts marked "about" come from matching the triage's lines to today's cards by their words, and some lines were edited, so they're near, not exact.
-
-## Today's loot against the triage
-
-The director has ruled a clean slate (`report.md`): today's pieces aren't the skeleton, so this section is a record of what the triage left standing, not a plan. The web is to be rebuilt from the Greats alone.
-
-Today's loot has 252 pieces with an effect below mythic: 93 uncommons, 99 rares, 60 legendaries.
-
-| | Slots | Hold a Great | Hold a Fine | Holes |
-| --- | --- | --- | --- | --- |
-| Uncommon | 93 | 6 | about 35 | about 52 |
-| Rare | 99 | 16 | about 28 | about 55 |
-| Legendary | 60 | 15 | about 17 | about 28 |
-
-- **35 of the 42 Greats sit on a piece today** (two of them on two pieces each, so 37 pieces). Seven have no piece: the Shield that every other ally's Shields go to, the opening that happens again for the whole party when a foe falls, a healer's overheal as a Shield on the healed ally, the half-HP start with Lifesteal ×2, basic attacks paid by Shock on the target, a heal on every cast, and Chill laid from max HP.
-- **About 70 Fines have no piece today** (they come from earlier loot). Most are an uncommon's shape: a status on a swing, a status as the fight starts, a small reaction.
-- **The mythics** weren't matched: one of sixteen reads like a kept line. Whether they were in the pass is asked below.
+The effects the web holds so far: the director's Greats (`triage.md`, `triage-formations.md`), the seats they starred, and what their answers to batches 1 and 2 added, with the count of what every effect is set off by, reads and changes. No piece is written here, and nothing is sized or slotted. The skeleton (what each road and class needs, and where the gaps are) is `skeleton.md`, once it's built.
 
 ## Where the Greats sit
 
@@ -43,21 +27,21 @@ From `triage-formations.md`: 7 Great, 19 Fine, and the seats the director starre
 
 ## The roads
 
-Greats counted by their pieces' road tags; a piece can sit on more than one road. Holes are the share of a road's tagged pieces whose effect was cut.
+Where the Greats sit by road, from what each does. A Great can sit on more than one road.
 
-| Road | Greats | Holes | What the Greats there are about | Nothing kept above Fine on |
-| --- | --- | --- | --- | --- |
-| Landslide | 9 | about 6 in 10 | the Shield as a weapon, Defense as a damage stat, the heavy swing | aiming the blow |
-| The Toll | 8 | about 6 in 10 | the dodge, the broken Shield | the draw, Thorns, what an attacker carries away |
-| Thousand Cuts | 8 | about 4 in 10 | the dodge, extra strikes | Bleed |
-| Barrage | 7 | about 5 in 10 | free casts, mana as a body, the growing spell | cooldowns, mana passed between allies |
-| Blood Pact | 7 | about 5 in 10 | prices, the held-low unit, heals that do more | nets over a low unit |
-| The Hunt | 4 | about 6 in 10 | the opening again, hiding | the Mark, executes, reach |
-| The Storm | 3 | about 5 in 10 | reading the charge, swinging when foes act | laying or spreading the charge |
-| Bonfire | 2 | about 5 in 10 | both are a caster's (the growing spell, every debuff) | everything about the fire |
-| Cold Snap | 2 | about 4 in 10 | both are readers of other things (every debuff, the charge); Chill laid from max HP is the one Great of its own, and has no piece | the shatter |
+| Road | Greats | What the Greats there are about | Nothing kept above Fine on |
+| --- | --- | --- | --- |
+| Landslide | 9 | the Shield as a weapon, Defense as a damage stat, the heavy swing | aiming the blow |
+| The Toll | 8 | the dodge, the broken Shield | the draw, Thorns, what an attacker carries away |
+| Thousand Cuts | 8 | the dodge, extra strikes | Bleed |
+| Barrage | 7 | free casts, mana as a body, the growing spell | cooldowns, mana passed between allies |
+| Blood Pact | 7 | prices, the held-low unit, heals that do more | nets over a low unit |
+| The Hunt | 4 | the opening again, hiding | the Mark, executes, reach |
+| The Storm | 3 | reading the charge, swinging when foes act | laying or spreading the charge |
+| Bonfire | 2 | both are a caster's (the growing spell, every debuff) | everything about the fire |
+| Cold Snap | 2 | both are readers of other things (every debuff, the charge); Chill laid from max HP is the one Great of its own | the shatter |
 
-Nine Greats sit on no road (exotics).
+Nine Greats sit on no road (exotics). The last column is as the triage left it: batches 1 and 2 have since added to several (Added by batch 1, Added by batch 2), and the skeleton is where each road's needs are checked.
 
 ## Links
 
@@ -276,14 +260,10 @@ What sets each effect in the web off, what it reads, and what it changes or move
 
 ## Gaps seen, not yet asked
 
-Candidates for a later batch. Each has to pass the check in `report.md` (ruling 9) before it goes out. These are only the thin spots seen among the kept effects. They aren't the whole list: batch 3 and after come from the skeleton built on the roads and the classes (`report.md`, Next).
+Thin spots seen among the kept effects while placing answers. They aren't the list of gaps: that's the skeleton's (`skeleton.md`), and each of these goes into it under the road or class it belongs to. Each has to pass the check in `report.md` (ruling 9) before it's a card.
 
 - **The Mark and Sunder,** underused by the count: one effect names the Mark and none names Sunder. Each still needs a job before it's a card. For the Mark, the Hunt has nothing above Fine on its own lever; for Sunder, Landslide wants its target opened before the blow.
 - **A way to hide a unit that isn't an Assassin.** Hidden has two payoffs (×2, and mana), and only the Assassin's kit and the knockout survived at 1 HP hide anyone. Two Fines hide a unit (below 33% HP; at the fight's start and on a kill), so this may be a Fine brought in, not a card.
 - **The Shield and the cast,** and **a formation for the dodge:** both sit on overused mechanics, so neither is asked until the web has grown.
 - **Not to ask:** a third Bleed card; anything that makes the foes act; a link between swings and casts; a piece for a unit with one ability; a formation about the kill; more from HP held low, or from max HP or Chill while they're on watch.
 - **Mythics:** sixteen, one batch, from scratch, once the gear is placed. Upgrades stay as part of the kits. Neither is ruled yet.
-
-## Asked of the director
-
-The decisions and the first requests are in `report.md`; the director's answers get folded into this page.

@@ -25,6 +25,9 @@ The reasoning behind this step is in `brief.md`; read that first. This page hold
     - **A card may ask for its job to be done from a named underused mechanic,** in one plain sentence in the ask.
     - **How this fits ruling 9.** Ruling 9 is about whether to ask: a card needs a job the web lacks, and "nothing names this mechanic" is never that job. This ruling is about how to ask once there's a job: the card may name the underused mechanic it wants the job done from. An underused mechanic with no job waits in `web.md`, Gaps seen, until one turns up.
 
+13. **The agent builds the web; the director fills its gaps, or originates the sections it doesn't have.** The web is a skeleton built from the roads and the classes: what each needs, and which of those needs are met, plain or a gap. The earlier loot is no part of it and no decision rests on it ("not relevant to this at all"). The batches run until the skeleton has no gaps.
+14. **No share is set for the authored pieces.** The director offered 70% and didn't want it ruled unless the agent agreed. The agent didn't: nothing says 70 and not 60 or 80, the plain parts are what the authored pieces act on and ruling 3 already sets how many there are, and a share to reach would turn the batches into a quota. The director accepted the skeleton's count of gaps in its place. The plain parts come last, and only where something needs one.
+
 ## The page
 
 `https://claude.ai/artifact/EBRC2rs3Tw6JW2AWMgxZDf`. **The page is built: use it as it stands, and never make it again.** A session's whole flow goes through the page's store, with the ArtifactData tool on that address:
@@ -45,40 +48,23 @@ The store holds the requests (`requests/<id>`: batch, order, kind, title, ask, w
 ## What the triage shows
 
 - **The Greats are about a unit's own body and rhythm:** its HP bar (seven), its Shield (five), its MP and casts (seven), how its basic attacks come (six), its dodge (four), a stat read from somewhere else (four). Nearly all either move something to a place it doesn't normally go, or change how a unit acts at a price.
-- **Today's loot keeps under half its effects.** Of 252 pieces with an effect below mythic, about 117 hold a kept effect (37 a Great) and about 135 are holes: about 52 uncommons, 55 rares, 28 legendaries.
-- **Seven Greats have no piece today,** and about 70 Fines don't either.
-- **Every road loses about half its pieces;** the Toll, Landslide and the Hunt lose about six in ten.
 - **The Greats by road:** Landslide 9, the Toll 8, Thousand Cuts 8, Barrage 7, Blood Pact 7, the Hunt 4, the Storm 3, Bonfire 2, Cold Snap 2. Bonfire's two are a caster's pieces, not the fire's.
-
-**How sure.** The counts come from matching the triage's lines to today's cards by their words. Edited lines match loosely, so each count is near, not exact. The slot-by-slot skeleton checks every piece.
-
-## First requests
-
-A trial of the format: six, each with the kept effects near it.
-
-1. **Bonfire.** Nothing kept is about the fire beyond laying it, and the road's idea is a fire that dies unless it's fed. I need one piece about keeping something up that a player would stop for. Near it: Crescendo, Heat that's lost when hit, more Burn every 3 ticks on the hottest foe, Burn passed on when its foe falls.
-2. **Cold Snap.** Everything kept on a shatter pays something small: MP, an ability ready, half a wait, half the cold moving on. I need a shatter that changes what the party does next. Near it: the ×3 swing that Stuns, Chill from max HP.
-3. **The Hunt.** Nothing Great is about choosing who dies. I need a reason to care which foe falls first. Near it: both openings that happen again, ×2 while Hidden, every ally attacking at once when a Marked foe falls, foes below 50% HP falling with the first.
-4. **The dodge and the hit that lands.** Four Greats fire on a dodge and none helps with the blow that gets through, which is why a dodger didn't hold as a front in play. I need the link from the dodge to cover: a Shield, HP or MP. The plain version (a Shield on each dodge) isn't in the kept lists, so I won't guess. Near it: the four dodge Greats, damage that hits MP, overheal as a Shield.
-5. **A debuff held on purpose.** Three kept effects want a unit that carries one: its hits move its debuffs onto the target, a status it gives itself is shared with the lowest ally, and statuses hurt it 50% less. Nothing kept puts a debuff on its own wearer. I need a way to hold one on purpose.
-6. **The crit.** Two Greats: crits heal the lowest ally, and +50% Crit chance with every other hit halved. I need one more thing a crit does that isn't damage or a status on its target. Near it, in the Fines: a crit adds Bleed, Marks, Slows or lands again; another ally's crit gives Might.
-
-## Open with the director
-
-**How much of the set is authored.** When the agent offered to move to the plain parts at 81 effects, the director said: "Shouldn't 70% be interesting parts and not plain parts? Wouldn't the plain part step just be to fill out things at the end? I felt like we were barely getting started." They don't want the 70% recorded as a ruling unless the agent agrees. The agent's answer, given in the chat and not yet replied to:
-
-- **Agreed:** the web is far from done, and the plain parts come last.
-- **Not agreed: a fixed share.** Nothing the agent has says 70 and not 60 or 80. The plain parts aren't filler: they're what the authored pieces act on, and ruling 3 already sets how many there are (one comes in only where something needs it). A share to reach would also turn the batches into a quota, and the director isn't for volume.
-- **Offered in its place:** the batches stop when the skeleton below has no gaps left, and the share is whatever that comes to. The skeleton gives a count of gaps, which is a number that means something.
 
 ## Next: for the session that picks this up
 
-Batches 1 and 2 are closed: every answer is placed, left out or withdrawn (`web.md`, Added by batch 1 and Added by batch 2; the director's words and each read in `batch-1-answers.md` and `batch-2-answers.md`). The web holds 81 effects. Nothing on the page waits on the director.
+Batches 1 and 2 are closed: every answer is placed, left out or withdrawn (`web.md`, Added by batch 1 and Added by batch 2; the director's words and each read in `batch-1-answers.md` and `batch-2-answers.md`). The web holds 81 effects. Nothing on the page waits on the director, and nothing is open with them. They've approved the plan below.
 
-**The agent got the next step wrong twice, and the director corrected both.** First it said the gaps were few: what had run thin was its way of finding them (thin spots among the kept effects), not the web. Then it offered to draw cards from the holes in the earlier loot, against ruling 4. The director's word (`intent.md`, The method): the agent builds a web, and they fill its gaps or originate the sections it doesn't have. The classes and the roads are what it's built from. The earlier loot is no part of it.
+**What went wrong before it, so it isn't repeated.** At 81 effects the agent said the gaps were few and offered to move to the plain parts. What had run thin was its way of finding gaps (thin spots among the kept effects), not the web: the director "felt like we were barely getting started". It then offered to draw cards from the holes in the earlier loot, against ruling 4. Rulings 13 and 14 are what came of it.
 
-1. Read `brief.md` first. Its reading list (What to read) is closed: read what it names for the job in hand, and nothing else whole.
-2. **Build the skeleton,** in `web.md`, from the roads and the classes. For each road (`docs/gear-design/builds.md`, The builds): what it needs to work, across its range and its routes. For each class: what each of its three identities would wear for its own reason. Against every need, one of three marks: something in the web does it (name it); a plain part does it and the agent will write it; or a gap, with what the agent was trying to do and didn't know how to choose. A road or a class with nothing at all is a section for the director to originate, asked as a whole direction.
-3. **Tell the director what the skeleton shows,** short, in the chat: how many needs, how many met, how many gaps, and which sections are empty. That count is the answer to how far along the web is.
-4. **Write batch 3 from the gaps,** about fifteen cards, seeded to the page with batch number 3. Ruling 9 holds for every card: say what a party lacks without the piece. Recount before treating a mechanic as closed: the overused line moves as the web grows (one effect in twelve is 7 of 81).
-5. Still to come, in the director's order, once the skeleton's gaps are filled: the plain parts (the agent's, shown by sample), sizing and slotting what's placed, formations beyond those kept or written, mythics, then build.
+1. **Read `brief.md` first.** Its reading list (What to read) is closed, and has a line for this job.
+2. **Build the skeleton,** in a new `skeleton.md`, from the roads and the classes.
+   - **For each of the nine roads** (`docs/gear-design/builds.md`, The builds): what it needs to work, across its range (from what most runs find to its most specific pieces) and its routes.
+   - **For each of the sixteen classes** (`docs/core-set/classes.md`, its section): what each of its three identities would wear for its own reason.
+   - **Against every need, one of three marks:** met, naming what in the web does it (`web.md`); plain, a simple part the agent will write at the end; or a gap, with what the agent was trying to do and didn't know how to choose. "Whenever you're even a little bit unsure", it's a gap.
+   - **A road or a class with nothing at all** is a section for the director to originate, asked as a whole direction.
+   - **Carry over** what's in `web.md`, Gaps seen, under the road or class each belongs to.
+   - Keep it words, in the scale's terms, and short enough to read every session: a line a need.
+3. **Tell the director what the skeleton shows,** short, in the chat: how many needs, how many met, how many plain, how many gaps, and which sections are empty. That count is how far along the web is. Show them the road and the class you're least sure of, as samples.
+4. **Write batch 3 from the gaps,** about fifteen cards, seeded to the page with batch number 3, and put only a short summary in the chat. Ruling 9 holds for every card: say what a party lacks without the piece. Recount before treating a mechanic as closed: the overused line moves as the web grows (one effect in twelve is 7 of 81). If building the skeleton has filled the session, stop after step 3 and let the next one write the batch.
+5. **After each batch:** read the answers, place them, update the count, and mark the skeleton's gaps as met.
+6. Still to come, in the director's order, once the skeleton has no gaps: the plain parts (the agent's, shown by sample), sizing and slotting what's placed, formations beyond those kept or written, mythics, then build.
