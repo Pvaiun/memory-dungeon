@@ -70,21 +70,23 @@ Nine Greats sit on no road (exotics).
 
 ## Added by batch 1
 
-The director's answers, placed by what they do. Words only: no piece is sized or slotted yet, and five wait on a reply (`batch-1-answers.md`).
+The director's answers, placed by what they do, with their replies folded in (`batch-1-answers.md` has their words). Words only: nothing is sized or slotted yet.
 
-- **Mana from the foes' debuffs:** MP regen for each different debuff the foes hold. Ties casting to every status road. Read as kinds, not stacks.
-- **Hot statuses:** damage statuses deal ×2 and drain half again as fast. Breaks "a status runs its own course" and "no piece resizes a status": waits on the director's ruling.
+- **Mana from the foes' debuffs:** a little MP regen for each stack of any debuff on the foes. Pays most where stacks pile up fast. Ties casting to every status road.
+- **The pile:** damage statuses the wearer lays (Burn, Bleed, Shock) go to the foe holding the most of that status, unless that foe is at its cap. Wide appliers become one foe's pile. The agent reads it as the wearer's own applications.
 - **Shock from casting:** every tick of a wind-up lays Shock on every foe. Long casts become the Storm's source; it pulls against Cast speed.
 - **Shock from wide abilities:** any ability that lands on more than one unit, allies included, lays Shock on every foe.
 - **A dodge heals:** a share of the blow it would have been. With overheal as a Shield, a dodger builds a Shield by dodging.
-- **Crits lay a hit's statuses 4 times.** Crit chance becomes a stat for every status road. Read as the statuses the hit carries.
-- **More max HP as the fight starts.** Sits with everything that reads max HP. By the max HP rule it heals into the room it makes, so repeated it's a heal that carries: waits on the director's ruling.
-- **Start-of-fight effects happen 2 times,** repeats included. Read as its wearer's own.
+- **Crits set off a hit's triggers 4 times:** the statuses it carries, Double strike's roll, anything worded "on a basic attack" or "on a hit". Never the hit's own damage, so no Lifesteal. It reaches cooldown and mana effects too.
+- **More max HP as the fight starts.** Current HP stays where it is and the fight's end cuts it back, so nothing carries out. It's the exception to the content test that makes such a status heal into its room.
+- **Might as the fight starts** (a Fine, the director's favourite opener): stacked on every kill by the pieces that repeat the opening.
 - **Blur for the whole party as the fight starts.** A Blur's miss is a dodge, so the dodge Greats work on units with no Evasion.
 - **Defense for wearing no armor** (an amulet). With "no offhand", a family: paid for an empty slot.
-- **A Mark on the foe with the least max HP as the fight starts** (if the director meant a foe): a plain part that brings the first kill early.
-- **A formation where two seats swing the third:** the third takes no action of its own and basic attacks whenever either of the others does. The agent's ruling: these are real basic attacks, and "never makes a basic attack" still stops them.
+- **A Mark on the foe with the least max HP as the fight starts:** a plain part that brings the first kill early.
+- **A formation where two seats swing the third:** the third takes no action of its own and basic attacks whenever either of the others does. Ruled by the director: its swings happen even on a unit that "never makes a basic attack".
 - **A formation with one Shield:** one seat holds triple the Shield and draws more; the others can't hold any.
+
+**Cut by the director:** start-of-fight effects happening 2 times (the opening keeps two multipliers: again on a kill, for one unit or for the party); statuses that deal ×2 and drain faster (replaced by the pile).
 
 **Threads the director settled:**
 - **Shock has two patterns:** keep the charge high and read it, or make the foes act and spend it.
@@ -92,15 +94,29 @@ The director's answers, placed by what they do. Words only: no piece is sized or
 - **The unit that doesn't act is there to benefit the others.** Nothing is asked to make it strong itself.
 - **Cold Snap is about reaching the shatter.** Nothing pays for a foe left half-frozen.
 - **No thread for debuffs held on purpose.**
-- **The Toll has its payoff** (the Shield that sends back ×2). The plain openers come in because the pieces that repeat the opening need them.
+- **The Toll has its payoff** (the Shield that sends back ×2).
+- **The player steers who dies only through a Mark or an ability's own aim,** so nothing asks for a reward by who died beyond a Marked foe falling.
+- **The plain openers come in** because the pieces that repeat the opening need them.
 
 **Found by placing them** (nobody wrote these down):
 - Party Blur, the opening again on a kill, and any "on a dodge" Great: every kill re-Blurs the party, and each Blur spent sets off a dodge.
 - Crits ×4 with Chill from max HP: a wall's crits freeze.
-- The two-seats-swing-the-third formation with the ×3 swing that Stuns: its "50% as often" costs nothing there.
+- The two-seats-swing-the-third formation with the ×3 swing that Stuns, or with "never makes a basic attack, Defense ×2": the price costs nothing in that seat.
 - The one-Shield formation with the Shield that sends back ×2 and the piece that takes every ally's Shield.
+- The pile with Shock from casting: a long cast puts the whole field's charge on one foe.
 
-**To watch:** "at fight start" now has three multipliers and about twenty plain effects, and could become a phrase a player collects, as Shield was.
+## Gaps seen, not yet asked
+
+Candidates for the next batch. Each has to pass the check in `report.md` (ruling 9) before it goes out: a job in the game's terms, the kind of thing wanted back, and nothing kept that already does it.
+
+- **A Bleed piece the director would call Great,** asked plainly (a new way to apply Bleed, or something that happens when a bleeding foe is hit), and skippable.
+- **Between fights.** HP, MP, knockouts and cooldowns carry from fight to fight, and one kept effect touches that (a fallen ally stands up after a won fight). A piece whose effect happens after a fight, or reads what the unit carried into it.
+- **A second shatter in one fight** (Cold Snap's line between the sign and the build): what brings a foe back to its cap after it shattered.
+- **Something of their own for the two who serve a caster** (Barrage's need): the seats and pieces kept feed the soloist and do nothing else.
+- **A formation where life moves between seats** (near the Lifeline and the piece that heals an ally when another pays).
+- **A formation where one seat picks the party's target** (near the Mark at fight start and The pack, a Fine).
+- **A piece two named classes on different roads would both want,** through a kind they share (the director's own request form).
+- **Mythics:** sixteen, one batch, from scratch, once the gear is placed. Upgrades stay as part of the kits. Neither is ruled yet.
 
 ## Asked of the director
 

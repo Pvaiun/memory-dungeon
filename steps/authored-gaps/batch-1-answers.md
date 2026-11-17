@@ -1,6 +1,6 @@
 # Batch 1: the director's answers and the agent's read
 
-Copied from the page's store on Nov 17. The page holds the live copy; the director may still reply on the cards marked with a question.
+Copied from the page's store when the batch closed (Nov 17). Each card: what was asked, the director's answer, their reply to the agent's read where they gave one, and the agent's read as it stands after that reply.
 
 ## Bonfire: keeping it up
 
@@ -12,7 +12,15 @@ Copied from the page's store on Nov 17. The page holds the live copy; the direct
 >
 > Damage: Damage statuses decrease 1.5x as fast/in quantity and do 2x damage
 
-**The agent's read (Placed, with a question):** Both placed. Mana per debuff: I'm reading it as MP regen for each different debuff the foes hold, so a party wants one more kind of debuff, not more of the same. It ties casting to all four status roads. It's quiet as written: I'll size it so a caster facing three kinds stops running dry, or nobody will see it happen. The second one breaks two of your rules: a status runs its own course, and no piece resizes a status. I'd keep it as the one piece that does, as a rule for the whole fight. Two things I need from you: do you allow that exception, and does it also apply to the statuses on your own party?
+**The director's reply to the read:**
+
+> Mana per debuff: I meant it as a small value per stack of any debuff. Useful for any build applying debuffs, but probably strongest on burn or shock which aim to stack a lot quickly.
+>
+> Second one: we could break the rule now, but we don't have to, we could change the damage one to: 
+>
+> All damage statuses get redirected to the foe holding the most of its type if any has one not at cap - needs to be reworded
+
+**The agent's read (Placed):** Settled. Mana per debuff is per stack of any debuff on the foes, a small amount each, so it pays most where stacks pile up fast. The second piece is replaced by your new one, which breaks no rule: damage statuses it lays go to the foe holding the most of that status, unless that foe is at the cap. I'm reading it as its wearer's own applications, and "damage statuses" as Burn, Bleed and Shock.
 
 ## Cold Snap: the climb
 
@@ -32,7 +40,11 @@ Copied from the page's store on Nov 17. The page holds the live copy; the direct
 
 > On fight start mark the ally with the lowest Max HP (not %). - maybe too small an effect
 
-**The agent's read (Placed, with a question):** Did you mean a foe? Marked is a debuff on a foe: it takes the party's picks. I've read this as: at fight start, Mark the foe with the least max HP. If so, you're right that it's small, and it's close to a piece you cut (Hunter's mark). I'll keep it as a plain part: it gets the first kill early, which is what the pieces that repeat the opening wait for. It doesn't answer the card, though: the party still doesn't care who dies. I'll ask that again in plainer words. If you did mean an ally, say so. Foes focusing your smallest unit is a different piece, and an interesting one for a dodger.
+**The director's reply to the read:**
+
+> Sorry I meant to say a foe. I'm not sure I understand the who does question. We don't have targeting choices really beyond per-ability and marked. Do you mean a reward on a marked foe dying?
+
+**The agent's read (Placed):** Settled: a foe. Kept as a plain part that brings the first kill early. You're right about my question. The player only steers who dies through a Mark or an ability's own aim, so "a reward that depends on who died" can only mean a Marked foe dying, and you already kept a Fine for that. I'm dropping the ask.
 
 ## The Storm: where the charge comes from
 
@@ -97,7 +109,11 @@ Copied from the page's store on Nov 17. The page holds the live copy; the direct
 
 > Crits apply on-hit effects 4 times.
 
-**The agent's read (Placed, with a question):** Placed, and it's a big one: Crit chance becomes a stat for every status road, without naming any of them. I'm reading "on-hit effects" as the statuses the hit carries, so a crit lays 4 times the stacks. I've left out heals, Shields and Lifesteal on a hit. Did you mean those too?
+**The director's reply to the read:**
+
+> I also meant double hits, or anything that else that triggers "on basic attack" but yes, it's not actually doing the effects of the attack 4x, so not lifesteal
+
+**The agent's read (Placed):** Settled, as you define it: on a crit, whatever the hit sets off happens 4 times. That's the statuses it carries, Double strike's roll, and anything worded "on a basic attack" or "on a hit". The hit's own damage isn't repeated, so no Lifesteal. This reaches cooldown and mana effects too, which makes crits a door into Barrage.
 
 ## The unit that stands still
 
@@ -121,7 +137,11 @@ Copied from the page's store on Nov 17. The page holds the live copy; the direct
 >
 > Note: the fine ones aren't terrible here either, they make good links to other builds
 
-**The agent's read (Placed, with a question):** Placed. It ties into everything that reads max HP: Chill from max HP, the heal on every cast, swings paid in HP, the Shield's cap. It's bigger than it looks. By your rule, max HP gained in a fight heals into the room it makes. So each time this happens it's also a 20% heal that carries out of the fight, and on every kill it refills the unit. Is that what you want, or should the extra HP be the first to go and not carry out? Agreed on the Fines: the plain openers come in here because these pieces need them.
+**The director's reply to the read:**
+
+> So I think the document out of an updated but we changed Max HP to not heal when it gets gained so at least there's that. Does that fix it? It might still be too strong. I was fishing for all those synergies though. Otherwise I would use one or more of the fines: Might is my favourite since it could be fun to stack
+
+**The agent's read (Placed):** You're right and I had it wrong. Max HP gained in a fight leaves current HP where it is, and the fight's end cuts it back, so nothing carries out. That fixes my worry. One of our content tests insists that such a status heals into its room. This piece will be its exception. Placed as the hub you were fishing for. Might comes in beside it as a plain opener: stacking it on every kill pairs with your Great that stops swings spending Might.
 
 ## A change of target
 
@@ -144,7 +164,11 @@ Copied from the page's store on Nov 17. The page holds the live copy; the direct
 > Seat 2: seat 3 basic attacks when this unit basic attacks
 > Seat 3: takes no action (basic attacks or abilities)
 
-**The agent's read (Placed):** Placed, and it's the strangest thing in the web so far. The third seat swings at the pace of the other two together and never casts. A slow, heavy weapon belongs there, and every "comes less often" price is free in that seat: the ×3 swing that Stuns lands at two daggers' pace. I'm leaving that in as something to find, and noting it for the balance pass. One ruling of mine: these are real basic attacks, so they carry what the swing carries, and a piece that says "never makes a basic attack" still stops them.
+**The director's reply to the read:**
+
+> I would expect that this formation triggers units that say they won't base attack if you think that's a problem then I'd want to make a new formation because this is like a something that will attract the player's eyes and they'll be disappointed if it
+
+**The agent's read (Placed):** Placed, and it's the strangest thing in the web so far. The third seat swings at the pace of the other two together and never casts. A slow, heavy weapon belongs there, and every "comes less often" price is free in that seat. I'm leaving that in as something to find. Overruled, your way: the seat's swings happen even on a unit that says it never makes a basic attack. A player who sees that pairing should get what they expect.
 
 ## A formation about who holds the Shield
 
@@ -181,4 +205,8 @@ Copied from the page's store on Nov 17. The page holds the live copy; the direct
 
 > At fight start effects trigger twice (even when retriggered)
 
-**The agent's read (Placed, with a question):** Placed. I'm reading it as its wearer's own start-of-fight effects, from its gear and its seat, with prices and drawbacks happening once. A caution about this thread. With this, the two pieces that repeat the opening on a kill, and twenty plain openers, "at fight start" could become what "Shield" was: a phrase a player collects. I'd stop at these three multipliers. Do you agree, or do you see it differently?
+**The director's reply to the read:**
+
+> I thought it'd be like an interesting multiplier for other functions but if there's too many let's just cut this now we don't need it
+
+**The agent's read (Withdrawn):** Cut, as you say. The opening keeps two multipliers: again on a kill, for one unit or for the whole party.

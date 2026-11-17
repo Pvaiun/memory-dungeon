@@ -42,6 +42,11 @@ A trial of the format: six, each with the kept effects near it.
 5. **A debuff held on purpose.** Three kept effects want a unit that carries one: its hits move its debuffs onto the target, a status it gives itself is shared with the lowest ally, and statuses hurt it 50% less. Nothing kept puts a debuff on its own wearer. I need a way to hold one on purpose.
 6. **The crit.** Two Greats: crits heal the lowest ally, and +50% Crit chance with every other hit halved. I need one more thing a crit does that isn't damage or a status on its target. Near it, in the Fines: a crit adds Bleed, Marks, Slows or lands again; another ally's crit gives Might.
 
-## Next
+## Next: for the session that picks this up
 
-On the director's replies to batch 1 (the cards marked with a question: hot statuses, the Mark, what a crit repeats, max HP gained in a fight, the opening's multipliers): batch 2, written by ruling 9, with the two asks that are put again (a kill reward that depends on who died; a Bleed piece).
+Batch 1 is closed: every answer is placed or withdrawn and nothing waits on the director (`web.md`, Added by batch 1; their words in `batch-1-answers.md`).
+
+1. Read `intent.md`, this report's rulings, `web.md` and `batch-1-answers.md`. The answers file is the best record of what the director likes and how they push back.
+2. Write batch 2 from `web.md`, Gaps seen, by ruling 9. About fifteen cards, plus an open card. Seed them into the page's `requests` collection with `batch: 2` (the shape is under The page; `batch-1.md` shows a batch as seeded).
+3. Tell the director in the chat only that the batch is out. When they say they're done, read `answers`, write a read of each into `replies` (kind and text), and put only the summary and the decisions in the chat. Don't read their answers before they say so.
+4. Still to come, in the director's order: the basic pieces (the agent's, shown by sample), sizing and slotting what's placed, formations beyond the nine kept or written, mythics, then build.
