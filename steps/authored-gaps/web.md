@@ -34,6 +34,14 @@ By what each is about. Each Great is listed once.
 
 **What the Greats aren't.** Three of the 42 name a status road's status (Chill once, Shock twice). None names Burn, Bleed, Sunder, the Mark, Taunt, Aggro, Guard or Thorns. Nearly all either move something to a place it doesn't normally go, or change how a unit acts at a price.
 
+## The formations
+
+From `triage-formations.md`: 7 Great, 19 Fine, and the seats the director starred.
+
+- **Great:** Icefall (two lay frost, and any shatter readies the Breaker's first-slotted ability) · The cathedral (a first-slotted ability with no cooldown, fed mana by two) · The standard (two carry what the Lead's swing carries) · Glass and stone (one deals and takes ×2) · Twins (what a Twin gives itself, the other gains) · Bannerman (one never acts, and the others gain its Attack and Defense) · The shepherd (one takes the hits meant for the lowest ally).
+- **Starred seats in Fine formations:** the Warden (a hit on the Anchor heals it from the Warden's max HP) · the Peak (hits land twice while every ally holds a Shield) · the Torch (a fallen foe's Burn passes to the foe with the most HP) · the Conductor and the Well (casts and blows taken feed the Soloist's mana) · the Lifeline (takes half of what the Anchor takes).
+- **What they share with the gear Greats:** one unit's stats, statuses, hits or mana becoming another's. Twins is Twin-knot's rule on two seats; Bannerman sits with the pieces that stop a unit acting; the Shepherd and the Lifeline move blows the way the gear Greats move Shield.
+
 ## The roads
 
 Greats counted by their pieces' road tags; a piece can sit on more than one road. Holes are the share of a road's tagged pieces whose effect was cut.

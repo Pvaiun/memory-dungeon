@@ -1,0 +1,91 @@
+# Formation cull: Greats and Fines
+
+Where a formation had more than one version, this is the one you picked. Lines are changed where a note said how; the notes themselves are removed. A seat you liked is in bold with a ★.
+
+## Great (7)
+
+- **Icefall**: Two lay frost; every shatter rings the third's spell.
+  - Rime: Its abilities add +50% Chill.
+  - Sleet: Basic attacks add a Chill.
+  - ★ **Breaker: Any shatter readies its first-slotted ability.**
+- **The cathedral**: Two give their mana; one never stops singing.
+  - ★ **Soloist: Its first-slotted ability has no cooldown.**
+  - Voice ×2: MP it gains goes to the Soloist. When the Soloist casts: a Shield of 5% of its max HP.
+- **The standard**: Two follow the lead's colour.
+  - Lead: No effect of its own.
+  - Follower ×2: Basic attacks add what the Lead's basic attacks add, sized by its own stats.
+- **Glass and stone**: One strikes like glass; two stand like stone.
+  - ★ **Glass: Deals and takes ×2. Draws less.**
+  - Stone ×2: Draws far more.
+- **Twins**: Two are bound as one.
+  - ★ **Twin ×2: Statuses it gives itself, the other Twin gains too.**
+  - Odd one out: Attack up 2 steps.
+- **Bannerman**: One carries the colours; the others fight under them.
+  - Banner: Never acts.
+  - Bearer ×2: Gains the Banner's Attack and Defense.
+- **The shepherd**: One stands over whoever is hurt most.
+  - Shepherd: Takes the hits meant for the ally with the lowest HP%. Defense up.
+  - Flock ×2: Attack up.
+
+## Fine (19)
+
+- **Thorn hedge**: A thorned wall, and two who make it cost.
+  - Anchor: Draws far more. Thorns.
+  - ★ **Warden: When the Anchor is hit, it heals 3% of the Warden's max HP.**
+  - Barb: A foe that hits the Anchor takes 5% of the Barb's Attack.
+- **The mountain**: A peak that stands on the party's stone. The party: Its Shields on a Foothill are 33% bigger.
+  - ★ **Peak: While every ally holds a Shield, each hit lands 2 times.**
+  - Foothill ×2: At fight start: a Shield of 20% of its max HP. Shields on it are 33% bigger.
+- **The palisade**: One is struck, two profit, more with every blow.
+  - Wall: Gains a Spite each time it's hit (up to 20).
+  - Reaper ×2: Hits deal +4% per Spite on the Wall.
+- **Shieldwall**: One shield up front; two behind it.
+  - Wall: Draws far more. Defense up 2 steps.
+  - Behind ×2: Draws less.
+- **Eye of the storm**: The storm doesn't lift. The party: Every ally's basic attacks add 2 Shock.
+  - Bolt: Abilities deal +3% per Shock the foes hold.
+  - Squall ×2: No effect of its own.
+- **Ring of steel**: One draws the field onto its spikes; two cut it down.
+  - Beacon: Draws far more. Thorns.
+  - Reaper ×2: Attack up.
+- **Pyre line**: The fire outlives whatever it's burning.
+  - Keeper: At fight start: Taunts and is Guarded. Foes that hit it gain 2 Burn.
+  - Stoker: Basic attacks 33% faster.
+  - ★ **Torch: When a burning foe falls, its Burn passes to the foe with the most HP.**
+- **Vigil**: One stands where the blows fall. While anyone lies fallen, the two who keep watch hit harder.
+  - Martyr: Draws more. HP down.
+  - Mourner ×2: While an ally is down, Attack up two steps.
+- **Shared cup**: Nobody's healing is wasted. The party: Healing past full goes to the ally with the lowest HP%.
+  - Drinker ×2: Lifesteal.
+  - Donor: Heals it gives are 33% bigger.
+- **Hoarfrost line**: Two lay frost with every blow; the third waits to break what freezes.
+  - Frost ×2: Basic attacks add a Chill.
+  - Breaker: When any foe's Chill shatters, its next hit deals triple.
+- **Wellspring**: Two keep one caster casting.
+  - Soloist: Abilities deal +50% and come round 33% faster. Draws far less.
+  - ★ **Conductor: Each cast gives the Soloist 10% of its max MP.**
+  - ★ **Well: Draws more. When hit: the Soloist gains 1% of its max MP.**
+- **Lifeline**: One is struck; one bears part of every blow; one is free.
+  - Anchor: Draws far more. Takes 50% less: the Lifeline takes it instead.
+  - ★ **Lifeline: Takes 50% of the damage the Anchor takes.**
+  - Free: Attack up 2 steps.
+- **Spur**: One opens the wound; two pour into it.
+  - Opener: Crits far more often.
+  - Blade ×2: Basic attacks 20% faster.
+- **Skirmish line**: Three light fighters who'd rather not be hit at all.
+  - Skirmisher ×3: Dodges. Defense down.
+- **The hundred hands**: A blur of small blows. The party: Every ally's basic attacks come 100% faster, for 45% of the damage.
+  - Hand ×3: No effect of its own.
+- **The pack**: The pack takes them one at a time.
+  - Lead: Hits Mark their target, if no foe is Marked.
+  - Packmate ×2: Hits on a Marked foe deal +50%.
+- **Bloodied ground**: One opens the wound; two drink from it.
+  - Opener: Crits add 4 Bleed.
+  - Blade ×2: Hits on a bleeding foe heal 2% of max HP.
+- **Storm front**: The wider the blow, the more it pays.
+  - Thunderhead: Each cast: its cooldown is 10% shorter per foe it hit.
+  - Squall: Basic attacks also hit every other foe with Shock, for 33%.
+  - Rod: Draws far more. Foes that hit it gain 2 Shock.
+- **Squall line**: Two charge the field; one draws the eye.
+  - Squall ×2: Basic attacks add 2 Shock and also hit a 2nd random foe for 50%, Shock included.
+  - Rod: Draws far more. Defense up.

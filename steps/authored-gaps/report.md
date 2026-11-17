@@ -4,13 +4,16 @@ For the director, Nov 17. Nothing in the game has changed: this is the first map
 
 ## Ruled by the director (Nov 17)
 
-1. **Status effects don't stay plain as a rule.** A road may have Greats on its own status.
-2. **No filling from the Fines.** They were the bare minimum acceptable: the pool isn't started with mediocre pieces. Some basic pieces will exist, later.
-3. **A clean slate.** Today's pieces aren't the skeleton: "What's in the build now is not better than what is in the list." A piece keeps nothing for holding an effect today.
-4. **Requests come in batches of about fifteen, on a page the director types into,** never in the chat. Requests and conversation don't share a message.
-5. **Mythics, formations and upgrades weren't in the triage.** Open: whether they join this pass (the agent's recommendation is in the session's reply of Nov 17).
+1. **The same nine builds, with a better web.** The web is rebuilt from what the director marked Great, and new Greats come from their answers to the requests.
+2. **Status effects don't stay plain as a rule.** A road may have Greats on its own status.
+3. **No filling from the Fines.** They were the bare minimum acceptable: the pool isn't started with mediocre pieces. Some basic pieces will exist, later. A Fine comes in only where something needs it.
+4. **A clean slate.** Today's pieces aren't the skeleton: "What's in the build now is not better than what is in the list."
+5. **Requests come in batches of about fifteen, on a page the director types into,** never in the chat. Requests and conversation don't share a message.
+6. **Formations are in the pass,** triaged the same way (`triage-formations.md`: 7 Great, 19 Fine, with the seats the director liked starred). Upgrades and mythics weren't triaged; the agent's recommendation (upgrades stay as part of the kits, mythics last and from scratch) hasn't been ruled on.
 
-So the counts below describe today's loot against the triage, and no longer size the work: the web is rebuilt from the 42 Greats alone, and a Fine comes in only where something needs it.
+## The page
+
+`https://claude.ai/artifact/EBRC2rs3Tw6JW2AWMgxZDf` (source: `requests-page.html`; republish that file to the same address). Its store holds the requests (`requests/<id>`: batch, order, kind, title, ask, why, near) and the director's answers (`answers/<id>`: text, status, batch). A new batch is seeded into `requests` with the next batch number, and the answers are read back from `answers`. Batch 1 is `batch-1.md`: six roads with no Great of their own, four links between the Greats' clusters, a change of target, two formations, a wall-less party, and an open card.
 
 ## What the triage shows
 
@@ -35,4 +38,4 @@ A trial of the format: six, each with the kept effects near it.
 
 ## Next
 
-The web rebuilt from the Greats alone (`web.md`), the page, and the first batch on it.
+On the director's answers to batch 1: each answer turned into a piece or a seat in words, shown where it lands in the web (`web.md`), with what it opens and what it closes; then batch 2.
