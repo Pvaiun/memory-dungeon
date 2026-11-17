@@ -25,6 +25,8 @@ The reasoning behind this step is in `brief.md`; read that first. This page hold
     - **A card may ask for its job to be done from a named underused mechanic,** in one plain sentence in the ask.
     - **How this fits ruling 9.** Ruling 9 is about whether to ask: a card needs a job the web lacks, and "nothing names this mechanic" is never that job. This ruling is about how to ask once there's a job: the card may name the underused mechanic it wants the job done from. An underused mechanic with no job waits in `web.md`, Gaps seen, until one turns up.
 
+13. **About 70% of the set is interesting, authored pieces; the plain parts fill out the rest, at the end.** Said when the agent offered to move on at 81 effects: "Shouldn't 70% be interesting parts and not plain parts? Wouldn't the plain part step just be to fill out things at the end? I felt like we were barely getting started." The batches go on until the web is near that share. The agent's count: 62 of the 81 effects are gear's, and today's loot has 252 pieces with an effect below mythic, so at today's size about 175 are authored and about 115 are still to come.
+
 ## The page
 
 `https://claude.ai/artifact/EBRC2rs3Tw6JW2AWMgxZDf`. **The page is built: use it as it stands, and never make it again.** A session's whole flow goes through the page's store, with the ArtifactData tool on that address:
@@ -65,12 +67,17 @@ A trial of the format: six, each with the kept effects near it.
 
 ## Next: for the session that picks this up
 
-Batches 1 and 2 are closed: every answer is placed, left out or withdrawn (`web.md`, Added by batch 1 and Added by batch 2; the director's words and each read in `batch-1-answers.md` and `batch-2-answers.md`). The web holds 81 effects. Nothing on the page waits on the director.
+Batches 1 and 2 are closed: every answer is placed, left out or withdrawn (`web.md`, Added by batch 1 and Added by batch 2; the director's words and each read in `batch-1-answers.md` and `batch-2-answers.md`). The web holds 81 effects, 62 of them gear's. Nothing on the page waits on the director.
 
-**One thing the director may still correct:** the agent's three readings of their second formation for HP paid (`b2-13`: the price can knock the first seat out, the second seat raises it once a fight, a fallen ally counts for nothing in the third). They're on the card and were told in the chat. If a reply turns up on that card, it wins: update the read, `batch-2-answers.md` and the formation's line in `web.md`.
+**Batch 3 is next, and many after it** (ruling 13). The agent ended batch 2 saying the gaps were few. That was wrong: what had run thin was its way of finding them (thin spots in the web as it stands), not the web. Draw the cards from what the game needs to hold, not only from what the web already has:
 
-**Asked of the director in the chat, and not answered yet:** a short batch 3, or on to the plain parts. The agent's view: the gaps left are few (`web.md`, Gaps seen: the Mark, Sunder, a way to hide a unit), three mechanics are overused and three on watch, so a batch 3 would be five cards or fewer, and the plain parts can start beside it.
+- **The holes in today's loot.** About 135 pieces whose effect was cut (`web.md`, Today's loot against the triage), 83 of them rares and legendaries. Each keeps what its slot was for (its roads, rungs and engines, from `npx tsx tools/loot-list.ts`). A hole is a job the game was already judged to need: ask for it where nothing in the web does that job.
+- **The classes.** Sixteen, each with three identities and the kinds it wears. A pair card (a piece two classes that share a kind would both want) was placed both times it was asked. Ask where a class or an identity has nothing in the web it would wear for its own reason.
+- **The roads' most specific pieces.** The director's intent names "a capstone for a build" and "a whole build's direction" as requests. Neither has been asked for any of the nine.
+- **What placing found:** an engine one part short.
+
+Ruling 9 still holds for every card: say what a party lacks without the piece. The overused flags loosen as the web grows (one effect in twelve is 7 of 81, and 15 of 180), so recount before treating a mechanic as closed.
 
 1. Read `brief.md` first: what this step is for, how the work is split, what was tried and dropped, and what the batches taught. Its reading list (What to read) is closed: read what it names for the job in hand, and nothing else whole.
-2. Do what the director chose. For a batch 3: write it from `web.md`, Gaps seen, by rulings 9 and 12; before a card goes out, check that nothing kept does its job, that its plain answer isn't something the director cut, and say what a party lacks without the piece. Seed it to the page with batch number 3.
-3. Still to come, in the director's order: the basic pieces (the agent's, shown by sample), sizing and slotting what's placed, formations beyond those kept or written, mythics, then build.
+2. Write batch 3, about fifteen cards, and seed it to the page with batch number 3. Put only a short summary in the chat.
+3. Still to come, in the director's order, once the web is near its share: the plain parts (the agent's, shown by sample), sizing and slotting what's placed, formations beyond those kept or written, mythics, then build.

@@ -101,8 +101,8 @@ The agent's reading, for seeing where the web is thick. It isn't the director's 
 
 ## Where it goes
 
-1. More batches, until the web is thick enough to play: the gaps in `web.md`, then what placing the answers shows.
-2. The plain parts, written by the agent and shown by sample.
+1. More batches, until about 70% of the set is authored (`report.md`, ruling 13): at today's size, about 175 gear effects against the web's 62. Few gaps found doesn't mean the web is full: when the thin spots run out, draw cards from the holes in today's loot, the classes and the roads (`report.md`, Next).
+2. The plain parts, written by the agent and shown by sample, to fill out what's left at the end.
 3. Sizing and slotting what's placed: kinds, rarities, who wears it, numbers.
 4. Formations beyond those kept or written, then mythics, on the director's word.
 5. Build and measure. Until then the game stays on today's loot, and nothing in it changes.

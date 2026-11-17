@@ -118,7 +118,7 @@ Placed by what they do, with the director's replies folded in (`batch-2-answers.
 - **Burn from the first-slotted ability:** on every target, allies included, at the director's word: what goes first is the player's choice, and a heal or buff slotted first burns whoever it lands on. The first thing in the web that lays Burn. The pile moves only Burn laid on foes.
 - **Mana while Hidden:** MP regen for as long as a unit is Hidden. Weak until a party can hide a caster.
 - **Attack for HP missing,** counted in points, not as a share, so a unit with a lot of HP gains most.
-- **A formation where one pays, one raises and one gains:** the first seat pays a share of its max HP for every basic attack and ability; the second raises the first when it falls; the third gains Attack for every share of HP the party is missing. The agent's readings, told to the director: paying can knock the first seat out, the second raises it once a fight, and a fallen ally counts for nothing in the third. The first seat leaves most fights low or down, and both carry: the shape's price.
+- **A formation where one pays, one raises and one gains:** the first seat pays a share of its max HP for every basic attack and ability; the second raises the first when it falls; the third gains Attack for every share of HP the party is missing. Ruled by the director, as written: the price can kill the first seat, the second raises it every time, and a fallen ally counts in full for the third ("a super risky strategy. I think we should pay it off"). It's the one thing in the game that wants a fall, an exception to the loot's rule that nothing does. After its first fall the first seat comes back, acts once and falls again while the second stands, so the third stays near its peak; the risk sits on the second seat, whose fall leaves the first down for good, and a knockout carries. The third seat's Attack is sized to pay for that.
 
 **Left out, and the director told why:** Chill turned into Bleed (two roads' statuses on one card, against the builds ruling); a Shield when a foe is Stunned (Shield is overused); Might while Hidden (the unit's own damage, on top of ×2 while Hidden; the director agreed).
 
@@ -277,7 +277,7 @@ What sets each effect in the web off, what it reads, and what it changes or move
 
 ## Gaps seen, not yet asked
 
-Candidates for a later batch. Each has to pass the check in `report.md` (ruling 9) before it goes out.
+Candidates for a later batch. Each has to pass the check in `report.md` (ruling 9) before it goes out. These are only the thin spots seen in the web as it stands. They aren't the whole list: most of batch 3 and after comes from the holes in today's loot, the classes and the roads (`report.md`, Next).
 
 - **The Mark and Sunder,** underused by the count: one effect names the Mark and none names Sunder. Each still needs a job before it's a card. For the Mark, the Hunt has nothing above Fine on its own lever; for Sunder, Landslide wants its target opened before the blow.
 - **A way to hide a unit that isn't an Assassin.** Hidden has two payoffs (×2, and mana), and only the Assassin's kit and the knockout survived at 1 HP hide anyone. Two Fines hide a unit (below 33% HP; at the fight's start and on a kill), so this may be a Fine brought in, not a card.
