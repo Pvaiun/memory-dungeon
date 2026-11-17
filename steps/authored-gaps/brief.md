@@ -30,7 +30,8 @@ Read this first. It says what this step is trying to do and why, how the work is
 
 - **The agent's:** the web (what connects to what, where it's thin, and whether a mechanic is overused), finding the gaps, turning each answer into a piece, checking it against the rules, sizing it, running it, and the plain parts nobody needs to author.
 - **The director's:** every creative decision. What a gap is filled with, and any call on a build's structure or goal.
-- **The director is never asked for** data entry, volume, or ideas from nothing. They said plainly that they can't write good questions or pieces with no context. Every request gives them a frame: one job, and what already sits near it.
+- **Many requests are welcome:** "I don't mind answering hundreds of these... I enjoy it." What they aren't for is the other kind of volume: data entry and mass content.
+- **The director is never asked for** data entry or ideas from nothing. They said plainly that they can't write good questions or pieces with no context. Every request gives them a frame: one job, and what already sits near it.
 - **The agent doesn't model the director's taste.** Workflows that rest on the agent learning what they like from their reactions were set aside by them: they've tried versions of that, and it depends on the agent parsing taste. So don't generate candidates for approval. Ask, and let them write.
 
 ## Tried in conversation and dropped
@@ -72,6 +73,7 @@ Six of the first fifteen came back marked as the wrong question, and the directo
 - **Read each one against the rules:** the director's rulings on vocabulary, loot and builds, and the section of `docs/core-set/vocabulary.md` for any status it names (What to read, above). Say what it conflicts with, what was assumed where the words are open, and what it does once it's placed beside the rest.
 - **Push back.** The director asks for it and uses it: one pushback in the first batch made them replace a piece with a better one that broke no rule. They also overrule, and then that's the ruling.
 - **Check a claim before pushing back with it.** One pushback in the first batch was wrong: the agent trusted a test's name over the rule's own text, and the director knew the game better than the note did. Where a pushback rests on how the engine behaves, read the rule or the code first.
+- **Count its partners.** A run shows about a fifth of the loot, so two named pieces meet in about one run in 25 (`report.md`, ruling 15). Say how many things in the web an answer works with. One that needs a single particular partner is told so, plainly; one with many is what the game is for.
 - **Say what placing them found.** Interactions nobody wrote down are the point of the web, and the director wants to hear them.
 - **Check each answer against the count** (below). A phrase many pieces share and a few pieces multiply is how the first failure came about, and the director can't see it forming from where they write.
 - **Be honest about your own additions.** Asked whether the sizes really helped or were only a response to their question, the true answer was the second, and saying so got a better page.
