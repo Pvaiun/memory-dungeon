@@ -160,6 +160,7 @@ What sets each effect in the web off, what it reads, and what it changes or move
 | Max HP | 8 | Watch: a stat, but five effects scale from it, one raises it on every kill, and Attack for HP missing counts in points, so it grows with it too. No more asked from it |
 | Chill | 6 (the pile now takes it) | Watch: near the line, and every one of them moves a foe toward the shatter. The next answer that names it is flagged |
 | HP paid or held low | 7 | Overused: at the line with the paying formation, and five of them add up on one low unit. What pulls against them is dying, and healing that takes the bonus away. The director is told: no more asked, and a new answer that names it is flagged |
+| A heal | 9 (6 that give one, 3 that read one) | Watch: past the line by number. The six that give a heal sit on six different triggers and mend different units, so they don't add up on one; the three readers (overheal into a Shield, twice, and a heal into the next hit) multiply every one of them. No card asks from it, and the next answer that reads a heal is flagged |
 | Cooldowns | 5 | Fine |
 | Shock, Stun | 4 each | Fine. Stun has its payoffs now: Might, and Slow left behind |
 | A crit, a kill, the draw, Might, Hidden, the first-slotted ability, extra strikes | 3 each | Fine. The three on the first-slotted ability stack on one cast, which is an engine a player finds, not yet a habit |
@@ -262,8 +263,9 @@ What sets each effect in the web off, what it reads, and what it changes or move
 
 Thin spots seen while placing answers: candidates for a later batch, and only one of the places cards come from (`report.md`, Next). Each has to pass the check in `report.md` (ruling 9) before it goes out.
 
-- **The Mark and Sunder,** underused by the count: one effect names the Mark and none names Sunder. Each still needs a job before it's a card. For the Mark, the Hunt has nothing above Fine on its own lever; for Sunder, Landslide wants its target opened before the blow.
-- **A way to hide a unit that isn't an Assassin.** Hidden has two payoffs (×2, and mana), and only the Assassin's kit and the knockout survived at 1 HP hide anyone. Two Fines hide a unit (below 33% HP; at the fight's start and on a kill), so this may be a Fine brought in, not a card.
-- **The Shield and the cast,** and **a formation for the dodge:** both sit on overused mechanics, so neither is asked until the web has grown.
-- **Not to ask:** a third Bleed card; anything that makes the foes act; a link between swings and casts; a piece for a unit with one ability; a formation about the kill; more from HP held low, or from max HP or Chill while they're on watch.
+- **Asked in batch 3, waiting on answers:** the Mark (as a whole direction), Sunder (in a pair of classes), a way to hide a unit that isn't an Assassin, a second thing a wind-up does, the bench, a third count that grows over a fight, the Hunt in a fight with one foe, and formations about who acts often and about crits.
+- **Burn** is still underused (two effects name it, one lays it) and has no job to ask from. Bonfire's keeper can't feed the fire from the web, but the plain answer is fire on a swing or on whoever strikes it: a plain part, the agent's to write, not a card.
+- **Haste** is named once, and three roads run on it. A payoff for being Hasted wasn't asked: Haste already pays by itself on every unit, so the card would have asked for what the game does.
+- **The Shield and the cast,** **a formation for the dodge** and **a formation about heals:** each sits on an overused or watched mechanic, so none is asked until the web has grown.
+- **Not to ask:** a third Bleed card; anything that makes the foes act; a link between swings and casts; a piece for a unit with one ability; a formation about the kill; a reward for a kill beyond the opening (every one the director saw, they left out of the Greats); a road's far end as a capstone (it's the skeleton by another name: ruling 14); more from HP held low, or from max HP, Chill or heals while they're on watch.
 - **Mythics:** sixteen, one batch, from scratch, once the gear is placed. Upgrades stay as part of the kits. Neither is ruled yet.

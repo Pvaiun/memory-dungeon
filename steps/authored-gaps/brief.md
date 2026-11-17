@@ -15,7 +15,7 @@ Read this first. It says what this step is trying to do and why, how the work is
   - the triage files, searched for a card's "near it" lines and for whether something kept already does a job;
   - one engine in `docs/gear-design/engines.md`, for what play showed (they were written for today's loot, which isn't the skeleton here);
   - `docs/core-set/rogue-mode.md`, for anything between fights; `docs/core-set/combat.md`, where a claim rests on how a fight runs.
-- **Leave alone:** rebuilding the page. It exists and it's the one to use: cards are seeded, answers read, and reads and questions written through its store (`report.md`, The page), and where it needs a change, the existing source is edited, never started again; `batch-1.md` and `batch-2.md` beyond the cards in hand; `docs/gear-design/philosophy.md` (its rulings are on the pages above); the code.
+- **Leave alone:** rebuilding the page. It exists and it's the one to use: cards are seeded, answers read, and reads and questions written through its store (`report.md`, The page), and where it needs a change, the existing source is edited, never started again; `batch-1.md`, `batch-2.md` and `batch-3.md` beyond the cards in hand; `docs/gear-design/philosophy.md` (its rulings are on the pages above); the code.
 
 **When to hand over.** At a batch's end, with the folder brought up to date. What wears a session down is what piles up in it: documents read whole, superseded versions of a plan, old copies of files, and at the far end an automatic summary that drops the director's exact words. A fresh session reading the current files has none of that.
 
@@ -123,4 +123,5 @@ Not decided: how many of the 450 are authored, and whether upgrades and mythics 
 - `web.md`: where the kept effects sit, what each batch added, the count of what every effect is set off by, reads and changes, and the thin spots seen.
 - `batch-1.md`, `batch-1-answers.md`: the first requests as sent, and their answers with the agent's reads. The second is the best record of how they answer and push back.
 - `batch-2.md`, `batch-2-answers.md`: the second requests as sent, and their answers with the agent's reads. The batch is closed.
+- `batch-3.md`: the third requests as sent. Its answers are on the page, unread until the director says they're done.
 - `requests-page.html`: the page's source.
