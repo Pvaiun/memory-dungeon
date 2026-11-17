@@ -2,9 +2,7 @@
 
 Read this first. It says what this step is trying to do and why, how the work is split between the director and the agent, what was tried and dropped on the way here, and what one batch has taught. `intent.md` is the director's intent in their words; `report.md` is their rulings and the handoff; this page is the reasoning behind both, written by the agent that ran the first session. Where the director's word differs, theirs wins.
 
-## Where this lives, and what to read
-
-**The branch.** Until it's merged to main, the newest copy of this folder is on `ccr-4cc0d6ea-c80agw`. A new session starts from main, where the folder is missing: fetch that branch and merge it before anything else.
+## What to read
 
 **Read little.** The work is judgement: writing a request that isn't the wrong question, and reading an answer against the rules. The director found that the judgement gets worse as the reading piles up, so this list is closed. What isn't on it is reference: open one section when a specific card or answer needs it, and not before.
 
@@ -17,9 +15,9 @@ Read this first. It says what this step is trying to do and why, how the work is
   - the triage files, searched for a card's "near it" lines and for whether something kept already does a job;
   - one engine in `docs/gear-design/engines.md`, for what play showed (they were written for today's loot, which isn't the skeleton here);
   - `docs/core-set/rogue-mode.md`, for anything between fights; `docs/core-set/combat.md`, where a claim rests on how a fight runs.
-- **Leave alone:** `requests-page.html` and the page's own source unless the page itself has to change (how its store is laid out is in `report.md`; a batch is seeded and read through the store, with no design skill and no read of the page); `batch-1.md` and `batch-2.md` beyond the cards in hand; `docs/gear-design/philosophy.md` (its rulings are on the pages above); the code.
+- **Leave alone:** the page. It's built, and a batch never changes it: cards are seeded, answers read and reads written through its store (`report.md`, The page). Don't open `requests-page.html`, read the page back or republish it unless the director asks for a change to the page itself; `batch-1.md` and `batch-2.md` beyond the cards in hand; `docs/gear-design/philosophy.md` (its rulings are on the pages above); the code.
 
-**Hand the checks over.** Whether an answer breaks a rule, and whether something kept already does a card's job, are checks against a reference. Give each to a subagent with the answer's or the card's words and the one document to check it against; take back a verdict and the line it rests on. Keep this session for the director's words and the web.
+**Do the checks yourself, from the section.** Whether an answer breaks a rule is a read of one rulings section or one status's entry, which costs less than briefing a subagent and loses nothing on the way back. Hand a subagent only a search too big to hold: today's whole loot list, or the code. Send one for the whole batch, not one a card, and ask for the lines its answer rests on.
 
 **When to hand over.** At a batch's end, with the folder brought up to date. What wears a session down is what piles up in it: documents read whole, superseded versions of a plan, old copies of files, and at the far end an automatic summary that drops the director's exact words. A fresh session reading the current files has none of that.
 
