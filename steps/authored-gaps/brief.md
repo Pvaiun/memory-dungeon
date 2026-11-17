@@ -37,7 +37,7 @@ Six of the first fifteen came back marked as the wrong question, and the directo
 - **Abstractions.** An ask in figures of speech can't be answered. Name the job in the game's own terms, and say what kind of thing is wanted back: an applier, a payoff, a seat, a link between two named things.
 - **Levers the player doesn't have.** Preparation is the whole game: who fights, what they wear, where they sit, the order of their abilities. The party's aim is steered only by a Mark and by an ability's own target phrase. A request that assumes another lever is wrong before it's asked.
 - **What worked:** links between two named things, a formation with a stated job, a function with a plain constraint. The director's own example requests in `intent.md` are the model for the form.
-- **"Near it"** on a card is what they already kept that sits closest to the gap. It's context, never a constraint.
+- **"Near it"** on a card is the Greats, starred seats and their own placed answers that sit closest to the gap. It's context, never a constraint. No Fines: listed there, they read as things to fit around, and most won't be in the game. A card with little near it is showing a real hole.
 - **No numbers and no sizes from the director.** They write whatever they find most interesting. The agent sizes afterwards, and says plainly when an answer is too small or too big for where it has to sit.
 - **They won't colour-code.** An answer to a road's request may never name that road's status and may serve many roads. That's what the game needs. Place it by what it does, not by the card that asked.
 - **"Wrong question" is the most useful button on the page.** Treat it as correct until shown otherwise, withdraw or re-ask in plain words, and say which.
