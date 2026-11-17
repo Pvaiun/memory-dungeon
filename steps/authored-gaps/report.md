@@ -1,5 +1,6 @@
 # Authored gaps: first report
 
+The reasoning behind this step is in `brief.md`; read that first. This page is the rulings, the page and the handoff.
 For the director, Nov 17. Nothing in the game has changed: this is the first map of the web (`web.md`), made from the triage (`triage.md`) and today's loot, with the decisions it needs and a first batch of requests.
 
 ## Ruled by the director (Nov 17)
@@ -46,7 +47,7 @@ A trial of the format: six, each with the kept effects near it.
 
 Batch 1 is closed: every answer is placed or withdrawn and nothing waits on the director (`web.md`, Added by batch 1; their words in `batch-1-answers.md`).
 
-1. Read `intent.md`, this report's rulings, `web.md` and `batch-1-answers.md`. The answers file is the best record of what the director likes and how they push back.
+1. Read `brief.md` first: what this step is for, how the work is split, what was tried and dropped, and what the first batch taught. Then `intent.md`, this report's rulings, `web.md` and `batch-1-answers.md`.
 2. Write batch 2 from `web.md`, Gaps seen, by ruling 9. About fifteen cards, plus an open card. Seed them into the page's `requests` collection with `batch: 2` (the shape is under The page; `batch-1.md` shows a batch as seeded).
 3. Tell the director in the chat only that the batch is out. When they say they're done, read `answers`, write a read of each into `replies` (kind and text), and put only the summary and the decisions in the chat. Don't read their answers before they say so.
 4. Still to come, in the director's order: the basic pieces (the agent's, shown by sample), sizing and slotting what's placed, formations beyond the nine kept or written, mythics, then build.
