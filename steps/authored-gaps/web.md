@@ -17,7 +17,6 @@ Today's loot has 252 pieces with an effect below mythic: 93 uncommons, 99 rares,
 - **35 of the 42 Greats sit on a piece today** (two of them on two pieces each, so 37 pieces). Seven have no piece: the Shield that every other ally's Shields go to, the opening that happens again for the whole party when a foe falls, a healer's overheal as a Shield on the healed ally, the half-HP start with Lifesteal ×2, basic attacks paid by Shock on the target, a heal on every cast, and Chill laid from max HP.
 - **About 70 Fines have no piece today** (they come from earlier loot). Most are an uncommon's shape: a status on a swing, a status as the fight starts, a small reaction.
 - **The mythics** weren't matched: one of sixteen reads like a kept line. Whether they were in the pass is asked below.
-- **Every hole has its old purpose.** Each cut piece keeps its Serves line (its roads, rungs and engines), which is what the slot was trying to do. A gap is written from that.
 
 ## Where the Greats sit
 
@@ -277,7 +276,7 @@ What sets each effect in the web off, what it reads, and what it changes or move
 
 ## Gaps seen, not yet asked
 
-Candidates for a later batch. Each has to pass the check in `report.md` (ruling 9) before it goes out. These are only the thin spots seen in the web as it stands. They aren't the whole list: most of batch 3 and after comes from the holes in today's loot, the classes and the roads (`report.md`, Next).
+Candidates for a later batch. Each has to pass the check in `report.md` (ruling 9) before it goes out. These are only the thin spots seen among the kept effects. They aren't the whole list: batch 3 and after come from the skeleton built on the roads and the classes (`report.md`, Next).
 
 - **The Mark and Sunder,** underused by the count: one effect names the Mark and none names Sunder. Each still needs a job before it's a card. For the Mark, the Hunt has nothing above Fine on its own lever; for Sunder, Landslide wants its target opened before the blow.
 - **A way to hide a unit that isn't an Assassin.** Hidden has two payoffs (×2, and mana), and only the Assassin's kit and the knockout survived at 1 HP hide anyone. Two Fines hide a unit (below 33% HP; at the fight's start and on a kill), so this may be a Fine brought in, not a card.

@@ -11,7 +11,8 @@ Recorded by the agent from the conversation of Nov 16–17, for the director to 
 
 ## The method
 
-- **The agent builds the web** from the kept effects and the loot the game has, as generic skeletons.
+- **The agent builds the web,** as generic skeletons, from the kept effects, the classes and the roads. "You are building a web and you're using me to fill gaps in the web or as the origin for sections of the web that you don't have at all."
+- **The earlier loot is no part of it:** "I would not be basing any of your decisions off the last loot... the loot we had before is not relevant to this at all."
 - **Gaps instead of guesses.** "Leave empty gaps in the web whenever you're even a little bit unsure, writing what you were trying to do but didn't know what to choose."
 - **Then it asks.** Each gap comes to the director as an objective to author against: a link between two mechanics, a capstone for a build, a function to fill, a piece two classes would both want, or a whole build's direction ("I don't know where to start with the shock build").
 - **Creative decisions on the structure or a build's goals are asked, never made by the agent.**

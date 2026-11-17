@@ -101,11 +101,12 @@ The agent's reading, for seeing where the web is thick. It isn't the director's 
 
 ## Where it goes
 
-1. More batches, until about 70% of the set is authored (`report.md`, ruling 13): at today's size, about 175 gear effects against the web's 62. Few gaps found doesn't mean the web is full: when the thin spots run out, draw cards from the holes in today's loot, the classes and the roads (`report.md`, Next).
-2. The plain parts, written by the agent and shown by sample, to fill out what's left at the end.
-3. Sizing and slotting what's placed: kinds, rarities, who wears it, numbers.
-4. Formations beyond those kept or written, then mythics, on the director's word.
-5. Build and measure. Until then the game stays on today's loot, and nothing in it changes.
+1. The skeleton: the web built from the roads and the classes, each need marked as met, plain or a gap (`report.md`, Next). Few thin spots among the kept effects doesn't mean the web is full, and the earlier loot is never where a gap comes from.
+2. More batches, from the skeleton's gaps, until it has none. How much of the set that makes is open with the director (`report.md`).
+3. The plain parts, written by the agent and shown by sample, at the end and only where something needs one.
+4. Sizing and slotting what's placed: kinds, rarities, who wears it, numbers.
+5. Formations beyond those kept or written, then mythics, on the director's word.
+6. Build and measure. Until then the game stays on today's loot, and nothing in it changes.
 
 Not decided: how many pieces the set should hold (the agent's view is fewer and better than today's count), and whether upgrades and mythics join.
 
