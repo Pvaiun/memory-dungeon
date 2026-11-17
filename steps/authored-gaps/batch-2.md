@@ -93,7 +93,7 @@ A starting unit knows one of its three abilities, and the player can leave abili
 
 ## 10. The Pyromancer and the Bramble knight (Two classes)
 
-I need a piece a Pyromancer and a Bramble knight would both want, each for its own reason. They share the totem.
+I need a piece a Pyromancer and a Bramble knight would both want, each for its own reason. They share the totem. I'd like it to be a Burn piece: one effect in the web names Burn, and nothing in the web lays it.
 
 One is a glass cannon of long casts that piles Burn on one foe. The other Taunts, and its Thorns leave every attacker bleeding. Nothing Great joins their roads. The Hexer and the Stormcaller hold totems too.
 

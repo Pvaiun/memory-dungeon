@@ -28,7 +28,7 @@ Read this first. It says what this step is trying to do and why, how the work is
 
 ## The split
 
-- **The agent's:** the web (what connects to what, where it's thin), finding the gaps, turning each answer into a piece, checking it against the rules, sizing it, running it, and the plain parts nobody needs to author.
+- **The agent's:** the web (what connects to what, where it's thin, and whether a mechanic is overused), finding the gaps, turning each answer into a piece, checking it against the rules, sizing it, running it, and the plain parts nobody needs to author.
 - **The director's:** every creative decision. What a gap is filled with, and any call on a build's structure or goal.
 - **The director is never asked for** data entry, volume, or ideas from nothing. They said plainly that they can't write good questions or pieces with no context. Every request gives them a frame: one job, and what already sits near it.
 - **The agent doesn't model the director's taste.** Workflows that rest on the agent learning what they like from their reactions were set aside by them: they've tried versions of that, and it depends on the agent parsing taste. So don't generate candidates for approval. Ask, and let them write.
@@ -57,6 +57,7 @@ Six of the first fifteen came back marked as the wrong question, and the directo
 - **"Near it"** on a card is the Greats, starred seats and their own placed answers that sit closest to the gap. It's context, never a constraint. No Fines: listed there, they read as things to fit around, and most won't be in the game. A card with little near it is showing a real hole.
 - **No numbers and no sizes from the director.** They write whatever they find most interesting. The agent sizes afterwards, and says plainly when an answer is too small or too big for where it has to sit.
 - **They won't colour-code.** An answer to a road's request may never name that road's status and may serve many roads. That's what the game needs. Place it by what it does, not by the card that asked.
+- **Ask from an underused mechanic where the job allows it.** A card still needs a job the web lacks. Where the count shows a mechanic the web needs more of, the ask names it in one plain sentence (The count, below).
 - **"Wrong question" is the most useful button on the page.** Treat it as correct until shown otherwise, withdraw or re-ask in plain words, and say which.
 
 ## Reading the answers
@@ -65,8 +66,18 @@ Six of the first fifteen came back marked as the wrong question, and the directo
 - **Push back.** The director asks for it and uses it: one pushback in the first batch made them replace a piece with a better one that broke no rule. They also overrule, and then that's the ruling.
 - **Check a claim before pushing back with it.** One pushback in the first batch was wrong: the agent trusted a test's name over the rule's own text, and the director knew the game better than the note did. Where a pushback rests on how the engine behaves, read the rule or the code first.
 - **Say what placing them found.** Interactions nobody wrote down are the point of the web, and the director wants to hear them.
-- **Watch for a new keyword forming.** A phrase many pieces share and a few pieces multiply is how the first failure came about. Say so when one starts, as the agent did for start-of-fight effects, and the director cut a multiplier.
+- **Check each answer against the count** (below). A phrase many pieces share and a few pieces multiply is how the first failure came about, and the director can't see it forming from where they write.
 - **Be honest about your own additions.** Asked whether the sizes really helped or were only a response to their question, the true answer was the second, and saying so got a better page.
+
+## The count
+
+The director doesn't manage the web, so they can use the same trigger or mechanic too often without noticing. Judging that is the agent's job, and they want to be told, not asked.
+
+- **The test.** A mechanic is overused when a player could take every piece that names it and be right each time: about one effect in twelve of the web, or more, names the same thing (a status, an event a unit has to be built for such as a dodge or the fight's start, or a resource such as Shield), and those effects add up on one unit instead of pulling against each other. It's underused when the game leans on it (a road's own status, a lever the player holds, or something the kits and kept effects supply) and fewer than three effects name it.
+- **What the test leaves alone.** Swings, casts, hits and plain stats are every unit's, and are common on purpose. A status no build leans on can stay rare. Judge by what a player would notice across a run, never by an even spread.
+- **The count is in `web.md`:** what sets each effect off, what it reads, what it changes or moves, with a line for every effect. Add each placed answer to it, and recount the words a player would collect.
+- **An answer on an overused mechanic:** say so in its read, plainly. The idea is good, the web has too much on that mechanic, give me something else for the same job. Write the read with the kind `overused`, so it shows under Needs you. Don't move their idea onto another mechanic: what replaces it is their decision. If they reply that they want it as written, it's placed.
+- **A job that can be done from an underused mechanic:** the card's ask says which, in one plain sentence. An underused mechanic with no job isn't a card: asking for it would be asking for coverage.
 
 ## What the kept effects have in common
 
@@ -100,7 +111,7 @@ Not decided: how many pieces the set should hold (the agent's view is fewer and 
 - `intent.md`: the director's intent, recorded short.
 - `report.md`: their rulings, how the page and its store work, and the next steps.
 - `triage.md`, `triage-formations.md`: what they kept, in their two piles.
-- `web.md`: where the kept effects sit, what the first batch added, and the gaps seen.
+- `web.md`: where the kept effects sit, what the first batch added, the count of what every effect is set off by, reads and changes, and the gaps seen.
 - `batch-1.md`, `batch-1-answers.md`: the first requests as sent, and their answers with the agent's reads. The second is the best record of how they answer and push back.
 - `batch-2.md`: the second requests as sent. Their answers aren't in yet.
 - `requests-page.html`: the page's source.

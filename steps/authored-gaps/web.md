@@ -105,6 +105,123 @@ The director's answers, placed by what they do, with their replies folded in (`b
 - The one-Shield formation with the Shield that sends back ×2 and the piece that takes every ally's Shield.
 - The pile with Shock from casting: a long cast puts the whole field's charge on one foe.
 
+## The count
+
+What sets each effect in the web off, what it reads, and what it changes or moves. It holds 71 effects: the 42 Greats, 10 from the Great formations (a formation's plain seats are folded into its line), the 6 starred seats and batch 1's 13. An effect can sit in two rows of a table. **Every time an answer is placed, add its line to the ledger and bump the counts.** The test for overused and underused is in `brief.md`, The count; the verdicts below are the agent's.
+
+| Set off by | Effects | Reads | Effects | Changes or moves | Effects |
+| --- | --- | --- | --- | --- | --- |
+| its cast | 12 | nothing | 26 | its damage | 16 |
+| its swing | 11 | a stat | 13 | how often it swings or hits | 9 |
+| always on | 9 | the size of a blow, heal or price | 8 | a status on the foes | 9 |
+| the fight's start | 8 | stacks on the foes | 6 | a status on itself or allies | 8 |
+| an ally's action or blow | 6 | HP or MP as it stands | 5 | who is hit | 7 |
+| a blow taken | 5 | gear slots or ability order | 5 | a stat | 7 |
+| a dodge | 5 | a status on itself | 5 | a heal | 6 |
+| its hit or crit | 4 | Shield held | 4 | MP | 6 |
+| a status gained, laid or shattering | 4 | a foe's HP | 2 | a Shield | 5 |
+| a heal | 3 | | | cooldowns | 4 |
+| a state held | 3 | | | an effect happening again | 4 |
+| a foe falling | 3 | | | HP spent or capped | 3 |
+| HP paid | 1 | | | | |
+| a foe acting | 1 | | | | |
+
+**By the word a player would collect** (every effect that names it, sources and payoffs together):
+
+| Names | Effects | Verdict |
+| --- | --- | --- |
+| The fight's start | 10 (8 openers, and the 2 that repeat them) | Overused: they all fire together, and a kill fires them again |
+| Shield | 8 | Overused: five sit on one holder and two more feed it; only the Peak pulls the other way |
+| The dodge | 7 (5 "on a dodge", 2 that make dodges) | Overused: all five stack on one dodger |
+| MP | 8 | Common, and fine: every caster needs it, and the eight pull three ways (cheaper casts, mana passed on, MP as a body) |
+| Max HP | 7 | Watch: a stat, but five effects scale from it and one raises it on every kill |
+| Chill, Shock, cooldowns, HP paid or held low | 4 each | Fine |
+| A crit, a kill, the draw | 3 each | Fine |
+| Hidden, Stun, Might, an empty slot | 2 each | Hidden and Stun are underused: supplied, with one payoff and none (batch 2 asks for both) |
+| Burn, the Mark | 1 each | Underused: a road's own status, and the player's one way to aim |
+| Bleed, Sunder | 0 | Underused: Thousand Cuts' status (asked in batch 2), and a thread of two roads |
+| Taunt, Thorns, Guard, and the statuses no build leans on | 0 | Left alone: the Toll has its payoff, and a rare status is allowed to stay rare |
+
+- **Swings, casts, hits and plain stats top every table and aren't overused:** every unit has them, and the swing effects pull against each other (never, half as often, only when a foe acts).
+- **Overused means no more for now, not too many kept.** Nothing placed is taken out. A new answer that names one of the three is flagged on its card, and the share falls as the web grows.
+- **Set off by nearly nothing:** a foe acting (1) and HP paid (1), each with several effects that supply it. Batch 2 asks for both jobs.
+
+**The ledger.**
+
+| Effect | From | Set off by | Reads | Changes or moves |
+| --- | --- | --- | --- | --- |
+| Damage hits MP in place of HP | Great | a blow taken | HP or MP as it stands | who is hit |
+| Overheal becomes a Shield on itself | Great | a heal | the size of a blow, heal or price | a Shield |
+| Attack lent to the weakest ally | Great | the fight's start | a stat | a stat |
+| Crits heal the lowest ally | Great | its hit or crit | the size of a blow, heal or price | a heal |
+| Abilities from the top ally's Attack | Great | its cast | a stat | its damage |
+| Crescendo on each cast | Great | its cast | nothing | its damage |
+| On a dodge: the hit lands on another foe | Great | a dodge | the size of a blow, heal or price | who is hit |
+| Readies the top-Attack ally's slowest ability | Great | the fight's start | a stat, gear slots or ability order | cooldowns |
+| Abilities from Defense | Great | its cast | a stat | its damage |
+| Every other ability free | Great | its cast | nothing | MP |
+| While Hidden: hits ×2 | Great | a state held | a status on itself | its damage |
+| An ally's price heals another | Great | HP paid | the size of a blow, heal or price | a heal |
+| On a dodge: strikes the attacker | Great | a dodge | nothing | how often it swings or hits |
+| A status given to itself, shared with the lowest ally | Great | a status gained, laid or shattering | a status on itself | a status on itself or allies |
+| A knockout survived at 1 HP, Hidden | Great | a blow taken | HP or MP as it stands | a status on itself or allies |
+| No offhand: Evasion and harder swings | Great | always on | gear slots or ability order | a stat, its damage |
+| Swings don't spend Might | Great | its swing | a status on itself | a status on itself or allies |
+| Every other ally's Shields go to it | Great | an ally's action or blow | Shield held | a Shield |
+| Max HP and max MP trade places | Great | always on | a stat | a stat |
+| A broken Shield sends back ×2 | Great | a blow taken | Shield held | its damage |
+| Never swings, Defense ×2 | Great | its swing | nothing | how often it swings or hits, a stat |
+| Abilities deal more per Shock | Great | its cast | stacks on the foes | its damage |
+| A foe falls: the party's opening again | Great | a foe falling | nothing | an effect happening again |
+| Stunned at the start, then everything ready and Hasted | Great | the fight's start | nothing | cooldowns, a status on itself or allies |
+| Extra strikes roll Double strike again | Great | its swing | nothing | how often it swings or hits |
+| Swings add half the party's Shield | Great | its swing | Shield held | its damage |
+| A heal becomes the healed ally's next hit | Great | a heal | the size of a blow, heal or price | its damage |
+| A kill: its own opening again | Great | a foe falling | nothing | an effect happening again |
+| +50% Crit chance, other hits halved | Great | its hit or crit | nothing | its damage |
+| Swings add Chill from max HP | Great | its swing | a stat | a status on the foes |
+| Abilities free under Clarity | Great | its cast, a state held | a status on itself | MP |
+| Its overheal becomes a Shield on the healed ally | Great | a heal | the size of a blow, heal or price | a Shield |
+| On a dodge: the next swing at once, 2 times | Great | a dodge | nothing | how often it swings or hits |
+| Half-HP start, Lifesteal ×2 | Great | the fight's start | nothing | HP spent or capped, a heal |
+| Swings 50% as often, ×3 and a Stun | Great | its swing | nothing | how often it swings or hits, its damage, a status on the foes |
+| On a dodge: Heat, lost when hit | Great | a dodge, a blow taken | nothing | a status on itself or allies |
+| Held at 50% HP for +50% | Great | always on | HP or MP as it stands | HP spent or capped, its damage |
+| Swings paid in HP | Great | its swing | a stat | HP spent or capped, its damage |
+| Swings deal more per Shock | Great | its swing | stacks on the foes | its damage |
+| A heal on every cast | Great | its cast | a stat | a heal |
+| Swings only when a foe acts | Great | a foe acting, its swing | nothing | how often it swings or hits |
+| Hits deal more per different debuff | Great | its hit or crit | stacks on the foes | its damage |
+| Icefall, Rime: abilities add more Chill | Great formation | its cast | nothing | a status on the foes |
+| Icefall, Sleet: swings add a Chill | Great formation | its swing | nothing | a status on the foes |
+| Icefall, Breaker ★: a shatter readies its first-slotted ability | Great formation | a status gained, laid or shattering | gear slots or ability order | cooldowns |
+| The cathedral, Soloist ★: its first-slotted ability has no cooldown | Great formation | its cast | gear slots or ability order | cooldowns |
+| The cathedral, Voice: its MP goes to the Soloist; a Shield when the Soloist casts | Great formation | always on, an ally's action or blow | HP or MP as it stands, a stat | MP, a Shield |
+| The standard: Followers' swings carry what the Lead's carry | Great formation | its swing | nothing | an effect happening again |
+| Glass and stone ★: one deals and takes ×2, two draw | Great formation | always on | nothing | its damage, who is hit |
+| Twins ★: what a Twin gives itself, the other gains | Great formation | a status gained, laid or shattering | a status on itself | a status on itself or allies |
+| Bannerman: one never acts, the others gain its Attack and Defense | Great formation | always on | a stat | a stat, how often it swings or hits |
+| The shepherd: takes the hits meant for the lowest ally | Great formation | an ally's action or blow | HP or MP as it stands | who is hit |
+| Warden ★: a hit on the Anchor heals it from the Warden's max HP | Starred seat | an ally's action or blow | a stat | a heal |
+| Peak ★: hits land twice while every ally holds a Shield | Starred seat | a state held | Shield held | how often it swings or hits |
+| Torch ★: a fallen foe's Burn passes on | Starred seat | a foe falling | stacks on the foes, a foe's HP | a status on the foes |
+| Conductor ★: each cast feeds the Soloist's mana | Starred seat | its cast | a stat | MP |
+| Well ★: draws more; blows taken feed the Soloist's mana | Starred seat | a blow taken | a stat | MP, who is hit |
+| Lifeline ★: takes half of what the Anchor takes | Starred seat | an ally's action or blow | the size of a blow, heal or price | who is hit |
+| Mana from the foes' debuffs | Batch 1 | always on | stacks on the foes | MP |
+| The pile | Batch 1 | a status gained, laid or shattering | stacks on the foes | a status on the foes |
+| Shock from casting | Batch 1 | its cast | nothing | a status on the foes |
+| Shock from wide abilities | Batch 1 | its cast | nothing | a status on the foes |
+| A dodge heals | Batch 1 | a dodge | the size of a blow, heal or price | a heal |
+| Crits set off a hit's triggers 4 times | Batch 1 | its hit or crit | nothing | an effect happening again |
+| More max HP as the fight starts | Batch 1 | the fight's start | nothing | a stat |
+| Might as the fight starts | Batch 1 | the fight's start | nothing | a status on itself or allies |
+| Blur for the party as the fight starts | Batch 1 | the fight's start | nothing | a status on itself or allies |
+| Defense for wearing no armor | Batch 1 | always on | gear slots or ability order | a stat |
+| A Mark on the foe with the least max HP as the fight starts | Batch 1 | the fight's start | a foe's HP | a status on the foes |
+| Formation: two seats swing the third | Batch 1 | an ally's action or blow | nothing | how often it swings or hits |
+| Formation: one Shield | Batch 1 | always on | nothing | a Shield, who is hit |
+
 ## Asked in batch 2
 
 Thirteen cards and an open one (`batch-2.md`). Each was checked against ruling 9, and against what the director cut: what's in today's loot (`npx tsx tools/loot-list.ts`) and in neither triage pile.
@@ -122,6 +239,7 @@ Thirteen cards and an open one (`batch-2.md`). Each was checked against ruling 9
   - a unit's swings and its casts: the web's two biggest clusters, joined by two Fines.
 - **A lever nothing reads:** a unit that knows, or slots, only one ability.
 - **Formations:** one about the moment a foe falls (no kept formation does anything on a kill but the Torch), and one about a unit that pays HP or sits low.
+- **Asked from an underused mechanic** (ruling 12): the Pyromancer and Bramble knight card asks for a Burn piece. Cards 1, 5, 6, 8 and 9 already name theirs (Bleed, a Stunned foe, Hidden, what a fight leaves, a unit with one ability).
 
 **Changed before it went out:**
 - **"A formation where life moves between seats"** became the formation about HP paid or held low. The Lifeline and the Warden, both starred, already move life to an anchor; nothing kept is about the unit that spends its own.
@@ -131,7 +249,8 @@ Thirteen cards and an open one (`batch-2.md`). Each was checked against ruling 9
 
 Candidates for a later batch. Each has to pass the check in `report.md` (ruling 9) before it goes out.
 
-- **A Burn applier,** if the Bleed and Chill cards come back with Greats: Bonfire would then be the one status road with only plain ways to lay its status. Batch 1's Bonfire card brought upkeep and the pile, not a source.
+- **A Burn applier,** if batch 2's Burn card (the Pyromancer and the Bramble knight) doesn't bring one. Batch 1's Bonfire card brought upkeep and the pile, not a source.
+- **The Mark and Sunder,** underused by the count: one effect names the Mark and none names Sunder. Each still needs a job before it's a card. For the Mark, the Hunt has nothing above Fine on its own lever; for Sunder, Landslide wants its target opened before the blow.
 - **The Shield and the cast.** Greats on both sides, and only Fines between them (a Shield from a cast, or from max MP). The Peak's doubled hits reach abilities, so it may need nothing.
 - **A formation for the dodge.** Skirmish line (a Fine) is three plain dodgers. With party Blur and the dodge Greats it may be enough as it is.
 - **Mythics:** sixteen, one batch, from scratch, once the gear is placed. Upgrades stay as part of the kits. Neither is ruled yet.
