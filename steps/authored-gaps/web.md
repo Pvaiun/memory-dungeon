@@ -12,10 +12,12 @@ By what each is about. Each Great is listed once.
 - **The swing:** never swings, Defense ×2 · 50% as often, ×3 and a Stun · only when a foe acts · doesn't spend Might · Double strike rolls again · no offhand.
 - **The dodge:** the hit lands on another foe · strikes the attacker · the next swing at once, 2 times · Heat, lost when hit.
 - **A stat read from somewhere else:** abilities from the top ally's Attack · Attack lent to the weakest ally · abilities from Defense · Chill from max HP.
-- **The fight's moments:** the opening again on a kill (its own; the whole party's) · a knockout survived at 1 HP, Hidden.
+- **The fight's moments:** the party's opening again when a foe falls · a knockout survived at 1 HP, Hidden.
 - **Paid by a state:** ×2 while Hidden · more per Shock on the target (abilities; basic attacks) · more per different debuff · +50% Crit chance with every other hit halved · a status given to itself shared with the lowest ally.
 
-**What the Greats aren't.** Three of the 42 name a status road's status (Chill once, Shock twice). None names Burn, Bleed, Sunder, the Mark, Taunt, Aggro, Guard or Thorns. Nearly all either move something to a place it doesn't normally go, or change how a unit acts at a price.
+**Cut from the Greats by the director:** the opening again on its wearer's own kill, for its wearer alone. It was the party's one made smaller, with the same partners, and worn together the two doubled the opening, which batch 1 cut. If the opening gets a second way to repeat, it fires on something other than a foe falling, and it's the director's to write.
+
+**What the Greats aren't.** Three of the 41 name a status road's status (Chill once, Shock twice). None names Burn, Bleed, Sunder, the Mark, Taunt, Aggro, Guard or Thorns. Nearly all either move something to a place it doesn't normally go, or change how a unit acts at a price.
 
 ## The formations
 
@@ -36,7 +38,7 @@ Where the Greats sit by road, from what each does. A Great can sit on more than 
 | Thousand Cuts | 8 | the dodge, extra strikes | Bleed |
 | Barrage | 7 | free casts, mana as a body, the growing spell | cooldowns, mana passed between allies |
 | Blood Pact | 7 | prices, the held-low unit, heals that do more | nets over a low unit |
-| The Hunt | 4 | the opening again, hiding | the Mark, executes, reach |
+| The Hunt | 3 | the opening again, hiding | the Mark, executes, reach |
 | The Storm | 3 | reading the charge, swinging when foes act | laying or spreading the charge |
 | Bonfire | 2 | both are a caster's (the growing spell, every debuff) | everything about the fire |
 | Cold Snap | 2 | both are readers of other things (every debuff, the charge); Chill laid from max HP is the one Great of its own | the shatter |
@@ -62,14 +64,14 @@ The director's answers, placed by what they do, with their replies folded in (`b
 - **A dodge heals:** a share of the blow it would have been. With overheal as a Shield, a dodger builds a Shield by dodging.
 - **Crits set off a hit's triggers 4 times:** the statuses it carries, Double strike's roll, anything worded "on a basic attack" or "on a hit". Never the hit's own damage, so no Lifesteal. It reaches cooldown and mana effects too.
 - **More max HP as the fight starts.** Current HP stays where it is and the fight's end cuts it back, so nothing carries out. It's the exception to the content test that makes such a status heal into its room.
-- **Might as the fight starts** (a Fine, the director's favourite opener): stacked on every kill by the pieces that repeat the opening.
+- **Might as the fight starts** (a Fine, the director's favourite opener): stacked each time a foe falls by the piece that repeats the opening.
 - **Blur for the whole party as the fight starts.** A Blur's miss is a dodge, so the dodge Greats work on units with no Evasion.
 - **Defense for wearing no armor** (an amulet). With "no offhand", a family: paid for an empty slot.
 - **A Mark on the foe with the least max HP as the fight starts:** a plain part that brings the first kill early.
 - **A formation where two seats swing the third:** the third takes no action of its own and basic attacks whenever either of the others does. Ruled by the director: its swings happen even on a unit that "never makes a basic attack".
 - **A formation with one Shield:** one seat holds triple the Shield and draws more; the others can't hold any.
 
-**Cut by the director:** start-of-fight effects happening 2 times (the opening keeps two multipliers: again on a kill, for one unit or for the party); statuses that deal ×2 and drain faster (replaced by the pile).
+**Cut by the director:** start-of-fight effects happening 2 times (the opening keeps one multiplier: again when a foe falls, for the whole party); statuses that deal ×2 and drain faster (replaced by the pile).
 
 **Threads the director settled:**
 - **Shock has two patterns:** keep the charge high and read it, or make the foes act and spend it.
@@ -79,7 +81,7 @@ The director's answers, placed by what they do, with their replies folded in (`b
 - **No thread for debuffs held on purpose.**
 - **The Toll has its payoff** (the Shield that sends back ×2).
 - **The player steers who dies only through a Mark or an ability's own aim,** so nothing asks for a reward by who died beyond a Marked foe falling.
-- **The plain openers come in** because the pieces that repeat the opening need them.
+- **The plain openers come in** because the piece that repeats the opening needs them.
 
 **Found by placing them** (nobody wrote these down):
 - Party Blur, the opening again on a kill, and any "on a dodge" Great: every kill re-Blurs the party, and each Blur spent sets off a dodge.
@@ -113,7 +115,7 @@ Placed by what they do, with the director's replies folded in (`batch-2-answers.
 - **Nothing asks a player to slot fewer abilities.** One ability doesn't mean fewer casts. The cooldowns piece is the one thing that tilts that way.
 - **Chill is a damage status** for the pile.
 - **Thousand Cuts' piece is about its extra strikes.** Asked twice, nothing Great names Bleed: it comes from the kits and the plain pieces.
-- **A kill needs no formation.** Felling foes is every party's aim, so a formation about it can only reward it or make it easier. The two Greats that repeat the opening already make a formation with start-of-fight seats do something on each kill.
+- **A kill needs no formation.** Felling foes is every party's aim, so a formation about it can only reward it or make it easier. The Great that repeats the opening already makes a formation with start-of-fight seats do something on each kill.
 
 **Found by placing them:**
 - The pile with Chill: a wearer's wide Chill gathers on the coldest foe, so foes shatter one after another.
@@ -129,11 +131,11 @@ Placed by what they do, with the director's replies folded in (`batch-2-answers.
 
 ## The count
 
-What sets each effect in the web off, what it reads, and what it changes or moves. It holds 81 effects: the 42 Greats, 10 from the Great formations (a formation's plain seats are folded into its line), the 6 starred seats, batch 1's 13 and batch 2's 10. An effect can sit in two rows of a table. **Every time an answer is placed, add its line to the ledger and bump the counts.** The test for overused and underused is in `brief.md`, The count; the verdicts below are the agent's.
+What sets each effect in the web off, what it reads, and what it changes or moves. It holds 80 effects: the 41 Greats, 10 from the Great formations (a formation's plain seats are folded into its line), the 6 starred seats, batch 1's 13 and batch 2's 10. An effect can sit in two rows of a table. **Every time an answer is placed, add its line to the ledger and bump the counts.** The test for overused and underused is in `brief.md`, The count; the verdicts below are the agent's.
 
 | Set off by | Effects | Reads | Effects | Changes or moves | Effects |
 | --- | --- | --- | --- | --- | --- |
-| its cast | 14 | nothing | 29 | its damage | 16 |
+| its cast | 14 | nothing | 28 | its damage | 16 |
 | its swing | 13 | a stat | 13 | a status on the foes | 12 |
 | always on | 10 | the size of a blow, heal or price | 8 | how often it swings or hits | 9 |
 | the fight's start | 8 | stacks on the foes | 7 | a status on itself or allies | 9 |
@@ -143,8 +145,8 @@ What sets each effect in the web off, what it reads, and what it changes or move
 | a dodge | 5 | Shield held | 4 | a heal | 6 |
 | its hit or crit | 4 | a foe's HP | 2 | a Shield | 5 |
 | a heal | 3 | | | cooldowns | 5 |
-| a state held | 4 | | | an effect happening again | 5 |
-| a foe falling | 3 | | | HP spent or capped | 5 |
+| a state held | 4 | | | an effect happening again | 4 |
+| a foe falling | 2 | | | HP spent or capped | 5 |
 | HP paid | 1 | | | | |
 | a foe acting | 1 | | | | |
 | a fight won | 1 | | | | |
@@ -153,7 +155,7 @@ What sets each effect in the web off, what it reads, and what it changes or move
 
 | Names | Effects | Verdict |
 | --- | --- | --- |
-| The fight's start | 10 (8 openers, and the 2 that repeat them) | Overused: they all fire together, and a kill fires them again |
+| The fight's start | 9 (8 openers, and the 1 that repeats them) | Overused: they all fire together, and a foe falling fires them again |
 | Shield | 8 | Overused: five sit on one holder and two more feed it; only the Peak pulls the other way |
 | The dodge | 7 (5 "on a dodge", 2 that make dodges) | Overused: all five stack on one dodger |
 | MP | 10 | Common, and fine: every caster needs it, and the ten pull three ways (cheaper casts, mana passed on or regained, MP as a body) |
@@ -163,8 +165,8 @@ What sets each effect in the web off, what it reads, and what it changes or move
 | A heal | 9 (6 that give one, 3 that read one) | Watch: past the line by number. The six that give a heal sit on six different triggers and mend different units, so they don't add up on one; the three readers (overheal into a Shield, twice, and a heal into the next hit) multiply every one of them. No card asks from it, and the next answer that reads a heal is flagged |
 | Cooldowns | 5 | Fine |
 | Shock, Stun | 4 each | Fine. Stun has its payoffs now: Might, and Slow left behind |
-| A crit, a kill, the draw, Might, Hidden, the first-slotted ability, extra strikes | 3 each | Fine. The three on the first-slotted ability stack on one cast, which is an engine a player finds, not yet a habit |
-| Burn, an empty slot | 2 each | Burn has a source now and is still underused. Hidden has two payoffs now and little that hides a unit (Gaps seen) |
+| A crit, the draw, Might, Hidden, the first-slotted ability, extra strikes | 3 each | Fine. The three on the first-slotted ability stack on one cast, which is an engine a player finds, not yet a habit |
+| Burn, an empty slot, a kill | 2 each | Burn has a source now and is still underused. A kill has the party's opening and the Torch. Hidden has two payoffs now and little that hides a unit (Gaps seen) |
 | The Mark, Slow, a fight won, a revive | 1 each | The Mark is underused: the player's one way to aim |
 | Bleed, Sunder | 0 | Underused. Bleed was asked twice and brought no piece that names it; Sunder is a thread of two roads |
 | Taunt, Thorns, Guard, and the statuses no build leans on | 0 | Left alone: the Toll has its payoff, and a rare status is allowed to stay rare |
@@ -204,7 +206,6 @@ What sets each effect in the web off, what it reads, and what it changes or move
 | Extra strikes roll Double strike again | Great | its swing | nothing | how often it swings or hits |
 | Swings add half the party's Shield | Great | its swing | Shield held | its damage |
 | A heal becomes the healed ally's next hit | Great | a heal | the size of a blow, heal or price | its damage |
-| A kill: its own opening again | Great | a foe falling | nothing | an effect happening again |
 | +50% Crit chance, other hits halved | Great | its hit or crit | nothing | its damage |
 | Swings add Chill from max HP | Great | its swing | a stat | a status on the foes |
 | Abilities free under Clarity | Great | its cast, a state held | a status on itself | MP |

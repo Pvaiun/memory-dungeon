@@ -31,7 +31,6 @@ Duplicates left out. Lines are changed where a note said how; the notes themselv
 - Extra strikes roll Double strike again, up to 2 more, each 20% weaker.
 - Basic attacks deal extra damage equal to 50% of all Shield the party holds.
 - Each heal it gives: the ally's next hit deals extra damage equal to 50% of the heal, adding up.
-- On a kill: its gear's and seat's start-of-fight effects happen again.
 - +50% Crit chance. Hits that don't crit deal −50%.
 - Basic attacks add Chill, from max HP.
 - Abilities are free while it has Clarity.

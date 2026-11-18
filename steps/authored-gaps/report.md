@@ -30,7 +30,7 @@ The reasoning behind this step is in `brief.md`; read that first. This page hold
 15. **The set's size is the target: "I'd like to reach 450 pieces of gear and 50 formations."** All loot, commons and plain pieces included. A plain number, not a share and not a gap count (the director: "a number quota and letting the web be what it ends up being"). It stops the agent calling the web done early, as it did at 81.
     - **Where the number comes from:** a finished run should have shown its player about a quarter of all the loot (`intent.md`, What it's for). The agent's rough count from the rogue mode's settings, not yet simulated: a run shows about 90 pieces, about 65 of them with an effect. That's about a fifth of 450, a little under the director's quarter, on the side they lean ("perhaps that number is low"). Measure it with whole runs at build.
     - **What it asks of every piece:** with a fifth of the loot shown, two named pieces meet in about one run in 25. A piece that needs one particular partner almost never works; a piece with many partners works every run, with a different one each time. That's the director's "as cross-build as possible", and the agent checks each answer for it (`brief.md`, Reading the answers).
-    - **How many of the 450 are authored isn't set.** By the loot's rarity rules a common is stats and an uncommon a simple effect, so the authored pieces are mostly rares and legendaries. The agent's estimate: about 225 if half the set is rare or above, about 315 at the 70% the director first offered. The web holds 62 gear effects, so 160 to 250 are still to come: 16 to 25 batches at ten placed a batch. The director is glad to answer that many.
+    - **How many of the 450 are authored isn't set.** By the loot's rarity rules a common is stats and an uncommon a simple effect, so the authored pieces are mostly rares and legendaries. The agent's estimate: about 225 if half the set is rare or above, about 315 at the 70% the director first offered. The web holds 61 gear effects, so 160 to 250 are still to come: 16 to 25 batches at ten placed a batch. The director is glad to answer that many.
     - **A batch carries three or four formation cards** (the director: "We can put 3 or 4 formations per batch if we want"). The web has about 15 formations (7 Great, 3 written, and the Fine formations that hold a starred seat), so 35 are still to come: about ten batches at that rate. Each formation card still needs a stated job; a batch with fewer real ones carries fewer.
 
 ## The page
@@ -53,11 +53,11 @@ The store holds the requests (`requests/<id>`: batch, order, kind, title, ask, w
 ## What the triage shows
 
 - **The Greats are about a unit's own body and rhythm:** its HP bar (seven), its Shield (five), its MP and casts (seven), how its basic attacks come (six), its dodge (four), a stat read from somewhere else (four). Nearly all either move something to a place it doesn't normally go, or change how a unit acts at a price.
-- **The Greats by road:** Landslide 9, the Toll 8, Thousand Cuts 8, Barrage 7, Blood Pact 7, the Hunt 4, the Storm 3, Bonfire 2, Cold Snap 2. Bonfire's two are a caster's pieces, not the fire's.
+- **The Greats by road:** Landslide 9, the Toll 8, Thousand Cuts 8, Barrage 7, Blood Pact 7, the Hunt 3, the Storm 3, Bonfire 2, Cold Snap 2. Bonfire's two are a caster's pieces, not the fire's.
 
 ## Next: for the session that picks this up
 
-Batches 1 and 2 are closed: every answer is placed, left out or withdrawn (`web.md`, Added by batch 1 and Added by batch 2; the director's words and each read in `batch-1-answers.md` and `batch-2-answers.md`). The web holds 81 effects. **Batch 3 is on the page and waits on the director's answers** (`batch-3.md`). The target is set (ruling 15: 450 pieces of gear and 50 formations, all loot).
+Batches 1 and 2 are closed: every answer is placed, left out or withdrawn (`web.md`, Added by batch 1 and Added by batch 2; the director's words and each read in `batch-1-answers.md` and `batch-2-answers.md`). The web holds 80 effects: the director cut one Great while batch 3 was out (`web.md`, Cut from the Greats). **Batch 3 is on the page and waits on the director's answers** (`batch-3.md`). The target is set (ruling 15: 450 pieces of gear and 50 formations, all loot).
 
 **What went wrong at the end of batch 2, so it isn't repeated.** At 81 effects the agent said the gaps were few and offered to move to the plain parts; the director "felt like we were barely getting started". What had run thin was one way of finding cards (thin spots among the kept effects). The agent then reached for structure twice: the holes in the earlier loot (against ruling 4), and a skeleton of needs by road and class (ruling 14). Neither is the method. The method is the batches.
 
@@ -77,5 +77,5 @@ Batches 1 and 2 are closed: every answer is placed, left out or withdrawn (`web.
    - **A whole direction,** where the web has almost nothing for a road's own lever.
    - **The open card,** every batch.
 6. **Every card passes ruling 9,** and a batch is as long as its real jobs: if fifteen can't be found, send fewer and say so. Batch 3 went out at fourteen. Two short batches running is the sign to stop and talk, whatever the target says.
-7. **Recount before treating a mechanic as closed.** The overused line moves as the web grows (one effect in twelve is 7 of 81).
+7. **Recount before treating a mechanic as closed.** The overused line moves as the web grows (one effect in twelve is 7 of 80).
 8. Still to come, in the director's order, once the authored pieces are in and they've looked at the whole web: the plain parts (the agent's, shown by sample), sizing and slotting what's placed, formations beyond those kept or written, mythics, then build. Slotting is where a class with too little to wear shows up; what it finds comes back as cards.

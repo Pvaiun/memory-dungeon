@@ -6,20 +6,18 @@ The requests on the director's page, as seeded. The page's store holds the live 
 
 I don't know where to start with the Mark, and I'd like you to. Tell me what the Mark should be in the loot: where a party gets one, and what a Marked foe gives the party besides its aim. Write as much or as little as you like. I'll turn it into pieces and bring back what I'm unsure of.
 
-The Mark is the player's one way to aim the whole party: basic attacks, and abilities aimed at a random foe, go to the Marked foe. One effect in the web names it, your opener, and nothing you marked Great does. In the kits only the Paladin Marks. So most parties choose who they hit through each ability's own aim and nothing else. With the two Greats that repeat the opening, your opener already moves the Mark on each kill. One rule stands: a piece or a seat Marks only while no foe is Marked.
+The Mark is the player's one way to aim the whole party: basic attacks, and abilities aimed at a random foe, go to the Marked foe. One effect in the web names it, your opener, and nothing you marked Great does. In the kits only the Paladin Marks. So most parties choose who they hit through each ability's own aim and nothing else. With the Great that repeats the opening, your opener already moves the Mark each time a foe falls. One rule stands: a piece or a seat Marks only while no foe is Marked.
 
 - yours: At fight start: a Mark on the foe with the least max HP.
 - Great: When a foe falls: every ally's start-of-fight effects happen again.
-- Great: On a kill: its gear's and seat's start-of-fight effects happen again.
 
 ## 2. The Hunt: a fight with one foe (Road)
 
 I need something for a party built on kills in a fight with one foe. A payoff.
 
-Against a lone boss nothing falls until the fight is over. The two Greats that repeat the opening never fire, the Torch has no fire to pass on, and a Mark has nowhere to move. A party that took those pieces gets nothing from them in the fights where most runs end. If that's the price of building on kills, mark this wrong.
+Against a lone boss nothing falls until the fight is over. The Great that repeats the opening never fires, the Torch has no fire to pass on, and a Mark has nowhere to move. A party that took those pieces gets nothing from them in the fights where most runs end. If that's the price of building on kills, mark this wrong.
 
 - Great: When a foe falls: every ally's start-of-fight effects happen again.
-- Great: On a kill: its gear's and seat's start-of-fight effects happen again.
 
 ## 3. A way to hide (Supply)
 
