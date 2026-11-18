@@ -66,6 +66,7 @@ Batches 1 and 2 are closed: every answer is placed, left out or withdrawn (`web.
 3. **Place them:** add each to `web.md` (Added by batch 3, the ledger, the counts, Found by placing them), and tell the director where the web stands against the target: gear effects placed, and formations.
 4. **What batch 3 was unsure of,** to watch in the answers:
    - **The Mark card is the first whole direction.** If the answer is a paragraph and not pieces, turn it into pieces and bring back the unsure ones as cards. If it comes back as the wrong question, the Mark is asked next as a pair of classes, the form that has always been placed.
+   - **An answer may change a class.** The director, on the Mark: "I don't think we can have a type of build that only get enabled by gear and one class" (only the Paladin's kit Marks). A class change in an answer is theirs to make. Don't place it as loot: list it in `web.md` as a kit change, with the versions it touches, to be made at build. The kits stay as they are until then.
    - **The bench** may be a lever the loot shouldn't touch. If it's marked wrong, don't ask again.
    - **Two pairs steer off a crowded mechanic in the ask.** If the director answers on it anyway, it's flagged as overused, as ruling 12 says.
 5. **Then batch 4,** about fifteen cards, from the same places, roughly in this order of how well each has worked:
