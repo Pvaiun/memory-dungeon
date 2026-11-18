@@ -45,7 +45,7 @@ None of these needs the page's source read, the page read back, a design skill l
 
 The store holds the requests (`requests/<id>`: batch, order, kind, title, ask, why, near) the director's answers (`answers/<id>`: text, status, reply, batch) and the agent's read of each (`replies/<id>`: kind, text; kind is placed, question, overused, withdrawn or again). A question and an overused read both show under Needs you until the director replies; overused is the read for ruling 12. A new batch is seeded into `requests` with the next batch number, and the answers are read back from `answers`.
 
-- **A card is drawn once.** The page doesn't redraw a card's ask, why or near lines when its request changes in the store, so an edit to a seeded card shows only after the director reloads the page. What they've typed is kept through a reload. Tell them to reload whenever a seeded card is changed.
+- **A changed card redraws itself.** The page first draws from the copy each device keeps, then the store's live copy arrives; a card's ask, why and near lines are redrawn whenever its request changes, and what the director has typed stays.
 - **A request's kind** is road, link, capstone, supply, function, pair (a piece two classes would both want), formation or open.
 - **A near line's tag** is great, fine, seat (a seat the director starred), gform or fform (a Great or a Fine formation), or yours (an effect the director wrote in an earlier batch).
 - **The page opens on a batch newer than any its device has shown,** and after that on the batch last picked.

@@ -159,27 +159,15 @@ textarea.small{ min-height:4rem; }
     var r = reqs.get(id), s = stateOf(id);
     var card = el("section", "card"); card.dataset.id = id;
     var head = el("button", "head"); head.type = "button";
-    var kind = el("span", "kind px"); kind.appendChild(el("span", "", KIND[r.kind] || "Request"));
+    var kindName = el("span", ""), kind = el("span", "kind px"); kind.appendChild(kindName);
     var num = el("span", "num"); kind.appendChild(num);
     var pill = el("span", "pill");
-    var h2 = el("h2", "", str(r.title));
+    var h2 = el("h2", "");
     var peek = el("span", "peek");
     head.appendChild(kind); head.appendChild(pill); head.appendChild(h2); head.appendChild(peek);
 
     var body = el("div", "body");
-    body.appendChild(el("p", "ask", str(r.ask)));
-    if (str(r.why)) body.appendChild(el("p", "why", str(r.why)));
-    var near = Array.isArray(r.near) ? r.near : [];
-    if (near.length){
-      body.appendChild(el("span", "near-title px", "Near it"));
-      var ul = el("ul", "near");
-      near.forEach(function(n){
-        var li = el("li"), t = TAG[n && n.tag] || TAG.fine;
-        li.appendChild(el("span", "tag" + (t[1] ? " g" : ""), t[0])); li.appendChild(el("span", "", str(n && n.t)));
-        ul.appendChild(li);
-      });
-      body.appendChild(ul);
-    }
+    var stat = el("div"); stat.style.display = "contents"; body.appendChild(stat);
     var lab = el("label", "sr", "Your answer: " + str(r.title)); lab.htmlFor = "ans-" + id;
     var ta = el("textarea"); ta.id = "ans-" + id; ta.rows = 4; ta.value = s.text;
     var foot = el("div", "foot"), save = el("span", "save"), acts = el("div", "acts");
@@ -200,13 +188,34 @@ textarea.small{ min-height:4rem; }
     skip.addEventListener("click", function(){ s.flag = s.flag === "skipped" ? "" : "skipped"; touch(id, true); });
     wrong.addEventListener("click", function(){ s.flag = s.flag === "wrong" ? "" : "wrong"; touch(id, true); if (s.flag) ta.focus(); });
 
-    var c = { card:card, head:head, num:num, pill:pill, peek:peek, body:body, ta:ta, save:save, skip:skip, wrong:wrong, read:read, rlab:rlab, rta:rta };
+    var c = { card:card, head:head, kindName:kindName, h2:h2, stat:stat, statV:null, num:num, pill:pill, peek:peek, body:body, ta:ta, save:save, skip:skip, wrong:wrong, read:read, rlab:rlab, rta:rta };
     cards.set(id, c); return c;
+  }
+  /* A card's request can change after it's drawn (an edit in the store, or a cached copy replaced by the live one): redraw what it says. */
+  function drawStatic(c, r){
+    var v = JSON.stringify([r.kind, r.title, r.ask, r.why, r.near]);
+    if (c.statV === v) return; c.statV = v;
+    c.kindName.textContent = KIND[r.kind] || "Request"; c.h2.textContent = str(r.title);
+    c.stat.textContent = "";
+    c.stat.appendChild(el("p", "ask", str(r.ask)));
+    if (str(r.why)) c.stat.appendChild(el("p", "why", str(r.why)));
+    var near = Array.isArray(r.near) ? r.near : [];
+    if (near.length){
+      c.stat.appendChild(el("span", "near-title px", "Near it"));
+      var ul = el("ul", "near");
+      near.forEach(function(n){
+        var li = el("li"), t = TAG[n && n.tag] || TAG.fine;
+        li.appendChild(el("span", "tag" + (t[1] ? " g" : ""), t[0])); li.appendChild(el("span", "", str(n && n.t)));
+        ul.appendChild(li);
+      });
+      c.stat.appendChild(ul);
+    }
   }
   function grow(ta, min){ ta.style.height = "auto"; ta.style.height = Math.max(ta.scrollHeight + 2, min || 104) + "px"; }
 
   function paint(id){
     var c = cards.get(id), s = stateOf(id), r = reqs.get(id); if (!c || !r) return;
+    drawStatic(c, r);
     var st = statusOf(s);
     c.pill.textContent = PILL[st]; c.pill.className = "pill " + st;
     c.skip.setAttribute("aria-pressed", String(s.flag === "skipped"));
