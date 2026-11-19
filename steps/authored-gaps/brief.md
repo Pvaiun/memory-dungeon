@@ -8,14 +8,14 @@ Read this first. It says what this step is trying to do and why, how the work is
 
 - **Every session:** `docs/primer.md`; this brief; `report.md` (the rulings and Next); `intent.md`; `web.md`.
 - **To write a batch:** in `docs/gear-design/builds.md`, The director's rulings, The frame and The builds (the nine roads). In `docs/gear-design/loot.md`, The director's rulings only.
-- **To read answers:** `batch-1-answers.md` and `batch-2-answers.md`, for how the director answers and pushes back; the rulings in `docs/core-set/vocabulary.md` and `docs/gear-design/loot.md`.
+- **To read answers:** `batch-1-answers.md`, `batch-2-answers.md` and `batch-3-answers.md`, for how the director answers and pushes back; the rulings in `docs/core-set/vocabulary.md` and `docs/gear-design/loot.md`.
 - **Only when a card or an answer needs it, and only that section:**
   - a status's entry in `docs/core-set/vocabulary.md`, when an answer names or leans on one;
   - a class's section of `docs/core-set/classes.md`, when a request names a class or to see what a kit already supplies;
   - the triage files, searched for a card's "near it" lines and for whether something kept already does a job;
   - one engine in `docs/gear-design/engines.md`, for what play showed (they were written for today's loot, which isn't the skeleton here);
   - `docs/core-set/rogue-mode.md`, for anything between fights; `docs/core-set/combat.md`, where a claim rests on how a fight runs.
-- **Leave alone:** rebuilding the page. It exists and it's the one to use: cards are seeded, answers read, and reads and questions written through its store (`report.md`, The page), and where it needs a change, the existing source is edited, never started again; `batch-1.md` and `batch-2.md` beyond the cards in hand; `docs/gear-design/philosophy.md` (its rulings are on the pages above); the code.
+- **Leave alone:** rebuilding the page. It exists and it's the one to use: cards are seeded, answers read, and reads and questions written through its store (`report.md`, The page), and where it needs a change, the existing source is edited, never started again; `batch-1.md`, `batch-2.md` and `batch-3.md` beyond the cards in hand; `docs/gear-design/philosophy.md` (its rulings are on the pages above); the code.
 
 **When to hand over.** At a batch's end, with the folder brought up to date. What wears a session down is what piles up in it: documents read whole, superseded versions of a plan, old copies of files, and at the far end an automatic summary that drops the director's exact words. A fresh session reading the current files has none of that.
 
@@ -123,4 +123,5 @@ Not decided: how many of the 450 are authored, and whether upgrades and mythics 
 - `web.md`: where the kept effects sit, what each batch added, the count of what every effect is set off by, reads and changes, and the thin spots seen.
 - `batch-1.md`, `batch-1-answers.md`: the first requests as sent, and their answers with the agent's reads. The second is the best record of how they answer and push back.
 - `batch-2.md`, `batch-2-answers.md`: the second requests as sent, and their answers with the agent's reads. The batch is closed.
+- `batch-3.md`, `batch-3-answers.md`: the third requests as sent, and their answers with the agent's reads. The batch is closed.
 - `requests-page.html`: the page's source.

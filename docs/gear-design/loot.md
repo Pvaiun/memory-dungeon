@@ -162,7 +162,7 @@ Every card the player reads (an ability, a passive, an upgrade, a piece, a mythi
 ## Words the cards lean on
 
 - **Marked** takes the party's basic attacks and its abilities aimed at a random foe (*Core set: rules and vocabulary*). A piece or a seat Marks only while no foe is Marked, so gear never adds a second Mark.
-- **Affliction:** Burn, Chill, Shock, Bleed and Sunder, the debuffs that build in stacks. A card that reaches every status road at once says "affliction" ("a random affliction", "each affliction the foe holds"), never two of the five. The Hexer's Malison does a fifth more for each different one a foe holds.
+- **Affliction:** Burn, Chill, Shock, Bleed and Sunder, the debuffs that build in stacks. A card that reaches every status road at once says "affliction" ("a random affliction", "each affliction the foe holds"). A card may name two of the five, or one of them beside another build's word (*Gear design: the builds*, The director's rulings). The Hexer's Malison does a fifth more for each different one a foe holds.
 - **Bewildered, Brittle, Fixated, Owed:** the pass's four statuses (*Core set: rules and vocabulary*): a foe's next swing on its own side, the next hit taken a crit, a foe's picks held on one unit, and hits on a unit that wait and land at once.
 - **Five counters,** each a status of its own with one meaning, shown as an icon with a number and kept for the fight unless its card spends it, each capped (`pieces/shared.ts`). One event adds one stack to a holder, however many of its cards count it. The card says what a stack is worth, in a bracket.
   - **Edge:** hits landed (Thousandth cut; The whetstone keeps one count for the party).
