@@ -32,11 +32,11 @@ Your piece that counts a Silenced foe as a foe falling has two classes for partn
 - yours: When a foe is Silenced: the party's "when a foe falls" effects happen.
 - Great: When a foe falls: every ally's start-of-fight effects happen again.
 
-## 4. The order of abilities (Function)
+## 4. An ability slot that isn't the first (Function)
 
-I need a piece or a seat about the order a unit's abilities are slotted in that isn't about the first slot: the last-slotted ability, or the order itself.
+I need a piece or a seat that does something with the ability slotted second or last, the way three effects already do with the one slotted first.
 
-The order of its abilities is one of the four things the player sets for a unit. A free unit uses the first ready ability in that order, so the first slot is cast most and the last least. Three effects name the order, and all three pay the first slot. A unit that holds any of them has one answer, its best ability first, and the rest of the order is never a thought. Your Burn piece made what goes first a choice; this asks for one further down.
+A unit uses its first ready ability in the order the player slotted them, so the first slot is cast most and the last least. Three effects name a slot, and all three name the first. A unit holding any of them has one answer, its best ability first, and what goes second or last is never a thought. If the first slot is the only one worth naming, mark this wrong.
 
 - starred seat: Soloist (The cathedral): its first-slotted ability has no cooldown.
 - starred seat: Breaker (Icefall): any shatter readies its first-slotted ability.
