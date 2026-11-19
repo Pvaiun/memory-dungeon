@@ -8,7 +8,7 @@ Read this first. It says what this step is trying to do and why, how the work is
 
 - **Every session:** `docs/primer.md`; this brief; `report.md` (the rulings and Next); `intent.md`; `web.md`.
 - **To write a batch:** in `docs/gear-design/builds.md`, The director's rulings, The frame and The builds (the nine roads). In `docs/gear-design/loot.md`, The director's rulings only.
-- **To read answers:** `batch-1-answers.md` and `batch-2-answers.md`, for how the director answers and pushes back; the rulings in `docs/core-set/vocabulary.md` and `docs/gear-design/loot.md`.
+- **To read answers:** `batch-1-answers.md`, `batch-2-answers.md` and `batch-3-answers.md`, for how the director answers and pushes back; the rulings in `docs/core-set/vocabulary.md` and `docs/gear-design/loot.md`.
 - **Only when a card or an answer needs it, and only that section:**
   - a status's entry in `docs/core-set/vocabulary.md`, when an answer names or leans on one;
   - a class's section of `docs/core-set/classes.md`, when a request names a class or to see what a kit already supplies;
@@ -123,5 +123,5 @@ Not decided: how many of the 450 are authored, and whether upgrades and mythics 
 - `web.md`: where the kept effects sit, what each batch added, the count of what every effect is set off by, reads and changes, and the thin spots seen.
 - `batch-1.md`, `batch-1-answers.md`: the first requests as sent, and their answers with the agent's reads. The second is the best record of how they answer and push back.
 - `batch-2.md`, `batch-2-answers.md`: the second requests as sent, and their answers with the agent's reads. The batch is closed.
-- `batch-3.md`: the third requests as sent. Its answers are on the page, unread until the director says they're done.
+- `batch-3.md`, `batch-3-answers.md`: the third requests as sent, and their answers with the agent's reads. Five reads wait on the director's reply.
 - `requests-page.html`: the page's source.

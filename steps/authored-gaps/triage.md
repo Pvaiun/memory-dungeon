@@ -38,7 +38,7 @@ Duplicates left out. Lines are changed where a note said how; the notes themselv
 - On a dodge: next basic attack comes at once and lands 2 times.
 - Starts every fight at half its HP (it pays), and its Lifesteal is doubled.
 - Basic attacks come 50% as often, deal ×3 and Stun their target.
-- On a dodge: 3 Heat (5% faster each, up to 10). When hit: loses 50% of its Heat.
+- On a dodge: 3 Heat (5% faster each, up to 10). When it loses HP: loses 50% of its Heat.
 - Starts each fight at 50% HP and can't be healed above it. Counts as below 50%. Hits deal +50%.
 - Basic attacks pay 5% of max HP and deal 4× what they paid as extra damage.
 - Basic attacks deal +5% per Shock on the target.
