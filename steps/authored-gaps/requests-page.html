@@ -147,7 +147,9 @@ textarea.small{ min-height:4rem; }
   function statusOf(s){ return s.flag === "skipped" || s.flag === "wrong" ? s.flag : (s.text.trim() ? "answered" : "open"); }
   function isDone(s){ return statusOf(s) !== "open"; }
   function asks(rp){ return !!rp && (rp.kind === "question" || rp.kind === "overused"); }
-  function needsYou(id){ return asks(replies.get(id)) && !stateOf(id).reply.trim(); }
+  /* A read can answer the director's reply: it carries that reply in "after". Until they change the reply, a read that asks still needs them, and one that doesn't is marked as a reply. */
+  function answersReply(id){ var rp = replies.get(id), r = stateOf(id).reply.trim(); return !!rp && !!rp.after && !!r && r === rp.after.trim(); }
+  function needsYou(id){ return asks(replies.get(id)) && (!stateOf(id).reply.trim() || answersReply(id)); }
 
   function setNote(title, text, bad){
     statusEl.hidden = false; statusEl.className = bad ? "note bad" : "note"; statusEl.textContent = "";
@@ -161,6 +163,7 @@ textarea.small{ min-height:4rem; }
     var head = el("button", "head"); head.type = "button";
     var kindName = el("span", ""), kind = el("span", "kind px"); kind.appendChild(kindName);
     var num = el("span", "num"); kind.appendChild(num);
+    var flag = el("span", "verdict"); flag.hidden = true; kind.appendChild(flag);
     var pill = el("span", "pill");
     var h2 = el("h2", "");
     var peek = el("span", "peek");
@@ -188,7 +191,7 @@ textarea.small{ min-height:4rem; }
     skip.addEventListener("click", function(){ s.flag = s.flag === "skipped" ? "" : "skipped"; touch(id, true); });
     wrong.addEventListener("click", function(){ s.flag = s.flag === "wrong" ? "" : "wrong"; touch(id, true); if (s.flag) ta.focus(); });
 
-    var c = { card:card, head:head, kindName:kindName, h2:h2, stat:stat, statV:null, num:num, pill:pill, peek:peek, body:body, ta:ta, save:save, skip:skip, wrong:wrong, read:read, rlab:rlab, rta:rta };
+    var c = { card:card, head:head, kindName:kindName, h2:h2, stat:stat, statV:null, flag:flag, num:num, pill:pill, peek:peek, body:body, ta:ta, save:save, skip:skip, wrong:wrong, read:read, rlab:rlab, rta:rta };
     cards.set(id, c); return c;
   }
   /* A card's request can change after it's drawn (an edit in the store, or a cached copy replaced by the live one): redraw what it says. */
@@ -223,6 +226,8 @@ textarea.small{ min-height:4rem; }
     c.ta.placeholder = s.flag === "wrong" ? "What should I have asked instead?" : s.flag === "skipped" ? "A note on why, if you like." : "Write the effect as you'd say it. Rough is fine.";
     if (document.activeElement !== c.ta && !s.dirty && c.ta.value !== s.text) c.ta.value = s.text;
     var rp = replies.get(id);
+    var ny = needsYou(id), told = !ny && answersReply(id);
+    c.flag.hidden = !(ny || told); c.flag.textContent = ny ? "Needs you" : "Replied"; c.flag.className = "verdict" + (ny ? " you" : "");
     c.read.hidden = !rp;
     if (rp && c.read.dataset.v !== rp.v){
       c.read.dataset.v = rp.v; c.read.textContent = "";
@@ -232,7 +237,7 @@ textarea.small{ min-height:4rem; }
       rp.text.split("\n").forEach(function(line){ if (line.trim()) c.read.appendChild(el("p", "", line)); });
     }
     var askYou = !!rp || !!s.reply;
-    c.rta.placeholder = rp && rp.kind === "overused" ? "Something else for the same job, or say you want it as written." : asks(rp) ? "Answer my question here. Your answer above stays as it is." : "Comment on my read, if you like.";
+    c.rta.placeholder = rp && rp.kind === "overused" ? "Something else for the same job, or say you want it as written." : ny && s.reply.trim() ? "Change or add to your reply here: I've answered it above." : asks(rp) ? "Answer my question here. Your answer above stays as it is." : "Comment on my read, if you like.";
     c.rlab.hidden = !askYou; c.rta.hidden = !askYou;
     if (document.activeElement !== c.rta && !s.dirty && c.rta.value !== s.reply) c.rta.value = s.reply;
     c.body.hidden = s.folded; c.head.setAttribute("aria-expanded", String(!s.folded));
@@ -344,7 +349,7 @@ textarea.small{ min-height:4rem; }
   }
   function onReplies(snap){
     replies = new Map();
-    snap.docs.forEach(function(d){ var x = d.data() || {}; replies.set(d.id, { kind:str(x.kind), text:str(x.text), v:str(x.kind) + "|" + str(x.text) }); });
+    snap.docs.forEach(function(d){ var x = d.data() || {}; replies.set(d.id, { kind:str(x.kind), text:str(x.text), after:str(x.after), v:str(x.kind) + "|" + str(x.text) }); });
     reqs.forEach(function(_, id){ openForRead(id); });
     if (gotReqs) layout();
   }
