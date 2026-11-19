@@ -338,12 +338,28 @@ What sets each effect in the web off, what it reads, and what it changes or move
 
 Thin spots seen while placing answers: candidates for a later batch, and only one of the places cards come from (`report.md`, Next). Each has to pass the check in `report.md` (ruling 9) before it goes out.
 
-- **Guard on gear.** Hidden from Guard has the Knight's Fortify and two versions for partners. Guard is a staple, so it's the plain parts' to carry, not a card; write some when the plain parts are written.
+- **Guard on gear.** Hidden from Guard has the Knight's Fortify and two versions for partners, and doesn't work on a unit that Taunts with its Guard (Taunt ends Hidden), which is how most walls gain it. Guard is a staple, so it's the plain parts' to carry, not a card; write some when the plain parts are written, for units that don't Taunt.
 - **Something for Bleed and Sunder to be laid by.** Each has one piece that names it, and both pieces read or need the status, so the supply is still the kits. A second Sunder or Bleed piece needs a job first.
-- **Silence from somewhere other than the Assassin and the Hexer.** The piece that counts a Silence as a foe falling works only beside those two classes. A supply card for batch 4, told to the director.
-- **Burn** is still underused (two effects name it, one lays it) and has no job to ask from. Bonfire's keeper can't feed the fire from the web, but the plain answer is fire on a swing or on whoever strikes it: a plain part, the agent's to write, not a card.
 - **Haste** is named once, and three roads run on it. A payoff for being Hasted wasn't asked: Haste already pays by itself on every unit, so the card would have asked for what the game does.
 - **The Knight and the Ranger,** when the web is fuller, at the director's offer.
 - **The Shield and the cast,** **a formation for the dodge** and **a formation about heals:** each sits on an overused or watched mechanic, so none is asked until the web has grown.
-- **Not to ask:** the bench; a third counter; a third Bleed card; anything that makes the foes act; a link between swings and casts; a piece for a unit with one ability; a formation about the kill; a reward for a kill beyond the opening (every one the director saw, they left out of the Greats); a road's far end as a capstone (it's the skeleton by another name: ruling 14); more from Shields, the fight's start, crits, HP held low, max HP, Chill or heals while they're overused or on watch.
+- **Thorns, an Aegis, Taunt and Weaken** are named by nothing, and the kits supply all four. None has a job to ask from; the Bramble knight and the Hoplite's card (batch 4) is where the first two may turn up.
 - **Mythics:** sixteen, one batch, from scratch, once the gear is placed. Upgrades stay as part of the kits, apart from the kit changes the director writes into an answer. Neither is ruled yet.
+
+**Asked in batch 4, waiting on answers:** Burn, as a whole direction (the plain appliers, fire on a swing or on whoever strikes the keeper, stay the agent's) · Silence from somewhere other than the Assassin and the Hexer · Landslide's blow in a pack · the order of abilities past the first slot · a formation with no front · a formation where a seat's passive or ability works for another seat · a formation about the statuses on the foes, whichever they are.
+
+**Seen while writing batch 4:**
+- **The opening Mark aims a loaded blow at the smallest foe.** It sits on the foe with the least max HP and takes the party's basic attacks, so a hammer's heavy swing goes there first. The director is told on Landslide's card.
+- **A Fine does Landslide's pack job:** damage left over from a kill carries into another foe (`triage.md`, Fine). If the card's answer leaves the job open, bring it in with the plain parts and say the road's pack game is what needs it.
+- **Three effects name the order of abilities, and all three pay the first slot.** Stacked on one unit they make the order one answer; the card asks for something further down.
+
+**Weighed for batch 4 and not asked,** with the reason, so they aren't weighed again without something new:
+- **A longer wind-up for a bigger ability** (partners for the two wind-up effects). The plain answer was cut: today's loot has it (abilities wind up longer, deal more and add more stacks) and neither pile does. The wind-up effects work on any ability with a wind-up, and most on the long ones three classes hold.
+- **Something for the two beside a struck ally** (the Toll's two who profit, on gear). The director has seen the shape three times as a formation and kept it only as Fine, cut the one that loaded a hammer from blows on an anvil, and withdrew the Toll's card in batch 1: the Toll has its payoff.
+- **The weapon slot left empty,** after the offhand, the armor and the amulet. Coverage: a party lacks nothing without it. If the director writes it on the open card, it joins the family.
+- **Something for a Stun or a Silence a boss has come to resist.** The resistance is what bounds the four effects a Stun or a Silence sets off, and it rests on stacks the player can't see.
+- **Clarity from more hands.** It has partners enough: the Knight's, the Vampire's and the Frostweaver's base kits give it.
+- **A formation that reads the party as a set** (what the three share or don't). Coverage, and its plain answer is a reward for matching gear, which is the first failure.
+- **A formation about the early fight and the late one.** The director cut the two shapes that turned over time (seats that rotate, a party that surges and ebbs), and asked for no third counter.
+
+- **Not to ask:** the bench; a third counter; a third Bleed card; anything that makes the foes act; a link between swings and casts; a piece for a unit with one ability; a formation about the kill; a formation whose seats aim the party; a reward for a kill beyond the opening (every one the director saw, they left out of the Greats); a road's far end as a capstone (it's the skeleton by another name: ruling 14); a piece that answers one kind of foe (a dodger, a Silencer: the loot's rule is no set-up only the foes supply); more from Shields, the fight's start, crits, HP held low, max HP, Chill or heals while they're overused or on watch.
