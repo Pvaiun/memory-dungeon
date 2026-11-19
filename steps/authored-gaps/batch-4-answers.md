@@ -1,6 +1,6 @@
 # Batch 4: the director's answers and the agent's read
 
-Copied from the page's store (Nov 19). Each card: what was asked, the director's answer, and the agent's read. The open card wasn't answered. Cards 1 and 6 wait on the director's reply.
+Copied from the page's store (Nov 19). Each card: what was asked, the director's answer, and the agent's read. Then the director's reply and the agent's response, in order, as the page shows them. The open card wasn't answered. Cards 1 and 5 wait on the director's reply.
 
 ## Bonfire: a payoff for a high fire
 
@@ -17,6 +17,20 @@ It also changes what Bonfire is to watch. A fire that bursts at a number is Chil
 What I like: it's one clear moment, it would be the first heal that comes from a status, and with the pile a whole party's fire reaches X on one foe.
 
 Two ways on. Keep it as written, and I rewrite the two rulings so a piece may do this. I'd then read "all the damage" as what those stacks would have dealt while they drained, and the heal as shared out across the party. Or give me one that reads the fire and leaves it burning. Which?
+
+**The director's reply:**
+
+> Ok you've convinced me, this isn't good.
+>
+> What about something simpler, is it enough of a payoff? I figure the pyromancer is squishy:
+>
+> Whenever burn ticks, heal for 30% (no idea what the right number is) of its damage.
+>
+> Or
+>
+> Take damage equal to 1.5% of max health every time burn ticks, gain a might stack for every 10 burn on the foe
+
+**The agent's response (Question, waiting on the director):** The burst is dropped. Of the two new ones, the second is taken and the first left: a heal for a share of each Burn tick is lifesteal from a status, the ruling the burst broke, and an eleventh effect on a heal. The second reads how high the fire stands and leaves it burning. Read as: each time a foe's Burn ticks, the wearer loses HP and gains 1 Might for every 10 Burn on that foe. Asked, the price: Burn ticks every 2 ticks on every burning foe, so 1.5% of max HP a tick takes its wearer from full to nothing in about 130 ticks against one burning foe and about 35 against four, and it would be the ninth effect on HP paid or held low. The HP price sized small, no price, or another price?
 
 ## Landslide: the blow in a pack
 
@@ -62,6 +76,12 @@ Why it's simple: every unit slots every ability it knows, so this is Cooldown th
 
 Size: three abilities at 12% is 36%, more Cooldown than a legendary carries (30%). I'll size it so a full kit lands between a rare's and a legendary's.
 
+**The director's reply:**
+
+> To be fair, when I play I very often only slot one or two abilities to maximize uptime on the effects I want. Like the frost ability for the ranger in a frost build, or the assassin's backstab.
+
+**The agent's response (Placed):** The agent had it wrong. If the director slots one or two abilities to keep one coming round, the piece is a real choice: fewer for uptime, or more for Cooldown on all of them. Placed as a designed piece; the size stands.
+
 ## The Paladin and the Geomancer
 
 **The director (answered):**
@@ -79,6 +99,12 @@ You've passed over one very like it. Today's loot has "Abilities wind up 50% lon
 By the numbers the price is small. A wind-up is 1 to 8 ticks and a cooldown is 14 to 56, so doubling the wind-up costs a caster about a tenth of its casts, for 30% more from each. What it really pays is time exposed: a Silence or a Stun loses a longer cast. I'll size the 30% down, or it's a gain on every caster.
 
 It suits the pair. The Paladin's Smite pays most and gains most. The Geomancer's rocks pay almost nothing.
+
+**The director's reply:**
+
+> Yeah I think this one of that's more interesting now because we have a wind-up subtheme growing here. I hear you on the pure buff though, should we try and find another bonus other than ability effectiveness?
+
+**The agent's response (Question, waiting on the director):** Yes. 30% more of everything makes it a stat with a wait attached, and the wind-up pieces already pay for the wait tick by tick. Wanted: something a long cast gets that a short one can't, the director's to write. The doubled wind-up stays, and the 30% is held.
 
 ## The Valkyrie and the Frostweaver
 
@@ -98,6 +124,12 @@ On Shields: agreed. It doesn't name one, so the count doesn't treat it as a Shie
 
 With your passive-sharing formation (card 9), I'm reading "your passive" as the wearer's own class's, not the borrowed one.
 
+**The director's reply:**
+
+> We could add a punishment to it like "can't wear an amulet" or maybe that's no fun, could be "+30% to cooldowns". I feel like I'd start with it as is unless you're very worried
+
+**The agent's response (Placed):** Placed as it is. What it doubles differs on every class, so the choice is who wears it. If simulation finds it on every unit, +30% to cooldowns is the price to bring back; "can't wear an amulet" would turn into a bonus beside the empty-amulet seats. The sixteen doublings come by sample.
+
 ## The Bramble knight and the Hoplite
 
 **The director (answered):**
@@ -115,6 +147,14 @@ When hit: strikes the attacker with a basic attack. It's the Toll's own thread, 
 Basic attacks scale from Thorns: the first effect that names Thorns. Few partners today. A unit needs Thorns, and that's the Bramble knight and whatever gear carries some. A Hoplite has none, so this half isn't the Hoplite's. It widens when the plain pieces carry Thorns, and I'll write some for it.
 
 Together on a Bramble knight: each blow costs the attacker the Thorns, then a swing sized by them.
+
+**The director's reply:**
+
+> Correct it should work on a unit that makes no swings, however I really don't like these like invisible caps like a limit to how often it can trigger. If we're worried we can dimish the damage and riders of basic attacks by a % instead.
+>
+> Yeah my thought on the Thorns one was that Thorns is a pretty common stat so it's for the Bramble knight, but any heavy plate wearer can use it. I'm open to cutting it if it's too lock and key
+
+**The agent's response (Placed):** No cap: it answers every hit, and the answering swing and what it carries are a share of a basic attack. A share can't size a Stun, so with the ×3 swing that Stuns every attacker is still Stunned; left as it is, to watch in simulation. Thorns is kept: it reads a stat, and the plain Plate and Mail pieces will carry some.
 
 ## A formation with no front
 
@@ -134,6 +174,12 @@ Sizes. A point a hit is far too much (stats run 1 to 5), so each hit gives a sma
 That's the fourth effect on the first-slotted ability, the thing card 4 was about. It's fine by number, and it stacks with the other three.
 
 What placing found. With no Taunt, your Hidden from Guard works on a Bramble knight here: its Thicket gives Guard, and no Taunt ends the hiding. Your new piece that strikes back when hit fires on all three. Aggro on gear is worth nothing in this shape, which is its price, and a caster takes a third of the blows.
+
+**The director's reply:**
+
+> I considered making it so that formation wide aggro stats on gear gave defense regardless of whether they were positive or negative but I felt like it just made this too complicated
+
+**The agent's response (Placed):** Agreed, left out. Aggro being worth nothing here is a clean price.
 
 ## A formation about what a class does
 
@@ -180,3 +226,9 @@ The third seat's heal: I'm reading it as a fixed amount each time, not a share o
 The first seat is the sixth effect on a crit, and with your piece that sets a crit's triggers off 4 times, one crit lays Shock 4 times. Crits stay on watch.
 
 Its weak fight is a foe that rarely acts: Shock pays only when its holder does, so the Bleed comes slowly.
+
+**The director's reply:**
+
+> I imagined the heal as a portion of the bleed damage, but I'm ok with it being a fixed amount as a trial too. We could remove the consume 50% less bleed on seat 2 if we want, it might be unnecessary overkill, or I can find another effect
+
+**The agent's response (Placed):** Settled. The heal stays a fixed amount, as a trial. The 50% comes off the second seat, which keeps its faster swings; another effect for it is welcome.
