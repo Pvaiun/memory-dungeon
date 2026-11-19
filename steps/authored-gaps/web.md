@@ -187,12 +187,14 @@ Placed by what they do (`batch-3-answers.md` has the director's words and each r
 
 ## Added by batch 4
 
-Placed by what they do (`batch-4-answers.md` has the director's words and each read). Words only: nothing is sized or slotted. Two cards wait on the director's reply.
+Placed by what they do (`batch-4-answers.md` has the director's words and each read). Words only: nothing is sized or slotted. Nothing waits on the director.
 
 - **Damage left over from a kill carries into another random foe,** and on with each kill. The Fine, brought in by the director's answer because Landslide's pack game needs it. Read as its wearer's own hits; what carries is damage, not a new hit.
 - **Pays HP to Silence a foe that starts a cast:** while above 30% HP, its wearer pays a share of its max HP and Silences a foe that starts a wind-up, which loses the cast. Silence from any class. Read as paying only when the Silence lands, and as a price, not damage. Nothing against foes that only swing.
 - **Cooldown for each ability slotted.** A real choice, at the director's word: they often slot one or two abilities to keep the one they want coming round, so it's fewer for uptime or more for Cooldown. Sized so a full kit lands between a rare's and a legendary's Cooldown (`SPECIAL.cooldown`).
-- **Wind-ups twice as long, for a bonus the director is writing.** Abilities only. They first wrote more damage, heals and stacks; the price is small by the numbers (`WINDUP` against `COOLDOWN`), so that was a gain on every caster, and they're looking for a bonus a long cast gets that a short one can't. Meant to meet the wind-up pieces: twice the Might and Shock from each cast.
+- **Wind-ups three times as long, and Thorns and Aggro while winding up.** A long cast pulls the blows in and makes them cost. The Thorns are held only during the wind-up and are gone as the cast lands, so they don't reach its own swings or the Bramble knight's lash. Sized under the knight's own Thorns (`SPECIAL.thorns`). The director's slotting note: it's meant for the great weapon's holders, so the swing that scales from Thorns doesn't go on a weapon.
+- **Wind-ups twice as long, and each ability is cast twice for twice the mana.** The cast twice, which Barrage wanted and nothing did. Mana is its price; the second cast is sized as a share of the first. It came from the Paladin and the Geomancer's card and isn't theirs (a second Mark or a second Shield is wasted).
+- **Might for the Burn on a foe:** each time a foe's Burn ticks, its wearer gains Might for every 10 Burn on that foe. No price: holding a fire that high is the price. It reads the fire and leaves it. Sized so the Might follows the fire's height and doesn't sit at the cap (`STATUS.burn`, `STATUS.might`).
 - **When hit: strikes the attacker with a basic attack.** The Toll's thread, and the twin of the Great that strikes on a dodge. It answers every hit (the director: no hidden caps), and the answering swing and what it carries are sized as a share of a basic attack. Works on a unit that never makes a basic attack.
 - **Basic attacks scale from Thorns.** The first thing that names Thorns. The director: Thorns is a common stat on heavy gear, so it reads a stat. The plain Plate and Mail pieces carry some.
 - **A formation with no front:** the foes' picks are even across the three whatever their Aggro, and no ally can Taunt. When hit, the first seat's first-slotted ability comes nearer, the second gains Defense and the third Attack, adding up over the fight and capped.
@@ -200,9 +202,7 @@ Placed by what they do (`batch-4-answers.md` has the director's words and each r
 - **A formation where two seats share their passives:** each holds both; the third seat is plain. A borrowed passive comes as its owner trained it and reads the borrower's stats. The agent checks each of the sixteen on another class and brings back the ones that don't work.
 - **A formation of Shock and Bleed:** a foe that takes Shock damage gains Bleed; the first seat's crits lay Shock, the second swings faster, the third is healed a fixed amount whenever Bleed pays (a trial: the director pictured a share of the Bleed, which the ruling against lifesteal from a status bars). It supplies both statuses itself. The second seat's hits closing less Bleed is taken off, unless the director writes it another effect.
 
-**Waiting on the director:**
-- **The fire's payoff.** The burst is dropped (it broke two vocabulary rulings, and the director agreed). In its place: each time a foe's Burn ticks, its wearer loses HP and gains Might for every 10 Burn on that foe. It reads the fire and leaves it. Asked: the price. Burn ticks every 2 ticks on every burning foe (`STATUS.burn`), so the HP they wrote is lethal as sized, and it would be the ninth effect on HP paid or held low. Left out, and told why: a heal for a share of each Burn tick (lifesteal from a status).
-- **The longer wind-up's bonus** (above).
+**Left out, and the director told why:** a fire that bursts at a set height and heals the party (it broke two vocabulary rulings and made the fire a second shatter; the director agreed) · a heal for a share of each Burn tick (lifesteal from a status) · an HP price on Might for the fire (the director: "kind of a weird intersect"; MP is the price to bring back if it's too easy) · more damage, heals and stacks for a doubled wind-up (a gain on every caster by the numbers) · Thorns while winding up without the Aggro (the same piece with fewer partners).
 
 **Withdrawn:** the order of abilities past the first slot, as a job (the director had to ask what the card meant; their answer is placed) · a formation for every status at once (the director: "that's just every build").
 
@@ -215,28 +215,30 @@ Placed by what they do (`batch-4-answers.md` has the director's words and each r
 - The no-front formation with the piece that strikes back when hit: all three answer.
 - Striking back when hit with the ×3 swing that Stuns: every attacker is Stunned, and a share can't size a Stun. Left as it is: two particular pieces, and a boss resists. Watch it in simulation, and go back to the director before changing it. With "never makes a basic attack, Defense ×2": a wall that only answers.
 - Paying HP to Silence with a Silenced foe counting as a foe falling: each foe's cast is the party's opening again. With the Great that heals another ally when one pays HP: every Silence is a heal.
-- The longer wind-up with Might and Shock on every tick of one: twice of each from every cast.
+- The tripled wind-up with Might and Shock on every tick of one: three times each from every cast. With the piece that strikes back when hit: hit mid-cast, it answers, and with the swing that scales from Thorns that answer is sized by the Thorns it holds while winding up. Three pieces.
+- Casting twice with the Great that makes every other ability free: the second cast costs nothing. With Crescendo, Burn from the first-slotted ability and Shock from wide abilities: each happens twice a cast.
+- Might for the fire with the pile: one foe's fire stands highest, so the Might does. With the Great that doesn't spend Might on swings: it stays when the fire sags.
 - Damage carried past a kill with the Great that repeats the opening: each foe felled on the way fires the openers.
 - Shared passives with a doubled passive: read as doubling only the wearer's own.
 - The Shock and Bleed shape with Shock from casting or from wide abilities: any Shock becomes Bleed. With crits setting a hit's triggers off 4 times: one crit lays Shock 4 times.
 
 ## The count
 
-What sets each effect in the web off, what it reads, and what it changes or moves. It holds 106 effects: the 41 Greats, 10 from the Great formations (a formation's plain seats are folded into its line), the 6 starred seats, batch 1's 13, batch 2's 10, batch 3's 16 (12 on gear, 4 formations) and batch 4's 10 (7 on gear, 3 formations). The fire's payoff waits on the director and isn't counted. The kit changes aren't counted. An effect can sit in two rows of a table. **Every time an answer is placed, add its line to the ledger and bump the counts.** The test for overused and underused is in `brief.md`, The count; the verdicts below are the agent's.
+What sets each effect in the web off, what it reads, and what it changes or moves. It holds 108 effects: the 41 Greats, 10 from the Great formations (a formation's plain seats are folded into its line), the 6 starred seats, batch 1's 13, batch 2's 10, batch 3's 16 (12 on gear, 4 formations) and batch 4's 12 (9 on gear, 3 formations). The kit changes aren't counted. An effect can sit in two rows of a table. **Every time an answer is placed, add its line to the ledger and bump the counts.** The test for overused and underused is in `brief.md`, The count; the verdicts below are the agent's.
 
 | Set off by | Effects | Reads | Effects | Changes or moves | Effects |
 | --- | --- | --- | --- | --- | --- |
-| its cast | 17 | nothing | 38 | its damage | 22 |
-| its swing | 15 | a stat | 16 | a status on the foes | 17 |
+| its cast | 18 | nothing | 39 | its damage | 21 |
+| its swing | 15 | a stat | 16 | a status on the foes | 16 |
 | always on | 18 | the size of a blow, heal or price | 9 | how often it swings or hits | 14 |
-| the fight's start | 8 | stacks on the foes | 12 | a status on itself or allies | 13 |
-| an ally's action or blow | 7 | HP or MP as it stands | 9 | a stat | 14 |
-| a status gained, laid or shattering | 12 | gear slots or ability order | 11 | who is hit | 12 |
-| a blow taken | 7 | a status on itself | 7 | MP | 8 |
+| the fight's start | 8 | stacks on the foes | 13 | a status on itself or allies | 14 |
+| an ally's action or blow | 7 | HP or MP as it stands | 9 | a stat | 15 |
+| a status gained, laid or shattering | 13 | gear slots or ability order | 11 | who is hit | 13 |
+| a blow taken | 7 | a status on itself | 7 | MP | 9 |
 | a dodge | 5 | Shield held | 4 | a heal | 7 |
 | its hit or crit | 10 | a foe's HP | 3 | a Shield | 5 |
 | a heal | 3 | | | cooldowns | 7 |
-| a state held | 4 | | | an effect happening again | 8 |
+| a state held | 5 | | | an effect happening again | 9 |
 | a foe falling | 3 | | | HP spent or capped | 6 |
 | HP paid | 1 | | | | |
 | a foe acting | 2 | | | | |
@@ -246,10 +248,10 @@ What sets each effect in the web off, what it reads, and what it changes or move
 
 | Names | Effects | Verdict |
 | --- | --- | --- |
-| The fight's start | 10 (8 openers, and the 2 that repeat them) | Overused (the line is 9 of 106): they all fire together, and a foe falling or a Silence fires them again. The shared amulet fires an amulet's opener three times |
+| The fight's start | 10 (8 openers, and the 2 that repeat them) | Overused (the line is 9 of 108): they all fire together, and a foe falling or a Silence fires them again. The shared amulet fires an amulet's opener three times |
 | Shield | 8 | Overused still, though just under the line by number: five sit on one holder and two more feed it; only the Peak pulls the other way. Heat's rule now gives one more reason to hold one |
 | The dodge | 7 (5 "on a dodge", 2 that make dodges) | Watch: under the line by number now, and all five still stack on one dodger. No card from it yet |
-| MP | 10 | Common, and fine: every caster needs it, and the ten pull three ways (cheaper casts, mana passed on or regained, MP as a body) |
+| MP | 11 | Common, and fine: every caster needs it, and the eleven pull four ways: the newest spends twice as much (cheaper casts, mana passed on or regained, MP as a body) |
 | Max HP | 8 | Watch: a stat, but five effects scale from it, one raises it on every kill, and Attack for HP missing counts in points, so it grows with it too. No more asked from it |
 | Chill | 6 (the pile now takes it) | Watch: near the line, and every one of them moves a foe toward the shatter. The next answer that names it is flagged |
 | HP paid or held low | 8 | Watch: one under the line. The eighth pays HP to Silence and needs HP to spend, so it pulls against the held-low pieces. With the paying formation, and five of them add up on one low unit. What pulls against them is dying, and healing that takes the bonus away. The director is told: no more asked, and a new answer that names it is flagged |
@@ -260,10 +262,12 @@ What sets each effect in the web off, what it reads, and what it changes or move
 | Stun | 5 | Fine. Its payoffs: Might, Slow left behind, and the Mark |
 | Shock | 5 | Fine. The Shock and Bleed shape lays it and turns its damage into Bleed |
 | The first-slotted ability | 4 | Watch: all four stack on one cast (no cooldown, readied by a shatter, readied by blows taken, Burn laid). The card that asked for another slot was withdrawn |
-| The Mark, Might, Hidden, extra strikes | 4 each | Fine. The Mark has sources and payoffs now, and two kit changes waiting |
-| The draw, an empty slot, a kill, a wind-up | 3 each | Fine. A kill has the party's opening, the Torch and the damage that carries on. A wind-up lays Shock, gives Might and can be doubled. The empty slots are an offhand, armor and an amulet |
-| Burn, Heat, Bleed, Silence, a passive | 2 each | Burn has a source and is still underused; its payoff waits on the director. Silence has a source any class can wear. A passive is shared by two seats, and doubled by a piece |
-| Sunder, Guard, Thorns, Slow, a fight won, a revive | 1 each | Guard hides a unit, and needs Guard on gear. Thorns sizes a swing, and needs Thorns on gear |
+| Might | 5 | Fine. Four give it to their wearer on different triggers (the opening, a Stun, a wind-up, a fire), and one keeps it |
+| A wind-up | 4 | Fine. Two pay for each tick of one and two make it longer, so all four stack on one caster, and its casts get rare: watch it in simulation |
+| The Mark, the draw, Hidden, extra strikes | 4 each | Fine. The Mark has sources and payoffs now, and two kit changes waiting |
+| Burn, an empty slot, a kill | 3 each | Burn has a source and a payoff of its own now. A kill has the party's opening, the Torch and the damage that carries on. The empty slots are an offhand, armor and an amulet |
+| Heat, Bleed, Thorns, Silence, a passive | 2 each | Thorns sizes a swing and is held while winding up. Silence has a source any class can wear. A passive is shared by two seats, and doubled by a piece |
+| Sunder, Guard, Slow, a fight won, a revive | 1 each | Guard hides a unit, and needs Guard on gear |
 | Taunt, an Aegis, Weaken, and the statuses no build leans on | 0 | Left alone: the Toll has its payoff, and a rare status is allowed to stay rare |
 
 - **Swings, casts, hits and plain stats top every table and aren't overused:** every unit has them, and the swing effects pull against each other (never, half as often, only when a foe acts).
@@ -373,7 +377,9 @@ What sets each effect in the web off, what it reads, and what it changes or move
 | Damage left over from a kill carries into another foe | Batch 4 | a foe falling | the size of a blow, heal or price | who is hit |
 | Pays HP to Silence a foe that starts a cast | Batch 4 | a foe acting | HP or MP as it stands | a status on the foes, HP spent or capped |
 | Cooldown for each ability slotted | Batch 4 | always on | gear slots or ability order | cooldowns |
-| Wind-ups twice as long, for a bonus not yet written | Batch 4 | its cast | nothing | its damage, a status on the foes |
+| Wind-ups three times as long; Thorns and Aggro while winding up | Batch 4 | its cast, a state held | nothing | who is hit, a stat |
+| Wind-ups twice as long; each ability cast twice for twice the mana | Batch 4 | its cast | nothing | an effect happening again, MP |
+| Might for the Burn on a foe, each time it ticks | Batch 4 | a status gained, laid or shattering | stacks on the foes | a status on itself or allies |
 | When hit: strikes the attacker with a basic attack | Batch 4 | a blow taken | nothing | how often it swings or hits |
 | Basic attacks scale from Thorns | Batch 4 | its swing | a stat | its damage |
 | Doubles the effect of its passive | Batch 4 | always on | nothing | an effect happening again |
@@ -393,7 +399,7 @@ Thin spots seen while placing answers: candidates for a later batch, and only on
 - **Thorns, an Aegis, Taunt and Weaken** are named by nothing, and the kits supply all four. None has a job to ask from; the Bramble knight and the Hoplite's card (batch 4) is where the first two may turn up.
 - **Mythics:** sixteen, one batch, from scratch, once the gear is placed. Upgrades stay as part of the kits, apart from the kit changes the director writes into an answer. Neither is ruled yet.
 
-**Owed to the plain parts by batch 4:** Thorns on gear, for the swing that scales from it · Guard on gear for units that don't Taunt (already owed).
+**Owed to the plain parts by batch 4:** Thorns on the plain Plate and Mail pieces, for the swing that scales from it · Guard on gear for units that don't Taunt (already owed).
 
 **Not Chill and Burn as a shape for now** (the director offered one): Chill is on watch and has Icefall. A second two-status shape is welcome where neither status is on watch; Burn and Sunder have the least.
 

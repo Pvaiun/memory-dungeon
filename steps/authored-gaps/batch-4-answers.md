@@ -1,6 +1,6 @@
 # Batch 4: the director's answers and the agent's read
 
-Copied from the page's store (Nov 19). Each card: what was asked, the director's answer, and the agent's read. Then the director's reply and the agent's response, in order, as the page shows them. The open card wasn't answered. Cards 1 and 5 wait on the director's reply.
+Copied from the page's store (Nov 19). Each card: what was asked, the director's answer, and the agent's read. Then the director's reply and the agent's response, in order, as the page shows them. The open card wasn't answered. Nothing waits on the director.
 
 ## Bonfire: a payoff for a high fire
 
@@ -31,6 +31,12 @@ Two ways on. Keep it as written, and I rewrite the two rulings so a piece may do
 > Take damage equal to 1.5% of max health every time burn ticks, gain a might stack for every 10 burn on the foe
 
 **The agent's response (Question, waiting on the director):** The burst is dropped. Of the two new ones, the second is taken and the first left: a heal for a share of each Burn tick is lifesteal from a status, the ruling the burst broke, and an eleventh effect on a heal. The second reads how high the fire stands and leaves it burning. Read as: each time a foe's Burn ticks, the wearer loses HP and gains 1 Might for every 10 Burn on that foe. Asked, the price: Burn ticks every 2 ticks on every burning foe, so 1.5% of max HP a tick takes its wearer from full to nothing in about 130 ticks against one burning foe and about 35 against four, and it would be the ninth effect on HP paid or held low. The HP price sized small, no price, or another price?
+
+**The director's second reply:**
+
+> Hmm, I liked the price because I felt like it could synergize with other types of low health builds, but actually it's kind of a weird intersect. We could try it without a price. Is there anything in the tree nearby that a price could synergize with?
+
+**The agent's response (Placed):** Placed without a price: the piece does nothing until a foe holds 10 Burn, and keeping a fire that high is the price. What a price could tie to: HP (the Great that heals when an ally pays, Attack for HP missing; on watch) or MP (mana for the foes' debuffs pays it back). Neither is needed; MP is the one to bring back if it's too easy. Sized so the Might follows the fire's height: as written it fills Might's cap within a few ticks.
 
 ## Landslide: the blow in a pack
 
@@ -105,6 +111,23 @@ It suits the pair. The Paladin's Smite pays most and gains most. The Geomancer's
 > Yeah I think this one of that's more interesting now because we have a wind-up subtheme growing here. I hear you on the pure buff though, should we try and find another bonus other than ability effectiveness?
 
 **The agent's response (Question, waiting on the director):** Yes. 30% more of everything makes it a stat with a wait attached, and the wind-up pieces already pay for the wait tick by tick. Wanted: something a long cast gets that a short one can't, the director's to write. The doubled wind-up stays, and the 30% is held.
+
+**The director's second reply:**
+
+> Triple wind-up times, gains 450 thorns while winding up.
+>
+> I tripled it because otherwise you might not get hit. Also this is a huge enabler for the great weapon holders (hoplite, bramble, geomancer, and paladin) to become long cast engines with other gear, though that means the thorns gear on basic attack needs to not also be on a weapon. I could hear the counterpoint that only the paladin has taunt and this is disproportionately good on the Bramble knight with taunt and thorns already.
+>
+> Alternatively:
+> Triple wind-up times, gain 450 thorns and 25 aggro while winding up.
+>
+> Or
+>
+> Double wind-up times, cast each ability twice for twice the mana. (not as good for the Paladin's mark or the Geo's shields though)
+>
+> Thoughts?
+
+**The agent's response (Placed):** Two of the three placed, as separate pieces. Triple wind-ups with Thorns and Aggro while winding up: the Aggro version, because without it the piece waits on someone else's draw. Tripling is a real price (a long wind-up goes from 6 ticks to 18). Best on the Bramble knight; sized under the knight's own Thorns. Corrected: Thorns held while winding up aren't there when the unit swings, so it feeds the Thorns swing only through the piece that strikes back when hit. Read as gone the moment the cast lands. Double wind-ups with each ability cast twice for twice the mana: placed as its own piece, not this pair's. It's the cast twice, with the most partners of the three; the second cast is sized as a share. Left out: Thorns without the Aggro.
 
 ## The Valkyrie and the Frostweaver
 

@@ -124,5 +124,5 @@ Not decided: how many of the 450 are authored, and whether upgrades and mythics 
 - `batch-1.md`, `batch-1-answers.md`: the first requests as sent, and their answers with the agent's reads. The second is the best record of how they answer and push back.
 - `batch-2.md`, `batch-2-answers.md`: the second requests as sent, and their answers with the agent's reads. The batch is closed.
 - `batch-3.md`, `batch-3-answers.md`: the third requests as sent, and their answers with the agent's reads. The batch is closed.
-- `batch-4.md`, `batch-4-answers.md`: the fourth requests as sent, and their answers with the agent's reads. Two reads wait on the director's reply.
+- `batch-4.md`, `batch-4-answers.md`: the fourth requests as sent, and their answers with the agent's reads. Every card is answered; it closes on the director's word.
 - `requests-page.html`: the page's source.
