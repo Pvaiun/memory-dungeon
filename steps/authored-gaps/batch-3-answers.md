@@ -1,6 +1,6 @@
 # Batch 3: the director's answers and the agent's read
 
-Copied from the page's store when the answers were read (Nov 19). Each card: what was asked, the director's answer, and the agent's read. Five reads ask the director something; their replies and the reads as they stand afterwards are added when they come. The open card wasn't answered.
+Copied from the page's store (Nov 19). Each card: what was asked, the director's answer, their reply to the agent's read where they gave one, and the agent's read as it stands after that reply. Where a reply changed the agent's read, the first read is in git. Two reads still ask the director something (the stacks piece, and the formation of wide and narrow). The open card wasn't answered.
 
 ## The Hunt: where to start with the Mark
 
@@ -18,21 +18,25 @@ Copied from the page's store when the answers were read (Nov 19). Each card: wha
 > Hits on a marked enemy also spread to another enemy
 > When an enemy is stunned, and no other enemy is marked, mark it
 
-**The agent's read (Placed, with a question):** Placed: the three gear effects. Two questions on the class changes, at the end.
+**The director's reply to the read:**
 
-Hits add Bleed to a Marked foe: placed. It's the first thing in the web that names Bleed. It puts the Hunt's word and Thousand Cuts' on one card, which your builds ruling forbids as written. I've read that ruling as two status roads on one card, the way it was used in batch 2, and the Mark isn't a status road. Say if you read it the other way.
+> So I'm not sure I remember writing that rule about multiple build's words on one card. I think now that I'm designing them it should probably be allowed because that feels pretty limiting to making builds cross-compatible but challenge me if I misunderstanding something.
+>
+> And yes March should only apply if there's no marked unit
+>
+> I think if there's any one class that isn't a support it's the Assassin and so I'd like to preserve their ability to deal big damage from hidden but then also allow them to start chaining kills from ambush
 
-Hits on a Marked foe spread to another foe: placed. It gives the Hunt a pack game: the party focuses one foe and spills onto a second. I'm reading the second hit as carrying what the first carries, at a share I'll size. It does nothing against a lone foe.
+**The agent's read (Placed):** Settled, all of it.
 
-A Stunned foe is Marked: placed. It has the most partners of the three: every Stun in the kits, every shatter, your ×3 swing that Stuns. It's also Landslide's aim, which nothing Great did: the party's swings pile onto whatever was just held still. With your Might when a foe is Stunned, one Stun loads the blow and aims it.
+Two builds' words on one card: allowed, and I won't challenge it. The line was in your builds rulings ("No card names two builds' keywords"), and I've rewritten it. It was doing a second job, which I'll keep doing by count: a card that needs both words already in the party meets in few runs, and I'll say so when one comes up. Bleed on a Marked foe isn't that. It needs only a Mark, and brings the Bleed.
 
-Ambush and March are listed as kit changes for build, not as loot.
+The three gear effects stand as placed: Bleed on a Marked foe, hits on a Marked foe spreading to another, and a Stunned foe being Marked.
 
-Question 1, March. War ballad is on a quick cooldown, and each applier keeps one Mark. So the Bard's Mark would jump to a new random foe every few ticks, and the party would never finish one. Should March Mark only while no foe is Marked, as gear does?
+March: Marks a random foe only while no foe is Marked, so the Bard's Mark stays until its foe falls.
 
-Question 2, Ambush. It replaces Smoke screen, which is the only thing in the kits that hides a unit other than the Assassin, and the Assassin's only version that works for someone else. Vanish would then have two versions that both hide the Assassin itself. Do you want Ambush in Smoke screen's place, or in Shadow step's (goes Hidden; its next hit after hiding deals ×3)?
+Ambush: in Smoke screen's place, as you wrote it. The Assassin keeps Shadow step's big hit from hiding, and Ambush starts the chain: it hides, Marks the foe with the least HP, and the party follows.
 
-Lament going costs less: it's a version about HP held low, which the web has plenty of.
+What that costs, for when the kits change at build: nothing in the kits will hide another unit. Your Hidden from Guard becomes the way to hide someone else.
 
 ## The Hunt: a fight with one foe
 
@@ -46,11 +50,21 @@ Lament going costs less: it's a version about HP held low, which the web has ple
 >
 > We could also find a way to trigger foe falls effects without a foe falling.
 
-**The agent's read (Placed, with a question):** Placed: more damage for each share of HP the target is missing. I'm reading it as the wearer's own hits. It rests on the foe's HP bar, which the player can see. It's plain and good on any unit that hits, so I'll size it to be small in a pack, where foes fall before they're low, and to show on a boss.
+**The director's reply to the read:**
 
-Your second idea is the one I'd most like: something that sets off "when a foe falls" effects in a fight where nothing falls. It would also be the second way to repeat the opening, which we left room for when you cut the smaller Great.
+> When a foe is silenced trigger the party's on foe fallen effects
 
-The question: what should count as a foe falling in a fight with one foe? I won't pick the trigger for you.
+**The agent's read (Placed):** Placed, both.
+
+More damage for each share of HP the target is missing: as I read it before.
+
+A Silenced foe counts as a foe falling: when a foe is Silenced, the party's "when a foe falls" effects happen. It's the opening's second way to repeat, and it works in a fight with one foe.
+
+It limits itself. A Silence can't land on a foe that's already Silenced, and a boss shrugs Silence off after the first few, so on a boss it fires a handful of times a fight. On a real kill only the kill counts, so nothing happens twice.
+
+What I've assumed: it sets off effects worded "when a foe falls", not "on a kill", since nobody landed a killing blow. And an effect that moves something off the fallen foe, like the Torch passing on its Burn, does nothing, since the foe still stands.
+
+Two things to know. It works only beside an Assassin or a Hexer, the two classes that Silence, so most runs that find it can't use it. Silence from gear would widen it, and I'll bring that as a card. And it adds to the fight's start, the most crowded word in the web: ten effects now. I've placed it because we left room for it and it's bounded.
 
 ## A way to hide
 
@@ -160,13 +174,15 @@ Card 10's answer pays the same price, half its Defense. Worn together, a unit ke
 
 > Apply 50% more stacks of any applied status effect - probably better on a tome, or maybe a wand
 
-**The agent's read (Placed):** Placed, and I'll size it down. Its wearer applies more stacks of any status it applies. That's within the rules: an applier sets how many stacks it adds. I'm reading it as statuses that stack (the five afflictions, Might and the like), not Shields, and not statuses with one fixed size such as Haste.
+**The director's reply to the read:**
 
-It works with nearly everything in the web that lays or counts stacks: the pile, mana from the foes' debuffs, Double strike from Sunder, Might from a wind-up.
+> Should we give this a downside? Or narrow it?
 
-The catch is the same thing. Every unit that applies a stacking status is better with it, on every status road at once, so there's no thought in taking it. Your loot ruling says a piece that's strong everywhere gives something up. At +50% it would be every applier's first pick.
+**The agent's read (Open, with a question):** Narrow it. A downside leaves it a piece every applier wants, only weaker. Narrowing is what makes it worth a lot somewhere and little elsewhere, which is your own rule for a good piece.
 
-I'll size it well under that. If you'd rather it kept its size and paid a price, the price is yours to write.
+You asked, so here's the narrowing I'd pick. These two classes share one thing: both land on everyone at once, the Bard's songs on every ally and the Hexer's curses on every foe. So: more stacks only from abilities that land on more than one unit. It sits beside your Shock from wide abilities.
+
+The narrowing is yours to choose. Tell me that one, or another.
 
 ## The Vampire and the Stormcaller
 
@@ -193,11 +209,17 @@ It shares its price with card 8's piece. What the two do together is on that car
 >
 > Tell me it you want something less catch-all, or if you want me to make two different ones.
 
-**The agent's read (Placed, with a question):** Placed, with a question. Keep it as one formation: a mixed party splitting itself is the interesting part. Two formations would each be a plain bonus for one kind of weapon.
+**The director's reply to the read:**
 
-The question is Attack. Basic attacks come out about even: twice the Attack at half the speed, or the reverse. Abilities don't. They scale from Attack and don't care about attack speed. So a caster with a staff gets ×2 on every spell that scales from Attack and pays nothing, since it barely swings. A one-handed caster loses half. That makes this the best formation for any staff caster.
+> What's your suggestion?
 
-Is that what you want: two hands for casters and heavy hitters, one hand for units that live on their swings? Or should the trade touch basic attacks only: their damage ×2 at half the speed, or halved at twice the speed?
+**The agent's read (Placed):** Placed, the way I'd suggest, since you asked: the trade touches basic attacks only. With a two-handed weapon, basic attacks deal ×2 and come half as often. With a one-handed weapon, they deal half and come twice as often. Attack itself doesn't change, so abilities are untouched.
+
+Why: nobody gets something for nothing, and it's the trade of time the card asked for. Damage comes out even, so what changes is everything counted by the swing. One hand: twice as many statuses from swings, on-hit triggers and crits. Two hands: each blow gets through Defense better and gets more out of each stack of Might.
+
+So a Landslide unit picks two hands and a Thousand Cuts unit picks one, in the same formation. The two-hand side is the Hoplite's own passive, so a Hoplite here swings a quarter as often for four times the blow.
+
+What it gives up: casters get nothing from it. It's a formation for a party that swings. Tell me if you'd rather keep it on Attack.
 
 ## A formation about crits
 
@@ -209,11 +231,13 @@ Is that what you want: two hands for casters and heavy hitters, one hand for uni
 > Seat 2: crit -25%, on a crit, crit damage for whole party +75%
 > Seat 3: crit +25%
 
-**The agent's read (Placed, with a question):** Placed, with a question. One seat crits rarely and its crit pays the whole party, one crits often and cashes it, one draws. Your Great with +50% Crit chance belongs in the second seat, so the seat's −25% is a price a party can buy back.
+**The director's reply to the read:**
 
-The question: how long does the party's +75% Crit damage last? As written it could stay for the rest of the fight and add up with every crit, which would be the biggest count in the web. Or it could last a short while, or cover each ally's next crit only.
+> I think it should last till the end of the fight we can scale the number down dramatically if it's too high
 
-I'm reading "on a crit" as once a crit, not 4 times with your crit piece.
+**The agent's read (Placed):** Settled. Each crit from the second seat raises the whole party's Crit damage for the rest of the fight, and the raises add up. That makes it the third thing in the web that grows over a fight, after Crescendo and Heat.
+
+I'll size each crit's share far below 75% and cap it, as Crescendo and Heat are capped.
 
 ## A formation about what the seats wear
 
@@ -243,12 +267,20 @@ I'll size the two bonuses: three points of Attack or Defense is more than any am
 > Seat 2: all multi-target actions target a single target instead, at 2x power (healing, damage, stacks)
 > Seat 3: none
 
-**The agent's read (Placed, with a question):** Placed, with a question and a warning.
+**The director's reply to the read:**
 
-What it does beside the rest: in the first seat every ability is wide, so your Shock from wide abilities fires on each one, and a single buff lands on all three allies. With your pile, a status aimed at one foe lands on every foe and then gathers on one. A basic attack that hits every foe lets a Monk Sunder the whole pack.
+> Seat 1: all self-targeted actions target the whole party
+> Seat 2: multi-target actions multiply their effectiveness and target a single unit (the first random target)
+> Seat 3: none
+>
+> Is this better? Don't say yes if it isn't
 
-The question is the second seat: when a wide action narrows to one target, which one? If it's a random foe, a Mark takes it, and the party's wide spells all land on the Marked foe at ×2. For allies I don't know: the one with the lowest HP, or the caster?
+**The agent's read (Open, with a question):** No, I don't think it's better, and that's my fault: my warning was overstated.
 
-The warning: against foes, the first seat is far ahead in a pack and behind on a lone foe, and the second seat is the reverse. Formations can be changed at a fight's preview, so players will swap this in and out by counting foes. Your formations ruling says a formation is chosen for what the party is, not the next foe. The ally side (heals and buffs) doesn't have that problem. Do you want it as written anyway?
+What the new version fixes: the first seat no longer turns on how many foes there are, and the outsized basic attack is gone.
 
-I'll size the first seat's share well below 75%: on six foes that's four and a half basic attacks in one. Statuses with one fixed size, such as Haste or Stun, can't land at ×2, so the second seat gains nothing on those.
+What it loses: the first seat is now Twins for three. "What it gives itself, the party gains" is the rule of Twins and of your Great that shares a status with the lowest ally, so this would be the third. Few abilities target only their caster: of the twelve kits I've read, four have one. So the seat does nothing for most units. And everything that placing the first version found was on the foe side: the pile gathering a widened status, Shock from every ability, a Monk Sundering the whole pack.
+
+Why my warning was overstated: in your first version the two seats pull opposite ways in the same fight. In a pack the widened unit is ahead and the narrowed one behind. On a lone foe it's the reverse. So the formation as a whole has no good fight and no bad one. What it does is turn a single-target unit into a wide one and a wide unit into a single-target one, and that's about what the party is, not the next foe.
+
+My suggestion: keep the first version, with the second seat's target as you now give it (the first random target, so a Mark takes it), and the first seat's share sized by me well under 75%. Which do you want?

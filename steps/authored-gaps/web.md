@@ -51,7 +51,7 @@ Nine Greats sit on no road (exotics). The last column is as the triage left it: 
 
 **Pairs with Greats on both sides and nothing joining them:** the dodge and the Shield · the dodge and the HP bar · the Shield and the cast · a crit and anything but a heal · Hidden and anything but damage · a kill and anything but the opening.
 
-**Links I'd leave out:** two status roads on one card (already ruled) · a status road's own payoff on its own status as a rare (a keyword piece, the pattern matching the pass is to end) · a Great made bigger at a higher rarity.
+**Links I'd leave out:** a status road's own payoff on its own status as a rare (a keyword piece, the pattern matching the pass is to end) · a Great made bigger at a higher rarity.
 
 ## Added by batch 1
 
@@ -105,7 +105,7 @@ Placed by what they do, with the director's replies folded in (`batch-2-answers.
 - **Attack for HP missing,** counted in points, not as a share, so a unit with a lot of HP gains most.
 - **A formation where one pays, one raises and one gains:** the first seat pays a share of its max HP for every basic attack and ability; the second raises the first when it falls; the third gains Attack for every share of HP the party is missing. Ruled by the director, as written: the price can kill the first seat, the second raises it every time, and a fallen ally counts in full for the third ("a super risky strategy. I think we should pay it off"). It's the one thing in the game that wants a fall, an exception to the loot's rule that nothing does. After its first fall the first seat comes back, acts once and falls again while the second stands, so the third stays near its peak; the risk sits on the second seat, whose fall leaves the first down for good, and a knockout carries. The third seat's Attack is sized to pay for that.
 
-**Left out, and the director told why:** Chill turned into Bleed (two roads' statuses on one card, against the builds ruling); a Shield when a foe is Stunned (Shield is overused); Might while Hidden (the unit's own damage, on top of ×2 while Hidden; the director agreed).
+**Left out, and the director told why:** Chill turned into Bleed (two roads' statuses on one card, which the builds ruling barred then and allows now: it comes back if the director asks for it, and Chill is on watch); a Shield when a foe is Stunned (Shield is overused); Might while Hidden (the unit's own damage, on top of ×2 while Hidden; the director agreed).
 
 **Dropped by the director:** a formation whose seats gain Evasion, Defense and max HP when a foe falls; and their first formation for HP held low, where two seats lost HP every tick (HP carries, so a party couldn't wear it for long).
 
@@ -131,31 +131,32 @@ Placed by what they do, with the director's replies folded in (`batch-2-answers.
 
 ## Added by batch 3
 
-Placed by what they do (`batch-3-answers.md` has the director's words and each read). Words only: nothing is sized or slotted. Five reads ask the director something; what's open is marked.
+Placed by what they do (`batch-3-answers.md` has the director's words and each read). Words only: nothing is sized or slotted. The director has replied to the reads; two things are still open and are marked.
 
-- **Bleed on a Marked foe:** its wearer's hits add Bleed to a foe that's Marked. The first thing in the web that names Bleed. It names the Hunt's word and a status road's on one card; placed on the reading that the builds ruling bars two status roads on a card, and the director told.
+- **Bleed on a Marked foe:** its wearer's hits add Bleed to a foe that's Marked. The first thing in the web that names Bleed. It names the Hunt's word and a status road's on one card, which the director now allows (Threads, below). It needs only a Mark, and brings the Bleed.
 - **Hits on a Marked foe spread:** each also lands on another foe, carrying what the hit carries. The Hunt's pack game. Nothing against a lone foe.
 - **A Stunned foe is Marked,** while no foe is. Any Stun, a shatter's included. Landslide's aim, which nothing Great did.
 - **More damage for each share of HP its target is missing:** the wearer's own hits. Plain, and good on anything that hits; sized to show on a boss.
+- **A Silenced foe counts as a foe falling:** when a foe is Silenced, the party's "when a foe falls" effects happen. The opening's second way to repeat, and the one that works in a fight with one foe. Read as effects worded "when a foe falls", not "on a kill", and not those that move something off the fallen foe (the Torch). A Silence doesn't land on a Silenced foe and a boss comes to resist it, so it's bounded. Its partners are the two classes that Silence, the Assassin and the Hexer.
 - **Hidden whenever it gains Guard.** The first thing that gives Guard a job. Few partners until gear carries Guard: the plain parts need some, and this is why.
 - **Might on every tick of its wind-up.** One stack is spent an action, so a cast leaves the rest for the next.
 - **Heat on a crit.** A second source of Heat, off the dodge.
 - **Double strike for each Sunder on the foes,** counted over every foe. The first thing that names Sunder. Five classes can lay it.
 - **Half its Defense becomes Attack.** For walls that swing. It came from the Knight and Ranger card and doesn't join them.
-- **More stacks of any status it applies:** stacking statuses only (the afflictions, Might), not Shields or fixed-size statuses. Good on every applier on every status road, so it's sized well under what the director wrote, or pays a price they write.
+- **More stacks of any status it applies:** stacking statuses only (the afflictions, Might), not Shields or fixed-size statuses. Good on every applier on every status road. *Open:* the director asked whether to give it a downside or narrow it; the agent said narrow, and offered more stacks only from abilities that land on more than one unit. The narrowing is theirs.
 - **Half its Defense for faster basic attacks.** Shares its price with the piece above.
-- **A formation of two hands or one:** a unit with a two-handed weapon has twice the Attack and half the attack speed; with a one-handed weapon, the reverse. Seats are plain. *Open:* whether the trade reaches abilities, which scale from Attack and ignore attack speed (a staff caster would double its spells for nothing).
-- **A formation where one seat's crit pays the party:** one seat draws; one crits less often, and its crit raises the whole party's Crit damage; one crits more often. *Open:* how long the raise lasts, and whether it adds up.
+- **A formation of two hands or one:** with a two-handed weapon a unit's basic attacks deal ×2 and come half as often; with a one-handed weapon they deal half and come twice as often. Seats are plain. The director wrote it on Attack, which would have doubled a staff caster's spells for nothing; asked for a suggestion, the agent put the trade on basic attacks alone, and it stands unless they say otherwise. Casters get nothing from it.
+- **A formation where one seat's crit pays the party:** one seat draws; one crits less often, and each of its crits raises the whole party's Crit damage for the rest of the fight, adding up; one crits more often. The third thing that grows over a fight. Sized far under what the director wrote, and capped.
 - **A formation with one amulet for three:** the third seat's amulet counts as worn by every member, stats and effect; the other two seats gain Attack or Defense for an empty amulet slot, which the shared amulet doesn't fill.
-- **A formation of wide and narrow:** in the first seat every single-target action lands on every foe or every ally at a share; in the second every multi-target action lands on one at more. *Open:* whom the second seat's narrowed action lands on, and whether the director keeps a formation whose worth turns on the number of foes.
+- **A formation of wide and narrow:** in the first seat every single-target action lands on every foe or every ally at a share; in the second every multi-target action lands on one at more: its first random target, so a Mark takes it. *Open:* which version. After the agent warned that its worth turned on the number of foes, the director rewrote the first seat as "all self-targeted actions target the whole party" and asked whether that was better. The agent said no: that seat is Twins for three, few abilities target only their caster, and the warning was overstated (the two seats pull opposite ways in the same fight, so the formation has no good fight and bad one). The first version is counted here until they choose.
 
 **Changed by the director:**
 - **Heat is lost when its holder loses HP,** not when it's hit: half its Heat each time. A Shield or an Aegis keeps it. Read as damage that reaches HP, a status's included, and not a price paid.
 - **One Great cut** before the answers (Cut from the Greats, above).
 
-**Kit changes, for build** (not loot; the kits stay as they are until then). Both wait on a question.
-- **Assassin, Vanish, version A: Ambush** (goes Hidden, and Marks the foe with the least current HP), in place of Smoke screen. *Open:* Smoke screen is the only thing in the kits that hides another unit and the Assassin's one version that works for someone else; the director was asked whether Ambush takes Shadow step's place instead.
-- **Bard, War ballad, version A: March** (Might on every ally, and a Mark on a random foe), in place of Lament. *Open:* War ballad is quick and each applier keeps one Mark, so the Mark would hop to a new foe every few ticks; the director was asked whether it Marks only while no foe is Marked.
+**Kit changes, for build** (not loot; the kits stay as they are until then). Both are settled.
+- **Assassin, Vanish, version A: Ambush** (goes Hidden, and Marks the foe with the least current HP), in place of Smoke screen. The director: the Assassin is the one class that isn't a support, so it keeps Shadow step's big hit from hiding and gains Ambush to start chaining kills. What it costs: nothing in the kits will hide another unit (Hidden from Guard is the way to), and the Assassin's count of versions that point it at another job should be checked at build.
+- **Bard, War ballad, version A: March** (Might on every ally, and a Mark on a random foe), in place of Lament. It Marks only while no foe is Marked, at the director's word, so the Mark stays until its foe falls.
 
 **Left out, and the director told why:** MP for the other allies on every tick of a wind-up (MP is the most-named thing in the web, and it makes the longest caster the battery).
 
@@ -166,7 +167,8 @@ Placed by what they do (`batch-3-answers.md` has the director's words and each r
 - **A build can't rest on gear and one class,** so an answer may change a kit (`report.md`, Next).
 - **No third counter.** Heat comes from more than one trigger.
 - **The Knight and the Ranger share too little** once Shields and dodges are set aside. The director offers to come back to them when the web is fuller.
-- **"When a foe falls" in a fight where nothing falls:** the director wants a way, and was asked what should count (card 2). It would be the opening's second way to repeat.
+- **Two builds' words may share a card:** "that feels pretty limiting to making builds cross-compatible". The builds ruling is rewritten. A card that needs both words already in the party is still told so, by its partner count.
+- **A Silence is what counts as a foe falling** in a fight where nothing falls.
 
 **Found by placing them:**
 - A Stunned foe is Marked, with Might when a foe is Stunned: one Stun loads the blow and aims it. With the ×3 swing that Stuns, the swing Marks its own target; with any shatter, the party's swings pile onto the frozen foe.
@@ -184,21 +186,21 @@ Placed by what they do (`batch-3-answers.md` has the director's words and each r
 
 ## The count
 
-What sets each effect in the web off, what it reads, and what it changes or moves. It holds 95 effects: the 41 Greats, 10 from the Great formations (a formation's plain seats are folded into its line), the 6 starred seats, batch 1's 13, batch 2's 10 and batch 3's 15 (11 on gear, 4 formations). The kit changes aren't counted. An effect can sit in two rows of a table. **Every time an answer is placed, add its line to the ledger and bump the counts.** The test for overused and underused is in `brief.md`, The count; the verdicts below are the agent's.
+What sets each effect in the web off, what it reads, and what it changes or moves. It holds 96 effects: the 41 Greats, 10 from the Great formations (a formation's plain seats are folded into its line), the 6 starred seats, batch 1's 13, batch 2's 10 and batch 3's 16 (12 on gear, 4 formations). The kit changes aren't counted. An effect can sit in two rows of a table. **Every time an answer is placed, add its line to the ledger and bump the counts.** The test for overused and underused is in `brief.md`, The count; the verdicts below are the agent's.
 
 | Set off by | Effects | Reads | Effects | Changes or moves | Effects |
 | --- | --- | --- | --- | --- | --- |
-| its cast | 16 | nothing | 33 | its damage | 18 |
+| its cast | 16 | nothing | 34 | its damage | 19 |
 | its swing | 14 | a stat | 15 | a status on the foes | 15 |
 | always on | 15 | the size of a blow, heal or price | 8 | how often it swings or hits | 13 |
 | the fight's start | 8 | stacks on the foes | 11 | a status on itself or allies | 13 |
-| an ally's action or blow | 7 | HP or MP as it stands | 8 | a stat | 14 |
-| a status gained, laid or shattering | 10 | gear slots or ability order | 9 | who is hit | 10 |
+| an ally's action or blow | 7 | HP or MP as it stands | 8 | a stat | 13 |
+| a status gained, laid or shattering | 11 | gear slots or ability order | 9 | who is hit | 10 |
 | a blow taken | 5 | a status on itself | 7 | MP | 8 |
 | a dodge | 5 | Shield held | 4 | a heal | 6 |
 | its hit or crit | 9 | a foe's HP | 3 | a Shield | 5 |
 | a heal | 3 | | | cooldowns | 5 |
-| a state held | 4 | | | an effect happening again | 5 |
+| a state held | 4 | | | an effect happening again | 6 |
 | a foe falling | 2 | | | HP spent or capped | 5 |
 | HP paid | 1 | | | | |
 | a foe acting | 1 | | | | |
@@ -208,7 +210,7 @@ What sets each effect in the web off, what it reads, and what it changes or move
 
 | Names | Effects | Verdict |
 | --- | --- | --- |
-| The fight's start | 9 (8 openers, and the 1 that repeats them) | Overused, a little over the line (8 of 95): they all fire together, and a foe falling fires them again. The shared amulet fires an amulet's opener three times |
+| The fight's start | 10 (8 openers, and the 2 that repeat them) | Overused (the line is 8 of 96): they all fire together, and a foe falling or a Silence fires them again. The shared amulet fires an amulet's opener three times |
 | Shield | 8 | Overused, at the line: five sit on one holder and two more feed it; only the Peak pulls the other way. Heat's rule now gives one more reason to hold one |
 | The dodge | 7 (5 "on a dodge", 2 that make dodges) | Watch: under the line by number now, and all five still stack on one dodger. No card from it yet |
 | MP | 10 | Common, and fine: every caster needs it, and the ten pull three ways (cheaper casts, mana passed on or regained, MP as a body) |
@@ -223,7 +225,7 @@ What sets each effect in the web off, what it reads, and what it changes or move
 | Shock, the Mark, Might, Hidden, extra strikes | 4 each | Fine. The Mark has sources and payoffs now, and two kit changes waiting |
 | The draw, the first-slotted ability, an empty slot | 3 each | Fine. The three on the first-slotted ability stack on one cast, which is an engine a player finds, not yet a habit. The empty slots are an offhand, armor and an amulet |
 | Burn, a kill, Heat, a wind-up | 2 each | Burn has a source and is still underused. A kill has the party's opening and the Torch. A wind-up lays Shock and gives Might, and with Chill from statuses all three stack on one caster |
-| Bleed, Sunder, Guard, Slow, a fight won, a revive | 1 each | Bleed and Sunder have their first piece each. Guard hides a unit, and needs Guard on gear |
+| Bleed, Sunder, Guard, Silence, Slow, a fight won, a revive | 1 each | Bleed and Sunder have their first piece each. Guard hides a unit, and needs Guard on gear. Silence counts as a foe falling, and only two classes Silence |
 | Taunt, Thorns, and the statuses no build leans on | 0 | Left alone: the Toll has its payoff, and a rare status is allowed to stay rare |
 
 - **Swings, casts, hits and plain stats top every table and aren't overused:** every unit has them, and the swing effects pull against each other (never, half as often, only when a foe acts).
@@ -318,6 +320,7 @@ What sets each effect in the web off, what it reads, and what it changes or move
 | Hits on a Marked foe spread to another | Batch 3 | its hit or crit | stacks on the foes | who is hit, how often it swings or hits |
 | A Stunned foe is Marked | Batch 3 | a status gained, laid or shattering | stacks on the foes | a status on the foes |
 | More damage for each share of HP its target is missing | Batch 3 | its hit or crit | a foe's HP | its damage |
+| A Silenced foe counts as a foe falling | Batch 3 | a status gained, laid or shattering | nothing | an effect happening again |
 | Hidden whenever it gains Guard | Batch 3 | a status gained, laid or shattering | a status on itself | a status on itself or allies, who is hit |
 | Might on every tick of its wind-up | Batch 3 | its cast | nothing | a status on itself or allies |
 | Heat on a crit | Batch 3 | its hit or crit | nothing | a status on itself or allies |
@@ -325,7 +328,7 @@ What sets each effect in the web off, what it reads, and what it changes or move
 | Half its Defense becomes Attack | Batch 3 | always on | a stat | a stat |
 | More stacks of any status it applies | Batch 3 | a status gained, laid or shattering | nothing | a status on the foes, a status on itself or allies |
 | Half its Defense for faster basic attacks | Batch 3 | always on | a stat | a stat, how often it swings or hits |
-| Formation: two hands or one | Batch 3 | always on | gear slots or ability order | a stat, how often it swings or hits |
+| Formation: two hands or one | Batch 3 | always on | gear slots or ability order | its damage, how often it swings or hits |
 | Formation: one seat's crit pays the party | Batch 3 | its hit or crit | nothing | a stat |
 | Formation: one amulet for three | Batch 3 | always on | gear slots or ability order | a stat, an effect happening again |
 | Formation: wide and narrow | Batch 3 | its swing, its cast | nothing | who is hit, its damage |
@@ -336,7 +339,7 @@ Thin spots seen while placing answers: candidates for a later batch, and only on
 
 - **Guard on gear.** Hidden from Guard has the Knight's Fortify and two versions for partners. Guard is a staple, so it's the plain parts' to carry, not a card; write some when the plain parts are written.
 - **Something for Bleed and Sunder to be laid by.** Each has one piece that names it, and both pieces read or need the status, so the supply is still the kits. A second Sunder or Bleed piece needs a job first.
-- **The opening's second way to repeat,** and "when a foe falls" in a fight with one foe: asked on batch 3's card 2. If the director writes it there, it isn't a card.
+- **Silence from somewhere other than the Assassin and the Hexer.** The piece that counts a Silence as a foe falling works only beside those two classes. A supply card for batch 4, told to the director.
 - **Burn** is still underused (two effects name it, one lays it) and has no job to ask from. Bonfire's keeper can't feed the fire from the web, but the plain answer is fire on a swing or on whoever strikes it: a plain part, the agent's to write, not a card.
 - **Haste** is named once, and three roads run on it. A payoff for being Hasted wasn't asked: Haste already pays by itself on every unit, so the card would have asked for what the game does.
 - **The Knight and the Ranger,** when the web is fuller, at the director's offer.

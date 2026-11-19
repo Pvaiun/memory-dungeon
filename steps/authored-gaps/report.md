@@ -30,8 +30,12 @@ The reasoning behind this step is in `brief.md`; read that first. This page hold
 15. **The set's size is the target: "I'd like to reach 450 pieces of gear and 50 formations."** All loot, commons and plain pieces included. A plain number, not a share and not a gap count (the director: "a number quota and letting the web be what it ends up being"). It stops the agent calling the web done early, as it did at 81.
     - **Where the number comes from:** a finished run should have shown its player about a quarter of all the loot (`intent.md`, What it's for). The agent's rough count from the rogue mode's settings, not yet simulated: a run shows about 90 pieces, about 65 of them with an effect. That's about a fifth of 450, a little under the director's quarter, on the side they lean ("perhaps that number is low"). Measure it with whole runs at build.
     - **What it asks of every piece:** with a fifth of the loot shown, two named pieces meet in about one run in 25. A piece that needs one particular partner almost never works; a piece with many partners works every run, with a different one each time. That's the director's "as cross-build as possible", and the agent checks each answer for it (`brief.md`, Reading the answers).
-    - **How many of the 450 are authored isn't set.** By the loot's rarity rules a common is stats and an uncommon a simple effect, so the authored pieces are mostly rares and legendaries. The agent's estimate: about 225 if half the set is rare or above, about 315 at the 70% the director first offered. The web holds 72 gear effects, so 150 to 240 are still to come: 14 to 22 batches at eleven placed a batch. The director is glad to answer that many.
+    - **How many of the 450 are authored isn't set.** By the loot's rarity rules a common is stats and an uncommon a simple effect, so the authored pieces are mostly rares and legendaries. The agent's estimate: about 225 if half the set is rare or above, about 315 at the 70% the director first offered. The web holds 73 gear effects, so 150 to 240 are still to come: 13 to 20 batches at twelve placed a batch. The director is glad to answer that many.
     - **A batch carries three or four formation cards** (the director: "We can put 3 or 4 formations per batch if we want"). The web has about 19 formations (7 Great, 7 written, and the Fine formations that hold a starred seat), so about 31 are still to come: eight to ten batches at that rate. Each formation card still needs a stated job; a batch with fewer real ones carries fewer.
+
+16. **A card may name two builds' keywords.** The director, on Bleed on a Marked foe: "it should probably be allowed because that feels pretty limiting to making builds cross-compatible". The line in `docs/gear-design/builds.md` (The director's rulings) is rewritten, and the word "affliction" keeps its use for a card that reaches every status road. The agent's check stays: a card that needs both words already in the party has few partners, and is told so.
+17. **An answer may change a class,** and the director says what goes. The Mark's answer changed two versions (`web.md`, Kit changes, for build). The kits stay as they are until build.
+18. **Nothing in the loot touches the bench:** "I don't think players should meta-game the bench in terms of affecting combat."
 
 ## The page
 
@@ -58,19 +62,16 @@ The store holds the requests (`requests/<id>`: batch, order, kind, title, ask, w
 
 ## Next: for the session that picks this up
 
-Batches 1 and 2 are closed. **Batch 3 is read and placed, and five of its reads wait on the director's reply** (`batch-3-answers.md`; `web.md`, Added by batch 3). The web holds 95 effects: 72 on gear and about 19 formations, against a target of 450 pieces and 50 formations (ruling 15). Two kit changes are listed for build and aren't counted.
+Batches 1 and 2 are closed. **Batch 3 is read, placed and replied to, with two things still open** (`batch-3-answers.md`; `web.md`, Added by batch 3). The web holds 96 effects: 73 on gear and about 19 formations, against a target of 450 pieces and 50 formations (ruling 15). Two kit changes are settled and listed for build.
 
 **What went wrong at the end of batch 2, so it isn't repeated.** At 81 effects the agent said the gaps were few and offered to move to the plain parts; the director "felt like we were barely getting started". What had run thin was one way of finding cards (thin spots among the kept effects). The agent then reached for structure twice: the holes in the earlier loot (against ruling 4), and a skeleton of needs by road and class (ruling 14). Neither is the method. The method is the batches.
 
 1. **Read `brief.md` first.** Its reading list (What to read) is closed.
-2. **Close batch 3.** When the director says they've replied, query `answers` for batch 3 and read each `reply`. The five open reads:
-   - **Card 1, the Mark:** whether March Marks only while no foe is Marked; whether Ambush takes Smoke screen's place or Shadow step's. Also told, not asked: Bleed on a Marked foe was placed on the reading that the builds ruling bars two status roads on one card.
-   - **Card 2:** what counts as a foe falling in a fight with one foe. Their answer is a new effect, and the opening's second way to repeat.
-   - **Card 11, two hands or one:** whether the trade reaches abilities or basic attacks only.
-   - **Card 12, the crit formation:** how long the party's Crit damage lasts, and whether it adds up.
-   - **Card 14, wide and narrow:** whom the second seat's narrowed action lands on, and whether they keep a formation whose worth turns on the number of foes.
+2. **Close batch 3.** Two things wait on the director, asked in the chat and on the cards:
+   - **Card 9, more stacks:** how to narrow it. They asked "Should we give this a downside? Or narrow it?"; the agent said narrow, and offered more stacks only from abilities that land on more than one unit. The narrowing is theirs.
+   - **Card 14, wide and narrow:** which version. They rewrote the first seat and asked "Is this better? Don't say yes if it isn't"; the agent said no and why (`web.md`, Added by batch 3). The first version is counted until they choose.
 
-   Rewrite each read on the page as it stands after the reply (`replies/<id>`, pinned to its version), fold the replies into `batch-3-answers.md` and `web.md`, and recount if anything is cut or added. Three reads also carry a choice the director may comment on without being asked: the mana piece left out (card 4), the size of the stacks piece (card 9), and what was assumed about the shared amulet (card 13).
+   When they answer, rewrite the two reads on the page (`replies/<id>`, pinned to its version) and the two lines in `batch-3-answers.md` and `web.md`. Card 11 stands on the agent's suggestion (basic attacks only) unless they object.
 3. **An answer may change a class.** The director, on the Mark: "I don't think we can have a type of build that only get enabled by gear and one class" (only the Paladin's kit Marks). A class change in an answer is theirs to make. Don't place it as loot: list it in `web.md` as a kit change, with the versions it touches, to be made at build. The kits stay as they are until then. Say what each change costs: which version goes, and what that version was doing.
 4. **Then batch 4,** about fifteen cards, three or four of them formations, from the same places, roughly in this order of how well each has worked:
    - **What placing the last answers found** (`web.md`, Found by placing them, and Gaps seen): something the web now supplies with nothing to do with it, or a set of parts one short of working.
@@ -78,9 +79,10 @@ Batches 1 and 2 are closed. **Batch 3 is read and placed, and five of its reads 
    - **A whole direction.** The Mark card was the first, and it worked: five effects and two kit changes from one card. Ask it where the web has almost nothing for a road's own lever.
    - **A formation with a stated job.** All four in batch 3 were answered. The job that names something the seats trade (time, crits, gear, how many an action lands on) is the form.
    - **A road's thin spot,** asked as a named job with the kind of thing wanted back. Say what a party on that road lacks without the piece before sending one.
+   - **A supply the last batch owes:** Silence from somewhere other than the Assassin and the Hexer, so the piece that counts a Silence as a foe falling has more than two classes for partners. The director has been told it's coming.
    - **A function with a plain constraint.** The wind-up and the count were answered; the bench was the wrong question (it's a lever the loot doesn't touch).
    - **The open card,** every batch.
 5. **Every card passes ruling 9,** and a batch is as long as its real jobs: if fifteen can't be found, send fewer and say so. Two short batches running is the sign to stop and talk, whatever the target says.
-6. **Recount before treating a mechanic as closed.** The overused line moves as the web grows (one effect in twelve is 8 of 95). The dodge and HP held low have dropped under it by number and stay on watch; crits and heals are on watch; Shield and the fight's start are still over.
+6. **Recount before treating a mechanic as closed.** The overused line moves as the web grows (one effect in twelve is 8 of 96). The dodge and HP held low have dropped under it by number and stay on watch; crits and heals are on watch; Shield and the fight's start are still over.
 7. **Tell the director when a seeded card changes or a read lands:** the page redraws by itself (The page), so no reload is needed.
 8. Still to come, in the director's order, once the authored pieces are in and they've looked at the whole web: the plain parts (the agent's, shown by sample; Guard on gear is owed there), sizing and slotting what's placed, formations beyond those kept or written, mythics, then build. Slotting is where a class with too little to wear shows up; what it finds comes back as cards.
