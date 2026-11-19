@@ -2,16 +2,15 @@
 
 The requests on the director's page, as seeded. The page's store holds the live copy and the answers. Near lines are Greats, starred seats, Great formations and the director's own earlier answers only: no Fines.
 
-## 1. Bonfire: where to start with the fire (Road)
+## 1. Bonfire: a payoff for a high fire (Road)
 
-I don't know where to start with the fire, and I'd like you to. Tell me what Burn should be in the loot beyond the pieces that lay it: what a high fire gives the party, and what it takes to keep one. Write as much or as little as you like. I'll turn it into pieces and bring back what I'm unsure of. If the fire is fine coming from the kits and the plain pieces, as Bleed is, mark this wrong.
+I need a payoff for a high fire: something that happens because a foe's Burn stands high, besides the Burn's own damage. Not an applier, and not upkeep. If the damage is payoff enough, mark this wrong.
 
-Bonfire has the least of its own in the web. Burn drains fast, so the number on the hottest foe is how hard the party is feeding it right now: that's the road's whole rhythm. Two effects name Burn. Your first-slotted piece lays it, and the Torch passes it on when its foe falls. Nothing reads a fire or cares how high it stands, and nothing you marked Great is about it. Your two answers to the first Bonfire card, the pile and mana for the foes' debuffs, serve every status road alike. Three base kits lay Burn, the Pyromancer's and the Paladin's among them. The plain appliers (fire on a swing, fire on whoever strikes the keeper) are mine to write.
+Burn drains fast, so its height on the hottest foe is how hard the party is feeding it right now. Nothing in the web cares about that height: a fire twice as high deals twice the Burn damage and does nothing else. Shock has two Greats that read the charge, and the fire has none. I'm not asking for appliers (the plain ones are mine to write) or for upkeep (your pile and your mana for the foes' debuffs answered that in batch 1).
 
 - yours: Its first-slotted ability adds Burn to every target, allies included.
 - starred seat: Torch (Pyre line): when a burning foe falls, its Burn passes to the foe with the most HP.
 - yours: Damage statuses it lays go to the foe holding the most of that status, unless that foe is at its cap.
-- yours: Regains MP for each stack of any debuff on the foes.
 
 ## 2. Landslide: the blow in a pack (Road)
 

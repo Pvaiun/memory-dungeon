@@ -346,7 +346,7 @@ Thin spots seen while placing answers: candidates for a later batch, and only on
 - **Thorns, an Aegis, Taunt and Weaken** are named by nothing, and the kits supply all four. None has a job to ask from; the Bramble knight and the Hoplite's card (batch 4) is where the first two may turn up.
 - **Mythics:** sixteen, one batch, from scratch, once the gear is placed. Upgrades stay as part of the kits, apart from the kit changes the director writes into an answer. Neither is ruled yet.
 
-**Asked in batch 4, waiting on answers:** Burn, as a whole direction (the plain appliers, fire on a swing or on whoever strikes the keeper, stay the agent's) · Silence from somewhere other than the Assassin and the Hexer · Landslide's blow in a pack · the order of abilities past the first slot · a formation with no front · a formation where a seat's passive or ability works for another seat · a formation about the statuses on the foes, whichever they are.
+**Asked in batch 4, waiting on answers:** a payoff for a high fire (the plain appliers, fire on a swing or on whoever strikes the keeper, stay the agent's) · Silence from somewhere other than the Assassin and the Hexer · Landslide's blow in a pack · the order of abilities past the first slot · a formation with no front · a formation where a seat's passive or ability works for another seat · a formation about the statuses on the foes, whichever they are.
 
 **Seen while writing batch 4:**
 - **The opening Mark aims a loaded blow at the smallest foe.** It sits on the foe with the least max HP and takes the party's basic attacks, so a hammer's heavy swing goes there first. The director is told on Landslide's card.
