@@ -123,5 +123,5 @@ Not decided: how many of the 450 are authored, and whether upgrades and mythics 
 - `web.md`: where the kept effects sit, what each batch added, the count of what every effect is set off by, reads and changes, and the thin spots seen.
 - `batch-1.md`, `batch-1-answers.md`: the first requests as sent, and their answers with the agent's reads. The second is the best record of how they answer and push back.
 - `batch-2.md`, `batch-2-answers.md`: the second requests as sent, and their answers with the agent's reads. The batch is closed.
-- `batch-3.md`, `batch-3-answers.md`: the third requests as sent, and their answers with the agent's reads. Two things in it wait on the director (`report.md`, Next).
+- `batch-3.md`, `batch-3-answers.md`: the third requests as sent, and their answers with the agent's reads. The batch is closed.
 - `requests-page.html`: the page's source.

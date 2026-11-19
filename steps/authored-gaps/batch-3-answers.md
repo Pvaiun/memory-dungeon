@@ -1,6 +1,6 @@
 # Batch 3: the director's answers and the agent's read
 
-Copied from the page's store (Nov 19). Each card: what was asked, the director's answer, their reply to the agent's read where they gave one, and the agent's read as it stands after that reply. Where a reply changed the agent's read, the first read is in git. Two reads still ask the director something (the stacks piece, and the formation of wide and narrow). The open card wasn't answered.
+Copied from the page's store when the batch closed (Nov 19). Each card: what was asked, the director's answer, their replies to the agent's read where they gave any, and the agent's read as it stands after the last reply. Where a reply changed the agent's read, the earlier reads are in git. The open card wasn't answered.
 
 ## The Hunt: where to start with the Mark
 
@@ -174,15 +174,23 @@ Card 10's answer pays the same price, half its Defense. Worn together, a unit ke
 
 > Apply 50% more stacks of any applied status effect - probably better on a tome, or maybe a wand
 
-**The director's reply to the read:**
+**The director's reply to the first read:**
 
 > Should we give this a downside? Or narrow it?
 
-**The agent's read (Open, with a question):** Narrow it. A downside leaves it a piece every applier wants, only weaker. Narrowing is what makes it worth a lot somewhere and little elsewhere, which is your own rule for a good piece.
+**The director's reply to the second read:**
 
-You asked, so here's the narrowing I'd pick. These two classes share one thing: both land on everyone at once, the Bard's songs on every ally and the Hexer's curses on every foe. So: more stacks only from abilities that land on more than one unit. It sits beside your Shock from wide abilities.
+> Attack -50%, apply 50% more stacks of any applied status effect
 
-The narrowing is yours to choose. Tell me that one, or another.
+**The agent's read (Placed):** Placed, with one change to the wording that you need to know about.
+
+As written, the price cancels the piece. Nearly every status in the kits takes its stacks from Attack, in step with it: half the Attack is half the stacks. So −50% Attack with +50% stacks comes to a quarter fewer stacks than wearing nothing, for the Bard, the Hexer and most appliers. I checked this in the game's numbers.
+
+So I've placed it as: its hits deal half damage, and it applies more stacks of any status it applies. Attack itself is untouched, so the stacks really go up. It's the same shape as your Great with +50% Crit chance, where the hits that don't crit are halved.
+
+What the price does: a unit that lives on its hits won't wear it. A unit whose damage is the status will, since a status's damage isn't a hit. The Bard pays through Refrain, which heals and gives mana by the size of its swings.
+
+Tell me if you meant Attack itself. I'll still size the stacks.
 
 ## The Vampire and the Stormcaller
 
@@ -267,7 +275,7 @@ I'll size the two bonuses: three points of Attack or Defense is more than any am
 > Seat 2: all multi-target actions target a single target instead, at 2x power (healing, damage, stacks)
 > Seat 3: none
 
-**The director's reply to the read:**
+**The director's reply to the first read:**
 
 > Seat 1: all self-targeted actions target the whole party
 > Seat 2: multi-target actions multiply their effectiveness and target a single unit (the first random target)
@@ -275,12 +283,10 @@ I'll size the two bonuses: three points of Attack or Defense is more than any am
 >
 > Is this better? Don't say yes if it isn't
 
-**The agent's read (Open, with a question):** No, I don't think it's better, and that's my fault: my warning was overstated.
+**The director's reply to the second read:**
 
-What the new version fixes: the first seat no longer turns on how many foes there are, and the outsized basic attack is gone.
+> Keep the first version
 
-What it loses: the first seat is now Twins for three. "What it gives itself, the party gains" is the rule of Twins and of your Great that shares a status with the lowest ally, so this would be the third. Few abilities target only their caster: of the twelve kits I've read, four have one. So the seat does nothing for most units. And everything that placing the first version found was on the foe side: the pile gathering a widened status, Shock from every ability, a Monk Sundering the whole pack.
+**The agent's read (Placed):** Settled: the first version stands. The first seat turns every single-target action into one that lands on every foe or every ally, at a share. The second turns every multi-target action into one that lands on its first random target, for more; against foes a Mark takes that pick. The third seat is plain.
 
-Why my warning was overstated: in your first version the two seats pull opposite ways in the same fight. In a pack the widened unit is ahead and the narrowed one behind. On a lone foe it's the reverse. So the formation as a whole has no good fight and no bad one. What it does is turn a single-target unit into a wide one and a wide unit into a single-target one, and that's about what the party is, not the next foe.
-
-My suggestion: keep the first version, with the second seat's target as you now give it (the first random target, so a Mark takes it), and the first seat's share sized by me well under 75%. Which do you want?
+I'll size the first seat's share well under 75%. What placing found is unchanged: the pile gathering a widened status, Shock from every ability in the wide seat, a Monk Sundering the whole pack.

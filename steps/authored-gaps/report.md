@@ -63,16 +63,12 @@ The store holds the requests (`requests/<id>`: batch, order, kind, title, ask, w
 
 ## Next: for the session that picks this up
 
-Batches 1 and 2 are closed. **Batch 3 is read, placed and replied to, with two things still open** (`batch-3-answers.md`; `web.md`, Added by batch 3). The web holds 96 effects: 73 on gear and about 19 formations, against a target of 450 pieces and 50 formations (ruling 15). Two kit changes are settled and listed for build.
+Batches 1, 2 and 3 are closed: every answer is placed, left out or withdrawn (`web.md`, Added by batch 1, 2 and 3; the director's words and each read in the three answers files). The web holds 96 effects: 73 on gear and about 19 formations, against a target of 450 pieces and 50 formations (ruling 15). Two kit changes are settled and listed for build. Nothing on the page waits on the director.
 
 **What went wrong at the end of batch 2, so it isn't repeated.** At 81 effects the agent said the gaps were few and offered to move to the plain parts; the director "felt like we were barely getting started". What had run thin was one way of finding cards (thin spots among the kept effects). The agent then reached for structure twice: the holes in the earlier loot (against ruling 4), and a skeleton of needs by road and class (ruling 14). Neither is the method. The method is the batches.
 
 1. **Read `brief.md` first.** Its reading list (What to read) is closed.
-2. **Close batch 3.** Two things wait on the director, asked in the chat and on the cards:
-   - **Card 9, more stacks:** how to narrow it. They asked "Should we give this a downside? Or narrow it?"; the agent said narrow, and offered more stacks only from abilities that land on more than one unit. The narrowing is theirs.
-   - **Card 14, wide and narrow:** which version. They rewrote the first seat and asked "Is this better? Don't say yes if it isn't"; the agent said no and why (`web.md`, Added by batch 3). The first version is counted until they choose.
-
-   When they answer, rewrite the two reads on the page (`replies/<id>`, pinned to its version) and the two lines in `batch-3-answers.md` and `web.md`. Card 11 stands on the agent's suggestion (basic attacks only) unless they object.
+2. **Check a price or a size against the numbers before placing it.** In batch 3 the director put a price of half its Attack on a piece that adds stacks; stacks follow Attack point for point, so the piece would have taken stacks away. Where an answer leans on how a number is made, read the constant.
 3. **An answer may change a class.** The director, on the Mark: "I don't think we can have a type of build that only get enabled by gear and one class" (only the Paladin's kit Marks). A class change in an answer is theirs to make. Don't place it as loot: list it in `web.md` as a kit change, with the versions it touches, to be made at build. The kits stay as they are until then. Say what each change costs: which version goes, and what that version was doing.
 4. **Then batch 4,** about fifteen cards, three or four of them formations, from the same places, roughly in this order of how well each has worked:
    - **What placing the last answers found** (`web.md`, Found by placing them, and Gaps seen): something the web now supplies with nothing to do with it, or a set of parts one short of working.

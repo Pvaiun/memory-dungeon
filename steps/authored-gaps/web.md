@@ -131,7 +131,7 @@ Placed by what they do, with the director's replies folded in (`batch-2-answers.
 
 ## Added by batch 3
 
-Placed by what they do (`batch-3-answers.md` has the director's words and each read). Words only: nothing is sized or slotted. The director has replied to the reads; two things are still open and are marked.
+Placed by what they do (`batch-3-answers.md` has the director's words and each read). Words only: nothing is sized or slotted. The batch is closed.
 
 - **Bleed on a Marked foe:** its wearer's hits add Bleed to a foe that's Marked. The first thing in the web that names Bleed. It names the Hunt's word and a status road's on one card, which the director now allows (Threads, below). It needs only a Mark, and brings the Bleed.
 - **Hits on a Marked foe spread:** each also lands on another foe, carrying what the hit carries. The Hunt's pack game. Nothing against a lone foe.
@@ -143,12 +143,12 @@ Placed by what they do (`batch-3-answers.md` has the director's words and each r
 - **Heat on a crit.** A second source of Heat, off the dodge.
 - **Double strike for each Sunder on the foes,** counted over every foe. The first thing that names Sunder. Five classes can lay it.
 - **Half its Defense becomes Attack.** For walls that swing. It came from the Knight and Ranger card and doesn't join them.
-- **More stacks of any status it applies:** stacking statuses only (the afflictions, Might), not Shields or fixed-size statuses. Good on every applier on every status road. *Open:* the director asked whether to give it a downside or narrow it; the agent said narrow, and offered more stacks only from abilities that land on more than one unit. The narrowing is theirs.
+- **More stacks of any status it applies, and its hits deal half:** stacking statuses only (the afflictions, Might), not Shields or fixed-size statuses. The director chose a price over narrowing it, and wrote the price as half its Attack. Stacks follow Attack point for point (`STACKS` in `scale.ts`), so that came to fewer stacks than wearing nothing; it's placed with the price on its hits and Attack untouched, and the director told. For a unit whose damage is the status, not the hit.
 - **Half its Defense for faster basic attacks.** Shares its price with the piece above.
 - **A formation of two hands or one:** with a two-handed weapon a unit's basic attacks deal ×2 and come half as often; with a one-handed weapon they deal half and come twice as often. Seats are plain. The director wrote it on Attack, which would have doubled a staff caster's spells for nothing; asked for a suggestion, the agent put the trade on basic attacks alone, and it stands unless they say otherwise. Casters get nothing from it.
 - **A formation where one seat's crit pays the party:** one seat draws; one crits less often, and each of its crits raises the whole party's Crit damage for the rest of the fight, adding up; one crits more often. The third thing that grows over a fight. Sized far under what the director wrote, and capped.
 - **A formation with one amulet for three:** the third seat's amulet counts as worn by every member, stats and effect; the other two seats gain Attack or Defense for an empty amulet slot, which the shared amulet doesn't fill.
-- **A formation of wide and narrow:** in the first seat every single-target action lands on every foe or every ally at a share; in the second every multi-target action lands on one at more: its first random target, so a Mark takes it. *Open:* which version. After the agent warned that its worth turned on the number of foes, the director rewrote the first seat as "all self-targeted actions target the whole party" and asked whether that was better. The agent said no: that seat is Twins for three, few abilities target only their caster, and the warning was overstated (the two seats pull opposite ways in the same fight, so the formation has no good fight and bad one). The first version is counted here until they choose.
+- **A formation of wide and narrow:** in the first seat every single-target action lands on every foe or every ally at a share; in the second every multi-target action lands on its first random target for more, and against foes a Mark takes that pick. The third seat is plain. The director rewrote the first seat once (self-targeted actions landing on the whole party) after the agent warned that the formation's worth turned on the number of foes; the agent said the warning was overstated, since the two seats pull opposite ways in the same fight, and the director kept the first version.
 
 **Changed by the director:**
 - **Heat is lost when its holder loses HP,** not when it's hit: half its Heat each time. A Shield or an Aegis keeps it. Read as damage that reaches HP, a status's included, and not a price paid.
@@ -182,7 +182,8 @@ Placed by what they do (`batch-3-answers.md` has the director's words and each r
 - Half its Defense into Attack with Defense for wearing no armor: the amulet gives both. Under the Bannerman, a Bearer turns the Banner's Defense into Attack. With the two Greats that read the top-Attack ally, a wall can be that ally.
 - The two half-Defense pieces together: a quarter of its Defense, harder and faster swings.
 - One amulet for three with Defense for wearing no armor: the whole party gains it. Any amulet's start-of-fight effect happens three times, and again when a foe falls.
-- More stacks with nearly everything that lays or counts stacks: the pile, mana from the foes' debuffs, Double strike from Sunder, Might from a wind-up.
+- More stacks with nearly everything that lays or counts stacks: the pile, mana from the foes' debuffs, Double strike from Sunder, Might from a wind-up. Its halved hits cost nothing where the damage is the status's own.
+- Two pieces now halve hits for something else: this one, and the Great with +50% Crit chance (only its hits that don't crit).
 
 ## The count
 
@@ -190,7 +191,7 @@ What sets each effect in the web off, what it reads, and what it changes or move
 
 | Set off by | Effects | Reads | Effects | Changes or moves | Effects |
 | --- | --- | --- | --- | --- | --- |
-| its cast | 16 | nothing | 34 | its damage | 19 |
+| its cast | 16 | nothing | 34 | its damage | 20 |
 | its swing | 14 | a stat | 15 | a status on the foes | 15 |
 | always on | 15 | the size of a blow, heal or price | 8 | how often it swings or hits | 13 |
 | the fight's start | 8 | stacks on the foes | 11 | a status on itself or allies | 13 |
@@ -326,7 +327,7 @@ What sets each effect in the web off, what it reads, and what it changes or move
 | Heat on a crit | Batch 3 | its hit or crit | nothing | a status on itself or allies |
 | Double strike for each Sunder on the foes | Batch 3 | always on | stacks on the foes | how often it swings or hits |
 | Half its Defense becomes Attack | Batch 3 | always on | a stat | a stat |
-| More stacks of any status it applies | Batch 3 | a status gained, laid or shattering | nothing | a status on the foes, a status on itself or allies |
+| More stacks of any status it applies, and its hits deal half | Batch 3 | a status gained, laid or shattering | nothing | a status on the foes, a status on itself or allies, its damage |
 | Half its Defense for faster basic attacks | Batch 3 | always on | a stat | a stat, how often it swings or hits |
 | Formation: two hands or one | Batch 3 | always on | gear slots or ability order | its damage, how often it swings or hits |
 | Formation: one seat's crit pays the party | Batch 3 | its hit or crit | nothing | a stat |
