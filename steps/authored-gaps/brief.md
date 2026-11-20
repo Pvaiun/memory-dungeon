@@ -7,6 +7,7 @@ Read this first. It says what this step is trying to do and why, how the work is
 **Read little.** The work is judgement: writing a request that isn't the wrong question, and reading an answer against the rules. The director found that the judgement gets worse as the reading piles up, so this list is closed. What isn't on it is reference: open one section when a specific card or answer needs it, and not before.
 
 - **Every session:** `docs/primer.md`; this brief; `report.md` (the rulings and Next); `intent.md`; `web.md`.
+- **To put the web on threads, with the classes in it** (`report.md`, Next): in `docs/gear-design/builds.md`, the two tables Threads the builds share and Every class in the set; `first-pass.md`; and each class's section of `docs/core-set/classes.md`, for its plan and its three identities only.
 - **To write a batch:** in `docs/gear-design/builds.md`, The director's rulings, The frame and The builds (the nine roads). In `docs/gear-design/loot.md`, The director's rulings only.
 - **To read answers:** the rulings in `docs/core-set/vocabulary.md` and `docs/gear-design/loot.md`.
 - **Only when a card or an answer needs it, and only that section:**
@@ -28,7 +29,7 @@ Read this first. It says what this step is trying to do and why, how the work is
 
 ## The split
 
-- **The agent's:** the web (what connects to what, where it's thin, and whether a mechanic is overused), finding the gaps, turning each answer into a piece, checking it against the rules, sizing it, running it, and the plain parts nobody needs to author.
+- **The agent's:** the web (what connects to what, where it's thin, and whether a mechanic is overused), with the classes in it as its biggest pieces, finding the gaps, turning each answer into a piece, checking it against the rules, sizing it, running it, and the plain parts nobody needs to author.
 - **The director's:** every creative decision. What a gap is filled with, and any call on a build's structure or goal.
 - **Many requests are welcome:** "I don't mind answering hundreds of these... I enjoy it." What they aren't for is the other kind of volume: data entry and mass content.
 - **The director is never asked for** data entry or ideas from nothing. They said plainly that they can't write good questions or pieces with no context. Every request gives them a frame: one job, and what already sits near it.
@@ -47,6 +48,11 @@ So they aren't proposed again. Each was the agent's idea.
 - **Gaps taken from the earlier loot** (what each cut piece's slot was for). The director: "the loot we had before is not relevant to this at all". The web is built from the roads and the classes.
 - **A skeleton of what each road and class needs,** each need marked met, plain or a gap, drawn up before the next batch. The director approved it, then asked whether it was a mistake, and the agent agreed. It's the top-down structure that reached its ceiling before: it turns every unmet need into a request for coverage, it sorts pieces by road when the director's answers serve many roads at once, and the agent reached for it because it had been told it was wrong, not because the batches had stopped working. The best of the web has come from placing answers and seeing what they do together.
 - **A share of the set to reach** (the director offered 70% authored). No share is set; the set's size is the target (`report.md`, ruling 15).
+
+- **Tagging each effect with the builds it serves.** Proposed, then dropped by the agent: it's picking by colour, done by the makers, and nothing can check a tag. An effect is written as what it wants and gives (`report.md`, ruling 23).
+- **A star with the builds at its points and everything placed between them.** It was the director's picture and the agent drew it. Left to their own links the effects group by thread, not by build, and where an effect sat changed with how a thread's weight was read. The builds are routes over the map, not its places.
+- **A few deep classes in place of sixteen,** with gear for one class only. The director's idea, weighed and set down by them (`report.md`, ruling 25). What was kept from it: the classes are a core part of the web.
+- **Cards that were lists to correct** (each build's threads). Never answered: too dense, and too early (`report.md`, ruling 28).
 
 What stuck was the director's own formulation: a skeleton, gaps where the agent is unsure, and each gap brought to them as an objective.
 
@@ -109,19 +115,20 @@ The agent's reading, for seeing where the web is thick. It isn't the director's 
 
 ## Where it goes
 
-1. More batches, toward the set's size in `report.md`, ruling 15 (450 pieces of gear, 50 formations), then a look at the whole web with the director. Few thin spots among the kept effects doesn't mean the web is full: cards also come from what placing found, from pairs of classes and from whole directions (`report.md`, Next). The earlier loot is never where a card comes from.
+1. The web put on threads, with the classes in it (`report.md`, Next). Then more batches, toward the set's size in `report.md`, ruling 15 (450 pieces of gear, 50 formations), then a look at the whole web with the director. Few thin spots among the kept effects doesn't mean the web is full: cards also come from what placing found, from pairs of classes and from whole directions (`report.md`, Next). The earlier loot is never where a card comes from.
 2. The plain parts, written by the agent and shown by sample, at the end and only where something needs one.
 3. Sizing and slotting what's placed: kinds, rarities, who wears it, numbers.
-4. Formations beyond those kept or written, then mythics, on the director's word.
+4. Formations beyond those kept or written, the classes' versions and upgrades, then mythics, on the director's word.
 5. Build and measure. Until then the game stays on today's loot, and nothing in it changes.
 
-Not decided: how many of the 450 are authored, and whether upgrades and mythics join.
+Not decided: how many of the 450 are authored, when the versions and upgrades are reworked, and whether mythics join.
 
 ## The files
 
 - `intent.md`: the director's intent, recorded short.
 - `report.md`: their rulings, how the page and its store work, and the next steps.
 - `web.md`: the catalog of every effect the web holds, the count, what the director has settled, every card asked, and what not to ask again.
+- `first-pass.md`: the agent's one-sitting draft of the threads and of what each effect wants and gives. A start for the catalog's new columns, to check row by row.
 - `triage.md`, `triage-formations.md`: what they kept, in their two piles, in their words.
 - `requests-page.html`: the page's source.
 
