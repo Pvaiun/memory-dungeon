@@ -73,6 +73,16 @@ Said once the threads were settled, thinking aloud. Not a ruling.
 - **The objective, restated:** "to find a way to build a web for gear and formations that can support variety in class builds, trying to step away from this fixed build idea we had before with the named builds".
 - **What they asked:** "is there a way to use classes as a way to be the scaffolding for this web, or does the web need anchoring somewhere else? And then, is that somewhere else those builds we've defined, or should it be something else?"
 
+## Classes are starting points
+
+Said in the same conversation, still thinking aloud. Not a ruling.
+
+- **Classes may be themed on statuses:** "status effects are like part of the lifeblood of the entire game, and theming units off status effects doesn't feel wrong to me." A class speaks "a language of status effects or base actions". Every class does the things that happen in a fight; a class leans on one (crits for the Assassin, striking for the Monk) and does others too.
+- **Class design isn't the worry:** "I'm not so worried about the class design and being able to add these. It's more so, how does the web surface around them?"
+- **"Classes are starting points, not destinations."** "So where is the web fanning out to?" "We're looking for the thing that drives the shape of what we put in the web. Otherwise, we just put random effects and it'll be a formless mass."
+- **The builds may be it, loosened:** "It's possible this builds thing is the right way to do it. It's been working so far. Maybe we just need to do analysis to make sure that maybe the builds can be less precise and more like categories of effects."
+- **Where classes connect is open:** "what is it that makes it that the pyromancer connects to X other unit?" Some are obvious, as with the Ranger; many are "just sort of arbitrary in the versions".
+
 ## The triage (`triage.md`)
 
 Every effect that has been on gear so far, in three piles:
