@@ -19,6 +19,14 @@ Recorded by the agent from the conversation of Nov 16–17, for the director to 
 - **Then it asks.** Each gap comes to the director as an objective to author against: a link between two mechanics, a capstone for a build, a function to fill, a piece two classes would both want, or a whole build's direction ("I don't know where to start with the shock build").
 - **Creative decisions on the structure or a build's goals are asked, never made by the agent.**
 
+## The shape of the web (Nov 20)
+
+- **The picture:** a star with the builds at its points and "a gradient of color" between them, filled in "so that we know that there's little clusters of related things that players can find and use and build their own unique builds."
+- **The builds guide the makers, not the player:** "the player shouldn't really understand the concept of these builds... It's just a guiding principle for us so that we're not placing things randomly." Rules for how many effects must answer each build led players to pick by colour, and with so few builds that was easy to work out.
+- **What the authored effects are for:** enough great elements in the web that the simple effects can then be filled in by AI.
+- **What they aren't sure of:** that the breadth and spread of the hundred-odd effects is being curated, managed or understood, and that the web is still the idea the work is run by.
+- **What they asked of the agent,** as the data scientist: what the web is as a data model, whether it has to be represented and how ("I don't believe that just lines of text is going to be able to do it"), and how that finds the gaps.
+
 ## The triage (`triage.md`)
 
 Every effect that has been on gear so far, in three piles:
