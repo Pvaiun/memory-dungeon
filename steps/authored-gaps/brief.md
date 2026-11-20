@@ -151,5 +151,6 @@ Not decided: how many of the 450 are authored, when the versions and upgrades ar
 - `web.md`: the threads, the catalog of every effect the web holds as what it wants and gives, the count, what the director has settled, every card asked, and what not to ask again. `tools/web-threads.ts` checks and counts it.
 - `triage.md`, `triage-formations.md`: what they kept, in their two piles, in their words.
 - `requests-page.html`: the page's source.
+- `map-page.html`: the map's source. `tools/web-map.ts` fills it from `web.md`.
 
 Past batches' cards and answers aren't kept here: the page's store has them, and git has the files.

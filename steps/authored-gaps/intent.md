@@ -93,6 +93,18 @@ Said in the same conversation, on the agent's proposal of classes as starts, bui
 - **The challenge, if it isn't:** "it would be better to just keep the builds as we have now and allow me to build the effects like I've been doing, because there's already quite a bit of natural cross-pollination happening." It has to feel "realistic and not just like generic data that we don't master".
 - **The picture:** not knowing what's being painted, but "trying to find the colors that exist so that players can paint their own."
 
+## Test the models against the map
+
+Said in the same conversation, on the agent's proposal of clock, shape and material. Not a ruling.
+
+- **The clock is one part of the texture:** "I think it really is." The other part is the effects themselves, "the classic video games words like crits, thorns, bleeds, heals, weakens, stuns, burns. Like these are texture." In Slay the Spire a Shiv build and an Anger build do the same thing and feel different by how they're made and what sits near them.
+- **A status can't borrow another's texture:** "shock can't have the same texture as burn. It's not just different colored burn because it works on a totally different clock."
+- **What the builds were:** "They were clocks tied to game mechanics." The mechanics aren't to be discredited.
+- **Better questions aren't the goal.** "I think the questions were pretty good." Their effects were made "as generic as possible", or to "connect multiple concepts together", which is why so many join two words. "If the goal is just to ask different questions, then I don't think this is worth it."
+- **The goal:** "so that we can know what we need to fill out, so that we can build the map, so that we know what spots are empty in the map, so that we can then figure out what needs to go in there."
+- **What they asked for:** to step back and look at the map again. "Let's try to just test models against the map and see if we were to apply this new model, do we gain any benefit? Is the map more clearly defined? Is the map less restrictive? Are there things that can connect now that couldn't before?" And of the agent: "you're going too micro, too fast into designing specific things."
+- **Why a map at all, and their doubt:** "I'm still not even convinced the map is the right conceptualization". What they like in it: "certain threads are closer to each other than others, so we don't just end up with a tangled mess where anything could point to anything." The player explores it to "try to land in a functioning party". If every mechanic had a road in towards crit, "you could just do any build from anywhere". Then: "I'm not sure that everything having a road to crit is a problem. I'm really not."
+
 ## The triage (`triage.md`)
 
 Every effect that has been on gear so far, in three piles:

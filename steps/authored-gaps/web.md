@@ -2,7 +2,7 @@
 
 What the web holds. First the threads: the one list of words every effect is written in, and every class will be. Then the catalog: every effect the director kept or wrote, one row each, as what it wants and what it gives. Then the count that says what's used too much, what the director has settled, every card asked so far, and what not to ask again. Nothing here is sized or slotted. The director's rulings and how the page works are in `report.md`.
 
-`npx tsx tools/web-threads.ts` reads this page: it stops on a word that isn't in the list, and prints the tally the count is judged from, what joins to what, and how many partners each effect has.
+`npx tsx tools/web-threads.ts` reads this page: it stops on a word that isn't in the list, and prints the tally the count is judged from, what joins to what, and how many partners each effect has. `npx tsx tools/web-map.ts` redraws the map from it (`report.md`, The map).
 
 ## The threads
 
@@ -70,122 +70,136 @@ What the web holds. First the threads: the one list of words every effect is wri
 - **(an ally's)** after a want: it's set off by other units too, or read from them. **(to an ally)** after a give: it lands on another unit, or on the whole party. A word with neither is the wearer's own, or sits on the foes, which the whole party shares.
 - **Only what its words name.** What follows through a status's own rule is the list's last column; what follows through another effect is in Effects that do something together.
 
+## The clocks
+
+A trial, and the agent's reading: what a fight's damage keeps time to. The seven are the rhythm table of `docs/gear-design/builds.md` read as a list of its own, each build a clock tied to a few words. The catalog's Clock column gives an effect one clock, two where it joins them, or none where it's a trade or a seat's shape with no timing of its own. A status brings its own clock: fire is fed, frost breaks, Bleed is cashed by hits, Shock follows the foes.
+
+| Clock | What it is | The builds on it |
+| --- | --- | --- |
+| Fed | fed, or it falls: as high as it's being kept up right now | Bonfire |
+| Breaks | builds until it breaks, on a beat | Cold Snap |
+| Hits | opened, then cashed by every hit | Thousand Cuts |
+| Foes | follows what the foes do: their actions, their attacks, their misses | The Storm, The Toll |
+| Load | a long quiet, then one blow | Landslide |
+| Kills | a volley at the start, then each kill sets off the next | The Hunt |
+| Fuel | poured out while the fuel lasts, mana or life | Barrage, Blood Pact |
+
 ## The catalog
 
 108 effects: the 41 gear effects the director marked Great (their exact words are in `triage.md`), 10 from the Great formations, 6 seats they starred in other formations, and 51 from their answers to four batches (41 on gear, 10 formations). A note is there only where something was assumed, or where sizing, slotting or simulation has something to remember.
 
-**Adding an effect:** one row, in words that say what it does; what it wants and what it gives, in the threads' words and by the rules above; then run the tool and recount its words in The count.
+**Adding an effect:** one row, in words that say what it does; what it wants and what it gives, in the threads' words and by the rules above; its clock, where it has one; then run the tool and recount its words in The count.
 
-| Effect | From | Wants | Gives | Note |
-| --- | --- | --- | --- | --- |
-| Damage hits MP in place of HP | Great | Blows taken, MP | — |  |
-| Overheal becomes a Shield on itself | Great | Heals | Shield |  |
-| Attack lent to the weakest ally | Great | The fight's start, Attack | Attack (to an ally) |  |
-| Crits heal the lowest ally | Great | Crits | Heals (to an ally) |  |
-| Abilities from the top ally's Attack | Great | Casts, Attack (an ally's) | — |  |
-| Crescendo on each cast | Great | Casts | — |  |
-| On a dodge: the hit lands on another foe | Great | The dodge | — |  |
-| Readies the top-Attack ally's slowest ability | Great | The fight's start, Attack (an ally's) | Casts (to an ally) |  |
-| Abilities from Defense | Great | Casts, Defense | — |  |
-| Every other ability free | Great | Casts | MP |  |
-| While Hidden: hits ×2 | Great | Hidden | — |  |
-| An ally's price heals another | Great | HP paid or held low (an ally's) | Heals (to an ally) |  |
-| On a dodge: strikes the attacker | Great | The dodge | Swings |  |
-| A status given to itself, shared with the lowest ally | Great | Buffs | Buffs (to an ally) |  |
-| A knockout survived at 1 HP, Hidden | Great | Blows taken | Hidden, HP paid or held low |  |
-| No offhand: Evasion and harder swings | Great | What's worn, Swings | The dodge |  |
-| Swings don't spend Might | Great | Swings, Might | — |  |
-| Every other ally's Shields go to it | Great | Shield (an ally's) | Shield |  |
-| Max HP and max MP trade places | Great | Max HP, MP | Max HP, MP |  |
-| A broken Shield sends back ×2 | Great | Blows taken, Shield | — |  |
-| Never swings, Defense ×2 | Great | — | Defense |  |
-| Abilities deal more per Shock | Great | Casts, Shock | — |  |
-| A foe falls: the party's opening again | Great | A kill | The fight's start (to an ally) |  |
-| Stunned at the start, then everything ready and Hasted | Great | The fight's start | Casts, Swings |  |
-| Extra strikes roll Double strike again | Great | Extra strikes | Extra strikes |  |
-| Swings add half the party's Shield | Great | Swings, Shield (an ally's) | — |  |
-| A heal becomes the healed ally's next hit | Great | Heals | — |  |
-| +50% Crit chance, other hits halved | Great | — | Crits |  |
-| Swings add Chill from max HP | Great | Swings, Max HP | Chill, What a hit carries |  |
-| Abilities free under Clarity | Great | Casts, MP | MP | It wants Clarity itself, which sits in MP: plain mana doesn't set it off. |
-| Its overheal becomes a Shield on the healed ally | Great | Heals | Shield (to an ally) |  |
-| On a dodge: the next swing at once, 2 times | Great | The dodge | Swings, Extra strikes |  |
-| Half-HP start, Lifesteal ×2 | Great | The fight's start, Lifesteal | HP paid or held low, Lifesteal |  |
-| Swings 50% as often, ×3 and a Stun | Great | Swings | Stun, What a hit carries |  |
-| On a dodge: Heat, lost when it loses HP | Great | The dodge | Swings, Casts |  |
-| Held at 50% HP for +50% | Great | — | HP paid or held low |  |
-| Swings paid in HP | Great | Swings, Max HP | HP paid or held low |  |
-| Swings deal more per Shock | Great | Swings, Shock | — |  |
-| A heal on every cast | Great | Casts, Max HP | Heals |  |
-| Swings only when a foe acts | Great | A foe acting | — |  |
-| Hits deal more per different debuff | Great | Afflictions | — | Tagged with the five afflictions; any other debuff counts too. |
-| Icefall, Rime: abilities add more Chill | Great formation | Casts, Chill | Chill |  |
-| Icefall, Sleet: swings add a Chill | Great formation | Swings | Chill, What a hit carries |  |
-| Icefall, Breaker ★: a shatter readies its first-slotted ability | Great formation | Chill, The first-slotted ability | Casts |  |
-| The cathedral, Soloist ★: its first-slotted ability has no cooldown | Great formation | The first-slotted ability, MP | Casts |  |
-| The cathedral, Voice: its MP goes to the Soloist; a Shield when the Soloist casts | Great formation | MP, Casts (an ally's), Max HP | MP (to an ally), Shield |  |
-| The standard: Followers' swings carry what the Lead's carry | Great formation | Swings, What a hit carries (an ally's) | What a hit carries |  |
-| Glass and stone ★: one deals and takes ×2, two draw | Great formation | — | Blows taken |  |
-| Twins ★: what a Twin gives itself, the other gains | Great formation | Buffs | Buffs (to an ally) |  |
-| Bannerman: one never acts, the others gain its Attack and Defense | Great formation | Attack, Defense | Attack (to an ally), Defense (to an ally) |  |
-| The shepherd: takes the hits meant for the lowest ally | Great formation | — | Blows taken |  |
-| Warden ★: a hit on the Anchor heals it from the Warden's max HP | Starred seat | Blows taken (an ally's), Max HP | Heals (to an ally) |  |
-| Peak ★: hits land twice while every ally holds a Shield | Starred seat | Shield (an ally's) | Extra strikes |  |
-| Torch ★: a fallen foe's Burn passes on | Starred seat | A kill, Burn | Burn |  |
-| Conductor ★: each cast feeds the Soloist's mana | Starred seat | Casts | MP (to an ally) |  |
-| Well ★: draws more; blows taken feed the Soloist's mana | Starred seat | Blows taken | Blows taken, MP (to an ally) |  |
-| Lifeline ★: takes half of what the Anchor takes | Starred seat | Blows taken (an ally's) | — |  |
-| Regains MP for each stack of any debuff on the foes | Batch 1 | Afflictions, Spread | MP |  |
-| Damage statuses it lays (Burn, Bleed, Shock, Chill) go to the foe holding the most of that status, unless that foe is at its cap | Batch 1 | Burn, Bleed, Shock, Chill | Focus | Its wearer's own applications only. |
-| Every tick of its wind-up lays Shock on every foe | Batch 1 | A wind-up | Shock, Spread |  |
-| Any ability of its that lands on more than one unit, allies included, lays Shock on every foe | Batch 1 | Casts, Spread | Shock, Spread |  |
-| On a dodge: heals a share of the blow it would have been | Batch 1 | The dodge | Heals |  |
-| On a crit, whatever the hit sets off happens 4 times | Batch 1 | Crits, What a hit carries | What a hit carries | Statuses carried, Double strike's roll, anything worded "on a hit" or "on a basic attack". Never the hit's own damage, so no Lifesteal. Heat on a crit counts once. |
-| At fight start: more max HP | Batch 1 | The fight's start | Max HP | Current HP stays where it is, and the fight's end cuts it back. |
-| At fight start: Might | Batch 1 | The fight's start | Might | A Fine, brought in because the effect that repeats the opening needs openers. |
-| At fight start: Blur on every ally | Batch 1 | The fight's start | The dodge (to an ally) | A Blur's miss is a dodge. |
-| Defense while it wears no armor | Batch 1 | What's worn | Defense | An amulet. |
-| At fight start: a Mark on the foe with the least max HP | Batch 1 | The fight's start | The Mark | Only while no foe is Marked. It calls a heavy swing onto the smallest foe; damage carried past a kill answers that. |
-| Formation: the third seat takes no action of its own and basic attacks whenever either of the others does | Batch 1 | Swings (an ally's), Casts (an ally's) | Swings | Its swings happen even on a unit that never makes a basic attack. |
-| Formation: one seat holds triple the Shield and draws more; the other two can't hold any | Batch 1 | Shield | Shield, Blows taken |  |
-| Its extra strikes set off what a basic attack sets off | Batch 2 | Extra strikes, What a hit carries | What a hit carries | A Fine, a little wider. It doesn't roll Double strike again by itself. |
-| Each status it lays on itself or an ally adds Chill to the foe with the most Chill | Batch 2 | Buffs | Chill | Its own applications, once for each ally a buff lands on; a random foe when none holds Chill. |
-| When another ally casts: a fixed amount comes off its cooldowns, split evenly over the abilities it has slotted | Batch 2 | Casts (an ally's) | Casts |  |
-| When a foe is Stunned: gains Might | Batch 2 | Stun | Might | Any Stun that lands, a shatter's included, whoever caused it. |
-| A Stun it lands leaves Slow behind | Batch 2 | Stun | Slow | On a boss both count toward its resistance to control. |
-| When a fight is won: gives up half the HP it has left and gains that share of its max MP | Batch 2 | Between fights | MP, HP paid or held low |  |
-| Its first-slotted ability adds Burn to every target, allies included | Batch 2 | The first-slotted ability, Casts | Burn | Burn on an ally is the director's choice. The gathering piece moves only Burn laid on foes. |
-| Attack for the HP it is missing | Batch 2 | HP paid or held low, Max HP | Attack | Counted in points, not as a share. |
-| While Hidden: regains MP every tick | Batch 2 | Hidden | MP |  |
-| Formation: the first seat pays a share of its max HP for every action; the second raises it when it falls; the third gains Attack for every share of HP the party is missing | Batch 2 | Swings, Casts, HP paid or held low (an ally's) | HP paid or held low, Attack | The price can kill the first seat, and a fallen ally counts in full: the one thing in the game that wants a fall. The third seat's Attack is sized to pay for the risk on the second. |
-| Its hits add Bleed to a Marked foe | Batch 3 | The Mark | Bleed, What a hit carries |  |
-| Its hits on a Marked foe also land on another foe, carrying what the hit carries | Batch 3 | The Mark, What a hit carries | Spread |  |
-| When a foe is Stunned and no foe is Marked: it is Marked | Batch 3 | Stun | The Mark |  |
-| Its hits deal more for each share of HP its target is missing | Batch 3 | Focus | — | Sized to show on a boss. Its words name no thread: tagged by what brings its target low. |
-| When a foe is Silenced: the party's "when a foe falls" effects happen | Batch 3 | Silence | A kill (to an ally) | Not effects worded "on a kill", and not those that move something off the fallen foe. A boss comes to resist Silence. |
-| Becomes Hidden whenever it gains Guard | Batch 3 | Guard | Hidden | A Taunt ends Hidden, so it doesn't work on a unit that Taunts as it Guards. Needs Guard on plain gear. |
-| Every tick of its wind-up gives it Might | Batch 3 | A wind-up | Might | Sized so one long cast doesn't fill the cap. |
-| On a crit: Heat | Batch 3 | Crits | Swings, Casts | Heat is lost when its holder loses HP (half each time), not when it's hit: the director changed the rule. |
-| Double strike for each stack of Sunder on the foes | Batch 3 | Sunder, Spread | Extra strikes | Counted over every foe. Sized so a fully Sundered pack is near a sure second strike. |
-| Half its Defense becomes Attack | Batch 3 | Defense | Attack |  |
-| Applies more stacks of any status it applies, and its hits deal half | Batch 3 | Afflictions, Might | Afflictions, Might | Stacking statuses only. The price is on its hits, not its Attack: stacks follow Attack (`STACKS`). |
-| Half its Defense for faster basic attacks | Batch 3 | Defense | Swings |  |
-| Formation: with a two-handed weapon a unit's basic attacks deal ×2 and come half as often; with a one-handed weapon they deal half and come twice as often | Batch 3 | What's worn | Swings | On basic attacks only, at the agent's suggestion; the director wrote it on Attack. |
-| Formation: one seat draws; one crits less often, and each of its crits raises the party's Crit damage for the rest of the fight; one crits more often | Batch 3 | Crits | Crits (to an ally), Blows taken | Sized far under what the director wrote, and capped. |
-| Formation: the third seat's amulet counts as worn by every member; the other two gain Attack or Defense for an empty amulet slot | Batch 3 | What's worn | Attack, Defense | Stats and effect are shared, and the shared amulet doesn't fill the other two's slot. Whether a mythic amulet is shared waits for the mythics. |
-| Formation: in the first seat every single-target action lands on every foe or every ally at a share; in the second every multi-target action lands on its first random target for more | Batch 3 | Spread | Spread, Focus | Against foes a Mark takes the second seat's pick. |
-| Damage left over from a kill carries into another random foe, and on with each kill | Batch 4 | A kill | A kill, Spread | Its wearer's own hits. What carries is damage, not a new hit. |
-| While above 30% HP: when a foe starts a wind-up, pays a share of its max HP and Silences that foe | Batch 4 | A foe acting | Silence, HP paid or held low | Pays only when the Silence lands. A price, not damage. |
-| Cooldown for each ability it has slotted | Batch 4 | — | Casts | The director slots one or two for uptime, so it's a choice. A full kit lands between a rare's and a legendary's Cooldown (`SPECIAL.cooldown`). |
-| Its wind-ups take three times as long; while winding up it has Thorns and Aggro | Batch 4 | A wind-up | A wind-up, Thorns, Blows taken | The Thorns are gone as the cast lands. Sized under the Bramble knight's own (`SPECIAL.thorns`). Meant for the great weapon's holders. |
-| Its wind-ups take twice as long, and each ability is cast twice for twice the mana | Batch 4 | Casts, MP | Casts, A wind-up | The second cast is sized as a share of the first. |
-| Each time a foe's Burn ticks: gains Might for every 10 Burn on that foe | Batch 4 | Burn, Focus | Might | No price. Sized so the Might follows the fire's height and doesn't sit at the cap. If it's too easy, an MP price is the one to take back to the director. |
-| When hit: strikes the attacker with a basic attack | Batch 4 | Blows taken | Swings | No cap on how often. The answering swing and what it carries are a share of a basic attack. Works on a unit that never makes one. A Stun it carries can't be sized by a share: watch it in simulation, and go back to the director before changing it. |
-| Its basic attacks scale from Thorns | Batch 4 | Swings, Thorns | — | Not on a weapon, so it can be worn with the tripled wind-up. Needs Thorns on plain Plate and Mail. |
-| Doubles the effect of its wearer's passive | Batch 4 | A passive | A passive | No price. What doubles for each of the sixteen is the agent's to say, from each power step, and to show the director by sample. Its own class's passive only. If simulation finds it on every unit, longer cooldowns is the price to take back to them. |
-| Formation: the foes' picks are even across the three, and no ally can Taunt; when hit, the first seat's first-slotted ability comes nearer, the second gains Defense, the third Attack | Batch 4 | Blows taken, The first-slotted ability | Blows taken, Casts, Defense, Attack | The gains add up over the fight, small and capped. A dodged blow isn't a hit. |
-| Formation: two seats each hold the other's passive as well as their own; the third is plain | Batch 4 | A passive (an ally's) | A passive (to an ally) | A borrowed passive comes as its owner trained it and reads the borrower's stats. The agent checks each of the sixteen on another class and brings back those that don't work. |
-| Formation: a foe that takes Shock damage gains Bleed; the first seat's crits lay Shock, the second swings faster, the third is healed whenever Bleed pays | Batch 4 | Shock, Crits, Bleed | Bleed, Shock, Swings, Heals | The heal is a fixed amount, as a trial: the director pictured a share of the Bleed. The second seat has room for another effect of theirs. |
+| Effect | From | Wants | Gives | Clock | Note |
+| --- | --- | --- | --- | --- | --- |
+| Damage hits MP in place of HP | Great | Blows taken, MP | — | Fuel |  |
+| Overheal becomes a Shield on itself | Great | Heals | Shield | — |  |
+| Attack lent to the weakest ally | Great | The fight's start, Attack | Attack (to an ally) | Kills |  |
+| Crits heal the lowest ally | Great | Crits | Heals (to an ally) | Hits |  |
+| Abilities from the top ally's Attack | Great | Casts, Attack (an ally's) | — | — |  |
+| Crescendo on each cast | Great | Casts | — | Fed |  |
+| On a dodge: the hit lands on another foe | Great | The dodge | — | Foes |  |
+| Readies the top-Attack ally's slowest ability | Great | The fight's start, Attack (an ally's) | Casts (to an ally) | Kills |  |
+| Abilities from Defense | Great | Casts, Defense | — | — |  |
+| Every other ability free | Great | Casts | MP | Fuel |  |
+| While Hidden: hits ×2 | Great | Hidden | — | Load |  |
+| An ally's price heals another | Great | HP paid or held low (an ally's) | Heals (to an ally) | Fuel |  |
+| On a dodge: strikes the attacker | Great | The dodge | Swings | Foes |  |
+| A status given to itself, shared with the lowest ally | Great | Buffs | Buffs (to an ally) | — |  |
+| A knockout survived at 1 HP, Hidden | Great | Blows taken | Hidden, HP paid or held low | — |  |
+| No offhand: Evasion and harder swings | Great | What's worn, Swings | The dodge | — |  |
+| Swings don't spend Might | Great | Swings, Might | — | Load |  |
+| Every other ally's Shields go to it | Great | Shield (an ally's) | Shield | — |  |
+| Max HP and max MP trade places | Great | Max HP, MP | Max HP, MP | — |  |
+| A broken Shield sends back ×2 | Great | Blows taken, Shield | — | Breaks, Foes |  |
+| Never swings, Defense ×2 | Great | — | Defense | — |  |
+| Abilities deal more per Shock | Great | Casts, Shock | — | Foes |  |
+| A foe falls: the party's opening again | Great | A kill | The fight's start (to an ally) | Kills |  |
+| Stunned at the start, then everything ready and Hasted | Great | The fight's start | Casts, Swings | Load |  |
+| Extra strikes roll Double strike again | Great | Extra strikes | Extra strikes | Hits |  |
+| Swings add half the party's Shield | Great | Swings, Shield (an ally's) | — | Fed |  |
+| A heal becomes the healed ally's next hit | Great | Heals | — | Load |  |
+| +50% Crit chance, other hits halved | Great | — | Crits | Hits |  |
+| Swings add Chill from max HP | Great | Swings, Max HP | Chill, What a hit carries | Breaks |  |
+| Abilities free under Clarity | Great | Casts, MP | MP | Fuel | It wants Clarity itself, which sits in MP: plain mana doesn't set it off. |
+| Its overheal becomes a Shield on the healed ally | Great | Heals | Shield (to an ally) | — |  |
+| On a dodge: the next swing at once, 2 times | Great | The dodge | Swings, Extra strikes | Foes |  |
+| Half-HP start, Lifesteal ×2 | Great | The fight's start, Lifesteal | HP paid or held low, Lifesteal | Fuel |  |
+| Swings 50% as often, ×3 and a Stun | Great | Swings | Stun, What a hit carries | Load |  |
+| On a dodge: Heat, lost when it loses HP | Great | The dodge | Swings, Casts | Foes, Fed |  |
+| Held at 50% HP for +50% | Great | — | HP paid or held low | Fuel |  |
+| Swings paid in HP | Great | Swings, Max HP | HP paid or held low | Fuel |  |
+| Swings deal more per Shock | Great | Swings, Shock | — | Foes |  |
+| A heal on every cast | Great | Casts, Max HP | Heals | — |  |
+| Swings only when a foe acts | Great | A foe acting | — | Foes |  |
+| Hits deal more per different debuff | Great | Afflictions | — | — | Tagged with the five afflictions; any other debuff counts too. |
+| Icefall, Rime: abilities add more Chill | Great formation | Casts, Chill | Chill | Breaks |  |
+| Icefall, Sleet: swings add a Chill | Great formation | Swings | Chill, What a hit carries | Breaks |  |
+| Icefall, Breaker ★: a shatter readies its first-slotted ability | Great formation | Chill, The first-slotted ability | Casts | Breaks |  |
+| The cathedral, Soloist ★: its first-slotted ability has no cooldown | Great formation | The first-slotted ability, MP | Casts | Fuel |  |
+| The cathedral, Voice: its MP goes to the Soloist; a Shield when the Soloist casts | Great formation | MP, Casts (an ally's), Max HP | MP (to an ally), Shield | Fuel |  |
+| The standard: Followers' swings carry what the Lead's carry | Great formation | Swings, What a hit carries (an ally's) | What a hit carries | Hits |  |
+| Glass and stone ★: one deals and takes ×2, two draw | Great formation | — | Blows taken | — |  |
+| Twins ★: what a Twin gives itself, the other gains | Great formation | Buffs | Buffs (to an ally) | — |  |
+| Bannerman: one never acts, the others gain its Attack and Defense | Great formation | Attack, Defense | Attack (to an ally), Defense (to an ally) | — |  |
+| The shepherd: takes the hits meant for the lowest ally | Great formation | — | Blows taken | — |  |
+| Warden ★: a hit on the Anchor heals it from the Warden's max HP | Starred seat | Blows taken (an ally's), Max HP | Heals (to an ally) | Foes |  |
+| Peak ★: hits land twice while every ally holds a Shield | Starred seat | Shield (an ally's) | Extra strikes | Breaks |  |
+| Torch ★: a fallen foe's Burn passes on | Starred seat | A kill, Burn | Burn | Kills, Fed |  |
+| Conductor ★: each cast feeds the Soloist's mana | Starred seat | Casts | MP (to an ally) | Fuel |  |
+| Well ★: draws more; blows taken feed the Soloist's mana | Starred seat | Blows taken | Blows taken, MP (to an ally) | Foes, Fuel |  |
+| Lifeline ★: takes half of what the Anchor takes | Starred seat | Blows taken (an ally's) | — | — |  |
+| Regains MP for each stack of any debuff on the foes | Batch 1 | Afflictions, Spread | MP | Fuel |  |
+| Damage statuses it lays (Burn, Bleed, Shock, Chill) go to the foe holding the most of that status, unless that foe is at its cap | Batch 1 | Burn, Bleed, Shock, Chill | Focus | — | Its wearer's own applications only. |
+| Every tick of its wind-up lays Shock on every foe | Batch 1 | A wind-up | Shock, Spread | Load, Foes |  |
+| Any ability of its that lands on more than one unit, allies included, lays Shock on every foe | Batch 1 | Casts, Spread | Shock, Spread | Foes |  |
+| On a dodge: heals a share of the blow it would have been | Batch 1 | The dodge | Heals | Foes |  |
+| On a crit, whatever the hit sets off happens 4 times | Batch 1 | Crits, What a hit carries | What a hit carries | Hits | Statuses carried, Double strike's roll, anything worded "on a hit" or "on a basic attack". Never the hit's own damage, so no Lifesteal. Heat on a crit counts once. |
+| At fight start: more max HP | Batch 1 | The fight's start | Max HP | Kills | Current HP stays where it is, and the fight's end cuts it back. |
+| At fight start: Might | Batch 1 | The fight's start | Might | Kills | A Fine, brought in because the effect that repeats the opening needs openers. |
+| At fight start: Blur on every ally | Batch 1 | The fight's start | The dodge (to an ally) | Kills | A Blur's miss is a dodge. |
+| Defense while it wears no armor | Batch 1 | What's worn | Defense | — | An amulet. |
+| At fight start: a Mark on the foe with the least max HP | Batch 1 | The fight's start | The Mark | Kills | Only while no foe is Marked. It calls a heavy swing onto the smallest foe; damage carried past a kill answers that. |
+| Formation: the third seat takes no action of its own and basic attacks whenever either of the others does | Batch 1 | Swings (an ally's), Casts (an ally's) | Swings | Hits | Its swings happen even on a unit that never makes a basic attack. |
+| Formation: one seat holds triple the Shield and draws more; the other two can't hold any | Batch 1 | Shield | Shield, Blows taken | — |  |
+| Its extra strikes set off what a basic attack sets off | Batch 2 | Extra strikes, What a hit carries | What a hit carries | Hits | A Fine, a little wider. It doesn't roll Double strike again by itself. |
+| Each status it lays on itself or an ally adds Chill to the foe with the most Chill | Batch 2 | Buffs | Chill | Breaks | Its own applications, once for each ally a buff lands on; a random foe when none holds Chill. |
+| When another ally casts: a fixed amount comes off its cooldowns, split evenly over the abilities it has slotted | Batch 2 | Casts (an ally's) | Casts | Fuel |  |
+| When a foe is Stunned: gains Might | Batch 2 | Stun | Might | Breaks, Load | Any Stun that lands, a shatter's included, whoever caused it. |
+| A Stun it lands leaves Slow behind | Batch 2 | Stun | Slow | Breaks | On a boss both count toward its resistance to control. |
+| When a fight is won: gives up half the HP it has left and gains that share of its max MP | Batch 2 | Between fights | MP, HP paid or held low | Fuel |  |
+| Its first-slotted ability adds Burn to every target, allies included | Batch 2 | The first-slotted ability, Casts | Burn | Fed | Burn on an ally is the director's choice. The gathering piece moves only Burn laid on foes. |
+| Attack for the HP it is missing | Batch 2 | HP paid or held low, Max HP | Attack | Fuel | Counted in points, not as a share. |
+| While Hidden: regains MP every tick | Batch 2 | Hidden | MP | Fuel |  |
+| Formation: the first seat pays a share of its max HP for every action; the second raises it when it falls; the third gains Attack for every share of HP the party is missing | Batch 2 | Swings, Casts, HP paid or held low (an ally's) | HP paid or held low, Attack | Fuel | The price can kill the first seat, and a fallen ally counts in full: the one thing in the game that wants a fall. The third seat's Attack is sized to pay for the risk on the second. |
+| Its hits add Bleed to a Marked foe | Batch 3 | The Mark | Bleed, What a hit carries | Hits |  |
+| Its hits on a Marked foe also land on another foe, carrying what the hit carries | Batch 3 | The Mark, What a hit carries | Spread | Hits |  |
+| When a foe is Stunned and no foe is Marked: it is Marked | Batch 3 | Stun | The Mark | Breaks, Kills |  |
+| Its hits deal more for each share of HP its target is missing | Batch 3 | Focus | — | Kills | Sized to show on a boss. Its words name no thread: tagged by what brings its target low. |
+| When a foe is Silenced: the party's "when a foe falls" effects happen | Batch 3 | Silence | A kill (to an ally) | Kills | Not effects worded "on a kill", and not those that move something off the fallen foe. A boss comes to resist Silence. |
+| Becomes Hidden whenever it gains Guard | Batch 3 | Guard | Hidden | — | A Taunt ends Hidden, so it doesn't work on a unit that Taunts as it Guards. Needs Guard on plain gear. |
+| Every tick of its wind-up gives it Might | Batch 3 | A wind-up | Might | Load | Sized so one long cast doesn't fill the cap. |
+| On a crit: Heat | Batch 3 | Crits | Swings, Casts | Hits, Fed | Heat is lost when its holder loses HP (half each time), not when it's hit: the director changed the rule. |
+| Double strike for each stack of Sunder on the foes | Batch 3 | Sunder, Spread | Extra strikes | Hits, Fed | Counted over every foe. Sized so a fully Sundered pack is near a sure second strike. |
+| Half its Defense becomes Attack | Batch 3 | Defense | Attack | — |  |
+| Applies more stacks of any status it applies, and its hits deal half | Batch 3 | Afflictions, Might | Afflictions, Might | — | Stacking statuses only. The price is on its hits, not its Attack: stacks follow Attack (`STACKS`). |
+| Half its Defense for faster basic attacks | Batch 3 | Defense | Swings | — |  |
+| Formation: with a two-handed weapon a unit's basic attacks deal ×2 and come half as often; with a one-handed weapon they deal half and come twice as often | Batch 3 | What's worn | Swings | Load, Hits | On basic attacks only, at the agent's suggestion; the director wrote it on Attack. |
+| Formation: one seat draws; one crits less often, and each of its crits raises the party's Crit damage for the rest of the fight; one crits more often | Batch 3 | Crits | Crits (to an ally), Blows taken | Hits, Fed | Sized far under what the director wrote, and capped. |
+| Formation: the third seat's amulet counts as worn by every member; the other two gain Attack or Defense for an empty amulet slot | Batch 3 | What's worn | Attack, Defense | — | Stats and effect are shared, and the shared amulet doesn't fill the other two's slot. Whether a mythic amulet is shared waits for the mythics. |
+| Formation: in the first seat every single-target action lands on every foe or every ally at a share; in the second every multi-target action lands on its first random target for more | Batch 3 | Spread | Spread, Focus | — | Against foes a Mark takes the second seat's pick. |
+| Damage left over from a kill carries into another random foe, and on with each kill | Batch 4 | A kill | A kill, Spread | Kills | Its wearer's own hits. What carries is damage, not a new hit. |
+| While above 30% HP: when a foe starts a wind-up, pays a share of its max HP and Silences that foe | Batch 4 | A foe acting | Silence, HP paid or held low | Foes, Fuel | Pays only when the Silence lands. A price, not damage. |
+| Cooldown for each ability it has slotted | Batch 4 | — | Casts | — | The director slots one or two for uptime, so it's a choice. A full kit lands between a rare's and a legendary's Cooldown (`SPECIAL.cooldown`). |
+| Its wind-ups take three times as long; while winding up it has Thorns and Aggro | Batch 4 | A wind-up | A wind-up, Thorns, Blows taken | Load, Foes | The Thorns are gone as the cast lands. Sized under the Bramble knight's own (`SPECIAL.thorns`). Meant for the great weapon's holders. |
+| Its wind-ups take twice as long, and each ability is cast twice for twice the mana | Batch 4 | Casts, MP | Casts, A wind-up | Load, Fuel | The second cast is sized as a share of the first. |
+| Each time a foe's Burn ticks: gains Might for every 10 Burn on that foe | Batch 4 | Burn, Focus | Might | Fed, Load | No price. Sized so the Might follows the fire's height and doesn't sit at the cap. If it's too easy, an MP price is the one to take back to the director. |
+| When hit: strikes the attacker with a basic attack | Batch 4 | Blows taken | Swings | Foes | No cap on how often. The answering swing and what it carries are a share of a basic attack. Works on a unit that never makes one. A Stun it carries can't be sized by a share: watch it in simulation, and go back to the director before changing it. |
+| Its basic attacks scale from Thorns | Batch 4 | Swings, Thorns | — | — | Not on a weapon, so it can be worn with the tripled wind-up. Needs Thorns on plain Plate and Mail. |
+| Doubles the effect of its wearer's passive | Batch 4 | A passive | A passive | — | No price. What doubles for each of the sixteen is the agent's to say, from each power step, and to show the director by sample. Its own class's passive only. If simulation finds it on every unit, longer cooldowns is the price to take back to them. |
+| Formation: the foes' picks are even across the three, and no ally can Taunt; when hit, the first seat's first-slotted ability comes nearer, the second gains Defense, the third Attack | Batch 4 | Blows taken, The first-slotted ability | Blows taken, Casts, Defense, Attack | Foes, Fed | The gains add up over the fight, small and capped. A dodged blow isn't a hit. |
+| Formation: two seats each hold the other's passive as well as their own; the third is plain | Batch 4 | A passive (an ally's) | A passive (to an ally) | — | A borrowed passive comes as its owner trained it and reads the borrower's stats. The agent checks each of the sixteen on another class and brings back those that don't work. |
+| Formation: a foe that takes Shock damage gains Bleed; the first seat's crits lay Shock, the second swings faster, the third is healed whenever Bleed pays | Batch 4 | Shock, Crits, Bleed | Bleed, Shock, Swings, Heals | Foes, Hits | The heal is a fixed amount, as a trial: the director pictured a share of the Bleed. The second seat has room for another effect of theirs. |
 
 **Kit changes, for build** (the director's, written in an answer; the kits stay as they are until then):
 - **Assassin, Vanish, version A: Ambush** (goes Hidden, and Marks the foe with the least current HP), in place of Smoke screen. After it, nothing in the kits hides another unit.

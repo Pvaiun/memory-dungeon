@@ -9,60 +9,24 @@
  *
  * Two effects are partners when one gives a thread the other wants. An effect that gives a thread also takes on what that
  * thread wants and gives by the rules (the list's last column). The threads every unit has are left out of partners and joins.
+ * The page is read by `web-threads/read.ts`; `web-map.ts` draws the same web.
  */
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
+import { PAGE, readWeb } from "./web-threads/read.js";
 
-const PAGE = "steps/authored-gaps/web.md";
-const COMMON = "every unit's";
 const SHARE_SEEN = 5; // a run shows about a fifth of the loot
 const LINE = 12; // one effect in twelve naming a thread is the overuse line
 
-type Thread = { name: string; kind: string; wants: string[]; gives: string[] };
-type Effect = { name: string; from: string; wants: string[]; gives: string[]; grouped: Set<string>; crosses: boolean };
-
-const page = readFileSync(PAGE, "utf8");
-/** The rows of the first table after a heading, as cells. */
-function table(after: string, head: string): string[][] {
-  const from = page.indexOf(head, page.indexOf(after));
-  if (from < 0) throw new Error(`no table "${head}" after "${after}"`);
-  const rows: string[][] = [];
-  for (const line of page.slice(from).split("\n").slice(2)) {
-    if (!line.startsWith("|")) break;
-    rows.push(line.slice(1, line.lastIndexOf("|")).split(" | ").map((c) => c.trim()));
-  }
-  return rows;
-}
-const list = (cell: string) => (cell === "—" || !cell ? [] : cell.split(", ").map((w) => w.trim()));
-const rule = (cell: string, verb: string) => list(cell.split("; ").find((p) => p.startsWith(verb + " "))?.slice(verb.length + 1) ?? "");
-
-const threads: Thread[] = table("## The threads", "| Thread |").map(([name, kind, , , rules]) => ({ name, kind, wants: rule(rules, "wants"), gives: rule(rules, "gives") }));
-const byName = new Map(threads.map((t) => [t.name, t]));
-const groups = new Map(table("## The threads", "| Word |").map(([word, stands]) => [word, list(stands)]));
-const common = new Set(threads.filter((t) => t.kind === COMMON).map((t) => t.name));
-
-const errors: string[] = [];
-function words(cell: string, effect: Effect): string[] {
-  return list(cell).flatMap((raw) => {
-    const word = raw.replace(/ \((an ally's|to an ally)\)$/, "");
-    if (word !== raw) effect.crosses = true;
-    if (groups.has(word)) return groups.get(word)!.map((w) => (effect.grouped.add(w), w));
-    if (!byName.has(word)) errors.push(`"${raw}" isn't a thread: ${effect.name}`);
-    return [word];
-  });
-}
-const effects: Effect[] = table("## The catalog", "| Effect |").map(([name, from, wants, gives]) => {
-  const e: Effect = { name, from, wants: [], gives: [], grouped: new Set(), crosses: false };
-  e.wants = words(wants, e);
-  e.gives = words(gives, e);
-  return e;
-});
-for (const t of threads) for (const w of [...t.wants, ...t.gives]) if (!byName.has(w)) errors.push(`"${w}" isn't a thread: the rules of ${t.name}`);
-for (const [word, stands] of groups) for (const w of stands) if (!byName.has(w)) errors.push(`"${w}" isn't a thread: ${word}`);
-if (errors.length) {
-  console.error(errors.join("\n"));
+let web;
+try {
+  web = readWeb();
+} catch (e) {
+  console.error((e as Error).message);
   process.exit(1);
 }
+const { threads, common, effects } = web;
+const byName = new Map(threads.map((t) => [t.name, t]));
 
 /** What an effect wants and gives once the rules of the threads it gives are counted, without the threads every unit has. */
 const reach = effects.map((e) => {
@@ -89,7 +53,7 @@ const tally = threads.map((t) => {
   const gives = effects.filter((e) => e.gives.includes(t.name));
   const wants = effects.filter((e) => e.wants.includes(t.name));
   const names = new Set([...gives, ...wants]);
-  return { t, gives: gives.length, wants: wants.length, names: names.size, grouped: [...names].filter((e) => e.grouped.has(t.name)).length };
+  return { t, gives: gives.length, wants: wants.length, names: names.size, grouped: [...names].filter((e) => e.grouped.includes(t.name)).length };
 });
 for (const r of tally) out.push(`| ${r.t.name}${common.has(r.t.name) ? " (every unit's)" : ""} | ${r.gives} | ${r.wants} | ${r.names} | ${r.names - r.grouped} | ${r.grouped || ""} |`);
 const names = (rs: typeof tally) => rs.map((r) => r.t.name).join(", ") || "none";
