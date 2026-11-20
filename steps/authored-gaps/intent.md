@@ -26,6 +26,9 @@ Recorded by the agent from the conversation of Nov 16–17, for the director to 
 - **What the authored effects are for:** enough great elements in the web that the simple effects can then be filled in by AI.
 - **What they aren't sure of:** that the breadth and spread of the hundred-odd effects is being curated, managed or understood, and that the web is still the idea the work is run by.
 - **What they asked of the agent,** as the data scientist: what the web is as a data model, whether it has to be represented and how ("I don't believe that just lines of text is going to be able to do it"), and how that finds the gaps.
+- **Far-apart builds may share little.** A player explores, refining a build as they go, so two builds on opposite sides of the star having few overlaps makes sense to them. They "could go either way".
+- **The classes are solid as identities and weak in their details.** Each class's "general vibe and their general things that they do" stands. Their upgrades, versions and each ability's exact effect were made in the same mass generation as the loot and are "super underdeveloped": "about 50% of them are just bad". The classes are to be read as broad pictures, a few threads each, and they change in reaction to the web: if the web puts Bonfire nearest another build, the Pyromancer can be given more of that build's effects.
+- **Open, and theirs to rule:** whether the builds are "helpful signposts, or... poor design" (Slay the Spire's defined builds on several characters, against Hades's one character and a unique thing every time); and whether the web is built piece by piece or has to be authored in its shape first, and if so whether the way it's authored today is right.
 
 ## The triage (`triage.md`)
 
