@@ -83,6 +83,10 @@ textarea::placeholder{ color:var(--muted); opacity:.8; }
 .verdict.you{ background:var(--accent); color:var(--accent-ink); }
 .replylab{ color:var(--muted); }
 textarea.small{ min-height:4rem; }
+.thread{ display:flex; flex-direction:column; gap:.8rem; }
+.said{ border-left:3px solid var(--accent); padding:.15rem 0 .15rem .75rem; display:flex; flex-direction:column; gap:.4rem; }
+.said p{ margin:0; white-space:pre-wrap; }
+.said .px{ color:var(--muted); }
 </style>
 
 <div class="wrap">
@@ -133,13 +137,18 @@ textarea.small{ min-height:4rem; }
   function lsGet(k){ try { return localStorage.getItem(k); } catch (e) { return null; } }
   function lsSet(k, v){ try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) {} }
   function str(v){ return typeof v === "string" ? v : ""; }
+  function strs(v){ return Array.isArray(v) ? v.map(str) : []; }
+  /* A card is a conversation: the answer, Claude's read, the director's reply, then Claude's later turns (replies/<id>.turns) each followed by the director's next reply (answers/<id>.more). Only the last reply box is open; earlier ones are shown as said. */
+  function turnsOf(id){ var rp = replies.get(id); return rp ? rp.turns : []; }
+  function curReply(id){ var s = stateOf(id), n = turnsOf(id).length; return n ? str(s.more[n - 1]) : s.reply; }
+  function setCurReply(id, v){ var s = stateOf(id), n = turnsOf(id).length; if (!n){ s.reply = v; return; } while (s.more.length < n) s.more.push(""); s.more[n - 1] = v; }
 
   function stateOf(id){
     var s = local.get(id);
     if (!s){
-      s = { text:"", flag:"", reply:"", readOpened:false, dirty:false, saving:false, again:false, error:"", folded:false, autoFolded:false, timer:0, retried:false };
+      s = { text:"", flag:"", reply:"", more:[], readOpened:false, dirty:false, saving:false, again:false, error:"", folded:false, autoFolded:false, timer:0, retried:false };
       var d = lsGet("draft:" + id);
-      if (d){ try { var o = JSON.parse(d); s.text = str(o.text); s.flag = str(o.flag); s.reply = str(o.reply); s.dirty = true; } catch (e) {} }
+      if (d){ try { var o = JSON.parse(d); s.text = str(o.text); s.flag = str(o.flag); s.reply = str(o.reply); s.more = strs(o.more); s.dirty = true; } catch (e) {} }
       local.set(id, s);
     }
     return s;
@@ -148,8 +157,8 @@ textarea.small{ min-height:4rem; }
   function isDone(s){ return statusOf(s) !== "open"; }
   function asks(rp){ return !!rp && (rp.kind === "question" || rp.kind === "overused"); }
   /* A read can answer the director's reply: it carries that reply in "after". Until they change the reply, a read that asks still needs them, and one that doesn't is marked as a reply. */
-  function answersReply(id){ var rp = replies.get(id), r = stateOf(id).reply.trim(); return !!rp && !!rp.after && !!r && r === rp.after.trim(); }
-  function needsYou(id){ return asks(replies.get(id)) && (!stateOf(id).reply.trim() || answersReply(id)); }
+  function answersReply(id){ var rp = replies.get(id), r = stateOf(id).reply.trim(); if (rp && rp.turns.length) return !curReply(id).trim(); return !!rp && !!rp.after && !!r && r === rp.after.trim(); }
+  function needsYou(id){ return asks(replies.get(id)) && (!curReply(id).trim() || answersReply(id)); }
 
   function setNote(title, text, bad){
     statusEl.hidden = false; statusEl.className = bad ? "note bad" : "note"; statusEl.textContent = "";
@@ -178,20 +187,21 @@ textarea.small{ min-height:4rem; }
     var wrong = el("button", "act", "Wrong question"); wrong.type = "button";
     acts.appendChild(skip); acts.appendChild(wrong); foot.appendChild(save); foot.appendChild(acts);
     var read = el("div", "read"); read.hidden = true;
+    var thread = el("div", "thread"); thread.hidden = true;
     var rlab = el("label", "replylab px", "Your reply"); rlab.htmlFor = "rep-" + id;
-    var rta = el("textarea", "small"); rta.id = "rep-" + id; rta.rows = 2; rta.value = s.reply; rta.placeholder = "Answer my question here. Your answer above stays as it is.";
-    body.appendChild(lab); body.appendChild(ta); body.appendChild(read); body.appendChild(rlab); body.appendChild(rta); body.appendChild(foot);
+    var rta = el("textarea", "small"); rta.id = "rep-" + id; rta.rows = 2; rta.value = curReply(id); rta.placeholder = "Answer my question here. Your answer above stays as it is.";
+    body.appendChild(lab); body.appendChild(ta); body.appendChild(read); body.appendChild(thread); body.appendChild(rlab); body.appendChild(rta); body.appendChild(foot);
     card.appendChild(head); card.appendChild(body);
 
     head.addEventListener("click", function(){ s.folded = !s.folded; paint(id); if (!s.folded) grow(ta); });
     ta.addEventListener("input", function(){ s.text = ta.value; grow(ta); touch(id); });
     ta.addEventListener("blur", function(){ if (s.dirty){ clearTimeout(s.timer); save_(id); } });
-    rta.addEventListener("input", function(){ s.reply = rta.value; grow(rta, 64); touch(id); });
+    rta.addEventListener("input", function(){ setCurReply(id, rta.value); grow(rta, 64); touch(id); });
     rta.addEventListener("blur", function(){ if (s.dirty){ clearTimeout(s.timer); save_(id); } });
     skip.addEventListener("click", function(){ s.flag = s.flag === "skipped" ? "" : "skipped"; touch(id, true); });
     wrong.addEventListener("click", function(){ s.flag = s.flag === "wrong" ? "" : "wrong"; touch(id, true); if (s.flag) ta.focus(); });
 
-    var c = { card:card, head:head, kindName:kindName, h2:h2, stat:stat, statV:null, flag:flag, num:num, pill:pill, peek:peek, body:body, ta:ta, save:save, skip:skip, wrong:wrong, read:read, rlab:rlab, rta:rta };
+    var c = { card:card, head:head, kindName:kindName, h2:h2, stat:stat, statV:null, flag:flag, num:num, pill:pill, peek:peek, body:body, ta:ta, save:save, skip:skip, wrong:wrong, read:read, thread:thread, rlab:rlab, rta:rta };
     cards.set(id, c); return c;
   }
   /* A card's request can change after it's drawn (an edit in the store, or a cached copy replaced by the live one): redraw what it says. */
@@ -229,17 +239,31 @@ textarea.small{ min-height:4rem; }
     var ny = needsYou(id), told = !ny && answersReply(id);
     c.flag.hidden = !(ny || told); c.flag.textContent = ny ? "Needs you" : "Replied"; c.flag.className = "verdict" + (ny ? " you" : "");
     c.read.hidden = !rp;
-    if (rp && c.read.dataset.v !== rp.v){
-      c.read.dataset.v = rp.v; c.read.textContent = "";
-      var rh = el("div", "rh"); rh.appendChild(el("span", "px", "Claude's read"));
-      rh.appendChild(el("span", "verdict" + (asks(rp) ? " you" : ""), VERDICT[rp.kind] || "Read"));
-      c.read.appendChild(rh);
-      rp.text.split("\n").forEach(function(line){ if (line.trim()) c.read.appendChild(el("p", "", line)); });
+    var turns = rp ? rp.turns : [], cur = curReply(id);
+    function box(into, label, text, last){
+      into.textContent = "";
+      var rh = el("div", "rh"); rh.appendChild(el("span", "px", label));
+      if (last) rh.appendChild(el("span", "verdict" + (asks(rp) ? " you" : ""), VERDICT[rp.kind] || "Read"));
+      into.appendChild(rh);
+      text.split("\n").forEach(function(line){ if (line.trim()) into.appendChild(el("p", "", line)); });
+    }
+    if (rp && c.read.dataset.v !== rp.v){ c.read.dataset.v = rp.v; box(c.read, "Claude's read", rp.text, !turns.length); }
+    /* The turns after the first read: what the director said, then what Claude said back. */
+    var said = turns.map(function(_, i){ return i ? str(s.more[i - 1]) : s.reply; });
+    var tv = rp ? rp.v + "\u0000" + said.join("\u0000") : "";
+    c.thread.hidden = !turns.length;
+    if (c.thread.dataset.v !== tv){
+      c.thread.dataset.v = tv; c.thread.textContent = "";
+      turns.forEach(function(t, i){
+        if (said[i].trim()){ var y = el("div", "said"); y.appendChild(el("span", "px", "You")); y.appendChild(el("p", "", said[i].trim())); c.thread.appendChild(y); }
+        var b = el("div", "read"); box(b, "Claude", t, i === turns.length - 1); c.thread.appendChild(b);
+      });
+      if (document.activeElement !== c.rta) c.rta.value = cur;
     }
     var askYou = !!rp || !!s.reply;
-    c.rta.placeholder = rp && rp.kind === "overused" ? "Something else for the same job, or say you want it as written." : ny && s.reply.trim() ? "Change or add to your reply here: I've answered it above." : asks(rp) ? "Answer my question here. Your answer above stays as it is." : "Comment on my read, if you like.";
+    c.rta.placeholder = rp && rp.kind === "overused" ? "Something else for the same job, or say you want it as written." : turns.length ? "Reply here. What we've said so far stays above." : ny && s.reply.trim() ? "Change or add to your reply here: I've answered it above." : asks(rp) ? "Answer my question here. Your answer above stays as it is." : "Comment on my read, if you like.";
     c.rlab.hidden = !askYou; c.rta.hidden = !askYou;
-    if (document.activeElement !== c.rta && !s.dirty && c.rta.value !== s.reply) c.rta.value = s.reply;
+    if (document.activeElement !== c.rta && !s.dirty && c.rta.value !== cur) c.rta.value = cur;
     c.body.hidden = s.folded; c.head.setAttribute("aria-expanded", String(!s.folded));
     c.peek.hidden = !s.folded; c.peek.textContent = s.text.trim() || str(r.ask);
     var msg = "", cls = "save";
@@ -257,7 +281,7 @@ textarea.small{ min-height:4rem; }
 
   function touch(id, now){
     var s = stateOf(id); s.dirty = true; s.error = ""; s.retried = false;
-    lsSet("draft:" + id, JSON.stringify({ text:s.text, flag:s.flag, reply:s.reply }));
+    lsSet("draft:" + id, JSON.stringify({ text:s.text, flag:s.flag, reply:s.reply, more:s.more }));
     clearTimeout(s.timer);
     if (now) save_(id); else s.timer = setTimeout(function(){ save_(id); }, 900);
     paint(id); progress();
@@ -267,8 +291,8 @@ textarea.small{ min-height:4rem; }
     if (!db){ s.error = "local"; paint(id); return; }
     if (s.saving){ s.again = true; return; }
     s.saving = true; paint(id);
-    var key = function(){ return s.text + "\u0000" + s.flag + "\u0000" + s.reply; }, sent = key();
-    var bodyDoc = { text:s.text, status:statusOf(s), reply:s.reply, batch:r ? r.batch : 0, updatedAt:new Date().toISOString() };
+    var key = function(){ return s.text + "\u0000" + s.flag + "\u0000" + s.reply + "\u0000" + s.more.join("\u0000"); }, sent = key();
+    var bodyDoc = { text:s.text, status:statusOf(s), reply:s.reply, more:s.more, batch:r ? r.batch : 0, updatedAt:new Date().toISOString() };
     db.doc("answers/" + id).set(bodyDoc).then(function(){
       s.error = "";
       if (key() === sent){ s.dirty = false; lsSet("draft:" + id, null); }
@@ -349,15 +373,15 @@ textarea.small{ min-height:4rem; }
   }
   function onReplies(snap){
     replies = new Map();
-    snap.docs.forEach(function(d){ var x = d.data() || {}; replies.set(d.id, { kind:str(x.kind), text:str(x.text), after:str(x.after), v:str(x.kind) + "|" + str(x.text) }); });
+    snap.docs.forEach(function(d){ var x = d.data() || {}; var t = strs(x.turns); replies.set(d.id, { kind:str(x.kind), text:str(x.text), after:str(x.after), turns:t, v:str(x.kind) + "|" + str(x.text) + "|" + t.join("|") }); });
     reqs.forEach(function(_, id){ openForRead(id); });
     if (gotReqs) layout();
   }
   function flushDrafts(){ if (gotReqs && gotAns && db) reqs.forEach(function(_, id){ var s = stateOf(id); if (s.dirty && !s.saving && !s.timer) save_(id); }); }
   function adopt(id){
     var s = stateOf(id), a = remote.get(id), c = cards.get(id);
-    if (s.dirty || s.saving || (c && document.activeElement === c.ta)) return;
-    s.text = a ? str(a.text) : ""; s.flag = a && (a.status === "skipped" || a.status === "wrong") ? a.status : ""; s.reply = a ? str(a.reply) : "";
+    if (s.dirty || s.saving || (c && (document.activeElement === c.ta || document.activeElement === c.rta))) return;
+    s.text = a ? str(a.text) : ""; s.flag = a && (a.status === "skipped" || a.status === "wrong") ? a.status : ""; s.reply = a ? str(a.reply) : ""; s.more = a ? strs(a.more) : [];
     if (!s.autoFolded && gotReqs && gotAns){ s.autoFolded = true; s.folded = isDone(s) && !needsYou(id) && !s.keepOpen; }
   }
   function onRequests(snap){
