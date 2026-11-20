@@ -36,11 +36,10 @@ The reasoning behind this step is in `brief.md`; read that first. This page hold
 16. **A card may name two builds' keywords.** The director, on Bleed on a Marked foe: "it should probably be allowed because that feels pretty limiting to making builds cross-compatible". The line in `docs/gear-design/builds.md` (The director's rulings) is rewritten, and the word "affliction" keeps its use for a card that reaches every status road. The agent's check stays: a card that needs both words already in the party has few partners, and is told so.
 17. **An answer may change a class,** and the director says what goes. The Mark's answer changed two versions (`web.md`, Kit changes, for build). The kits stay as they are until build.
 18. **Nothing in the loot touches the bench:** "I don't think players should meta-game the bench in terms of affecting combat."
-19. **No cap a player can't see.** "I really don't like these like invisible caps like a limit to how often it can trigger." An effect is sized by a share of what it does, never by a hidden limit.
-20. **A card keeps its whole conversation.** The agent's later responses are added under the director's replies, never written over the first read.
-21. **Cards in plain words.** The director found the cards' language cryptic, and had to ask what two of batch 4's meant. A card says what's wanted in its first sentence, and names an effect by what it does, never by the agent's nickname for it.
-22. **The shape of the web comes first:** "the shape of the web is the paramount thing you need to be managing." The work is a catalog of effects that grows to the set's size, with good coverage across the builds and good links between them. Sizes, slots and other details of how a piece will be built are minor: a note beside the effect at most. The folder holds no history of the workflow.
-23. **The agent doesn't predict how the director will answer.** No notes on their manner, and no reading of old answers to learn it. Their rulings are what an agent needs from them.
+19. **A card keeps its whole conversation.** The agent's later responses are added under the director's replies, never written over the first read.
+20. **Cards in plain words.** The director found the cards' language cryptic, and had to ask what two of batch 4's meant. A card says what's wanted in its first sentence, and names an effect by what it does, never by the agent's nickname for it.
+21. **The shape of the web comes first:** "the shape of the web is the paramount thing you need to be managing." The work is a catalog of effects that grows to the set's size, with good coverage across the builds and good links between them. Sizes, slots and other details of how a piece will be built are minor: a note beside the effect at most. The folder holds no history of the workflow.
+22. **The agent doesn't predict how the director will answer.** No notes on their manner, and no reading of old answers to learn it. Their rulings are what an agent needs from them.
 
 ## The page
 
@@ -59,7 +58,7 @@ None of this needs the page's source read or anything republished. Where the dir
 Four batches are closed. The web holds 108 effects, 82 on gear and about 22 formations, against 450 pieces and 50 formations (ruling 15). Nothing on the page waits on the director.
 
 1. **Read `brief.md` first.** Its reading list is closed.
-2. **The director wants to talk about how the web's shape is tracked before batch 5 is written** (ruling 22): which builds each effect serves, and what links each pair of builds. Today `web.md` counts overuse well and says nothing by build. What was proposed to them, not yet agreed: tag each catalog row with the builds it serves, by what it does, and read thin builds and unjoined pairs off that. It's a map of what's placed, not a list of what each build needs (ruling 14 dropped that).
+2. **The director wants to talk about how the web's shape is tracked before batch 5 is written** (ruling 21): which builds each effect serves, and what links each pair of builds. Today `web.md` counts overuse well and says nothing by build. What was proposed to them, not yet agreed: tag each catalog row with the builds it serves, by what it does, and read thin builds and unjoined pairs off that. It's a map of what's placed, not a list of what each build needs (ruling 14 dropped that).
 3. **Then batch 5,** about fifteen cards, three or four of them formations. Where cards have come from, best first:
    - **What `web.md` shows is thin or one part short:** an effect with few partners, or something the web supplies with nothing to do with it.
    - **Two classes that share a kind,** asked for a piece both would want, each for its own reason. Read each class's section of `docs/core-set/classes.md` before naming it; the kinds each class holds are in the two tables of `docs/core-set/gear.md`. Don't bar both classes' own mechanics in the ask, or nothing is left to join.

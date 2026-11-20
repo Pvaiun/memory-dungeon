@@ -175,7 +175,6 @@ Their decisions about what the web is, one line each. They stop a card being ask
 - **No third counter.** Heat comes from more than one trigger, and is lost when its holder loses HP.
 - **Two builds' words may share a card.** A shape for statuses pairs two named ones; one for every status at once is every status party's pick.
 - **A payoff for a fire reads it and leaves it burning.**
-- **No cap a player can't see.** An effect is sized by a share, never by a hidden limit on how often it fires.
 
 ## Cards asked
 
