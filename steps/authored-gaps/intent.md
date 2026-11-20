@@ -60,6 +60,15 @@ The director, stepping back: "I feel like my rambling yesterday derailed this." 
 - **What they can't yet see:** how the words for a class are decided beyond its theme, and how classes come to overlap now that the builds don't make them ("we gave the Bard shock specifically because it wanted to be a member of the shock build"). "Are we just going back to the drawing board for the sake of the drawing board?"
 - **They asked to step back from actions** and untangle it first.
 
+## The roles
+
+Said once the threads were settled, thinking aloud. Not a ruling.
+
+- **The roles come first:** defined "before we go into any class or stars or anything."
+- **There may be only two:** "it really does feel like the only two roles are damage mitigation and dealing damage." Buffs and the rest "all are in service of either dealing more damage or taking or slash healing slash avoiding" it.
+- **What they're weighing:** whether roles go a level deeper, as "different ways of mitigating damage", which "starts to look a lot like words"; and if they don't, "what's the point of roles if there's only two of them?" Every unit performs both, so "how else do we categorize them?"
+- **On the builds:** "I understand why or where the builds came from, because the builds are ways to do things."
+
 ## The triage (`triage.md`)
 
 Every effect that has been on gear so far, in three piles:
