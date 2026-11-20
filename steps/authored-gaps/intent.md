@@ -50,6 +50,16 @@ Said late and tired, as a ramble to react to: "it's likely this is like worthles
 - **The classes' identities come first.** With sixteen classes kept and the classes a core part of the web: "before we continue... we should decide what each class is supposed to represent in that web."
 - **The classes themselves may have to change:** "is the pyromancer really a valid class?"
 
+## The classes as the guiding light (Nov 21)
+
+The director, stepping back: "I feel like my rambling yesterday derailed this." What stands from it, in their words and still a sketch:
+
+- **The web as the agent drew it stays:** "really powerful visually, and I think systemically."
+- **The classes take the builds' place as the guide:** "instead of 8 builds, we use classes as our guiding light." They don't sit on the outside of a star. Each stands for a conception of what it does "that has yet been designed, but it isn't based on what their current kit does".
+- **A guess at the form:** one to three stars on each of a few roles, to be defined, perhaps dealing damage, mitigating damage, and enabling or disabling. Then tags on each class "based on the way that they do those roles and the different words that they use. And then those become the scaffolding for the rest of the web."
+- **What they can't yet see:** how the words for a class are decided beyond its theme, and how classes come to overlap now that the builds don't make them ("we gave the Bard shock specifically because it wanted to be a member of the shock build"). "Are we just going back to the drawing board for the sake of the drawing board?"
+- **They asked to step back from actions** and untangle it first.
+
 ## The triage (`triage.md`)
 
 Every effect that has been on gear so far, in three piles:
