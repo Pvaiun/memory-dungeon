@@ -7,7 +7,7 @@ Read this first. It says what this step is trying to do and why, how the work is
 **Read little.** The work is judgement: writing a request that isn't the wrong question, and reading an answer against the rules. The director found that the judgement gets worse as the reading piles up, so this list is closed. What isn't on it is reference: open one section when a specific card or answer needs it, and not before.
 
 - **Every session:** `docs/primer.md`; this brief; `report.md` (the rulings and Next); `intent.md`; `web.md`.
-- **To put the web on threads, with the classes in it** (`report.md`, Next): in `docs/gear-design/builds.md`, the table Threads the builds share; `first-pass.md`; and each class's line in `docs/primer.md` for its theme. A class's section of `docs/core-set/classes.md` only to run the two tests on its kit as it stands: the director designs each class afresh, and not from its kit.
+- **To put the classes in the web** (`report.md`, Next): the threads and how an effect is tagged, in `web.md`, The threads; and each class's line in `docs/primer.md` for its theme. A class's section of `docs/core-set/classes.md` only to run the two tests on its kit as it stands: the director designs each class afresh, and not from its kit.
 - **To write a batch:** in `docs/gear-design/builds.md`, The director's rulings, The frame and The builds (the nine roads). In `docs/gear-design/loot.md`, The director's rulings only.
 - **To read answers:** the rulings in `docs/core-set/vocabulary.md` and `docs/gear-design/loot.md`.
 - **Only when a card or an answer needs it, and only that section:**
@@ -49,6 +49,8 @@ So they aren't proposed again. Each was the agent's idea.
 - **A skeleton of what each road and class needs,** each need marked met, plain or a gap, drawn up before the next batch. The director approved it, then asked whether it was a mistake, and the agent agreed. It's the top-down structure that reached its ceiling before: it turns every unmet need into a request for coverage, it sorts pieces by road when the director's answers serve many roads at once, and the agent reached for it because it had been told it was wrong, not because the batches had stopped working. The best of the web has come from placing answers and seeing what they do together.
 - **A share of the set to reach** (the director offered 70% authored). No share is set; the set's size is the target (`report.md`, ruling 15).
 
+- **A thread for what's given to an ally, and one for a fall softened.** Both were in the agent's first draft of the threads. The first joined everything to everything: it's a mark on a word now, (to an ally) or (an ally's). The second was a role under another name: keeping a unit alive is what every party needs, and the roles are the director's to design.
+- **The draw and a blow taken as two threads.** One was only ever given and the other only ever wanted: two halves of one word, Blows taken.
 - **Tagging each effect with the builds it serves.** Proposed, then dropped by the agent: it's picking by colour, done by the makers, and nothing can check a tag. An effect is written as what it wants and gives (`report.md`, ruling 23).
 - **A star with the builds at its points and everything placed between them.** It was the director's picture and the agent drew it. Left to their own links the effects group by thread, not by build, and where an effect sat changed with how a thread's weight was read. The map has no star and no edge: its dots are the threads.
 - **Three lines for each class** (how it acts, what it gives, what it needs). The director agreed, then sketched stars and words, which says the same and more (`report.md`, ruling 25).
@@ -63,7 +65,7 @@ What stuck was the director's own formulation: a skeleton, gaps where the agent 
 The agent's reasoning, agreed with the director in conversation. Their rulings on it are 23 to 31 in `report.md`.
 
 - **The builds did two jobs at once.** They made parties able to live, and they made classes share things: the Bard was given Shock so it could join the Storm. A class's stars take the first job. Words that classes share take the second. Neither needs a build in between.
-- **A class's words aren't invented for it.** They're a handful of threads from the list the gear uses, each given or needed, each tied to the role it serves.
+- **A class's words aren't invented for it.** They're a handful of threads from the list the gear uses (`web.md`, The threads), each given or needed, each tied to the role it serves. A word a class gives says who it reaches, the way an effect's does: itself, an ally, or the foes. A class that gives Might only to itself is no partner to one that needs it.
 - **Two classes overlap where they hold the same word:** one gives it and one needs it (partners), both give it (two ways into the same thing), or both need it (rivals). The same word in a different role is how two classes overlap without being alike.
 - **How a class's words are chosen.** No table is the one right one. Four things leave little of it arbitrary, in this order:
   1. **The stars** set how many words and of what kind: about a word from a role's shelf for each star.
@@ -73,7 +75,7 @@ The agent's reasoning, agreed with the director in conversation. Their rulings o
 - **The check, on paper.** All 560 trios scored from the table alone: whether each can live, by its stars, and how many partner links it holds. Most should have a link or two, and not every trio should have many. Two tables can be compared in seconds. For the looting, a run dealt from the catalog with no fights: a handful of classes and a fifth of the loot, and at each offer what connects to what the party holds and whether the pick is obvious.
 - **Two tests for a class as written.** Take its status away: is there still a class? Does it make and cash the same thing by itself? One that does needs no one and nothing needs it. The Pyromancer's kit fails both: all four of its parts name Burn, three laying it and one cashing it. A class should be half of several loops, and still do something alone.
 - **The caution.** A piece that names a class's word is a sure pick for that class, so most of what helps a class shouldn't name its word: the one-third rule in `docs/gear-design/builds.md`, The director's rulings, read for classes.
-- **The sizes fit.** Sixteen classes with about five words each, over about 27 threads, is about three classes to a word.
+- **The sizes fit.** The list has 39 threads, and about 30 are words a class would hold: three are every unit's, and a few belong to the player or the foes. Sixteen classes with about five words each is between two and three classes to a word.
 
 ## What a good request is
 
@@ -111,7 +113,7 @@ The director doesn't manage the web, so they can use the same trigger or mechani
 
 - **The test.** A mechanic is overused when a player could take every piece that names it and be right each time: about one effect in twelve of the web, or more, names the same thing (a status, an event a unit has to be built for such as a dodge or the fight's start, or a resource such as Shield), and those effects add up on one unit instead of pulling against each other. It's underused when the game leans on it (a road's own status, a lever the player holds, or something the kits and kept effects supply) and fewer than three effects name it.
 - **What the test leaves alone.** Swings, casts, hits and plain stats are every unit's, and are common on purpose. A status no build leans on can stay rare. Judge by what a player would notice across a run, never by an even spread.
-- **The count is in `web.md`:** the catalog has a row for every effect, with what sets it off, what it reads and what it changes or moves, and The count tallies the words a player would collect. Add each placed answer as a row, and recount its words.
+- **The count is in `web.md`:** the catalog has a row for every effect, as what it wants and what it gives in the threads' words, and The count gives each thread's number and verdict. Add each placed answer as a row, run `npx tsx tools/web-threads.ts`, and recount its words.
 - **An answer on an overused mechanic:** say so in its read, plainly. The idea is good, the web has too much on that mechanic, give me something else for the same job. Write the read with the kind `overused`, so it shows under Needs you. Don't move their idea onto another mechanic: what replaces it is their decision. If they reply that they want it as written, it's placed.
 - **A job that can be done from an underused mechanic:** the card's ask says which, in one plain sentence. An underused mechanic with no job isn't a card: asking for it would be asking for coverage.
 
@@ -134,7 +136,7 @@ The agent's reading, for seeing where the web is thick. It isn't the director's 
 
 ## Where it goes
 
-1. The threads settled and the 108 tagged; then the classes designed by the director as stars and words, and drawn onto the web (`report.md`, Next). Then more batches, toward the set's size in `report.md`, ruling 15 (450 pieces of gear, 50 formations), then a look at the whole web with the director. Few thin spots among the kept effects doesn't mean the web is full: cards also come from what placing found, from pairs of classes and from whole directions (`report.md`, Next). The earlier loot is never where a card comes from.
+1. The roles designed with the director; then the classes designed by them as stars and words, and drawn onto the web (`report.md`, Next). Then more batches, toward the set's size in `report.md`, ruling 15 (450 pieces of gear, 50 formations), then a look at the whole web with the director. Few thin spots among the kept effects doesn't mean the web is full: cards also come from what placing found, from pairs of classes and from whole directions (`report.md`, Next). The earlier loot is never where a card comes from.
 2. The plain parts, written by the agent and shown by sample, at the end and only where something needs one.
 3. Sizing and slotting what's placed: kinds, rarities, who wears it, numbers.
 4. Formations beyond those kept or written, the classes' versions and upgrades, then mythics, on the director's word.
@@ -146,8 +148,7 @@ Not decided: how many of the 450 are authored, when the versions and upgrades ar
 
 - `intent.md`: the director's intent, recorded short.
 - `report.md`: their rulings, how the page and its store work, and the next steps.
-- `web.md`: the catalog of every effect the web holds, the count, what the director has settled, every card asked, and what not to ask again.
-- `first-pass.md`: the agent's one-sitting draft of the threads and of what each effect wants and gives. A start for the catalog's new columns, to check row by row.
+- `web.md`: the threads, the catalog of every effect the web holds as what it wants and gives, the count, what the director has settled, every card asked, and what not to ask again. `tools/web-threads.ts` checks and counts it.
 - `triage.md`, `triage-formations.md`: what they kept, in their two piles, in their words.
 - `requests-page.html`: the page's source.
 

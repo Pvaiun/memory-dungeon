@@ -137,6 +137,7 @@ tools/                       the Node command lines; each header says how to run
   piece-check.ts             does every item do what its card says?
   gear-slots.ts              the gear slots' counts: who wears which kinds
   loot-list.ts               today's loot as one line per item: its cards, and the builds it was tagged for
+  web-threads.ts             the authored-gaps step's web, from steps/authored-gaps/web.md: checks every effect's wants and gives against the list of threads, and counts each thread, the joins and each effect's partners
   loot-count.ts              the loot's shapes counted, one measure for a pass's before and after: repeated effect shapes, exotics, conditional pieces, keyword share per build, keyword formations; and pairs of pieces one class can wear together whose cards share a sentence
   smoke.ts                   npm run smoke: the documents' own test trios
   dungeon.ts                 npm run dungeon: print one run

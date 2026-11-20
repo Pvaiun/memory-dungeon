@@ -20,7 +20,7 @@ The reasoning behind this step is in `brief.md`; read that first. This page hold
 11. **No Fines on a card** (after batch 2 went out with them). Most Fines won't be in the game, and the director's answer outranks any it overlaps, so there's nothing to steer around. "Near it" shows only Greats, starred seats, Great formations and the director's own placed answers. A card doesn't mention Fines at all: a job only a Fine does today is a job nothing in the web does, and the card says that. The director is never asked to replace one.
 
 12. **The agent judges whether a mechanic is overused, and tells the director.** The director writes the pieces and doesn't manage the web, so they can use one trigger or mechanic too often without seeing it, which is how a player comes to take everything that shares a word. The judgement is the agent's, and the director is told, not asked.
-    - **A count is kept in `web.md`** (The count): for every effect in the web, what sets it off, what it reads, and what it changes or moves, updated each time an answer is placed. The test is in `brief.md`, The count.
+    - **A count is kept in `web.md`** (The count): how many effects name each thread, from every effect's wants and gives, updated each time an answer is placed. The test is in `brief.md`, The count.
     - **An answer on an overused mechanic** gets a read that says so plainly: the idea is good, the web has too much on that mechanic, give me something else for the same job. It's marked as needing the director. The agent never moves their idea onto another mechanic: what replaces it is theirs. If they answer that they want it as written, that's the ruling and it's placed.
     - **A card may ask for its job to be done from a named underused mechanic,** in one plain sentence in the ask.
     - **How this fits ruling 9.** Ruling 9 is about whether to ask: a card needs a job the web lacks, and "nothing names this mechanic" is never that job. This ruling is about how to ask once there's a job: the card may name the underused mechanic it wants the job done from. An underused mechanic with no job waits in `web.md`, Seen, not yet asked, until one turns up.
@@ -70,34 +70,40 @@ None of this needs the page's source read or anything republished. Where the dir
 
 ## Next: for the session that picks this up
 
-Four batches of effects are closed. The web holds 108 effects, 82 on gear and about 22 formations, against 450 pieces and 50 formations (ruling 15). Nothing on the page waits on the director. The catalog in `web.md` stands as it is: it's handed on, not rebuilt.
+Four batches of effects are closed. The web holds 108 effects, 82 on gear and about 22 formations, against 450 pieces and 50 formations (ruling 15). The threads are settled, 39 of them, and every effect is tagged as what it wants and what it gives (`web.md`, The threads and The catalog). Nothing on the page waits on the director. The roles are next, and they're the director's.
 
 1. **Read `brief.md` first.** Its reading list is closed. The classes in the web is the section this work rests on.
-2. **Settle the threads.** The agent's, with nothing needed from the director. Start from the 27 in `docs/gear-design/builds.md`, Threads the builds share, and the sixteen the agent added (`first-pass.md`). The list is the words a class can hold. It isn't sorted by role yet: the roles aren't designed.
-3. **Tag the 108.** Rewrite the catalog's three columns in `web.md` as Wants and Gives, in the list's words. `first-pass.md` has a draft made in one sitting: check each row against the effect's own words. It shows which words the gear already leans on and which are short of a class.
-4. **The roles are designed with the director first, in the chat, before any class card.** They're theirs to define ("we also need to design the roles"). Four things to settle, in a few lines each:
-   - **What the roles are.** Their guess is dealing damage, mitigating damage, and enabling or disabling. Bring a trial sort of the threads under that guess, as evidence and not as a decision: which words fall cleanly under one role, which fall under two, which under none, where healing lands, and whether making foes do less lands with mitigating or with disabling. Once they've ruled, sort the threads for good; that sort is the shelves the class cards show.
+2. **The roles are designed with the director first, in the chat, before any class card.** They're theirs to define ("we also need to design the roles"), and they asked that nothing be sorted by role before that talk: bring the thread list as it stands, and sort it only on their word. Four things to settle, in a few lines each:
+   - **What the roles are.** Their guess is dealing damage, mitigating damage, and enabling or disabling. Questions the list raises, to put to them and not to answer for them: where healing lands, and whether making foes do less lands with mitigating or with disabling. If they ask for a trial sort, it's evidence and not a decision: which words fall cleanly under one role, which under two, which under none. Once they've ruled, sort the threads for good; that sort is the shelves the class cards show.
    - **What one, two and three stars mean,** in words a simulation can later measure.
    - **Whether a class has a set number of stars to spread,** so the sixteen have shapes that can be compared.
    - **What a party of three needs** to live through a run, in stars. A party has to have damage and a way to stay alive; the third role makes the others better, and a party can do without it.
-5. **Then the director designs the classes:** one batch of sixteen short cards, a class each, with the shelves beside them. They give each class its stars and its main word for each role it has stars in. Not from its current kit.
-6. **Fill the table and bring its holes.** The agent adds the words that fit, checks the table (`brief.md`, The classes in the web) and scores the trios. A word with one class giving it, or with nobody who needs it, goes to the director as a card.
-7. **Redraw the map** at `https://claude.ai/artifact/9GtG7CvLQBAgZszRWyfz35` (read it first, then publish to the same address): the threads as the dots, placed by their own links, each class drawn onto it as the dots it holds, the effects as strands. A small tool in `tools/` draws it from the catalog (with its line in `docs/code-map.md`), so it's redrawn at each batch's end.
-8. **Then batches that hold both kinds of card,** chosen from the map: a part of a class's kit, asked the way gear is asked, and effects. About fifteen cards, three or four of them formations. Where an effect card comes from, best first:
+3. **Then the director designs the classes:** one batch of sixteen short cards, a class each, with the shelves beside them. They give each class its stars and its main word for each role it has stars in. Not from its current kit.
+4. **Fill the table and bring its holes.** The agent adds the words that fit, checks the table (`brief.md`, The classes in the web) and scores the trios. A word with one class giving it, or with nobody who needs it, goes to the director as a card. The first words to look at are in `web.md`, The count: what the gear reads more than it gives is waiting for a class to supply it.
+5. **Redraw the map** at `https://claude.ai/artifact/9GtG7CvLQBAgZszRWyfz35` (read it first, then publish to the same address): the threads as the dots, placed by their own links, each class drawn onto it as the dots it holds, the effects as strands. `tools/web-threads.ts` already reads the threads and the catalog and works out the joins; the drawing is added to it, so the map is redrawn at each batch's end.
+6. **Then batches that hold both kinds of card,** chosen from the map: a part of a class's kit, asked the way gear is asked, and effects. About fifteen cards, three or four of them formations. Where an effect card comes from, best first:
    - **A class the web leaves alone,** or a word a class gives that little wants.
    - **A link out of a group on one word.**
    - **Two classes,** asked for a piece both would want, each for its own reason. The kinds each class holds are in the two tables of `docs/core-set/gear.md`. Don't bar both classes' own words in the ask, or nothing is left to join.
    - **A formation with a stated job:** something the seats trade.
    - **A supply a placed effect is short of.** Count who supplies it first, the classes included.
    - **The open card,** every batch.
-9. **Before sending a card,** check it against `web.md` (Settled by the director, Cards asked, Not to ask again), and against today's loot: `npx tsx tools/loot-list.ts` writes `out/loot-list.md`, and an effect that's there and in neither triage pile was cut, so a card whose plain answer it is, is a wrong question.
-10. **A batch is as long as its real jobs.** Two short batches running is the sign to stop and talk.
-11. **When reading answers:** check a price or a size against the constant it leans on before placing it; an answer that changes a class is listed as a kit change in `web.md`; where the director offers alternatives and asks for thoughts, say which and why, and place it.
-12. **Still to come, in the director's order,** once the authored parts are in and they've looked at the whole web: the plain parts (the agent's, shown by sample), sizing and slotting, formations beyond those kept or written, mythics, then everything built once and run.
+7. **Before sending a card,** check it against `web.md` (Settled by the director, Cards asked, Not to ask again), and against today's loot: `npx tsx tools/loot-list.ts` writes `out/loot-list.md`, and an effect that's there and in neither triage pile was cut, so a card whose plain answer it is, is a wrong question.
+8. **A batch is as long as its real jobs.** Two short batches running is the sign to stop and talk.
+9. **When reading answers:** check a price or a size against the constant it leans on before placing it; tag the answer by the rules in `web.md`, The threads, and run the tool; an answer that changes a class is listed as a kit change in `web.md`; where the director offers alternatives and asks for thoughts, say which and why, and place it.
+10. **Still to come, in the director's order,** once the authored parts are in and they've looked at the whole web: the plain parts (the agent's, shown by sample), sizing and slotting, formations beyond those kept or written, mythics, then everything built once and run.
 
-**What the first pass found,** rough, and to check again once the 108 are tagged properly:
-- Most effects sit between two builds or more, and more than half want one thread and give a different one.
-- Grouped by their own links, the effects fall into groups by thread, not by build: statuses with Might; Shields with blows taken and the draw; what a swing carries with extra strikes and aim; then groups on one word each (MP, Defense, the dodge, HP paid or held low). The four statuses share a group, which the director did on purpose, making each piece cross-build as they wrote it.
-- Seek and reach holds nothing. Nothing joins Burn or Chill to blows taken or to HP paid.
-- With a fifth of the web seen, an effect had a partner also seen about two times in three.
-- In this step's cards, nine named two classes and all nine produced a piece; thirteen named a build and four were wrong questions. The agent had also learned to ask better by then.
+**What the tagging found.** The numbers are the tool's; the groups are a rough reading, for the map to show properly.
+- **67 of the 108 want one thread and give a different one.** 17 give nothing, being payoffs, and 6 want nothing. 26 cross from one unit to another.
+- **The middle effect has 7 partners.** With a fifth of the web shown, an effect has a partner shown too about 72% of the time.
+- **Left to their own links, the effects group by thread:**
+  - the five afflictions with what a hit carries, extra strikes, Stun, Might, the Mark and focus (about 30 effects);
+  - Shield with heals, Hidden and crits (about 27);
+  - MP with HP paid or held low and max HP (about 17);
+  - blows taken with Thorns (7);
+  - Defense, alone (7): nothing leads out of it but Attack and swing speed;
+  - the dodge (7), with two ways out, to extra strikes and to a heal.
+- **Seven effects have no partner in particular.** Five name only what every unit has (casts, swings, Attack), one waits on the foes, one reads only what's worn. They work anywhere, and nothing in the web points at them.
+- **Being struck is the most-named word:** 13 effects, 8 of them formations or seats.
+- **Some effects hold no thread on one side because what they give is damage or staying alive.** Those are what the roles are for, and the list says nothing about them.
+- **What the gear reads more than it gives, what it gives more than anything reads, and what never meets** are three short lists in `web.md`, The count. The first is where the classes' words are most wanted.
