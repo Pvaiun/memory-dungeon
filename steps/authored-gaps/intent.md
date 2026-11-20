@@ -46,6 +46,7 @@ Said late and tired, as a ramble to react to: "it's likely this is like worthles
 - **Discovery inside a single run:** "a player is faced with choices, and they make the choice they think is best in the moment, but they do not know where it will end up, and they are surprised every time. And over hundreds of runs, they learn to make the right choices to lead to good outcomes most of the time, but they still don't know what those outcomes are going to be. That's what I'm chasing."
 - **Two ways the game could go, and they see both.** Keep adding classes, to thirty, forty, fifty or sixty, with a class as "a piece of the arsenal". Or four to six classes, "all deep as hell", mixed together. The second is "basically a full redesign of the game", and they are "not convinced yet" it's the right way.
 - **Their own objection to few classes:** with six classes, a rule for who wears what (two in light, two in medium, two in heavy) is "a stupid A or B choice every single time".
+- **The classes' identities come first.** With sixteen classes kept and the classes a core part of the web: "before we continue... we should decide what each class is supposed to represent in that web."
 
 ## The triage (`triage.md`)
 

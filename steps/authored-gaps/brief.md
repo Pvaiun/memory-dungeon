@@ -115,7 +115,7 @@ The agent's reading, for seeing where the web is thick. It isn't the director's 
 
 ## Where it goes
 
-1. The web put on threads, with the classes in it (`report.md`, Next). Then more batches, toward the set's size in `report.md`, ruling 15 (450 pieces of gear, 50 formations), then a look at the whole web with the director. Few thin spots among the kept effects doesn't mean the web is full: cards also come from what placing found, from pairs of classes and from whole directions (`report.md`, Next). The earlier loot is never where a card comes from.
+1. What each class stands for in the web, decided by the director, then the web put on threads with the classes in it (`report.md`, Next). Then more batches, toward the set's size in `report.md`, ruling 15 (450 pieces of gear, 50 formations), then a look at the whole web with the director. Few thin spots among the kept effects doesn't mean the web is full: cards also come from what placing found, from pairs of classes and from whole directions (`report.md`, Next). The earlier loot is never where a card comes from.
 2. The plain parts, written by the agent and shown by sample, at the end and only where something needs one.
 3. Sizing and slotting what's placed: kinds, rarities, who wears it, numbers.
 4. Formations beyond those kept or written, the classes' versions and upgrades, then mythics, on the director's word.
