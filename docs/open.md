@@ -4,7 +4,7 @@ What's built and waiting on the director, and the questions nobody has settled. 
 
 ## The current step
 
-- **Authored gaps** (`steps/authored-gaps/`, `brief.md` first). A new way to make loot: the agent holds the web and the director authors each gap. Four batches are placed. The web is being put on threads, with the classes in it. Nothing in the game has changed.
+- **Authored gaps** (`steps/authored-gaps/`, `brief.md` first). A new way to make loot: the agent holds the web and the director authors each gap. Four batches of effects are placed. The classes are the guide now, in place of the builds: the director designs each as stars and words, and they're drawn onto the web. Nothing in the game has changed.
 
 ## Built, awaiting the director's read
 
@@ -25,8 +25,8 @@ Each step's `report.md` leads with the decisions it needs.
 
 ## Open questions
 
-- **A run that offers a way to a party that lives,** in place of every trio having to. Agreed in principle by the director; the rogue mode's to design (`steps/authored-gaps/report.md`, ruling 27).
-- **More classes, later,** each authored the way the gear is, with a small kit (`steps/authored-gaps/report.md`, ruling 25).
+- **A run that offers a way to a party that lives,** in place of every trio having to. Agreed in principle by the director; the rogue mode's to design (`steps/authored-gaps/report.md`, ruling 28).
+- **More classes, later,** each authored the way the gear is, with a small kit (`steps/authored-gaps/report.md`, ruling 26).
 - **Whether foes should have MP at all.** The director isn't sure.
 - **Fractions of a stack stay hidden:** the icon shows whole stacks, so a rider under one stack shows nothing until the count turns over. Set aside: five times the stacks of Burn, Chill, Shock and Bleed, rounding by dice, and a fill on the icon (if the playtest asks for it).
 - **A hidden result:** a panel for every event instead of only the results the player couldn't see, if the playtest misses one.

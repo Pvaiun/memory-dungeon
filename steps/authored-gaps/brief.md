@@ -7,7 +7,7 @@ Read this first. It says what this step is trying to do and why, how the work is
 **Read little.** The work is judgement: writing a request that isn't the wrong question, and reading an answer against the rules. The director found that the judgement gets worse as the reading piles up, so this list is closed. What isn't on it is reference: open one section when a specific card or answer needs it, and not before.
 
 - **Every session:** `docs/primer.md`; this brief; `report.md` (the rulings and Next); `intent.md`; `web.md`.
-- **To put the web on threads, with the classes in it** (`report.md`, Next): in `docs/gear-design/builds.md`, the two tables Threads the builds share and Every class in the set; `first-pass.md`; and each class's section of `docs/core-set/classes.md`, for its plan and its three identities only.
+- **To put the web on threads, with the classes in it** (`report.md`, Next): in `docs/gear-design/builds.md`, the table Threads the builds share; `first-pass.md`; and each class's line in `docs/primer.md` for its theme. A class's section of `docs/core-set/classes.md` only to run the two tests on its kit as it stands: the director designs each class afresh, and not from its kit.
 - **To write a batch:** in `docs/gear-design/builds.md`, The director's rulings, The frame and The builds (the nine roads). In `docs/gear-design/loot.md`, The director's rulings only.
 - **To read answers:** the rulings in `docs/core-set/vocabulary.md` and `docs/gear-design/loot.md`.
 - **Only when a card or an answer needs it, and only that section:**
@@ -50,12 +50,30 @@ So they aren't proposed again. Each was the agent's idea.
 - **A share of the set to reach** (the director offered 70% authored). No share is set; the set's size is the target (`report.md`, ruling 15).
 
 - **Tagging each effect with the builds it serves.** Proposed, then dropped by the agent: it's picking by colour, done by the makers, and nothing can check a tag. An effect is written as what it wants and gives (`report.md`, ruling 23).
-- **A star with the builds at its points and everything placed between them.** It was the director's picture and the agent drew it. Left to their own links the effects group by thread, not by build, and where an effect sat changed with how a thread's weight was read. The builds are routes over the map, not its places.
-- **A few deep classes in place of sixteen,** with gear for one class only. The director's idea, weighed and set down by them (`report.md`, ruling 25). What was kept from it: the classes are a core part of the web.
-- **Building a few classes early and running them in fights,** to test the way of working. The director ruled it out, and it would have measured the wrong thing: fights, where what's chased is the looting, which only the whole breadth of the web can show (`report.md`, ruling 29).
-- **Cards that were lists to correct** (each build's threads). Never answered: too dense, and too early (`report.md`, ruling 28).
+- **A star with the builds at its points and everything placed between them.** It was the director's picture and the agent drew it. Left to their own links the effects group by thread, not by build, and where an effect sat changed with how a thread's weight was read. The map has no star and no edge: its dots are the threads.
+- **Three lines for each class** (how it acts, what it gives, what it needs). The director agreed, then sketched stars and words, which says the same and more (`report.md`, ruling 25).
+- **A few deep classes in place of sixteen,** with gear for one class only. The director's idea, weighed and set down by them (`report.md`, ruling 26). What was kept from it: the classes are the guide.
+- **Building a few classes early and running them in fights,** to test the way of working. The director ruled it out, and it would have measured the wrong thing: fights, where what's chased is the looting, which only the whole breadth of the web can show (`report.md`, ruling 30).
+- **Cards that were lists to correct** (each build's threads). Never answered: too dense, and too early (`report.md`, ruling 29).
 
 What stuck was the director's own formulation: a skeleton, gaps where the agent is unsure, and each gap brought to them as an objective.
+
+## The classes in the web
+
+The agent's reasoning, agreed with the director in conversation. Their rulings on it are 23 to 31 in `report.md`.
+
+- **The builds did two jobs at once.** They made parties able to live, and they made classes share things: the Bard was given Shock so it could join the Storm. A class's stars take the first job. Words that classes share take the second. Neither needs a build in between.
+- **A class's words aren't invented for it.** They're a handful of threads from the list the gear uses, each given or needed, each tied to the role it serves.
+- **Two classes overlap where they hold the same word:** one gives it and one needs it (partners), both give it (two ways into the same thing), or both need it (rivals). The same word in a different role is how two classes overlap without being alike.
+- **How a class's words are chosen.** No table is the one right one. Four things leave little of it arbitrary, in this order:
+  1. **The stars** set how many words and of what kind: about a word from a role's shelf for each star.
+  2. **The theme** picks the main word for each role a class has stars in, and no two classes share a main word for the same role.
+  3. **Fit.** A word runs on something happening: many small hits, casts, blows taken, kills, the foes acting. It goes only on a class whose way of acting makes that happen often.
+  4. **The table's holes** decide the rest: a word with one class giving it, or with nobody who needs it. Those go to the director, and they're where most of the overlap is made.
+- **The check, on paper.** All 560 trios scored from the table alone: whether each can live, by its stars, and how many partner links it holds. Most should have a link or two, and not every trio should have many. Two tables can be compared in seconds. For the looting, a run dealt from the catalog with no fights: a handful of classes and a fifth of the loot, and at each offer what connects to what the party holds and whether the pick is obvious.
+- **Two tests for a class as written.** Take its status away: is there still a class? Does it make and cash the same thing by itself? One that does needs no one and nothing needs it. The Pyromancer's kit fails both: all four of its parts name Burn, three laying it and one cashing it. A class should be half of several loops, and still do something alone.
+- **The caution.** A piece that names a class's word is a sure pick for that class, so most of what helps a class shouldn't name its word: the one-third rule in `docs/gear-design/builds.md`, The director's rulings, read for classes.
+- **The sizes fit.** Sixteen classes with about five words each, over about 27 threads, is about three classes to a word.
 
 ## What a good request is
 
@@ -116,7 +134,7 @@ The agent's reading, for seeing where the web is thick. It isn't the director's 
 
 ## Where it goes
 
-1. What each class stands for in the web, decided by the director, then the web put on threads with the classes in it (`report.md`, Next). Then more batches, toward the set's size in `report.md`, ruling 15 (450 pieces of gear, 50 formations), then a look at the whole web with the director. Few thin spots among the kept effects doesn't mean the web is full: cards also come from what placing found, from pairs of classes and from whole directions (`report.md`, Next). The earlier loot is never where a card comes from.
+1. The threads settled and the 108 tagged; then the classes designed by the director as stars and words, and drawn onto the web (`report.md`, Next). Then more batches, toward the set's size in `report.md`, ruling 15 (450 pieces of gear, 50 formations), then a look at the whole web with the director. Few thin spots among the kept effects doesn't mean the web is full: cards also come from what placing found, from pairs of classes and from whole directions (`report.md`, Next). The earlier loot is never where a card comes from.
 2. The plain parts, written by the agent and shown by sample, at the end and only where something needs one.
 3. Sizing and slotting what's placed: kinds, rarities, who wears it, numbers.
 4. Formations beyond those kept or written, the classes' versions and upgrades, then mythics, on the director's word.
