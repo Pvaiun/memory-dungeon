@@ -80,7 +80,7 @@ None of this needs the page's source read or anything republished. Where the dir
 
 ## The map
 
-`https://claude.ai/artifact/9GtG7CvLQBAgZszRWyfz35`. It's drawn from the catalog, never by hand: `npx tsx tools/web-map.ts` fills `map-page.html` and writes `out/web-map.html`, which is published to that address (read the artifact first). It draws the same words and effects three ways, with a switch: between the nine builds, between the seven clocks, and by their own links with no frame. Under the map it sets the builds against the clocks on the same 108, counts every pair of builds and of clocks, lays every clock against every word, and counts the roads between words. The page works every number out from the data.
+`https://claude.ai/artifact/9GtG7CvLQBAgZszRWyfz35`. It's drawn from the catalog, never by hand: `npx tsx tools/web-map.ts` fills `map-page.html` and writes `out/web-map.html`, which is published to that address (read the artifact first). It draws the same words and effects three ways, with a switch: between the nine builds, between the seven clocks, and by their own links with no frame. Under the map it sets the builds against the clocks on the same 108, counts every pair of builds and of clocks, lays every clock against every word, and counts the roads between words. The page works every number out from the data. The whole map fits on screen at rest; the buttons over it zoom in and out, and a drag moves it once it's zoomed.
 
 ## Next: for the session that picks this up
 

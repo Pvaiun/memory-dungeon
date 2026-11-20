@@ -33,7 +33,15 @@ p{margin:0;max-width:66ch}
 .stage{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;align-items:start}
 @media (min-width:980px){.stage{grid-template-columns:minmax(0,1fr) 330px}}
 .scroll{overflow-x:auto;min-width:0}
-svg#map{display:block;width:100%;min-width:700px;height:auto}
+.mapbox{display:flex;flex-direction:column;gap:8px;min-width:0}
+.zoom{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.zoom button{background:var(--panel);border:1px solid var(--line);color:var(--ink);border-radius:4px;min-width:36px;height:34px;padding:0 10px;font:inherit;font-size:15px;font-weight:500;cursor:pointer}
+.zoom button:disabled{color:var(--muted);cursor:default;opacity:.6}
+.zoom button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.zoom span{color:var(--muted);font-size:13px}
+svg#map{display:block;width:100%;height:auto;aspect-ratio:880/790;max-height:min(82vh,680px);touch-action:pan-y;-webkit-user-select:none;user-select:none;border:1px solid var(--line);border-radius:6px;background:var(--bg)}
+svg#map.zoomed{touch-action:none;cursor:grab}
+svg#map.dragging{cursor:grabbing}
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px 18px;display:flex;flex-direction:column;gap:10px;min-width:0}
 .panel .lean{color:var(--ink2);font-size:14px}
 .panel h4{margin:6px 0 0;font-family:var(--body);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
@@ -116,7 +124,15 @@ table{border-collapse:collapse;font-variant-numeric:tabular-nums}
       <p class="note" id="lensNote"></p>
     </div>
     <div class="stage">
-      <div class="scroll"><svg id="map" viewBox="-80 0 880 790" role="group" aria-label="The loot web"></svg></div>
+      <div class="mapbox">
+        <div class="zoom" role="group" aria-label="Zoom the map">
+          <button type="button" id="zout" aria-label="Zoom out">−</button>
+          <button type="button" id="zin" aria-label="Zoom in">+</button>
+          <button type="button" id="zfit">Whole map</button>
+          <span>Zoom in to read the names, then drag to move.</span>
+        </div>
+        <svg id="map" viewBox="-80 0 880 790" role="group" aria-label="The loot web"></svg>
+      </div>
       <aside class="panel" id="detail" aria-live="polite"></aside>
     </div>
   </section>
@@ -244,7 +260,7 @@ function layout(k) {
   const placed = ids.filter(t => home[t]), loose = ids.filter(t => !home[t]);
   placed.forEach(t => pos[t] = { ...home[t] });
   relax(placed, pos, home, k === 'none' ? 84 : 66);
-  loose.forEach((t, i) => pos[t] = { x: loose.length > 1 ? 40 + i * (640 / (loose.length - 1)) : cx, y: cy + R + 105 });
+  loose.forEach((t, i) => pos[t] = { x: loose.length > 1 ? -30 + i * (780 / (loose.length - 1)) : cx, y: cy + R + 98 + (i % 2) * 24 });
   return { pos, loose };
 }
 const laid = {};
@@ -306,6 +322,32 @@ function drawLens() {
 function redraw() { drawLens(); drawMap(); drawDetail(); }
 document.getElementById('lens').addEventListener('click', ev => { const b = ev.target.closest('button'); if (!b) return; lens = b.dataset.k; if (sel.type === 'place') sel = { type: null }; redraw(); if (lens !== 'none') { pairs = lens; pairSel = null; drawGrid(); } document.querySelector(`#lens [data-k="${lens}"]`).focus(); });
 const map = document.getElementById('map');
+
+/* ---- zoom and drag: the view is the part of the map the frame shows ---- */
+const WHOLE = { x: -80, y: 0, w: 880, h: 790 }, CLOSEST = 6;
+let view = { ...WHOLE }, drag = null, dragged = false;
+const zin = document.getElementById('zin'), zout = document.getElementById('zout'), zfit = document.getElementById('zfit');
+function showView() {
+  view.x = Math.min(WHOLE.x + WHOLE.w - view.w, Math.max(WHOLE.x, view.x)); view.y = Math.min(WHOLE.y + WHOLE.h - view.h, Math.max(WHOLE.y, view.y));
+  map.setAttribute('viewBox', `${view.x.toFixed(1)} ${view.y.toFixed(1)} ${view.w.toFixed(1)} ${view.h.toFixed(1)}`);
+  const whole = view.w >= WHOLE.w - 0.5; map.classList.toggle('zoomed', !whole);
+  zout.disabled = zfit.disabled = whole; zin.disabled = view.w <= WHOLE.w / CLOSEST + 0.5;
+}
+const spot = ev => { const m = map.getScreenCTM(); if (!m) return null; const p = map.createSVGPoint(); p.x = ev.clientX; p.y = ev.clientY; return p.matrixTransform(m.inverse()); };
+function zoom(by, at) {
+  const w = Math.min(WHOLE.w, Math.max(WHOLE.w / CLOSEST, view.w / by)), k = w / view.w, c = at || { x: view.x + view.w / 2, y: view.y + view.h / 2 };
+  view = { x: c.x - (c.x - view.x) * k, y: c.y - (c.y - view.y) * k, w, h: view.h * k }; showView();
+}
+zin.onclick = () => zoom(1.5); zout.onclick = () => zoom(1 / 1.5); zfit.onclick = () => { view = { ...WHOLE }; showView(); };
+map.addEventListener('wheel', ev => { if (!ev.ctrlKey && !ev.metaKey) return; ev.preventDefault(); zoom(ev.deltaY < 0 ? 1.2 : 1 / 1.2, spot(ev)); }, { passive: false });
+map.addEventListener('pointerdown', ev => { if (!map.classList.contains('zoomed') || ev.button) return; drag = { id: ev.pointerId, px: ev.clientX, py: ev.clientY, x: view.x, y: view.y, moved: false }; });
+map.addEventListener('pointermove', ev => { if (!drag || ev.pointerId !== drag.id) return; const dx = ev.clientX - drag.px, dy = ev.clientY - drag.py;
+  if (!drag.moved) { if (Math.hypot(dx, dy) < 5) return; drag.moved = true; map.classList.add('dragging'); try { map.setPointerCapture(drag.id); } catch (e) {} }
+  const r = map.getBoundingClientRect(), per = Math.max(view.w / r.width, view.h / r.height); view.x = drag.x - dx * per; view.y = drag.y - dy * per; showView(); });
+const drop = ev => { if (!drag || ev.pointerId !== drag.id) return; dragged = drag.moved; drag = null; map.classList.remove('dragging'); };
+map.addEventListener('pointerup', drop); map.addEventListener('pointercancel', drop);
+map.addEventListener('click', ev => { if (dragged) { dragged = false; ev.stopPropagation(); ev.preventDefault(); } }, true);
+
 const pick = ev => { const d = ev.target.closest('.dot'), p = ev.target.closest('.place');
   if (d) sel = { type: 'thread', id: d.dataset.t }; else if (p) sel = { type: 'place', id: p.dataset.p }; else return false; redraw(); return true; };
 map.addEventListener('click', pick);
@@ -406,6 +448,5 @@ function drawRoads() {
 }
 document.getElementById('wide').addEventListener('change', drawRoads);
 
-drawGrid(); drawMatrix(); drawRoads(); redraw();
-(function () { const sc = map.parentElement; sc.scrollLeft = (sc.scrollWidth - sc.clientWidth) / 2; })();
+drawGrid(); drawMatrix(); drawRoads(); redraw(); showView();
 </script>
