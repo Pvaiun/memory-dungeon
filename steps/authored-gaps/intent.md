@@ -83,6 +83,16 @@ Said in the same conversation, still thinking aloud. Not a ruling.
 - **The builds may be it, loosened:** "It's possible this builds thing is the right way to do it. It's been working so far. Maybe we just need to do analysis to make sure that maybe the builds can be less precise and more like categories of effects."
 - **Where classes connect is open:** "what is it that makes it that the pyromancer connects to X other unit?" Some are obvious, as with the Ranger; many are "just sort of arbitrary in the versions".
 
+## Texture: the builds' core pieces
+
+Said in the same conversation, on the agent's proposal of classes as starts, builds as loose categories and doors between ("I do think your conceptualization works"). Not a ruling.
+
+- **The worry is texture.** Landslide's "big punctuating moment", a fire that ramps, a frost that shatters: "These are not words that were like threads part of the map. These were sort of creative objectives that helped make effects that had more thematic value than just everything matching to everything else."
+- **What they want from loosening:** "even more texture available to us", "a lexicon wide enough, but also specific enough that we can allow players to create their own rhythms and texture with their choices." Other ways to maintain and ramp than fire, "maybe mana or attacks or another status"; being hit taking "all sorts of different forms, like fueling my team or triggering attacks".
+- **The question:** "is it possible to break down the builds into their core pieces and allow players to build stuff out of those core pieces."
+- **The challenge, if it isn't:** "it would be better to just keep the builds as we have now and allow me to build the effects like I've been doing, because there's already quite a bit of natural cross-pollination happening." It has to feel "realistic and not just like generic data that we don't master".
+- **The picture:** not knowing what's being painted, but "trying to find the colors that exist so that players can paint their own."
+
 ## The triage (`triage.md`)
 
 Every effect that has been on gear so far, in three piles:
