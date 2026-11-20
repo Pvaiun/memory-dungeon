@@ -69,6 +69,10 @@ Said once the threads were settled, thinking aloud. Not a ruling.
 - **What they're weighing:** whether roles go a level deeper, as "different ways of mitigating damage", which "starts to look a lot like words"; and if they don't, "what's the point of roles if there's only two of them?" Every unit performs both, so "how else do we categorize them?"
 - **On the builds:** "I understand why or where the builds came from, because the builds are ways to do things."
 
+- **Two roles and words aren't a scaffold.** Sorting every word under attack or defense and giving each class a couple leaves the classes "defined by a couple of key statuses that they use or mechanics", which is where they are now: "redefining classes is what they already are. It doesn't really help us very much." As a way of describing classes, it works.
+- **The objective, restated:** "to find a way to build a web for gear and formations that can support variety in class builds, trying to step away from this fixed build idea we had before with the named builds".
+- **What they asked:** "is there a way to use classes as a way to be the scaffolding for this web, or does the web need anchoring somewhere else? And then, is that somewhere else those builds we've defined, or should it be something else?"
+
 ## The triage (`triage.md`)
 
 Every effect that has been on gear so far, in three piles:
