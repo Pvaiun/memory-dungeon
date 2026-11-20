@@ -30,6 +30,17 @@ Recorded by the agent from the conversation of Nov 16–17, for the director to 
 - **The classes are solid as identities and weak in their details.** Each class's "general vibe and their general things that they do" stands. Their upgrades, versions and each ability's exact effect were made in the same mass generation as the loot and are "super underdeveloped": "about 50% of them are just bad". The classes are to be read as broad pictures, a few threads each, and they change in reaction to the web: if the web puts Bonfire nearest another build, the Pyromancer can be given more of that build's effects.
 - **Open, and theirs to rule:** whether the builds are "helpful signposts, or... poor design" (Slay the Spire's defined builds on several characters, against Hades's one character and a unique thing every time); and whether the web is built piece by piece or has to be authored in its shape first, and if so whether the way it's authored today is right.
 
+## A turn the director is weighing: the classes as the anchor (Nov 20)
+
+Said late and tired, as a ramble to react to: "it's likely this is like worthless, but give me your thoughts." Not a decision. Nothing is to be built from it until they say so.
+
+- **The classes are this game's gods.** "Aren't classes the single biggest choice that the player has, and the single biggest chunk of gameplay that they select? And shouldn't they be the signposting the different mechanics in the game?"
+- **Today the work runs backwards.** It goes from builds and rhythms to gear, and then to class upgrades that fit the gear, with the classes "after the fact kind of being appended onto these different mechanics with loose theming". The builds were made as an anchor because the classes weren't one: the game was first conceived with five party slots, where a class filled a general role.
+- **A party isn't that diverse underneath.** It needs ways to deal damage and ways to sustain, by mitigation or healing: tank, support and damage, with the usual permutations (burst that kills before damage comes in, supports stacked on one damage dealer, bruisers).
+- **The idea:** far fewer classes (five to seven), each much deeper (six or seven abilities, with versions given by "some other sort of mechanic" than a free pick), each fitting all three roles to a degree in its own flavour. A party is then a matching of classes and their flavours, and builds are "the way that you capitalize on those choices".
+- **Gear may be per class,** every piece for a single class, with formations as "the sort of monkey wrench that connects all three". The web is then designed "around combinations of known classes, rather than trying to connect everything to everything else".
+- **On the status builds being one group in the web:** that was on purpose. They made each piece cross-build as they wrote it.
+
 ## The triage (`triage.md`)
 
 Every effect that has been on gear so far, in three piles:

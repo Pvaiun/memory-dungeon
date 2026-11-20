@@ -67,6 +67,7 @@ Six of the first fifteen came back marked as the wrong question, and the directo
 - **They won't colour-code.** An answer to a road's request may never name that road's status and may serve many roads. That's what the game needs. Place it by what it does, not by the card that asked.
 - **Ask from an underused mechanic where the job allows it.** A card still needs a job the web lacks. Where the count shows a mechanic the web needs more of, the ask names it in one plain sentence (The count, below).
 - **An answer they struggle to write is a wrong question too.** Asked for a formation about the kill, the director wrote one they didn't believe in and then couldn't find another: felling foes is every party's aim, so there was nothing to change. When they say they can't find it, withdraw the card; don't ask again.
+- **A card is short, and it's never a list to proofread.** Eleven cards about the threads went out as long lists to correct, while the method itself was still being discussed. The director didn't answer them: "a giant wall of text", and too early. While a question about how the work is done is open, it's talked through in the chat and nothing is seeded.
 - **"Wrong question" is the most useful button on the page.** Treat it as correct until shown otherwise, withdraw or re-ask in plain words, and say which.
 
 ## Reading the answers
