@@ -52,6 +52,7 @@ So they aren't proposed again. Each was the agent's idea.
 - **Tagging each effect with the builds it serves.** Proposed, then dropped by the agent: it's picking by colour, done by the makers, and nothing can check a tag. An effect is written as what it wants and gives (`report.md`, ruling 23).
 - **A star with the builds at its points and everything placed between them.** It was the director's picture and the agent drew it. Left to their own links the effects group by thread, not by build, and where an effect sat changed with how a thread's weight was read. The builds are routes over the map, not its places.
 - **A few deep classes in place of sixteen,** with gear for one class only. The director's idea, weighed and set down by them (`report.md`, ruling 25). What was kept from it: the classes are a core part of the web.
+- **Building a few classes early and running them in fights,** to test the way of working. The director ruled it out, and it would have measured the wrong thing: fights, where what's chased is the looting, which only the whole breadth of the web can show (`report.md`, ruling 29).
 - **Cards that were lists to correct** (each build's threads). Never answered: too dense, and too early (`report.md`, ruling 28).
 
 What stuck was the director's own formulation: a skeleton, gaps where the agent is unsure, and each gap brought to them as an objective.
