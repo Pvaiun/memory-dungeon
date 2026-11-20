@@ -41,6 +41,12 @@ Said late and tired, as a ramble to react to: "it's likely this is like worthles
 - **Gear may be per class,** every piece for a single class, with formations as "the sort of monkey wrench that connects all three". The web is then designed "around combinations of known classes, rather than trying to connect everything to everything else".
 - **On the status builds being one group in the web:** that was on purpose. They made each piece cross-build as they wrote it.
 
+## What the director is chasing (Nov 20)
+
+- **Discovery inside a single run:** "a player is faced with choices, and they make the choice they think is best in the moment, but they do not know where it will end up, and they are surprised every time. And over hundreds of runs, they learn to make the right choices to lead to good outcomes most of the time, but they still don't know what those outcomes are going to be. That's what I'm chasing."
+- **Two ways the game could go, and they see both.** Keep adding classes, to thirty, forty, fifty or sixty, with a class as "a piece of the arsenal". Or four to six classes, "all deep as hell", mixed together. The second is "basically a full redesign of the game", and they are "not convinced yet" it's the right way.
+- **Their own objection to few classes:** with six classes, a rule for who wears what (two in light, two in medium, two in heavy) is "a stupid A or B choice every single time".
+
 ## The triage (`triage.md`)
 
 Every effect that has been on gear so far, in three piles:
