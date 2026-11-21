@@ -54,9 +54,15 @@ function critRoll(w: W, rng: CUnit, chance: number, multiplier: number): number 
 
 type Calc = { amount: number; word: string | null; crit: boolean; raw: number };
 
-/** The resolution order: amount, boosts, damage-taken modifiers, crit, mitigation. Whole points, rounded down. */
-function calc(w: W, t: CUnit, p: Part, raw: number, tags: readonly string[], boost: number, crit: number): Calc {
-  let x = raw * (1 + boost / 100) * (1 + takenOf(w, t, tags) / 100);
+/**
+ * The difficulty dials on a unit's hits: the fight's knob (the power stat) and the clock's enrage. They scale the hit before any
+ * status or ability boost, so a boost or cut is a share of the dialled hit at every knob (Weaken halves a hit in act III as in act I).
+ */
+export const dial = (w: W, u: CUnit) => stat(w, u, "power") + enrage(w);
+
+/** The resolution order: amount, the dials, boosts, damage-taken modifiers, crit, mitigation. Whole points, rounded down. */
+function calc(w: W, t: CUnit, p: Part, raw: number, tags: readonly string[], boost: number, crit: number, dials = 0): Calc {
+  let x = raw * (1 + dials / 100) * (1 + boost / 100) * (1 + takenOf(w, t, tags) / 100);
   if (crit) x = (x * crit) / 100;
   // The amount before Defense, for the log only: what mitigation took off.
   const preMit = x;
@@ -218,7 +224,7 @@ export function hit(w: W, ctx: Ctx, t0: CUnit, e: S.DamageEffectT, o: HitOpts = 
   if (!fixed && main.type === "physical" && evaded(w, a, t)) {
     w.log?.({ t: "dmg", vis: "player", at: w.f.now, by: a.id, target: t.id, src: ctx.id, part: "hit", amount: 0, soaked: 0, word: "MISS", crit: false, hp: t.hp, shield: shield(w, t) });
     // A dodged hit's raw amount (after the attacker's boosts, before Defense) and type ride on its events, for a strike sized from it.
-    const raw = Math.max(0, Math.floor(parts[0].raw * (1 + (boostOf(w, a, shaped(tags), t) + stat(w, a, "power") + enrage(w) + (ctx.mod?.damage ?? 0)) / 100)));
+    const raw = Math.max(0, Math.floor(parts[0].raw * (1 + dial(w, a) / 100) * (1 + (boostOf(w, a, shaped(tags), t) + (ctx.mod?.damage ?? 0)) / 100)));
     fire(w, ev("hit_evaded", t, a, { kind, tags, raw, dtype: main.type }));
     fire(w, ev("hit_missed", a, t, { kind, tags, raw, dtype: main.type }));
     return false;
@@ -226,12 +232,12 @@ export function hit(w: W, ctx: Ctx, t0: CUnit, e: S.DamageEffectT, o: HitOpts = 
   // The hit and its riders read the same state, and share one crit roll.
   const [chance, multiplier] = fixed || o.plain ? [0, 0] : critOf(w, a, t, tags);
   const crit = critRoll(w, a, chance, multiplier);
-  const power = o.plain ? 0 : stat(w, a, "power") + enrage(w) + (ctx.mod?.damage ?? 0);
-  const boosted = (p: Part, x: CUnit) => (o.plain ? 0 : boostOf(w, a, shaped(partTags(kind, p, extra)), x) + power);
+  const dials = o.plain ? 0 : dial(w, a);
+  const boosted = (p: Part, x: CUnit) => (o.plain ? 0 : boostOf(w, a, shaped(partTags(kind, p, extra)), x) + (ctx.mod?.damage ?? 0));
   const resultsOn = (x: CUnit, ps: typeof parts, dodge: boolean): (Calc | null)[] =>
     fixed
       ? [{ amount: Math.max(0, Math.floor(o.fixed!)), word: null, crit: false, raw: Math.max(0, Math.floor(o.fixed!)) }]
-      : ps.map(({ p, raw, rider }) => (rider && dodge && p.type === "physical" && evaded(w, a, x) ? null : calc(w, x, p, raw, partTags(kind, p, extra), boosted(p, x), crit)));
+      : ps.map(({ p, raw, rider }) => (rider && dodge && p.type === "physical" && evaded(w, a, x) ? null : calc(w, x, p, raw, partTags(kind, p, extra), boosted(p, x), crit, dials)));
   let results = resultsOn(t, parts, true);
   // A big hit on an ally moves, once, to a unit that covers it, and resolves again against that unit (its own mitigation, block,
   // absorbs and HP; the hit's riders and statuses with it), keeping its crit and without a second dodge.
@@ -374,7 +380,7 @@ export function strike(w: W, ctx: Ctx, t: CUnit, e: S.DamageEffectT) {
       ? critRoll(w, from, stat(w, from, "crit_chance"), stat(w, from, "crit_multiplier"))
       : critRoll(w, st.holder, d.crit.chance, d.crit.multiplier ?? stat(w, st.holder, "crit_multiplier"));
   }
-  const r = calc(w, t, p, raw, tags, st.fixedBoost ? 0 : boostOf(w, ctx.actor, tags, t) + stat(w, ctx.actor, "power") + enrage(w), crit);
+  const r = calc(w, t, p, raw, tags, st.fixedBoost ? 0 : boostOf(w, ctx.actor, tags, t), crit, st.fixedBoost ? 0 : dial(w, ctx.actor));
   const by = st.fixedBoost ? (d.perSource ? unit(w, st.src) : null) : ctx.actor;
   // A pulse empties or spends a status as nobody; a reaction as its actor. A knockout names `by`.
   const tk = take(w, t, r.amount, st.fixedBoost ? null : ctx.actor);

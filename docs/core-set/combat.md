@@ -152,13 +152,14 @@ Damage resolves in this order:
 
 1. Dodge check (Blur first: a unit holding it dodges, and the Blur is spent)
 2. Base amount and scaling, including scaling from a condition instead of a stat (Judgement, Pyre)
-3. The attacker's boosts
-4. The target's damage-taken modifiers
-5. Crit
-6. Mitigation (Defense)
-7. Aegis: blocks the damage if it's above a set share of the holder's max HP
-8. Shields
-9. HP
+3. The difficulty dials: the fight's knob for a foe, and the enrage. They scale the hit as a step of their own, so every boost and cut after them is a share of the dialled hit, and Weaken halves a hit at any knob.
+4. The attacker's boosts: statuses (Might, Weaken, Shock), gear and passives, added together
+5. The target's damage-taken modifiers
+6. Crit
+7. Mitigation (Defense)
+8. Aegis: blocks the damage if it's above a set share of the holder's max HP
+9. Shields
+10. HP
 
 ### Stats every unit has
 
