@@ -1,6 +1,6 @@
 # The web
 
-What the web holds. First the threads: the one list of words every effect is written in, and every class will be. Then the catalog: every effect the director kept or wrote, one row each, as what it wants and what it gives. Then the count that says what's used too much, what the director has settled, every card asked so far and what came of it, what not to ask again, and the effects seen to do something together. Nothing here is sized or slotted. How the request page works is in `report.md`.
+What the web holds. First the threads: the one list of words every effect is written in, and every class will be. Then the catalog: every effect the director kept or wrote, one row each, as what it wants and what it gives. Then the count that says what's used too much, what the director has settled, every card asked so far and what came of it, what not to ask again, and the effects seen to do something together. Nothing here is sized or slotted. The director's rulings and how the page works are in `report.md`.
 
 `npx tsx tools/web-threads.ts` reads this page: it stops on a word that isn't in the list, and prints the tally the count is judged from, what joins to what, and how many partners each effect has. `npx tsx tools/web-map.ts` redraws the map from it (`report.md`, The web).
 

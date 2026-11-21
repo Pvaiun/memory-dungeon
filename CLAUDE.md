@@ -44,7 +44,7 @@ An agent that reads everything does worse work, not safer work: what it needs ge
 Three lines, replaced when they change. What's done isn't listed anywhere: it's in the documents, the code and git.
 
 - **The game is built and approved as it stands:** the rogue mode (the interface's Settings → MODE → ROGUE), engine 0.30, schema 0.14. It's tuned by simulation for a first playtest, and nothing is final. Free play stays as the sandbox.
-- **The current step is authored gaps** (`steps/authored-gaps/report.md`): a new way to make loot. Its folder holds the web of effects, drawn between the nine builds, and one other way to sort it. The director sets the direction from there.
+- **The current step is authored gaps** (`steps/authored-gaps/brief.md`): a new way to make loot, on a web the classes guide. The director designs each class next.
 - **Everything else that's open** (built and waiting on the director's read or playtest, and the open questions) is one line each in `docs/open.md`. Open it only when the work touches one.
 
 ## The director's preferences
