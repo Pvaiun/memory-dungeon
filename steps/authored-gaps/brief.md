@@ -7,7 +7,7 @@ Read this first. It says what this step is trying to do and why, how the work is
 **Read little.** The work is judgement: writing a request that isn't the wrong question, and reading an answer against the rules. The director found that the judgement gets worse as the reading piles up, so this list is closed. What isn't on it is reference: open one section when a specific card or answer needs it, and not before.
 
 - **Every session:** `docs/primer.md`; this brief; `report.md` (the rulings and Next); `intent.md`; `web.md`.
-- **To put the web on threads, with the classes in it** (`report.md`, Next): in `docs/gear-design/builds.md`, the table Threads the builds share; `first-pass.md`; and each class's line in `docs/primer.md` for its theme. A class's section of `docs/core-set/classes.md` only to run the two tests on its kit as it stands: the director designs each class afresh, and not from its kit.
+- **To put the web on threads, with the classes in it** (`report.md`, Next): in `docs/gear-design/builds.md`, the table Threads the builds share; and each class's line in `docs/primer.md` for its theme. A class's section of `docs/core-set/classes.md` only to run the two tests on its kit as it stands: the director designs each class afresh, and not from its kit.
 - **To write a batch:** in `docs/gear-design/builds.md`, The director's rulings, The frame and The builds (the nine roads). In `docs/gear-design/loot.md`, The director's rulings only.
 - **To read answers:** the rulings in `docs/core-set/vocabulary.md` and `docs/gear-design/loot.md`.
 - **Only when a card or an answer needs it, and only that section:**
@@ -147,7 +147,7 @@ Not decided: how many of the 450 are authored, when the versions and upgrades ar
 - `intent.md`: the director's intent, recorded short.
 - `report.md`: their rulings, how the page and its store work, and the next steps.
 - `web.md`: the catalog of every effect the web holds, the count, what the director has settled, every card asked, and what not to ask again.
-- `first-pass.md`: the agent's one-sitting draft of the threads and of what each effect wants and gives. A start for the catalog's new columns, to check row by row.
+- `map-page.html`: the map's page, filled from the catalog by `tools/web-map.ts`.
 - `triage.md`, `triage-formations.md`: what they kept, in their two piles, in their words.
 - `requests-page.html`: the page's source.
 

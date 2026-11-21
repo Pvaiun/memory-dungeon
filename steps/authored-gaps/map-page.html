@@ -1,0 +1,452 @@
+<title>The Loot Web</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap">
+<style>
+/* Layout: one column. The map is first and largest, with its detail beside it on a wide screen and under it on a phone. */
+:root{
+  --bg:#f6f7fa; --panel:#ffffff; --ink:#1a1e27; --ink2:#485062; --muted:#6d7688; --line:#d8dce5;
+  --dot:#8e98ab; --accent:#256abf; --soft:#dbe8f9; --halo:#f6f7fa;
+  --display:"Space Grotesk","IBM Plex Sans",system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){--bg:#13151a;--panel:#1b1e25;--ink:#e7e9ef;--ink2:#b4bac7;--muted:#8d94a3;--line:#2d323c;--dot:#667086;--accent:#6da7ec;--soft:#1d3555;--halo:#13151a;color-scheme:dark}
+}
+:root[data-theme="dark"]{--bg:#13151a;--panel:#1b1e25;--ink:#e7e9ef;--ink2:#b4bac7;--muted:#8d94a3;--line:#2d323c;--dot:#667086;--accent:#6da7ec;--soft:#1d3555;--halo:#13151a;color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5}
+.wrap{max-width:1120px;margin:0 auto;padding-block:28px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:36px}
+h1,h2,h3{font-family:var(--display);font-weight:600;text-wrap:balance;margin:0;letter-spacing:-0.01em}
+h1{font-size:30px;line-height:1.15}
+h2{font-size:20px}
+h3{font-size:17px}
+p{margin:0;max-width:66ch}
+.lede{color:var(--ink2);font-size:16px}
+.head{display:flex;flex-direction:column;gap:10px}
+.flag{align-self:flex-start;font-size:12px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;color:var(--accent);border:1px solid var(--accent);border-radius:3px;padding:2px 8px}
+.how{display:flex;flex-direction:column;gap:6px;color:var(--ink2);margin:0;padding:0;list-style:none}
+.how b{color:var(--ink);font-weight:600}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{background:var(--panel);border:1px solid var(--line);color:var(--ink2);border-radius:4px;padding:6px 12px;font:inherit;font-size:14px;font-weight:500;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--panel)}
+.seg button:focus-visible,.cell:focus-visible,.clear:focus-visible,.tog input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.lens{display:flex;flex-direction:column;gap:8px}
+.stage{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;align-items:start}
+@media (min-width:980px){.stage{grid-template-columns:minmax(0,1fr) 330px}}
+.scroll{overflow-x:auto;min-width:0}
+.mapbox{display:flex;flex-direction:column;gap:8px;min-width:0}
+.zoom{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.zoom button{background:var(--panel);border:1px solid var(--line);color:var(--ink);border-radius:4px;min-width:36px;height:34px;padding:0 10px;font:inherit;font-size:15px;font-weight:500;cursor:pointer}
+.zoom button:disabled{color:var(--muted);cursor:default;opacity:.6}
+.zoom button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.zoom span{color:var(--muted);font-size:13px}
+svg#map{display:block;width:100%;height:auto;aspect-ratio:880/790;max-height:min(82vh,680px);touch-action:pan-y;-webkit-user-select:none;user-select:none;border:1px solid var(--line);border-radius:6px;background:var(--bg)}
+svg#map.zoomed{touch-action:none;cursor:grab}
+svg#map.dragging{cursor:grabbing}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px 18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.panel .lean{color:var(--ink2);font-size:14px}
+.panel h4{margin:6px 0 0;font-family:var(--body);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.panel ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:7px}
+.panel li{font-size:14px;line-height:1.4}
+.panel li span{color:var(--muted);font-size:13px;display:block}
+.list{max-height:460px;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
+.clear{align-self:flex-start;background:none;border:1px solid var(--line);color:var(--ink2);border-radius:4px;padding:4px 10px;font:inherit;font-size:13px;cursor:pointer}
+.clear:hover{border-color:var(--accent);color:var(--accent)}
+section{display:flex;flex-direction:column;gap:14px}
+.finds{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px;max-width:72ch}
+.finds b{font-weight:600}
+.note{color:var(--ink2);font-size:14px}
+table{border-collapse:collapse;font-variant-numeric:tabular-nums}
+.grid th{font-weight:500;font-size:12.5px;color:var(--ink2);padding:4px 6px;white-space:nowrap}
+.grid th.row{text-align:right}
+.grid th.up{vertical-align:bottom;padding:4px 2px}
+.grid th.up span{display:inline-block;writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap}
+.grid td{padding:2px}
+.cell{position:relative;width:42px;height:34px;border:1px solid transparent;border-radius:3px;font:inherit;font-size:14px;color:var(--ink);cursor:pointer;font-variant-numeric:tabular-nums}
+.matrix .cell{width:30px;height:30px;font-size:13px}
+.cell.zero{border:1px dashed var(--muted);background:none;color:var(--muted)}
+.matrix .cell.zero{border-color:transparent;color:transparent}
+.matrix .cell.zero.own{border:1px dashed var(--muted)}
+.cell.self{border:1px solid var(--line);background:none;color:var(--ink2)}
+.cell.door::after,.cell.own::after{content:"";position:absolute;top:3px;right:3px;width:5px;height:5px;border-radius:50%;background:var(--ink)}
+.cell.on{outline:2px solid var(--accent);outline-offset:1px}
+.ledger{width:100%;max-width:760px}
+.ledger th{text-align:left;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;padding:6px 10px 6px 0;border-bottom:1px solid var(--line)}
+.ledger td{padding:6px 10px 6px 0;border-bottom:1px solid var(--line);font-size:14px;vertical-align:top}
+.ledger td.n,.ledger th.n{text-align:right;width:96px}
+.ledger .who{color:var(--ink2)}
+.two{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;align-items:start}
+@media (min-width:980px){.two{grid-template-columns:auto minmax(0,1fr)}.two.wide{grid-template-columns:minmax(0,1fr) 330px}}
+.tog{display:flex;gap:8px;align-items:center;font-size:14px;color:var(--ink2)}
+.nums{display:flex;flex-wrap:wrap;gap:10px 28px;margin:0;padding:0;list-style:none}
+.nums li{display:flex;flex-direction:column}
+.nums b{font-family:var(--display);font-size:24px;font-weight:600;line-height:1.2}
+.nums span{color:var(--ink2);font-size:13px}
+/* the map */
+#map text{font-family:var(--body);fill:var(--ink)}
+#map .rim{fill:none;stroke:var(--line);stroke-width:1}
+#map .spoke{stroke:var(--line);stroke-width:1}
+#map .strand{stroke:var(--ink2);fill:none;stroke-linecap:round;opacity:.22}
+#map .strand.rule{stroke-dasharray:4 5}
+#map .strand.hi{stroke:var(--accent);opacity:.9}
+#map .strand.lo{opacity:.07}
+#map .dot circle.c{fill:var(--dot);stroke:var(--halo);stroke-width:2}
+#map .dot.empty circle.c{fill:var(--halo);stroke:var(--muted);stroke-width:1.5;stroke-dasharray:3 3}
+#map .dot text{font-size:12.5px;text-anchor:middle;paint-order:stroke;stroke:var(--halo);stroke-width:4px;stroke-linejoin:round}
+#map .dot.empty text{fill:var(--muted)}
+#map .dot{cursor:pointer}
+#map .dot.most circle.c,#map .dot.sel circle.c{fill:var(--accent)}
+#map .dot.some circle.c{fill:var(--soft);stroke:var(--accent);stroke-width:2}
+#map .dot.lo{opacity:.45}
+#map .dot.sel text{font-weight:600}
+#map .dot:focus-visible circle.c,#map .place:focus-visible text{stroke:var(--accent);stroke-width:3}
+#map .place{cursor:pointer}
+#map .place text{font-family:var(--display);font-size:16px;font-weight:600}
+#map .place.sel text{fill:var(--accent);text-decoration:underline}
+#map .cap{font-size:12px;fill:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+@media (prefers-reduced-motion:no-preference){#map .strand,#map .dot{transition:opacity .15s}}
+</style>
+
+<div class="wrap">
+  <header class="head">
+    <span class="flag">Three ways to read it</span>
+    <h1>The loot web</h1>
+    <p class="lede">The 108 effects the web holds, drawn three ways: between the nine builds, between seven clocks, and with no frame at all. The dots and the lines are the same each time. Only where the dots sit changes.</p>
+    <ul class="how">
+      <li><b>A dot is a word:</b> something an effect can give or want, like a Shield, a dodge or Burn. A bigger dot holds more effects. A dashed ring holds none.</li>
+      <li><b>A line is an effect</b> that wants one word and gives another. A dashed line is what a status does by itself: Chill ends in a Stun.</li>
+      <li><b>Left off:</b> swings, casts and Attack, which every unit has, and the six effects that name every affliction or every buff at once. They would join everything.</li>
+    </ul>
+  </header>
+
+  <section>
+    <div class="lens">
+      <div class="seg" id="lens" role="group" aria-label="How the web is divided"></div>
+      <p class="note" id="lensNote"></p>
+    </div>
+    <div class="stage">
+      <div class="mapbox">
+        <div class="zoom" role="group" aria-label="Zoom the map">
+          <button type="button" id="zout" aria-label="Zoom out">−</button>
+          <button type="button" id="zin" aria-label="Zoom in">+</button>
+          <button type="button" id="zfit">Whole map</button>
+          <span>Zoom in to read the names, then drag to move.</span>
+        </div>
+        <svg id="map" viewBox="-80 0 880 790" role="group" aria-label="The loot web"></svg>
+      </div>
+      <aside class="panel" id="detail" aria-live="polite"></aside>
+    </div>
+  </section>
+
+  <section>
+    <h2>The same 108, under the builds and under the clocks</h2>
+    <p class="note">A place is a build or a clock. An effect has a place under the builds when it names a word that matters most to one, and under the clocks when the agent could read a clock off its own words.</p>
+    <div class="scroll"><table class="ledger" id="cmp"></table></div>
+    <ol class="finds" id="finds"></ol>
+  </section>
+
+  <section>
+    <h2>Between each pair</h2>
+    <div class="seg" id="pairLens" role="group" aria-label="Pairs of builds or of clocks"></div>
+    <p class="note" id="pairNote"></p>
+    <div class="two">
+      <div class="scroll"><table class="grid" id="grid"></table></div>
+      <aside class="panel" id="pair" aria-live="polite"></aside>
+    </div>
+  </section>
+
+  <section>
+    <h2>Every clock against every word</h2>
+    <p class="note">How many effects run a word on a clock. A dot in the corner marks a build's own pairing: its clock and a word that matters most to it. Everything without a dot is a pairing no build describes.</p>
+    <ul class="nums" id="mnums"></ul>
+    <div class="two wide">
+      <div class="scroll"><table class="grid matrix" id="matrix"></table></div>
+      <aside class="panel" id="mcell" aria-live="polite"></aside>
+    </div>
+  </section>
+
+  <section>
+    <h2>Near and far</h2>
+    <p class="note">A road runs from one word to another when an effect wants the first and gives the second. This counts how far apart the words are by road, and which words everything leads to.</p>
+    <label class="tog"><input type="checkbox" id="wide"> Count the six effects that name every affliction or every buff</label>
+    <ul class="nums" id="rnums"></ul>
+    <ul class="finds" id="rfinds"></ul>
+    <div class="scroll"><table class="ledger" id="roads"></table></div>
+  </section>
+
+  <section>
+    <h2>What's solid and what's a reading</h2>
+    <ul class="finds">
+      <li><b>Solid:</b> what each effect gives and wants. It's read off the effect's own words and was checked row by row.</li>
+      <li><b>From the builds page:</b> which words matter to which build. Move a word there and it moves here.</li>
+      <li><b>A reading:</b> each effect's clock. The agent gave every effect one clock, two, or none in a single sitting. Where a word sits under the clocks follows from that.</li>
+      <li><b>Not a list of needs.</b> An empty place is somewhere to look for a job. It isn't a card until there's a job.</li>
+    </ul>
+  </section>
+</div>
+
+<script>
+const D = /*DATA*/;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const T = Object.fromEntries(D.threads.map(t => [t.n, t]));
+const ids = D.threads.filter(t => !t.common).map(t => t.n);
+const keep = ws => [...new Set(ws.filter(w => !T[w].common))];
+const E = D.effects.map(e => ({ ...e, w: keep(e.w), g: keep(e.g) }));
+E.forEach(e => e.th = [...new Set([...e.w, ...e.g])]);
+const NARROW = E.filter(e => !e.wide);
+const B = D.builds, BN = B.map(b => b.n), CN = D.clockOrder, C = Object.fromEntries(D.clocks.map(c => [c.n, c]));
+const build = n => B.find(b => b.n === n);
+E.forEach(e => e.b = BN.filter(n => e.th.some(t => build(n).most.includes(t))));
+const names = a => a.join(', ');
+const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
+const gives = t => E.filter(e => e.g.includes(t)), wants = t => E.filter(e => e.w.includes(t));
+const cnt = t => E.filter(e => e.th.includes(t)).length;
+
+/* ---- the three ways ---- */
+const onClock = (t, c) => NARROW.filter(e => e.c.includes(c) && e.th.includes(t)).length;
+const LENS = {
+  builds: { label: 'The nine builds', rim: BN, loose: "No build's more than another's",
+    note: 'The rim is the nine builds, each beside builds it has a door to. A word sits nearer the builds the builds page says it matters to.',
+    lean: (t, r) => build(r).most.includes(t) ? 2 : build(r).some.includes(t) ? 1 : 0, pull: l => l * l, places: e => e.b },
+  clocks: { label: 'The seven clocks', rim: CN, loose: 'On no clock',
+    note: "The rim is seven clocks: what a fight's damage keeps time to. A word sits nearer the clocks its effects run on. Which clock an effect runs on is the agent's reading.",
+    lean: (t, r) => onClock(t, r), pull: l => l, places: e => e.c },
+  none: { label: 'No frame', rim: [], loose: 'Joined to nothing',
+    note: 'No rim. Words that effects join pull together, and everything else pushes apart. This is the shape the effects make by themselves.' }
+};
+let lens = 'builds', sel = { type: null };
+
+/* ---- the strands: one per pair of words an effect joins ---- */
+const strands = {}, ruled = {};
+NARROW.forEach((e, i) => e.w.forEach(x => e.g.forEach(y => { if (x !== y) (strands[x + '|' + y] = strands[x + '|' + y] || []).push(e); })));
+ids.forEach(t => { T[t].gives.forEach(y => { if (!T[y].common) ruled[t + '|' + y] = 1; }); T[t].wants.forEach(x => { if (!T[x].common) ruled[x + '|' + t] = 1; }); });
+
+/* ---- where the dots sit ---- */
+const cx = 360, cy = 345, R = 285;
+const ang = (i, n) => (-90 + i * 360 / n) * Math.PI / 180;
+function relax(placed, pos, home, MIN) {
+  for (let it = 0; it < 500; it++) {
+    for (let i = 0; i < placed.length; i++) for (let j = i + 1; j < placed.length; j++) {
+      const a = pos[placed[i]], b = pos[placed[j]]; let dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy);
+      if (d < MIN) { if (d < 0.01) { dx = Math.cos(i * 2.4 + j); dy = Math.sin(i * 2.4 + j); d = 1; } const p = (MIN - d) / 2; a.x -= dx / d * p; a.y -= dy / d * p; b.x += dx / d * p; b.y += dy / d * p; }
+    }
+    placed.forEach(t => { const p = pos[t], h = home[t]; p.x += (h.x - p.x) * 0.03; p.y += (h.y - p.y) * 0.03;
+      const d = Math.hypot(p.x - cx, p.y - cy), mx = R * 0.9; if (d > mx) { p.x = cx + (p.x - cx) * mx / d; p.y = cy + (p.y - cy) * mx / d; } });
+  }
+}
+function layout(k) {
+  const L = LENS[k], home = {}, pos = {};
+  if (k === 'none') {
+    const linked = new Set(); [...Object.keys(strands), ...Object.keys(ruled)].forEach(key => key.split('|').forEach(t => linked.add(t)));
+    const nodes = ids.filter(t => linked.has(t)), p = {}, K = 78;
+    nodes.forEach((t, i) => p[t] = { x: 220 * Math.cos(ang(i, nodes.length)), y: 220 * Math.sin(ang(i, nodes.length)) });
+    const links = [...Object.entries(strands).map(([key, l]) => [key, Math.min(3, l.length)]), ...Object.keys(ruled).map(key => [key, 1])].map(([key, w]) => [...key.split('|'), w]);
+    for (let it = 0; it < 400; it++) {
+      const f = {}; nodes.forEach(t => f[t] = { x: -p[t].x * 0.012, y: -p[t].y * 0.012 });
+      for (let i = 0; i < nodes.length; i++) for (let j = i + 1; j < nodes.length; j++) {
+        const a = p[nodes[i]], b = p[nodes[j]]; let dx = a.x - b.x, dy = a.y - b.y, d = Math.max(1, Math.hypot(dx, dy)); const r = K * K / d / d;
+        f[nodes[i]].x += dx * r; f[nodes[i]].y += dy * r; f[nodes[j]].x -= dx * r; f[nodes[j]].y -= dy * r;
+      }
+      links.forEach(([x, y, w]) => { const a = p[x], b = p[y], dx = b.x - a.x, dy = b.y - a.y, d = Math.max(1, Math.hypot(dx, dy)), s = d / K * 0.06 * w;
+        f[x].x += dx * s; f[x].y += dy * s; f[y].x -= dx * s; f[y].y -= dy * s; });
+      const step = 12 * (1 - it / 400) + 0.5;
+      nodes.forEach(t => { const m = Math.hypot(f[t].x, f[t].y) || 1, s = Math.min(step, m); p[t].x += f[t].x / m * s; p[t].y += f[t].y / m * s; });
+    }
+    const reach = nodes.map(t => Math.hypot(p[t].x, p[t].y)).sort((a, b) => a - b), far = reach[Math.floor(reach.length * 0.8)];
+    nodes.forEach(t => { const d = Math.hypot(p[t].x, p[t].y), k = Math.min(d / far * 0.78, 0.9) * R / (d || 1); home[t] = { x: cx + p[t].x * k, y: cy + p[t].y * k }; });
+  } else {
+    ids.forEach(t => { let sx = 0, sy = 0, sw = 0; L.rim.forEach((r, i) => { const w = L.pull(L.lean(t, r)); sx += w * Math.cos(ang(i, L.rim.length)); sy += w * Math.sin(ang(i, L.rim.length)); sw += w; });
+      if (sw) home[t] = { x: cx + 0.8 * R * sx / sw, y: cy + 0.8 * R * sy / sw }; });
+  }
+  const placed = ids.filter(t => home[t]), loose = ids.filter(t => !home[t]);
+  placed.forEach(t => pos[t] = { ...home[t] });
+  relax(placed, pos, home, k === 'none' ? 84 : 66);
+  loose.forEach((t, i) => pos[t] = { x: loose.length > 1 ? -30 + i * (780 / (loose.length - 1)) : cx, y: cy + R + 98 + (i % 2) * 24 });
+  return { pos, loose };
+}
+const laid = {};
+const rad = t => 4.5 + 2.3 * Math.sqrt(cnt(t));
+
+function drawMap() {
+  const L = LENS[lens], { pos, loose } = laid[lens] || (laid[lens] = layout(lens));
+  const lean = (t, r) => L.rim.length ? L.lean(t, r) : 0;
+  let s = '';
+  if (L.rim.length) { s += `<circle class="rim" cx="${cx}" cy="${cy}" r="${R}"/>`;
+    L.rim.forEach((r, i) => { s += `<line class="spoke" x1="${cx}" y1="${cy}" x2="${cx + R * Math.cos(ang(i, L.rim.length))}" y2="${cy + R * Math.sin(ang(i, L.rim.length))}"/>`; }); }
+  const near = new Set();
+  const all = [...Object.entries(strands).map(([k, l]) => [k, l, '']), ...Object.keys(ruled).filter(k => !strands[k]).map(k => [k, [], ' rule'])];
+  if (sel.type === 'thread') { near.add(sel.id); all.forEach(([k]) => { const [x, y] = k.split('|'); if (x === sel.id) near.add(y); if (y === sel.id) near.add(x); }); }
+  all.forEach(([k, list, cls]) => { const [x, y] = k.split('|'), a = pos[x], b = pos[y]; let c = cls;
+    if (sel.type === 'thread') c += (x === sel.id || y === sel.id) ? ' hi' : ' lo';
+    if (sel.type === 'place') c += (lens === 'clocks' ? list.some(e => e.c.includes(sel.id)) : (lean(x, sel.id) && lean(y, sel.id))) ? ' hi' : ' lo';
+    s += `<line class="strand${c}" x1="${a.x.toFixed(1)}" y1="${a.y.toFixed(1)}" x2="${b.x.toFixed(1)}" y2="${b.y.toFixed(1)}" stroke-width="${Math.min(4.5, 0.9 + 0.8 * Math.max(0, list.length - 1))}"/>`; });
+  if (loose.length) s += `<text class="cap" x="-60" y="${cy + R + 72}">${esc(L.loose)}</text>`;
+  ids.forEach(t => { const p = pos[t], n = cnt(t), r = rad(t); let c = n ? '' : ' empty';
+    if (sel.type === 'thread') c += t === sel.id ? ' sel' : (near.has(t) ? '' : ' lo');
+    if (sel.type === 'place') { const l = lean(t, sel.id); c += l >= 2 ? ' most' : l === 1 ? ' some' : ' lo'; }
+    s += `<g class="dot${c}" data-t="${esc(t)}" tabindex="0" role="button" aria-label="${esc(t)}: ${gives(t).length} give it, ${wants(t).length} want it"><title>${esc(t)}: ${gives(t).length} give it, ${wants(t).length} want it</title><circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${Math.max(r, 18)}" fill="transparent"/><circle class="c" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${r.toFixed(1)}"/><text x="${p.x.toFixed(1)}" y="${(p.y + r + 13).toFixed(1)}">${esc(T[t].s)}</text></g>`; });
+  L.rim.forEach((r, i) => { const a = ang(i, L.rim.length), c = Math.cos(a), x = cx + (R + 22) * c, y = cy + (R + 22) * Math.sin(a) + 5 + (Math.sin(a) > 0.5 ? 10 : Math.sin(a) < -0.5 ? -6 : 0);
+    const anchor = c > 0.3 ? 'start' : c < -0.3 ? 'end' : 'middle';
+    s += `<g class="place${sel.type === 'place' && sel.id === r ? ' sel' : ''}" data-p="${esc(r)}" tabindex="0" role="button" aria-label="${esc(r)}"><text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="${anchor}">${esc(r)}</text></g>`; });
+  document.getElementById('map').innerHTML = s;
+}
+const tags = e => [e.b.length ? names(e.b) : 'no build', e.c.length ? 'clock: ' + names(e.c) : 'no clock'].join(' · ');
+const line = (e, mode) => { const sides = mode === 'g' ? (e.w.length ? 'wants ' + names(e.w) : 'wants nothing else') : mode === 'w' ? (e.g.length ? 'gives ' + names(e.g) : 'gives damage or cover, no word') : [e.w.length ? 'wants ' + names(e.w) : '', e.g.length ? 'gives ' + names(e.g) : ''].filter(Boolean).join(' · ') || 'names only what every unit has';
+  return `<li>${esc(e.name)}<span>${esc(sides)}</span><span>${esc(tags(e))}</span></li>`; };
+function leanLine(t) {
+  const most = BN.filter(b => build(b).most.includes(t)), some = BN.filter(b => build(b).some.includes(t)), cl = CN.filter(c => onClock(t, c));
+  const b = most.length || some.length ? [most.length ? 'Matters most to ' + names(most) : '', some.length ? (most.length ? 'some to ' : 'Matters some to ') + names(some) : ''].filter(Boolean).join(' · ') + '.' : 'No build leans on it more than another.';
+  return b + ' ' + (cl.length ? 'Its effects run on ' + plural(cl.length, 'clock') + ': ' + names(cl) + '.' : 'None of its effects has a clock.');
+}
+function drawDetail() {
+  const el = document.getElementById('detail'); let h = '';
+  if (sel.type === 'thread') { const t = sel.id, g = gives(t), w = wants(t);
+    h = `<h3>${esc(t)}</h3><p class="lean">${esc(leanLine(t))}</p><div class="list">`;
+    if (!g.length && !w.length) h += `<p class="lean">Nothing in the web gives it or wants it.</p>`;
+    if (g.length) h += `<div><h4>Gives it · ${g.length}</h4><ul>${g.map(e => line(e, 'g')).join('')}</ul></div>`;
+    if (w.length) h += `<div><h4>Wants it · ${w.length}</h4><ul>${w.map(e => line(e, 'w')).join('')}</ul></div>`;
+    h += `</div>`;
+  } else if (sel.type === 'place' && lens === 'builds') { const b = build(sel.id), mine = E.filter(e => e.b.includes(b.n));
+    h = `<h3>${esc(b.n)}</h3><p class="lean">${mine.length} effects name a word that matters most to it, ${mine.filter(e => e.b.length === 1).length} of them for it alone. Its clock: ${esc(b.clock)}.</p><p class="lean"><b>Most:</b> ${esc(names(b.most))}.<br><b>Some:</b> ${esc(names(b.some))}.</p><div class="list"><div><h4>Its effects · ${mine.length}</h4><ul>${mine.map(e => line(e, 'b')).join('')}</ul></div></div>`;
+  } else if (sel.type === 'place') { const c = C[sel.id], mine = E.filter(e => e.c.includes(c.n)), ws = ids.filter(t => onClock(t, c.n));
+    h = `<h3>${esc(c.n)}</h3><p class="lean">${esc(c.what[0].toUpperCase() + c.what.slice(1))}. ${c.builds.length > 1 ? 'The builds on it: ' : 'The build on it: '}${esc(names(c.builds))}.</p><p class="lean">${mine.length} effects run on it, ${mine.filter(e => e.c.length === 1).length} of them on it alone, over ${plural(ws.length, 'word')}.</p><div class="list"><div><h4>Its effects · ${mine.length}</h4><ul>${mine.map(e => line(e, 'b')).join('')}</ul></div></div>`;
+  } else h = `<h3>The whole web</h3><p class="lean">Tap a dot to see which effects give that word and which want it. ${lens === 'none' ? '' : 'Tap a name on the rim to see the words and effects that lean to it.'}</p><p class="lean">Stun is a good one to start with: one effect lands it, every Chill ends in one, and three effects turn it into something else.</p><button class="clear" id="eg" type="button">Show Stun</button>`;
+  if (sel.type) h += `<button class="clear" id="clear" type="button">Show the whole web</button>`;
+  el.innerHTML = h;
+  const c = document.getElementById('clear'); if (c) c.onclick = () => { sel = { type: null }; redraw(); };
+  const g = document.getElementById('eg'); if (g) g.onclick = () => { sel = { type: 'thread', id: 'Stun' }; redraw(); };
+}
+function drawLens() {
+  document.getElementById('lens').innerHTML = Object.entries(LENS).map(([k, L]) => `<button type="button" data-k="${k}" aria-pressed="${k === lens}">${esc(L.label)}</button>`).join('');
+  document.getElementById('lensNote').textContent = LENS[lens].note;
+}
+function redraw() { drawLens(); drawMap(); drawDetail(); }
+document.getElementById('lens').addEventListener('click', ev => { const b = ev.target.closest('button'); if (!b) return; lens = b.dataset.k; if (sel.type === 'place') sel = { type: null }; redraw(); if (lens !== 'none') { pairs = lens; pairSel = null; drawGrid(); } document.querySelector(`#lens [data-k="${lens}"]`).focus(); });
+const map = document.getElementById('map');
+
+/* ---- zoom and drag: the view is the part of the map the frame shows ---- */
+const WHOLE = { x: -80, y: 0, w: 880, h: 790 }, CLOSEST = 6;
+let view = { ...WHOLE }, drag = null, dragged = false;
+const zin = document.getElementById('zin'), zout = document.getElementById('zout'), zfit = document.getElementById('zfit');
+function showView() {
+  view.x = Math.min(WHOLE.x + WHOLE.w - view.w, Math.max(WHOLE.x, view.x)); view.y = Math.min(WHOLE.y + WHOLE.h - view.h, Math.max(WHOLE.y, view.y));
+  map.setAttribute('viewBox', `${view.x.toFixed(1)} ${view.y.toFixed(1)} ${view.w.toFixed(1)} ${view.h.toFixed(1)}`);
+  const whole = view.w >= WHOLE.w - 0.5; map.classList.toggle('zoomed', !whole);
+  zout.disabled = zfit.disabled = whole; zin.disabled = view.w <= WHOLE.w / CLOSEST + 0.5;
+}
+const spot = ev => { const m = map.getScreenCTM(); if (!m) return null; const p = map.createSVGPoint(); p.x = ev.clientX; p.y = ev.clientY; return p.matrixTransform(m.inverse()); };
+function zoom(by, at) {
+  const w = Math.min(WHOLE.w, Math.max(WHOLE.w / CLOSEST, view.w / by)), k = w / view.w, c = at || { x: view.x + view.w / 2, y: view.y + view.h / 2 };
+  view = { x: c.x - (c.x - view.x) * k, y: c.y - (c.y - view.y) * k, w, h: view.h * k }; showView();
+}
+zin.onclick = () => zoom(1.5); zout.onclick = () => zoom(1 / 1.5); zfit.onclick = () => { view = { ...WHOLE }; showView(); };
+map.addEventListener('wheel', ev => { if (!ev.ctrlKey && !ev.metaKey) return; ev.preventDefault(); zoom(ev.deltaY < 0 ? 1.2 : 1 / 1.2, spot(ev)); }, { passive: false });
+map.addEventListener('pointerdown', ev => { if (!map.classList.contains('zoomed') || ev.button) return; drag = { id: ev.pointerId, px: ev.clientX, py: ev.clientY, x: view.x, y: view.y, moved: false }; });
+map.addEventListener('pointermove', ev => { if (!drag || ev.pointerId !== drag.id) return; const dx = ev.clientX - drag.px, dy = ev.clientY - drag.py;
+  if (!drag.moved) { if (Math.hypot(dx, dy) < 5) return; drag.moved = true; map.classList.add('dragging'); try { map.setPointerCapture(drag.id); } catch (e) {} }
+  const r = map.getBoundingClientRect(), per = Math.max(view.w / r.width, view.h / r.height); view.x = drag.x - dx * per; view.y = drag.y - dy * per; showView(); });
+const drop = ev => { if (!drag || ev.pointerId !== drag.id) return; dragged = drag.moved; drag = null; map.classList.remove('dragging'); };
+map.addEventListener('pointerup', drop); map.addEventListener('pointercancel', drop);
+map.addEventListener('click', ev => { if (dragged) { dragged = false; ev.stopPropagation(); ev.preventDefault(); } }, true);
+
+const pick = ev => { const d = ev.target.closest('.dot'), p = ev.target.closest('.place');
+  if (d) sel = { type: 'thread', id: d.dataset.t }; else if (p) sel = { type: 'place', id: p.dataset.p }; else return false; redraw(); return true; };
+map.addEventListener('click', pick);
+map.addEventListener('keydown', ev => { if (ev.key !== 'Enter' && ev.key !== ' ') return; const k = ev.target.dataset; if (!pick(ev)) return; ev.preventDefault();
+  const n = [...map.querySelectorAll(k.t ? '.dot' : '.place')].find(x => (x.dataset.t || x.dataset.p) === (k.t || k.p)); if (n) n.focus(); });
+
+/* ---- the same 108 under each ---- */
+const tally = f => ({ one: E.filter(e => f(e).length === 1).length, many: E.filter(e => f(e).length > 1).length, none: E.filter(e => !f(e).length).length });
+const between = (f, a, b) => a === b ? NARROW.filter(e => f(e).length === 1 && f(e)[0] === a) : NARROW.filter(e => f(e).includes(a) && f(e).includes(b));
+const emptyPairs = (f, rim) => rim.flatMap((a, i) => rim.slice(i + 1).filter(b => !between(f, a, b).length).map(b => [a, b]));
+const cells = {}; NARROW.forEach(e => e.c.forEach(c => e.th.forEach(t => (cells[c + '|' + t] = cells[c + '|' + t] || []).push(e))));
+const own = (c, t) => B.filter(b => b.clock === c && b.most.includes(t) && !T[t].common);
+const ownCells = CN.flatMap(c => ids.filter(t => own(c, t).length).map(t => c + '|' + t));
+(function () {
+  const tb = tally(e => e.b), tc = tally(e => e.c), pb = emptyPairs(e => e.b, BN), pc = emptyPairs(e => e.c, CN);
+  const onlyB = E.filter(e => e.b.length && !e.c.length).length, onlyC = E.filter(e => e.c.length && !e.b.length), neither = E.filter(e => !e.b.length && !e.c.length);
+  const row = (label, a, b) => `<tr><td>${label}</td><td class="n">${a}</td><td class="n">${b}</td></tr>`;
+  document.getElementById('cmp').innerHTML = `<tr><th></th><th class="n">The nine builds</th><th class="n">The seven clocks</th></tr>` +
+    row('Effects with one place', tb.one, tc.one) + row('Between two places or more', tb.many, tc.many) + row('With no place', tb.none, tc.none) +
+    row('Placed this way and not the other', onlyB, onlyC.length) + row('Pairs of places with nothing between them', `${pb.length} of ${BN.length * (BN.length - 1) / 2}`, `${pc.length} of ${CN.length * (CN.length - 1) / 2}`);
+  const filled = Object.keys(cells), ownFilled = ownCells.filter(k => cells[k]);
+  const span = t => CN.filter(c => cells[c + '|' + t]).length;
+  const afflictions = ['Burn', 'Chill', 'Shock', 'Bleed', 'Sunder'], held = ids.filter(t => !afflictions.includes(t)).sort((a, b) => span(b) - span(a)).slice(0, 5);
+  const sameClock = pb.filter(([a, b]) => build(a).clock === build(b).clock);
+  const stillEmpty = pb.filter(([a, b]) => { const ca = build(a).clock, cb = build(b).clock; return !NARROW.some(e => ca === cb ? e.c.includes(ca) && !e.b.includes(a) && !e.b.includes(b) : e.c.includes(ca) && e.c.includes(cb)); });
+  document.getElementById('finds').innerHTML = [
+    `<b>The two ways place different effects.</b> ${onlyB} have a build and no clock: they are trades, like half its Defense for Attack, or the shape of a seat. ${onlyC.length} have a clock and no build: ${esc(onlyC.map(e => e.name).slice(0, 3).join('; '))}, and ${onlyC.length - 3} more. ${neither.length} have neither.`,
+    `<b>The clocks are sharper and leave more out.</b> ${tc.one} effects sit on exactly one clock, against ${tb.one} with exactly one build. But ${tc.none} have no clock, against ${tb.none} with no build.`,
+    `<b>The web already holds far more than the nine pairings.</b> A build is a clock tied to a few words: ${ownCells.length} pairings in all, ${ownFilled.length} of them holding an effect. The web holds effects on ${filled.length} pairings.`,
+    `<b>What the party holds runs on many clocks, and a status on few.</b> ${esc(held.map(t => `${t} ${span(t)}`).join(', '))}. Against: ${esc(afflictions.map(t => `${t} ${span(t)}`).join(', '))}.`,
+    `<b>The clocks join a few builds the words don't.</b> ${pb.length} pairs of builds have no effect between them by their words. ${sameClock.length ? esc(sameClock.map(p => p.join(' and ')).join('; ')) + ' share a clock. ' : ''}${stillEmpty.length} stay empty by clock too: ${esc(stillEmpty.map(p => p.join(' and ')).join('; '))}.`
+  ].map(x => `<li>${x}</li>`).join('');
+  document.getElementById('mnums').innerHTML = [[filled.length, 'pairings hold an effect'], [ownFilled.length + ' of ' + ownCells.length, "of the builds' own pairings hold one"], [filled.length - ownFilled.length, 'pairings lie outside the nine builds']].map(([n, t]) => `<li><b>${n}</b><span>${t}</span></li>`).join('');
+})();
+
+/* ---- between each pair ---- */
+const isDoor = (a, b) => D.doors.includes(a + '|' + b) || D.doors.includes(b + '|' + a);
+let pairs = 'builds', pairSel = null;
+function drawGrid() {
+  const rim = pairs === 'builds' ? BN : CN, f = pairs === 'builds' ? (e => e.b) : (e => e.c), short = n => pairs === 'builds' ? build(n).short : n;
+  if (!pairSel) pairSel = pairs === 'builds' ? ['Bonfire', 'The Toll'] : ['Fuel', 'Fed'];
+  document.getElementById('pairLens').innerHTML = [['builds', 'Pairs of builds'], ['clocks', 'Pairs of clocks']].map(([k, l]) => `<button type="button" data-k="${k}" aria-pressed="${k === pairs}">${l}</button>`).join('');
+  document.getElementById('pairNote').textContent = pairs === 'builds' ? 'How many effects name a word that matters most to both builds. The diagonal counts effects that sit with that build alone. A dot in the corner marks a pair the builds page names a door between. A dashed cell is empty.' : 'How many effects run on both clocks. The diagonal counts effects on that clock alone. A dashed cell is empty.';
+  const max = Math.max(1, ...rim.flatMap(a => rim.filter(b => b !== a).map(b => between(f, a, b).length)));
+  let h = '<tr><th></th>' + rim.map(b => `<th scope="col">${esc(short(b))}</th>`).join('') + '</tr>';
+  rim.forEach(a => { h += `<tr><th class="row" scope="row">${esc(a)}</th>` + rim.map(b => { const n = between(f, a, b).length, self = a === b;
+    const cls = ['cell', self ? 'self' : n === 0 ? 'zero' : '', pairs === 'builds' && !self && isDoor(a, b) ? 'door' : '', (pairSel[0] === a && pairSel[1] === b) || (pairSel[0] === b && pairSel[1] === a) ? 'on' : ''].filter(Boolean).join(' ');
+    const bg = self || n === 0 ? '' : ` style="background:color-mix(in oklab, var(--accent) ${Math.round(8 + 47 * n / max)}%, var(--panel))"`;
+    return `<td><button type="button" class="${cls}" data-a="${esc(a)}" data-b="${esc(b)}"${bg} title="${esc(a)}${self ? ' alone' : ' and ' + esc(b)}: ${n}" aria-label="${esc(a)} and ${esc(b)}: ${n}">${n}</button></td>`; }).join('') + '</tr>'; });
+  document.getElementById('grid').innerHTML = h;
+  const [a, b] = pairSel, list = between(f, a, b);
+  document.getElementById('pair').innerHTML = `<h3>${a === b ? esc(a) + ' alone' : esc(a) + ' and ' + esc(b)}</h3><p class="lean">${plural(list.length, 'effect')}${pairs === 'builds' && a !== b ? (isDoor(a, b) ? '. The builds page names a door here.' : '. The builds page names no door here.') : '.'}</p><div class="list"><ul>${list.map(e => line(e, 'b')).join('') || '<li><span>Nothing in the web sits with both.</span></li>'}</ul></div>`;
+}
+document.getElementById('pairLens').addEventListener('click', ev => { const b = ev.target.closest('button'); if (!b) return; pairs = b.dataset.k; pairSel = null; drawGrid(); document.querySelector(`#pairLens [data-k="${pairs}"]`).focus(); });
+document.getElementById('grid').addEventListener('click', ev => { const c = ev.target.closest('.cell'); if (!c) return; pairSel = [c.dataset.a, c.dataset.b]; drawGrid(); const n = [...document.querySelectorAll('#grid .cell')].find(x => x.dataset.a === pairSel[0] && x.dataset.b === pairSel[1]); if (n) n.focus(); });
+
+/* ---- every clock against every word ---- */
+const KINDS = ['happens', 'held', 'a stat', 'on the foes', 'where it lands', "the player's"];
+const cols = ids.filter(t => CN.some(c => cells[c + '|' + t] || own(c, t).length)).sort((a, b) => KINDS.indexOf(T[a].kind) - KINDS.indexOf(T[b].kind));
+let cellSel = ['Foes', 'The dodge'];
+function drawMatrix() {
+  const max = Math.max(...Object.values(cells).map(l => l.length));
+  let h = '<tr><th></th>' + cols.map(t => `<th class="up" scope="col"><span>${esc(T[t].s)}</span></th>`).join('') + '</tr>';
+  CN.forEach(c => { h += `<tr><th class="row" scope="row">${esc(c)}</th>` + cols.map(t => { const n = (cells[c + '|' + t] || []).length, o = own(c, t).length;
+    const cls = ['cell', n ? '' : 'zero', o ? 'own' : '', cellSel[0] === c && cellSel[1] === t ? 'on' : ''].filter(Boolean).join(' ');
+    const bg = n ? ` style="background:color-mix(in oklab, var(--accent) ${Math.round(10 + 45 * n / max)}%, var(--panel))"` : '';
+    return `<td><button type="button" class="${cls}" data-c="${esc(c)}" data-t="${esc(t)}"${bg} title="${esc(t)} on ${esc(c)}: ${n}" aria-label="${esc(t)} on ${esc(c)}: ${n}">${n || ''}</button></td>`; }).join('') + '</tr>'; });
+  document.getElementById('matrix').innerHTML = h;
+  const [c, t] = cellSel, list = cells[c + '|' + t] || [], o = own(c, t);
+  document.getElementById('mcell').innerHTML = `<h3>${esc(t)} on ${esc(c)}</h3><p class="lean">${esc(C[c].what[0].toUpperCase() + C[c].what.slice(1))}.</p><p class="lean">${plural(list.length, 'effect')}. ${o.length ? esc(names(o.map(b => b.n))) + "'s own pairing." : 'No build describes this pairing.'}</p><div class="list"><ul>${list.map(e => line(e, 'b')).join('') || '<li><span>Nothing in the web runs this word on this clock.</span></li>'}</ul></div>`;
+}
+document.getElementById('matrix').addEventListener('click', ev => { const c = ev.target.closest('.cell'); if (!c) return; cellSel = [c.dataset.c, c.dataset.t]; drawMatrix(); const n = [...document.querySelectorAll('#matrix .cell')].find(x => x.dataset.c === cellSel[0] && x.dataset.t === cellSel[1]); if (n) n.focus(); });
+
+/* ---- near and far ---- */
+function drawRoads() {
+  const wide = document.getElementById('wide').checked, out = {}, live = ids.filter(t => cnt(t));
+  live.forEach(t => out[t] = new Set());
+  (wide ? E : NARROW).forEach(e => { const gs = new Set(e.g), ws = new Set(e.w);
+    e.g.forEach(g => { T[g].gives.forEach(y => !T[y].common && gs.add(y)); T[g].wants.forEach(x => !T[x].common && ws.add(x)); });
+    ws.forEach(a => gs.forEach(b => { if (a !== b) out[a].add(b); })); });
+  const into = {}; live.forEach(t => into[t] = live.filter(a => out[a].has(t)));
+  const steps = {}; let one = 0, two = 0, none = 0, total = 0;
+  live.forEach(a => { const seen = { [a]: 0 }; let edge = [a], k = 0;
+    while (edge.length) { k++; const next = []; edge.forEach(x => out[x].forEach(y => { if (!(y in seen)) { seen[y] = k; next.push(y); } })); edge = next; }
+    steps[a] = seen; live.forEach(b => { if (b === a) return; total++; if (seen[b] === 1) one++; if (seen[b] <= 2) two++; if (!(b in seen)) none++; }); });
+  const pct = n => Math.round(100 * n / total) + '%';
+  document.getElementById('rnums').innerHTML = [[pct(one), 'of pairs of words are one road apart'], [pct(two), 'are within two roads'], [pct(none), 'have no road between them at all']].map(([n, t]) => `<li><b>${n}</b><span>${t}</span></li>`).join('');
+  const starts = live.filter(t => !into[t].length && out[t].size), ends = live.filter(t => into[t].length && !out[t].size);
+  const top = live.slice().sort((a, b) => into[b].length - into[a].length)[0];
+  document.getElementById('rfinds').innerHTML = [
+    `<b>Words with roads out and none in:</b> ${esc(names(starts))}. Nothing in the web makes these out of something else, so a party has them or it doesn't.`,
+    `<b>Words with roads in and none out:</b> ${esc(names(ends))}. Effects pile these up and nothing turns them into another word, only into damage or cover.`,
+    `<b>Most roads lead to ${esc(top)}:</b> ${into[top].length} other words have an effect that ends in it.`,
+    `<b>Crits:</b> ${into['Crits'].length ? plural(into['Crits'].length, 'word') + ' lead to it' : 'no word leads to it'}, and it leads to ${esc(names([...out['Crits']]))}.`
+  ].map(x => `<li>${x}</li>`).join('');
+  document.getElementById('roads').innerHTML = '<tr><th>Word</th><th class="n">Roads in</th><th class="n">Roads out</th><th>Leads to</th></tr>' +
+    live.slice().sort((a, b) => into[b].length - into[a].length || out[b].size - out[a].size).map(t => `<tr><td>${esc(t)}</td><td class="n">${into[t].length}</td><td class="n">${out[t].size}</td><td class="who">${esc(names([...out[t]]) || '—')}</td></tr>`).join('');
+}
+document.getElementById('wide').addEventListener('change', drawRoads);
+
+drawGrid(); drawMatrix(); drawRoads(); redraw(); showView();
+</script>

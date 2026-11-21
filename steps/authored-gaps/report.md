@@ -68,13 +68,38 @@ The reasoning behind this step is in `brief.md`; read that first. This page hold
 
 None of this needs the page's source read or anything republished. Where the director asks for a change to the page, edit `requests-page.html` in place and republish it to the same address; don't write a new page.
 
+## The map
+
+`https://claude.ai/artifact/9GtG7CvLQBAgZszRWyfz35`. It's drawn from the catalog, never by hand: `npx tsx tools/web-map.ts` fills `map-page.html` and writes `out/web-map.html`, which is published to that address (read the artifact first). A switch draws the same threads and effects three ways: between the nine builds, between the seven clocks, and by their own links with no frame.
+
+## Another way to sort it: four lines
+
+The agent's, and not a ruling. A fight has only so much of four things. Each has two ends, and a way to live or a way to kill sits at one end of one.
+
+| A fight has only so much | One end | The other end |
+| --- | --- | --- |
+| Time (the party's) | End it: the opening, kill order, executes | Stretch it: what builds on the foes, mending, slowing them |
+| The foes' attacks (each unit's) | Take them: Shield, Defense, Thorns, what answers a blow | Slip them: Evasion, Blur, Hidden, what answers a dodge |
+| HP (each unit's) | Keep it: Shield, healing past full, damage from max HP | Spend it: prices in HP, power when low, Lifesteal |
+| A unit's actions | Many small: what a swing carries, extra strikes | Few big: Might, wind-ups, crits |
+
+- **Ends on different lines combine freely.** That's where a party no build describes comes from.
+- **The two ends of one line suit different parties,** so the same piece is a good pick in one party and a poor one in another.
+- **Time is the whole party's; the other three are each unit's.** Two units can sit at the two ends of a line, and then share the foes' attacks between them.
+
+**How far it holds,** measured on engine 0.30 with three plain bodies (the average class line, a plain sword, no abilities, no passive, no gear) in the rogue's own fights:
+- **Time holds.** Hits made half again as big cut the killing Chill did to a fifth and Bleed's to under half. A Shield of 25% of max HP saved 16 points of the party's HP in an 18-tick fight and 20 in a 48-tick one; Regen kept up saved 14 and 49.
+- **The foes' attacks hold in one place.** Evasion 60 halved the killing Thorns did. A Shield and Evasion don't work against each other: they multiply.
+- **The HP and actions lines are read from the rules' wording and weren't measured.** Their ends are flavours more than opposites.
+- **Most ways to live leave most ways to kill alone:** of 40 pairs tried, 29 changed nothing.
+
 ## Next: for the session that picks this up
 
 Four batches of effects are closed. The web holds 108 effects, 82 on gear and about 22 formations, against 450 pieces and 50 formations (ruling 15). Nothing on the page waits on the director. The catalog in `web.md` stands as it is: it's handed on, not rebuilt.
 
 1. **Read `brief.md` first.** Its reading list is closed. The classes in the web is the section this work rests on.
-2. **Settle the threads.** The agent's, with nothing needed from the director. Start from the 27 in `docs/gear-design/builds.md`, Threads the builds share, and the sixteen the agent added (`first-pass.md`). The list is the words a class can hold. It isn't sorted by role yet: the roles aren't designed.
-3. **Tag the 108.** Rewrite the catalog's three columns in `web.md` as Wants and Gives, in the list's words. `first-pass.md` has a draft made in one sitting: check each row against the effect's own words. It shows which words the gear already leans on and which are short of a class.
+2. **The threads are settled and the 108 tagged.** `web.md` holds the list of 39 threads and every effect as what it wants and gives; `npx tsx tools/web-threads.ts` checks and counts it. The list isn't sorted by role: the roles aren't designed.
+3. **The map is drawn from the catalog** (The map, above), between the nine builds.
 4. **The roles are designed with the director first, in the chat, before any class card.** They're theirs to define ("we also need to design the roles"). Four things to settle, in a few lines each:
    - **What the roles are.** Their guess is dealing damage, mitigating damage, and enabling or disabling. Bring a trial sort of the threads under that guess, as evidence and not as a decision: which words fall cleanly under one role, which fall under two, which under none, where healing lands, and whether making foes do less lands with mitigating or with disabling. Once they've ruled, sort the threads for good; that sort is the shelves the class cards show.
    - **What one, two and three stars mean,** in words a simulation can later measure.
@@ -82,7 +107,7 @@ Four batches of effects are closed. The web holds 108 effects, 82 on gear and ab
    - **What a party of three needs** to live through a run, in stars. A party has to have damage and a way to stay alive; the third role makes the others better, and a party can do without it.
 5. **Then the director designs the classes:** one batch of sixteen short cards, a class each, with the shelves beside them. They give each class its stars and its main word for each role it has stars in. Not from its current kit.
 6. **Fill the table and bring its holes.** The agent adds the words that fit, checks the table (`brief.md`, The classes in the web) and scores the trios. A word with one class giving it, or with nobody who needs it, goes to the director as a card.
-7. **Redraw the map** at `https://claude.ai/artifact/9GtG7CvLQBAgZszRWyfz35` (read it first, then publish to the same address): the threads as the dots, placed by their own links, each class drawn onto it as the dots it holds, the effects as strands. A small tool in `tools/` draws it from the catalog (with its line in `docs/code-map.md`), so it's redrawn at each batch's end.
+7. **Redraw the map at each batch's end** (The map, above), and draw each class onto it as the dots it holds once the classes are designed.
 8. **Then batches that hold both kinds of card,** chosen from the map: a part of a class's kit, asked the way gear is asked, and effects. About fifteen cards, three or four of them formations. Where an effect card comes from, best first:
    - **A class the web leaves alone,** or a word a class gives that little wants.
    - **A link out of a group on one word.**
@@ -94,10 +119,3 @@ Four batches of effects are closed. The web holds 108 effects, 82 on gear and ab
 10. **A batch is as long as its real jobs.** Two short batches running is the sign to stop and talk.
 11. **When reading answers:** check a price or a size against the constant it leans on before placing it; an answer that changes a class is listed as a kit change in `web.md`; where the director offers alternatives and asks for thoughts, say which and why, and place it.
 12. **Still to come, in the director's order,** once the authored parts are in and they've looked at the whole web: the plain parts (the agent's, shown by sample), sizing and slotting, formations beyond those kept or written, mythics, then everything built once and run.
-
-**What the first pass found,** rough, and to check again once the 108 are tagged properly:
-- Most effects sit between two builds or more, and more than half want one thread and give a different one.
-- Grouped by their own links, the effects fall into groups by thread, not by build: statuses with Might; Shields with blows taken and the draw; what a swing carries with extra strikes and aim; then groups on one word each (MP, Defense, the dodge, HP paid or held low). The four statuses share a group, which the director did on purpose, making each piece cross-build as they wrote it.
-- Seek and reach holds nothing. Nothing joins Burn or Chill to blows taken or to HP paid.
-- With a fifth of the web seen, an effect had a partner also seen about two times in three.
-- In this step's cards, nine named two classes and all nine produced a piece; thirteen named a build and four were wrong questions. The agent had also learned to ask better by then.
