@@ -4,7 +4,7 @@ What's built and waiting on the director, and the questions nobody has settled. 
 
 ## The current step
 
-- **Authored gaps** (`steps/authored-gaps/`, `report.md` first). A new way to make loot. The folder holds the web: 108 effects, each written as what it wants and gives on one list of threads, drawn between the nine builds. Nothing in the game has changed.
+- **Authored gaps** (`steps/authored-gaps/`, `report.md` first). A new way to make loot: the director answers requests on a page, and each answer is placed in the web. The folder holds the web: 108 effects, each written as what it wants and gives on one list of threads, drawn between the nine builds. Nothing in the game has changed.
 
 ## Built, awaiting the director's read
 

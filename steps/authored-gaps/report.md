@@ -1,11 +1,25 @@
 # Authored gaps: what this folder holds
 
-Two things: the web of effects, and one other way to sort it. Nothing in the game has changed for either.
+Three things: the web of effects, the page the director answers requests on, and one other way to sort the web. Nothing in the game has changed for either.
 
 ## The web
 
 - **`web.md`** is the web: the list of threads, the clocks, and a catalog row for each of the 108 effects, written as what it wants and what it gives. `npx tsx tools/web-threads.ts` checks every word against the list and counts it.
 - **The map** is at `https://claude.ai/artifact/9GtG7CvLQBAgZszRWyfz35`. It's drawn from the catalog, never by hand: `npx tsx tools/web-map.ts` fills `map-page.html` and writes `out/web-map.html`, which is published to that address (read the artifact first). A switch draws the same threads and effects three ways: between the nine builds, between the seven clocks, and by their own links with no frame.
+
+## The request page
+
+`https://claude.ai/artifact/EBRC2rs3Tw6JW2AWMgxZDf`. **The page is built: use it as it stands, and never make it again.** A session's whole flow goes through the page's store, with the ArtifactData tool on that address:
+
+- **Seed a batch:** write its cards to `requests/<id>` (`b5-01` and on, `b5-open`) with the next batch number, in one batch write. Fields: batch, order (the open card is 99), kind, title, ask, why, near (a list of `{t, tag}`). The page shows them by itself, and redraws a card whose request changes.
+- **Read the answers:** query `answers` for the batch, once the director says they're done. Fields: text, status, reply, more.
+- **Write a read:** set `replies/<id>` to `{kind, text}`. Kind is placed, question, overused, withdrawn or again; question and overused show under Needs you.
+- **Answer a reply:** append to `replies/<id>.turns` (a list of strings) and set `kind` to where the card now stands. Send the whole list back: an update replaces the field. Never rewrite `text`. The director's first reply is `answers/<id>.reply`; their reply to turn *n* is `answers/<id>.more[n-1]`. A reply is unanswered when `reply` is set and there are no turns, or `more` is as long as `turns`.
+- **A request's kind** is road, link, capstone, supply, function, pair, formation or open. **A near line's tag** is great, seat (a seat the director starred), gform (a Great formation) or yours (an effect they wrote in an earlier batch). No Fines.
+
+None of this needs the page's source read or anything republished. Where the director asks for a change to the page, edit `requests-page.html` in place and republish it to the same address; don't write a new page.
+
+What each card came to is in `web.md`: Settled by the director, Cards asked, Not to ask again, and Seen, not yet asked.
 
 ## Another way to sort it: four lines
 

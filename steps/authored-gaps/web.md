@@ -1,6 +1,6 @@
 # The web
 
-What the web holds. First the threads: the one list of words every effect is written in, and every class will be. Then the catalog: every effect the director kept or wrote, one row each, as what it wants and what it gives. Then the count that says what's used too much, and the effects seen to do something together. Nothing here is sized or slotted.
+What the web holds. First the threads: the one list of words every effect is written in, and every class will be. Then the catalog: every effect the director kept or wrote, one row each, as what it wants and what it gives. Then the count that says what's used too much, what the director has settled, every card asked so far and what came of it, what not to ask again, and the effects seen to do something together. Nothing here is sized or slotted. How the request page works is in `report.md`.
 
 `npx tsx tools/web-threads.ts` reads this page: it stops on a word that isn't in the list, and prints the tally the count is judged from, what joins to what, and how many partners each effect has. `npx tsx tools/web-map.ts` redraws the map from it (`report.md`, The web).
 
@@ -243,6 +243,55 @@ By thread: every effect that names the word, givers and wanters together. The nu
 **What the gear gives more than anything reads:** HP paid or held low (7 give, 3 want), heals (6 and 3), MP (9 and 6), extra strikes (4 and 2), Slow (1 and none).
 
 **What never meets:** nothing joins a blow taken to any affliction, either way round; nothing joins HP paid or held low to one; nothing joins a blow taken to the dodge. Nothing names Weaken or Seek.
+
+## Settled by the director
+
+Their decisions about what the web is, one line each. They stop a card being asked twice.
+
+- **The Storm has two patterns:** hold the foes slow or still so the charge reaches its cap and is read, or stand under their attacks while it spends itself. Nothing makes the foes act sooner.
+- **Shield has two patterns:** one unit holding all of it, or everyone holding some.
+- **The unit that doesn't act is there to benefit the others.** Nothing makes it strong itself.
+- **Cold Snap is about reaching the shatter.** Nothing pays for a foe left half-frozen.
+- **No thread for debuffs held on purpose.**
+- **The Toll has its payoff:** the Shield that sends back what it held.
+- **The player steers who dies only through a Mark or an ability's own aim.** No reward by who died, beyond a Marked foe falling.
+- **The opening repeats when a foe falls, for the whole party, and when a foe is Silenced.** Nothing else repeats it or doubles it.
+- **The swing and the cast need no link.** Every unit does both.
+- **Nothing pushes a player to slot fewer abilities.** They may choose to, for uptime.
+- **Thousand Cuts' piece is about its extra strikes.** Bleed comes from the kits and the plain pieces.
+- **A kill needs no formation,** and no reward beyond the opening.
+- **Nothing in the loot touches the bench.**
+- **A build can't rest on gear and one class,** so an answer may change a kit.
+- **No third counter.** Heat comes from more than one trigger, and is lost when its holder loses HP.
+- **Two builds' words may share a card.** A shape for statuses pairs two named ones; one for every status at once is every status party's pick.
+- **A payoff for a fire reads it and leaves it burning.**
+
+## Cards asked
+
+Every card sent, and what came of it.
+
+- **Batch 1.** Bonfire, keeping it up: placed (mana for debuffs; the gathering piece) · Cold Snap, the climb: wrong question · The Hunt, who dies first: placed (the opening Mark) · The Storm, where the charge comes from: placed (Shock from casting, from wide abilities) · Thousand Cuts, the wound: wrong question, asked again in batch 2 · The Toll, wanting to be hit: wrong question · The dodge and cover: placed · A debuff held on purpose: wrong question · The crit: placed · The unit that stands still: wrong question · An opening worth repeating: placed (max HP, Might) · A change of target: wrong question · A formation about the swing: placed · A formation about who holds the Shield: placed · A party with no wall: placed (party Blur, Defense for no armor) · Open: answered, then cut by the director.
+- **Batch 2.** Thousand Cuts, a Bleed piece: placed (extra strikes) · Cold Snap, cold without a wall: placed · The Storm, making them act: wrong question · Barrage, the two who serve: placed · A Stunned foe: placed · Hidden: placed (mana) · The swing and the cast: wrong question · Between fights: placed · A unit with one ability: wrong question · Pyromancer and Bramble knight: placed (Burn from the first slot) · Assassin and Cleric: placed (Attack for HP missing) · A formation about the kill: withdrawn · A formation about HP paid or held low: placed · Open: not answered.
+- **Batch 3.** The Mark, a whole direction: placed (three effects, two kit changes) · The Hunt in a fight with one foe: placed (two) · A way to hide: placed · The wind-up: placed (Might) · The bench: wrong question · A count that grows: placed (Heat on a crit) · Monk and Hoplite: placed · Knight and Ranger: a piece placed, the pair withdrawn · Bard and Hexer: placed · Vampire and Stormcaller: placed · Formations about time, crits, what the seats wear, wide and narrow: all four placed · Open: not answered.
+- **Batch 4.** Bonfire, a payoff for a high fire: placed (Might for the Burn) · Landslide's blow in a pack: placed · Silence from more hands: placed · An ability slot that isn't the first: job withdrawn, the answer placed · Paladin and Geomancer: placed (two wind-up pieces) · Valkyrie and Frostweaver: placed (the doubled passive) · Bramble knight and Hoplite: placed (two) · Formations with no front, about what a class does, about the statuses on the foes: all three placed · Open: not answered.
+
+## Not to ask again
+
+- **Wrong questions and withdrawn jobs:** a payoff on a half-frozen foe · a reason to want a unit hit · a debuff held on purpose · something for a unit that gives up acting · a redirect for its own sake · a way to make the foes act · a link between swings and casts · a piece for a unit with one ability · a formation about the kill · the bench · another ability slot than the first · a formation for every status at once · a third counter · a third Bleed card.
+- **Their plain answer was cut by the director:** a formation whose seats aim the party · a longer wind-up for more of everything · a shape that turns over time (seats that rotate, a party that surges and ebbs).
+- **Coverage:** the weapon slot left empty · a formation that reads the party as a set · Clarity from more hands (three base kits give it) · something for the two beside a struck ally (seen three times as a formation and kept only as Fine).
+- **Against a rule:** a payoff for a Stun or Silence a boss resists (the resistance is what bounds them) · a piece that answers one kind of foe (no set-up only the foes supply) · a road's far end as a capstone (ruling 14).
+- **While overused or on watch:** more from Shields, the fight's start, crits, HP paid or held low, max HP, Chill, heals, the dodge, the first-slotted ability; a formation about who is struck; another effect for every affliction or every buff at once.
+
+**Written by the director and left out,** with the reason, in case one comes back: Chill turned into Bleed (barred then, allowed now) · a Shield when a foe is Stunned (Shield is overused) · Might while Hidden (on top of ×2 while Hidden) · MP for allies on every tick of a wind-up (MP is the most-named thing) · a fire that bursts at a set height and heals the party (two vocabulary rulings; the director agreed) · a heal for a share of each Burn tick (lifesteal from a status) · Thorns while winding up without the Aggro (fewer partners).
+
+## Seen, not yet asked
+
+- **For the plain parts, the agent's to write:** Guard on gear, for units that don't Taunt · Thorns on Plate and Mail · fire on a swing, and on whoever strikes the keeper.
+- **Needs a job first:** a second Sunder or Bleed piece · Haste (it pays by itself) · Thorns, an Aegis, Taunt and Weaken, which nothing names.
+- **Waiting for the web to grow:** the Knight and the Ranger as a pair (the director's offer) · the Shield and the cast · a formation for the dodge · a formation about heals.
+- **Welcome:** a second shape for two named statuses, where neither is on watch.
+- **Mythics:** sixteen, one batch, from scratch, once the gear is placed. Not ruled yet.
 
 ## Effects that do something together
 

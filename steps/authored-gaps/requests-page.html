@@ -1,0 +1,405 @@
+<title>Authored Gaps</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&family=Silkscreen&display=swap">
+<style>
+/* Layout: one narrow column of request cards under a sticky progress bar; on each card the typing box is the biggest thing. */
+:root{
+  --bg:#eceef4; --surface:#ffffff; --field:#f6f7fb; --ink:#1b2033; --muted:#596078; --line:#d3d8e6;
+  --accent:#2f4bbf; --accent-ink:#ffffff;
+  --great:#8a5600; --great-bg:#fbeecb; --fine:#525a75; --fine-bg:#e4e8f2;
+  --ok:#0b6b53; --warn:#a2391d;
+  --display:"Space Grotesk",system-ui,sans-serif; --body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif; --pixel:"Silkscreen","Space Grotesk",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#11131c; --surface:#1a1d2a; --field:#131622; --ink:#e7e9f3; --muted:#9aa1bb; --line:#2e3347;
+  --accent:#93a6ff; --accent-ink:#10132a;
+  --great:#f0c268; --great-bg:#3a2d10; --fine:#aab1cb; --fine-bg:#272b3c;
+  --ok:#62d2b2; --warn:#ff9c7d; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#11131c; --surface:#1a1d2a; --field:#131622; --ink:#e7e9f3; --muted:#9aa1bb; --line:#2e3347;
+  --accent:#93a6ff; --accent-ink:#10132a;
+  --great:#f0c268; --great-bg:#3a2d10; --fine:#aab1cb; --fine-bg:#272b3c;
+  --ok:#62d2b2; --warn:#ff9c7d; color-scheme:dark }
+
+body{ background:var(--bg); color:var(--ink); font-family:var(--body); font-size:15px; line-height:1.5; }
+body::before{ content:""; position:fixed; inset:0 0 auto; height:env(safe-area-inset-top,0px); z-index:10; background:var(--bg); }
+.wrap{ max-width:44rem; margin:0 auto; padding-block:1.25rem 4rem;
+  padding-left:max(16px,env(safe-area-inset-left,0px)); padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:flex; flex-direction:column; gap:1rem; }
+.px{ font-family:var(--pixel); font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; }
+h1{ font-family:var(--display); font-weight:600; font-size:1.7rem; line-height:1.15; margin:0; text-wrap:balance; }
+.intro{ display:flex; flex-direction:column; gap:.4rem; }
+.intro p{ margin:0; color:var(--muted); max-width:38rem; }
+.legend{ display:flex; flex-wrap:wrap; gap:.4rem .9rem; color:var(--muted); font-size:.85rem; align-items:center; }
+.legend span{ display:inline-flex; gap:.4rem; align-items:center; }
+
+.bar{ position:sticky; top:env(safe-area-inset-top,0px); z-index:5; background:var(--bg); padding-block:.55rem;
+  border-bottom:1px solid var(--line); display:flex; flex-wrap:wrap; gap:.5rem .75rem; align-items:center; justify-content:space-between; }
+.group{ display:flex; flex-wrap:wrap; gap:.35rem; }
+.chipbtn{ font:inherit; font-size:.85rem; font-weight:500; color:var(--muted); background:transparent; border:1px solid var(--line);
+  border-radius:999px; padding:.3rem .75rem; min-height:2.1rem; cursor:pointer; }
+.chipbtn[aria-pressed="true"]{ background:var(--ink); color:var(--bg); border-color:var(--ink); }
+.progress{ font-size:.85rem; color:var(--muted); font-variant-numeric:tabular-nums; }
+.progress b{ color:var(--ink); font-weight:600; }
+
+.note{ border:1px dashed var(--line); border-radius:10px; padding:1rem; color:var(--muted); background:transparent; }
+.note strong{ color:var(--ink); font-weight:600; display:block; }
+.note.bad{ border-color:var(--warn); color:var(--warn); }
+
+.list{ display:flex; flex-direction:column; gap:.9rem; }
+.card{ background:var(--surface); border:1px solid var(--line); border-radius:10px; display:flex; flex-direction:column; min-width:0; }
+.head{ all:unset; box-sizing:border-box; cursor:pointer; display:grid; grid-template-columns:1fr auto; gap:.25rem .75rem; padding:.9rem 1rem .6rem; width:100%; }
+.head:focus-visible, .chipbtn:focus-visible, .act:focus-visible, textarea:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+.kind{ color:var(--accent); display:flex; gap:.6rem; align-items:baseline; }
+.kind .num{ color:var(--muted); font-variant-numeric:tabular-nums; }
+.pill{ font-size:.75rem; font-weight:600; padding:.1rem .55rem; border-radius:999px; align-self:start; white-space:nowrap; background:var(--fine-bg); color:var(--fine); }
+.pill.answered{ background:transparent; color:var(--ok); border:1px solid var(--ok); }
+.pill.wrong{ background:transparent; color:var(--warn); border:1px solid var(--warn); }
+.head h2{ grid-column:1 / -1; font-family:var(--display); font-weight:600; font-size:1.12rem; line-height:1.25; margin:0; text-wrap:balance; }
+.peek{ grid-column:1 / -1; color:var(--muted); font-size:.9rem; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+.body{ padding:0 1rem 1rem; display:flex; flex-direction:column; gap:.8rem; min-width:0; }
+.ask{ font-size:1.02rem; font-weight:500; margin:0; }
+.why{ margin:0; color:var(--muted); }
+.near{ display:flex; flex-direction:column; gap:.35rem; margin:0; padding:0; list-style:none; }
+.near-title{ color:var(--muted); }
+.near li{ display:grid; grid-template-columns:5.6rem 1fr; gap:.6rem; align-items:start; font-size:.92rem; min-width:0; }
+.tag{ font-family:var(--pixel); font-size:.62rem; letter-spacing:.04em; text-transform:uppercase; padding:.18rem .35rem; border-radius:4px; text-align:center; background:var(--fine-bg); color:var(--fine); margin-top:.12rem; }
+.tag.g{ background:var(--great-bg); color:var(--great); }
+textarea{ font:inherit; font-size:16px; line-height:1.45; color:var(--ink); background:var(--field); border:1px solid var(--line); border-radius:8px;
+  padding:.7rem .8rem; width:100%; box-sizing:border-box; min-height:6.5rem; resize:vertical; }
+textarea::placeholder{ color:var(--muted); opacity:.8; }
+.foot{ display:flex; flex-wrap:wrap; gap:.5rem .75rem; align-items:center; justify-content:space-between; }
+.save{ font-size:.82rem; color:var(--muted); min-height:1.2rem; }
+.save.ok{ color:var(--ok); } .save.bad{ color:var(--warn); }
+.acts{ display:flex; flex-wrap:wrap; gap:.4rem; }
+.act{ font:inherit; font-size:.85rem; font-weight:500; background:transparent; color:var(--ink); border:1px solid var(--line); border-radius:8px; padding:.35rem .7rem; min-height:2.3rem; cursor:pointer; }
+.act[aria-pressed="true"]{ background:var(--ink); color:var(--bg); border-color:var(--ink); }
+.sr{ position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
+.tail{ color:var(--muted); font-size:.85rem; }
+.read{ background:var(--field); border:1px solid var(--line); border-radius:8px; padding:.7rem .8rem; display:flex; flex-direction:column; gap:.4rem; }
+.read .rh{ display:flex; flex-wrap:wrap; gap:.5rem; align-items:center; color:var(--muted); }
+.read p{ margin:0; }
+.verdict{ font-size:.75rem; font-weight:600; padding:.1rem .55rem; border-radius:999px; background:var(--fine-bg); color:var(--fine); }
+.verdict.you{ background:var(--accent); color:var(--accent-ink); }
+.replylab{ color:var(--muted); }
+textarea.small{ min-height:4rem; }
+.thread{ display:flex; flex-direction:column; gap:.8rem; }
+.said{ border-left:3px solid var(--accent); padding:.15rem 0 .15rem .75rem; display:flex; flex-direction:column; gap:.4rem; }
+.said p{ margin:0; white-space:pre-wrap; }
+.said .px{ color:var(--muted); }
+</style>
+
+<div class="wrap">
+  <div class="intro">
+    <span class="px" style="color:var(--muted)">Memory Dungeon · the web</span>
+    <h1>Authored gaps</h1>
+    <p>Each card is a gap in the web that I didn't want to guess at. Write the effect the way you'd say it out loud. Rough is fine, and so is more than one idea. It saves as you type, and I read your answers from here.</p>
+    <p>Write whatever you find most interesting, at any size. Don't set numbers: I do that after. Where a card needs a particular size, it says so.</p>
+    <div class="legend">
+      <span><i class="tag g">Great</i> you marked it Great</span>
+      <span><i class="tag">Fine</i> you marked it Fine</span>
+      <span><i class="tag g">★ Seat</i> a seat you starred</span>
+      <span><i class="tag g">Yours</i> you wrote it in an earlier batch</span>
+    </div>
+  </div>
+
+  <div class="bar" id="bar" hidden>
+    <div class="group" id="batches" role="group" aria-label="Batch"></div>
+    <div class="progress" id="progress" aria-live="polite"></div>
+    <div class="group" id="filters" role="group" aria-label="Show">
+      <button class="chipbtn" data-f="all" aria-pressed="true">All</button>
+      <button class="chipbtn" data-f="open" aria-pressed="false">Open</button>
+      <button class="chipbtn" data-f="done" aria-pressed="false">Done</button>
+      <button class="chipbtn" data-f="you" aria-pressed="false">Needs you</button>
+    </div>
+  </div>
+
+  <div class="note" id="status"><strong>Loading the requests…</strong>They arrive in batches of about fifteen, the most structural first.</div>
+  <div class="list" id="list"></div>
+  <div class="tail" id="tail" hidden>Nothing here is final until you say so: an answer can be changed any time, and I'll show you where each one lands in the web before it becomes a piece.</div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var KIND = { road:"Road", link:"Link", capstone:"Capstone", supply:"Supply", "function":"Function", pair:"Two classes", formation:"Formation", open:"Open" };
+  var TAG = { great:["Great",true], fine:["Fine",false], seat:["★ Seat",true], gform:["Formation",true], fform:["Formation",false], yours:["Yours",true] };
+  var VERDICT = { placed:"Placed", question:"Placed, with a question", overused:"Too much of this in the web", withdrawn:"Withdrawn", again:"Asked again" };
+  var PILL = { open:"Open", answered:"Answered", skipped:"Skipped", wrong:"Wrong question" };
+
+  var db = null, reqs = new Map(), remote = new Map(), local = new Map(), cards = new Map(), replies = new Map();
+  var batch = null, filter = "all", gotReqs = false, gotAns = false, orderKey = "";
+  var topSeen = 0;
+  var $ = function(id){ return document.getElementById(id); };
+  var listEl = $("list"), statusEl = $("status");
+
+  function el(tag, cls, text){ var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function lsGet(k){ try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v){ try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) {} }
+  function str(v){ return typeof v === "string" ? v : ""; }
+  function strs(v){ return Array.isArray(v) ? v.map(str) : []; }
+  /* A card is a conversation: the answer, Claude's read, the director's reply, then Claude's later turns (replies/<id>.turns) each followed by the director's next reply (answers/<id>.more). Only the last reply box is open; earlier ones are shown as said. */
+  function turnsOf(id){ var rp = replies.get(id); return rp ? rp.turns : []; }
+  function curReply(id){ var s = stateOf(id), n = turnsOf(id).length; return n ? str(s.more[n - 1]) : s.reply; }
+  function setCurReply(id, v){ var s = stateOf(id), n = turnsOf(id).length; if (!n){ s.reply = v; return; } while (s.more.length < n) s.more.push(""); s.more[n - 1] = v; }
+
+  function stateOf(id){
+    var s = local.get(id);
+    if (!s){
+      s = { text:"", flag:"", reply:"", more:[], readOpened:false, dirty:false, saving:false, again:false, error:"", folded:false, autoFolded:false, timer:0, retried:false };
+      var d = lsGet("draft:" + id);
+      if (d){ try { var o = JSON.parse(d); s.text = str(o.text); s.flag = str(o.flag); s.reply = str(o.reply); s.more = strs(o.more); s.dirty = true; } catch (e) {} }
+      local.set(id, s);
+    }
+    return s;
+  }
+  function statusOf(s){ return s.flag === "skipped" || s.flag === "wrong" ? s.flag : (s.text.trim() ? "answered" : "open"); }
+  function isDone(s){ return statusOf(s) !== "open"; }
+  function asks(rp){ return !!rp && (rp.kind === "question" || rp.kind === "overused"); }
+  /* A read can answer the director's reply: it carries that reply in "after". Until they change the reply, a read that asks still needs them, and one that doesn't is marked as a reply. */
+  function answersReply(id){ var rp = replies.get(id), r = stateOf(id).reply.trim(); if (rp && rp.turns.length) return !curReply(id).trim(); return !!rp && !!rp.after && !!r && r === rp.after.trim(); }
+  function needsYou(id){ return asks(replies.get(id)) && (!curReply(id).trim() || answersReply(id)); }
+
+  function setNote(title, text, bad){
+    statusEl.hidden = false; statusEl.className = bad ? "note bad" : "note"; statusEl.textContent = "";
+    statusEl.appendChild(el("strong", "", title)); statusEl.appendChild(document.createTextNode(text));
+  }
+
+  /* ---------- cards ---------- */
+  function buildCard(id){
+    var r = reqs.get(id), s = stateOf(id);
+    var card = el("section", "card"); card.dataset.id = id;
+    var head = el("button", "head"); head.type = "button";
+    var kindName = el("span", ""), kind = el("span", "kind px"); kind.appendChild(kindName);
+    var num = el("span", "num"); kind.appendChild(num);
+    var flag = el("span", "verdict"); flag.hidden = true; kind.appendChild(flag);
+    var pill = el("span", "pill");
+    var h2 = el("h2", "");
+    var peek = el("span", "peek");
+    head.appendChild(kind); head.appendChild(pill); head.appendChild(h2); head.appendChild(peek);
+
+    var body = el("div", "body");
+    var stat = el("div"); stat.style.display = "contents"; body.appendChild(stat);
+    var lab = el("label", "sr", "Your answer: " + str(r.title)); lab.htmlFor = "ans-" + id;
+    var ta = el("textarea"); ta.id = "ans-" + id; ta.rows = 4; ta.value = s.text;
+    var foot = el("div", "foot"), save = el("span", "save"), acts = el("div", "acts");
+    var skip = el("button", "act", "Skip for now"); skip.type = "button";
+    var wrong = el("button", "act", "Wrong question"); wrong.type = "button";
+    acts.appendChild(skip); acts.appendChild(wrong); foot.appendChild(save); foot.appendChild(acts);
+    var read = el("div", "read"); read.hidden = true;
+    var thread = el("div", "thread"); thread.hidden = true;
+    var rlab = el("label", "replylab px", "Your reply"); rlab.htmlFor = "rep-" + id;
+    var rta = el("textarea", "small"); rta.id = "rep-" + id; rta.rows = 2; rta.value = curReply(id); rta.placeholder = "Answer my question here. Your answer above stays as it is.";
+    body.appendChild(lab); body.appendChild(ta); body.appendChild(read); body.appendChild(thread); body.appendChild(rlab); body.appendChild(rta); body.appendChild(foot);
+    card.appendChild(head); card.appendChild(body);
+
+    head.addEventListener("click", function(){ s.folded = !s.folded; paint(id); if (!s.folded) grow(ta); });
+    ta.addEventListener("input", function(){ s.text = ta.value; grow(ta); touch(id); });
+    ta.addEventListener("blur", function(){ if (s.dirty){ clearTimeout(s.timer); save_(id); } });
+    rta.addEventListener("input", function(){ setCurReply(id, rta.value); grow(rta, 64); touch(id); });
+    rta.addEventListener("blur", function(){ if (s.dirty){ clearTimeout(s.timer); save_(id); } });
+    skip.addEventListener("click", function(){ s.flag = s.flag === "skipped" ? "" : "skipped"; touch(id, true); });
+    wrong.addEventListener("click", function(){ s.flag = s.flag === "wrong" ? "" : "wrong"; touch(id, true); if (s.flag) ta.focus(); });
+
+    var c = { card:card, head:head, kindName:kindName, h2:h2, stat:stat, statV:null, flag:flag, num:num, pill:pill, peek:peek, body:body, ta:ta, save:save, skip:skip, wrong:wrong, read:read, thread:thread, rlab:rlab, rta:rta };
+    cards.set(id, c); return c;
+  }
+  /* A card's request can change after it's drawn (an edit in the store, or a cached copy replaced by the live one): redraw what it says. */
+  function drawStatic(c, r){
+    var v = JSON.stringify([r.kind, r.title, r.ask, r.why, r.near]);
+    if (c.statV === v) return; c.statV = v;
+    c.kindName.textContent = KIND[r.kind] || "Request"; c.h2.textContent = str(r.title);
+    c.stat.textContent = "";
+    c.stat.appendChild(el("p", "ask", str(r.ask)));
+    if (str(r.why)) c.stat.appendChild(el("p", "why", str(r.why)));
+    var near = Array.isArray(r.near) ? r.near : [];
+    if (near.length){
+      c.stat.appendChild(el("span", "near-title px", "Near it"));
+      var ul = el("ul", "near");
+      near.forEach(function(n){
+        var li = el("li"), t = TAG[n && n.tag] || TAG.fine;
+        li.appendChild(el("span", "tag" + (t[1] ? " g" : ""), t[0])); li.appendChild(el("span", "", str(n && n.t)));
+        ul.appendChild(li);
+      });
+      c.stat.appendChild(ul);
+    }
+  }
+  function grow(ta, min){ ta.style.height = "auto"; ta.style.height = Math.max(ta.scrollHeight + 2, min || 104) + "px"; }
+
+  function paint(id){
+    var c = cards.get(id), s = stateOf(id), r = reqs.get(id); if (!c || !r) return;
+    drawStatic(c, r);
+    var st = statusOf(s);
+    c.pill.textContent = PILL[st]; c.pill.className = "pill " + st;
+    c.skip.setAttribute("aria-pressed", String(s.flag === "skipped"));
+    c.wrong.setAttribute("aria-pressed", String(s.flag === "wrong"));
+    c.ta.placeholder = s.flag === "wrong" ? "What should I have asked instead?" : s.flag === "skipped" ? "A note on why, if you like." : "Write the effect as you'd say it. Rough is fine.";
+    if (document.activeElement !== c.ta && !s.dirty && c.ta.value !== s.text) c.ta.value = s.text;
+    var rp = replies.get(id);
+    var ny = needsYou(id), told = !ny && answersReply(id);
+    c.flag.hidden = !(ny || told); c.flag.textContent = ny ? "Needs you" : "Replied"; c.flag.className = "verdict" + (ny ? " you" : "");
+    c.read.hidden = !rp;
+    var turns = rp ? rp.turns : [], cur = curReply(id);
+    function box(into, label, text, last){
+      into.textContent = "";
+      var rh = el("div", "rh"); rh.appendChild(el("span", "px", label));
+      if (last) rh.appendChild(el("span", "verdict" + (asks(rp) ? " you" : ""), VERDICT[rp.kind] || "Read"));
+      into.appendChild(rh);
+      text.split("\n").forEach(function(line){ if (line.trim()) into.appendChild(el("p", "", line)); });
+    }
+    if (rp && c.read.dataset.v !== rp.v){ c.read.dataset.v = rp.v; box(c.read, "Claude's read", rp.text, !turns.length); }
+    /* The turns after the first read: what the director said, then what Claude said back. */
+    var said = turns.map(function(_, i){ return i ? str(s.more[i - 1]) : s.reply; });
+    var tv = rp ? rp.v + "\u0000" + said.join("\u0000") : "";
+    c.thread.hidden = !turns.length;
+    if (c.thread.dataset.v !== tv){
+      c.thread.dataset.v = tv; c.thread.textContent = "";
+      turns.forEach(function(t, i){
+        if (said[i].trim()){ var y = el("div", "said"); y.appendChild(el("span", "px", "You")); y.appendChild(el("p", "", said[i].trim())); c.thread.appendChild(y); }
+        var b = el("div", "read"); box(b, "Claude", t, i === turns.length - 1); c.thread.appendChild(b);
+      });
+      if (document.activeElement !== c.rta) c.rta.value = cur;
+    }
+    var askYou = !!rp || !!s.reply;
+    c.rta.placeholder = rp && rp.kind === "overused" ? "Something else for the same job, or say you want it as written." : turns.length ? "Reply here. What we've said so far stays above." : ny && s.reply.trim() ? "Change or add to your reply here: I've answered it above." : asks(rp) ? "Answer my question here. Your answer above stays as it is." : "Comment on my read, if you like.";
+    c.rlab.hidden = !askYou; c.rta.hidden = !askYou;
+    if (document.activeElement !== c.rta && !s.dirty && c.rta.value !== cur) c.rta.value = cur;
+    c.body.hidden = s.folded; c.head.setAttribute("aria-expanded", String(!s.folded));
+    c.peek.hidden = !s.folded; c.peek.textContent = s.text.trim() || str(r.ask);
+    var msg = "", cls = "save";
+    if (s.saving) msg = "Saving…";
+    else if (s.error === "local") { msg = "Kept on this device only: the page can't reach its store here."; cls += " bad"; }
+    else if (s.error === "readonly") { msg = "Not saved: this view can't write. Open the page as its owner."; cls += " bad"; }
+    else if (s.error) { msg = "Not saved yet. It retries when you type or leave the box."; cls += " bad"; }
+    else if (s.dirty) msg = "Typing…";
+    else if (st !== "open") { msg = "Saved"; cls += " ok"; }
+    c.save.textContent = msg; c.save.className = cls;
+    var show = filter === "all" ? true : filter === "open" ? st === "open" || document.activeElement === c.ta
+      : filter === "you" ? needsYou(id) || document.activeElement === c.rta : st !== "open";
+    c.card.hidden = !(show && r.batch === batch);
+  }
+
+  function touch(id, now){
+    var s = stateOf(id); s.dirty = true; s.error = ""; s.retried = false;
+    lsSet("draft:" + id, JSON.stringify({ text:s.text, flag:s.flag, reply:s.reply, more:s.more }));
+    clearTimeout(s.timer);
+    if (now) save_(id); else s.timer = setTimeout(function(){ save_(id); }, 900);
+    paint(id); progress();
+  }
+  function save_(id){
+    var s = stateOf(id), r = reqs.get(id);
+    if (!db){ s.error = "local"; paint(id); return; }
+    if (s.saving){ s.again = true; return; }
+    s.saving = true; paint(id);
+    var key = function(){ return s.text + "\u0000" + s.flag + "\u0000" + s.reply + "\u0000" + s.more.join("\u0000"); }, sent = key();
+    var bodyDoc = { text:s.text, status:statusOf(s), reply:s.reply, more:s.more, batch:r ? r.batch : 0, updatedAt:new Date().toISOString() };
+    db.doc("answers/" + id).set(bodyDoc).then(function(){
+      s.error = "";
+      if (key() === sent){ s.dirty = false; lsSet("draft:" + id, null); }
+    }, function(e){
+      var code = e && e.code;
+      if (code === "unavailable" && !s.retried){ s.retried = true; s.again = true; }
+      else s.error = code === "invalid_argument" || code === "revoked" || code === "not_granted" ? "readonly" : "failed";
+    }).then(function(){
+      s.saving = false;
+      var more = s.again || (!s.error && key() !== sent);
+      s.again = false; paint(id); progress();
+      if (more) setTimeout(function(){ save_(id); }, s.retried ? 1500 : 0);
+    });
+  }
+
+  /* ---------- list, batches, progress ---------- */
+  function inBatch(){
+    var out = []; reqs.forEach(function(r, id){ if (r.batch === batch) out.push(id); });
+    return out.sort(function(a, b){ return (reqs.get(a).order || 0) - (reqs.get(b).order || 0) || (a < b ? -1 : 1); });
+  }
+  function layout(){
+    var all = []; reqs.forEach(function(r){ if (all.indexOf(r.batch) < 0) all.push(r.batch); }); all.sort(function(a, b){ return a - b; });
+    if (!all.length){ $("bar").hidden = true; $("tail").hidden = true; listEl.textContent = ""; orderKey = "";
+      setNote("No requests have landed yet.", "They appear here in batches of about fifteen. Nothing for you to do until they do."); return; }
+    statusEl.hidden = true; $("bar").hidden = false; $("tail").hidden = false;
+    /* A batch newer than any this device has shown opens first; after that the last one picked. */
+    var top = all[all.length - 1];
+    if (!topSeen) topSeen = Number(lsGet("batchTop")) || 0;
+    if (top > topSeen){ topSeen = top; batch = top; lsSet("batchTop", String(top)); lsSet("batch", String(top)); }
+    else if (all.indexOf(batch) < 0){ var saved = Number(lsGet("batch")); batch = all.indexOf(saved) >= 0 ? saved : top; }
+    var bt = $("batches"); bt.textContent = "";
+    all.forEach(function(b){
+      var bn = el("button", "chipbtn", "Batch " + b); bn.type = "button"; bn.setAttribute("aria-pressed", String(b === batch));
+      bn.addEventListener("click", function(){ batch = b; lsSet("batch", String(b)); layout(); }); bt.appendChild(bn);
+    });
+    var ids = inBatch(), key = batch + ":" + ids.join(",");
+    if (key !== orderKey){
+      orderKey = key;
+      var n = 0;
+      ids.forEach(function(id){
+        var c = cards.get(id) || buildCard(id);
+        c.num.textContent = reqs.get(id).kind === "open" ? "" : String(++n).padStart(2, "0");
+        if (c.card.parentNode !== listEl || c.card !== listEl.children[ids.indexOf(id)]) listEl.appendChild(c.card);
+      });
+      cards.forEach(function(c, id){ if (ids.indexOf(id) < 0 && c.card.parentNode) c.card.remove(); });
+    }
+    ids.forEach(function(id){ paint(id); var c = cards.get(id); if (!c.body.hidden){ grow(c.ta); if (!c.rta.hidden) grow(c.rta, 64); } });
+    progress();
+  }
+  function progress(){
+    var a = 0, p = 0, o = 0;
+    inBatch().forEach(function(id){
+      if (reqs.get(id).kind === "open") return;
+      var st = statusOf(stateOf(id)); if (st === "answered") a++; else if (st === "open") o++; else p++;
+    });
+    var pr = $("progress"); pr.textContent = "";
+    var y = inBatch().filter(needsYou).length;
+    pr.appendChild(el("b", "", String(a))); pr.appendChild(document.createTextNode(" answered · " + p + " passed · " + o + " open" + (y ? " · " + y + " need you" : "")));
+  }
+  $("filters").addEventListener("click", function(ev){
+    var b = ev.target.closest("button[data-f]"); if (!b) return;
+    filter = b.dataset.f; lsSet("filter", filter);
+    Array.prototype.forEach.call(this.children, function(x){ x.setAttribute("aria-pressed", String(x === b)); });
+    inBatch().forEach(paint);
+  });
+  (function(){ var f = lsGet("filter"); if (f === "open" || f === "done" || f === "you"){ filter = f;
+    Array.prototype.forEach.call($("filters").children, function(x){ x.setAttribute("aria-pressed", String(x.dataset.f === f)); }); } })();
+
+  /* ---------- store ---------- */
+  function onAnswers(snap){
+    remote = new Map(); snap.docs.forEach(function(d){ remote.set(d.id, d.data() || {}); });
+    gotAns = true; reqs.forEach(function(_, id){ adopt(id); });
+    inBatch().forEach(paint); progress(); flushDrafts();
+  }
+  function openForRead(id){
+    var s = stateOf(id), rp = replies.get(id); if (!rp || s.readOpened) return; s.readOpened = true;
+    if (needsYou(id) || lsGet("seen:" + id) !== rp.v){ s.folded = false; s.keepOpen = true; lsSet("seen:" + id, rp.v); }
+  }
+  function onReplies(snap){
+    replies = new Map();
+    snap.docs.forEach(function(d){ var x = d.data() || {}; var t = strs(x.turns); replies.set(d.id, { kind:str(x.kind), text:str(x.text), after:str(x.after), turns:t, v:str(x.kind) + "|" + str(x.text) + "|" + t.join("|") }); });
+    reqs.forEach(function(_, id){ openForRead(id); });
+    if (gotReqs) layout();
+  }
+  function flushDrafts(){ if (gotReqs && gotAns && db) reqs.forEach(function(_, id){ var s = stateOf(id); if (s.dirty && !s.saving && !s.timer) save_(id); }); }
+  function adopt(id){
+    var s = stateOf(id), a = remote.get(id), c = cards.get(id);
+    if (s.dirty || s.saving || (c && (document.activeElement === c.ta || document.activeElement === c.rta))) return;
+    s.text = a ? str(a.text) : ""; s.flag = a && (a.status === "skipped" || a.status === "wrong") ? a.status : ""; s.reply = a ? str(a.reply) : ""; s.more = a ? strs(a.more) : [];
+    if (!s.autoFolded && gotReqs && gotAns){ s.autoFolded = true; s.folded = isDone(s) && !needsYou(id) && !s.keepOpen; }
+  }
+  function onRequests(snap){
+    reqs = new Map();
+    snap.docs.forEach(function(d){ var r = d.data() || {}; reqs.set(d.id, { batch:Number(r.batch) || 1, order:Number(r.order) || 0, kind:str(r.kind), title:str(r.title), ask:str(r.ask), why:str(r.why), size:str(r.size), near:r.near }); });
+    gotReqs = true; reqs.forEach(function(_, id){ adopt(id); openForRead(id); }); layout(); flushDrafts();
+  }
+  var slow = setTimeout(function(){ if (!gotReqs) setNote("The requests can't be reached yet.", "Keep this page open: they appear as soon as the store answers."); }, 10000);
+  function fail(e){ clearTimeout(slow); setNote("The requests couldn't be loaded.", "Open this page in Claude while signed in as its owner. Anything you typed is kept on this device.", true); }
+
+  var c0 = window.claude;
+  if (!c0 || typeof c0.use !== "function") fail();
+  else c0.use("db").then(function(d){
+    if (!d){ fail(); return; }
+    db = d;
+    db.collection("requests").onSnapshot(function(s){ if (!s.metadata.fromCache || s.size) clearTimeout(slow); onRequests(s); }, fail);
+    db.collection("answers").onSnapshot(onAnswers, function(){});
+    db.collection("replies").onSnapshot(onReplies, function(){});
+  }, fail);
+})();
+</script>
