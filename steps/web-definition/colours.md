@@ -1,6 +1,6 @@
 # Colours and ways to win
 
-The agent's proposal, for the director to argue with. Only the first section is ruled.
+The agent's proposal, for the director to argue with. Only the first section is ruled. The page that shows it is `https://claude.ai/artifact/FpRMmFMcitDuVW3xpLWVTW`, published from `colours-page.html` beside this file.
 
 ## Ruled by the director
 
@@ -25,13 +25,13 @@ A foe's blow can be answered at four moments, and each is a colour. The names ar
 | Sorcery | before it's thrown | stops it: Stun, Slow, Chill, Silence, Weaken, Shock's cut |
 | Wind | as it arrives | isn't there: Evasion, Blur, Hidden |
 | Iron | as it lands | takes it: Shield, Defense, Guard, Aegis, max HP |
-| Life | after it lands | undoes it: heals, Regen, Lifesteal |
+| Blood | after it lands | undoes it: heals, Regen, Lifesteal |
 
-- **A colour kills with the same thing it lives by.** Iron's payoffs read its Shield and the blows it takes; Wind's read its dodges and its many hits; Sorcery's read what it has laid on the foes; Life's read HP paid and HP mended. That's why what a colour holds works together, where "defence" as one spot on a map didn't.
+- **A colour kills with the same thing it lives by.** Iron's payoffs read its Shield and the blows it takes; Wind's read its dodges and its many hits; Sorcery's read what it has laid on the foes; Blood's read HP paid and HP mended. That's why what a colour holds works together, where "defence" as one spot on a map didn't.
+- **The four moments take in every way to live the vocabulary has,** and the ten staples already hold some of each: Shield, Guard and Taunt; Evasion; Stun, Slow and Weaken; Regen, Heal and Cleanse.
 - **Killing first isn't a colour.** It's Rush, a way to win.
 - **A colour is not an element.** Sorcery holds fire, frost and lightning. Naming a colour for one element is what made the first cut narrow.
 - **A colour is not a role.** Each has to make a whole party: something that stands in front in its own way, something that kills, and a way to last.
-- **Four, not five.** Every fifth colour tried came out as one of the nine builds again: the Hunt (Hidden, the Mark, crits, kills), fire alone, or a healer with nothing to kill with.
 
 ## The colours
 
@@ -56,7 +56,7 @@ It believes a fight is won by whoever acts first, most often and where it choose
 - **The dodge:** Evasion, Blur, Accuracy, and what answers a dodge.
 - **The ambush:** Hidden, crits, Crit damage, Brittle.
 - **The hunt:** the Mark, Seek, the weakest foe, a kill, the fight's start.
-- **The wound:** Bleed, shared with Life.
+- **The wound:** Bleed, shared with Blood.
 - **Its hole: it has no body.** Its classes have the least HP and Defense. Evasion never meets a status's damage or an Area. Defense cuts many small hits most: the same damage in swings half the size took 45% longer.
 - **Classes:** Ranger, Monk, Assassin, Valkyrie.
 
@@ -64,22 +64,22 @@ It believes a fight is won by whoever acts first, most often and where it choose
 
 It believes a fight is won by what's laid on the foes, which no armour stops and no dodge slips.
 
-- **Fire:** Burn. All killing and no safety, and it dies unless it's fed.
-- **Frost:** Chill, Slow, the shatter and its Stun. The most safety, on a beat.
-- **Lightning:** Shock. Fast foes hurt themselves and slow foes hit softly.
+- **Fire:** Burn. All killing and no safety. It dies unless it's fed, so it leans to Wind's tempo and Blood's well.
+- **Frost:** Chill, Slow, the shatter and its Stun. The most safety, on a beat. It leans to Iron, who can wait for the break.
+- **Lightning:** Shock. Fast foes hurt themselves and slow foes hit softly. It leans to Iron, whose wall the foes have to strike.
 - **The curse:** Silence, Weaken, Bewildered, Dispel.
-- **The great cast:** wind-ups, Cast speed, cooldowns, MP, Area.
+- **The great cast:** wind-ups, Cast speed, cooldowns, Area.
 - **Its hole: it starts late and runs dry.** A built-up status pays only with upkeep. Its spells cost several times anyone else's, and nobody regains MP unaided. Bosses resist repeated Stun, Silence and Slow. A fight ended fast took Chill's killing down to a fifth.
 - **Classes:** Pyromancer, Frostweaver, Stormcaller, Hexer.
 
-### Life: everything has a price, and everything can be paid back
+### Blood: everything has a price, and everything can be paid back
 
-It believes HP is a currency: spent for power, drunk back, and given.
+It believes HP and MP are currency: spent for power, drunk back, and given.
 
 - **Mending:** heals, Regen, Cleanse, Revive, healing past full.
 - **The price:** HP paid, power when low.
 - **The drain:** Lifesteal, Siphon, Rot.
-- **The gift:** Might, MP and Clarity, what one unit gives another.
+- **The well:** MP and Clarity, Might, what one unit gives another.
 - **Its hole: it prevents nothing, and kills through others.** Mending comes after the blow: Regen kept up saved 14 points of HP in a fast fight and 49 in a slow one. Under Rot only a Shield still works.
 - **Classes:** Cleric, Paladin, Bard, Vampire.
 
@@ -91,10 +91,10 @@ Every colour does every way in its own words. Strong, some or weak is the agent'
 | --- | --- | --- | --- | --- |
 | Iron | strong: the hammer behind the wall, Shield and Might loaded into one blow (Landslide). 8 | some: Sunder piles while the wall holds. 10 | strong: Thorns, a broken Shield sent back (the Toll). 6 | weak: an opening thrust. 2 |
 | Wind | some: the ambusher, one hit from Hidden. 6 | strong: a wound cashed by a hundred hits (Thousand Cuts). 19 | some: the dancer, whose dodge answers the blow. 6 | strong: the Mark, Seek, kills that ready the next (the Hunt). 12 |
-| Sorcery | strong: one caster fed MP, firing in salvos (Barrage). 16 | strong: the pile, in fire, frost or charge (Bonfire, Cold Snap, the Storm). 12 | some: a charged field, where each foe's own action costs it. 9 | weak: an opening Area, and the pile pays late. 3 |
-| Life | strong: one pays in life, one drinks, one gives (Blood Pact). 13 | some: the long fight goes to whoever mends. 4 | some: the keeper, mending the one who's struck. 4 | some: kills and crits feed. 1 |
+| Sorcery | strong: one caster firing in salvos, fed from Blood's well (Barrage). 7 | strong: the pile, in fire, frost or charge (Bonfire, Cold Snap, the Storm). 12 | some: a charged field, where each foe's own action costs it. 8 | weak: an opening Area, and the pile pays late. 3 |
+| Blood | strong: one pays in life, one drinks, one gives (Blood Pact). 23 | some: the long fight goes to whoever mends. 4 | some: the keeper, mending the one who's struck. 5 | some: kills and crits feed. 1 |
 
-- **All nine builds land,** each as one colour or a pair on one way to win.
+- **All nine builds land,** each as one colour or a pair on one way to win. A party of fire and frost, which the builds had no place for, is Sorcery alone on Attrition.
 - **Rush and Retaliation each have one strong colour.** The other two ways have three.
 
 ## The six pairs
@@ -105,21 +105,23 @@ Each pair shares one word, the door between them, and each colour fills the othe
 | --- | --- | --- | --- |
 | Iron and Wind | Sunder | the flurry opens what the hammer strikes; the wall gives the blades a body | on one unit, Evasion 60 halved what Thorns killed |
 | Iron and Sorcery | Stun | the wall buys the pile its time; foes that strike the wall are charged and chilled | a Stunned or slowed foe strikes less, so Thorns earns less (not measured) |
-| Iron and Life | Might | the anchor and its keeper; Might given to the slow hitter; healing past full becomes a Shield | the slowest pair |
+| Iron and Blood | Might | the anchor and its keeper; Might given to the slow hitter; healing past full becomes a Shield | the slowest pair |
 | Wind and Sorcery | Haste | a faster unit lays more stacks | both are thin; a fight ended fast starves the pile |
-| Wind and Life | Bleed | crits and kills feed; a wound cashed by many hits | neither prevents a big blow |
-| Sorcery and Life | MP | the well and the caster: two serve one | slow to start |
+| Wind and Blood | Bleed | crits and kills feed; a wound cashed by many hits | neither prevents a big blow |
+| Sorcery and Blood | MP | the well and the caster: two serve one | slow to start |
 
 ## Where every word lives
 
-One home, and a second where it's a door. What every unit has belongs to nobody: Swings, Casts, Attack, and what's the player's (the first-slotted ability, what's worn, a passive).
+One home, and a second where it's a door.
 
 | Colour | Home of | Second home of |
 | --- | --- | --- |
 | Iron | Shield, Guard, Taunt, Aegis, Fixated, Sunder, Thorns, Defense, max HP, the draw, blows taken | Stun, Might, a wind-up |
 | Wind | Haste, Bleed, the Mark, Hidden, Brittle, Blur, Evasion, Accuracy, Crit damage, Double strike, Attack speed, Seek, crits, the dodge, extra strikes, what a hit carries, a kill, the fight's start, Focus | Sunder, Silence |
-| Sorcery | Burn, Chill, Shock, Stun, Slow, Silence, Weaken, Bewildered, Cooldown, Cast speed, Area, Dispel, a foe acting, a wind-up, Spread, MP | Haste |
-| Life | Regen, Might, Rot, Clarity, Owed, Lifesteal, Siphon, heals, Cleanse, Revive, HP paid or held low | Bleed, MP, max HP |
+| Sorcery | Burn, Chill, Shock, Stun, Slow, Silence, Weaken, Bewildered, Cooldown, Cast speed, Area, Dispel, a foe acting, a wind-up, Spread | Haste, MP |
+| Blood | Regen, Might, Rot, Clarity, Owed, Lifesteal, Siphon, MP, heals, Cleanse, Revive, HP paid or held low | Bleed, max HP |
+
+- **Nobody's:** Swings, Casts and Attack, which every unit has; what's the player's (the first-slotted ability, what's worn, a passive); and what links two allies with no word of its own (a stat lent, a swing copied, a status shared, an action timed to an ally's).
 
 ## The classes
 
@@ -130,7 +132,7 @@ Nothing is redesigned. Each class has a main colour from its trunk, and its iden
 | Iron | Knight, Bramble knight, Hoplite, Geomancer | Frostweaver (Shields, Guard), Paladin (Taunt, Plate), Monk (Sunder, Stun) |
 | Wind | Ranger, Monk, Assassin, Valkyrie | Stormcaller (fast swings), Vampire (quick drains, Bleed), Bard (Haste) |
 | Sorcery | Pyromancer, Frostweaver, Stormcaller, Hexer | Ranger (Chill arrows), Valkyrie (Shock), Paladin (Burn), Geomancer (long casts, Stun) |
-| Life | Cleric, Paladin, Bard, Vampire | Bramble knight (Regen), Knight (Clarity), Assassin (crits that heal), Valkyrie (raises) |
+| Blood | Cleric, Paladin, Bard, Vampire | Bramble knight (Regen), Knight (Clarity), Assassin (crits that heal), Valkyrie (raises) |
 
 - **The starters are three colours:** Knight, Cleric, Ranger. Sorcery is the first colour a run finds.
 - **The Valkyrie touches all four,** and the Paladin three. Hybrids by design, and the hardest to place.
@@ -138,19 +140,42 @@ Nothing is redesigned. Each class has a main colour from its trunk, and its iden
 ## What was checked
 
 - **The kits.** Every class's passive, abilities and versions were read from the pack. The sixteen fall four to a colour.
-- **Armour.** All four Iron classes wear Plate, all four Wind classes Leather, all four Sorcery classes Robes, and three of the four Life classes Mail (the Bard doesn't). Cloaks are Wind's, orbs Sorcery's, relics and vials Life's, shields Iron's. Nobody designed these as colours, and they're how a colour's pieces reach its classes with nothing written on a card.
-- **The loot.** Of the 268 pieces with an effect, by the words on their cards: 167 sit in one colour, 57 cross two or more, 44 have none. Every pair is crossed, the least by 8 pieces.
-- **The kept effects.** Of the 108: 58 in one colour, 39 cross, 11 none. Every pair is crossed, from 5 (Sorcery and Life) to 12 (Wind and Sorcery).
-- **One colour as a whole party.** Trios with bare kits on the seven free-play dungeons, 30 seeds, as stages cleared a dungeon: Iron 2.4 to 2.9, Sorcery 1.4 to 2.0, the starters 1.75, Wind 1.7, Life 1.0 to 1.5. No trio clears a dungeon bare, so this ranks them and nothing more.
+- **Armour.** All four Iron classes wear Plate, all four Wind classes Leather, all four Sorcery classes Robes, and three of the four Blood classes Mail (the Bard doesn't). Cloaks are Wind's, orbs Sorcery's, relics and vials Blood's, shields Iron's. Nobody designed these as colours, and they're how a colour's pieces reach its classes with nothing written on a card.
+- **The loot.** Of the 268 pieces with an effect, by the words on their cards: 173 sit in one colour (Iron 39, Wind 42, Sorcery 40, Blood 52), 48 cross two or more, 47 have none. Every pair is crossed. The thinnest are Sorcery with Blood (3 pieces) and Iron with Sorcery (6).
+- **The kept effects.** Of the 108: 57 in one colour, 40 cross, 11 none. Every pair is crossed, from 4 (Iron and Sorcery) to 12 (Iron and Blood).
+- **One colour as a whole party.** Trios with bare kits on the seven free-play dungeons, 30 seeds, as stages cleared a dungeon: Iron 2.4 to 2.9, Sorcery 1.4 to 2.0, the starters 1.75, Wind 1.7, Blood 1.0 to 1.5. No trio clears a dungeon bare, so this ranks them and nothing more.
 
 The counts are scratch scripts over the pack and `steps/authored-gaps/web.md`; the trios are a study file run with `npm run study`. None is kept in the repo.
 
+## Three independent reads
+
+Three agents were set the same question apart from each other and from this cut: one starting from the rules, one from the class kits, one from the player.
+
+- **All three found Iron as it is here.**
+- **The one from the rules found the same root by itself:** four moments at which a blow can be answered.
+- **Two kept fire, frost and the curses in one colour.** The third dealt one status to each colour by the clock it pays on (Chill on a count, Bleed on the party's hits, Shock on the foes' actions, Burn on a pulse). What's kept of that here is where each element leans.
+- **They split on the other half of the game:** speed, the dodge, aim and kills, blood, and mending. That's the real fork, below.
+- **All three said the wall is compulsory today,** so Iron reads as a role until other fronts hold.
+
+## The fork
+
+The half of the game that isn't Iron or Sorcery can be cut three ways.
+
+| Cut | What it is | What it buys | What it costs |
+| --- | --- | --- | --- |
+| This one | Wind is speed, the dodge and aim. Blood is mending, the price, the drain and the well. | The classes fall four to a colour, the armour agrees, and Blood Pact and the Hunt are already these. | Blood can read as the healer's role. |
+| The predator | Aim and kills join the drain: a colour that chooses who dies and feeds on it. Speed and the dodge stand alone. Healing and MP are everyone's. | No colour can be mistaken for a role. Crits and Lifesteal feed each other by the rules: the biggest hit drinks most. | The Cleric has no colour, eight classes touch Iron, and the speed colour may be everyone's. |
+| Five | As this one, with aim (Hidden, the Mark, crits, kills) split from speed. | Each colour is tighter. | The aim colour is the Hunt again: strong at Rush and little else. |
+
+The agent's pick is the first.
+
 ## Least sure
 
-- **Life may be a role and not a colour.** Its bare trios get the least far, and its killing comes through gear (the price, the drain) and two classes (the Vampire, the Paladin).
+- **Blood may be a role and not a colour.** Its bare trios get the least far, and its killing comes through gear (the price, the drain) and two classes (the Vampire, the Paladin).
 - **Four reads like warrior, rogue, mage and priest.** What has to hold is that a colour is a whole party. Bare, only Iron's front works: the wall problem, seen from a new side. Each colour would need a front of its own kind (one that slips, one that stops the blow, one that mends).
-- **Sorcery may be too big.** It holds three of the five afflictions and four of the nine builds.
-- **Rush and Retaliation are each strong in one colour.**
+- **Retaliation and Rush may not be ways to win.** Each is strong in one colour only. If that stays so, Retaliation is Iron's theme and Rush is Wind's. They hold as ways to win only if Sorcery's charged field and Blood's feast become real.
+- **Shock has no settled home.** The three reads put it in three colours: it's laid by speed, paid on the foes' actions, and looks like an element.
+- **The holes are soft.** Of 40 pairings of a way to live with a way to kill, 29 changed nothing, so a hole is mostly what a colour's payoffs read, and little in the rules forces it.
 - **The doors are a choice.** Sunder, Stun, Might, Haste, Bleed and MP each fit their pair by the kits and the rules, and other words could be argued.
 - **Inside Sorcery, Stun and Chill work against Shock's damage,** since a foe that acts less pays less. Not measured.
 

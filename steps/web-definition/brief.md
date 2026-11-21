@@ -21,7 +21,8 @@ The list is closed. This step sits beside authored gaps (`steps/authored-gaps/`)
 ## What's here
 
 - `intent.md`: the director's intent.
-- `colours.md`: the agent's first cut at colours and ways to win, with a count of how the kept effects fall on it. Waiting on the director's read. Not a ruling.
+- `colours.md`: what the director has ruled (the four ways to win, pairs allowed and some designed, colours wide), then the agent's proposal of four colours with what was checked, three independent reads and the fork left to the director. Waiting on their read.
+- `colours-page.html`: the page that shows the proposal, at `https://claude.ai/artifact/FpRMmFMcitDuVW3xpLWVTW`. Change it there and publish to the same address.
 - `four-lines.md`: an earlier way to sort the web that an agent proposed, with how far it was measured to hold. Not a ruling.
 
 ## How to work

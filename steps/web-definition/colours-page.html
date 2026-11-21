@@ -1,0 +1,351 @@
+<title>The Four Colours</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=Pixelify+Sans:wght@500;600&display=swap">
+<style>
+/* Layout: one reading column. A blow's four moments as a strip, four window-framed colour cards, a square of pairs, a grid of ways to win. */
+:root {
+  --bg: #f4f6f9; --panel: #ffffff; --ink: #141a24; --muted: #566173; --line: #d3d9e2; --soft: #e9edf2;
+  --iron: #46586e; --iron-bg: #e4eaf1;
+  --wind: #147a64; --wind-bg: #dcf1ea;
+  --sorc: #6540bd; --sorc-bg: #ebe4f9;
+  --life: #b22f38; --life-bg: #f8e2e3;
+  --display: "Pixelify Sans", "Trebuchet MS", system-ui, sans-serif;
+  --body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "DM Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1219; --panel: #161b25; --ink: #e7ebf1; --muted: #98a3b4; --line: #2a3241; --soft: #1c222e;
+    --iron: #a3b6ca; --iron-bg: #1d2632;
+    --wind: #52cbb0; --wind-bg: #122925;
+    --sorc: #ad92f2; --sorc-bg: #211a37;
+    --life: #f07f84; --life-bg: #2f181b;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1219; --panel: #161b25; --ink: #e7ebf1; --muted: #98a3b4; --line: #2a3241; --soft: #1c222e;
+  --iron: #a3b6ca; --iron-bg: #1d2632;
+  --wind: #52cbb0; --wind-bg: #122925;
+  --sorc: #ad92f2; --sorc-bg: #211a37;
+  --life: #f07f84; --life-bg: #2f181b;
+  color-scheme: dark;
+}
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.55; }
+.page { max-width: 62rem; margin: 0 auto; padding-block: 2.5rem 4rem; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: flex; flex-direction: column; gap: 3.25rem; }
+h1, h2, h3, p, ul, ol, dl, dd, figure { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+h1 { font-family: var(--display); font-weight: 600; font-size: clamp(2.2rem, 7vw, 3.4rem); line-height: 1.05; letter-spacing: 0.01em; text-wrap: balance; }
+h2 { font-family: var(--display); font-weight: 500; font-size: 1.6rem; line-height: 1.15; text-wrap: balance; }
+.eyebrow, .label { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); }
+.lede { font-size: 1.1rem; max-width: 40rem; color: var(--ink); }
+.prose { max-width: 42rem; }
+.muted { color: var(--muted); }
+header { display: flex; flex-direction: column; gap: 0.9rem; }
+section { display: flex; flex-direction: column; gap: 1.25rem; }
+.c-iron { --c: var(--iron); --cb: var(--iron-bg); }
+.c-wind { --c: var(--wind); --cb: var(--wind-bg); }
+.c-sorc { --c: var(--sorc); --cb: var(--sorc-bg); }
+.c-life { --c: var(--life); --cb: var(--life-bg); }
+
+/* the blow's four moments */
+.moments { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; border: 1px solid var(--line); background: var(--panel); border-radius: 6px; overflow: hidden; }
+.moment { padding: 1rem 1rem 1.1rem; display: flex; flex-direction: column; gap: 0.35rem; border-left: 1px solid var(--line); border-top: 4px solid var(--c); min-width: 0; }
+.moment:first-child { border-left: 0; }
+.moment .when { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.moment .name { font-family: var(--display); font-size: 1.35rem; color: var(--c); line-height: 1.1; }
+.moment .does { font-weight: 600; }
+.moment .with { font-size: 0.9rem; color: var(--muted); }
+.blowline { display: flex; align-items: center; gap: 0.75rem; font-family: var(--mono); font-size: 0.75rem; color: var(--muted); letter-spacing: 0.05em; }
+.blowline::before, .blowline::after { content: ""; height: 1px; background: var(--line); flex: 1; }
+.blowline span { white-space: nowrap; }
+.notes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; }
+.notes li { font-size: 0.95rem; min-width: 0; }
+.notes b { display: block; }
+
+/* colour cards, framed like a menu window */
+.cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
+.card { background: var(--panel); border: 2px solid var(--c); border-radius: 6px; box-shadow: inset 0 0 0 3px var(--panel), inset 0 0 0 4px var(--c); padding: 1.4rem 1.35rem 1.35rem; display: flex; flex-direction: column; gap: 0.9rem; min-width: 0; }
+.card h3 { font-family: var(--display); font-weight: 600; font-size: 1.7rem; color: var(--c); line-height: 1; }
+.card .motto { font-weight: 600; }
+.card .belief { font-size: 0.95rem; color: var(--muted); }
+.themes { display: flex; flex-direction: column; gap: 0.45rem; }
+.themes li { display: grid; grid-template-columns: 6.2rem minmax(0, 1fr); gap: 0.6rem; font-size: 0.92rem; align-items: baseline; }
+.themes .t { font-weight: 600; }
+.hole { background: var(--cb); border-radius: 4px; padding: 0.75rem 0.85rem; font-size: 0.92rem; display: flex; flex-direction: column; gap: 0.25rem; }
+.hole b { color: var(--c); }
+.meta { display: grid; grid-template-columns: 4.2rem minmax(0, 1fr); gap: 0.25rem 0.6rem; font-size: 0.88rem; }
+.meta dt { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding-top: 0.15rem; }
+
+/* pairs */
+.pairs { display: grid; grid-template-columns: minmax(0, 22rem) minmax(0, 1fr); gap: 1.75rem; align-items: start; }
+.square { width: 100%; max-width: 22rem; height: auto; display: block; }
+.square text { font-family: var(--body); }
+.pairlist { display: flex; flex-direction: column; gap: 0.9rem; }
+.pairlist li { display: flex; flex-direction: column; gap: 0.15rem; font-size: 0.93rem; padding-bottom: 0.9rem; border-bottom: 1px solid var(--line); }
+.pairlist li:last-child { border-bottom: 0; padding-bottom: 0; }
+.pairlist .who { font-weight: 600; display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: baseline; }
+.door { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; border: 1px solid var(--line); border-radius: 3px; padding: 0.05rem 0.4rem; color: var(--muted); font-weight: 400; }
+.pull { color: var(--muted); }
+.ci { color: var(--iron); } .cw { color: var(--wind); } .cs { color: var(--sorc); } .cl { color: var(--life); }
+
+/* tables */
+.scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); }
+table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+th, td { text-align: left; vertical-align: top; padding: 0.7rem 0.8rem; border-bottom: 1px solid var(--line); }
+tr:last-child td, tr:last-child th { border-bottom: 0; }
+thead th { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 500; background: var(--soft); }
+.grid { min-width: 46rem; }
+.grid th[scope="row"] { font-family: var(--display); font-size: 1.2rem; font-weight: 500; color: var(--c); white-space: nowrap; }
+.grid td { border-left: 1px solid var(--line); width: 23%; }
+.str { display: flex; align-items: center; gap: 0.4rem; font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; }
+.pips { display: inline-flex; gap: 3px; }
+.pips i { width: 9px; height: 9px; border-radius: 2px; border: 1px solid var(--c); display: block; }
+.pips i.on { background: var(--c); }
+.build { display: inline-block; font-size: 0.78rem; font-weight: 600; background: var(--cb); color: var(--c); border-radius: 3px; padding: 0.05rem 0.4rem; margin-top: 0.35rem; margin-right: 0.2rem; }
+.n { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); font-variant-numeric: tabular-nums; display: block; margin-top: 0.35rem; }
+.num { font-variant-numeric: tabular-nums; font-family: var(--mono); white-space: nowrap; }
+
+.fork { min-width: 44rem; }
+.fork th[scope="row"] { font-weight: 700; white-space: nowrap; }
+.fork td { border-left: 1px solid var(--line); }
+.pick { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 400; }
+.checks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
+.check { display: flex; flex-direction: column; gap: 0.5rem; min-width: 0; }
+.check h3 { font-size: 1rem; font-weight: 700; }
+.check p { font-size: 0.93rem; }
+.plain { display: flex; flex-direction: column; gap: 0.7rem; max-width: 44rem; }
+.plain li { padding-left: 1.1rem; position: relative; }
+.plain li::before { content: ""; position: absolute; left: 0; top: 0.62em; width: 6px; height: 6px; background: var(--muted); border-radius: 1px; }
+.ask { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 1.4rem 1.35rem; }
+.ask ol { counter-reset: q; display: flex; flex-direction: column; gap: 0.8rem; max-width: 44rem; }
+.ask li { counter-increment: q; display: grid; grid-template-columns: 1.6rem minmax(0, 1fr); }
+.ask li::before { content: counter(q); font-family: var(--display); font-size: 1.15rem; line-height: 1.3; }
+
+@media (max-width: 760px) {
+  .moments { grid-template-columns: 1fr; }
+  .moment { border-left: 0; border-top: 0; border-left: 4px solid var(--c); border-bottom: 1px solid var(--line); }
+  .moment:first-child { border-left: 4px solid var(--c); }
+  .moment:last-child { border-bottom: 0; }
+  .notes, .cards, .pairs, .checks { grid-template-columns: 1fr; }
+  .square { margin: 0 auto; }
+}
+</style>
+
+<div class="page">
+  <header>
+    <p class="eyebrow">Defining the web · a proposal</p>
+    <h1>The Four Colours</h1>
+    <p class="lede">What sits at the corners of the web, in place of the nine builds. This is the agent's proposal, for the director to argue with. The names are placeholders.</p>
+  </header>
+
+  <section>
+    <h2>One blow, four moments</h2>
+    <p class="prose">A foe's blow can be answered at four moments. Each moment is a colour, and a colour kills with the same thing it lives by. That is why what sits inside one colour works together.</p>
+    <div class="blowline"><span>a foe decides to strike</span></div>
+    <div class="moments">
+      <div class="moment c-sorc"><span class="when">Before it's thrown</span><span class="name">Sorcery</span><span class="does">stops it</span><span class="with">Stun, Slow, Chill, Silence, Weaken</span></div>
+      <div class="moment c-wind"><span class="when">As it arrives</span><span class="name">Wind</span><span class="does">isn't there</span><span class="with">Evasion, Blur, Hidden</span></div>
+      <div class="moment c-iron"><span class="when">As it lands</span><span class="name">Iron</span><span class="does">takes it</span><span class="with">Shield, Defense, Guard, Aegis</span></div>
+      <div class="moment c-life"><span class="when">After it lands</span><span class="name">Blood</span><span class="does">undoes it</span><span class="with">heals, Regen, Lifesteal</span></div>
+    </div>
+    <div class="blowline"><span>the blow is over</span></div>
+    <ul class="notes">
+      <li><b>Killing first isn't a colour.</b> It's Rush, one of the four ways to win.</li>
+      <li><b>A colour isn't an element.</b> Sorcery holds fire, frost and lightning. One element to a colour is what made the first cut narrow.</li>
+      <li><b>A colour isn't a role.</b> Each has to make a whole party: a front of its own kind, something that kills, and a way to last.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>The colours</h2>
+    <p class="prose muted">Each holds four or five themes: the words a player collects. Each has one hole, which the rules already make real, and which is the reason to take a second colour.</p>
+    <div class="cards">
+      <article class="card c-iron">
+        <h3>Iron</h3>
+        <p class="motto">Let them come.</p>
+        <p class="belief">A fight is won by whoever is still standing, and what protects it is what it strikes with.</p>
+        <ul class="themes">
+          <li><span class="t">The anvil</span><span>Taunt, the draw, blows taken, Thorns, Fixated</span></li>
+          <li><span class="t">The shell</span><span>a Shield made, moved, broken and read; Aegis</span></li>
+          <li><span class="t">The weight</span><span>Defense, Guard and max HP, as armour and as what its blows scale from</span></li>
+          <li><span class="t">The hammer</span><span>slow heavy swings, long wind-ups, Sunder to open the target</span></li>
+        </ul>
+        <div class="hole"><b>Its hole: it can't hurry and can't choose.</b><span>Defense never meets a status's damage. Nothing in its kits has Seek. Its killing waits on the foes' attacks or on long cooldowns.</span></div>
+        <dl class="meta"><dt>Classes</dt><dd>Knight, Bramble knight, Hoplite, Geomancer</dd><dt>Wears</dt><dd>Plate, shields, hammers, great weapons</dd></dl>
+      </article>
+      <article class="card c-wind">
+        <h3>Wind</h3>
+        <p class="motto">Strike first, strike often, be elsewhere.</p>
+        <p class="belief">A fight is won by whoever acts first, most often and where it chooses.</p>
+        <ul class="themes">
+          <li><span class="t">The flurry</span><span>Attack speed, Haste, Double strike, extra strikes, what a hit carries</span></li>
+          <li><span class="t">The dodge</span><span>Evasion, Blur, and what answers a dodge</span></li>
+          <li><span class="t">The ambush</span><span>Hidden, crits, Crit damage, Brittle</span></li>
+          <li><span class="t">The hunt</span><span>the Mark, Seek, the weakest foe, a kill, the fight's start</span></li>
+          <li><span class="t">The wound</span><span>Bleed, shared with Blood</span></li>
+        </ul>
+        <div class="hole"><b>Its hole: it has no body.</b><span>Its classes have the least HP and Defense. Evasion never meets a status's damage or an Area. Defense cuts many small hits most: the same damage in swings half the size took 45% longer.</span></div>
+        <dl class="meta"><dt>Classes</dt><dd>Ranger, Monk, Assassin, Valkyrie</dd><dt>Wears</dt><dd>Leather, cloaks, bows, daggers</dd></dl>
+      </article>
+      <article class="card c-sorc">
+        <h3>Sorcery</h3>
+        <p class="motto">Let the field do the work.</p>
+        <p class="belief">A fight is won by what's laid on the foes, which no armour stops and no dodge slips.</p>
+        <ul class="themes">
+          <li><span class="t">Fire</span><span>Burn. All killing, no safety. It dies unless it's fed, so it leans to Wind's tempo and Blood's well</span></li>
+          <li><span class="t">Frost</span><span>Chill, Slow, the shatter and its Stun. The most safety, on a beat. It leans to Iron, who can wait for the break</span></li>
+          <li><span class="t">Lightning</span><span>Shock. Fast foes hurt themselves, slow foes hit softly. It leans to Iron, whose wall the foes have to strike</span></li>
+          <li><span class="t">The curse</span><span>Silence, Weaken, Bewildered, Dispel</span></li>
+          <li><span class="t">The great cast</span><span>wind-ups, Cast speed, cooldowns, Area</span></li>
+        </ul>
+        <div class="hole"><b>Its hole: it starts late and runs dry.</b><span>A built-up status pays only with upkeep. Its spells cost several times anyone else's, and nobody regains MP unaided. Bosses resist repeated Stun, Silence and Slow. A fight ended fast took Chill's killing down to a fifth.</span></div>
+        <dl class="meta"><dt>Classes</dt><dd>Pyromancer, Frostweaver, Stormcaller, Hexer</dd><dt>Wears</dt><dd>Robes, orbs, totems, tomes, staves, wands</dd></dl>
+      </article>
+      <article class="card c-life">
+        <h3>Blood</h3>
+        <p class="motto">Everything has a price, and everything can be paid back.</p>
+        <p class="belief">HP and MP are currency: spent for power, drunk back, and given.</p>
+        <ul class="themes">
+          <li><span class="t">Mending</span><span>heals, Regen, Cleanse, Revive, healing past full</span></li>
+          <li><span class="t">The price</span><span>HP paid, power when low</span></li>
+          <li><span class="t">The drain</span><span>Lifesteal, Siphon, Rot</span></li>
+          <li><span class="t">The well</span><span>MP and Clarity, Might, what one unit gives another</span></li>
+        </ul>
+        <div class="hole"><b>Its hole: it prevents nothing, and kills through others.</b><span>Mending comes after the blow: Regen kept up saved 14 points of HP in a fast fight and 49 in a slow one. Under Rot only a Shield still works.</span></div>
+        <dl class="meta"><dt>Classes</dt><dd>Cleric, Paladin, Bard, Vampire</dd><dt>Wears</dt><dd>Mail, relics, vials, maces</dd></dl>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <h2>Six pairs, six doors</h2>
+    <p class="prose">Any two colours can be combined, and each fills the other's hole. Each pair shares one word, which is the door between them.</p>
+    <div class="pairs">
+      <svg class="square" viewBox="0 0 360 360" role="img" aria-label="The four colours at the corners of a square, in the order of the blow's moments. Each of the six lines between them carries the word the pair shares.">
+        <g fill="none" stroke="var(--line)" stroke-width="2">
+          <line x1="70" y1="70" x2="290" y2="70"></line>
+          <line x1="290" y1="70" x2="290" y2="290"></line>
+          <line x1="290" y1="290" x2="70" y2="290"></line>
+          <line x1="70" y1="290" x2="70" y2="70"></line>
+          <line x1="70" y1="70" x2="290" y2="290"></line>
+          <line x1="290" y1="70" x2="70" y2="290"></line>
+        </g>
+        <g font-size="13" font-weight="600" text-anchor="middle" fill="var(--ink)">
+          <rect x="151" y="58" width="58" height="24" rx="3" fill="var(--bg)" stroke="var(--line)"></rect><text x="180" y="75">Haste</text>
+          <rect x="259" y="168" width="62" height="24" rx="3" fill="var(--bg)" stroke="var(--line)"></rect><text x="290" y="185">Sunder</text>
+          <rect x="151" y="278" width="58" height="24" rx="3" fill="var(--bg)" stroke="var(--line)"></rect><text x="180" y="295">Might</text>
+          <rect x="47" y="168" width="46" height="24" rx="3" fill="var(--bg)" stroke="var(--line)"></rect><text x="70" y="185">MP</text>
+          <rect x="107" y="121" width="50" height="24" rx="3" fill="var(--bg)" stroke="var(--line)"></rect><text x="132" y="138">Stun</text>
+          <rect x="201" y="121" width="54" height="24" rx="3" fill="var(--bg)" stroke="var(--line)"></rect><text x="228" y="138">Bleed</text>
+        </g>
+        <g font-size="15" font-weight="700" text-anchor="middle">
+          <circle cx="70" cy="70" r="34" fill="var(--sorc-bg)" stroke="var(--sorc)" stroke-width="2"></circle><text x="70" y="75" fill="var(--sorc)">Sorcery</text>
+          <circle cx="290" cy="70" r="34" fill="var(--wind-bg)" stroke="var(--wind)" stroke-width="2"></circle><text x="290" y="75" fill="var(--wind)">Wind</text>
+          <circle cx="290" cy="290" r="34" fill="var(--iron-bg)" stroke="var(--iron)" stroke-width="2"></circle><text x="290" y="295" fill="var(--iron)">Iron</text>
+          <circle cx="70" cy="290" r="34" fill="var(--life-bg)" stroke="var(--life)" stroke-width="2"></circle><text x="70" y="295" fill="var(--life)">Blood</text>
+        </g>
+      </svg>
+      <ul class="pairlist">
+        <li><span class="who"><span><span class="ci">Iron</span> and <span class="cw">Wind</span></span><span class="door">door: Sunder</span></span><span>The flurry opens what the hammer strikes. The wall gives the blades a body.</span><span class="pull">Pulls: on one unit, Evasion 60 halved what Thorns killed.</span></li>
+        <li><span class="who"><span><span class="ci">Iron</span> and <span class="cs">Sorcery</span></span><span class="door">door: Stun</span></span><span>The wall buys the pile its time. Foes that strike the wall are charged and chilled.</span><span class="pull">Pulls: a Stunned or slowed foe strikes less, so Thorns earns less. Not measured.</span></li>
+        <li><span class="who"><span><span class="ci">Iron</span> and <span class="cl">Blood</span></span><span class="door">door: Might</span></span><span>The anchor and its keeper. Might given to the slow hitter. Healing past full becomes a Shield.</span><span class="pull">Pulls: the slowest pair.</span></li>
+        <li><span class="who"><span><span class="cw">Wind</span> and <span class="cs">Sorcery</span></span><span class="door">door: Haste</span></span><span>A faster unit lays more stacks.</span><span class="pull">Pulls: both are thin, and a fight ended fast starves the pile.</span></li>
+        <li><span class="who"><span><span class="cw">Wind</span> and <span class="cl">Blood</span></span><span class="door">door: Bleed</span></span><span>Crits and kills feed. A wound is cashed by many hits.</span><span class="pull">Pulls: neither prevents a big blow.</span></li>
+        <li><span class="who"><span><span class="cs">Sorcery</span> and <span class="cl">Blood</span></span><span class="door">door: MP</span></span><span>The well and the caster: two serve one.</span><span class="pull">Pulls: slow to start.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>Every colour, every way to win</h2>
+    <p class="prose">Each colour does each way to win in its own words. The nine builds are marked where they land. The number is how many of the 108 kept effects sit in that cell today. Strong, some and weak are the agent's read.</p>
+    <div class="scroll">
+      <table class="grid">
+        <thead><tr><th></th><th>Carry<br><span style="text-transform:none;letter-spacing:0">two serve one</span></th><th>Attrition<br><span style="text-transform:none;letter-spacing:0">the pile kills</span></th><th>Retaliation<br><span style="text-transform:none;letter-spacing:0">their attacks kill them</span></th><th>Rush<br><span style="text-transform:none;letter-spacing:0">each kill pays for the next</span></th></tr></thead>
+        <tbody>
+          <tr class="c-iron"><th scope="row">Iron</th>
+            <td><div class="str"><span class="pips"><i class="on"></i><i class="on"></i><i class="on"></i></span>Strong</div>The hammer behind the wall: Shield and Might loaded into one blow.<br><span class="build">Landslide</span><span class="n">8 effects</span></td>
+            <td><div class="str"><span class="pips"><i class="on"></i><i class="on"></i><i></i></span>Some</div>Sunder piles while the wall holds.<span class="n">10 effects</span></td>
+            <td><div class="str"><span class="pips"><i class="on"></i><i class="on"></i><i class="on"></i></span>Strong</div>Thorns, and a broken Shield sent back.<br><span class="build">The Toll</span><span class="n">6 effects</span></td>
+            <td><div class="str"><span class="pips"><i class="on"></i><i></i><i></i></span>Weak</div>An opening thrust, and little else.<span class="n">2 effects</span></td></tr>
+          <tr class="c-wind"><th scope="row">Wind</th>
+            <td><div class="str"><span class="pips"><i class="on"></i><i class="on"></i><i></i></span>Some</div>The ambusher: one hit from Hidden, a crit set up.<span class="n">6 effects</span></td>
+            <td><div class="str"><span class="pips"><i class="on"></i><i class="on"></i><i class="on"></i></span>Strong</div>A wound cashed by a hundred hits.<br><span class="build">Thousand Cuts</span><span class="n">19 effects</span></td>
+            <td><div class="str"><span class="pips"><i class="on"></i><i class="on"></i><i></i></span>Some</div>The dancer, whose dodge answers the blow.<span class="n">6 effects</span></td>
+            <td><div class="str"><span class="pips"><i class="on"></i><i class="on"></i><i class="on"></i></span>Strong</div>The Mark, Seek, and kills that ready the next.<br><span class="build">The Hunt</span><span class="n">12 effects</span></td></tr>
+          <tr class="c-sorc"><th scope="row">Sorcery</th>
+            <td><div class="str"><span class="pips"><i class="on"></i><i class="on"></i><i class="on"></i></span>Strong</div>One caster firing in salvos, fed from Blood's well.<br><span class="build">Barrage</span><span class="n">7 effects</span></td>
+            <td><div class="str"><span class="pips"><i class="on"></i><i class="on"></i><i class="on"></i></span>Strong</div>The pile, in fire, frost or charge.<br><span class="build">Bonfire</span><span class="build">Cold Snap</span><span class="build">The Storm</span><span class="n">12 effects</span></td>
+            <td><div class="str"><span class="pips"><i class="on"></i><i class="on"></i><i></i></span>Some</div>A charged field, where each foe's own action costs it.<span class="n">8 effects</span></td>
+            <td><div class="str"><span class="pips"><i class="on"></i><i></i><i></i></span>Weak</div>An opening Area. The pile pays late.<span class="n">3 effects</span></td></tr>
+          <tr class="c-life"><th scope="row">Blood</th>
+            <td><div class="str"><span class="pips"><i class="on"></i><i class="on"></i><i class="on"></i></span>Strong</div>One pays in life, one drinks, one gives.<br><span class="build">Blood Pact</span><span class="n">23 effects</span></td>
+            <td><div class="str"><span class="pips"><i class="on"></i><i class="on"></i><i></i></span>Some</div>The long fight goes to whoever mends.<span class="n">4 effects</span></td>
+            <td><div class="str"><span class="pips"><i class="on"></i><i class="on"></i><i></i></span>Some</div>The keeper, mending the one who's struck.<span class="n">5 effects</span></td>
+            <td><div class="str"><span class="pips"><i class="on"></i><i class="on"></i><i></i></span>Some</div>Kills and crits feed.<span class="n">1 effect</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="prose muted">Most builds are really a pair: Bonfire is Sorcery fed by Wind's tempo, the Toll is Iron with Blood's keeper, Barrage is Sorcery served by Blood. A party of fire and frost, which the builds had no place for, is Sorcery alone on Attrition.</p>
+  </section>
+
+  <section>
+    <h2>What was checked</h2>
+    <div class="checks">
+      <div class="check"><h3>The kits fall four to a colour</h3><p>Every class's passive, abilities and versions were read from the game's data. The sixteen classes sort four to a colour with none redesigned. The starters are three colours (Knight, Cleric, Ranger), so Sorcery is the first colour a run finds.</p></div>
+      <div class="check"><h3>The armour already agrees</h3><p>All four Iron classes wear Plate, all four Wind classes Leather, all four Sorcery classes Robes, and three of the four Blood classes Mail. Nobody designed armour as colours. It is how a colour's pieces can reach its classes with nothing written on a card.</p></div>
+      <div class="check"><h3>The loot crosses every pair</h3><p>Of the 268 pieces with an effect, by the words on their cards: 173 sit in one colour (Iron 39, Wind 42, Sorcery 40, Blood 52), 48 cross two or more, 47 have none. Every pair is crossed. The thinnest are Sorcery with Blood (3 pieces) and Iron with Sorcery (6). Of the 108 kept effects, 57 sit in one colour and 40 cross.</p></div>
+      <div class="check"><h3>One colour as a whole party</h3><p>Trios of one colour with bare kits, on the seven free-play dungeons. No bare trio clears a dungeon, so this only ranks them.</p>
+        <div class="scroll"><table><thead><tr><th>Trios of</th><th>Stages cleared a dungeon</th></tr></thead><tbody>
+          <tr><td>Iron</td><td class="num">2.4 to 2.9</td></tr>
+          <tr><td>Sorcery</td><td class="num">1.4 to 2.0</td></tr>
+          <tr><td>The starters (three colours)</td><td class="num">1.75</td></tr>
+          <tr><td>Wind</td><td class="num">1.7</td></tr>
+          <tr><td>Blood</td><td class="num">1.0 to 1.5</td></tr>
+        </tbody></table></div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Three independent reads, and the fork</h2>
+    <p class="prose">Three agents were set the same question apart from each other and from this cut: one starting from the rules, one from the class kits, one from the player.</p>
+    <ul class="plain">
+      <li><b>All three found Iron as it is here.</b> Two kept fire, frost and the curses in one colour, as here.</li>
+      <li><b>The one that started from the rules found the same root by itself:</b> four moments at which a blow can be answered.</li>
+      <li><b>They split on the other half of the game:</b> speed, the dodge, aim and kills, blood, and mending. It can be cut three ways, and that choice is yours.</li>
+    </ul>
+    <div class="scroll">
+      <table class="fork">
+        <thead><tr><th>Cut</th><th>What it is</th><th>What it buys</th><th>What it costs</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">This one<br><span class="pick">the agent's pick</span></th><td>Wind is speed, the dodge and aim. Blood is mending, the price, the drain and the well.</td><td>The classes fall four to a colour, the armour agrees, and Blood Pact and the Hunt are already these.</td><td>Blood can read as the healer's role.</td></tr>
+          <tr><th scope="row">The predator</th><td>Aim and kills join the drain: a colour that chooses who dies and feeds on it. Speed and the dodge stand alone. Healing and MP are everyone's.</td><td>No colour can be mistaken for a role. Crits and Lifesteal feed each other by the rules: the biggest hit drinks most.</td><td>The Cleric has no colour, eight classes touch Iron, and the speed colour may be everyone's.</td></tr>
+          <tr><th scope="row">Five</th><td>As this one, with aim (Hidden, the Mark, crits, kills) split from speed.</td><td>Each colour is tighter.</td><td>The aim colour is the Hunt again: strong at Rush and little else.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Least sure</h2>
+    <ul class="plain">
+      <li><b>Blood may be a role and not a colour.</b> Its bare trios get the least far. Its killing comes through gear (the price, the drain) and two classes, the Vampire and the Paladin.</li>
+      <li><b>Four reads like warrior, rogue, mage and priest.</b> What has to hold is that a colour is a whole party. Bare, only Iron's front works. That is the wall problem from a new side: each colour would need a front of its own kind.</li>
+      <li><b>Retaliation and Rush may not be ways to win.</b> Each is strong in one colour only. If that stays so, Retaliation is Iron's theme and Rush is Wind's. They hold only if Sorcery's charged field and Blood's feast become real.</li>
+      <li><b>Shock has no settled home.</b> The three reads put it in three colours: it is laid by speed, paid on the foes' actions, and looks like an element.</li>
+      <li><b>The holes are soft.</b> Of 40 pairings of a way to live with a way to kill, 29 changed nothing. A hole is mostly what a colour's payoffs read, and little in the rules forces it.</li>
+      <li><b>The Valkyrie touches all four colours</b> and the Paladin three. They are hybrids by design and the hardest to place.</li>
+    </ul>
+  </section>
+
+  <section class="ask">
+    <h2>What I need from you</h2>
+    <ol>
+      <li><span><b>The root.</b> Four colours, one for each moment a blow can be answered. Is that the game?</span></li>
+      <li><span><b>The fork.</b> This cut, the predator, or five.</span></li>
+      <li><span><b>Retaliation and Rush.</b> Keep them as ways to win and give the other colours a real version of each, or let them be Iron's and Wind's themes.</span></li>
+      <li><span><b>The names.</b> Iron, Wind, Sorcery and Blood are placeholders.</span></li>
+    </ol>
+  </section>
+</div>
