@@ -56,6 +56,43 @@ The reasoning behind this step is in `brief.md`; read that first. This page hold
 - **What becomes of the nine builds.** They're no longer the guide. The agent proposed keeping them as names for places where several classes overlap, to check the web can still produce them. One reason it gave, a rhythm to watch, is weaker now that fights don't have to be interesting. The director hasn't said.
 - **When the versions and upgrades are reworked:** inside this pass, or after the gear.
 
+## The builds question: measured, and proposed
+
+The director asked whether the builds are right (`intent.md`, Builds as ways to live and ways to kill). What follows is the agent's, from the rules alone, on engine 0.30. Nothing here is ruled, and the next steps above wait on it.
+
+**How it was measured.** Three plain bodies at the average class line: a plain sword, no abilities, no passive, no gear, Neutral. The rogue's own fights (the build test's set), each sized so the plain trio loses 40% of its HP. Then one thing switched on at a time, at the size the rules give it and held all fight, so every figure is a ceiling. The probes were scratch scripts and aren't kept.
+
+**What each way of living buys** (the 40% fight then costs):
+
+| Way to live | In the rules | Costs |
+| --- | --- | --- |
+| A second pool | one full Shield | 3% |
+| Mending | Regen always / Lifesteal 20% | 2% / 26% |
+| Their hits miss | Evasion 35 / 60 | 25% / 15% |
+| Their hits are smaller | Weaken / Guard | 18% / 31% |
+| They act less | Slow / Chill held at 6 / one foe always Stunned | 28% / 32% / 29% |
+| They die sooner | Attack +50% / the Mark always on the lowest foe | 26% / 30% |
+
+- Layers multiply: two halve the cost again, three leave about 8%.
+- Taunt alone does nothing (42%). It makes one unit's layer cover the party: Regen on one unit 27%, on one that Taunts 10%.
+- Weaken's and Shock's cuts add to each other: both held, with Shock at its cap, 2%. Set aside by the director for now.
+
+**Which ways to live starve which ways to kill.** Each way to kill fed to every foe at a fixed rate; regular fights and elites only. 100 is the share of the killing it did with no way to live.
+
+| | Shield | Regen | Weaken | Evasion 60 | Slow | Stun | The Mark | Hits +50% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Burn | 100 | 100 | 100 | 100 | 98 | 100 | 95 | 76 |
+| Shock | 100 | 101 | 100 | 99 | 89 | 75 | 90 | 73 |
+| Bleed | 100 | 102 | 100 | 100 | 96 | 100 | 104 | 42 |
+| Chill (its shatters) | 100 | 106 | 101 | 97 | 90 | 91 | 74 | 20 |
+| Thorns on one who Taunts | 102 | 101 | 103 | 54 | 86 | 76 | 88 | 91 |
+
+- Bigger hits take a bigger share by themselves; allowing for that, the last column costs Burn and Shock about a tenth, Bleed nearly half and Chill three quarters.
+- Shield, Regen and Weaken starve nothing, so nothing argues against taking them.
+- Fire and frost don't oppose each other: both want the fight long.
+
+**Proposed to the director, not ruled:** the grid isn't ways to live against ways to kill, which the rules leave almost wholly open. It's the few things a fight has only so much of, each with two ends, and every way to live or kill sits at one end of one: time (end it, or stretch it), the foes' attacks (take them, or slip them), HP (keep it, or spend it), a unit's actions (many small, or few big). Time is the party's; the other three are each unit's. The first two are measured above; the last two are read from the rules' wording.
+
 ## The page
 
 `https://claude.ai/artifact/EBRC2rs3Tw6JW2AWMgxZDf`. **The page is built: use it as it stands, and never make it again.** A session's whole flow goes through the page's store, with the ArtifactData tool on that address:

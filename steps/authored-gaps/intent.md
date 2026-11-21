@@ -60,6 +60,18 @@ The director, stepping back: "I feel like my rambling yesterday derailed this." 
 - **What they can't yet see:** how the words for a class are decided beyond its theme, and how classes come to overlap now that the builds don't make them ("we gave the Bard shock specifically because it wanted to be a member of the shock build"). "Are we just going back to the drawing board for the sake of the drawing board?"
 - **They asked to step back from actions** and untangle it first.
 
+## Builds as ways to live and ways to kill (Nov 21)
+
+A conversation the director opened by asking whether the builds, and their number, are right. Nothing in it is ruled.
+
+- **How they're working:** "taking those builds and trying to put them at the edges of a map and trying to build out things that connect to each other and go in the direction of those builds."
+- **An analysis of the builds can't rest on the effects:** it "build[s] the conceptualization off the items that already exist, aka the ones designed with those builds in mind". They want the game's mechanics analysed.
+- **Surviving:** "doesn't that push us towards thinking that actually surviving needs to be in almost every build, so actually the builds need to be looked at differently?"
+- **Ways to live aren't one to a party:** "You could totally have a shield and a dodge in the same party. And they can also be kind of matched with any way to kill."
+- **How the builds came about:** combining ways to live with ways to kill, then pulling toward "an identity that feels like it has a cool fantasy". "We were looking for the most mechanically deep way to express the system as we have now, and we thought that rhythm would be one of the best ways to do it, in addition to status effect, unfortunately."
+- **What they're asking for:** "a way to categorize these ways to live and ways to kill and their overlap cleanly enough to make a grid that lets players be creative and find unique combinations, but not build anything they want... There's a fine line. The builds prevent us from having pyro chill parties." The same distinction the builds' poles gave, "but with not just how you live, but how you live and how you damage as separate elements".
+- **Set aside by them for now:** whether Weaken's and Shock's cuts should multiply each other.
+
 ## The triage (`triage.md`)
 
 Every effect that has been on gear so far, in three piles:
