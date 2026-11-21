@@ -88,6 +88,20 @@ Offered "for the sake of argument", and "this might be a weaker conceptualizatio
 - **A unit, resources.** Giver: supports team resources, tanky, fixed cost actions, resupplies others. Taker: spends team resources, vulnerable, action cost (HP or MP) multiplier.
 - **A unit, focus.** Singular: maximizing one stat, maximizing one status effect, multipliers, value from direct action. Spread: versatile moveset, both offensive and defensive, value from presence and status effects.
 
+### Colours and ways to win (Nov 21)
+
+Where the director landed after the agent's last model (three facts about a party: `report.md`, The builds question). An idea they asked the agent's view on; not a ruling.
+
+- **On the three facts:** "more correct, more objective, but it makes an abstraction of any sort of emotional or thematic experience the player might have." Things at the same spot don't work together, and a payoff for Shield or Evasion is far better when that one stat is stacked, so it "appl[ies] to too many things equally" to sort anything. They preferred the earlier four lines, which "operated in thematic families that I could understand", though "less correct and more arbitrary".
+- **What excites a player:** "a player isn't going to get excited because a fight ran long. A player is going to get excited because a fight ran long while they were doing something... it's those words that excite the player."
+- **Magic's colours and its deck styles are two things.** A colour holds themes, kinds of effect it's often seen with. A deck wins "through other words, through deck styles like aggro, control, go wide". "These colors are each individually suited more or less to each of the strategies", decks are rarely one colour, and two colours' themes converge on one way to win, so two decks can win the same way by different means.
+- **"I think the builds are our colors. But the problem is that the way we had described the build was mixing the color with the winning strategy."** Each build is a theme and one way to win with it. "So basically our builds are too narrow."
+- **Burn and Chill show it:** "two different poles of this web that are actually just a single win condition tied to a theme, rather than a set of themes that the player can use to build win conditions".
+- **The work, as they see it:** "we design what the win conditions are generally, and we've kind of already done that in a lot of ways. And two, design which theme families work best with those win conditions and where they overlap."
+- **Maybe not a web:** "you can mix any combination of colors. You just have to find what the right win condition is for that combination of colors."
+- **What they aren't sure of:** "I don't know if the game that we've built is complex enough to support that every color matches everything."
+- **The classes:** "bundles that are way more tailored and controlled on our end than something like a Magic card". A class can stand for one or a few thematic families, "so we can curate kind of specific combos using a smaller subset than just all of game design and every mechanic in our game".
+
 ## The triage (`triage.md`)
 
 Every effect that has been on gear so far, in three piles:

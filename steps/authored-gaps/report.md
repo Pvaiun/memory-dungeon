@@ -110,7 +110,12 @@ The director asked whether the builds are right (`intent.md`, Builds as ways to 
 
 Nothing here makes two things work against each other; layers still multiply. What it gives is the order of a party's options changing as its picks move those three, which is a thought at each pick only while slots are short. Read off an effect's own definition, with no keyword: when it pays, who it lands on, and whether it's a fixed amount or a share.
 
-**The director, on it:**
+**The director's turn: colours and ways to win** (`intent.md`, Colours and ways to win). The three facts are right and too abstract to sort by: they're how a party wins, and what a player is excited by is the words. The builds fused the two. The agent's view, given to them and not ruled:
+- **It's two layers, and both earlier frames were one of them.** The families of words are authored, as Magic's colours are. How a party wins is the three facts above, with the director's own narrow and wide. A player never sees the second named; it decides whether a piece of their colours is right for their party.
+- **The game already has the three kinds of thing:** a class carries a family or two (and a party holds one of each class, which limits mixing); a formation is already about who is struck, who hits hard and who waits; a piece has its words and the way it pays.
+- **Three things have to hold:** a family has something it can't do (six ways to live were measured, and a family could own one); a family reaches two ways to win or more, so it's wider than its status; and inside a family, pieces lean to different ways to win, which the plain-body measure can check.
+
+**The director, on the four lines:**
 - **Ruled: fire and frost can be partners.**
 - **Whether this is the grid waits.** They asked for example parties placed on it first.
 - **Say it plainly.** The overlap table's scale lost them, and so did "what does each use up that something else wants". The table's number is how much of its job a way of killing still does beside a way of living. The question about Shield, mending and Weaken is whether to give a player a reason not to always take them; it isn't about making them exclude each other.
