@@ -91,7 +91,24 @@ The director asked whether the builds are right (`intent.md`, Builds as ways to 
 - Shield, Regen and Weaken starve nothing, so nothing argues against taking them.
 - Fire and frost don't oppose each other: both want the fight long.
 
-**Proposed to the director, not ruled:** the grid isn't ways to live against ways to kill, which the rules leave almost wholly open. It's the few things a fight has only so much of, each with two ends, and every way to live or kill sits at one end of one: time (end it, or stretch it), the foes' attacks (take them, or slip them), HP (keep it, or spend it), a unit's actions (many small, or few big). Time is the party's; the other three are each unit's. The first two are measured above; the last two are read from the rules' wording.
+**The same five ways to live, by how long the fight runs** (points of the party's HP saved a fight; the plain trio's hits made half again as big, or a third smaller):
+
+| | Fast: 18 ticks, the fight costs 23% | Slow: 48 ticks, the fight costs 78% |
+| --- | --- | --- |
+| A Shield of 25% of max HP at the start | 16 | 20 |
+| Regen kept up on everyone | 14 | 49 |
+| Evasion 35 | 8 | 24 |
+| Lifesteal 20% | 5 | 6 |
+
+- A Shield and Lifesteal are fixed amounts a fight; Evasion and kept-up Regen grow with its length. So the order of the same options changes with the party.
+- The same damage in swings half the size took 45% longer, by the Defense rule, and Burn carried on swings did 55% of the killing against 26% on plain swings. The heavy end couldn't be sized: in fights turned down this far a heavy swing kills a foe outright.
+
+**The agent's view, not ruled.** It first proposed four lines of opposed ends (time, the foes' attacks taken or slipped, HP kept or spent, a unit's actions). The director's read was right: only time and Thorns against Evasion bite, and Shield against dodge is two flavours of one thing. Their own axes (`intent.md`) brought the part that was missing: who is hit. What the rules hold up is three facts about a party, each a quantity it has one value of, and each changing what a piece is worth:
+- **How long its fights run.** It sorts a fixed amount a fight from a rate or a share (the table above).
+- **Where the foes' hits land,** on one unit or on all three. It sorts what sits on one unit from what sits on everyone (Regen on one unit, 27%; on one that Taunts, 10%).
+- **How big its swings are.** It sorts what pays by the hit from what pays by the blow. Measured in direction only.
+
+Nothing here makes two things work against each other; layers still multiply. What it gives is the order of a party's options changing as its picks move those three, which is a thought at each pick only while slots are short. Read off an effect's own definition, with no keyword: when it pays, who it lands on, and whether it's a fixed amount or a share.
 
 **The director, on it:**
 - **Ruled: fire and frost can be partners.**
