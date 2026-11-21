@@ -73,6 +73,20 @@ A conversation the director opened by asking whether the builds, and their numbe
 - **Set aside by them for now:** whether Weaken's and Shock's cuts should multiply each other.
 - **On the agent's grid of four lines** (`report.md`, The builds question): "an interesting way of looking at it", and not decided: "let's still wait on deciding if it's the grid for now." They asked for a couple of example builds a player would use, placed on it.
 - **Fire and frost:** "Frost and fire can be partners. I think that's fine."
+- **Their read of the agent's four lines:** the ends are "non-optimal combinations", not opposites. Thorns against Evasion "is a very specific antagonism", not seen "between most other things in your model, like shield and evasion, or from max HP and power when low, or crits and attack riders".
+
+### The director's own axes (Nov 21)
+
+Offered "for the sake of argument", and "this might be a weaker conceptualization". Not a decision.
+
+- **More macro:** "it's more about the party makeup than the mechanics a party uses, for example shield and dodge are just seen as two flavours of the same thing here."
+- **Not a list of keywords:** "it's more of a subjective per-effect thing, for example shield are both a way to have a focused tank survive but also a way to have a spread team survive, it depends how it's applied. It seems like many words find themselves across a few axises." Certain axes are meant to work better with others.
+- **Time is left out:** "most fights have the same duration according to simulations."
+- **The party, defensive strategy.** Absorb: taunt, defense, shield, overheal, hidden, evasion, big narrow heals. Mitigate: stun, slow, weaken, guard, shock, silence, chill, small wide heals, blur.
+- **The party, offensive strategy.** Carry: crit, high MP abilities, cooldown reduction, might, burn and shock detonators, shatter, ATK, marked, usually one carry. Attrition: burn, bleed, shock, haste, slow, on-hit effects, thorns, retaliation hits.
+- **A unit, survival.** Take hits: shield, defense, thorns, on being hit effects. Avoid hits: evasion, blur, hidden, on dodge.
+- **A unit, resources.** Giver: supports team resources, tanky, fixed cost actions, resupplies others. Taker: spends team resources, vulnerable, action cost (HP or MP) multiplier.
+- **A unit, focus.** Singular: maximizing one stat, maximizing one status effect, multipliers, value from direct action. Spread: versatile moveset, both offensive and defensive, value from presence and status effects.
 
 ## The triage (`triage.md`)
 
