@@ -17,6 +17,7 @@ Each step's `report.md` leads with the decisions it needs.
 
 ## Built, awaiting the director's playtest
 
+- **The difficulty dials scale a hit before its boosts** (`docs/core-set/combat.md`, Damage): the knob and the enrage are their own step, so Weaken and Shock cut the same share at every knob. The knobs aren't retuned for it: the debuff builds are stronger in acts II and III than the bosses were tuned for.
 - **Creative builds** (`steps/creative-builds/`): unique pieces and builds found, not picked. Nothing in it is balanced.
 - **The foes in a fight's preview** (`docs/core-set/enemies.md`, The enemies).
 - **Junk, and putting on from the bag** (`docs/core-set/rogue-mode.md`, The bag).

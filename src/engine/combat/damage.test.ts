@@ -107,6 +107,14 @@ test("boosts: a +area damage boost doesn't apply to a single-target Fire Bolt; a
   assert.deepEqual(a.hits("Bag").map((e) => [e.src, e.amount]), [["shield_bash", 45], ["basic", 30]]);
 });
 
+test("boosts: the difficulty dial scales the hit before boosts, so a −50% cut halves a hit at +150 power as at none", () => {
+  const weak = status("weak", { label: "debuff", boosts: [{ tag: "physical", pct: -50 }] });
+  const bolt = (x: Spec) => strike({ abilities: ["fire_bolt"], ...x }, {}, { statuses: [weak], abilities: [FIRE_BOLT] }).map((e) => e.amount);
+  assert.deepEqual(bolt({ flat: { power: 150 } }), [250]);
+  assert.deepEqual(bolt({ flat: { power: 150 }, statuses: ["weak"] }), [125], "half of 250, not 250 − 50 points");
+  assert.deepEqual(bolt({ statuses: ["weak"] }), [50]);
+});
+
 test("damage taken: Fire Bolt with +30% boosts against Vulnerable (+20% damage taken) deals amount × 1.3 × 1.2", () => {
   const boost = status("boost", { boosts: [{ tag: "physical", pct: 30 }] }), vuln = status("vuln", { label: "debuff", taken: [{ pct: 20 }] });
   assert.deepEqual(strike({ abilities: ["fire_bolt"], statuses: ["boost"] }, { statuses: ["vuln"] }, { statuses: [boost, vuln], abilities: [FIRE_BOLT] }).map((e) => e.amount), [156]);
