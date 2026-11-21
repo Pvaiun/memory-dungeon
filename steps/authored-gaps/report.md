@@ -93,6 +93,11 @@ The director asked whether the builds are right (`intent.md`, Builds as ways to 
 
 **Proposed to the director, not ruled:** the grid isn't ways to live against ways to kill, which the rules leave almost wholly open. It's the few things a fight has only so much of, each with two ends, and every way to live or kill sits at one end of one: time (end it, or stretch it), the foes' attacks (take them, or slip them), HP (keep it, or spend it), a unit's actions (many small, or few big). Time is the party's; the other three are each unit's. The first two are measured above; the last two are read from the rules' wording.
 
+**The director, on it:**
+- **Ruled: fire and frost can be partners.**
+- **Whether this is the grid waits.** They asked for example parties placed on it first.
+- **Say it plainly.** The overlap table's scale lost them, and so did "what does each use up that something else wants". The table's number is how much of its job a way of killing still does beside a way of living. The question about Shield, mending and Weaken is whether to give a player a reason not to always take them; it isn't about making them exclude each other.
+
 ## The page
 
 `https://claude.ai/artifact/EBRC2rs3Tw6JW2AWMgxZDf`. **The page is built: use it as it stands, and never make it again.** A session's whole flow goes through the page's store, with the ArtifactData tool on that address:

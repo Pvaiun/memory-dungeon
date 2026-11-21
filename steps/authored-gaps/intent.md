@@ -71,6 +71,8 @@ A conversation the director opened by asking whether the builds, and their numbe
 - **How the builds came about:** combining ways to live with ways to kill, then pulling toward "an identity that feels like it has a cool fantasy". "We were looking for the most mechanically deep way to express the system as we have now, and we thought that rhythm would be one of the best ways to do it, in addition to status effect, unfortunately."
 - **What they're asking for:** "a way to categorize these ways to live and ways to kill and their overlap cleanly enough to make a grid that lets players be creative and find unique combinations, but not build anything they want... There's a fine line. The builds prevent us from having pyro chill parties." The same distinction the builds' poles gave, "but with not just how you live, but how you live and how you damage as separate elements".
 - **Set aside by them for now:** whether Weaken's and Shock's cuts should multiply each other.
+- **On the agent's grid of four lines** (`report.md`, The builds question): "an interesting way of looking at it", and not decided: "let's still wait on deciding if it's the grid for now." They asked for a couple of example builds a player would use, placed on it.
+- **Fire and frost:** "Frost and fire can be partners. I think that's fine."
 
 ## The triage (`triage.md`)
 
