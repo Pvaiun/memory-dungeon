@@ -194,8 +194,8 @@ The half of the game that isn't Iron or Sorcery can be cut three ways.
 | Cut | What it is | What it buys | What it costs |
 | --- | --- | --- | --- |
 | This one | Wind is speed, the dodge and aim. Blood is mending, the price, the drain and the well. | The classes fall four to a colour, the armour agrees, and Blood Pact and the Hunt are already these. | Blood can read as the healer's role. |
-| The predator | Aim and kills join the drain: a colour that chooses who dies and feeds on it. Speed and the dodge stand alone. Healing and MP are everyone's. | No colour can be mistaken for a role. Crits and Lifesteal feed each other by the rules: the biggest hit drinks most. | The Cleric has no colour, eight classes touch Iron, and the speed colour may be everyone's. |
-| Five | As this one, with aim (Hidden, the Mark, crits, kills) split from speed. | Each colour is tighter. | The aim colour is the Hunt again: strong at Rush and little else. |
+| The predator | Iron and Sorcery stay. Blood goes: healing, Revive and MP belong to no colour, as Attack doesn't. Its drinking and paying in HP join Wind's aim (Hidden, the Mark, crits, kills) in one colour: pick one foe, kill it, feed on it. The Assassin and the Vampire are that colour. What's left of Wind (speed and the dodge) is a colour of its own. | No colour is just the healer. Crits and Lifesteal feed each other by the rules: the biggest hit drinks the most. | The Cleric has no colour. With no mending colour, Iron is the only way to last, and eight classes lean on it. Speed may be something every party wants rather than a choice. |
+| Five | This cut, with Wind split in two. Speed: fast swings, extra strikes, Haste, the dodge, Bleed (the Monk, the Stormcaller). Aim: Hidden, the Mark, crits, kills, Seek (the Assassin, the Ranger). | It removes a pull inside Wind: big crits end fights before a Bleed pays (hits half again as big cut Bleed's killing to under half). | Ten pairs to support instead of six, from the same 16 classes. The aim colour is the Hunt build again: strong at Rush, weak at the rest. Both halves dodge, so they may still be one colour. |
 
 The agent's pick is the first.
 
@@ -205,7 +205,7 @@ The agent's pick is the first.
 - **Four reads like warrior, rogue, mage and priest.** What has to hold is that a colour is a whole party. Bare, only Iron's front works: the wall problem, seen from a new side. Each colour would need a front of its own kind (one that slips, one that stops the blow, one that mends).
 - **Retaliation and Rush may not be ways to win.** Each is strong in one colour only. If that stays so, Retaliation is Iron's theme and Rush is Wind's. They hold as ways to win only if Sorcery's charged field and Blood's feast become real.
 - **Shock has no settled home.** The three reads put it in three colours: it's laid by speed, paid on the foes' actions, and looks like an element.
-- **The holes are soft.** Of 40 pairings of a way to live with a way to kill, 29 changed nothing, so a hole is mostly what a colour's payoffs read, and little in the rules forces it.
+- **The holes are soft.** An earlier measure (`four-lines.md`) put each of eight things (Shield, Regen, Weaken, Evasion, Slow, Stun, the Mark, bigger hits) beside each of five ways to kill (Burn, Shock, Bleed, Chill's shatters, Thorns). In 29 of the 40 pairs the way to kill still did within a tenth of its usual share of the killing. So little in the rules makes one colour's pieces work against another's, and a hole is mostly what a colour's payoffs read. The 11 that clash are the pulls in the pairs table: the dodge against Thorns, foes held still against Shock and Thorns, fights ended fast against the piles.
 - **The doors are a choice.** Sunder, Stun, Might, Haste, Bleed and MP each fit their pair by the kits and the rules, and other words could be argued.
 - **Inside Sorcery, Stun and Chill work against Shock's damage,** since a foe that acts less pays less. Not measured.
 
