@@ -106,6 +106,11 @@ thead th { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.08em;
 .n { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); font-variant-numeric: tabular-nums; display: block; margin-top: 0.35rem; }
 .num { font-variant-numeric: tabular-nums; font-family: var(--mono); white-space: nowrap; }
 
+.signs { min-width: 46rem; }
+.signs th[scope="row"] { font-weight: 700; white-space: nowrap; }
+.signs td.for { white-space: nowrap; font-weight: 600; }
+.signs td.way { color: var(--muted); }
+.signs tr.grp td { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); background: var(--soft); padding-block: 0.45rem; }
 .fork { min-width: 44rem; }
 .fork th[scope="row"] { font-weight: 700; white-space: nowrap; }
 .fork td { border-left: 1px solid var(--line); }
@@ -258,6 +263,45 @@ thead th { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.08em;
   </section>
 
   <section>
+    <h2>Sixteen signposts</h2>
+    <p class="prose">A class is what shows a player a colour's plan, or a pair's, the way a signpost uncommon does in a Magic draft. This is read from each class's base kit, its passive and three abilities, with no class changed. Each of the six pairs has exactly one class whose base kit shows both colours.</p>
+    <div class="scroll">
+      <table class="signs">
+        <thead><tr><th>Signpost for</th><th>Class</th><th>What its base kit tells a player</th><th>Points at</th></tr></thead>
+        <tbody>
+          <tr class="grp"><td colspan="4">One for each pair</td></tr>
+          <tr><td class="for"><span class="cw">Wind</span> and <span class="ci">Iron</span></td><th scope="row">Monk</th><td>Every blow and every extra strike adds Sunder. The flurry opens the foe for a heavy blow.</td><td class="way">Carry, Attrition</td></tr>
+          <tr><td class="for"><span class="cs">Sorcery</span> and <span class="ci">Iron</span></td><th scope="row">Frostweaver</th><td>It Shields the whole party at the start, then lays Chill until it shatters. A shattered foe is Sundered.</td><td class="way">Attrition</td></tr>
+          <tr><td class="for"><span class="ci">Iron</span> and <span class="cl">Blood</span></td><th scope="row">Bramble knight</th><td>It Taunts, is struck, and its Thorns answer. It mends the lowest ally.</td><td class="way">Retaliation</td></tr>
+          <tr><td class="for"><span class="cs">Sorcery</span> and <span class="cw">Wind</span></td><th scope="row">Stormcaller</th><td>Fast swings fork to a second foe and leave Shock on both. Then the whole party's swings do.</td><td class="way">Attrition</td></tr>
+          <tr><td class="for"><span class="cl">Blood</span> and <span class="cw">Wind</span></td><th scope="row">Vampire</th><td>It pays in HP, drinks it back with every hit, and drinks double when it's low. Its drain opens a Bleed.</td><td class="way">Carry</td></tr>
+          <tr><td class="for"><span class="cl">Blood</span> and <span class="cs">Sorcery</span></td><th scope="row">Bard</th><td>Its swings hand out heals and MP, and it makes an ally's spell land twice.</td><td class="way">Carry</td></tr>
+          <tr class="grp"><td colspan="4">One colour</td></tr>
+          <tr><td class="for"><span class="ci">Iron</span></td><th scope="row">Knight</th><td>It starts behind a Shield, Guards a friend and calls the foes onto itself.</td><td class="way">Retaliation, or the wall for any plan</td></tr>
+          <tr><td class="for"><span class="ci">Iron</span></td><th scope="row">Hoplite</th><td>Half as many swings, each twice as hard, on foes it has Sundered.</td><td class="way">Carry</td></tr>
+          <tr><td class="for"><span class="ci">Iron</span></td><th scope="row">Geomancer</th><td>While its Shield holds, its rocks crit twice as often.</td><td class="way">Carry</td></tr>
+          <tr><td class="for"><span class="cw">Wind</span></td><th scope="row">Ranger</th><td>Blur at the start and on every crit. Three arrows, each adding to a different pile.</td><td class="way">Whatever the party is piling</td></tr>
+          <tr><td class="for"><span class="cw">Wind</span></td><th scope="row">Assassin</th><td>It goes Hidden, then stabs the weakest foe past a Taunt.</td><td class="way">Rush</td></tr>
+          <tr><td class="for"><span class="cs">Sorcery</span></td><th scope="row">Pyromancer</th><td>Every cast feeds one fire, and a great cast burns it down.</td><td class="way">Attrition, Carry</td></tr>
+          <tr><td class="for"><span class="cs">Sorcery</span></td><th scope="row">Hexer</th><td>Its curse hits harder for each different thing laid on a foe.</td><td class="way">Attrition</td></tr>
+          <tr><td class="for"><span class="cl">Blood</span></td><th scope="row">Cleric</th><td>It heals, lifts debuffs and raises the fallen, quickest when it's nearly dead.</td><td class="way">Keeps any plan standing</td></tr>
+          <tr class="grp"><td colspan="4">More than two</td></tr>
+          <tr><td class="for"><span class="cw">Wind</span> and <span class="cs">Sorcery</span>, with <span class="ci">Iron</span> and <span class="cl">Blood</span></td><th scope="row">Valkyrie</th><td>Three hits lay Shock and a blow from above reads it. Every hit Shields her, and she raises the fallen.</td><td class="way">Attrition, Rush</td></tr>
+          <tr><td class="for"><span class="cl">Blood</span>, <span class="cw">Wind</span> and <span class="cs">Sorcery</span></td><th scope="row">Paladin</th><td>It Marks a foe so everyone strikes at once, heals, and Burns. Its hits deal more to any foe with something on it.</td><td class="way">Rush</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul class="plain">
+      <li><b>The starters are three colours, and each points at the others.</b> The Ranger's three arrows are three doors: Bleed to Blood, Chill to Sorcery, Sunder to Iron. Sorcery is the first colour a run finds.</li>
+      <li><b>The passive carries the signpost in 14 of 16.</b> It is the one thing a new recruit always shows, whichever abilities it knows. The two that don't: the Paladin's reads anything laid on a foe, and the Valkyrie's is Iron's word on a Wind and Sorcery class.</li>
+      <li><b>The Vampire and the Bard are the softest of the six.</b> The Vampire's only Wind word is Bleed, and the Bard hands out three doors at once (MP, Haste, Might).</li>
+      <li><b>Rush has no pair's signpost,</b> only the Assassin and the Paladin's Mark. Retaliation has one.</li>
+      <li><b>The Valkyrie holds all four colours, so she has no hole.</b> She is one of the two classes that lead whole runs.</li>
+      <li><b>A class's three identities are its smaller signposts,</b> each leaning to another colour. By the agent's count of them, Sorcery with Blood has the fewest (three classes), and it is also the pair the loot is thinnest on.</li>
+    </ul>
+  </section>
+
+  <section>
     <h2>Every colour, every way to win</h2>
     <p class="prose">Each colour does each way to win in its own words. The nine builds are marked where they land. The number is how many of the 108 kept effects sit in that cell today. Strong, some and weak are the agent's read.</p>
     <div class="scroll">
@@ -335,7 +379,7 @@ thead th { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.08em;
       <li><b>Retaliation and Rush may not be ways to win.</b> Each is strong in one colour only. If that stays so, Retaliation is Iron's theme and Rush is Wind's. They hold only if Sorcery's charged field and Blood's feast become real.</li>
       <li><b>Shock has no settled home.</b> The three reads put it in three colours: it is laid by speed, paid on the foes' actions, and looks like an element.</li>
       <li><b>The holes are soft.</b> Of 40 pairings of a way to live with a way to kill, 29 changed nothing. A hole is mostly what a colour's payoffs read, and little in the rules forces it.</li>
-      <li><b>The Valkyrie touches all four colours</b> and the Paladin three. They are hybrids by design and the hardest to place.</li>
+      <li><b>Two classes signpost three or four colours:</b> the Paladin and the Valkyrie. A signpost should have its colours' holes, and the Valkyrie has none.</li>
     </ul>
   </section>
 

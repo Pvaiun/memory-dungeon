@@ -15,6 +15,7 @@ The agent's proposal, for the director to argue with. Only the first section is 
 
 - **Any two colours can be combined.** Only some pairs get designed support.
 - **A colour is wide.** Seven colours of one status each were "too narrow": no gain on the nine builds.
+- **The classes are the signposts.** A class shows a player what one colour does, or what two do together, as the signpost uncommons of a Magic draft do.
 
 ## The idea
 
@@ -123,19 +124,48 @@ One home, and a second where it's a door.
 
 - **Nobody's:** Swings, Casts and Attack, which every unit has; what's the player's (the first-slotted ability, what's worn, a passive); and what links two allies with no word of its own (a stat lent, a swing copied, a status shared, an action timed to an ally's).
 
-## The classes
+## The classes as signposts
 
-Nothing is redesigned. Each class has a main colour from its trunk, and its identities lean to others.
+A class is what tells a player a colour's plan, or a pair's. Read from each class's base kit (its passive and three abilities), with none redesigned. A class's main colour is the first named.
 
-| Colour | Main | Also touched by |
-| --- | --- | --- |
-| Iron | Knight, Bramble knight, Hoplite, Geomancer | Frostweaver (Shields, Guard), Paladin (Taunt, Plate), Monk (Sunder, Stun) |
-| Wind | Ranger, Monk, Assassin, Valkyrie | Stormcaller (fast swings), Vampire (quick drains, Bleed), Bard (Haste) |
-| Sorcery | Pyromancer, Frostweaver, Stormcaller, Hexer | Ranger (Chill arrows), Valkyrie (Shock), Paladin (Burn), Geomancer (long casts, Stun) |
-| Blood | Cleric, Paladin, Bard, Vampire | Bramble knight (Regen), Knight (Clarity), Assassin (crits that heal), Valkyrie (raises) |
+**One for each pair.** Each of the six pairs has exactly one class whose base kit shows both colours.
 
-- **The starters are three colours:** Knight, Cleric, Ranger. Sorcery is the first colour a run finds.
-- **The Valkyrie touches all four,** and the Paladin three. Hybrids by design, and the hardest to place.
+| Pair | Signpost | What its base kit tells a player | Points at |
+| --- | --- | --- | --- |
+| Wind and Iron | Monk | every blow and every extra strike adds Sunder: the flurry opens the foe for a heavy blow | Carry, Attrition |
+| Sorcery and Iron | Frostweaver | it Shields the whole party at the start, then lays Chill until it shatters, and a shattered foe is Sundered | Attrition |
+| Iron and Blood | Bramble knight | it Taunts, is struck, and its Thorns answer; it mends the lowest ally | Retaliation |
+| Sorcery and Wind | Stormcaller | fast swings fork to a second foe and leave Shock on both; then the whole party's swings do | Attrition |
+| Blood and Wind | Vampire | it pays in HP, drinks it back with every hit, and drinks double when it's low; its drain opens a Bleed | Carry |
+| Blood and Sorcery | Bard | its swings hand out heals and MP, and it makes an ally's spell land twice | Carry |
+
+**One colour.**
+
+| Colour | Signpost | What its base kit tells a player | Points at |
+| --- | --- | --- | --- |
+| Iron | Knight | it starts behind a Shield, Guards a friend and calls the foes onto itself | Retaliation, or the wall for any plan |
+| Iron | Hoplite | half as many swings, each twice as hard, on foes it has Sundered | Carry |
+| Iron | Geomancer | while its Shield holds, its rocks crit twice as often | Carry |
+| Wind | Ranger | Blur at the start and on every crit; three arrows, each adding to a different pile | whatever the party is piling |
+| Wind | Assassin | it goes Hidden, then stabs the weakest foe past a Taunt | Rush |
+| Sorcery | Pyromancer | every cast feeds one fire, and a great cast burns it down | Attrition, Carry |
+| Sorcery | Hexer | its curse hits harder for each different thing laid on a foe | Attrition |
+| Blood | Cleric | it heals, lifts debuffs and raises the fallen, quickest when it's nearly dead | keeps any plan standing |
+
+**More than two.**
+
+| Colours | Signpost | What its base kit tells a player | Points at |
+| --- | --- | --- | --- |
+| Wind and Sorcery, with Iron and Blood | Valkyrie | three hits lay Shock and a blow from above reads it; every hit Shields her, and she raises the fallen | Attrition, Rush |
+| Blood, Wind and Sorcery | Paladin | it Marks a foe so everyone strikes at once, heals, and Burns; its hits deal more to any foe with something on it | Rush |
+
+- **The starters are three colours,** and each points at the others. The Ranger's three arrows are three doors: Bleed to Blood, Chill to Sorcery, Sunder to Iron. Sorcery is the first colour a run finds.
+- **The passive carries the signpost in 14 of 16.** It's the one thing a new recruit always shows, whichever abilities it knows. The two that don't: the Paladin's reads anything laid on a foe, and the Valkyrie's is Iron's word (a Shield from each hit) on a Wind and Sorcery class.
+- **The Vampire and the Bard are the softest of the six.** The Vampire's only Wind word is Bleed, and the Bard hands out three doors at once (MP, Haste, Might).
+- **Rush has no pair's signpost,** only the Assassin and the Paladin's Mark. Retaliation has one.
+- **The Valkyrie holds all four colours, so she has no hole,** and she's one of the two classes that lead whole runs (`docs/balance.md`, To watch).
+- **A class's three identities are its smaller signposts:** each leans to another colour. Counted from the builds page's class table, as the agent's read, the classes with an identity on each pair: Wind and Sorcery 7, Iron and Sorcery 6, Iron and Blood 6, Iron and Wind 4, Wind and Blood 3, Sorcery and Blood 3. Sorcery with Blood is the thinnest pair in the identities and in the loot.
+- **What a signpost has to do,** for any later work on a class: its base kit names its colour's themes; a pair's signpost holds the door word; and it has its colours' holes.
 
 ## What was checked
 
