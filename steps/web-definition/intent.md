@@ -1,0 +1,12 @@
+# Defining the web: the director's intent
+
+What the director wants, from their message of Nov 22. Where it's wrong, they correct it.
+
+- **Builds stop being the web's scaffold.** Built as spokes on a wheel, they're what a player picks: they take the pieces that name their build's words and end up on one of its roads every run, with none of the journey of choices that discovers what the party will be. The builds are what they really are: decks, examples of places a party can end up, "among many, many others."
+- **The poles become our version of Magic's colour wheel.** A colour is a thematically related set of mechanics with a style: some mechanics exclusive to it or far more frequent in it (and so absent from the others, which is what gives it its identity), others in every colour but expressed its own way. Its theme is clear enough that a player understands the play space by looking at the cards.
+- **Win conditions are separate from colours.** A colour isn't a deck or a win condition; each colour is tuned to be strong at a few of them. A party is a chosen win condition, colours believed to suit it, and the pieces that work together across those colours in its service.
+- **Creativity stands on two pillars:** understanding, because the colours are easy to read, and combinations many enough that the outcome can't be predicted. A player builds toward a style or an objective, not a specific deck, and what they end with is their own.
+- **The classes are the signposts,** like Magic's signpost uncommons: each class a pillar for a colour or a combination of colours, and a party, by definition, the mix of three signposts. Everything around them is the colours' cards: the formation, the weapon and gear kinds, the gear and its effects, the ability versions. A version is a small, signposted choice that turns a class toward another kind of party; a formation multiplies the colour choice.
+- **Swapping between viable parties** during a run should be easy enough to try things out, and the run should end somewhere that may look like one of the builds as written, ideally always different, and often somewhere nobody designed.
+- **Not everything at once.** Nothing is sacred and nothing is frozen. The director's gut is to start with the colours, each with a strong theme, as the scaffold the web and the loot go into; the classes come after, or during.
+- **Open, by their word:** whether a web is still the right shape.
