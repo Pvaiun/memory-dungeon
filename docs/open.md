@@ -4,7 +4,7 @@ What's built and waiting on the director, and the questions nobody has settled. 
 
 ## The current step
 
-- **The wheel** (`steps/the-wheel/`, `brief.md` first). The five colours that sort the web, on the frame in `docs/colours.md`, found in the gameplay. The work runs in two workspaces cut off from the classes and builds, side by side: plays the director marks (`the-wheel-workspace`), and problems the director answers (`the-wheel-workspace-b`). It comes back here when each has a wheel.
+- **The wheel** (`steps/the-wheel/`, `brief.md` first). The five colours that sort the web, on the frame in `docs/colours.md`, found in the gameplay. The work runs in a workspace cut off from the classes and builds, `the-wheel-workspace-c`: choosable cards shown three at a time, and the distinctions the director draws between them. It comes back here when it has a wheel.
 - **Authored gaps** (`steps/authored-gaps/`, `brief.md` first). A new way to make loot: the agent holds the web and the director authors each gap. Four batches of effects are placed. It waits on the colours' pie, and resumes making loot into its holes. Nothing in the game has changed.
 
 ## Built, awaiting the director's read

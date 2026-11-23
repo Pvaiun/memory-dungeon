@@ -4,22 +4,24 @@ A design step, with the director: the five colours that sort the web. Nothing is
 
 ## Where the work runs
 
-**Not here.** The colours have to be found without the classes or the builds shaping them, and an agent in this repository can't be kept from either: the primer alone carries both. So the work runs in two workspaces, side by side, each a branch with no history that holds only its own instructions, its brief, the director's intent, and the sources it may read (the colours' frame, the vocabulary, the combat rules, the engine's building blocks, the weapon and formation rules, the challenges, and a list of threads for checking gaps), with every class and build name taken out of them.
+**Not here.** The colours have to be found without the classes or the builds shaping them, and an agent in this repository can't be kept from either: the primer alone carries both. So the work runs in a workspace: a branch with no history that holds only its own instructions, its brief, the director's intent, and the sources it may read (the colours' frame, the vocabulary, the combat rules, the engine's building blocks, the weapon and formation rules, the challenges, and a list of threads for checking gaps), with every class and build name taken out of them.
 
-- **Version A, `the-wheel-workspace`: plays, marked.** Five agents list every way the rules allow to do each way to win; the director marks each alive, flat or never and rambles; three agents draw wheels from the marks apart; the director picks, then the question, then the names.
-- **Version B, `the-wheel-workspace-b`: problems, answered.** Agents pose batches of tight problems about the game; the director solves them, which is how they design best; the answers, with the director's earlier answers from authored gaps, are sorted into wheels by attitude, by the director and three agents apart; an audit, the pick, the question, the names. The director holds this to be the right way of working.
+**Version C, `the-wheel-workspace-c`, is the one being run: triads.** Agents make cards, each something a player could choose, spanning everything the rules allow. The director is shown three at a time and says which two the same kind of player would reach for, and in a few words why. The distinctions that keep coming back, in the director's words, are sorted into wheels, by the director and by three agents apart; then an audit, the pick, the question and the names.
 
-A session there starts on its workspace's branch, and what it makes is merged back into that branch, not into main. Each ends with a `wheel.md`.
+**Set aside,** their workspaces left as they stand:
+- **Version A, `the-wheel-workspace`:** a complete list of moments in a fight, to mark. Its list couldn't be judged: a fight is where the player has no say, and the fun is in the choices. Its list is still a complete account of what the rules allow, and can join C's sources as `sources/plays.md`.
+- **Version B, `the-wheel-workspace-b`:** narrow problems, answered at length. It asked for volume against a blank page, with no way to see how the answers would add up.
 
-## Here, when the workspaces are done
+A session there starts on its workspace's branch, and what it makes is merged back into that branch, not into main. It ends with a `wheel.md`.
 
-- **Compare the two wheels** for the director: the colours they share and where they part.
+## Here, when the workspace is done
+
 - **Audit the chosen wheel against the classes and the builds,** which can be seen here without harm now: a colour that's a family of today's classes, or one of the nine builds, in disguise.
 - **Fold it in:** the five colours' cards and the question go into `docs/colours.md`, with any ruling the director made on the way into its rulings.
 - **The step closes:** this folder is deleted, the workspace branches are left as they stand, and the pie opens.
 
 ## What to read
 
-- **Every session:** `docs/primer.md`; this brief; `intent.md`; `docs/colours.md`; each workspace's `wheel.md` and `report.md` (`git show origin/the-wheel-workspace:wheel.md`, and the same on `the-wheel-workspace-b`).
+- **Every session:** `docs/primer.md`; this brief; `intent.md`; `docs/colours.md`; the workspace's `wheel.md` and `report.md` (`git show origin/the-wheel-workspace-c:wheel.md`).
 - **For the audit:** the class table in `docs/core-set/classes.md`, The classes, and the nine builds in `docs/gear-design/builds.md`, The rhythm space.
 - **Leave alone:** everything else. The work isn't here.
