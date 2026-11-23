@@ -1,0 +1,2024 @@
+[
+  {
+    "id": "B-001",
+    "way": "burst",
+    "also": [],
+    "question": "size",
+    "play": "Basic attacks with a slow, heavy swing land one big blow per interval. Defense takes a smaller share off a big hit than off a small one, so against armoured foes more of each tick's damage gets through than a fast, light kind's.",
+    "rests_on": [
+      "Speed",
+      "Swing",
+      "Defense"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-002",
+    "way": "burst",
+    "also": [],
+    "question": "size",
+    "play": "A wearer of an Attack-heavy kind who stacks Attack turns its basic attacks into big blows. The swing grows with the Attack it carries, so the Attack that feeds its abilities makes every plain swing a spike too.",
+    "rests_on": [
+      "Scaling",
+      "Attack"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-003",
+    "way": "burst",
+    "also": [],
+    "question": "price",
+    "play": "A unit with little Attack still adds heavy blows through a base-heavy, heavy kind. Its swing doesn't need Attack behind it, so a unit built for anything else adds real damage to the party's burst without spending stats on it.",
+    "rests_on": [
+      "Scaling",
+      "Swing"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-004",
+    "way": "burst",
+    "also": [],
+    "question": "price",
+    "play": "A unit's swing or big hit scaled from max HP or Defense turns a defensive stat into damage. A unit stacked to survive lands large blows without trading any of that away.",
+    "rests_on": [
+      "Swing",
+      "Scaling",
+      "scale: stat",
+      "rescale",
+      "max_hp",
+      "Defense"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-005",
+    "way": "burst",
+    "also": [],
+    "question": "price",
+    "play": "A heavier piece of its kind swings harder for one stat step fewer. The wearer gives up stats it would carry for bigger basic-attack blows from the first swing.",
+    "rests_on": [
+      "Swing",
+      "Budget",
+      "SWING_TRADE"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-006",
+    "way": "burst",
+    "also": [],
+    "question": "price",
+    "play": "A two-handed heavy kind gives big blows and a rich budget at the cost of the offhand. The party trades a whole piece for basic attacks that land large from the first swing.",
+    "rests_on": [
+      "Hands",
+      "Swing",
+      "Budget"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-007",
+    "way": "burst",
+    "also": [],
+    "question": "width",
+    "play": "Basic attacks that hit every foe make each swing an Area hit. Small blows land on the whole pack all fight long, so a swarm of weak foes falls together instead of one at a time.",
+    "rests_on": [
+      "area",
+      "aim"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-008",
+    "way": "burst",
+    "also": [],
+    "question": "size",
+    "play": "Crit chance and Crit damage on a unit that already hits big make its hits spike. Crits land before Defense, so a big crit gets through nearly whole and takes a large share of a foe's HP in one blow.",
+    "rests_on": [
+      "Crit chance",
+      "Crit damage",
+      "Crits",
+      "Defense"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-009",
+    "way": "burst",
+    "also": [],
+    "question": "size",
+    "play": "High Crit chance on a fast kind turns a steady stream into frequent small spikes. A crit lifts a hit before Defense, and Defense takes the biggest share off small hits, so crits help small blows most.",
+    "rests_on": [
+      "Crit chance",
+      "Speed",
+      "Defense"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-010",
+    "way": "burst",
+    "also": [
+      "debuff"
+    ],
+    "question": "timing",
+    "play": "A quick hit lays Brittle, and a slow heavy hit that waits for it is a sure crit. A hit's own statuses land after it, so the poke sets up and the big blow that follows crits.",
+    "rests_on": [
+      "Brittle",
+      "A hit's own statuses land after the hit",
+      "mods (wait)",
+      "Crit damage"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-011",
+    "way": "burst",
+    "also": [
+      "debuff"
+    ],
+    "question": "size",
+    "play": "A multi-hit ability whose hits each lay Brittle makes every hit after its first a crit. Each hit's Brittle lands after it, ready for the next hit of the same action.",
+    "rests_on": [
+      "Brittle",
+      "mods (apply)",
+      "damage (hits)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-012",
+    "way": "burst",
+    "also": [
+      "debuff"
+    ],
+    "question": "width",
+    "play": "Brittle laid on every foe, then an Area, makes the Area crit on the whole pack. One crit each, on every foe, in one action.",
+    "rests_on": [
+      "Brittle",
+      "Area"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-013",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "Hits that always crit against a foe under an HP line finish wounded foes fast. The crit lands before Defense, so the last stretch of each foe's HP goes in a blow or two.",
+    "rests_on": [
+      "crits (when)",
+      "hpBelow"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-014",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "Hits that crit against a foe holding a given status, such as Stun or Chill, turn each window the party opens into crits. Whatever lays the status sets the moment the crits come.",
+    "rests_on": [
+      "crits (when)",
+      "has"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-015",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "A short status from the unit's own piece sets its Crit chance high for a while, so every hit in that stretch crits. The unit's damage gathers into one window instead of spreading by chance.",
+    "rests_on": [
+      "set",
+      "Crit chance"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-016",
+    "way": "burst",
+    "also": [],
+    "question": "size",
+    "play": "A crit that makes the ability ready again, or recasts it, chains big hits off lucky ones. Each crit buys another blow at once, so high Crit chance turns into runs of burst.",
+    "rests_on": [
+      "hit_lands (crit)",
+      "recast",
+      "cooldown (ready)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-017",
+    "way": "burst",
+    "also": [
+      "debuff"
+    ],
+    "question": "timing",
+    "play": "A debuff that makes every hit on a foe crit for a short while gives the whole party a crit window on it. Every ally's hits in that stretch crit, where Brittle gives only one.",
+    "rests_on": [
+      "critsTaken",
+      "Brittle"
+    ],
+    "needs_block": "A status: a debuff with critsTaken (always) and a duration, so every hit on its holder crits while it lasts.",
+    "needs_ruling": null
+  },
+  {
+    "id": "B-018",
+    "way": "burst",
+    "also": [],
+    "question": "size",
+    "play": "Double strike gives each basic attack a chance to hit twice. More hits land per tick, each a full hit that can crit and carry riders, so damage and everything that counts hits arrive sooner.",
+    "rests_on": [
+      "Double strike",
+      "extra"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-019",
+    "way": "burst",
+    "also": [],
+    "question": "size",
+    "play": "Attack speed brings a unit's basic attacks sooner, so damage that rides on its swings lands faster. A unit whose burst is its riders, extra strikes or Double strike gets more of it into each stretch of the fight.",
+    "rests_on": [
+      "Attack speed",
+      "Double strike",
+      "riders"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-020",
+    "way": "burst",
+    "also": [],
+    "question": "width",
+    "play": "An extra strike after every basic attack, aimed by its own rule at another foe, makes each swing land on two targets. The second hit can go to the lowest-HP foe, finishing it while the swing works on the first.",
+    "rests_on": [
+      "strike (status field)",
+      "extra",
+      "lowest"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-021",
+    "way": "burst",
+    "also": [
+      "build"
+    ],
+    "question": "size",
+    "play": "Extra strikes heard as basic attacks set off everything the unit's basic attacks set off. Each Double strike or extra strike applies the swing's riders and reactions again, so on-swing effects come twice as often.",
+    "rests_on": [
+      "echo",
+      "Double strike",
+      "riders"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-022",
+    "way": "burst",
+    "also": [],
+    "question": "size",
+    "play": "An ability with several hits lands them in one action, each a separate hit that can crit, applies its own effects and counts toward anything that counts hits. The burst arrives as a flurry, which passes under a block and breaks what counts hits.",
+    "rests_on": [
+      "damage (hits)",
+      "Hits"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-023",
+    "way": "burst",
+    "also": [],
+    "question": "size",
+    "play": "An amount added to every hit before boosts, crit and Defense lifts many small hits. Defense takes a big share off small hits, so adding to each one makes a fast stream land far harder.",
+    "rests_on": [
+      "adds",
+      "Defense"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-024",
+    "way": "burst",
+    "also": [],
+    "question": "size",
+    "play": "An amount added to each hit from the target's own max HP makes every hit take a share of the foe's health. Against a boss or a large foe the same blows deal far more than against a small one.",
+    "rests_on": [
+      "adds",
+      "max_hp"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-025",
+    "way": "burst",
+    "also": [
+      "build"
+    ],
+    "question": "size",
+    "play": "A counter that fills with each hit and at its cap sets off a big strike turns a stream of small hits into periodic spikes. The faster the hits come, the sooner each spike lands.",
+    "rests_on": [
+      "status_capped",
+      "strike",
+      "oncePerEvent",
+      "drop"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-026",
+    "way": "burst",
+    "also": [],
+    "question": "width",
+    "play": "When an ally lands a hit, this unit strikes the same foe out of turn. The party's blows gather on one target in the same moment instead of spreading.",
+    "rests_on": [
+      "hit_lands (whose: ally)",
+      "strike",
+      "other"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-027",
+    "way": "burst",
+    "also": [],
+    "question": "size",
+    "play": "Bleed laid on a foe is cashed fast by a flurry of hits. Each hit it takes deals untyped damage per stack, so a fast kind, Double strike or a multi-hit ability whose early hits lay it turns the stacks into damage in a few ticks.",
+    "rests_on": [
+      "Bleed",
+      "Double strike",
+      "damage (hits)",
+      "Speed",
+      "A hit's own statuses land after the hit"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-028",
+    "way": "burst",
+    "also": [],
+    "question": "width",
+    "play": "The whole party cashes one foe's Bleed by focusing it. With the foe Marked, every party basic attack lands on it, and each hit from any ally deals the Bleed damage, so the stacks pay out at the party's combined hit rate.",
+    "rests_on": [
+      "Bleed",
+      "Marked"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-029",
+    "way": "burst",
+    "also": [],
+    "question": "width",
+    "play": "Bleed laid on every foe, then an Area with several hits, cashes every foe's stacks in one action. Each hit on each foe deals its Bleed damage, so the pack loses HP together.",
+    "rests_on": [
+      "Bleed",
+      "Area",
+      "damage (hits)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-030",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "A multi-hit ability that waits until its target holds enough Bleed cashes the stacks at their peak. The flurry is held back while the stacks are laid, then lands every hit on a full total.",
+    "rests_on": [
+      "Bleed",
+      "stacks",
+      "mods (wait)",
+      "damage (hits)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-031",
+    "way": "burst",
+    "also": [],
+    "question": "size",
+    "play": "Bleed carries many small hits past high Defense. Defense shrinks each small hit, but the Bleed damage each one sets off is untyped and lands whole, so weak hits still deal big damage.",
+    "rests_on": [
+      "Bleed",
+      "untyped",
+      "Defense"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-032",
+    "way": "burst",
+    "also": [],
+    "question": "width",
+    "play": "When a foe holding afflictions falls, a piece moves them to another foe at the stacks it held. The next foe starts burning or bleeding at full, so the damage lands from the first tick instead of building again.",
+    "rests_on": [
+      "ko",
+      "apply (passed)",
+      "affliction"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-033",
+    "way": "burst",
+    "also": [
+      "build"
+    ],
+    "question": "size",
+    "play": "Burn laid in big applications makes its pulses large from the start. Boosts on Burn's tag and changes that add stacks raise what each application adds, so the foe takes near-ceiling damage without the slow climb of upkeep.",
+    "rests_on": [
+      "Burn",
+      "boosts (status tag)",
+      "mods (stacks)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-034",
+    "way": "burst",
+    "also": [
+      "build"
+    ],
+    "question": "timing",
+    "play": "Burn applied quickly and often reaches its ceiling early. Haste and quick cooldowns shorten the time between applications, so the pulses climb to their upkeep level in the first part of the fight.",
+    "rests_on": [
+      "Burn",
+      "Haste",
+      "Cooldown"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-035",
+    "way": "burst",
+    "also": [
+      "build"
+    ],
+    "question": "width",
+    "play": "Burn applied to every foe by an Area sets the whole pack burning at once. Each foe pulses its own stacks, so the pack loses HP together on every pulse.",
+    "rests_on": [
+      "Burn",
+      "Area"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-036",
+    "way": "burst",
+    "also": [
+      "build"
+    ],
+    "question": "width",
+    "play": "An affliction laid on one foe is copied to every other foe as it lands. A single-target application becomes a pack-wide one, so wide damage comes without an Area.",
+    "rests_on": [
+      "share",
+      "status_gained",
+      "affliction"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-037",
+    "way": "burst",
+    "also": [
+      "debuff"
+    ],
+    "question": "width",
+    "play": "A reaction that gives every foe what the unit's basic attacks carry lays one swing's riders across the whole pack at once. Brittle, Bleed or Sunder from a single-target swing land everywhere for the party's wide hits to use.",
+    "rests_on": [
+      "riders (effect op)",
+      "Brittle",
+      "Bleed",
+      "Sunder"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-038",
+    "way": "burst",
+    "also": [],
+    "question": "size",
+    "play": "A hit that scales from the stacks of one affliction its target holds lands big on a foe the party has built up. It reads the stacks and leaves them, so the affliction keeps working and the next payoff lands as big.",
+    "rests_on": [
+      "scale: stacks",
+      "affliction",
+      "The foe with the most Burn (or Chill, or Sunder)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-039",
+    "way": "burst",
+    "also": [],
+    "question": "width",
+    "play": "A hit that scales from the number of debuffs its target holds rewards laying many kinds on one foe. Aimed at the foe with the most debuffs, it lands as one large blow on the foe the party has worked on most.",
+    "rests_on": [
+      "scale: count (debuffs)",
+      "mostDebuffs",
+      "mods (times)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-040",
+    "way": "burst",
+    "also": [],
+    "question": "size",
+    "play": "Spending all of a foe's affliction stacks at once for a lump of damage turns built-up stacks into immediate burst. The damage lands now instead of over the status's course, and the stacks are gone.",
+    "rests_on": [
+      "spend",
+      "scale: stacks",
+      "affliction"
+    ],
+    "needs_block": null,
+    "needs_ruling": "vocabulary.md: 'A status runs its own course. No ability spends, shortens or sets off a status early; a payoff reads the stacks and leaves them.'"
+  },
+  {
+    "id": "B-041",
+    "way": "burst",
+    "also": [
+      "debuff"
+    ],
+    "question": "size",
+    "play": "Chill rushed to its cap shatters early: its holder takes damage for each stack and a Stun. The shatter is untyped, never dodged and never cut by Defense, so the lump lands whole on foes that blunt hits.",
+    "rests_on": [
+      "Chill",
+      "Haste",
+      "Cooldown",
+      "untyped"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-042",
+    "way": "burst",
+    "also": [
+      "debuff"
+    ],
+    "question": "width",
+    "play": "Chill applied to every foe brings the pack to its cap together, so the foes shatter close together. Each takes its shatter damage and a Stun, and the pack loses a lump of HP at once.",
+    "rests_on": [
+      "Chill",
+      "Area"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-043",
+    "way": "burst",
+    "also": [
+      "debuff"
+    ],
+    "question": "width",
+    "play": "A shatter that passes Chill to another foe sets off a chain of shatters across a pack. Passed Chill is cut for foes that shattered lately, so the chain dies down, but a fresh foe takes it whole and shatters soon after.",
+    "rests_on": [
+      "Chill",
+      "status_capped",
+      "apply (passed)",
+      "damp"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-044",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "A strike, or a big ability made ready, the moment a foe shatters lands while it is Stunned and freshly hurt. The party's burst stacks onto the shatter's lump in the same moment.",
+    "rests_on": [
+      "status_capped",
+      "Chill",
+      "strike",
+      "cooldown (ready)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-045",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "Shock aimed at the foe with the fastest swing pays out soonest. Its damage comes each time its holder acts, so a quick foe turns the stacks into damage within a few ticks.",
+    "rests_on": [
+      "Shock",
+      "by: swing"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-046",
+    "way": "burst",
+    "also": [
+      "debuff"
+    ],
+    "question": "size",
+    "play": "Shock kept at its cap on a slow foe makes each of its actions set off a large lump. The foe acts rarely, so the stacks are full each time it does, and its hits are softened as it strikes.",
+    "rests_on": [
+      "Shock"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-047",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "Calling a Shocked foe's action early sets its Shock off at once. A Taunt that makes the foes swing at once, or an effect that makes a foe's basic attack ready now, turns the held stacks into damage now rather than at its next action.",
+    "rests_on": [
+      "Shock",
+      "Taunt",
+      "cooldown (ready)",
+      "A foe's action can be called early"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-048",
+    "way": "burst",
+    "also": [],
+    "question": "price",
+    "play": "Hasting a Shocked foe makes it act more often, so its Shock pays out faster. The party takes that foe's blows sooner in exchange for Shock damage landing in a fraction of the time.",
+    "rests_on": [
+      "Shock",
+      "Haste",
+      "apply"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-049",
+    "way": "burst",
+    "also": [],
+    "question": "width",
+    "play": "Shock laid on every foe of a quick pack pays out as each one acts. An Area charges them all, and the pack sets off its own stacks within a few ticks.",
+    "rests_on": [
+      "Shock",
+      "Area"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-050",
+    "way": "burst",
+    "also": [
+      "debuff"
+    ],
+    "question": "timing",
+    "play": "A big hit that waits until its target holds Sunder at its cap lands with every stack behind it. Sunder raises all damage the foe takes, so holding the hit for the cap makes it the largest it can be.",
+    "rests_on": [
+      "Sunder",
+      "atCap",
+      "mods (wait)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-051",
+    "way": "burst",
+    "also": [
+      "debuff"
+    ],
+    "question": "width",
+    "play": "Sunder laid on every foe, then an Area, raises the damage on the whole pack at once. Every foe takes more from the Area and from everything else that reaches it.",
+    "rests_on": [
+      "Sunder",
+      "Area"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-052",
+    "way": "burst",
+    "also": [
+      "debuff"
+    ],
+    "question": "width",
+    "play": "Sunder on one foe raises every kind of damage it takes, status damage included. Hits, afflictions and Thorns from the whole party all land bigger on it, so one debuff lifts the party's whole burst.",
+    "rests_on": [
+      "Sunder",
+      "taken",
+      "untyped"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-053",
+    "way": "burst",
+    "also": [],
+    "question": "size",
+    "play": "Might stacked up and spent on one big hit makes that hit much larger. Each action spends one stack, so the stacks count most on the unit's biggest, slowest action.",
+    "rests_on": [
+      "Might"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-054",
+    "way": "burst",
+    "also": [],
+    "question": "size",
+    "play": "Might spent on a multi-hit ability or an Area boosts every hit of the action for one stack. Each action spends only one stack, however many hits it lands or foes it reaches.",
+    "rests_on": [
+      "Might",
+      "damage (hits)",
+      "Area"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-055",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "Basic attacks that don't spend Might save every stack for the unit's abilities. Swings keep coming while the stacks wait, and the next ability lands with all of them.",
+    "rests_on": [
+      "Might",
+      "spare"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-056",
+    "way": "burst",
+    "also": [],
+    "question": "width",
+    "play": "A support lays Might on the ally with the highest Attack just ahead of its big hit. The support's action turns into extra damage on the unit that hits hardest.",
+    "rests_on": [
+      "Might",
+      "The ally with the highest Attack",
+      "slot order"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-057",
+    "way": "burst",
+    "also": [],
+    "question": "width",
+    "play": "Might shared with every ally as one gains it makes the whole party's next actions hit harder together. One application becomes a party-wide boost landing in the same stretch.",
+    "rests_on": [
+      "Might",
+      "share",
+      "status_gained"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-058",
+    "way": "burst",
+    "also": [],
+    "question": "width",
+    "play": "A support holding Might, Haste and other buffs passes them all to the main hitter at once. What it built on itself lands as fresh applications on the one unit that turns them into the most damage.",
+    "rests_on": [
+      "pass",
+      "Might",
+      "Haste"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-059",
+    "way": "burst",
+    "also": [
+      "debuff"
+    ],
+    "question": "size",
+    "play": "Removing a foe's Might or Haste and moving it to a party unit turns the foe's build-up into the party's next big hit.",
+    "rests_on": [
+      "remove (move)",
+      "Dispel",
+      "Might",
+      "Haste"
+    ],
+    "needs_block": "remove's `move` field is listed without a meaning; it needs defining as moving the removed statuses onto the actor.",
+    "needs_ruling": null
+  },
+  {
+    "id": "B-060",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "Haste laid on the party's main hitter shortens its cooldowns, wind-ups and time between attacks for a while. Its big abilities come round sooner and land sooner after they start, so its damage gathers into that stretch.",
+    "rests_on": [
+      "Haste"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-061",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "Haste and Might given at the fight's start by seats or the party effect make the opening the party's strongest stretch. Every ally acts faster and harder in the first ticks, before the foes' plans unfold.",
+    "rests_on": [
+      "fight_start",
+      "seat",
+      "party effect",
+      "Haste",
+      "Might"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-062",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "Cast speed, or a change that makes the big ability wind up in a moment, makes its damage land almost as soon as it starts. Less time in the wind-up means less time for its target to fall first or a knockout to cancel it.",
+    "rests_on": [
+      "Cast speed",
+      "mods (cast)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-063",
+    "way": "burst",
+    "also": [],
+    "question": "size",
+    "play": "Cooldown on a unit with one strong ability brings that ability round sooner and more often. The burst repeats through the fight instead of landing once.",
+    "rests_on": [
+      "Cooldown"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-064",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "Basic attacks that never wait on the unit's abilities keep swinging through every wind-up and recovery. A unit with long casts loses none of its swing damage while it charges its big hit.",
+    "rests_on": [
+      "tireless"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-065",
+    "way": "burst",
+    "also": [],
+    "question": "size",
+    "play": "All the unit's chosen abilities wait until every one is ready, then fire as one. Their damage lands in a single moment instead of spread across their cooldowns, at the price of waiting for the slowest.",
+    "rests_on": [
+      "mods (together)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-066",
+    "way": "burst",
+    "also": [
+      "debuff"
+    ],
+    "question": "width",
+    "play": "Marking one foe pulls every party basic attack, and every ability aimed at a random foe, onto it. The party's damage stops spreading across the pack, so that foe falls far sooner.",
+    "rests_on": [
+      "Marked",
+      "focus"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-067",
+    "way": "burst",
+    "also": [
+      "debuff"
+    ],
+    "question": "timing",
+    "play": "A Mark laid again and again on the foe with the lowest HP keeps moving the party's focus to the weakest. Foes go down one after another, fast, and the pack's damage shrinks with each.",
+    "rests_on": [
+      "Marked",
+      "single",
+      "The foe with the lowest current HP"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-068",
+    "way": "burst",
+    "also": [],
+    "question": "width",
+    "play": "A big hit aimed at the foe with the highest Attack takes out the most dangerous foe first. The blow lands where the foes' damage matters most.",
+    "rests_on": [
+      "The foe with the highest Attack",
+      "top"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-069",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "Basic attacks aimed by their own rule at the foe with the lowest HP finish wounded foes between abilities. Each swing goes where it can end a foe, so no damage spreads onto healthy ones.",
+    "rests_on": [
+      "aim",
+      "lowest"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-070",
+    "way": "burst",
+    "also": [
+      "debuff"
+    ],
+    "question": "timing",
+    "play": "A big hit aimed at a foe in its wind-up can knock it out before its action lands. Damage doesn't interrupt a cast but a knockout does, so burst on the caster stops its big move.",
+    "rests_on": [
+      "casting",
+      "What interrupts"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-071",
+    "way": "burst",
+    "also": [],
+    "question": "width",
+    "play": "A big hit with Seek lands on the foe it means, past a Taunting one. The party's burst reaches the foe behind the taunter instead of wearing down the tank.",
+    "rests_on": [
+      "Seek",
+      "Taunt"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-072",
+    "way": "burst",
+    "also": [],
+    "question": "width",
+    "play": "Basic attacks with Seek let every swing pass a Taunting foe and follow a Mark behind it. The whole basic-attack stream lands on the foe that matters.",
+    "rests_on": [
+      "seek (status field)",
+      "Marked",
+      "Taunt"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-073",
+    "way": "burst",
+    "also": [
+      "debuff"
+    ],
+    "question": "width",
+    "play": "Dispelling a foe's Taunt frees every party pick at once. Abilities and swings aimed by their own rules reach their targets again, so the burst lands where it was aimed.",
+    "rests_on": [
+      "Dispel",
+      "Taunt"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-074",
+    "way": "burst",
+    "also": [],
+    "question": "width",
+    "play": "An Area hits every foe at once, Hidden ones included, and skips the Taunt rule. Against a pack it lands the same blow on every foe in one action, so the pack's total HP falls fastest.",
+    "rests_on": [
+      "Area",
+      "Hidden",
+      "Taunt"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-075",
+    "way": "burst",
+    "also": [],
+    "question": "size",
+    "play": "An Area that comes round a share sooner for each foe it hit fires most often against the biggest packs. The more foes stand, the faster it returns, so a pack melts in quick repeats.",
+    "rests_on": [
+      "cooldown (lessPct)",
+      "scale: count (hit)",
+      "Area"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-076",
+    "way": "burst",
+    "also": [],
+    "question": "width",
+    "play": "A single-target big hit changed to land on every foe deals an even share to each. It trades one large blow for a little on all, which can finish a whole wounded pack at once.",
+    "rests_on": [
+      "mods (spread)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-077",
+    "way": "burst",
+    "also": [],
+    "question": "width",
+    "play": "Bonus hits on a second random foe, or on up to three others, spread a big action across a few foes. Those extra targets ignore Taunt, so the splash reaches past a taunter without Seek.",
+    "rests_on": [
+      "A second, random foe (Arc)",
+      "Up to three other random foes (Chain lightning)",
+      "bonus",
+      "The Taunt rule"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-078",
+    "way": "burst",
+    "also": [],
+    "question": "width",
+    "play": "A big hit that deals more while only one foe stands saves its weight for a lone boss or the last of a pack. The party's burst grows where every hit already goes to the same foe.",
+    "rests_on": [
+      "scale: when",
+      "count",
+      "atMost"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-079",
+    "way": "burst",
+    "also": [],
+    "question": "width",
+    "play": "When a foe falls, every other foe takes untyped damage from a reaction. Each kill weakens the rest of the pack, so kills come faster and faster through a group.",
+    "rests_on": [
+      "ko",
+      "damage (in a reaction)",
+      "exclude",
+      "untyped"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-080",
+    "way": "burst",
+    "also": [],
+    "question": "width",
+    "play": "A killing blow's left-over damage carries to another foe as a strike. Overkill isn't wasted on a fallen foe, so a big hit on a weak foe keeps working on the next.",
+    "rests_on": [
+      "strike (carry)",
+      "ko",
+      "amount"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-081",
+    "way": "burst",
+    "also": [
+      "debuff"
+    ],
+    "question": "timing",
+    "play": "Dispelling a foe's Shield, Guard, Blur or Aegis just before the big hit lets it land whole on HP. Dispel removes the whole Shield pool, so the burst goes straight through.",
+    "rests_on": [
+      "Dispel",
+      "Shield",
+      "Guard",
+      "Blur",
+      "Aegis"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-082",
+    "way": "burst",
+    "also": [],
+    "question": "size",
+    "play": "Many small hits pass under a foe's Aegis, which blocks only damage above a share of max HP. Against a foe holding Aegis, a flurry delivers the burst one big blow would lose.",
+    "rests_on": [
+      "Aegis",
+      "damage (hits)",
+      "Speed"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-083",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "A quick hit slotted ahead of the big one spends a foe's Blur, or a mid-sized one its Aegis, on itself. The cheap hit draws the defence and the big hit after it lands.",
+    "rests_on": [
+      "Blur",
+      "Aegis",
+      "slot order"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-084",
+    "way": "burst",
+    "also": [],
+    "question": "size",
+    "play": "What a foe's Shield soaked or its Aegis blocked of a big hit comes back at once as a second landing. The defence takes the blow but the burst still reaches the foe.",
+    "rests_on": [
+      "strike",
+      "event (stopped)",
+      "hit_lands",
+      "bare"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-085",
+    "way": "burst",
+    "also": [],
+    "question": "size",
+    "play": "Accuracy on the unit with the biggest hit keeps an evasive foe from dodging it. A burst that is one large blow loses everything on a dodge, so cancelling Evasion makes it land when it's due.",
+    "rests_on": [
+      "Accuracy",
+      "Evasion"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-086",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "A big hit that misses, or is interrupted in its wind-up, comes ready again at once. The burst a dodge or an interrupt would have cost is back on the next action instead of a full cooldown later.",
+    "rests_on": [
+      "hit_missed",
+      "action_interrupted",
+      "cooldown (event)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-087",
+    "way": "burst",
+    "also": [],
+    "question": "size",
+    "play": "Many small hits break a foe's Bulwark fast, since every hit takes one stack. A fast kind, Double strike or a multi-hit ability reaches zero soonest and opens its Stun and double damage.",
+    "rests_on": [
+      "Bulwark",
+      "Double strike",
+      "damage (hits)",
+      "Speed"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-088",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "The party's biggest hit held until a foe's Bulwark breaks lands in its double-damage window. An ability that waits for a Stunned foe, or comes ready when a foe is Stunned, fires into it.",
+    "rests_on": [
+      "Bulwark",
+      "Stun",
+      "mods (wait)",
+      "status_gained",
+      "cooldown (ready)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-089",
+    "way": "burst",
+    "also": [
+      "debuff"
+    ],
+    "question": "size",
+    "play": "A debuff that sets a foe's Defense to nothing for a short time lets every hit land whole. Many small hits gain the most, since Defense takes its biggest share off them.",
+    "rests_on": [
+      "set",
+      "Defense"
+    ],
+    "needs_block": "A status: a debuff with set on defense and a duration.",
+    "needs_ruling": null
+  },
+  {
+    "id": "B-090",
+    "way": "burst",
+    "also": [
+      "debuff"
+    ],
+    "question": "size",
+    "play": "Bewildering a foe with a heavy swing turns its next basic attack onto one of its allies. The foe's own Attack becomes damage on its side, landing at once if its swing is called early.",
+    "rests_on": [
+      "Bewildered",
+      "confuse",
+      "cooldown (ready)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-091",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "Thorns on the unit that draws the foes' picks makes every hit they land cost them untyped damage. A Taunt that calls their swings at once brings the retaliation in a rush.",
+    "rests_on": [
+      "Thorns",
+      "Taunt",
+      "Aggro",
+      "A foe's action can be called early"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-092",
+    "way": "burst",
+    "also": [],
+    "question": "width",
+    "play": "Thorns given to every ally by the party effect makes a foe's Area cost it once for each unit it hits. A foe that strikes the whole party takes the retaliation several times in one action.",
+    "rests_on": [
+      "Thorns",
+      "party effect",
+      "Area"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-093",
+    "way": "burst",
+    "also": [],
+    "question": "size",
+    "play": "Thorns returns the same untyped damage for every hit that lands, so foes that hit many times pay most. Fast swingers, multi-hit abilities and Double strike on the foes' side feed it hardest, and it costs its holder nothing.",
+    "rests_on": [
+      "Thorns",
+      "untyped",
+      "Double strike"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-094",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "A strike out of turn each time the unit dodges answers every miss with a hit. Evasion makes it often and Blur makes the next one sure, so the foes' own swings bring the party's damage.",
+    "rests_on": [
+      "hit_evaded",
+      "strike",
+      "Evasion",
+      "Blur"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-095",
+    "way": "burst",
+    "also": [],
+    "question": "size",
+    "play": "A strike back for a share of the damage just taken returns big blows in kind. The harder a foe hits, the bigger the answer, so a heavy hitter pays for its own burst at once.",
+    "rests_on": [
+      "damage_taken",
+      "strike",
+      "scale: amount"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-096",
+    "way": "burst",
+    "also": [
+      "debuff"
+    ],
+    "question": "width",
+    "play": "Fixating a foe on the unit that answers hits sends every swing of that foe into its Thorns or riposte. The retaliation lands on that one foe at its whole attack rate.",
+    "rests_on": [
+      "Fixated",
+      "Thorns",
+      "strike"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-097",
+    "way": "burst",
+    "also": [],
+    "question": "width",
+    "play": "A strike at whoever last hit an ally answers blows on any party member. One unit's reaction turns the foes' attacks on the whole party into hits on the attackers.",
+    "rests_on": [
+      "hit_taken (whose: ally)",
+      "assailant",
+      "strike"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-098",
+    "way": "burst",
+    "also": [
+      "sustain"
+    ],
+    "question": "timing",
+    "play": "When the unit's Shield is emptied, it strikes for what the Shield held. The pool the foes broke comes back at them as one blow, at the moment they break through.",
+    "rests_on": [
+      "status_ended (stacks)",
+      "Shield",
+      "strike",
+      "scale: amount"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-099",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "A kill that makes the ability ready again lets it move straight on to the next foe. Against a weakened pack, one big hit clears them one after another.",
+    "rests_on": [
+      "ko",
+      "cooldown (event)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-100",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "A reaction that makes all of the unit's abilities ready at once, on a kill or past an HP line, lets it fire its whole kit back to back. Every big hit it slotted comes in a run instead of one per cooldown.",
+    "rests_on": [
+      "cooldown (abilities)",
+      "ko",
+      "hp_low"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-101",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "An ability that resolves again at once, free and with no wind-up, when it kills chains through a pack without a pause. Each repeat picks its target afresh by its own rule.",
+    "rests_on": [
+      "recast",
+      "ko",
+      "repeat"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-102",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "Every ability still well off cooldown when a fight starts is brought to at least half charged. Cooldowns carry from fight to fight, so this makes sure the big hit comes early in every fight.",
+    "rests_on": [
+      "fight_start",
+      "cooldown (atMost)",
+      "Cooldowns carry between fights"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-103",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "Winning a fight makes the big ability ready, and cooldowns carry, so the next fight opens with it. The party starts every fight after the first with its burst in hand.",
+    "rests_on": [
+      "fight_won",
+      "cooldown (ready)",
+      "Cooldowns carry between fights"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-104",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "A big hit that waits for a foe over a share of its HP isn't spent finishing the last foe of a fight. It carries ready into the next fight and opens it.",
+    "rests_on": [
+      "hpAtLeast",
+      "Firing",
+      "Cooldowns carry between fights"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-105",
+    "way": "burst",
+    "also": [],
+    "question": "size",
+    "play": "Each hit the unit lands brings its big ability a few ticks closer. A fast kind or Double strike charges it quickly, so the big hit comes round far more often than its cooldown says.",
+    "rests_on": [
+      "hit_lands",
+      "cooldown (less)",
+      "Double strike",
+      "Speed"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-106",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "Each hit the unit takes brings its big ability closer. The harder the foes press it, the sooner its burst comes back.",
+    "rests_on": [
+      "hit_taken",
+      "cooldown (less)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-107",
+    "way": "burst",
+    "also": [],
+    "question": "width",
+    "play": "A support's action pulls the main hitter's slowest ability closer or makes it ready. The support spends its turn bringing the party's biggest hit forward.",
+    "rests_on": [
+      "cooldown (slowest)",
+      "cooldown (ready)",
+      "The ally with the highest Attack"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-108",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "Each unit's action readies the first ability of the unit in the next seat. The party's big hits fire one after another down the seats in a quick run.",
+    "rests_on": [
+      "action_resolve",
+      "cooldown (first)",
+      "seat (next)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-109",
+    "way": "burst",
+    "also": [],
+    "question": "size",
+    "play": "An ability that resolves a second time at once, free, lands the same big hit twice back to back. One wind-up and one cost buy two blows.",
+    "rests_on": [
+      "recast",
+      "action_resolve",
+      "repeat"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-110",
+    "way": "burst",
+    "also": [],
+    "question": "price",
+    "play": "A second cast that is paid for costs the MP again but still skips the wind-up and the cooldown. The unit burns fuel twice as fast to land two blows for one wait.",
+    "rests_on": [
+      "recast (paid)",
+      "MP"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-111",
+    "way": "burst",
+    "also": [],
+    "question": "price",
+    "play": "An ability with no cooldown is cast whenever it can be, limited only by its MP. The unit pours its fuel into its biggest hit as fast as its wind-ups allow.",
+    "rests_on": [
+      "mods (cooldown)",
+      "MP"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-112",
+    "way": "burst",
+    "also": [],
+    "question": "price",
+    "play": "A big hit that scales from what it paid grows when its cost is raised. A change that makes it cost more MP, or adds an HP price, turns the extra spend straight into damage.",
+    "rests_on": [
+      "scale: cost",
+      "mods (mp)",
+      "mods (hp)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-113",
+    "way": "burst",
+    "also": [],
+    "question": "price",
+    "play": "A big hit paid for in HP instead of MP lands more for the HP it costs. The price is lost at once, not as damage, so nothing soaks it, and it never takes the unit below 1 HP.",
+    "rests_on": [
+      "pay",
+      "mods (hp)",
+      "scale: cost"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-114",
+    "way": "burst",
+    "also": [],
+    "question": "price",
+    "play": "Every basic attack paid for in HP hits harder by what it paid. The unit spends its own health on each swing for a stream of bigger blows.",
+    "rests_on": [
+      "mods (pay)",
+      "basic",
+      "scale: cost"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-115",
+    "way": "burst",
+    "also": [],
+    "question": "price",
+    "play": "Paying HP sets off a reaction that adds Might or a strike. Each price the unit pays turns into damage at once.",
+    "rests_on": [
+      "hp_paid",
+      "Might",
+      "strike"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-116",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "A unit whose hits scale from its own missing HP hits hardest when hurt. Its burst arrives late, as the fight turns against it.",
+    "rests_on": [
+      "scale: hp (missing)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-117",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "A hit that scales from the unit's current HP lands biggest while it is healthy. Its burst comes at the fight's start and after each heal, and shrinks as the unit is worn down.",
+    "rests_on": [
+      "scale: hp (current)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-118",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "When the unit is knocked out, a status that survives its knockout deals a parting blow to the foes. The unit's fall becomes damage at once, so even a lost hitter lands its last burst.",
+    "rests_on": [
+      "survivesKO",
+      "ko",
+      "damage (in a reaction)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-119",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "Falling under an HP line makes the unit's big ability ready or sets off a strike. The burst lands the moment it's in danger, whatever brought its HP down.",
+    "rests_on": [
+      "hp_low",
+      "cooldown (ready)",
+      "strike"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-120",
+    "way": "burst",
+    "also": [],
+    "question": "price",
+    "play": "A cap on the unit's own healing holds its HP under a line from the moment it lands. Everything that scales from missing HP or waits for low HP is on from the start; the price is HP it can't get back.",
+    "rests_on": [
+      "healCap",
+      "hpBelow",
+      "scale: hp (missing)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-121",
+    "way": "burst",
+    "also": [],
+    "question": "price",
+    "play": "Swapping the unit's Attack and Defense turns a high Defense into a high Attack. Its hits jump in size, paid for by the Defense it gives up.",
+    "rests_on": [
+      "swap",
+      "Attack",
+      "Defense"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-122",
+    "way": "burst",
+    "also": [],
+    "question": "price",
+    "play": "A hurt unit trades HP shares with a healthy foe: the foe is left at the unit's percent and the unit at the foe's. Paying HP first lowers its share on purpose, so one action takes a large share off a boss.",
+    "rests_on": [
+      "trade",
+      "pay"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-123",
+    "way": "burst",
+    "also": [
+      "sustain"
+    ],
+    "question": "price",
+    "play": "Healing past full turns into a strike on a foe for the part past full. The party's spare healing becomes damage as it overflows.",
+    "rests_on": [
+      "overhealed",
+      "strike",
+      "scale: amount"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-124",
+    "way": "burst",
+    "also": [],
+    "question": "price",
+    "play": "MP gained past the full pool turns into damage on a foe. Regen that would be wasted at full lands as hits instead.",
+    "rests_on": [
+      "mp_over",
+      "scale: amount",
+      "damage"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-125",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "Hits that deal more the more HP their target has lost grow as each foe weakens. The last stretch of a foe's HP goes faster than the first.",
+    "rests_on": [
+      "boosts",
+      "scale: hp (missing)",
+      "of: target"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-126",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "A foe under an HP line is knocked out at once. It isn't damage, so no Shield, Aegis or floor stands in the way, and the last stretch of its HP is skipped.",
+    "rests_on": [
+      "fell",
+      "hpBelow"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-127",
+    "way": "burst",
+    "also": [],
+    "question": "width",
+    "play": "Every foe under an HP line is knocked out at once. After an Area or afflictions bring a pack down together, one action ends all of them.",
+    "rests_on": [
+      "fell",
+      "all",
+      "hpBelow"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-128",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "A foe going under an HP line makes the party's finishing ability ready at once. The finisher fires the moment it can end that foe.",
+    "rests_on": [
+      "hp_low (whose: foe)",
+      "cooldown (ready)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-129",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "Doom laid on a hurt foe ends it when its countdown runs out, as untyped damage of a large share of its max HP. A foe the party has worn down falls at a known moment.",
+    "rests_on": [
+      "Doom"
+    ],
+    "needs_block": null,
+    "needs_ruling": "vocabulary.md: Doom is enemy-only; 'the party can't use it until the director says so.'"
+  },
+  {
+    "id": "B-130",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "The unit's first action of the fight hits much harder or always crits. Its opening blow lands before anything has acted, so the fight starts with one foe badly hurt or down.",
+    "rests_on": [
+      "acted",
+      "scale: when",
+      "crits (when)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-131",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "Hits on foes that haven't yet acted deal more or crit. The party's quickest actions land before the foes' first moves, so the first few ticks carry the most damage.",
+    "rests_on": [
+      "acted",
+      "crits (when)",
+      "boosts"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-132",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "The start-of-fight effects of the party's gear and seats happen again mid-fight. Every opening boost and cooldown pull comes a second time, giving the party a second opening.",
+    "rests_on": [
+      "restart",
+      "fight_start",
+      "repeat"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-133",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "Holding the biggest hit until the enrage lands it when every hit is dialled up. The enrage scales a hit as its own step, so boosts after it multiply a larger number.",
+    "rests_on": [
+      "Enrage",
+      "difficulty dials"
+    ],
+    "needs_block": "A condition: the fight has passed an enrage step (RULES.enrage), so an ability can wait for it.",
+    "needs_ruling": null
+  },
+  {
+    "id": "B-134",
+    "way": "burst",
+    "also": [],
+    "question": "width",
+    "play": "A seat that adds Attack, Crit chance or speed to one unit makes it the party's main hitter. The formation pours its numbers into one unit's burst rather than the party's.",
+    "rests_on": [
+      "seat"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-135",
+    "way": "burst",
+    "also": [],
+    "question": "price",
+    "play": "A seat or a status that raises one unit's damage while lowering its Defense or HP, or raising its Aggro, buys burst with fragility. The main hitter lands more, and the foes' blows on it land harder too.",
+    "rests_on": [
+      "seat",
+      "boosts",
+      "taken",
+      "Aggro"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-136",
+    "way": "burst",
+    "also": [],
+    "question": "width",
+    "play": "A party effect giving every ally Attack or a speed stat lifts the whole party's damage together. Three units hitting harder at once bring the foes down sooner than their parts.",
+    "rests_on": [
+      "party effect"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-137",
+    "way": "burst",
+    "also": [],
+    "question": "width",
+    "play": "A hit that scales from a stat or stacks held by the unit in another seat turns that ally's build into this unit's damage. A defender's Defense or a counter it holds lands as the hitter's blow.",
+    "rests_on": [
+      "seat (scale)",
+      "scale: stat",
+      "scale: stacks"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-138",
+    "way": "burst",
+    "also": [
+      "build"
+    ],
+    "question": "size",
+    "play": "A fast attacker's basic attacks borrow the riders a slower ally's basic attacks carry. Brittle, Bleed or Sunder from the slow ally go on at the fast one's rate.",
+    "rests_on": [
+      "borrow"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-139",
+    "way": "burst",
+    "also": [
+      "build"
+    ],
+    "question": "size",
+    "play": "Each pulse of an affliction the party laid sets off a small hit from a piece answering the damage. Status damage that can't crit or cash Bleed brings hits that can.",
+    "rests_on": [
+      "damage_dealt",
+      "status_triggered",
+      "strike"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-140",
+    "way": "burst",
+    "also": [
+      "build"
+    ],
+    "question": "size",
+    "play": "A party unit's own status that pulses untyped damage on every foe, with crits turned on for its pulses, spikes when it crits. The steady pulse gains the spikes a hit would have.",
+    "rests_on": [
+      "pulse",
+      "crit (status field)",
+      "untyped"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-141",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "A fallen hitter raised with its actions ready fires its big ability at once. The revive brings back its burst, not a unit waiting out every cooldown.",
+    "rests_on": [
+      "revive (ready)",
+      "Revive"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "B-142",
+    "way": "burst",
+    "also": [
+      "sustain"
+    ],
+    "question": "timing",
+    "play": "Lifting a Weaken or Shock from the party's main hitter just before its big hit lets the hit land whole. Weaken halves a hit, so a Cleanse ahead of the big hit restores it.",
+    "rests_on": [
+      "Cleanse",
+      "Weaken",
+      "Shock",
+      "mods (wait)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  }
+]
