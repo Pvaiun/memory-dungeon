@@ -1,5 +1,7 @@
 # The wheel: the brief
 
+**Version B, kept in reserve.** This is the second way of working for the wheel: the director gives the question and their phrases first, and candidates grow from them. Version A (a complete list of plays drawn from the rules, which the director marks and rambles on) is the one being run, on the main line. Use this one if version A fails.
+
 A design step, with the director: the five colours that sort the web. Nothing is built in it and nothing in the game changes. The frame is `docs/colours.md`; its rulings bind this step.
 
 ## What it's for
