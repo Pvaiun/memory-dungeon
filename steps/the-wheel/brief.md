@@ -9,7 +9,7 @@ A design step, with the director: the five colours that sort the web. Nothing is
 **Version C, `the-wheel-workspace-c`, is the one being run: triads.** Agents make cards, each something a player could choose, spanning everything the rules allow. The director is shown three at a time and says which two the same kind of player would reach for, and in a few words why. The distinctions that keep coming back, in the director's words, are sorted into wheels, by the director and by three agents apart; then an audit, the pick, the question and the names.
 
 **Set aside,** their workspaces left as they stand:
-- **Version A, `the-wheel-workspace`:** a complete list of moments in a fight, to mark. Its list couldn't be judged: a fight is where the player has no say, and the fun is in the choices. Its list is still a complete account of what the rules allow, and can join C's sources as `sources/plays.md`.
+- **Version A, `the-wheel-workspace`:** a complete list of moments in a fight, to mark. Its list couldn't be judged: a fight is where the player has no say, and the fun is in the choices.
 - **Version B, `the-wheel-workspace-b`:** narrow problems, answered at length. It asked for volume against a blank page, with no way to see how the answers would add up.
 
 A session there starts on its workspace's branch, and what it makes is merged back into that branch, not into main. It ends with a `wheel.md`.
