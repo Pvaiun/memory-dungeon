@@ -1,0 +1,1012 @@
+[
+  {
+    "id": "U-001",
+    "way": "build",
+    "also": [],
+    "question": "size",
+    "play": "Burn laid a little on every swing of a fast weapon climbs to the ceiling its upkeep reaches and holds there. The damage rises through the fight's opening and stays high only while the swings keep coming.",
+    "rests_on": ["Burn", "riders (status field)", "Speed: Fast (KIND_SPEED)", "Attack speed"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-002",
+    "way": "build",
+    "also": [],
+    "question": "size",
+    "play": "Burn laid in large piles by an ability on a long cooldown spikes after each cast and decays between casts. The foe burns hardest just after each one, and the build holds only if the next cast comes before the pile fades.",
+    "rests_on": ["Burn", "apply", "Cooldowns: long (COOLDOWN)"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-003",
+    "way": "build",
+    "also": [],
+    "question": "width",
+    "play": "Burn laid on every foe at once makes the whole field's damage climb together. Area abilities, basic attacks aimed at every foe, or a single-target ability spread to every foe carry it; it pays most against many foes in a long fight.",
+    "rests_on": ["Burn", "Area", "area (tag)", "spread (ability change)"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-004",
+    "way": "build",
+    "also": [],
+    "question": "width",
+    "play": "Burn piled on the foe that already holds the most climbs far past what spread upkeep reaches. Without Seek, a Taunting foe takes the pile instead, whether it burns or not.",
+    "rests_on": ["Burn", "The foe with the most Burn", "highest (pick), by stacks", "Seek", "The Taunt rule"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-005",
+    "way": "build",
+    "also": [],
+    "question": "width",
+    "play": "An affliction aimed at whichever foe holds the fewest stacks keeps every foe at the same height. Abilities pick by lowest stacks and basic attacks aim the same way, so the field wears down evenly and no kill takes a tall pile with it.",
+    "rests_on": ["lowest (pick), by stacks", "aim (status field)", "Burn", "Sunder"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-006",
+    "way": "build",
+    "also": [],
+    "question": "width",
+    "play": "Applications aimed only at foes below an affliction's cap fill one foe and then move to the next. A capped build never wastes stacks on a full foe, and its excess becomes the next foe's build.",
+    "rests_on": ["belowCap (unit condition)", "where (targeting rule)", "Sunder", "Shock"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-007",
+    "way": "build",
+    "also": [],
+    "question": "width",
+    "play": "Every unit in the party lays the same affliction, so the shared total climbs to a ceiling no one applier reaches. A stack counts the same whoever laid it, and each applier that falls lowers the ceiling at once.",
+    "rests_on": ["Stacks (stacking)", "riders (status field)", "Burn", "Bleed"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-008",
+    "way": "build",
+    "also": [],
+    "question": "width",
+    "play": "A unit whose basic attacks also carry an ally's riders lays both units' stacks with every swing. Two units feed one affliction at one weapon's speed, the stacks read off the borrower.",
+    "rests_on": ["borrow (status field)", "riders (status field)"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-009",
+    "way": "build",
+    "also": [],
+    "question": "timing",
+    "play": "Haste on the unit keeping an affliction up lifts the ceiling its upkeep reaches, since a faster unit applies more stacks. The pile rises while Haste lasts and sinks back toward the lower ceiling when it lapses.",
+    "rests_on": ["Haste", "Attack speed", "Cooldown", "Cast speed", "Burn"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-010",
+    "way": "build",
+    "also": ["debuff"],
+    "question": "size",
+    "play": "Sunder and Burn built on one foe multiply. Each Sunder stack raises every Burn tick as well as every hit, since damage-taken modifiers reach a status's damage, so two piles built together climb faster than either alone.",
+    "rests_on": ["Sunder", "Burn", "taken (status field)"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-011",
+    "way": "build",
+    "also": [],
+    "question": "timing",
+    "play": "An affliction outlives the foe it was laid on: when an afflicted foe falls, a piece lays the stacks it held on the foes still standing. The build isn't lost to the kill and walks down the field.",
+    "rests_on": ["status_ended", "ko (status-ended cause)", "amount (scale)", "apply", "split (reaction)", "exclude (targeting rule)"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-012",
+    "way": "build",
+    "also": [],
+    "question": "width",
+    "play": "Each application of an affliction on one foe is copied onto another: a reaction to the foe gaining stacks shares them, or lays one swing's riders on the others, so the build spreads without extra actions.",
+    "rests_on": ["share (effect op)", "status_gained", "riders (effect op)", "copy (apply field)"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-013",
+    "way": "build",
+    "also": ["debuff"],
+    "question": "size",
+    "play": "Chill walked to its cap a little at a time slows a foe more with each stack, then shatters it for damage per stack and a Stun. The Chill is spent and the cycle starts over: slow, break, again.",
+    "rests_on": ["Chill", "status_capped", "Stun"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-014",
+    "way": "build",
+    "also": ["debuff"],
+    "question": "width",
+    "play": "Chill laid on every foe at once brings the whole field to its cap together, so the shatters, their damage and their Stuns land on every foe in the same moment instead of one at a time.",
+    "rests_on": ["Chill", "Area", "status_capped"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-015",
+    "way": "build",
+    "also": ["debuff"],
+    "question": "width",
+    "play": "One shatter becomes a rolling chain: a piece passes a shattering foe's Chill to the other foes, cut by about half for each foe that shattered lately, so the chain dies down rather than looping.",
+    "rests_on": ["Chill", "status_capped", "passed (apply field)", "damp (status field)"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-016",
+    "way": "build",
+    "also": ["debuff"],
+    "question": "size",
+    "play": "Shock kept on a slow foe, or on one the party has Slowed or Chilled, stays near its cap because the foe acts rarely. Each action it takes costs it damage at the cap, and its swings are cut the most.",
+    "rests_on": ["Shock", "Slow", "Chill"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-017",
+    "way": "build",
+    "also": ["debuff"],
+    "question": "timing",
+    "play": "Shock laid on a foe that is Stunned or winding up can't drain, since it drains only when its holder acts. It piles toward the cap, and the foe's next action pays the whole pile at once.",
+    "rests_on": ["Shock", "Stun", "Wind-ups", "action_resolve"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-018",
+    "way": "build",
+    "also": [],
+    "question": "width",
+    "play": "Bleed laid by one unit and cashed by another: a few heavy hits lay big piles, and an ally's many small hits, from a fast weapon, Double strike or a multi-hit ability, each deal damage per stack before a share closes.",
+    "rests_on": ["Bleed", "Swing: Heavy", "Speed: Fast (KIND_SPEED)", "Double strike", "hits (damage field)"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-019",
+    "way": "build",
+    "also": [],
+    "question": "size",
+    "play": "One unit lays Bleed and sets it off with the same hits. A hit's own statuses land after it, so each hit cashes the last one's stacks, and the pile climbs only while each hit lays more than it closes.",
+    "rests_on": ["Bleed", "riders (status field)", "A hit's own statuses land after the hit"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-020",
+    "way": "build",
+    "also": [],
+    "question": "timing",
+    "play": "Bleed laid by reactions rather than hits waits on a foe nobody is hitting, since it has no duration and closes only when hit. When a Mark or a target rule turns the party's hits there, a burst of hits cashes the whole pile.",
+    "rests_on": ["Bleed", "apply", "Marked", "targeting rule"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-021",
+    "way": "build",
+    "also": [],
+    "question": "width",
+    "play": "Area abilities with several hits lay Bleed on every foe and, with each later hit, cash it on every foe at once, so both the build and its payoff are field-wide.",
+    "rests_on": ["Bleed", "Area", "hits (damage field)"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-022",
+    "way": "build",
+    "also": ["debuff"],
+    "question": "price",
+    "play": "The foes cash the party's Bleed on each other: Bewildered turns a foe's next basic attack onto one of its own allies, a hit that sets off that ally's Bleed at no action of the party's.",
+    "rests_on": ["Bleed", "Bewildered", "confuse (status field)"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-023",
+    "way": "build",
+    "also": ["debuff"],
+    "question": "size",
+    "play": "Sunder kept near its cap on one foe raises every kind of damage it takes, hits, ticks and Thorns alike, so the whole party's damage on it grows. It loses a stack a pulse and holds only under steady application.",
+    "rests_on": ["Sunder", "taken (status field)", "Thorns"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-024",
+    "way": "build",
+    "also": ["debuff"],
+    "question": "width",
+    "play": "Sunder on every foe lifts the party's damage across the field, and pays only as far as the party's other damage is wide too: Area hits, afflictions on every foe, Thorns on a unit every foe strikes.",
+    "rests_on": ["Sunder", "Area", "Thorns"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-025",
+    "way": "build",
+    "also": ["debuff"],
+    "question": "price",
+    "play": "A vulnerability on a foe that never drains: each party hit on it adds a stack that makes it take more of everything for the rest of the fight. Unlike Sunder it needs no upkeep, so the fight leans ever harder the party's way.",
+    "rests_on": ["taken (status field)", "trigger (status field)", "hit_taken", "Sunder"],
+    "needs_block": "A status: a debuff whose stacks raise all damage its holder takes, gained per hit taken and never drained.",
+    "needs_ruling": null
+  },
+  {
+    "id": "U-026",
+    "way": "build",
+    "also": ["debuff"],
+    "question": "timing",
+    "play": "A debuff that worsens on its own: its pulse lays Sunder on its holder, so one application keeps the foe's vulnerability climbing with time while the party's hits go elsewhere.",
+    "rests_on": ["pulse (status field)", "apply", "Sunder"],
+    "needs_block": "A status: a debuff whose pulse applies Sunder to its own holder.",
+    "needs_ruling": null
+  },
+  {
+    "id": "U-027",
+    "way": "build",
+    "also": ["debuff"],
+    "question": "width",
+    "play": "Damage that grows with how many debuffs its target holds rewards breadth of kinds over depth of stacks: each different debuff the party lays raises it, and hits that lay one of several statuses at random feed it.",
+    "rests_on": ["count (scale): debuffs", "boosts (status field)", "one (effect op)", "mostDebuffs"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-028",
+    "way": "build",
+    "also": [],
+    "question": "width",
+    "play": "A hit that grows with how many foes hold an affliction rewards spreading even one stack onto every foe before it lands: one stack on each counts as much as a tall pile.",
+    "rests_on": ["count (scale): { side, where }", "has (unit condition)"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-029",
+    "way": "build",
+    "also": [],
+    "question": "width",
+    "play": "A hit that grows with an affliction's total stacks across every foe reads the whole field's pile at once, so wide upkeep pays into one big blow wherever it's aimed.",
+    "rests_on": ["count (scale): { side, where } with stacks"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-030",
+    "way": "build",
+    "also": [],
+    "question": "timing",
+    "play": "An ability whose damage scales from its target's stacks lands harder the longer the pile has been built. It reads the stacks and leaves them, so the pile keeps working after the payoff.",
+    "rests_on": ["stacks (scale)", "affliction"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-031",
+    "way": "build",
+    "also": [],
+    "question": "size",
+    "play": "Every hit gains a flat amount for each stack of an affliction its target holds, added before boosts, crit and Defense. Many small hits gain most, and they break through Defense more as the pile rises.",
+    "rests_on": ["adds (status field)", "stacks (scale)", "Defense"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-032",
+    "way": "build",
+    "also": [],
+    "question": "size",
+    "play": "A unit's hits grow by a share for each stack its target holds, read off the unit being hit, so a slow, heavy hitter's every blow climbs with the pile its allies build.",
+    "rests_on": ["boosts (status field)", "stacks (scale)", "Swing: Heavy"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-033",
+    "way": "build",
+    "also": [],
+    "question": "timing",
+    "play": "A big ability that waits until the build is done: its own condition holds it until its target holds an affliction at its cap or past a set number of stacks, or its own counter is high, so it lands at the peak.",
+    "rests_on": ["if (ability condition)", "stacks (unit condition)", "atCap", "wait (ability change)"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-034",
+    "way": "build",
+    "also": [],
+    "question": "timing",
+    "play": "Once a foe holds an affliction past a set number of stacks, every hit on it crits. The build crosses a line and the party's damage steps up all at once instead of climbing; Crit damage makes the step taller.",
+    "rests_on": ["crits (status field): when, chance", "stacks (unit condition)", "Crit damage"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-035",
+    "way": "build",
+    "also": [],
+    "question": "timing",
+    "play": "Topping a build fires a free action: when a foe's affliction reaches its cap, one of the unit's abilities resolves again at once, free, or the unit strikes out of turn.",
+    "rests_on": ["status_capped", "recast", "strike (effect op)"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-036",
+    "way": "build",
+    "also": ["burst"],
+    "question": "timing",
+    "play": "A foe whose affliction passes a set number of stacks is knocked out at once, past Shields, Aegis and floors. The build is a visible countdown to a kill rather than a race of damage.",
+    "rests_on": ["fell", "status_gained", "stacks (unit condition)"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-037",
+    "way": "build",
+    "also": ["burst"],
+    "question": "timing",
+    "play": "A payoff that cashes a pile and starts it over: an ability spends a foe's affliction and deals damage scaled from the stacks it took, so the build charges and releases on the foe.",
+    "rests_on": ["spend", "stacks (scale)"],
+    "needs_block": null,
+    "needs_ruling": "A status runs its own course: no ability spends, shortens or sets off a status early (vocabulary.md)."
+  },
+  {
+    "id": "U-038",
+    "way": "build",
+    "also": [],
+    "question": "size",
+    "play": "Might laid by an ally on a slow, heavy hitter climbs to its cap, since each action spends only one stack and the hitter acts rarely. Each big blow lands harder; on a fast unit the same Might is spent as fast as it comes.",
+    "rests_on": ["Might", "apply", "Speed: Slow (KIND_SPEED)", "Swing: Heavy"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-039",
+    "way": "build",
+    "also": [],
+    "question": "size",
+    "play": "A unit that gains Might from each hit it lands, while each action spends one, comes out ahead on actions with several hits: multi-hit abilities and Double strike climb it toward the cap, single blows only hold it.",
+    "rests_on": ["Might", "hit_lands", "Double strike"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-040",
+    "way": "build",
+    "also": [],
+    "question": "price",
+    "play": "Might its basic attacks don't spend climbs to the cap and stays there through every swing, spent only by abilities. A unit that mostly swings keeps its peak, and each ability it casts costs a stack.",
+    "rests_on": ["Might", "spare (status field)"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-041",
+    "way": "build",
+    "also": [],
+    "question": "timing",
+    "play": "A unit that grows with time alone: a status adds a stack to it on a timer, whatever it does or faces. Long fights favour it, and an early knockout wastes it.",
+    "rests_on": ["pulse (status field)", "Stacks (stacking)", "cap (status field)"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-042",
+    "way": "build",
+    "also": [],
+    "question": "width",
+    "play": "The whole party grows on one clock: a formation's party effect adds a stack to every ally on a timer, so each member's danger climbs together and a fallen member's share is lost.",
+    "rests_on": ["party effect (formation)", "pulse (status field)"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-043",
+    "way": "build",
+    "also": [],
+    "question": "size",
+    "play": "A counter that adds a flat amount to each hit per stack, gained as hits land, grows a fast weapon most. Each small hit gains the add before Defense, so the climb breaks through armour that blunts a percent boost.",
+    "rests_on": ["adds (status field)", "hit_lands", "Speed: Fast (KIND_SPEED)", "Defense"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-044",
+    "way": "build",
+    "also": [],
+    "question": "size",
+    "play": "A counter that raises Attack per stack lifts an Attack-heavy weapon's swing and every ability scaled from Attack, while a base-heavy swing barely moves. The weapon kind decides how much of the climb reaches basic attacks.",
+    "rests_on": ["Attack", "stats (status field)", "Scaling: Attack-heavy", "Scaling: Base-heavy"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-045",
+    "way": "build",
+    "also": [],
+    "question": "size",
+    "play": "A unit that swings faster and faster: a counter raises Attack speed per stack, gained on each swing, up to its cap. Every rider it carries is laid faster with it, so its afflictions climb on an accelerating clock.",
+    "rests_on": ["Attack speed", "stats (status field)", "hit_lands", "riders (status field)"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-046",
+    "way": "build",
+    "also": [],
+    "question": "size",
+    "play": "A unit whose abilities come round sooner with each cast: a counter raises Cooldown or Cast speed per stack as its abilities resolve, or a change cuts its cooldowns for each stack it holds, so its casting accelerates through the fight.",
+    "rests_on": ["Cooldown", "Cast speed", "action_resolve", "cooldown (ability change), times", "cooldown (effect op): lessPct"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-047",
+    "way": "build",
+    "also": [],
+    "question": "size",
+    "play": "A counter that adds Crit chance per stack, gained on each crit, makes crits come more often the more it crits. Its damage climbs in jumps and turns spikier; a Brittle foe hands it a sure crit to feed on.",
+    "rests_on": ["Crit chance", "crit (tag)", "hit_lands", "Crit damage", "Brittle"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-048",
+    "way": "build",
+    "also": [],
+    "question": "size",
+    "play": "Hits that cost no action make every hit-counting build climb faster: Double strike's second strikes and reactions' strikes out of turn each lay on-hit stacks, feed hit-fed counters and cash Bleed, and echo lets riders that name basic attacks hear them.",
+    "rests_on": ["Double strike", "strike (effect op)", "extra (tag)", "echo (status field)", "Bleed"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-049",
+    "way": "build",
+    "also": [],
+    "question": "size",
+    "play": "Basic attacks that never wait on the unit's abilities keep laying riders through every wind-up and recovery, so a caster's on-hit build climbs on two clocks at once.",
+    "rests_on": ["tireless (status field)", "riders (status field)", "Wind-ups"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-050",
+    "way": "build",
+    "also": [],
+    "question": "width",
+    "play": "A counter that gains a stack for each foe its hits land on climbs several stacks a cast from hits on every foe, so it grows fastest in crowded fights and slowest against a lone foe.",
+    "rests_on": ["count (scale): hit", "countAtLeast", "action_resolve", "Area"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-051",
+    "way": "build",
+    "also": [],
+    "question": "width",
+    "play": "A unit that grows with every kill: each foe it fells adds a stack it keeps for the fight, or its hits scale from the foes fallen so far. It pays in fights of many foes and does nothing against a lone boss.",
+    "rests_on": ["ko", "other (event filter): holder", "count (scale): { side, where } with ko: true"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-052",
+    "way": "build",
+    "also": [],
+    "question": "width",
+    "play": "The whole party grows through a crowded fight: a formation's party effect gives every ally a lasting stack whenever any foe falls, whoever felled it.",
+    "rests_on": ["party effect (formation)", "ko", "whose: foe"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-053",
+    "way": "build",
+    "also": ["burst"],
+    "question": "timing",
+    "play": "Each kill sets off the start-of-fight effects of the unit's gear and seat again, so opening buffs and head starts come back with every foe it fells, while a price kept to the first time isn't paid twice.",
+    "rests_on": ["restart", "fight_start", "ko", "repeat (event filter)"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-054",
+    "way": "build",
+    "also": [],
+    "question": "timing",
+    "play": "A party that grows as it loses members: each ally that falls makes the survivors stronger, through a reaction to the knockout or a count of fallen allies, so its last unit standing fights at its peak.",
+    "rests_on": ["ko", "whose: ally", "count (scale): { side, where } with ko: true"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-055",
+    "way": "build",
+    "also": [],
+    "question": "timing",
+    "play": "A builder whose status survives its knockout passes its buffs to an ally as it falls, at their own length and with the stacks it held, so the party's built-up stacks outlive the unit that built them.",
+    "rests_on": ["pass (effect op)", "survivesKO", "ko"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-056",
+    "way": "build",
+    "also": [],
+    "question": "size",
+    "play": "A unit that grows from being hit: it gains a stack each time a hit lands on it, and draws fire by Aggro, Taunt or a Fixated foe. Many small foe hits feed it fastest, and the harder foes press it, the harder it hits back.",
+    "rests_on": ["hit_taken", "Aggro", "Taunt", "Fixated"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-057",
+    "way": "build",
+    "also": [],
+    "question": "size",
+    "play": "Growth scaled from each blow's damage: stacks sized by the damage taken grow most from big hits, and applications under one stack wait and add up, so it feeds on a heavy foe's blows rather than a swarm's.",
+    "rests_on": ["damage_taken", "hp_lost", "amount (scale)", "Stacks (stacking)"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-058",
+    "way": "build",
+    "also": [],
+    "question": "price",
+    "play": "A unit that grows from blows that never reach its HP: what its Shield soaks and its Aegis blocks becomes stacks, so the party's protection on it is what feeds it.",
+    "rests_on": ["stopped (scale event)", "hit_taken", "Shield", "Aegis"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-059",
+    "way": "build",
+    "also": [],
+    "question": "price",
+    "play": "Thorns that grow with each hit taken make every foe hit cost its attacker more as the fight goes on. The holder spends no action, and the foes' own pace sets how fast it hurts them.",
+    "rests_on": ["Thorns", "hit_taken", "stats (status field)"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-060",
+    "way": "build",
+    "also": [],
+    "question": "price",
+    "play": "A unit that lays an affliction on whoever hits it builds the pile on the foes pressing it without spending an action, so the harder the foes attack, the higher their stacks climb.",
+    "rests_on": ["hit_taken", "other (effect target)", "apply", "Burn", "Bleed"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-061",
+    "way": "build",
+    "also": [],
+    "question": "width",
+    "play": "A unit that takes the big blows meant for its allies gains its hit-fed stacks from the whole party's incoming damage, so one counter grows from every ally's danger.",
+    "rests_on": ["cover (status field)", "hit_taken"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-062",
+    "way": "build",
+    "also": [],
+    "question": "price",
+    "play": "An evasive unit grows as foes swing at it and miss: each dodge adds a stack at no cost in HP. Blur makes one dodge sure, and foes' Accuracy starves it.",
+    "rests_on": ["hit_evaded", "Evasion", "Blur", "Accuracy"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-063",
+    "way": "build",
+    "also": [],
+    "question": "timing",
+    "play": "Each of its misses adds Accuracy for the rest of the fight, so a unit facing an evasive foe closes in on it, landing more hits and laying more riders as the fight runs.",
+    "rests_on": ["hit_missed", "Accuracy", "stats (status field)"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-064",
+    "way": "build",
+    "also": [],
+    "question": "timing",
+    "play": "A unit whose hits scale from its own missing HP grows as the foes wear it down: the damage it takes becomes damage it deals, and the party's heals blunt it.",
+    "rests_on": ["hp (scale): max HP minus current"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-065",
+    "way": "build",
+    "also": [],
+    "question": "timing",
+    "play": "An HP floor holds a missing-HP hitter at 1 while it lasts, so its build reaches the top and stays there until the floor ends.",
+    "rests_on": ["floor (status field)", "hp (scale): max HP minus current"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-066",
+    "way": "build",
+    "also": [],
+    "question": "price",
+    "play": "A cap on its own healing keeps a missing-HP hitter hurt whatever the party's healers do. Its own side can't undo the build, so Shields and Defense must keep it standing.",
+    "rests_on": ["healCap (status field)", "hp (scale): max HP minus current", "Shield"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-067",
+    "way": "build",
+    "also": [],
+    "question": "price",
+    "play": "A unit that spends its own life to grow: each HP price it pays adds to a counter, and paying itself down also feeds any missing-HP scaling it has, while the party's heals refill what it spends.",
+    "rests_on": ["pay (effect op)", "hp_paid", "hp (ability change)"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-068",
+    "way": "build",
+    "also": [],
+    "question": "timing",
+    "play": "A unit that turns dangerous once hurt: under a line of HP it gains a lasting buff or its hits step up. Above the line it fights plain, so its danger arrives in one step once the fight has worn it down.",
+    "rests_on": ["hp_low", "hpBelow", "when (scale)"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-069",
+    "way": "build",
+    "also": [],
+    "question": "price",
+    "play": "A counter that grows only while its holder stays above a line of HP makes the party's Shields and heals the build's upkeep; a dip under the line stalls it until the unit is mended.",
+    "rests_on": ["hp_high", "hpAtLeast", "pulse (status field)", "if (condition)"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-070",
+    "way": "build",
+    "also": [],
+    "question": "price",
+    "play": "A unit that grows from the damage it owes: its piece holds its hits as Owed, and its own hits scale from the debt it carries, strongest just before the debt comes due and lands as one blow.",
+    "rests_on": ["Owed", "owe (status field)", "debt (status field)", "stacks (scale)"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-071",
+    "way": "build",
+    "also": [],
+    "question": "price",
+    "play": "A counter that grows with each of its holder's actions and halves each time it's hit rewards keeping it out of the foes' picks. Low Aggro, a Taunting ally or Hidden protect the climb; a unit foes reach keeps losing it.",
+    "rests_on": ["trigger (status field)", "drop (status field)", "hit_taken", "Aggro", "Taunt", "Hidden"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-072",
+    "way": "build",
+    "also": [],
+    "question": "price",
+    "play": "An aura its source keeps on each ally grows while the source stands and ends the moment it falls, so the party's growth rests on keeping one unit alive.",
+    "rests_on": ["Per source", "ko (status-ended cause)"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-073",
+    "way": "build",
+    "also": [],
+    "question": "price",
+    "play": "A stacking ability with no cooldown is cast whenever its wind-up and MP allow, laying stacks as fast as fuel lasts, so the ceiling is bought with MP rather than with slots or time.",
+    "rests_on": ["cooldown (ability change)", "MP", "apply"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-074",
+    "way": "build",
+    "also": [],
+    "question": "price",
+    "play": "MP gained past a full pool becomes stacks, so a unit given more MP regen, Clarity or Siphon than it spends turns the surplus into growth instead of waste.",
+    "rests_on": ["mp_over", "MP regeneration", "Clarity", "Siphon"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-075",
+    "way": "build",
+    "also": [],
+    "question": "width",
+    "play": "One unit grows from the party's tempo: it gains a stack each time an ally acts or lands a hit, or only the ally in a named or the next seat, so every speed gain on the others speeds its climb.",
+    "rests_on": ["action_resolve", "hit_lands", "whose: ally", "seat (event filter)"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-076",
+    "way": "build",
+    "also": ["sustain"],
+    "question": "price",
+    "play": "A unit that grows from being mended: each heal it receives adds a stack, so the party's healer is also its damage support. Hurt and healed often, it climbs fastest; Rot on it stalls the build.",
+    "rests_on": ["healed", "Heal", "Regen", "Rot"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-077",
+    "way": "build",
+    "also": ["sustain"],
+    "question": "price",
+    "play": "Healing past full becomes stacks, so a unit that rarely needs mending turns the party's spare heals and Regen into growth.",
+    "rests_on": ["overhealed", "Heal", "Regen"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-078",
+    "way": "build",
+    "also": [],
+    "question": "width",
+    "play": "One unit's growth becomes the whole party's: each stack it gains is copied to its allies as it lands.",
+    "rests_on": ["share (effect op)", "status_gained", "copy (apply field)"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-079",
+    "way": "build",
+    "also": [],
+    "question": "width",
+    "play": "The party's gains pile on one unit: what an ally would gain is diverted to the party's strongest hitter, so one tall pile climbs instead of several short ones.",
+    "rests_on": ["divert (status field)"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-080",
+    "way": "build",
+    "also": [],
+    "question": "width",
+    "play": "One unit builds and another cashes: a unit's hits scale from the stacks held by the ally in a set seat, so the formation decides whose growth pays whom.",
+    "rests_on": ["seat (scale)", "stacks (scale)"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-081",
+    "way": "build",
+    "also": [],
+    "question": "width",
+    "play": "A unit whose hits grow with how many buffs it holds hits harder for each different buff the party keeps on it, so breadth of support pays rather than one tall buff.",
+    "rests_on": ["count (scale): buffs"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-082",
+    "way": "build",
+    "also": [],
+    "question": "size",
+    "play": "An applier whose stacks per application grow over the fight lifts its upkeep's ceiling twice over: its applications scale from a stat or counter that climbs, or add more for each of a count that rises.",
+    "rests_on": ["stacks (apply field)", "stacks (ability change)", "times (ability change)", "boosts (status field): a status's tag"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-083",
+    "way": "build",
+    "also": [],
+    "question": "size",
+    "play": "The build on the foes grows the party's hitters too: each tick of an affliction on a foe, or each cap it reaches, adds to a party unit's counter, so two builds climb as one.",
+    "rests_on": ["damage_taken", "whose: foe", "status_triggered", "status_capped"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-084",
+    "way": "build",
+    "also": ["debuff"],
+    "question": "timing",
+    "play": "A party that grows with every wind-up it breaks: each foe cast it interrupts with Silence adds a stack to its units.",
+    "rests_on": ["action_interrupted", "whose: foe", "Silence"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-085",
+    "way": "build",
+    "also": [],
+    "question": "timing",
+    "play": "A unit that charges and fires on a cycle: a counter on it sets off a payoff at its cap and empties by its own definition, so each fill is a countdown to the next big blow.",
+    "rests_on": ["status_capped", "cap (status field)", "strike (effect op)", "damage (effect op)"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-086",
+    "way": "build",
+    "also": ["burst"],
+    "question": "timing",
+    "play": "A build that starts high: gear or a seat lays stacks of an affliction on every foe as the fight starts, so the party's upkeep only has to hold a pile it never had to raise.",
+    "rests_on": ["fight_start", "apply", "seat (formation)", "Burn", "Sunder"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-087",
+    "way": "build",
+    "also": [],
+    "question": "width",
+    "play": "A Mark draws the party's basic attacks and random-foe abilities to one foe, so every applier's stacks pile there instead of scattering, and one deep pile replaces several shallow ones.",
+    "rests_on": ["Marked", "focus (status field)"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-088",
+    "way": "build",
+    "also": [],
+    "question": "size",
+    "play": "A unit that gains Defense or max HP each time it's hit, with abilities that read that stat in place of Attack, grows tougher and harder-hitting together as the foes press it.",
+    "rests_on": ["rescale (status field)", "hit_taken", "stats (status field)", "Defense"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-089",
+    "way": "build",
+    "also": [],
+    "question": "price",
+    "play": "A unit whose hits scale from its own Shield pool hits harder as allies pile Shield on it and softer as foes break it: the party's shielding is its damage, and each foe blow takes from both.",
+    "rests_on": ["Shield", "absorb (status field)", "stacks (scale)"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-090",
+    "way": "build",
+    "also": [],
+    "question": "timing",
+    "play": "A foe that owes the party's hits: a marker on it holds their damage, after Defense, as a debt that lands all at once a set time later. Its HP holds until the lump lands, and a payoff reading the debt grows with it.",
+    "rests_on": ["Owed", "owe (status field)", "debt (status field)", "stacks (scale)"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-091",
+    "way": "build",
+    "also": [],
+    "question": "timing",
+    "play": "Doom laid on a foe early starts a countdown that kills only a hurt foe, so the party's damage through the countdown decides whether it lands as a finisher.",
+    "rests_on": ["Doom"],
+    "needs_block": null,
+    "needs_ruling": "Doom is enemy-only: the party can't use it until the director says so (vocabulary.md, tiers ruling)."
+  },
+  {
+    "id": "U-092",
+    "way": "build",
+    "also": ["debuff"],
+    "question": "size",
+    "play": "Bulwark laid on a foe is stripped a stack per hit; at zero the foe is Stunned and takes double damage for a while, then it refills, so a party of many small hits cycles break windows on it.",
+    "rests_on": ["Bulwark", "hit_taken", "Stun"],
+    "needs_block": null,
+    "needs_ruling": "Bulwark is enemy-only: the party can't use it until the director says so (vocabulary.md, tiers ruling)."
+  },
+  {
+    "id": "U-093",
+    "way": "build",
+    "also": [],
+    "question": "width",
+    "play": "A foe whose growth feeds the party: a debuff diverts what it would gain to the unit that laid it, so the more the foe builds itself up, the more the party grows.",
+    "rests_on": ["divert (status field)", "source (effect target)"],
+    "needs_block": "A status: a debuff carrying divert, sending what its holder would gain to the unit that applied it.",
+    "needs_ruling": null
+  },
+  {
+    "id": "U-094",
+    "way": "build",
+    "also": [],
+    "question": "width",
+    "play": "A party that grows in numbers: a unit brings new allies into the fight on a timer or an event, each entering with its actions on cooldown, so the party's count is the build.",
+    "rests_on": ["summon"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-095",
+    "way": "build",
+    "also": ["sustain"],
+    "question": "timing",
+    "play": "A party that wins late on the rules' own clock: past a set time every unit on both sides deals more, and more at each step, so a party that outlasts the foes' early pressure meets the steps with its sustain intact.",
+    "rests_on": ["Enrage (RULES.enrage)"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-096",
+    "way": "build",
+    "also": [],
+    "question": "timing",
+    "play": "A unit that changes how it fights mid-fight: once its counter reaches a line, a new rule switches on, its abilities resolving twice or its swings striking again, instead of only its numbers climbing.",
+    "rests_on": ["recast", "strike (status field)", "stacks (unit condition)", "if (reaction)"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-097",
+    "way": "build",
+    "also": [],
+    "question": "price",
+    "play": "A build that goes around armour: against a high-Defense foe a fast, light weapon's swings barely hurt, but each lays its riders in full, so the untyped damage the party builds does the killing its hits can't.",
+    "rests_on": ["Statuses on hits", "riders (status field)", "Defense", "Swing: Light", "Burn"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-098",
+    "way": "build",
+    "also": [],
+    "question": "price",
+    "play": "A unit that grows from the foes' afflictions: each debuff they lay on it adds a stack it keeps, so a Cleanse that lifts the debuffs later leaves the growth behind.",
+    "rests_on": ["status_gained", "other (event filter): foe", "Cleanse"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-099",
+    "way": "build",
+    "also": [],
+    "question": "timing",
+    "play": "A builder that rises at its peak: its counter survives its knockout, so when an ally revives it in the same fight it comes back with every stack it had built instead of starting over.",
+    "rests_on": ["survivesKO", "Revive", "revived"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-100",
+    "way": "build",
+    "also": [],
+    "question": "price",
+    "play": "Growth that costs its own guard: each stack of a counter raises the unit's damage and lowers its Defense or raises the damage it takes, so the more it builds, the more fragile it gets.",
+    "rests_on": ["stats (status field)", "taken (status field)", "boosts (status field)"],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "U-101",
+    "way": "build",
+    "also": [],
+    "question": "price",
+    "play": "A unit that grows on an ally's life: each of its casts takes an HP price from an ally, never below 1, and adds a stack to itself, so one member's HP fuels another's climb.",
+    "rests_on": ["pay (effect op)", "hp_paid"],
+    "needs_block": null,
+    "needs_ruling": null
+  }
+]
