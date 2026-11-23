@@ -4,16 +4,15 @@ The director's intent is in `intent.md`, and what they've ruled of the frame is 
 
 ## Decisions needed
 
-1. **Is the frame set?** It's the brief's rulings, with two of the agent's below (the two pairs, and a hole in every colour). If so, this step closes: the frame goes into a document of its own with the rulings at its head, the rulings it contradicts are rewritten (the builds as the loot's scaffold in *Gear design: the builds*, "built backwards from builds" in *Gear design: philosophy*), and the wheel opens as the next step.
+1. **Is the frame set?** It's the brief's rulings, with the agent's hole in every colour (below). If so, this step closes: the frame goes into a document of its own with the rulings at its head, the rulings it contradicts are rewritten (the builds as the loot's scaffold in *Gear design: the builds*, "built backwards from builds" in *Gear design: philosophy*), and the wheel opens as the next step.
 
 Unless the director would rather seed the colours with phrases of their own, the agent brings candidate wheels built from temperaments and the game's mechanics, not from the classes or the builds.
 
 ## The agent's reading of the frame
 
-- **The four ways are two pairs.** Burst and building up are both the party's damage, early or rising. Sustain and debuffs both keep the foes' damage off the party: one is held by the party, the other laid on the foes. Each pair overlaps in what it does, which is why the ways can't be exclusive; what tells the two halves apart is time for the first pair, and which side holds it for the second.
 - **Every colour has a hole as well as a peak,** however wide it is. A colour with no hole pairs with anything and never needs a partner, which is a colour good at everything by another road.
-- **Time pulls them apart.** Burst wants the fight short; sustain and building up want it long, and the enrage caps how long. That tension is one place a colour's opposites can come from.
-- **A style might be written as a few questions any mechanic answers:** how big and how often, how wide, when, and at what price. Two colours sharing a mechanic answer them differently. A suggestion, for the wheel's cards.
+- **A colour's style is read inside each way it leans to.** A suggestion for the wheel's cards: a few questions any way can be asked (how big and how often, how wide, when, at what price), answered differently by each colour that does it.
+- **Symmetry is a pull to resist.** Five colours on a wheel invite giving each the same shape; the ways invite mirroring. Neither is wanted.
 
 ## The frame
 
@@ -31,7 +30,7 @@ On paper, before anything is built:
 - **Coverage:** no colour has a 0 anywhere, so every colour can sustain and kill, and can field a party alone.
 - **Shape:** every colour has a peak and a hole; a shared peak is told apart by style; no two colours have the same profile.
 - **Pairs:** the better of two colours on each way shows what a pair covers and lacks. Every pair can make a party that wins; some come easily and some are exotic.
-- **Opposites lean apart:** a colour's opposites peak where it's weak.
+- **Opposites:** each colour's exclusions can be traced to its opposites.
 - **Identity:** each colour reads as one thing, by the director, on its card.
 
 Whether the decks that come out are fun is judged later: the director on samples, then simulation and the playtest.
