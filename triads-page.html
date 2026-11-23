@@ -113,12 +113,6 @@ button { cursor: pointer; }
 
 .triad { display: grid; gap: 16px; }
 .meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
-.way {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  color: var(--muted);
-}
-.way b { color: var(--ink); font-weight: 500; }
 h1 {
   font-family: var(--font-head);
   font-weight: 600;
@@ -248,7 +242,6 @@ textarea.tall { min-height: 84px; }
   <main class="triad" id="triad">
     <div class="meta">
       <span class="eyebrow" id="count">Triad 1 of 10</span>
-      <span class="way" id="way"></span>
     </div>
     <h1>Which two want the same thing?</h1>
     <p class="hint" id="hint">Tap the odd one out, or pick one of the options under the cards.</p>
@@ -618,11 +611,6 @@ textarea.tall { min-height: 84px; }
     if (!t) return;
     var d = draftFor(t);
     document.getElementById("count").textContent = "Triad " + (idx + 1) + " of " + TRIADS.length;
-    var way = document.getElementById("way");
-    way.textContent = "";
-    way.appendChild(document.createTextNode("All three: "));
-    way.appendChild(el("b", null, t.way));
-    way.appendChild(document.createTextNode(", " + (WAYS[t.way] || "")));
 
     var cards = document.getElementById("cards");
     cards.textContent = "";
