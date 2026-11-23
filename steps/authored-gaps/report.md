@@ -74,6 +74,8 @@ None of this needs the page's source read or anything republished. Where the dir
 
 ## Next: for the session that picks this up
 
+**Waits on the colours** (`docs/colours.md`). The web is sorted by five colours now, not by the builds or the classes: the four ways to win take the place of the roles below, rulings 24 and 25 and Next's items 3 to 8 are overtaken, and the classes are read through the colours' pie after it's made. This step resumes making loot into the pie's holes; the threads and the catalog stand.
+
 Four batches of effects are closed. The web holds 108 effects, 82 on gear and about 22 formations, against 450 pieces and 50 formations (ruling 15). Nothing on the page waits on the director. The catalog in `web.md` stands as it is: it's handed on, not rebuilt.
 
 1. **Read `brief.md` first.** Its reading list is closed. The classes in the web is the section this work rests on.

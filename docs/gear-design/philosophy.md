@@ -13,7 +13,7 @@ The game's combat rules are in *Core set: rules and vocabulary* (its Gear sectio
 
 What the director wants from the loot, distilled, with their words quoted where the wording matters. Where it's wrong, they correct it, and their latest word wins.
 
-- **Designed things, built backwards from builds,** not rules with pieces fitted to them: "It should be designed entities that you build." Depth before width. Nothing earns a place by already existing: "I would not keep any loot that we have now just for the sake of keeping it."
+- **Designed things, made on the colours** (`docs/colours.md`), not rules with pieces fitted to them: "It should be designed entities that you build." Depth before width. Nothing earns a place by already existing: "I would not keep any loot that we have now just for the sake of keeping it."
 - **No limit on the type of effect,** on gear or formations, as long as each one is phrased so the player knows what will happen.
 - **The engine can grow** with the designs: "You can go as far as you want with that." "Engine growing is totally fine."
 - **Chaos and exotics:** "These types of games are about finding the chaos, finding the build in the chaos."

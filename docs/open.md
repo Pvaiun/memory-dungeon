@@ -4,8 +4,8 @@ What's built and waiting on the director, and the questions nobody has settled. 
 
 ## The current step
 
-- **Defining the web** (`steps/web-definition/`, `brief.md` first). A conversation with the director on how the web of effects is sorted. Authored gaps waits on it.
-- **Authored gaps** (`steps/authored-gaps/`, `brief.md` first). A new way to make loot: the agent holds the web and the director authors each gap. Four batches of effects are placed. The classes are the guide now, in place of the builds: the director designs each as stars and words, and they're drawn onto the web. Nothing in the game has changed.
+- **The wheel** (`steps/the-wheel/`, `brief.md` first). The five colours that sort the web, on the frame in `docs/colours.md`. Waiting on the director's intent.
+- **Authored gaps** (`steps/authored-gaps/`, `brief.md` first). A new way to make loot: the agent holds the web and the director authors each gap. Four batches of effects are placed. It waits on the colours' pie, and resumes making loot into its holes. Nothing in the game has changed.
 
 ## Built, awaiting the director's read
 
