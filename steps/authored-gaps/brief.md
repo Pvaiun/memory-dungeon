@@ -2,6 +2,8 @@
 
 Read this first. It says what this step is trying to do and why, how the work is split between the director and the agent, what was tried and dropped on the way here, and what the batches have taught. `intent.md` is the director's intent in their words; `report.md` is their rulings and the handoff; this page is the reasoning behind both, written by the agent that ran the first session. Where the director's word differs, theirs wins.
 
+**Waits on the colours** (`docs/colours.md`). The web is sorted by five colours now, not by the builds or the classes: the four ways to win take the place of the roles below, rulings 24 and 25 and Next's items 3 to 8 are overtaken, and the classes are read through the colours' pie after it's made. This step resumes making loot into the pie's holes; the threads and the catalog stand.
+
 ## What to read
 
 **Read little.** The work is judgement: writing a request that isn't the wrong question, and reading an answer against the rules. The director found that the judgement gets worse as the reading piles up, so this list is closed. What isn't on it is reference: open one section when a specific card or answer needs it, and not before.
