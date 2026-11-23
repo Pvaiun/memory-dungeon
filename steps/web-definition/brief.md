@@ -29,7 +29,9 @@ The list is closed. This step sits beside authored gaps (`steps/authored-gaps/`)
 The frame, as ruled so far. They win over `report.md` where the two differ.
 
 - **Five colours are the web's poles.** A colour is a temperament, not an element. Every colour has its own ways to sustain and to kill, and a party of one colour can be built. A colour's exclusions come from its opposites.
-- **A class is a commander that can shift.** Its trunk sits in a home colour; its versions may speak another colour's mechanics, so a class shows a pair through them and a unit's colours can move through a run. A class is read by the colours its mechanics carry, and comes into the design only as far as the party needs it.
+- **A colour is four things:** what it never does, the mechanics it prefers, the ways to win it leans to, and its style: its own way of doing whatever it does, so a mechanic two colours share behaves differently in each.
+- **Four ways to win, none exclusive:** sustain the party, debuff or disable the foes, burst them down, build the party up. A colour leans toward some and owns none; a party draws on several.
+- **A class is a commander:** one colour or several, read by the colours its mechanics carry. It comes into the design only as far as the party needs it.
 - **The builds don't carry over,** not as a test of the wheel and not as a target. A build's shape, a deck a party ends as, is the model; the nine's spread and fun are unproven.
 - **Later, not now:** whether colours are shown to the player, and what stops a party taking the best of every colour (the mana question).
 
