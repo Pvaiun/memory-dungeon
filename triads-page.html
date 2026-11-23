@@ -459,7 +459,7 @@ textarea.tall { min-height: 84px; }
     if (text != null) e.textContent = text;
     return e;
   }
-  function blankAnswer() { return { odd: null, wants: "", instead: "", add: "", addWay: null }; }
+  function blankAnswer() { return { odd: null, wants: "", instead: "", add: "", addWays: [] }; }
   function blankDraft() { return { kind: null, answers: [blankAnswer(), blankAnswer()], note: "" }; }
 
   function fromSaved(t, body) {
@@ -471,7 +471,7 @@ textarea.tall { min-height: 84px; }
       var a = list[i] || {};
       var letter = null;
       if (a.odd) { var k = t.cards.indexOf(a.odd); if (k >= 0) letter = LETTERS[k]; }
-      d.answers[i] = { odd: letter, wants: a.wants || "", instead: a.instead || "", add: a.add || "", addWay: a.addWay || null };
+      d.answers[i] = { odd: letter, wants: a.wants || "", instead: a.instead || "", add: a.add || "", addWays: waysOf(a) };
     }
     return d;
   }
@@ -482,7 +482,12 @@ textarea.tall { min-height: 84px; }
       if (!raw) return;
       var obj = JSON.parse(raw);
       if (obj && typeof obj === "object") {
-        Object.keys(obj).forEach(function (k) { if (obj[k] && obj[k].d) { drafts[k] = obj[k].d; dirty[k] = true; } });
+        Object.keys(obj).forEach(function (k) {
+          if (!obj[k] || !obj[k].d) return;
+          var d = obj[k].d;
+          (d.answers || []).forEach(function (a) { if (a) a.addWays = waysOf(a); });
+          drafts[k] = d; dirty[k] = true;
+        });
       }
     } catch (e) {}
   }
@@ -621,15 +626,22 @@ textarea.tall { min-height: 84px; }
       : "Dictation stopped: the microphone or speech service failed. Press Speak to try again.");
   }
 
-  function wayPicker(id, value, onPick) {
+  // Ways to win an added card serves, as a list; older saves held one as addWay.
+  function waysOf(a) {
+    if (a && Array.isArray(a.addWays)) return a.addWays.slice();
+    return a && a.addWay ? [a.addWay] : [];
+  }
+
+  function wayPicker(id, value, onToggle) {
     var p = el("div", "pick");
-    p.appendChild(el("span", null, "Its way to win:"));
+    p.appendChild(el("span", null, "Its ways to win, any that apply:"));
     WAY_NAMES.forEach(function (w, i) {
+      var on = value.indexOf(w) >= 0;
       var c = el("button", "chip", w);
       c.type = "button";
       c.id = id + "-" + i;
-      c.setAttribute("aria-pressed", value === w ? "true" : "false");
-      c.addEventListener("click", function () { onPick(value === w ? null : w); });
+      c.setAttribute("aria-pressed", on ? "true" : "false");
+      c.addEventListener("click", function () { onToggle(w); });
       p.appendChild(c);
     });
     return p;
@@ -655,7 +667,12 @@ textarea.tall { min-height: 84px; }
     b.appendChild(field("wants-" + i, "How do the two feel connected?", "How it feels, not the mechanics they share.", a.wants, function (v) { a.wants = v; touch(t); }, true));
     b.appendChild(field("instead-" + i, "What's the third one about?", "If it comes.", a.instead, function (v) { a.instead = v; touch(t); }));
     var addF = field("add-" + i, "Add a fourth", "Optional. A card like the two, going by what you said connects them; ideally from another way to win.", a.add, function (v) { a.add = v; touch(t); });
-    addF.appendChild(wayPicker("addway-" + i, a.addWay, function (w) { a.addWay = w; touch(t); render(); }));
+    addF.appendChild(wayPicker("addway-" + i, a.addWays, function (w) {
+      var k = a.addWays.indexOf(w);
+      if (k >= 0) a.addWays.splice(k, 1); else a.addWays.push(w);
+      a.addWays.sort(function (x, y) { return WAY_NAMES.indexOf(x) - WAY_NAMES.indexOf(y); });
+      touch(t); render();
+    }));
     b.appendChild(addF);
     return b;
   }
@@ -753,7 +770,7 @@ textarea.tall { min-height: 84px; }
         wants: a.wants.trim(),
         instead: a.instead.trim(),
         add: a.add.trim(),
-        addWay: a.addWay || null
+        addWays: a.addWays.slice()
       });
     }
     return {
