@@ -152,7 +152,27 @@ footer { color: var(--muted); font-size: 13px; }
 <script>
 const BATCH = 1;
 const PROBLEMS = [
-  /*PROBLEMS*/
+  {"id": "b1-01", "label": "1.01", "text": "Make landing damage early count in a boss fight. A boss outlasts every cooldown many times over, so a party that front-loads its damage ends the fight no sooner than one that deals the same damage evenly."},
+  {"id": "b1-02", "label": "1.02", "text": "Make mending reach the ally in most danger. A heal aimed at the most hurt ally picks by share of max HP, so a sturdy ally at half HP, or one paying HP for its own actions, draws it away from a fragile ally one blow from falling."},
+  {"id": "b1-03", "label": "1.03", "text": "Make a foe's visible wind-up matter to a party that can't cancel it. Only Silence ends a wind-up and a Stun only pauses one; everything else the party does to a foe lands the same whether it's winding up or not."},
+  {"id": "b1-04", "label": "1.04", "text": "Let a unit build first and cash in later. An ability that pays out on a foe's stacks fires the moment it's ready, so it goes off on whatever little is there, and slot order only decides between abilities that are ready at the same moment."},
+  {"id": "b1-05", "label": "1.05", "text": "Make a crit the party sets up with Brittle land on a hit worth critting. Brittle makes the next hit on its holder a crit, whoever lands it, so on a foe several allies are hitting, the smallest blow usually spends it: a quick basic attack, or Double strike's second strike."},
+  {"id": "b1-06", "label": "1.06", "text": "Get damage into a foe that takes much less from every hit, in a fight's first seconds. What reaches it in full is a status's own damage or Thorns, and each of those builds up over time or waits for the foe to be hit, to act or to strike."},
+  {"id": "b1-07", "label": "1.07", "text": "Keep a run's easy fights from spending the fuel its hard ones need. Units cast whenever an ability is ready, as freely in an easy fight as in a hard one; MP carries from fight to fight, and no unit regains it in a fight by itself."},
+  {"id": "b1-08", "label": "1.08", "text": "Give the party a way to beat a foe that heals its most hurt ally. The party's own focus aims the heal: the harder it hits one foe, the more surely the next heal lands there."},
+  {"id": "b1-09", "label": "1.09", "text": "Let a unit itself grow more dangerous as a fight goes on, and keep what it grows. The one buff that stacks is Might, and every action its holder takes spends a stack, basic attacks included, so a unit uses up its own growth as fast as it acts."},
+  {"id": "b1-10", "label": "1.10", "text": "Stop a party's heavy hits and its stacks wasting each other on the same foe. Everything laid on a foe ends when it falls, so a blow that knocks out a loaded foe early throws away what an ally spent the fight building on it."},
+  {"id": "b1-11", "label": "1.11", "text": "Let the three units land their biggest hits together. Each acts on its own clock, with its own speeds and wind-ups and cooldowns carried from the last fight, so big hits land seconds apart, and against a foe that heals or a pack that raises its fallen, damage that's spread out gets undone."},
+  {"id": "b1-12", "label": "1.12", "text": "Keep one knockout from turning into three when the unit drawing the foes' blows falls. A unit built to draw takes 85 to 90% of the foes' picks, so when it drops, those blows spread over two allies never dressed to take them."},
+  {"id": "b1-13", "label": "1.13", "text": "Give the party a way to blunt a foe whose danger rides on what its hits carry, not on what they deal. A status a hit carries lands in full whatever Defense or Weaken takes off the hit, so against a foe that Bleeds the party or Sunders its target with every hit, cutting its damage cuts nothing that matters."},
+  {"id": "b1-14", "label": "1.14", "text": "Make stacks laid on foes count in a short regular fight, not only a long one. Every foe starts a fight clean, and stacks that climb only with upkeep peak about when a regular fight is already decided."},
+  {"id": "b1-15", "label": "1.15", "text": "Stop a party's slowing of a boss and its stopping of the boss's big cast from competing. Every Stun, Silence and Slow that lands on a boss, a Chill shatter's Stun included, adds hidden resistance that first shortens the next one and then turns it away, so slowing a boss to soften its blows uses up what the interrupt was counting on."},
+  {"id": "b1-16", "label": "1.16", "text": "Give the party some say over whether a group's foes fall together or one at a time. Bombs that fall together wipe the party, while a Linked pack or a Vengeful pair punishes foes that fall apart, and the party's kills land wherever its scattered hits happen to finish them."},
+  {"id": "b1-17", "label": "1.17", "text": "Find a way through a Silence field once it has landed. Every ally is left to its basic attacks, and the Cleanse that would lift it is Silenced too, so a party that didn't stop the wind-up has no good way through what follows."},
+  {"id": "b1-18", "label": "1.18", "text": "Give the party a way to bear on a foe's special stats. A foe's Evasion, Thorns, Siphon or Double strike holds all fight, nothing in the statuses or effects lowers it, and all the party has to meet those stats sits on its own side."},
+  {"id": "b1-19", "label": "1.19", "text": "Find something for a party to do with a growth once it's at its top, in a long fight. Might, Sunder and Shock stop at a cap, and Burn levels off where its drain meets its upkeep, so through a boss fight's second half the party spends its actions holding the top and gets no more dangerous."},
+  {"id": "b1-20", "label": "1.20", "text": "Give a unit whose abilities mostly heal or shield something to do while the party is whole. Its heal waits while nobody can be healed and its Shield waits while every pool is full, so through a fight's quiet stretches it only swings its weapon."},
+  {"id": "b1-21", "label": "1.21", "text": "Keep healing and fuel drawn from a unit's own hits from drying up in the fights that need them most. Lifesteal and Siphon take a share of what each hit deals, so against foes that are hard to hit or hard to hurt they give least, just when the fight runs long."}
 ];
 
 const STATUS_LABEL = { open: "Open", answered: "Answered", skipped: "Skipped", wrong: "Wrong question" };
@@ -186,11 +206,12 @@ function loadLocal(id) {
 
 function build() {
   const list = document.getElementById("list");
-  PROBLEMS.forEach((p, i) => {
+  PROBLEMS.forEach(p => {
     state[p.id] = { mark: null, text: "" };
     const local = loadLocal(p.id);
     if (local && typeof local.text === "string") state[p.id] = { mark: local.mark || null, text: local.text };
-
+  });
+  PROBLEMS.forEach(p => {
     const li = document.createElement("li");
     li.className = "card";
     li.id = "p-" + p.id;
