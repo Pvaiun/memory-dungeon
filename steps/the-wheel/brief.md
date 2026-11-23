@@ -14,14 +14,14 @@ The colours are found in the gameplay, not authored from a theme. The game's rul
 
 ## How to work
 
-Four stages, each ending with the director. A session runs one stage and stops.
+Four stages, each ending with the director. The first session runs stage 1 and puts up stage 2's page, then stops; each later session runs one stage and stops. What a stage makes is kept in this folder: the merged list in `plays.md`, the page's link and each stage's handoff in `report.md`.
 
 ### 1. The inventory: every play
 
 A **play** is one distinct way to do one of the four ways to win: what happens in a fight, why it wins, and the mechanics it rests on, in the rules' words. It's read from the mechanics and where they meet, not from what the fight's text happens to show.
 
 - **Five agents, run together,** each working alone: one for each way to win, going as deep as the way allows, and one for the plays that only exist where two mechanics meet, across the ways. One agent asked for variety tends to give variations of its first idea; five starting points cover more.
-- **Each agent reads only the sources below,** and none of the primer, the classes, the builds, the gear design or the loot. That's a deliberate exception to reading the primer: it carries the class table and the builds, which this stage must not draw from.
+- **Each agent reads only the sources below,** and none of the primer, the classes, the builds, the gear design or the loot. That's a deliberate exception to reading the primer: it carries the class table and the builds, which this stage must not draw from. Each agent's prompt says so in as many words, and that this overrides the project's standing instruction to read the primer first. Each agent ends its report with every file it opened; a list drawn from any other file is thrown away and run again.
   - `docs/colours.md`: the four ways to win and the style questions (how big and how often, how wide, when, at what price), which are the generator: within a way, a change in any of them that would make a fight play or feel different is a different play.
   - `docs/core-set/vocabulary.md`, whole.
   - `docs/core-set/combat.md`, whole.
@@ -30,7 +30,7 @@ A **play** is one distinct way to do one of the four ways to win: what happens i
 - **Bounds every play keeps:** the player gives no orders in a fight; no positional targeting; a status does the same thing whoever applies it; elements are themes, never mechanics; MP is fuel, and no play is about lasting more fights. A play the rules don't allow yet, but a small new building block would, is kept and marked as needing one. A play that needs a new system isn't.
 - **Distinct, not padded.** Two plays are different if they would play or feel different in a fight. Don't merge them, and don't list the same play twice in other words. Expect a few hundred across the five agents; the count is whatever the space holds.
 - **Each play is one or two plain sentences,** with its way (or ways) to win and the mechanics it rests on. No flavour, no theme, no names, no attitude: those are the director's and stage 3's.
-- **The session merges the five lists,** takes out the doubles, and checks for gaps against the threads in `steps/authored-gaps/web.md`, The threads: a thread no play touches is either a gap to fill or a word with nothing in it, said which.
+- **The session merges the five lists** into `plays.md`, takes out the doubles, and checks for gaps against the threads in `steps/authored-gaps/web.md`, The threads: a thread no play touches is either a gap to fill or a word with nothing in it, said which.
 
 **The agents' prompts give intent and ranges, never examples.** An agent copies what it's shown, and an example play in a prompt becomes a hundred plays like it.
 
