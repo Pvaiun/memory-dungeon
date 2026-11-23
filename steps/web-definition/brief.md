@@ -24,6 +24,17 @@ The list is closed. This step sits beside authored gaps (`steps/authored-gaps/`)
 - `report.md`: the agent's frame and way of working, and the decisions it needs.
 - `four-lines.md`: one way to sort the web that an agent proposed, with how far it was measured to hold. Not a ruling.
 
+## The director's rulings
+
+The frame, as ruled so far. They win over `report.md` where the two differ.
+
+- **Five colours are the web's poles.** A colour is a temperament, not an element. Every colour has its own ways to sustain and to kill, and a party of one colour can be built. A colour's exclusions come from its opposites.
+- **A class is a commander that can shift.** Its trunk sits in a home colour; its versions may speak another colour's mechanics, so a class shows a pair through them and a unit's colours can move through a run. A class is read by the colours its mechanics carry, and comes into the design only as far as the party needs it.
+- **The builds don't carry over,** not as a test of the wheel and not as a target. A build's shape, a deck a party ends as, is the model; the nine's spread and fun are unproven.
+- **Later, not now:** whether colours are shown to the player, and what stops a party taking the best of every colour (the mana question).
+
+**For authored gaps:** it will make loot on the colours, not on the builds; the builds' tags don't guide it.
+
 ## How to work
 
 Talk it through in the chat, short and plain. Measure a claim about how fights work before leaning on it. When the director rules, record the ruling here, and say what it changes for authored gaps.
