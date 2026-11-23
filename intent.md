@@ -8,3 +8,5 @@ What the director wants from this work. Where it's wrong, they correct it.
 - **Coverage from the cards, not from memory.** The agents make the cards span everything the rules allow, so nothing depends on what the director thinks of on the day.
 - **Agnostic of the classes and the builds,** and of the director's earlier answers, which were written against questions about the builds. That's why this workspace holds none of them.
 - **The director may design the wheel from their own words** at the end, with the agents drafting apart and challenging it.
+- **The creative output has to come from the director.** The cards only draw it out: what the director says two cards want, and the cards they add of their own. A deck they can't feel anything about has failed, however complete it is.
+- **A pilot first,** for quality: the cards tuned on the director's reactions before the deck is written.

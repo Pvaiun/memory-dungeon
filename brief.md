@@ -9,41 +9,69 @@ Five colours, each on one card (what it never does, the mechanics it prefers, it
 ## The idea
 
 The director can't design colours on a blank page, and can't judge a list of moments in a fight: the fight is where the player has no say. What they can do, fast and well, is look at a few concrete things and say which belong together and why. That's a known way of drawing out the categories an expert works with but can't lay out from nothing (triads, from Kelly's repertory grid). So:
-- **The cards** are things a player could choose, spanning everything the rules allow. The agents make them, and they carry the coverage.
-- **The triads:** three cards at a time. The director names the odd one out and says, in a few words, what the two are after and what the third is after instead. The words are the point.
+- **The cards** are things a player could choose, spanning everything the rules allow. They're stimuli, not answers: what matters is what they draw out of the director.
+- **The triads:** three cards at a time. The director names the odd one out and says, in a few words, what the two want and what the third wants instead. The words are the point.
+- **Add one:** the director may write a card that wants the same thing as the two, ideally from another way to win. It's where their own invention comes in, a card at a time, and it tests whether a distinction spans the ways to win, which a colour must.
 - **The distinctions** that keep coming back, in the director's own vocabulary, each with its two sides, are temperaments in the making. A colour is a set of sides that hang together; its opposites come from the other sides.
+
+**This draws out the director's taste; it doesn't add any.** The creative output has to come from the director: in their words, and in the cards they add. Everything here serves getting it out of them.
 
 **A colour is held together by attitude, not synergy.** Cards that belong together because they work together make a build, which is a deck a party ends as, not a colour. A distinction that only says two cards share a mechanic is a fact about the cards, not a temperament.
 
+## Who knows what
+
+- **The session knows the goal:** it aims the triads and gathers the director's words, and needs the frame to do it. It never suggests words to the director, groups cards in front of them, or aims a triad to lead toward an answer.
+- **The agents who write the cards don't.** Whoever writes the stimuli knowing what's being looked for plants it. Their prompts say nothing of colours, temperaments or what the cards are for beyond being cards a player could choose, and they don't read `sources/colours.md`: they read `sources/ways-to-win.md` in its place.
+
+## What a card is
+
+One thing a player could choose in a run (a piece, an ability or a version of one, a seat), in one or two plain sentences saying what it does, as a card in the game would. Scale words, not numbers. No flavour, theme, name or attitude, and no slot or class.
+
+- **A hook, not a description:** one bold, specific idea a player would stop at and wonder how to use, at the specificity of a rare. A condition, a trade or a twist. Plain stat cards don't carry an attitude and stay out, and so does the shape that trades one number up for another down.
+- **Bounds every card keeps:** the player gives no orders in a fight; no positional targeting; a status does the same thing whoever applies it; elements are themes, never mechanics; MP is fuel, and no card is about lasting more fights. A card the rules don't allow yet, but a small new building block would, is kept and marked as needing one.
+- **The card-writers' prompts give intent and ranges, never examples.** An example card in a prompt becomes a hundred cards like it.
+
+## The page
+
+One triad at a time, the three cards side by side, the same question every time: **which two want the same thing?** For each triad, the director:
+- taps the odd one out, or **no two belong**, or **splits two ways** (and gives both), or **none of these grabs me**;
+- writes a few words: what the two want, and, if it comes, what the third wants instead;
+- may **add one:** a card that wants the same thing as the two, ideally from another way to win.
+
+Answers are saved where the agent can read them back (the artifact's database). The director checks that one answer survives a reload before going on. Everything the director writes is kept in their words.
+
 ## How to work
 
-Stages, each ending with the director. Each session runs one stage or one batch of triads and stops. Every card is kept in `cards.md`, every triad and its answer in `triads.md`, the page's link and each session's handoff in `report.md`.
+Each session runs one stage or one batch and stops. Every card is kept in `cards.md` (the director's own marked as theirs), every triad and its answer in `triads.md`, the page's link and each session's handoff in `report.md`.
 
-### 1. The cards, and the first batch
+### 0. The pilot
 
-**A card** is one thing a player could choose in a run (a piece, an ability or a version of one, a seat): one plain sentence saying what it does, as a card in the game would. Scale words, not numbers. No flavour, theme, name or attitude, and no slot or class.
+To tune the cards on the director's reactions before a deck is made: how bold, how long, how specific.
+- **One agent writes thirty to forty cards,** about a quarter for each way to win, on as many different mechanics as it can. It reads `sources/ways-to-win.md`, `sources/vocabulary.md`, `sources/combat.md`, `sources/primitives.md` and `sources/gear-rules.md`.
+- **Ten triads, each inside one way to win,** the three cards on different mechanics, so the obvious split (what kills against what protects) isn't there to reach for. The ten spread across the four ways.
+- **Put up the page,** and stop.
+- **The next session reads the answers with the director:** whether their words read as what something wants, or only as what it does; which cards were dead and why; what made a card easy to have a feeling about. What's learned is written into `report.md` as the standard the deck is written to. If the words only ever say what cards do, the director decides whether to change the cards, change the question, or stop.
 
-- **Five agents, run together,** each working alone, draft the cards: one for each way to win, and one for where mechanics meet across the ways. Each reads `sources/colours.md` (the four ways to win, and the style questions, which are the spread to cover: how big and how often, how wide, when, at what price), `sources/vocabulary.md`, `sources/combat.md`, `sources/primitives.md` and `sources/gear-rules.md`.
-- **Bounds every card keeps:** the player gives no orders in a fight; no positional targeting; a status does the same thing whoever applies it; elements are themes, never mechanics; MP is fuel, and no card is about lasting more fights. A card the rules don't allow yet, but a small new building block would, is kept and marked as needing one.
-- **The session merges them** into `cards.md`: one card per distinct choice, the doubles taken out, checked for gaps against `sources/threads.md`. Somewhere between one and two hundred and fifty cards; the space decides.
-- **The agents' prompts give intent and ranges, never examples.** An example card in a prompt becomes a hundred cards like it.
+### 1. The deck, and the first batch
 
-**The first batch:** about twenty-five triads, spread across the cards so that every way to win and every part of the style questions turns up. In the first batch, no two cards in a triad share their main mechanic: kinship has to come from something other than the mechanic, which is where attitude lives.
-
-**The page:** one triad at a time, the three cards side by side. The director taps the odd one out, and writes a few words: what the two are after, and, if it comes, what the third is after instead. They can say no two belong, or that it splits two ways (and give both). The question on the page is the same every time: **which two would the same kind of player reach for?** Answers are saved where the agent can read them back (the artifact's database). Then stop until the director says the batch is done.
+- **Five agents, run together,** each working alone and to the pilot's standard, write the deck: one for each way to win, and one for where mechanics meet across the ways. Each reads the same sources as the pilot's agent.
+- **The session merges them** into `cards.md` with the pilot's cards and any the director added: one card per distinct choice, the doubles taken out, checked for gaps against `sources/threads.md`. Somewhere between one and two hundred and fifty cards; the space decides.
+- **The first batch:** about twenty-five triads, each inside one way to win, on different mechanics, spread across the deck. Then the page, and stop.
 
 ### 2. More batches, aimed
 
-From the answers so far, about twenty-five triads a batch, aimed by the session:
+About twenty-five triads a batch, aimed by the session from the answers so far:
+- **Across the ways to win,** once distinctions are showing: cards from different ways that might want the same thing. A distinction that holds across the ways is what a colour is made of; one that only holds inside a way is a style.
 - **At the distinctions showing,** to test them: two cards the director put together before, beside a third that might split them a new way; cards that sit on either side of a distinction, in new company.
-- **At cards and corners not yet seen.**
-- **At cards that share a mechanic,** once distinctions are showing: whether the director splits them by attitude is how a colour's style shows.
+- **At cards and corners not yet seen,** and at the director's own added cards.
+- **At cards that share a mechanic,** late: whether the director splits them by attitude is how a colour's style shows.
+- **Dead cards** (those behind "none of these grabs me" more than once) are rewritten to the standard or dropped.
 
 **When to stop:** when batches stop bringing new distinctions. Say in `report.md` after each batch how many new ones it brought; the director decides.
 
 ### 3. The distinctions
 
-- **The director's words, gathered** into `distinctions.md`: each distinction with its two sides, in their words, how often it came up, and the triads it came from.
+- **The director's words, gathered** into `distinctions.md`: each distinction with its two sides, in their words, how often it came up, which ways to win it was seen across, and the triads and added cards it came from.
 - **Nothing is merged without the director:** where two of their phrasings look like one distinction, the session proposes the merge and the director confirms or refuses it.
 - **Every card placed** on the main distinctions, as the session's guess, shown to the director to correct, a sample or all of it, as they choose.
 
@@ -61,9 +89,9 @@ From the answers so far, about twenty-five triads a batch, aimed by the session:
 
 ### 5. The audit, the pick, the question and the names
 
-- **The audit:** the leading wheel checked against every card, for what has no home and no deliberate absence, and for the failures below.
-- **The director picks, merges or writes the wheel,** and the session writes each colour's card into `wheel.md`.
-- **The question the five answer** is named from the wheel, now that it can be seen.
+- **The audit:** the leading set checked against every card, for what has no home and no deliberate absence, and for the failures below.
+- **The director picks, merges or writes the five,** and the session writes each colour's card into `wheel.md`.
+- **The question the five answer** is named from them, now that they can be seen.
 - **Names last,** with the director, from their own words where they can be.
 - **Then the work goes back to the main line** with the director, where it joins the design.
 
@@ -71,9 +99,10 @@ From the answers so far, about twenty-five triads a batch, aimed by the session:
 
 - It's held together by synergy, or by a shared mechanic, not by attitude: a build in disguise.
 - It holds cards from one way to win only.
+- It's a kind of player (careful, reckless, a builder of combos), not a temperament: those run across every colour.
 - It could sit unchanged in another fantasy game, or matches one of Magic's colours one to one.
 - It's an element, or a role.
-- Its profile mirrors another colour's, or the wheel gives every colour the same shape.
+- Its profile mirrors another colour's, or the five share one shape.
 
 ## Rules for the work
 
