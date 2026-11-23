@@ -1,0 +1,580 @@
+<title>The Play Inventory</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column; a sticky bar of the four ways; each way split by the style question its plays turn on. */
+:root {
+  --bg: #f4f5f8;
+  --surface: #ffffff;
+  --sunk: #eceef3;
+  --ink: #1a2030;
+  --muted: #5a6376;
+  --line: #dadfe7;
+  --accent: #3346a5;
+  --accent-ink: #ffffff;
+  --alive: #17845a;
+  --alive-soft: #dff3ea;
+  --flat: #7a6a3a;
+  --flat-soft: #f1ecdc;
+  --never: #b3363a;
+  --never-soft: #f8e1e1;
+  --warn: #8a5a00;
+  --font-display: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --radius: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11141a; --surface: #191d25; --sunk: #222733; --ink: #e5e8ee; --muted: #9aa2b1; --line: #2c323e;
+    --accent: #93a3ff; --accent-ink: #11141a;
+    --alive: #4cc48c; --alive-soft: #173328; --flat: #cdb46c; --flat-soft: #322c1b; --never: #f07a7a; --never-soft: #3a1d20; --warn: #e0b052;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11141a; --surface: #191d25; --sunk: #222733; --ink: #e5e8ee; --muted: #9aa2b1; --line: #2c323e;
+  --accent: #93a3ff; --accent-ink: #11141a;
+  --alive: #4cc48c; --alive-soft: #173328; --flat: #cdb46c; --flat-soft: #322c1b; --never: #f07a7a; --never-soft: #3a1d20; --warn: #e0b052;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.5; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
+.wrap { max-width: 760px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+button, textarea, input { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Header */
+.head { padding-block: 28px 20px; display: grid; gap: 14px; }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0; }
+h1 { font-size: clamp(28px, 6vw, 38px); font-weight: 700; }
+.lede { margin: 0; color: var(--muted); max-width: 62ch; }
+.lede strong { color: var(--ink); }
+.tally { display: grid; gap: 8px; }
+.bar { height: 8px; border-radius: 99px; background: var(--sunk); display: flex; overflow: hidden; }
+.bar span { display: block; height: 100%; }
+.bar .a { background: var(--alive); } .bar .f { background: var(--flat); } .bar .n { background: var(--never); }
+.counts { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.counts b { color: var(--ink); font-weight: 700; }
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; vertical-align: 1px; }
+.dot.a { background: var(--alive); } .dot.f { background: var(--flat); } .dot.n { background: var(--never); }
+.conn { font-size: 13px; color: var(--muted); margin: 0; }
+.conn.bad { color: var(--warn); }
+
+/* Ramble boxes */
+.ramble { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; display: grid; gap: 8px; }
+.ramble label { font-family: var(--font-display); font-weight: 600; font-size: 15px; }
+.ramble p { margin: 0; font-size: 14px; color: var(--muted); }
+.ramble textarea { width: 100%; min-height: 96px; resize: vertical; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); padding: 10px 12px; line-height: 1.5; }
+.saved { font-size: 12px; color: var(--muted); min-height: 1em; font-family: var(--font-mono); }
+
+/* Ways bar */
+.ways { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--surface); border-block: 1px solid var(--line); }
+.ways .wrap { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; padding-block: 6px; }
+.way-tab { border: 0; background: transparent; border-radius: 8px; padding: 8px 6px; text-align: left; display: grid; gap: 2px; min-width: 0; }
+.way-tab .nm { font-family: var(--font-display); font-weight: 600; font-size: 15px; line-height: 1.2; }
+.way-tab .pr { font-family: var(--font-mono); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.way-tab[aria-selected="true"] { background: var(--accent); color: var(--accent-ink); }
+.way-tab[aria-selected="true"] .pr { color: inherit; opacity: 0.85; }
+.way-tab:not([aria-selected="true"]):hover { background: var(--sunk); }
+
+/* Way panel */
+.panel { padding-block: 22px 80px; display: grid; gap: 18px; }
+.way-head { display: grid; gap: 6px; }
+.way-head h2 { font-size: 24px; }
+.way-head p { margin: 0; color: var(--muted); max-width: 62ch; }
+.tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { border: 1px solid var(--line); background: var(--surface); border-radius: 99px; padding: 4px 12px; font-size: 14px; }
+.chip[aria-pressed="true"] { border-color: var(--accent); background: var(--accent); color: var(--accent-ink); }
+.search { flex: 1 1 200px; min-width: 0; border: 1px solid var(--line); background: var(--surface); border-radius: 99px; padding: 5px 14px; font-size: 14px; }
+.next { border: 1px solid var(--line); background: var(--surface); border-radius: 99px; padding: 4px 12px; font-size: 14px; }
+.qnav { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 14px; }
+.qnav a { color: var(--accent); text-decoration: none; }
+.qnav a:hover { text-decoration: underline; }
+.qnav span { color: var(--muted); font-family: var(--font-mono); font-size: 12px; }
+
+.q { display: grid; gap: 0; scroll-margin-top: 90px; }
+.q > header { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding-block: 10px 8px; border-bottom: 2px solid var(--ink); }
+.q > header h3 { font-size: 18px; }
+.q > header .pr { font-family: var(--font-mono); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.q .empty { color: var(--muted); font-size: 14px; padding-block: 12px; margin: 0; }
+
+/* A play */
+.play { display: grid; gap: 8px; padding-block: 14px; border-bottom: 1px solid var(--line); scroll-margin-top: 90px; }
+.play:focus { outline: none; }
+.play:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 4px; }
+.play .meta { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; font-size: 12px; color: var(--muted); }
+.pid { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+.tag { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.02em; border-radius: 4px; padding: 1px 6px; background: var(--sunk); color: var(--muted); }
+.tag.need { background: transparent; border: 1px solid var(--warn); color: var(--warn); }
+.play .txt { margin: 0; max-width: 66ch; }
+.rests { display: flex; flex-wrap: wrap; gap: 4px; list-style: none; margin: 0; padding: 0; }
+.rests button { border: 0; background: transparent; padding: 0 6px 0 0; font-family: var(--font-mono); font-size: 12px; color: var(--accent); }
+.rests button:hover { text-decoration: underline; }
+.needs { margin: 0; font-size: 13px; color: var(--warn); max-width: 66ch; }
+.ctrl { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--surface); }
+.seg button { border: 0; background: transparent; padding: 6px 14px; font-size: 14px; border-right: 1px solid var(--line); }
+.seg button:last-child { border-right: 0; }
+.seg button:hover { background: var(--sunk); }
+.seg button[data-m="alive"][aria-pressed="true"] { background: var(--alive); color: var(--surface); }
+.seg button[data-m="flat"][aria-pressed="true"] { background: var(--flat); color: var(--surface); }
+.seg button[data-m="never"][aria-pressed="true"] { background: var(--never); color: var(--surface); }
+.seg button:disabled { cursor: default; opacity: 0.55; }
+.note-btn { border: 0; background: transparent; color: var(--muted); font-size: 14px; padding: 6px 4px; }
+.note-btn:hover { color: var(--ink); }
+.note-btn.has { color: var(--accent); }
+.play textarea { width: 100%; min-height: 64px; resize: vertical; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); padding: 8px 10px; font-size: 15px; }
+.play.m-alive .pid::before, .play.m-flat .pid::before, .play.m-never .pid::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; vertical-align: 0; }
+.play.m-alive .pid::before { background: var(--alive); }
+.play.m-flat .pid::before { background: var(--flat); }
+.play.m-never .pid::before { background: var(--never); }
+.keys { font-size: 13px; color: var(--muted); margin: 0; }
+.keys kbd { font-family: var(--font-mono); font-size: 11px; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 4px; background: var(--surface); }
+.loading { color: var(--muted); padding-block: 20px; }
+
+@media (max-width: 560px) {
+  .way-tab .nm { font-size: 13px; }
+  .way-tab { padding: 6px 4px; }
+  .keys { display: none; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+</style>
+
+<div class="wrap head">
+  <p class="eyebrow">The wheel · stage 2</p>
+  <h1>The Play Inventory</h1>
+  <p class="lede">Every play stage 1 found in the rules, grouped by way to win and, within each way, by the style question it turns on. Mark each <strong>alive</strong>, <strong>flat</strong> or <strong>never</strong> (you'd hate to see it in the game); a note is optional. Take it a section at a time: everything saves as you go, and nothing is lost between sittings.</p>
+  <div class="tally" id="tally" aria-live="polite">
+    <div class="bar" id="bar"><span class="a"></span><span class="f"></span><span class="n"></span></div>
+    <div class="counts" id="counts">Loading the plays…</div>
+  </div>
+  <p class="conn" id="conn">Connecting to your saved marks…</p>
+  <div class="ramble">
+    <label for="ramble-top">Ramble</label>
+    <p>Anything at all: what's alive, what's missing, what the plays make you think of. Anything you add that no play covers becomes a play.</p>
+    <textarea id="ramble-top" data-ramble="top" disabled></textarea>
+    <div class="saved" data-saved="top"></div>
+  </div>
+</div>
+
+<nav class="ways" aria-label="Ways to win">
+  <div class="wrap" role="tablist" id="tabs"></div>
+</nav>
+
+<main class="wrap panel" id="panel">
+  <p class="loading">Loading the plays…</p>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var WAYS = [
+    { id: "burst", name: "Burst", def: "Damage that lands earlier than it otherwise would, in any size and number of hits." },
+    { id: "build", name: "Build up", def: "The party growing more dangerous as the fight goes on, in itself or in what it lays on the foes." },
+    { id: "debuff", name: "Debuff or disable", def: "Turning the fight's terms against the foes, in what they can do to the party and in what the party can do to them." },
+    { id: "sustain", name: "Sustain", def: "Not dying, and keeping the fight going: harm kept off, harm mended, and the fuel to go on." }
+  ];
+  var WAYNAME = {}; WAYS.forEach(function (w) { WAYNAME[w.id] = w.name; });
+  var QS = [
+    { id: "size", name: "How big and how often" },
+    { id: "width", name: "How wide" },
+    { id: "timing", name: "When" },
+    { id: "price", name: "At what price" }
+  ];
+  var MARKS = ["alive", "flat", "never"];
+  var MARKNAME = { alive: "Alive", flat: "Flat", never: "Never" };
+
+  var S = {
+    plays: [], byId: {}, marks: {}, rambles: {},
+    way: "burst", filter: "all", search: "",
+    db: null, writable: false, ready: false
+  };
+
+  try { var saved = JSON.parse(localStorage.getItem("pi-view") || "{}"); if (saved.filter) S.filter = saved.filter; } catch (e) {}
+  var hashWay = (location.hash || "").replace("#", "");
+  if (WAYS.some(function (w) { return w.id === hashWay; })) S.way = hashWay;
+  else { try { var lw = JSON.parse(localStorage.getItem("pi-view") || "{}").way; if (lw) S.way = lw; } catch (e) {} }
+
+  function remember() { try { localStorage.setItem("pi-view", JSON.stringify({ way: S.way, filter: S.filter })); } catch (e) {} }
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function markOf(id) { var m = S.marks[id]; return m && m.mark ? m.mark : null; }
+  function noteOf(id) { var m = S.marks[id]; return m && m.note ? m.note : ""; }
+
+  // ---- Tally and tabs ----
+  function tally(list) {
+    var t = { total: list.length, alive: 0, flat: 0, never: 0 };
+    list.forEach(function (p) { var m = markOf(p.id); if (m) t[m]++; });
+    t.marked = t.alive + t.flat + t.never;
+    return t;
+  }
+  function renderTally() {
+    var t = tally(S.plays);
+    var bar = document.getElementById("bar").children;
+    var tot = t.total || 1;
+    bar[0].style.width = (100 * t.alive / tot) + "%";
+    bar[1].style.width = (100 * t.flat / tot) + "%";
+    bar[2].style.width = (100 * t.never / tot) + "%";
+    var c = document.getElementById("counts");
+    c.textContent = "";
+    var parts = [
+      [null, t.marked + " of " + t.total + " marked"],
+      ["a", t.alive + " alive"], ["f", t.flat + " flat"], ["n", t.never + " never"]
+    ];
+    parts.forEach(function (p, i) {
+      var s = el("span");
+      if (p[0]) s.appendChild(el("span", "dot " + p[0]));
+      var b = el(i === 0 ? "b" : "span", null, p[1]);
+      s.appendChild(b);
+      c.appendChild(s);
+    });
+    renderTabs();
+  }
+  function renderTabs() {
+    var tabs = document.getElementById("tabs");
+    tabs.textContent = "";
+    WAYS.forEach(function (w) {
+      var list = S.plays.filter(function (p) { return p.way === w.id; });
+      var t = tally(list);
+      var b = el("button", "way-tab");
+      b.type = "button"; b.setAttribute("role", "tab"); b.id = "tab-" + w.id;
+      b.setAttribute("aria-selected", String(S.way === w.id));
+      b.appendChild(el("span", "nm", w.name));
+      b.appendChild(el("span", "pr", t.marked + " / " + t.total));
+      b.addEventListener("click", function () { if (S.way !== w.id) { S.way = w.id; history.replaceState(null, "", "#" + w.id); remember(); renderPanel(); renderTabs(); window.scrollTo({ top: document.querySelector(".ways").offsetTop - 2 }); } });
+      tabs.appendChild(b);
+    });
+  }
+
+  // ---- Panel ----
+  function visible(p) {
+    var m = markOf(p.id);
+    if (S.filter === "unmarked" && m) return false;
+    if (S.filter !== "all" && S.filter !== "unmarked" && m !== S.filter) return false;
+    if (S.search) {
+      var hay = (p.play + " " + (p.rests_on || []).join(" ") + " " + p.id + " " + (p.needs_block || "") + " " + (p.needs_ruling || "")).toLowerCase();
+      var terms = S.search.toLowerCase().split(/\s+/).filter(Boolean);
+      for (var i = 0; i < terms.length; i++) if (hay.indexOf(terms[i]) < 0) return false;
+    }
+    return true;
+  }
+
+  function renderPanel() {
+    var way = WAYS.filter(function (w) { return w.id === S.way; })[0];
+    var panel = document.getElementById("panel");
+    panel.textContent = "";
+    var all = S.plays.filter(function (p) { return p.way === way.id; });
+
+    var head = el("div", "way-head");
+    head.appendChild(el("h2", null, way.name));
+    head.appendChild(el("p", null, way.def));
+    panel.appendChild(head);
+
+    // the way's ramble
+    var r = el("div", "ramble");
+    var lab = el("label", null, "Ramble on " + way.name.toLowerCase()); lab.htmlFor = "ramble-" + way.id;
+    r.appendChild(lab);
+    r.appendChild(el("p", null, "What this way should and shouldn't be, what's missing from it, anything the plays below make you think."));
+    var ta = el("textarea"); ta.id = "ramble-" + way.id; ta.setAttribute("data-ramble", way.id);
+    ta.value = (S.rambles[way.id] && S.rambles[way.id].text) || "";
+    ta.disabled = !S.writable;
+    wireRamble(ta, way.id);
+    r.appendChild(ta);
+    var sv = el("div", "saved"); sv.setAttribute("data-saved", way.id); r.appendChild(sv);
+    panel.appendChild(r);
+
+    // tools
+    var tools = el("div", "tools");
+    var chips = el("div", "chips"); chips.setAttribute("role", "group"); chips.setAttribute("aria-label", "Show");
+    [["all", "All"], ["unmarked", "Unmarked"], ["alive", "Alive"], ["flat", "Flat"], ["never", "Never"]].forEach(function (f) {
+      var b = el("button", "chip", f[1]); b.type = "button";
+      b.setAttribute("aria-pressed", String(S.filter === f[0]));
+      b.addEventListener("click", function () { S.filter = f[0]; remember(); renderPanel(); });
+      chips.appendChild(b);
+    });
+    tools.appendChild(chips);
+    var se = el("input", "search"); se.type = "search"; se.id = "search"; se.placeholder = "Find a mechanic or word"; se.value = S.search;
+    se.setAttribute("aria-label", "Find plays by mechanic or word");
+    var st; se.addEventListener("input", function () { clearTimeout(st); st = setTimeout(function () { S.search = se.value.trim(); renderLists(); }, 200); });
+    tools.appendChild(se);
+    var nx = el("button", "next", "Next unmarked ↓"); nx.type = "button";
+    nx.addEventListener("click", nextUnmarked);
+    tools.appendChild(nx);
+    panel.appendChild(tools);
+
+    var keys = el("p", "keys");
+    keys.innerHTML = "On a play: <kbd>1</kbd> alive · <kbd>2</kbd> flat · <kbd>3</kbd> never · <kbd>0</kbd> clear · <kbd>j</kbd>/<kbd>k</kbd> next and previous · <kbd>n</kbd> note";
+    panel.appendChild(keys);
+
+    var qnav = el("nav", "qnav"); qnav.id = "qnav"; qnav.setAttribute("aria-label", "Style questions");
+    panel.appendChild(qnav);
+
+    var lists = el("div"); lists.id = "lists"; lists.style.display = "grid"; lists.style.gap = "26px";
+    panel.appendChild(lists);
+    renderLists();
+  }
+
+  function renderLists() {
+    var lists = document.getElementById("lists"); if (!lists) return;
+    var qnav = document.getElementById("qnav");
+    lists.textContent = ""; qnav.textContent = "";
+    var all = S.plays.filter(function (p) { return p.way === S.way; });
+    QS.forEach(function (q) {
+      var inQ = all.filter(function (p) { return p.question === q.id; });
+      if (!inQ.length) return;
+      var t = tally(inQ);
+      var a = el("a", null, q.name); a.href = "#q-" + q.id;
+      a.addEventListener("click", function (e) { e.preventDefault(); var t2 = document.getElementById("q-" + q.id); if (t2) t2.scrollIntoView(); });
+      var wrapA = el("span"); wrapA.appendChild(a); wrapA.appendChild(document.createTextNode(" ")); wrapA.appendChild(el("span", null, t.marked + "/" + t.total));
+      qnav.appendChild(wrapA);
+
+      var sec = el("section", "q"); sec.id = "q-" + q.id;
+      var h = el("header");
+      h.appendChild(el("h3", null, q.name));
+      var pr = el("span", "pr", t.marked + " / " + t.total + " marked"); pr.setAttribute("data-qpr", q.id);
+      h.appendChild(pr);
+      sec.appendChild(h);
+      var shown = inQ.filter(visible);
+      if (!shown.length) sec.appendChild(el("p", "empty", S.search ? "No play here matches that search." : "Nothing here under this filter."));
+      shown.forEach(function (p) { sec.appendChild(card(p)); });
+      lists.appendChild(sec);
+    });
+  }
+
+  function card(p) {
+    var a = el("article", "play"); a.id = "p-" + p.id; a.tabIndex = 0; a.setAttribute("data-id", p.id);
+    var m = markOf(p.id); if (m) a.classList.add("m-" + m);
+    var meta = el("div", "meta");
+    meta.appendChild(el("span", "pid", p.id));
+    (p.also || []).forEach(function (w) { meta.appendChild(el("span", "tag", "also " + (WAYNAME[w] || w).toLowerCase())); });
+    if (p.needs_block) meta.appendChild(el("span", "tag need", "needs a new block"));
+    if (p.needs_ruling) meta.appendChild(el("span", "tag need", "needs a ruling changed"));
+    a.appendChild(meta);
+    a.appendChild(el("p", "txt", p.play));
+    if (p.needs_block) a.appendChild(el("p", "needs", "Block: " + p.needs_block));
+    if (p.needs_ruling) a.appendChild(el("p", "needs", "Ruling: " + p.needs_ruling));
+    var ul = el("ul", "rests"); ul.setAttribute("aria-label", "Rests on");
+    (p.rests_on || []).forEach(function (r) {
+      var li = el("li"); var b = el("button", null, r); b.type = "button"; b.title = "Find plays that rest on " + r;
+      b.addEventListener("click", function () { S.search = r; var s = document.getElementById("search"); if (s) s.value = r; renderLists(); });
+      li.appendChild(b); ul.appendChild(li);
+    });
+    a.appendChild(ul);
+
+    var ctrl = el("div", "ctrl");
+    var seg = el("div", "seg"); seg.setAttribute("role", "group"); seg.setAttribute("aria-label", "Mark " + p.id);
+    MARKS.forEach(function (mk) {
+      var b = el("button", null, MARKNAME[mk]); b.type = "button"; b.setAttribute("data-m", mk);
+      b.setAttribute("aria-pressed", String(m === mk)); b.disabled = !S.writable;
+      b.addEventListener("click", function () { setMark(p.id, markOf(p.id) === mk ? null : mk); });
+      seg.appendChild(b);
+    });
+    ctrl.appendChild(seg);
+    var nb = el("button", "note-btn" + (noteOf(p.id) ? " has" : ""), noteOf(p.id) ? "Note ✓" : "Add a note"); nb.type = "button";
+    nb.disabled = !S.writable;
+    ctrl.appendChild(nb);
+    var sv = el("span", "saved"); sv.setAttribute("data-saved", p.id); ctrl.appendChild(sv);
+    a.appendChild(ctrl);
+
+    var ta = el("textarea"); ta.id = "note-" + p.id; ta.hidden = !noteOf(p.id); ta.value = noteOf(p.id);
+    ta.setAttribute("aria-label", "Note on " + p.id); ta.disabled = !S.writable;
+    nb.addEventListener("click", function () { ta.hidden = false; ta.focus(); });
+    wireNote(ta, p.id);
+    a.appendChild(ta);
+    return a;
+  }
+
+  function refreshCard(id) {
+    var a = document.getElementById("p-" + id); if (!a) return;
+    var m = markOf(id);
+    a.classList.remove("m-alive", "m-flat", "m-never"); if (m) a.classList.add("m-" + m);
+    a.querySelectorAll(".seg button").forEach(function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-m") === m)); b.disabled = !S.writable; });
+    var nb = a.querySelector(".note-btn"); var n = noteOf(id);
+    if (nb) { nb.className = "note-btn" + (n ? " has" : ""); nb.textContent = n ? "Note ✓" : "Add a note"; nb.disabled = !S.writable; }
+    var ta = a.querySelector("textarea");
+    if (ta && document.activeElement !== ta && !pendingNote[id]) { ta.value = n; if (n) ta.hidden = false; ta.disabled = !S.writable; }
+  }
+  function refreshCounts() {
+    renderTally();
+    var all = S.plays.filter(function (p) { return p.way === S.way; });
+    QS.forEach(function (q) {
+      var inQ = all.filter(function (p) { return p.question === q.id; });
+      var t = tally(inQ);
+      var pr = document.querySelector('[data-qpr="' + q.id + '"]'); if (pr) pr.textContent = t.marked + " / " + t.total + " marked";
+    });
+    var qnav = document.getElementById("qnav");
+    if (qnav) {
+      var spans = qnav.children, k = 0;
+      QS.forEach(function (q) {
+        var inQ = all.filter(function (p) { return p.question === q.id; });
+        if (!inQ.length) return;
+        var t = tally(inQ); var s = spans[k++]; if (s && s.lastChild) s.lastChild.textContent = t.marked + "/" + t.total;
+      });
+    }
+  }
+
+  function nextUnmarked() {
+    var cards = Array.prototype.slice.call(document.querySelectorAll(".play"));
+    var cur = document.activeElement && document.activeElement.closest ? document.activeElement.closest(".play") : null;
+    var start = cur ? cards.indexOf(cur) + 1 : 0;
+    for (var i = 0; i < cards.length; i++) {
+      var c = cards[(start + i) % cards.length];
+      if (!markOf(c.getAttribute("data-id"))) { c.scrollIntoView({ block: "center" }); c.focus({ preventScroll: true }); return; }
+    }
+  }
+
+  // ---- Saving ----
+  var chains = {}, pendingNote = {}, noteTimers = {}, rambleTimers = {};
+  function flash(key, text) {
+    var s = document.querySelector('[data-saved="' + key + '"]'); if (!s) return;
+    s.textContent = text;
+    if (text === "Saved") setTimeout(function () { if (s.textContent === "Saved") s.textContent = ""; }, 1600);
+  }
+  function enqueue(key, fn) {
+    var prev = chains[key] || Promise.resolve();
+    var next = prev.then(fn, fn);
+    chains[key] = next.catch(function () {});
+    return next;
+  }
+  function writeMark(id) {
+    if (!S.db) return;
+    var body = { mark: markOf(id), note: noteOf(id), at: new Date().toISOString() };
+    flash(id, "Saving…");
+    enqueue("m:" + id, function () {
+      return S.db.collection("marks").doc(id).set(body).then(function () { flash(id, "Saved"); }, function (e) { onWriteError(id, e); });
+    });
+  }
+  function onWriteError(key, e) {
+    var code = e && e.code;
+    if (code === "invalid_argument" || code === "not_granted") { S.writable = false; setConn("This view can only read the marks, so changes aren't being saved.", true); }
+    else if (code === "quota_exceeded") flash(key, "Not saved: the store is full");
+    else flash(key, "Not saved — try again");
+  }
+  function setMark(id, mark) {
+    if (!S.writable) return;
+    var cur = S.marks[id] || {};
+    S.marks[id] = { mark: mark, note: cur.note || "" };
+    refreshCard(id); refreshCounts(); writeMark(id);
+  }
+  function wireNote(ta, id) {
+    function flush() {
+      if (!pendingNote[id]) return;
+      pendingNote[id] = false; clearTimeout(noteTimers[id]);
+      var cur = S.marks[id] || {};
+      S.marks[id] = { mark: cur.mark || null, note: ta.value };
+      writeMark(id); refreshCard(id);
+    }
+    ta.addEventListener("input", function () { pendingNote[id] = true; clearTimeout(noteTimers[id]); noteTimers[id] = setTimeout(flush, 900); flash(id, "Editing…"); });
+    ta.addEventListener("blur", flush);
+  }
+  function wireRamble(ta, key) {
+    var pending = false;
+    function flush() {
+      if (!pending || !S.db) return; pending = false; clearTimeout(rambleTimers[key]);
+      var text = ta.value;
+      S.rambles[key] = { text: text };
+      flash(key, "Saving…");
+      enqueue("r:" + key, function () {
+        return S.db.collection("rambles").doc(key).set({ text: text, at: new Date().toISOString() }).then(function () { flash(key, "Saved"); }, function (e) { onWriteError(key, e); });
+      });
+    }
+    ta.addEventListener("input", function () { pending = true; ta._pending = true; clearTimeout(rambleTimers[key]); rambleTimers[key] = setTimeout(function () { flush(); ta._pending = false; }, 1200); flash(key, "Editing…"); });
+    ta.addEventListener("blur", function () { flush(); ta._pending = false; });
+  }
+
+  // ---- Keyboard ----
+  document.addEventListener("keydown", function (e) {
+    var t = e.target;
+    if (!t || !t.classList || !t.classList.contains("play")) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var id = t.getAttribute("data-id");
+    var map = { "1": "alive", "2": "flat", "3": "never" };
+    if (map[e.key]) { e.preventDefault(); setMark(id, markOf(id) === map[e.key] ? null : map[e.key]); }
+    else if (e.key === "0") { e.preventDefault(); setMark(id, null); }
+    else if (e.key === "j" || e.key === "k") {
+      e.preventDefault();
+      var cards = Array.prototype.slice.call(document.querySelectorAll(".play"));
+      var i = cards.indexOf(t) + (e.key === "j" ? 1 : -1);
+      if (cards[i]) { cards[i].focus({ preventScroll: true }); cards[i].scrollIntoView({ block: "nearest" }); }
+    } else if (e.key === "n") {
+      e.preventDefault(); var ta = t.querySelector("textarea"); if (ta && !ta.disabled) { ta.hidden = false; ta.focus(); }
+    }
+  });
+
+  window.addEventListener("hashchange", function () {
+    var h = (location.hash || "").replace("#", "");
+    if (WAYS.some(function (w) { return w.id === h; }) && h !== S.way) { S.way = h; remember(); renderPanel(); renderTabs(); }
+  });
+
+  // ---- Connection ----
+  function setConn(text, bad) { var c = document.getElementById("conn"); c.textContent = text; c.classList.toggle("bad", !!bad); c.hidden = !text; }
+  function enableAll() {
+    document.querySelectorAll("textarea[data-ramble]").forEach(function (ta) { ta.disabled = !S.writable; });
+    S.plays.forEach(function (p) { refreshCard(p.id); });
+  }
+  function applyRambles() {
+    document.querySelectorAll("textarea[data-ramble]").forEach(function (ta) {
+      var k = ta.getAttribute("data-ramble");
+      if (document.activeElement === ta || ta._pending) return;
+      ta.value = (S.rambles[k] && S.rambles[k].text) || "";
+    });
+  }
+
+  function connect() {
+    if (!window.claude || !window.claude.use) { setConn("Marks save only when this page is opened on claude.ai. Here it can only be read.", true); return; }
+    var timer = setTimeout(function () { if (!S.ready) setConn("Your saved marks can't be reached yet. Marks made now may not save.", true); }, 10000);
+    Promise.all([window.claude.use("db"), window.claude.use("user").catch(function () { return null; })]).then(function (res) {
+      var db = res[0], user = res[1];
+      if (!db) { clearTimeout(timer); setConn("This view can't save marks. Open the page on claude.ai, signed in, to mark.", true); return; }
+      S.db = db;
+      var canP = user && user.can ? Promise.resolve(user.can("data.write")).catch(function () { return null; }) : Promise.resolve(null);
+      canP.then(function (can) {
+        S.writable = can !== false;
+        var gotM = false, gotR = false;
+        function settle(meta) {
+          if (gotM && gotR && !S.ready && meta && !meta.fromCache) {
+            S.ready = true; clearTimeout(timer);
+            setConn(S.writable ? "" : "You can read the marks here, but only the director's account saves them.", !S.writable);
+          }
+        }
+        db.collection("marks").onSnapshot(function (snap) {
+          gotM = true;
+          snap.docChanges().forEach(function (ch) {
+            var id = ch.doc.id;
+            if (ch.type === "removed") delete S.marks[id];
+            else { var d = ch.doc.data() || {}; if (!pendingNote[id]) S.marks[id] = { mark: d.mark || null, note: d.note || "" }; else S.marks[id] = { mark: d.mark || null, note: (S.marks[id] && S.marks[id].note) || "" }; }
+            refreshCard(id);
+          });
+          refreshCounts(); settle(snap.metadata);
+        }, function (e) { clearTimeout(timer); setConn("The saved marks stopped loading. Reload the page to reconnect.", true); });
+        db.collection("rambles").onSnapshot(function (snap) {
+          gotR = true;
+          snap.docs.forEach(function (d) { S.rambles[d.id] = d.data() || {}; });
+          applyRambles(); settle(snap.metadata);
+        }, function () {});
+        enableAll();
+        if (!S.writable) setConn("You can read the marks here, but only the director's account saves them.", true);
+      });
+    }, function () { clearTimeout(timer); setConn("This view can't save marks.", true); });
+  }
+
+  // ---- Boot ----
+  fetch("plays.json").then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }).then(function (plays) {
+    S.plays = plays; plays.forEach(function (p) { S.byId[p.id] = p; });
+    renderTally(); renderPanel();
+    connect();
+  }).catch(function () {
+    document.getElementById("panel").textContent = "";
+    document.getElementById("panel").appendChild(el("p", "loading", "The list of plays didn't load. Reload the page to try again."));
+    document.getElementById("counts").textContent = "";
+  });
+})();
+</script>
