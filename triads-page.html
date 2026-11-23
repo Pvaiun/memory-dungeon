@@ -226,6 +226,20 @@ textarea.tall { min-height: 84px; }
 .status.err { color: var(--warn); }
 .spacer { flex: 1 1 auto; }
 
+.field-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; }
+.field-head label { min-width: 0; }
+.mic {
+  flex: none;
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 14px;
+}
+.mic.on { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.partial { font-size: 14px; color: var(--muted); font-style: italic; min-height: 1.2em; }
+.dictmsg { margin: 0; font-size: 14px; color: var(--warn); }
+
 .foot { font-size: 14px; color: var(--muted); display: grid; gap: 4px; max-width: 70ch; }
 .foot p { margin: 0; }
 
@@ -243,7 +257,7 @@ textarea.tall { min-height: 84px; }
     <div class="meta">
       <span class="eyebrow" id="count">Triad 1 of 10</span>
     </div>
-    <h1>Which two want the same thing?</h1>
+    <h1>Which two feel connected?</h1>
     <p class="hint" id="hint">Tap the odd one out, or pick one of the options under the cards.</p>
     <div class="cards" id="cards"></div>
     <div class="choices" id="choices">
@@ -254,6 +268,7 @@ textarea.tall { min-height: 84px; }
 
     <div class="form" id="form"></div>
 
+    <p class="dictmsg" id="dictmsg" hidden></p>
     <div class="actions">
       <button class="btn" type="button" id="prev">Back</button>
       <button class="btn primary" type="button" id="save">Save and next</button>
@@ -432,6 +447,11 @@ textarea.tall { min-height: 84px; }
   var dirty = {};   // triad id -> true when changed since saved
   var idx = 0;
   var saving = false;
+  var dict = null;          // dictation namespace, when this view offers it
+  var dictTarget = null;    // id of the text box taking dictation
+  var dictState = "idle";
+  var dictPartial = "";
+  var renderedIdx = -1;
 
   function el(tag, cls, text) {
     var e = document.createElement(tag);
@@ -545,8 +565,60 @@ textarea.tall { min-height: 84px; }
     ta.id = id;
     ta.value = value || "";
     ta.addEventListener("input", function () { onInput(ta.value); });
-    f.appendChild(l); f.appendChild(ta);
+    var head = el("div", "field-head");
+    head.appendChild(l);
+    if (dict) head.appendChild(micButton(id));
+    f.appendChild(head); f.appendChild(ta);
     return f;
+  }
+
+  function micButton(id) {
+    var b = el("button", "mic", "Speak");
+    b.type = "button";
+    b.id = "mic-" + id;
+    b.setAttribute("aria-label", "Dictate into this box");
+    b.addEventListener("click", function () {
+      if (!dict) return;
+      if (dict.active() && dictTarget === id) { dict.stop(); return; }
+      dictTarget = id;
+      dictPartial = "";
+      showDictMsg("");
+      if (!dict.active()) dict.start().catch(function (e) { dictError(e && e.code); });
+      refreshMics();
+    });
+    return b;
+  }
+
+  function refreshMics() {
+    Array.prototype.forEach.call(document.querySelectorAll(".mic"), function (b) {
+      var id = b.id.slice(4);
+      var on = dictTarget === id && dictState !== "idle";
+      b.classList.toggle("on", on);
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+      b.textContent = on ? (dictState === "starting" ? "Starting\u2026" : "Stop") : "Speak";
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".partial"), function (p) { p.remove(); });
+    if (dictTarget && dictState !== "idle") {
+      var ta = document.getElementById(dictTarget);
+      if (ta) { var p = el("div", "partial", dictPartial); p.id = "partial-" + dictTarget; ta.insertAdjacentElement("afterend", p); }
+    }
+  }
+
+  function showDictMsg(text) {
+    var m = document.getElementById("dictmsg");
+    m.textContent = text;
+    m.hidden = !text;
+  }
+
+  function dictError(code) {
+    if (!code || code === "stopped" || code === "viewer_stopped" || code === "dismissed") return;
+    if (code === "unavailable") { dict = null; dictTarget = null; showDictMsg(""); render(); return; }
+    showDictMsg(
+      code === "not_granted" ? "Dictation is switched off for this page. You can turn it on in the page's Permissions menu."
+      : code === "rate_limited" ? "Dictation is busy. Try again in a moment."
+      : code === "hidden" ? "Dictation stopped when the page went out of view. Press Speak to go on."
+      : code === "time_limit" ? "Dictation stopped after an hour. Press Speak to go on."
+      : "Dictation stopped: the microphone or speech service failed. Press Speak to try again.");
   }
 
   function wayPicker(id, value, onPick) {
@@ -580,9 +652,9 @@ textarea.tall { min-height: 84px; }
       });
       b.appendChild(p);
     }
-    b.appendChild(field("wants-" + i, "What do the two want?", null, a.wants, function (v) { a.wants = v; touch(t); }, true));
-    b.appendChild(field("instead-" + i, "What does the third want instead?", "If it comes.", a.instead, function (v) { a.instead = v; touch(t); }));
-    var addF = field("add-" + i, "Add one", "Optional. A card that wants the same thing as the two, ideally from another way to win.", a.add, function (v) { a.add = v; touch(t); });
+    b.appendChild(field("wants-" + i, "How do the two feel connected?", "How it feels, not the mechanics they share.", a.wants, function (v) { a.wants = v; touch(t); }, true));
+    b.appendChild(field("instead-" + i, "What's the third one about?", "If it comes.", a.instead, function (v) { a.instead = v; touch(t); }));
+    var addF = field("add-" + i, "Add a fourth", "Optional. A card like the two, going by what you said connects them; ideally from another way to win.", a.add, function (v) { a.add = v; touch(t); });
     addF.appendChild(wayPicker("addway-" + i, a.addWay, function (w) { a.addWay = w; touch(t); render(); }));
     b.appendChild(addF);
     return b;
@@ -604,12 +676,15 @@ textarea.tall { min-height: 84px; }
       form.appendChild(nb);
     }
     if (active) { var again = document.getElementById(active); if (again && again.tagName === "TEXTAREA") again.focus(); }
+    refreshMics();
   }
 
   function render() {
     var t = current();
     if (!t) return;
     var d = draftFor(t);
+    if (renderedIdx !== idx && dict && dict.active()) { dictTarget = null; dict.stop(); }
+    renderedIdx = idx;
     document.getElementById("count").textContent = "Triad " + (idx + 1) + " of " + TRIADS.length;
 
     var cards = document.getElementById("cards");
@@ -644,7 +719,7 @@ textarea.tall { min-height: 84px; }
       b.setAttribute("aria-pressed", d.kind === b.getAttribute("data-kind") ? "true" : "false");
     });
     document.getElementById("hint").textContent = split
-      ? "Give both splits below: the odd one out each time, and what the two want."
+      ? "Give both splits below: the odd one out each time, and how the two feel connected."
       : "Tap the odd one out, or pick one of the options under the cards.";
 
     renderForm(t, d);
@@ -757,5 +832,34 @@ textarea.tall { min-height: 84px; }
     }).catch(function () { dbState = "absent"; renderStore(); renderStatus(); });
   }
   connect();
+
+  if (window.claude && typeof window.claude.use === "function") {
+    window.claude.use("dictation").then(function (d) {
+      if (!d) return;
+      dict = d;
+      d.onPartial(function (e) {
+        dictPartial = (e && e.text) || "";
+        var p = dictTarget && document.getElementById("partial-" + dictTarget);
+        if (p) p.textContent = dictPartial;
+      });
+      d.onFinal(function (e) {
+        var ta = dictTarget && document.getElementById(dictTarget);
+        if (!ta) return;
+        var add = (e && e.text) || "";
+        if (!ta.value || /\s$/.test(ta.value)) add = add.replace(/^\s+/, "");
+        ta.value += add;
+        ta.dispatchEvent(new Event("input"));
+        dictPartial = "";
+        var p = document.getElementById("partial-" + dictTarget);
+        if (p) p.textContent = "";
+      });
+      d.onState(function (e) {
+        dictState = e.state;
+        if (e.state === "idle") { dictPartial = ""; dictError(e.reason); }
+        refreshMics();
+      });
+      render();
+    }).catch(function () {});
+  }
 })();
 </script>
