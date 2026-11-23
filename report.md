@@ -12,6 +12,11 @@ What's behind the page:
 - **40 cards** (`cards.md`), 10 for each way to win, from one agent that read only the five sources the brief names and was told nothing of what the cards are for. One card, P20, needs a new building block and is marked.
 - **10 triads** (`triads.md`): three Burst, two Build up, three Debuff or disable, two Sustain. Each triad stays inside one way to win, its three cards on different mechanics and of different kinds (ability, version, piece, seat). Each card is used once, so 30 of the 40 are seen.
 
+## The director's reactions so far, before answering
+
+- On the page's questions: "These questions are super cryptic to me."
+- On "want": "What do you mean a card is after? Like I don't understand that." The question's central word didn't land as written. This is the pilot's own question (does the question work?), so it's for the next session to take up with the director, along with whatever they decide now.
+
 ## Handoff to the next session
 
 - **Read the answers** with `ArtifactData`, `action: "list"`, collection `answers`, on the page's URL. There's one document per triad, named by its id (`pilot-01` … `pilot-10`), with: `kind` (`pair`, `split`, `none-belong`, `none-grabs`), `answers` (one or two items: `odd` as a card id, `wants`, `instead`, `add`, `addWay`), `note` and `savedAt`. Copy each one into `triads.md` under its triad, in the director's words, and copy any added card into `cards.md`, marked as theirs.
