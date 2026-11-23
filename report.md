@@ -4,7 +4,8 @@
 
 **The page: https://claude.ai/artifact/W4iuZ1adkUKCVjydUNf3gN** (private to you)
 
-- **Ten triads, one at a time.** For each: tap the odd one out, or pick *No two belong*, *Splits two ways* or *None of these grabs me*. Then write a few words: what the two want and, if it comes, what the third wants instead. *Add one* is there if a card of your own comes to mind.
+- **Ten triads, one at a time,** under one question: **which two feel connected?** For each: tap the odd one out, or pick *No two belong*, *Splits two ways* or *None of these grabs me*. Then a few words: how the two feel connected, and, if it comes, what the third one is about. *Add a fourth* is there if a card of your own comes to mind.
+- **Speak** on each text box takes dictation where the platform offers it: Chrome on a computer and the Claude desktop app's main window, not the Claude phone app.
 - **After your first save, reload the page** and check the answer is still there before going on. The page says how many saved answers it loaded.
 - **Nothing to decide before you answer.** The next session reads your answers with you and sets the standard the deck is written to.
 
@@ -16,6 +17,7 @@ What's behind the page:
 
 - **Read the answers** with `ArtifactData`, `action: "list"`, collection `answers`, on the page's URL. There's one document per triad, named by its id (`pilot-01` … `pilot-10`), with: `kind` (`pair`, `split`, `none-belong`, `none-grabs`), `answers` (one or two items: `odd` as a card id, `wants`, `instead`, `add`, `addWay`), `note` and `savedAt`. Copy each one into `triads.md` under its triad, in the director's words, and copy any added card into `cards.md`, marked as theirs.
 - **Then the pilot's questions, with the director** (brief, stage 0): whether their words say what something wants or only what it does; which cards were dead and why; what made a card easy to have a feeling about. Write what's learned here, as the standard for the deck.
+- **The question was reworded before any answer,** from the brief's "which two want the same thing?" to the director's reading of it. The director: "want, it doesn't make sense for something that has no needs"; what they'll write is "how it feels like they're connected", "without talking about nitty-gritty gameplay mechanics that an AI could determine itself", then what the third one is about, then possibly a fourth like the two. The page now asks: *Which two feel connected?*, *How do the two feel connected?* (how it feels, not the mechanics they share), *What's the third one about?* and *Add a fourth*. The stored fields keep their names: `wants` holds the first answer, `instead` the second, `add` the fourth card.
 - **The page names no way to win.** The director's ruling: "Nothing should frame the cards but the question." Later batches keep to it. The way still goes into each saved answer, out of sight, for the session's use.
 - **The page's source** is `triads-page.html`. The triads are in its `triads-data` block. Republishing the same file keeps the URL and the saved answers. A later batch can add triads under new ids without touching the pilot's.
 - **Keeping card-writers blind.** A general-purpose helper agent is shown this repository's `CLAUDE.md`, which names the goal. A `Plan` agent isn't, so the pilot's writer was a `Plan` agent. It read copies of the five sources in the session's scratchpad and returned its cards as text. Stage 1's writers need the same treatment. Its brief is below, as sent but for a shortened file list.

@@ -1,6 +1,6 @@
 # Triads
 
-Every triad and the director's answer, in their words. The question is the same every time: **which two want the same thing?**
+Every triad and the director's answer, in their words. The question is the same every time: **which two feel connected?** (The brief's wording, "which two want the same thing?", was changed by the director before any answer.)
 
 ## The pilot
 
