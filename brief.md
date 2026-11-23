@@ -4,7 +4,7 @@ Five colours for the game, found in the distinctions the director draws between 
 
 ## What it's for
 
-Five colours, each on one card (what it never does, the mechanics it prefers, its profile and style, what it can't answer), that pass the checks in `sources/colours.md`, What checks a wheel. The director picks, merges or writes one wheel, and names it.
+Five colours, each on one card (what it never does, the mechanics it prefers, its profile and style, what it can't answer), that pass the checks in `sources/colours.md`, What checks a wheel. The director picks, merges or writes one set of five, and names them. (A **wheel**, in this brief and the frame, means just that: the five colours together, with which are each other's opposites. It's the result of this work, not a later step.)
 
 ## The idea
 
@@ -23,7 +23,7 @@ Stages, each ending with the director. Each session runs one stage or one batch 
 
 **A card** is one thing a player could choose in a run (a piece, an ability or a version of one, a seat): one plain sentence saying what it does, as a card in the game would. Scale words, not numbers. No flavour, theme, name or attitude, and no slot or class.
 
-- **Five agents, run together,** each working alone, draft the cards: one for each way to win, and one for where mechanics meet across the ways. Each reads `sources/colours.md` (the four ways to win, and the style questions, which are the spread to cover: how big and how often, how wide, when, at what price), `sources/vocabulary.md`, `sources/combat.md`, `sources/primitives.md` and `sources/gear-rules.md`. If `sources/plays.md` exists, it's a complete list of what the rules allow, to draft from and check against.
+- **Five agents, run together,** each working alone, draft the cards: one for each way to win, and one for where mechanics meet across the ways. Each reads `sources/colours.md` (the four ways to win, and the style questions, which are the spread to cover: how big and how often, how wide, when, at what price), `sources/vocabulary.md`, `sources/combat.md`, `sources/primitives.md` and `sources/gear-rules.md`.
 - **Bounds every card keeps:** the player gives no orders in a fight; no positional targeting; a status does the same thing whoever applies it; elements are themes, never mechanics; MP is fuel, and no card is about lasting more fights. A card the rules don't allow yet, but a small new building block would, is kept and marked as needing one.
 - **The session merges them** into `cards.md`: one card per distinct choice, the doubles taken out, checked for gaps against `sources/threads.md`. Somewhere between one and two hundred and fifty cards; the space decides.
 - **The agents' prompts give intent and ranges, never examples.** An example card in a prompt becomes a hundred cards like it.
@@ -47,10 +47,10 @@ From the answers so far, about twenty-five triads a batch, aimed by the session:
 - **Nothing is merged without the director:** where two of their phrasings look like one distinction, the session proposes the merge and the director confirms or refuses it.
 - **Every card placed** on the main distinctions, as the session's guess, shown to the director to correct, a sample or all of it, as they choose.
 
-### 4. The wheels
+### 4. The five colours, drafted from the distinctions
 
-- **The director may draft the five first,** from their own distinctions, before seeing any agent's. If they do, theirs is the wheel the others are read against, and the agents' job becomes challenging it.
-- **Three agents, each working alone,** each given `sources/colours.md`, `sources/challenges.md`, `distinctions.md` and the placed cards, and none another's work. Each proposes a wheel of five unnamed colours (by letter), and for each colour:
+- **The director may draft the five first,** if they want to: from their own distinctions, which sides seem to belong to one colour. It's optional, and it's done before seeing any agent's draft. If they do, theirs is the set the others are read against, and the agents' job becomes challenging it.
+- **Three agents, each working alone,** each given `sources/colours.md`, `sources/challenges.md`, `distinctions.md` and the placed cards, and none another's work. Each proposes five unnamed colours (by letter), and for each colour:
   - its attitude: the sides of the distinctions it holds, in the director's words;
   - the cards it holds, from several ways to win;
   - what it never does, traced to its opposites: the other sides of its distinctions;
