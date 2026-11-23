@@ -1,0 +1,406 @@
+<title>Wheel B Problems</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column of problem cards, a plain header with the count; answers save to the artifact's store. */
+:root {
+  --bg: #f4f7f8;
+  --surface: #ffffff;
+  --ink: #17262b;
+  --muted: #5b6d73;
+  --line: #d5dfe2;
+  --accent: #1d5c6b;
+  --accent-soft: #e2eff2;
+  --ok: #2f7a4b;
+  --ok-soft: #e3f2e8;
+  --skip: #8a6512;
+  --skip-soft: #f7eed8;
+  --wrong: #a33a4d;
+  --wrong-soft: #f8e4e8;
+  --focus: #2a8aa0;
+  --font-display: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1719; --surface: #162124; --ink: #e2ecee; --muted: #93a7ad; --line: #2a3a3f;
+    --accent: #7cc3d3; --accent-soft: #1b3036; --ok: #7fcf9c; --ok-soft: #17302a;
+    --skip: #e2bd63; --skip-soft: #33291a; --wrong: #ee8fa0; --wrong-soft: #3a1f27; --focus: #7cc3d3;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1719; --surface: #162124; --ink: #e2ecee; --muted: #93a7ad; --line: #2a3a3f;
+  --accent: #7cc3d3; --accent-soft: #1b3036; --ok: #7fcf9c; --ok-soft: #17302a;
+  --skip: #e2bd63; --skip-soft: #33291a; --wrong: #ee8fa0; --wrong-soft: #3a1f27; --focus: #7cc3d3;
+  color-scheme: dark;
+}
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.55;
+}
+.wrap {
+  max-width: 760px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 32px 64px;
+  display: grid;
+  gap: 28px;
+}
+header { display: grid; gap: 10px; }
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+h1 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(26px, 5vw, 34px);
+  line-height: 1.15;
+  margin: 0;
+  text-wrap: balance;
+}
+.lede { margin: 0; max-width: 62ch; color: var(--ink); }
+.lede + .lede { color: var(--muted); }
+.tally {
+  display: flex; flex-wrap: wrap; gap: 8px 16px;
+  font-family: var(--font-mono); font-size: 13px; color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  padding-top: 4px;
+}
+.tally b { color: var(--ink); font-weight: 500; }
+.bar { height: 4px; border-radius: 2px; background: var(--line); overflow: hidden; display: flex; }
+.bar span { display: block; height: 100%; transition: width .3s ease; }
+.bar .a { background: var(--ok); } .bar .s { background: var(--skip); } .bar .w { background: var(--wrong); }
+.notice {
+  margin: 0; padding: 10px 14px; border-radius: 8px;
+  background: var(--accent-soft); color: var(--ink); font-size: 14px;
+}
+.notice[data-tone="warn"] { background: var(--skip-soft); }
+.list { display: grid; gap: 16px; list-style: none; margin: 0; padding: 0; }
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 18px 18px 14px;
+  display: grid; gap: 12px;
+  min-width: 0;
+}
+.card[data-status="answered"] { border-left: 3px solid var(--ok); }
+.card[data-status="skipped"] { border-left: 3px solid var(--skip); }
+.card[data-status="wrong"] { border-left: 3px solid var(--wrong); }
+.head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.pid { font-family: var(--font-mono); font-size: 12px; color: var(--muted); letter-spacing: 0.04em; }
+.chip {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 2px 8px; border-radius: 999px; color: var(--muted); background: var(--bg);
+}
+.card[data-status="answered"] .chip { color: var(--ok); background: var(--ok-soft); }
+.card[data-status="skipped"] .chip { color: var(--skip); background: var(--skip-soft); }
+.card[data-status="wrong"] .chip { color: var(--wrong); background: var(--wrong-soft); }
+.q { margin: 0; font-size: 16px; line-height: 1.55; max-width: 65ch; }
+textarea {
+  width: 100%; box-sizing: border-box; min-height: 88px; resize: vertical;
+  font: inherit; font-size: 15px; line-height: 1.5; color: var(--ink);
+  background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px;
+}
+textarea:focus-visible, button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+textarea:disabled { opacity: .8; }
+.foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; }
+.marks { display: flex; gap: 8px; flex-wrap: wrap; }
+.mark {
+  font: inherit; font-size: 13px; font-weight: 500; cursor: pointer;
+  padding: 5px 12px; border-radius: 999px; border: 1px solid var(--line);
+  background: transparent; color: var(--muted);
+}
+.mark:hover { color: var(--ink); border-color: var(--muted); }
+.mark[aria-pressed="true"][data-mark="skipped"] { color: var(--skip); background: var(--skip-soft); border-color: var(--skip); }
+.mark[aria-pressed="true"][data-mark="wrong"] { color: var(--wrong); background: var(--wrong-soft); border-color: var(--wrong); }
+.mark:disabled { cursor: default; opacity: .6; }
+.save { font-family: var(--font-mono); font-size: 12px; color: var(--muted); min-height: 1.2em; }
+.save[data-tone="err"] { color: var(--wrong); }
+footer { color: var(--muted); font-size: 13px; }
+@media (prefers-reduced-motion: reduce) { .bar span { transition: none; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">The wheel, version B · Batch 1</div>
+    <h1>Problems to solve</h1>
+    <p class="lede">Each is one thing about how fights work that's worth solving. Answer in a few lines, in any form: an effect, a way a unit behaves, a seat, a rule.</p>
+    <p class="lede">If a problem is the wrong question, mark it and say why, or skip it. Both are answers too. Everything saves as you type.</p>
+    <div class="tally" id="tally" aria-live="polite"></div>
+    <div class="bar" aria-hidden="true"><span class="a" id="barA"></span><span class="s" id="barS"></span><span class="w" id="barW"></span></div>
+    <p class="notice" id="notice">Loading saved answers…</p>
+  </header>
+
+  <ol class="list" id="list"></ol>
+
+  <footer>Answers are kept with this page, where the next session reads them back. Say in the chat when the batch is done.</footer>
+</div>
+
+<script>
+const BATCH = 1;
+const PROBLEMS = [
+  /*PROBLEMS*/
+];
+
+const STATUS_LABEL = { open: "Open", answered: "Answered", skipped: "Skipped", wrong: "Wrong question" };
+const PLACEHOLDER = {
+  open: "Your answer, in a few lines",
+  answered: "Your answer, in a few lines",
+  skipped: "Skipped. A note, if you like",
+  wrong: "Why it's the wrong question, or what the right one is"
+};
+
+const state = {};      // id -> { mark: null|"skipped"|"wrong", text: "" }
+const els = {};        // id -> { card, ta, chip, save, marks }
+const pending = {};    // id -> timer
+const inflight = {};   // id -> bool
+const dirty = {};      // id -> bool
+let db = null, canWrite = true, connected = false;
+
+function statusOf(id) {
+  const s = state[id];
+  if (s.mark) return s.mark;
+  return s.text.trim() ? "answered" : "open";
+}
+
+function localKey(id) { return "wheelb-draft-" + id; }
+function saveLocal(id) {
+  try { localStorage.setItem(localKey(id), JSON.stringify(state[id])); } catch (e) {}
+}
+function loadLocal(id) {
+  try { const v = localStorage.getItem(localKey(id)); return v ? JSON.parse(v) : null; } catch (e) { return null; }
+}
+
+function build() {
+  const list = document.getElementById("list");
+  PROBLEMS.forEach((p, i) => {
+    state[p.id] = { mark: null, text: "" };
+    const local = loadLocal(p.id);
+    if (local && typeof local.text === "string") state[p.id] = { mark: local.mark || null, text: local.text };
+
+    const li = document.createElement("li");
+    li.className = "card";
+    li.id = "p-" + p.id;
+
+    const head = document.createElement("div");
+    head.className = "head";
+    const pid = document.createElement("span");
+    pid.className = "pid";
+    pid.textContent = p.label;
+    const chip = document.createElement("span");
+    chip.className = "chip";
+    head.append(pid, chip);
+
+    const q = document.createElement("p");
+    q.className = "q";
+    q.textContent = p.text;
+
+    const ta = document.createElement("textarea");
+    ta.id = "answer-" + p.id;
+    ta.setAttribute("aria-label", "Answer to problem " + p.label);
+    ta.value = state[p.id].text;
+
+    const foot = document.createElement("div");
+    foot.className = "foot";
+    const marks = document.createElement("div");
+    marks.className = "marks";
+    const markBtns = {};
+    [["skipped", "Skip"], ["wrong", "Wrong question"]].forEach(([m, label]) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "mark";
+      b.dataset.mark = m;
+      b.id = "mark-" + m + "-" + p.id;
+      b.textContent = label;
+      b.addEventListener("click", () => {
+        state[p.id].mark = state[p.id].mark === m ? null : m;
+        paint(p.id);
+        queueSave(p.id, 0);
+      });
+      marks.append(b);
+      markBtns[m] = b;
+    });
+    const save = document.createElement("span");
+    save.className = "save";
+    foot.append(marks, save);
+
+    ta.addEventListener("input", () => {
+      state[p.id].text = ta.value;
+      dirty[p.id] = true;
+      paint(p.id);
+      queueSave(p.id, 900);
+    });
+    ta.addEventListener("blur", () => { if (pending[p.id]) queueSave(p.id, 0); });
+
+    li.append(head, q, ta, foot);
+    list.append(li);
+    els[p.id] = { card: li, ta, chip, save, marks: markBtns };
+    paint(p.id);
+  });
+  tally();
+}
+
+function paint(id) {
+  const st = statusOf(id), e = els[id];
+  e.card.dataset.status = st;
+  e.chip.textContent = STATUS_LABEL[st];
+  e.ta.placeholder = PLACEHOLDER[st];
+  for (const m in e.marks) e.marks[m].setAttribute("aria-pressed", String(state[id].mark === m));
+  tally();
+}
+
+function tally() {
+  const n = PROBLEMS.length;
+  const c = { answered: 0, skipped: 0, wrong: 0, open: 0 };
+  PROBLEMS.forEach(p => c[statusOf(p.id)]++);
+  document.getElementById("tally").innerHTML =
+    "<span><b>" + c.answered + "</b> answered</span>" +
+    "<span><b>" + c.skipped + "</b> skipped</span>" +
+    "<span><b>" + c.wrong + "</b> wrong question</span>" +
+    "<span><b>" + c.open + "</b> of " + n + " open</span>";
+  document.getElementById("barA").style.width = (100 * c.answered / n) + "%";
+  document.getElementById("barS").style.width = (100 * c.skipped / n) + "%";
+  document.getElementById("barW").style.width = (100 * c.wrong / n) + "%";
+}
+
+function setSave(id, text, tone) {
+  const s = els[id].save;
+  s.textContent = text;
+  if (tone) s.dataset.tone = tone; else delete s.dataset.tone;
+}
+
+function queueSave(id, delay) {
+  saveLocal(id);
+  clearTimeout(pending[id]);
+  pending[id] = setTimeout(() => { pending[id] = null; flush(id); }, delay);
+  if (db && canWrite) setSave(id, "Saving…");
+  else if (!db) setSave(id, "Kept in this browser only");
+}
+
+async function flush(id) {
+  if (!db || !canWrite) return;
+  if (inflight[id]) { dirty[id] = true; return; }
+  inflight[id] = true;
+  dirty[id] = false;
+  const p = PROBLEMS.find(x => x.id === id);
+  const body = {
+    problem: p.label,
+    batch: BATCH,
+    question: p.text,
+    status: statusOf(id),
+    text: state[id].text,
+    updatedAt: new Date().toISOString()
+  };
+  try {
+    await db.collection("answers").doc(id).set(body);
+    setSave(id, "Saved");
+  } catch (e) {
+    if (e && e.code === "invalid_argument") {
+      canWrite = false;
+      lockAll("Only the page's owner can save answers here. You're seeing them read-only.");
+    } else if (e && e.code === "unavailable") {
+      setSave(id, "Couldn't save yet, retrying…", "err");
+      inflight[id] = false;
+      setTimeout(() => flush(id), 1500 + Math.random() * 1500);
+      return;
+    } else {
+      setSave(id, "Not saved: " + ((e && e.message) || "the store refused it"), "err");
+    }
+  }
+  inflight[id] = false;
+  if (dirty[id] && !pending[id]) flush(id);
+}
+
+function lockAll(msg) {
+  PROBLEMS.forEach(p => {
+    els[p.id].ta.disabled = true;
+    for (const m in els[p.id].marks) els[p.id].marks[m].disabled = true;
+  });
+  notice(msg, "warn");
+}
+
+function notice(msg, tone) {
+  const n = document.getElementById("notice");
+  n.hidden = !msg;
+  n.textContent = msg || "";
+  if (tone) n.dataset.tone = tone; else delete n.dataset.tone;
+}
+
+function applyRemote(snap) {
+  snap.docs.forEach(d => {
+    const id = d.id;
+    if (!state[id]) return;
+    const v = d.data() || {};
+    const e = els[id];
+    const busy = document.activeElement === e.ta || pending[id] || inflight[id] || dirty[id];
+    if (busy) return;
+    const mark = v.status === "skipped" || v.status === "wrong" ? v.status : null;
+    const text = typeof v.text === "string" ? v.text : "";
+    if (text !== state[id].text || mark !== state[id].mark) {
+      state[id] = { mark, text };
+      e.ta.value = text;
+      saveLocal(id);
+      paint(id);
+    }
+    if (!d.metadata.hasPendingWrites) setSave(id, "Saved");
+  });
+}
+
+build();
+
+(async function connect() {
+  const c = window.claude;
+  if (!c || typeof c.use !== "function") {
+    notice("Answers can't be saved from this copy of the page. Open it on claude.ai to answer; drafts stay in this browser meanwhile.", "warn");
+    PROBLEMS.forEach(p => { if (state[p.id].text || state[p.id].mark) setSave(p.id, "Kept in this browser only"); });
+    return;
+  }
+  const [dbNs, user] = await Promise.all([c.use("db"), c.use("user")]);
+  if (!dbNs) {
+    notice("Answers can't be saved in this view. Sign in to claude.ai and open the page there; drafts stay in this browser meanwhile.", "warn");
+    return;
+  }
+  db = dbNs;
+  if (user) {
+    try {
+      const owner = await user.isOwner();
+      if (owner === false) { canWrite = false; }
+    } catch (e) {}
+  }
+  const timer = setTimeout(() => {
+    if (!connected) notice("Saved answers can't be reached yet. What you type is kept and will save once the page reconnects.", "warn");
+  }, 10000);
+  db.collection("answers").onSnapshot(snap => {
+    applyRemote(snap);
+    if (!snap.metadata.fromCache) {
+      connected = true;
+      clearTimeout(timer);
+      if (canWrite) {
+        notice("");
+        PROBLEMS.forEach(p => {
+          const had = snap.docs.some(d => d.id === p.id);
+          if (!had && (state[p.id].text || state[p.id].mark)) flush(p.id);
+        });
+      } else {
+        lockAll("You're reading the director's answers. Only the page's owner can change them.");
+      }
+    }
+  }, err => {
+    clearTimeout(timer);
+    notice("The answer store stopped responding (" + (err && err.code) + "). Reload the page to reconnect; drafts are kept in this browser.", "warn");
+  });
+})();
+</script>
