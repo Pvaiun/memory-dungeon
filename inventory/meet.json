@@ -1,0 +1,2333 @@
+[
+  {
+    "id": "X-001",
+    "way": "burst",
+    "also": [
+      "build"
+    ],
+    "question": "timing",
+    "play": "One unit lays Bleed and a partner's fast, many-hit swings cash it: each hit pays untyped damage per stack past Defense, then closes a share, so the same Bleed lands in a few seconds instead of over the fight.",
+    "rests_on": [
+      "Bleed",
+      "Double strike",
+      "Speed (fast)",
+      "untyped"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-002",
+    "way": "burst",
+    "also": [],
+    "question": "width",
+    "play": "Bleed laid across the foes, then one Area hit: the single cast sets off every foe's Bleed in the same moment, so a whole pack's stacks pay out together.",
+    "rests_on": [
+      "Bleed",
+      "Area"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-003",
+    "way": "burst",
+    "also": [
+      "debuff"
+    ],
+    "question": "width",
+    "play": "Marked on the Bleeding foe pulls the party's basic attacks and random-foe abilities onto it, so every swing in the party cashes the same Bleed instead of scattering onto foes that hold none.",
+    "rests_on": [
+      "Marked",
+      "Bleed",
+      "focus"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-004",
+    "way": "debuff",
+    "also": [
+      "burst"
+    ],
+    "question": "size",
+    "play": "A Bewildered foe's next basic attack strikes one of its own allies; when that ally holds Bleed, the foe's own blow sets the Bleed off, so the foes' swing pays the party's stacks.",
+    "rests_on": [
+      "Bewildered",
+      "Bleed",
+      "confuse"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-005",
+    "way": "debuff",
+    "also": [
+      "burst"
+    ],
+    "question": "size",
+    "play": "Bewildered aimed at the foe with the highest Attack sends its biggest basic attack into its own side: the party is spared its heaviest blow and a foe takes it, for one application.",
+    "rests_on": [
+      "Bewildered",
+      "The foe with the highest Attack"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-006",
+    "way": "burst",
+    "also": [
+      "debuff"
+    ],
+    "question": "size",
+    "play": "With Sunder or Brittle already on the foes, a Bewildered foe's swing into its own side lands harder or as a sure crit, so the party's debuffs pay on a blow the party never threw.",
+    "rests_on": [
+      "Bewildered",
+      "Sunder",
+      "Brittle"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-007",
+    "way": "build",
+    "also": [],
+    "question": "size",
+    "play": "Haste or Attack speed on a unit whose swings or quick abilities lay Burn, Chill or Shock raises how often it applies, so the affliction holds near a higher ceiling against its own drain instead of fading between applications.",
+    "rests_on": [
+      "Haste",
+      "Attack speed",
+      "Cooldown",
+      "affliction",
+      "Burn",
+      "Chill",
+      "Shock"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-008",
+    "way": "debuff",
+    "also": [],
+    "question": "size",
+    "play": "Slow or Chill on a Shocked foe makes it act less often, so its Shock drains less and sits near the cap, and every hit it does throw is cut by all the stacks it holds as it strikes.",
+    "rests_on": [
+      "Shock",
+      "Slow",
+      "Chill"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-009",
+    "way": "debuff",
+    "also": [
+      "sustain"
+    ],
+    "question": "size",
+    "play": "Weaken and Shock on the same big-hitting foe add their cuts, so its hits land at a fraction of their size while the party spends no Defense or HP to take them.",
+    "rests_on": [
+      "Weaken",
+      "Shock"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-010",
+    "way": "burst",
+    "also": [
+      "build"
+    ],
+    "question": "timing",
+    "play": "Shock laid on a Stunned foe doesn't drain, since it drains only when its holder acts: stacks pile up through the Stun, and the foe's first action after it takes damage for all of them at once.",
+    "rests_on": [
+      "Shock",
+      "Stun"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-011",
+    "way": "burst",
+    "also": [],
+    "question": "price",
+    "play": "Haste laid on a Shocked foe makes it act more often, and each action takes damage per stack: the party trades the foe's faster swings and cooldowns for faster Shock payouts.",
+    "rests_on": [
+      "Shock",
+      "Haste",
+      "apply"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-012",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "An effect that sets a Shocked foe's basic attack ready now forces an action at once, so the foe sets off its own Shock when the party chooses, at the price of a swing it would have waited for.",
+    "rests_on": [
+      "Shock",
+      "cooldown (basic, ready)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-013",
+    "way": "debuff",
+    "also": [],
+    "question": "size",
+    "play": "Shock aimed at the foe with the slowest basic attack holds its stacks longest, so the heaviest, slowest swinger strikes at Shock's full cut on every blow.",
+    "rests_on": [
+      "Shock",
+      "swing (by)",
+      "highest"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-014",
+    "way": "burst",
+    "also": [],
+    "question": "size",
+    "play": "Shock aimed at the foe with the fastest basic attack is cashed most often, so the quickest foe hurts itself on every swing it takes.",
+    "rests_on": [
+      "Shock",
+      "swing (by)",
+      "lowest"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-015",
+    "way": "debuff",
+    "also": [],
+    "question": "size",
+    "play": "Chill near its cap slows as much as Slow, and the two add, so a foe holding both acts at a crawl beyond what either reaches alone.",
+    "rests_on": [
+      "Chill",
+      "Slow"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-016",
+    "way": "debuff",
+    "also": [
+      "burst"
+    ],
+    "question": "width",
+    "play": "Chill laid on every foe at once by Area builds the whole pack to the cap together, so they shatter within moments of one another: a window in which every foe is Stunned.",
+    "rests_on": [
+      "Chill",
+      "Area",
+      "Stun"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-017",
+    "way": "debuff",
+    "also": [
+      "burst"
+    ],
+    "question": "width",
+    "play": "A piece that answers a Chill cap by passing Chill to the other foes turns one shatter into a chain across the pack; damp cuts what reaches foes that shattered lately, so it spreads wide but never loops.",
+    "rests_on": [
+      "Chill",
+      "status_capped",
+      "apply (passed)",
+      "damp"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-018",
+    "way": "debuff",
+    "also": [],
+    "question": "timing",
+    "play": "Stun, Silence, Slow and Chill's shatter on a boss, spaced so its hidden stacks drain between them, each land at full length; bunched together, the second is RESISTED and the next IMMUNE.",
+    "rests_on": [
+      "control resistance",
+      "Stun",
+      "Silence",
+      "Slow",
+      "Chill"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-019",
+    "way": "build",
+    "also": [],
+    "question": "size",
+    "play": "Sunder raises every kind of damage its holder takes, status damage and Thorns included, so each stack of it multiplies the Burn and Bleed on the same foe, which Defense and Guard never meet.",
+    "rests_on": [
+      "Sunder",
+      "Burn",
+      "Bleed",
+      "Thorns",
+      "taken"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-020",
+    "way": "build",
+    "also": [
+      "burst"
+    ],
+    "question": "size",
+    "play": "Sunder raises a hit before Defense takes its share, and Defense takes most off small hits, so on a high-Defense foe Sunder lifts a partner's light, fast swings by more than its face.",
+    "rests_on": [
+      "Sunder",
+      "Defense",
+      "Speed (fast)",
+      "Swing (light)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-021",
+    "way": "debuff",
+    "also": [
+      "sustain"
+    ],
+    "question": "size",
+    "play": "Weaken halves a foe's hit before the tank's Defense meets it, and Defense takes a bigger share off smaller hits, so Weaken on the tank's attackers cuts what reaches HP by more than half.",
+    "rests_on": [
+      "Weaken",
+      "Guard",
+      "Defense"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-022",
+    "way": "burst",
+    "also": [
+      "build"
+    ],
+    "question": "size",
+    "play": "Might spends one stack per action, and a Double strike or a multi-hit ability is one action, so each stack boosts two or more hits.",
+    "rests_on": [
+      "Might",
+      "Double strike"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-023",
+    "way": "build",
+    "also": [],
+    "question": "size",
+    "play": "On a slow, heavy weapon each Might stack is spent once per long interval, so stacks last longer and each lands on a big blow; on a fast weapon the same stacks are gone in a few swings.",
+    "rests_on": [
+      "Might",
+      "Speed (slow)",
+      "Swing (heavy)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-024",
+    "way": "build",
+    "also": [
+      "burst"
+    ],
+    "question": "timing",
+    "play": "A stack like Might that the holder's basic attacks don't spend keeps every stack for its abilities, so a fast swinger builds it all fight and spends it only on its big casts.",
+    "rests_on": [
+      "Might",
+      "spare"
+    ],
+    "needs_block": "a status: a Might-like stack whose trigger spares basic attacks (spare: basic), since Might itself can't vary",
+    "needs_ruling": null
+  },
+  {
+    "id": "X-025",
+    "way": "burst",
+    "also": [],
+    "question": "size",
+    "play": "Brittle makes the next hit a crit and Crit damage makes that crit huge: laid just before a slow, heavy blow or a big ability, it lands one crit through Defense with no Crit chance at all.",
+    "rests_on": [
+      "Brittle",
+      "Crit damage",
+      "Defense",
+      "Swing (heavy)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-026",
+    "way": "burst",
+    "also": [],
+    "question": "width",
+    "play": "Brittle laid on every foe, then an Area hit: each foe takes a sure crit from the one cast.",
+    "rests_on": [
+      "Brittle",
+      "Area"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-027",
+    "way": "build",
+    "also": [
+      "burst"
+    ],
+    "question": "timing",
+    "play": "Brittle turns a piece's answer to a crit, a hit_lands reaction filtered on the crit tag, from chance into a sure thing on the hit after Brittle lands.",
+    "rests_on": [
+      "Brittle",
+      "hit_lands",
+      "crit (tag)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-028",
+    "way": "debuff",
+    "also": [
+      "burst"
+    ],
+    "question": "width",
+    "play": "Taunt sends every foe's single-target pick to a Thorns holder, so every swing the foes throw pays its attacker untyped damage, at no cost to the holder.",
+    "rests_on": [
+      "Taunt",
+      "Thorns"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-029",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "Taunt gathers the foes' many small hits onto one Guarded unit, where Defense takes the largest share off small hits.",
+    "rests_on": [
+      "Taunt",
+      "Guard",
+      "Defense"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-030",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "Taunt sends a boss's single big blow to an Aegis holder, which blocks it whole; the next Aegis is ready for the next big blow while small ones pass.",
+    "rests_on": [
+      "Taunt",
+      "Aegis"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-031",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "Aegis blocks the one big hit above its line and Shield soaks the small ones under it, so a unit holding both covers both ends of the foes' damage.",
+    "rests_on": [
+      "Aegis",
+      "Shield"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-032",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "Guard trims mid-sized hits under Aegis's line, since Aegis is checked after mitigation, so the Aegis isn't spent on blows Defense could carry and waits for the one that needs it.",
+    "rests_on": [
+      "Aegis",
+      "Guard",
+      "Defense"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-033",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "Aegis's line is a share of its holder's max HP, so on a frail unit it blocks almost any blow big enough to fell it, where on a big tank it blocks only the largest.",
+    "rests_on": [
+      "Aegis",
+      "max_hp"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-034",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "One Taunting unit and Hidden allies: the foes' single-target picks, Seek included, have only the taunter to go to, and only Area reaches the rest.",
+    "rests_on": [
+      "Taunt",
+      "Hidden",
+      "Seek",
+      "Area"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-035",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "Hidden keeps a unit out of every pick and a Shield on it soaks the Area that still reaches it, so together they leave it untouched.",
+    "rests_on": [
+      "Hidden",
+      "Shield",
+      "Area"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-036",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "Hidden never leaves the foes nobody to pick, and the last in seat order stays out, so seating the sturdiest unit last makes it the one left in the light when the others hide.",
+    "rests_on": [
+      "Hidden",
+      "seat order",
+      "Someone stays in the light"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-037",
+    "way": "sustain",
+    "also": [],
+    "question": "price",
+    "play": "Under Rot, healing fails but Shields are unaffected, so a party facing Rot keeps its HP by laying Shield ahead of the damage instead of mending after it.",
+    "rests_on": [
+      "Rot",
+      "Shield",
+      "Heal"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-038",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "Owed turns many hits into one lump that lands a set time later as one damage, so a single Aegis blocks the whole lump, though no one hit was ever above its line.",
+    "rests_on": [
+      "Owed",
+      "Aegis",
+      "debt"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-039",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "Owed holds a unit's damage until it comes due, and a Shield present then soaks it, so an ally's Shield laid in the gap meets the whole lump at once.",
+    "rests_on": [
+      "Owed",
+      "Shield"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-040",
+    "way": "debuff",
+    "also": [
+      "burst"
+    ],
+    "question": "width",
+    "play": "A piece giving the party's basic attacks Seek, with Marked on one foe, lets every swing follow the Mark past a Taunting foe.",
+    "rests_on": [
+      "Marked",
+      "seek",
+      "Taunt"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-041",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "With no party Taunt, two units each Fixating a different foe hold one foe each to themselves, splitting the foes' attacks between chosen units instead of by draw.",
+    "rests_on": [
+      "Fixated",
+      "Taunt"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-042",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "Two Taunting units share the foes' forced picks by draw, so the Aggro on each sets how the hits split between them, rather than one unit taking them all.",
+    "rests_on": [
+      "Taunt",
+      "Aggro",
+      "draw"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-043",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "Seek skips a Taunting unit and picks among the rest by draw, so a second unit high in Aggro catches the foes' Seek strikes that would otherwise reach the frail.",
+    "rests_on": [
+      "Taunt",
+      "Seek",
+      "Aggro",
+      "A random foe that isn't Taunting"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-044",
+    "way": "debuff",
+    "also": [
+      "sustain"
+    ],
+    "question": "width",
+    "play": "Silence leaves foes only their basic attacks, which always obey the Taunt rule, so foes whose abilities carry Seek or Area are left with nothing that gets past the taunter.",
+    "rests_on": [
+      "Silence",
+      "Taunt",
+      "Seek",
+      "Area"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-045",
+    "way": "debuff",
+    "also": [],
+    "question": "timing",
+    "play": "Slow stretches a foe's wind-up, so a Silence that waits for a casting foe always finds one, and loses it a longer cast each time.",
+    "rests_on": [
+      "Silence",
+      "Slow",
+      "casting"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-046",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "Blur on a unit its seat makes rarely drawn waits untouched until the one hit that reaches it, usually a Seek strike or an Area, so the backline's single exposed moment is a sure miss.",
+    "rests_on": [
+      "Blur",
+      "Aggro",
+      "Seek",
+      "Area"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-047",
+    "way": "burst",
+    "also": [
+      "debuff"
+    ],
+    "question": "timing",
+    "play": "Blur's miss is a dodge, so a piece that answers a dodge with a strike out of turn ripostes for certain on the next hit, not by chance.",
+    "rests_on": [
+      "Blur",
+      "hit_evaded",
+      "strike"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-048",
+    "way": "burst",
+    "also": [
+      "sustain"
+    ],
+    "question": "size",
+    "play": "Taunt draws every pick to a unit high in Evasion whose dodges each answer with a strike, so the more the foes swing, the more ripostes they take.",
+    "rests_on": [
+      "Evasion",
+      "Taunt",
+      "hit_evaded",
+      "strike"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-049",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "Doom spares a unit at full HP, so a Doomed ally healed or Regenerating back to full before the count runs out survives it untouched.",
+    "rests_on": [
+      "Doom",
+      "Heal",
+      "Regen"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-050",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "Doom's damage is a large share of max HP, above Aegis's line, so an Aegis on the Doomed unit blocks it whole whatever HP the unit holds.",
+    "rests_on": [
+      "Doom",
+      "Aegis"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-051",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "Many small hits strip a foe's Bulwark fast, and an ability that waits for a Stunned foe then fires into its double-damage window instead of into the next Bulwark.",
+    "rests_on": [
+      "Bulwark",
+      "Double strike",
+      "Stun",
+      "wait"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-052",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "Doom laid by the party on a foe it has already worn down kills it at zero, while a fresh foe survives it: the party spends its hits first and lets the count finish the work.",
+    "rests_on": [
+      "Doom",
+      "hp (current)"
+    ],
+    "needs_block": null,
+    "needs_ruling": "vocabulary.md, rulings: Doom is enemy-only; the party can't use it until the director says so"
+  },
+  {
+    "id": "X-053",
+    "way": "debuff",
+    "also": [
+      "build"
+    ],
+    "question": "timing",
+    "play": "Shields soak status damage, so Dispel stripping a foe's Shield pool lets the Burn, Bleed or Shock already on it reach HP.",
+    "rests_on": [
+      "Dispel",
+      "Shield",
+      "Burn",
+      "Bleed",
+      "Shock"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-054",
+    "way": "debuff",
+    "also": [],
+    "question": "width",
+    "play": "Dispel lifting a foe's Taunt frees every one of the party's picks at once, where Seek frees only the ability that carries it.",
+    "rests_on": [
+      "Dispel",
+      "Taunt",
+      "Seek"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-055",
+    "way": "debuff",
+    "also": [
+      "burst"
+    ],
+    "question": "width",
+    "play": "Targets after the first ignore Taunt, so against a Taunting foe a second hit or a chain reaches the foes behind it while the first is spent on the taunter.",
+    "rests_on": [
+      "The Taunt rule",
+      "A second, random foe (Arc)",
+      "Up to three other random foes (Chain lightning)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-056",
+    "way": "debuff",
+    "also": [],
+    "question": "width",
+    "play": "Only Area reaches a Hidden foe, so an Area hit is the one way to wear down a foe that hides and to lay statuses on it.",
+    "rests_on": [
+      "Hidden",
+      "Area"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-057",
+    "way": "debuff",
+    "also": [],
+    "question": "width",
+    "play": "Abilities applying Stun or Silence skip foes that already hold it and take the next one their phrase allows, so repeated control walks across a pack instead of wasting on one foe.",
+    "rests_on": [
+      "Stun",
+      "Silence",
+      "Fizzle",
+      "Fizzle statuses"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-058",
+    "way": "build",
+    "also": [
+      "debuff"
+    ],
+    "question": "timing",
+    "play": "Rot on a foe that heals keeps the party's Burn or Bleed from being mended away between pulses, so the built-up damage holds.",
+    "rests_on": [
+      "Rot",
+      "Burn",
+      "Bleed",
+      "Heal"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-059",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "Lifesteal heals a share of each hit's damage, so an Area hit heals off every foe it lands on: the more foes stand, the more one cast mends.",
+    "rests_on": [
+      "Lifesteal",
+      "Area"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-060",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "Siphon takes MP from each hit's target, so an Area hit draws MP from every foe at once, fuel for the party's spells in a crowded fight.",
+    "rests_on": [
+      "Siphon",
+      "Area"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-061",
+    "way": "debuff",
+    "also": [],
+    "question": "timing",
+    "play": "Draining a foe's MP while it winds up leaves it short when the cast resolves: the ability fizzles, doing nothing and paying nothing, and still goes on cooldown.",
+    "rests_on": [
+      "mp",
+      "Siphon",
+      "casting",
+      "MP is paid when the action resolves"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-062",
+    "way": "build",
+    "also": [],
+    "question": "size",
+    "play": "A piece that adds a share of its holder's Defense to its hits turns Guard into damage: each Guard raises both what the unit shrugs off and what it deals.",
+    "rests_on": [
+      "Guard",
+      "adds",
+      "Defense"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-063",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "A Shield that scales from Defense lands larger on a Guarded unit, so Guard laid first makes every Shield after it bigger.",
+    "rests_on": [
+      "Guard",
+      "Shield",
+      "Defense"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-064",
+    "way": "burst",
+    "also": [],
+    "question": "price",
+    "play": "swap turns a unit's Defense into its Attack, so a wearer stacked with Defense swings an Attack-heavy weapon hard, paying with the Defense it gave up.",
+    "rests_on": [
+      "swap",
+      "Defense",
+      "Scaling (Attack-heavy)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-065",
+    "way": "burst",
+    "also": [
+      "sustain"
+    ],
+    "question": "price",
+    "play": "rescale lets a unit's abilities read Defense where they read Attack, so a tank keeps its Defense and still casts for damage from it, at the price of a weak basic attack.",
+    "rests_on": [
+      "rescale",
+      "Defense"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-066",
+    "way": "build",
+    "also": [],
+    "question": "size",
+    "play": "A status that raises Attack pays most on an Attack-heavy weapon, whose swing is mostly its wearer's Attack; on a base-heavy weapon the same status barely moves the basic attack.",
+    "rests_on": [
+      "stats",
+      "Scaling (Attack-heavy)",
+      "Scaling (base-heavy)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-067",
+    "way": "build",
+    "also": [
+      "burst"
+    ],
+    "question": "size",
+    "play": "A piece multiplying crit chance against foes that hold a debuff makes every debuff the party lays a crit setup, and Crit damage then sizes each one.",
+    "rests_on": [
+      "crits",
+      "when",
+      "times",
+      "Crit damage"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-068",
+    "way": "burst",
+    "also": [
+      "debuff"
+    ],
+    "question": "timing",
+    "play": "An ability scaling from whether its target is Stunned or Silenced turns control into damage: the disabler lays the lockout and the striker's next cast takes the bonus.",
+    "rests_on": [
+      "when",
+      "hasAny",
+      "Stun",
+      "Silence"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-069",
+    "way": "build",
+    "also": [],
+    "question": "price",
+    "play": "A dodged hit applies nothing, so against evasive foes a party whose damage rides on statuses needs Accuracy to land them, spent on hitting at all rather than hitting harder.",
+    "rests_on": [
+      "Accuracy",
+      "Evasion",
+      "Statuses on hits"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-070",
+    "way": "build",
+    "also": [],
+    "question": "size",
+    "play": "A status carried by a hit lands in full whatever Defense takes off the hit, so light, fast swings carrying afflictions keep a high-Defense foe loaded though their damage barely gets through.",
+    "rests_on": [
+      "Statuses on hits",
+      "Defense",
+      "Speed (fast)",
+      "Swing (light)",
+      "affliction"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-071",
+    "way": "build",
+    "also": [
+      "debuff"
+    ],
+    "question": "width",
+    "play": "spread lands a one-foe ability on every foe, its damage split but its statuses whole on each, so a single-target ability carrying a status becomes a full application on the whole pack.",
+    "rests_on": [
+      "spread",
+      "Statuses on hits"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-072",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "A foe's Blur is spent on the next hit whatever its size, so a fast partner's light swings strip it before the slow, heavy blow or the big ability lands.",
+    "rests_on": [
+      "Blur",
+      "Speed (fast)",
+      "Swing (heavy)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-073",
+    "way": "burst",
+    "also": [],
+    "question": "size",
+    "play": "A foe's Aegis blocks only a hit above its line, so many small hits pass under it and wear the foe down where one big blow would be blocked whole.",
+    "rests_on": [
+      "Aegis",
+      "Double strike",
+      "Speed (fast)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-074",
+    "way": "sustain",
+    "also": [],
+    "question": "price",
+    "play": "soak takes damage from MP before HP, so Siphon, Clarity and MP regen become a second health bar refilled by fighting, paid for in the spells that MP no longer buys.",
+    "rests_on": [
+      "soak",
+      "Siphon",
+      "Clarity",
+      "MP regen"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-075",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "drawBy weighs foes' picks by max HP, so the unit with the most HP draws the most fire with no Aggro at all, and its Regen and Shield, sized from max HP, grow with it.",
+    "rests_on": [
+      "drawBy",
+      "max_hp",
+      "Regen",
+      "Shield"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-076",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "sharesHeals splits all healing evenly across the side, so one unit's Lifesteal or one big heal mends the whole party, and no heal is wasted on an ally already full.",
+    "rests_on": [
+      "sharesHeals",
+      "Lifesteal",
+      "Heal"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-077",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "cover moves a hit too big for a frail ally onto the holder, where the holder's Aegis blocks it whole.",
+    "rests_on": [
+      "cover",
+      "Aegis"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-078",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "cover resolves a big hit again against the holder, so the holder's Defense and Guard meet the blow in place of the frail ally's.",
+    "rests_on": [
+      "cover",
+      "Guard",
+      "Defense"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-079",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "floor keeps its holder at 1 HP at least, so a Taunting holder takes every pick and cannot fall while it lasts: a window in which only Area and Seek reach the rest of the party.",
+    "rests_on": [
+      "floor",
+      "Taunt"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-080",
+    "way": "burst",
+    "also": [
+      "build"
+    ],
+    "question": "price",
+    "play": "floor keeps a unit at 1 HP while the hits pile on, and its abilities that scale from missing HP strike their hardest from there.",
+    "rests_on": [
+      "floor",
+      "hp (missing)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-081",
+    "way": "burst",
+    "also": [],
+    "question": "price",
+    "play": "An HP price lowers its payer's HP on purpose and never below 1, so an ability scaling from missing HP grows with every price the unit pays.",
+    "rests_on": [
+      "pay",
+      "hp (missing)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-082",
+    "way": "burst",
+    "also": [],
+    "question": "price",
+    "play": "A unit pays its HP down near 1, then trades HP shares with the healthiest foe: the foe is left at the payer's share and the payer at the foe's.",
+    "rests_on": [
+      "pay",
+      "trade"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-083",
+    "way": "burst",
+    "also": [
+      "sustain"
+    ],
+    "question": "price",
+    "play": "A unit pays HP for its strikes, then a rewind takes it back to what it held some ticks ago, so the price is paid and then undone.",
+    "rests_on": [
+      "pay",
+      "rewind"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-084",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "Owed holds the damage of many hits and lands it at one known moment, so a rewind answering the lump returns HP to what it was just before it.",
+    "rests_on": [
+      "Owed",
+      "rewind",
+      "status_ended"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-085",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "floor holds a unit at 1 HP through the deadliest stretch, and a rewind as it ends takes the unit back to before the blows.",
+    "rests_on": [
+      "floor",
+      "rewind"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-086",
+    "way": "sustain",
+    "also": [
+      "burst"
+    ],
+    "question": "price",
+    "play": "Abilities paid in HP instead of MP, on a unit with Lifesteal or Regen, turn hits into fuel: the unit spends its health on casts and swings it back.",
+    "rests_on": [
+      "hp (ability change)",
+      "Lifesteal",
+      "Regen"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-087",
+    "way": "build",
+    "also": [],
+    "question": "price",
+    "play": "A piece that answers each HP price with a stack of Might or another build-up status turns every paid ability into growth as well as a cast.",
+    "rests_on": [
+      "hp_paid",
+      "pay",
+      "Might"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-088",
+    "way": "build",
+    "also": [
+      "burst"
+    ],
+    "question": "timing",
+    "play": "A price fires hp_low when it takes its payer under the line, so a unit sets off its own low-HP answers where its slot order says, not when the foes' damage happens to.",
+    "rests_on": [
+      "pay",
+      "hp_low"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-089",
+    "way": "build",
+    "also": [],
+    "question": "price",
+    "play": "hp_low fires again each time HP comes back to its line and drops under, so a unit that pays HP and is healed back over sets off its low-HP answers again and again.",
+    "rests_on": [
+      "hp_low",
+      "hp_high",
+      "pay",
+      "Heal"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-090",
+    "way": "build",
+    "also": [
+      "burst"
+    ],
+    "question": "price",
+    "play": "healCap keeps a unit under a line however much it is healed, so its below-half conditions hold all fight, paid for in HP it can never regain.",
+    "rests_on": [
+      "healCap",
+      "hpBelow",
+      "hp_low"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-091",
+    "way": "burst",
+    "also": [],
+    "question": "price",
+    "play": "An ability whose damage reads what it paid grows when a piece raises its MP cost, so MP becomes its damage stat.",
+    "rests_on": [
+      "cost",
+      "mp (ability change)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-092",
+    "way": "burst",
+    "also": [
+      "build"
+    ],
+    "question": "price",
+    "play": "An ability with no cooldown is cast whenever its MP allows, so MP regen, Clarity and Siphon alone decide how often it fires.",
+    "rests_on": [
+      "cooldown (ability change)",
+      "MP regen",
+      "Clarity",
+      "Siphon"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-093",
+    "way": "burst",
+    "also": [],
+    "question": "size",
+    "play": "together casts several abilities as one, the others free, so the party pays one MP cost and lands every effect in the same moment, after waiting until all are ready.",
+    "rests_on": [
+      "together"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-094",
+    "way": "build",
+    "also": [
+      "burst"
+    ],
+    "question": "size",
+    "play": "tireless keeps basic attacks swinging through wind-ups and recoveries, so a unit with long casts loses none of its weapon's damage while it charges them.",
+    "rests_on": [
+      "tireless",
+      "Wind-ups"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-095",
+    "way": "debuff",
+    "also": [],
+    "question": "timing",
+    "play": "Cast speed shortens the party's wind-ups, so foes that Silence a casting unit find little casting to catch and the party's spells resolve.",
+    "rests_on": [
+      "Cast speed",
+      "Silence",
+      "casting"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-096",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "Taunt carried by gear as the forced stat isn't a status, so a foe's Dispel can't lift it and the tank holds the picks all fight.",
+    "rests_on": [
+      "forced",
+      "Taunt",
+      "Dispel"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-097",
+    "way": "sustain",
+    "also": [
+      "debuff"
+    ],
+    "question": "price",
+    "play": "A piece's price laid on its own wearer as a debuff is lifted by an ally's Cleanse or kept off by an immunity, so the party keeps the power and drops its cost.",
+    "rests_on": [
+      "Cleanse",
+      "immune:debuffs",
+      "immune:status:<status>"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-098",
+    "way": "burst",
+    "also": [
+      "sustain"
+    ],
+    "question": "timing",
+    "play": "A piece that answers its Shield being emptied by damage with a strike or a stack, sized by the most the pool held, turns the Shield into a fuse: the harder the foes break it, the harder it answers.",
+    "rests_on": [
+      "Shield",
+      "status_ended (cause stacks)",
+      "amount"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-099",
+    "way": "burst",
+    "also": [
+      "sustain"
+    ],
+    "question": "size",
+    "play": "A piece that answers a spent Aegis with damage sized by what it stopped turns the foe's biggest blow back on it.",
+    "rests_on": [
+      "Aegis",
+      "status_ended (cause spent)",
+      "amount"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-100",
+    "way": "build",
+    "also": [
+      "sustain"
+    ],
+    "question": "price",
+    "play": "damage_taken counts what a Shield soaks, so a piece that answers damage taken keeps firing while the holder's HP never moves; one answering hp_lost would sit silent.",
+    "rests_on": [
+      "Shield",
+      "damage_taken",
+      "hp_lost"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-101",
+    "way": "build",
+    "also": [],
+    "question": "size",
+    "play": "Taunt gathers the foes' hits onto one unit whose piece answers each hit taken with a stack for itself, so the tank grows fastest in the fights where it is hit most.",
+    "rests_on": [
+      "Taunt",
+      "hit_taken",
+      "Might"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-102",
+    "way": "debuff",
+    "also": [],
+    "question": "width",
+    "play": "A Taunting unit whose piece lays Weaken on whoever hits it weakens every foe in the fight, since every foe's single-target pick must go to it.",
+    "rests_on": [
+      "Taunt",
+      "hit_taken",
+      "Weaken",
+      "other"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-103",
+    "way": "debuff",
+    "also": [],
+    "question": "size",
+    "play": "A Taunting unit whose piece sets its attacker's basic attack back to a full cooldown each time it is hit slows every foe forced to swing at it.",
+    "rests_on": [
+      "Taunt",
+      "hit_taken",
+      "cooldown (basic, full)",
+      "other"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-104",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "A piece that answers healing past full with a Shield turns wasted healing into a pool, so Regen and big heals on a full unit keep it covered for the next blow.",
+    "rests_on": [
+      "overhealed",
+      "Shield",
+      "Regen",
+      "Heal"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-105",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "MP gained past a full pool, from Clarity or Siphon, goes to an ally through a piece answering mp_over, so one unit's surplus fuels another's spells.",
+    "rests_on": [
+      "mp_over",
+      "Clarity",
+      "Siphon",
+      "mp"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-106",
+    "way": "build",
+    "also": [
+      "sustain"
+    ],
+    "question": "width",
+    "play": "A piece that copies each buff an ally gains to the other allies turns one Haste, Guard or Might into one for the whole party.",
+    "rests_on": [
+      "share",
+      "status_gained",
+      "Haste",
+      "Guard",
+      "Might"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-107",
+    "way": "build",
+    "also": [],
+    "question": "width",
+    "play": "A piece that copies each affliction a foe gains to the other foes turns every single-target application into one on the whole pack, the copies laid even where a cap took none.",
+    "rests_on": [
+      "share",
+      "status_gained",
+      "affliction"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-108",
+    "way": "debuff",
+    "also": [],
+    "question": "timing",
+    "play": "A piece that answers a debuff landing on its wearer by passing its debuffs to the applier returns a foe's Weaken, Slow or Burn to the foe that laid it, at full length.",
+    "rests_on": [
+      "pass",
+      "status_gained",
+      "other"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-109",
+    "way": "debuff",
+    "also": [],
+    "question": "price",
+    "play": "A piece whose price is a debuff on its own wearer, paired with a pass to a foe, turns the price into an attack: the wearer takes it, then hands it over.",
+    "rests_on": [
+      "pass",
+      "debuff"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-110",
+    "way": "build",
+    "also": [
+      "sustain"
+    ],
+    "question": "timing",
+    "play": "A status that survives its holder's knockout and passes its buffs on hands the fallen unit's Might, Shield or Haste to an ally the moment it falls, so nothing it built is lost.",
+    "rests_on": [
+      "pass",
+      "ko",
+      "survivesKO"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-111",
+    "way": "debuff",
+    "also": [
+      "build"
+    ],
+    "question": "size",
+    "play": "A Dispel that moves what it removes takes a foe's Might, Haste or Shield onto the party, weakening the foe and arming an ally in one cast.",
+    "rests_on": [
+      "Dispel",
+      "remove (move)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-112",
+    "way": "debuff",
+    "also": [
+      "sustain"
+    ],
+    "question": "timing",
+    "play": "A Cleanse that moves the debuffs it lifts onto a foe answers the foes' Weaken or Burn by laying it back on them.",
+    "rests_on": [
+      "Cleanse",
+      "remove (move)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-113",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "A piece that heals or shields an ally each time a debuff is lifted from it makes every Cleanse a heal as well, worth most against foes that lay many debuffs.",
+    "rests_on": [
+      "Cleanse",
+      "status_ended (cause removed)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-114",
+    "way": "build",
+    "also": [],
+    "question": "width",
+    "play": "A piece that lays its wearer's swing riders when an event fires, on a kill or on an ally being hit, applies them without a swing, to targets the swing would never pick.",
+    "rests_on": [
+      "riders (effect op)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-115",
+    "way": "build",
+    "also": [],
+    "question": "size",
+    "play": "borrow lets a fast swinger carry a slow ally's riders, with stacks read off itself, so the ally's statuses land at the fast weapon's rate.",
+    "rests_on": [
+      "borrow",
+      "Speed (fast)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-116",
+    "way": "build",
+    "also": [],
+    "question": "size",
+    "play": "echo makes extra strikes count as basic attacks for the holder's riders, so every Double strike lays its basic attack's statuses twice.",
+    "rests_on": [
+      "echo",
+      "Double strike"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-117",
+    "way": "burst",
+    "also": [
+      "build"
+    ],
+    "question": "width",
+    "play": "A piece adding one more hit after each basic attack, aimed by its own rule, gives each swing two different foes: one by draw and one by the rule the piece names.",
+    "rests_on": [
+      "strike (status field)",
+      "aim"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-118",
+    "way": "burst",
+    "also": [],
+    "question": "width",
+    "play": "A strike that carries a killing blow's leftover to another foe makes a heavy hit's overkill count, so big, slow blows waste nothing on a weak foe.",
+    "rests_on": [
+      "ko",
+      "amount",
+      "strike (carry)",
+      "Swing (heavy)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-119",
+    "way": "burst",
+    "also": [],
+    "question": "width",
+    "play": "A recast on an ability's kill resolves it again at once, free, choosing a fresh target by its rule, so one cast can chain through a weakened pack.",
+    "rests_on": [
+      "recast",
+      "ko"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-120",
+    "way": "burst",
+    "also": [],
+    "question": "price",
+    "play": "A piece setting an ability ready on a kill brings it back through its wind-up and MP, so it fires as fast as foes fall, paying full price each time.",
+    "rests_on": [
+      "cooldown (event, ready)",
+      "ko"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-121",
+    "way": "build",
+    "also": [],
+    "question": "timing",
+    "play": "A piece that answers a foe falling by laying its affliction stacks on another foe keeps a built-up total alive through kills, instead of losing it with the body.",
+    "rests_on": [
+      "status_ended (cause ko)",
+      "amount",
+      "apply",
+      "split"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-122",
+    "way": "burst",
+    "also": [],
+    "question": "width",
+    "play": "An Area ability that comes sooner for each foe it hit fires more often the more foes stand, and slows as they fall.",
+    "rests_on": [
+      "cooldown (lessPct)",
+      "count (hit)",
+      "Area"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-123",
+    "way": "build",
+    "also": [],
+    "question": "width",
+    "play": "A piece adding stacks to its wearer for each foe an Area hit lands on builds fastest in crowded fights.",
+    "rests_on": [
+      "count (hit)",
+      "Area",
+      "Might"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-124",
+    "way": "build",
+    "also": [],
+    "question": "size",
+    "play": "A piece bringing the first-slotted ability closer on each basic attack makes the slot order a lever: whatever the player puts first fires far more often than the rest.",
+    "rests_on": [
+      "cooldown (first)",
+      "slot order"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-125",
+    "way": "burst",
+    "also": [],
+    "question": "size",
+    "play": "A piece bringing the ability with the longest whole cooldown closer lifts the party's biggest, rarest cast toward a regular rhythm.",
+    "rests_on": [
+      "cooldown (slowest)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-126",
+    "way": "build",
+    "also": [
+      "sustain"
+    ],
+    "question": "size",
+    "play": "A piece bringing its wearer's next ability closer on each dodge makes an evasive unit cast faster the more it is attacked.",
+    "rests_on": [
+      "hit_evaded",
+      "Evasion",
+      "cooldown (soonest)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-127",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "A revive that raises an ally with its actions ready skips the full cooldown a revived unit comes back with, so it acts at once instead of standing idle.",
+    "rests_on": [
+      "Revive",
+      "revive (ready)",
+      "cooldown"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-128",
+    "way": "burst",
+    "also": [
+      "sustain"
+    ],
+    "question": "timing",
+    "play": "A revived ally stands up under its low-HP line, so its below-half answers fire the moment it rises.",
+    "rests_on": [
+      "Revive",
+      "hp_low"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-129",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "restart replays a unit's fight-start gear and seat effects, so answering hp_low with it lays the opening Shield, Aegis or Might again when the unit needs it most.",
+    "rests_on": [
+      "restart",
+      "fight_start",
+      "hp_low"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-130",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "A piece that knocks out a foe the moment it goes under a line removes the last stretch of HP no hit has to chew through, past Shield, Aegis or floor.",
+    "rests_on": [
+      "fell",
+      "hp_low"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-131",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "Units summoned onto the party's side holding Taunt or high draw soak the foes' single-target picks, so the three party units are hit less.",
+    "rests_on": [
+      "summon",
+      "Taunt",
+      "Aggro"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-132",
+    "way": "debuff",
+    "also": [],
+    "question": "price",
+    "play": "replace takes a foe out without knocking it out, so its own answers to its knockout never fire and its statuses end, trading a dangerous foe for lesser ones that take its place.",
+    "rests_on": [
+      "replace",
+      "ko"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-133",
+    "way": "burst",
+    "also": [
+      "build"
+    ],
+    "question": "timing",
+    "play": "An ability that spends a foe's affliction stacks for one big blow trades the built-up total for damage now.",
+    "rests_on": [
+      "spend",
+      "affliction"
+    ],
+    "needs_block": null,
+    "needs_ruling": "vocabulary.md, rulings: a status runs its own course; no ability spends, shortens or sets off a status early"
+  },
+  {
+    "id": "X-134",
+    "way": "burst",
+    "also": [
+      "build"
+    ],
+    "question": "size",
+    "play": "A payoff that reads its target's stacks, aimed at the foe with the most Burn, Chill or Sunder, leaves the stacks where they are, so it hits the same pile again and again.",
+    "rests_on": [
+      "stacks (scale)",
+      "The foe with the most Burn (or Chill, or Sunder)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-135",
+    "way": "burst",
+    "also": [
+      "build"
+    ],
+    "question": "width",
+    "play": "A payoff counting an affliction's stacks across every foe grows with spreading the affliction wide, not with stacking one foe high.",
+    "rests_on": [
+      "count ({ side, where })",
+      "stacks",
+      "affliction"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-136",
+    "way": "burst",
+    "also": [
+      "debuff"
+    ],
+    "question": "size",
+    "play": "A blow scaling from the debuffs its target holds rewards laying many kinds on one foe, each adding to the strike whatever it does on its own.",
+    "rests_on": [
+      "count (debuffs)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-137",
+    "way": "burst",
+    "also": [
+      "build"
+    ],
+    "question": "size",
+    "play": "A blow scaling from its user's own buffs makes the Haste, Guard, Shield and Regen its allies give it into damage as well as what they do.",
+    "rests_on": [
+      "count (buffs)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-138",
+    "way": "build",
+    "also": [],
+    "question": "width",
+    "play": "A status that reads the stacks held by the unit in another seat makes one unit's build-up power its seat-mate.",
+    "rests_on": [
+      "seat (scale)",
+      "stacks"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-139",
+    "way": "build",
+    "also": [],
+    "question": "width",
+    "play": "Reactions that give something to the next seat chain the party: each unit's action arms the one after it in slot order, wrapping round.",
+    "rests_on": [
+      "seat (next / previous)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-140",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "A side-wide answer that every unit holds but only the first standing in slot order gives passes down the seats as units fall, so it outlives any one of them.",
+    "rests_on": [
+      "party",
+      "seat order",
+      "ko"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-141",
+    "way": "build",
+    "also": [],
+    "question": "price",
+    "play": "A piece rewarding allies that wield its wearer's weapon kind makes a party of one kind stronger together, paid for in the speeds and swings it gives up.",
+    "rests_on": [
+      "kin",
+      "count ({ side, where })"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-142",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "A piece answering a foe's action_start with Shield or Aegis on the party lays the guard while a big cast winds up, before it lands.",
+    "rests_on": [
+      "action_start",
+      "Shield",
+      "Aegis",
+      "casting"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-143",
+    "way": "debuff",
+    "also": [
+      "burst"
+    ],
+    "question": "timing",
+    "play": "A piece answering a foe's interrupted cast with damage or a cooldown refund makes every Silence that catches a wind-up pay twice.",
+    "rests_on": [
+      "action_interrupted",
+      "Silence"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-144",
+    "way": "build",
+    "also": [
+      "sustain"
+    ],
+    "question": "size",
+    "play": "A piece giving its wearer a stack for each heal it gives makes a mender grow more dangerous as the fight goes on.",
+    "rests_on": [
+      "healed",
+      "Heal",
+      "other"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-145",
+    "way": "build",
+    "also": [
+      "burst"
+    ],
+    "question": "timing",
+    "play": "A piece answering Shock or Sunder reaching its cap turns holding an affliction at its cap into a repeated payoff, as Chill's shatter does for Chill.",
+    "rests_on": [
+      "status_capped",
+      "Shock",
+      "Sunder"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-146",
+    "way": "burst",
+    "also": [],
+    "question": "timing",
+    "play": "A burst ability that waits for a healthy target never fires on a fight's last weak foe, so its cooldown, carried between fights, brings it into the next fight ready.",
+    "rests_on": [
+      "Cooldowns carry between fights",
+      "hpAtLeast"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-147",
+    "way": "burst",
+    "also": [
+      "debuff"
+    ],
+    "question": "timing",
+    "play": "An ability that fires only at foes that haven't acted lands its blow or Stun before their first actions, while their opening rolls leave them only partly charged.",
+    "rests_on": [
+      "acted",
+      "RULES.opening",
+      "Stun"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-148",
+    "way": "burst",
+    "also": [
+      "debuff"
+    ],
+    "question": "timing",
+    "play": "A big ability that waits for its target to be Stunned lands while the foe can't answer, and a Stunned foe's wind-up waits until it is free.",
+    "rests_on": [
+      "wait",
+      "hasAny",
+      "Stun"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-149",
+    "way": "debuff",
+    "also": [
+      "burst"
+    ],
+    "question": "price",
+    "play": "An answer to a boss resisting or ignoring control would let a piece turn the wasted control into damage or stacks, so chaining control past the cap still pays.",
+    "rests_on": [
+      "control resistance"
+    ],
+    "needs_block": "an event: control_resisted, fired when control resistance shortens or blocks a control status",
+    "needs_ruling": null
+  },
+  {
+    "id": "X-150",
+    "way": "debuff",
+    "also": [],
+    "question": "timing",
+    "play": "A Stun or Silence aimed at the foe whose ability is nearest ready catches the big cast before it starts, instead of landing on whichever foe the draw picks.",
+    "rests_on": [
+      "Stun",
+      "Silence",
+      "highest"
+    ],
+    "needs_block": "a target rule: a `by` reading the cooldown left on a unit's soonest ability",
+    "needs_ruling": null
+  },
+  {
+    "id": "X-151",
+    "way": "debuff",
+    "also": [
+      "sustain"
+    ],
+    "question": "timing",
+    "play": "A debuff whose divert sends what its holder would gain to the unit that laid it steals a foe's heals and buffs as they land.",
+    "rests_on": [
+      "divert"
+    ],
+    "needs_block": "a status: a debuff carrying divert, sending its holder's gains to its source",
+    "needs_ruling": null
+  },
+  {
+    "id": "X-152",
+    "way": "sustain",
+    "also": [],
+    "question": "price",
+    "play": "Against foes that Dispel, Fixated holds a foe's attacks on its applier where a Taunt would be stripped, since Fixated is a debuff on the foe and Dispel lifts only buffs.",
+    "rests_on": [
+      "Fixated",
+      "Taunt",
+      "Dispel"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-153",
+    "way": "debuff",
+    "also": [],
+    "question": "width",
+    "play": "Thorns given to every ally by a party effect makes a foe's Area hit pay its attacker once for each ally it lands on.",
+    "rests_on": [
+      "Thorns",
+      "party effect",
+      "Area"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-154",
+    "way": "build",
+    "also": [],
+    "question": "size",
+    "play": "A piece laying one debuff at random from several, feeding a blow that counts its target's debuffs, pays whatever the dice pick, since the count reads only how many kinds the foe holds.",
+    "rests_on": [
+      "one",
+      "count (debuffs)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-155",
+    "way": "build",
+    "also": [],
+    "question": "price",
+    "play": "A piece answering its wearer's missed hits with a stack or a cooldown refund turns a foe's Evasion into the party's build-up, so the dodges it can't prevent still feed it.",
+    "rests_on": [
+      "hit_missed",
+      "Evasion",
+      "cooldown"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-156",
+    "way": "build",
+    "also": [],
+    "question": "size",
+    "play": "A piece answering each pulse or trigger of an affliction on a foe with another status lays a second build-up at the first one's rate, so Burn's pulses or Bleed's triggers carry Sunder or Chill with them.",
+    "rests_on": [
+      "status_triggered",
+      "damage_taken",
+      "Burn",
+      "Bleed",
+      "Sunder"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-157",
+    "way": "burst",
+    "also": [
+      "build"
+    ],
+    "question": "timing",
+    "play": "An Area payoff that waits until at least a given number of foes hold an affliction fires only once the pack is loaded, never on one stacked foe.",
+    "rests_on": [
+      "atLeast",
+      "has",
+      "Area",
+      "affliction"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-158",
+    "way": "debuff",
+    "also": [],
+    "question": "timing",
+    "play": "A piece that sets a foe's abilities back to a full cooldown when it gains Stun turns each Stun into a long stretch of basic attacks after it ends.",
+    "rests_on": [
+      "status_gained",
+      "Stun",
+      "cooldown (abilities, full)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-159",
+    "way": "burst",
+    "also": [],
+    "question": "price",
+    "play": "A piece that rewards an empty offhand pays a two-handed weapon's wearer for the slot its weapon took, so the two-hander's swing and the reward add.",
+    "rests_on": [
+      "Hands (two)",
+      "offhand (false)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "X-160",
+    "way": "debuff",
+    "also": [
+      "burst"
+    ],
+    "question": "size",
+    "play": "A piece answering hits taken with damage sized by their raw amount before Defense pays back the whole blow, so the tank's Defense cuts what it takes but not what it returns.",
+    "rests_on": [
+      "hit_taken",
+      "event (raw)",
+      "Defense",
+      "Guard"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  }
+]
