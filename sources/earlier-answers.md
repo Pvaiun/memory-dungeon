@@ -1,0 +1,55 @@
+# Earlier answers
+
+The director's own answers to an earlier round of problems about this game, written before the colours were thought of, against questions aimed at an older way of sorting the game. They're kept as answers already given: they join the triage beside the new ones. The questions they answered aren't here, and none of them is a problem to pose again.
+
+- Regains MP for each stack of any debuff on the foes
+- Damage statuses it lays (Burn, Bleed, Shock, Chill) go to the foe holding the most of that status, unless that foe is at its cap
+- Every tick of its wind-up lays Shock on every foe
+- Any ability of its that lands on more than one unit, allies included, lays Shock on every foe
+- On a dodge: heals a share of the blow it would have been
+- On a crit, whatever the hit sets off happens 4 times
+- At fight start: more max HP
+- At fight start: Might
+- At fight start: Blur on every ally
+- Defense while it wears no armor
+- At fight start: a Mark on the foe with the least max HP
+- Formation: the third seat takes no action of its own and basic attacks whenever either of the others does
+- Formation: one seat holds triple the Shield and draws more; the other two can't hold any
+- Its extra strikes set off what a basic attack sets off
+- Each status it lays on itself or an ally adds Chill to the foe with the most Chill
+- When another ally casts: a fixed amount comes off its cooldowns, split evenly over the abilities it has slotted
+- When a foe is Stunned: gains Might
+- A Stun it lands leaves Slow behind
+- When a fight is won: gives up half the HP it has left and gains that share of its max MP
+- Its first-slotted ability adds Burn to every target, allies included
+- Attack for the HP it is missing
+- While Hidden: regains MP every tick
+- Formation: the first seat pays a share of its max HP for every action; the second raises it when it falls; the third gains Attack for every share of HP the party is missing
+- Its hits add Bleed to a Marked foe
+- Its hits on a Marked foe also land on another foe, carrying what the hit carries
+- When a foe is Stunned and no foe is Marked: it is Marked
+- Its hits deal more for each share of HP its target is missing
+- When a foe is Silenced: the party's "when a foe falls" effects happen
+- Becomes Hidden whenever it gains Guard
+- Every tick of its wind-up gives it Might
+- On a crit: Heat
+- Double strike for each stack of Sunder on the foes
+- Half its Defense becomes Attack
+- Applies more stacks of any status it applies, and its hits deal half
+- Half its Defense for faster basic attacks
+- Formation: with a two-handed weapon a unit's basic attacks deal ×2 and come half as often; with a one-handed weapon they deal half and come twice as often
+- Formation: one seat draws; one crits less often, and each of its crits raises the party's Crit damage for the rest of the fight; one crits more often
+- Formation: the third seat's amulet counts as worn by every member; the other two gain Attack or Defense for an empty amulet slot
+- Formation: in the first seat every single-target action lands on every foe or every ally at a share; in the second every multi-target action lands on its first random target for more
+- Damage left over from a kill carries into another random foe, and on with each kill
+- While above 30% HP: when a foe starts a wind-up, pays a share of its max HP and Silences that foe
+- Cooldown for each ability it has slotted
+- Its wind-ups take three times as long; while winding up it has Thorns and Aggro
+- Its wind-ups take twice as long, and each ability is cast twice for twice the mana
+- Each time a foe's Burn ticks: gains Might for every 10 Burn on that foe
+- When hit: strikes the attacker with a basic attack
+- Its basic attacks scale from Thorns
+- Doubles the effect of its wearer's passive
+- Formation: the foes' picks are even across the three, and no ally can Taunt; when hit, the first seat's first-slotted ability comes nearer, the second gains Defense, the third Attack
+- Formation: two seats each hold the other's passive as well as their own; the third is plain
+- Formation: a foe that takes Shock damage gains Bleed; the first seat's crits lay Shock, the second swings faster, the third is healed whenever Bleed pays
