@@ -8,4 +8,4 @@ What the director wants from this step, from the conversation of Nov 23. Where i
 - **The mechanics and how they meet,** not the fight's text alone. The log is something a player looks at afterwards, and some of what happens isn't clear in it.
 - **Scope is the agent's call.** The director has the time and will read hundreds of things if that's what the work needs.
 - **The best way of working is in the brief,** several agents included where that's better.
-- **Version B** (the director's question and phrases first) is kept on the branch `the-wheel-version-b`, for if this way fails.
+- **Problems first, patterns after,** which is how the director designs best: the agent poses tight problems, the director solves them one at a time, and the colours are sorted out of the answers. They hold this to be the right way of working, and it runs as version B beside version A, which finds the colours from a complete list of plays the director marks.
