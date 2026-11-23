@@ -4,12 +4,28 @@ The director's intent is in `intent.md`, and what they've ruled of the frame is 
 
 ## Decisions needed
 
-1. **Who seeds the colours.** The director's phrases for some or all of them, or the agent's candidates built from temperaments (what a colour values and can't stand) and the game's mechanics. Not from the classes' fantasies or the builds: either would bring the old scaffold back in.
-2. **Is the frame set?** If so, this step closes: the frame goes into a document of its own with these rulings at its head, the rulings it contradicts are rewritten (the builds as the loot's scaffold in *Gear design: the builds*, "built backwards from builds" in *Gear design: philosophy*), and the wheel opens as the next step.
+1. **A colour's profile, as the frame's format.** Each colour gets stars on the four ways to win, from 1 to 4, never 0 (a 1 is a weak way of its own, which is the coverage ruling), on an equal budget, so no colour is best at everything. Each strength also says which lever it pulls (below) and in what style, since the stars say how much and the identity is in how. The values come with the wheel, not now.
+2. **With five colours on four ways, either one colour has no peak or two share one.** The agent's lean: two share a peak and are told apart by lever and style, which makes the style carry weight; a colour with no peak risks being the default pick, or the bland one.
+3. **Is the frame set?** If so, this step closes: the frame goes into a document of its own with these rulings at its head, the rulings it contradicts are rewritten (the builds as the loot's scaffold in *Gear design: the builds*, "built backwards from builds" in *Gear design: philosophy*), and the wheel opens as the next step.
+
+Unless the director would rather seed the colours with phrases of their own, the agent brings candidate wheels built from temperaments and the game's mechanics, not from the classes or the builds.
+
+## The levers
+
+Each way to win is one term of the race, and each term has a few levers. They're the middle layer between the ways to win and the threads, and where two colours with the same stars differ.
+
+| Way to win | Its levers |
+| --- | --- |
+| Sustain | restore HP once lost; prevent damage before it lands; avoid being struck |
+| Debuff or disable | stop the foes acting; lower what they deal; raise what they take |
+| Burst | damage early, on one foe or across many |
+| Build up | the party grows; what's laid on the foes grows; a resource grows toward its spending |
+
+**Sustain means holding the party's HP and nothing else.** Stopping the foes' damage is a debuff, even when it keeps the party alive. Killing a foe early cuts its damage too, so burst and disable meet against a pack and part against a lone boss.
 
 ## The agent's reading of the frame
 
-- **The four ways to win are the four terms of the fight's race.** A fight is the party's damage against the foes' HP, raced against the foes' damage against the party's HP. Burst raises the party's damage now; building up raises it over the fight; debuffs and disables lower what the foes do (or raise what they take); sustain holds the party's HP. Every party moves all four terms, which is why none is exclusive: what differs is where its edge comes from. Burst and building up share a term and differ in time, which is why they can look like the same thing.
+- **The four ways to win are the four terms of the fight's race.** A fight is the party's damage against the foes' HP, raced against the foes' damage against the party's HP. Burst puts the party's damage early in the fight; building up makes it rise over the fight; debuffs and disables lower what the foes do (or raise what they take); sustain holds the party's HP. Every party moves all four terms, which is why none is exclusive: what differs is where its edge comes from. Burst and building up share a term and differ in time, which is why they can look like the same thing.
 - **Time pulls them apart.** Burst wants the fight short; sustain and building up want it long, and the enrage caps how long. That tension is one place a colour's opposites can come from.
 - **A style might be written as a few questions any mechanic answers:** how big and how often, how wide, when, and at what price. Two colours sharing a mechanic answer them differently. A suggestion, for the wheel's cards.
 
@@ -26,9 +42,10 @@ The director's intent is in `intent.md`, and what they've ruled of the frame is 
 ## What checks the wheel, in place of the builds
 
 On paper, before anything is built:
-- **Coverage:** every colour can sustain and kill, and can field a party alone.
-- **Spread:** each colour leans strongly to one or two ways to win and weakly to others; no colour is strong in all four, no two colours lean the same way, and each way to win has colours strong and weak in it. This catches four decks landing in one colour.
-- **Pairs:** every pair of colours makes a party that can win, and has something one gives that the other wants.
+- **Coverage:** no colour has a 0 anywhere, so every colour can sustain and kill, and can field a party alone.
+- **Spread:** each colour peaks in one or two ways and is weak in another; no two colours have the same profile; and each way to win has about as many stars across the wheel as the others, unless a lean is chosen on purpose.
+- **Pairs:** the better of two colours on each way shows what a pair covers and lacks. Every pair must make a party that can win, and has something one gives that the other wants.
+- **Opposites lean apart:** a colour's opposites peak where it's weak.
 - **Identity:** each colour reads as one thing, by the director, on its card.
 
 Whether the decks that come out are fun is judged later: the director on samples, then simulation and the playtest.
