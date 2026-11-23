@@ -1,0 +1,2542 @@
+[
+  {
+    "id": "S-001",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "A quick, cheap Heal aimed at the ally with the lowest share of max HP tops up whoever is worst off between blows. Small mends, often, keep anyone from drifting toward a knockout while incoming damage stays under their rate.",
+    "rests_on": [
+      "Heal",
+      "The ally with the lowest share of max HP",
+      "quick cooldown (COOLDOWN)",
+      "MP costs: skills are cheap"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-002",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "One large Heal on a long cooldown, at a spell's MP cost, restores a big share at once and can turn a fight that was being lost. Between casts the party holds on with whatever else it has.",
+    "rests_on": [
+      "Heal",
+      "long cooldown (COOLDOWN)",
+      "MP costs: spells cost several times more"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-003",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "A Heal aimed at every ally mends all three at once, for less each. It answers foes whose damage is spread or random, and Area hits that land on everyone.",
+    "rests_on": [
+      "Heal",
+      "Every ally",
+      "Area"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-004",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "A Heal on the caster and on the other ally with the lowest share of max HP keeps a pair standing, the mender included, without spending on the third.",
+    "rests_on": [
+      "Heal",
+      "The other ally with the lowest share of max HP"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-005",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "A Heal aimed at the ally with the highest Attack keeps the party's main damage dealer standing rather than whoever is most hurt, so the fight ends before the others fall.",
+    "rests_on": [
+      "Heal",
+      "The ally with the highest Attack"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-006",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "A Heal scaling from the target's missing HP is small on a scratched ally and large on one near a knockout, so the same cast is a top-up or a rescue.",
+    "rests_on": [
+      "Heal",
+      "hp (max HP minus current)",
+      "Every amount states its own scaling"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-007",
+    "way": "sustain",
+    "also": [],
+    "question": "price",
+    "play": "A Heal that waits on its target falling under an HP line never spends MP on scratches, so its fuel goes only to damage that matters and lasts the fight, at the price of letting small harm stand.",
+    "rests_on": [
+      "Heal",
+      "trigger condition",
+      "hpBelow",
+      "MP costs"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-008",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "A party-wide Heal whose condition asks for several allies under a line holds until the damage has spread, then mends them all in one cast.",
+    "rests_on": [
+      "Heal",
+      "Every ally",
+      "atLeast (condition)",
+      "hpBelow"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-009",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "A heal slotted first, with a condition that an ally is under a line, takes the unit's turn only when someone is low; otherwise the unit spends its turns on damage, since a free unit uses the first ready ability in slot order.",
+    "rests_on": [
+      "slot order",
+      "trigger condition",
+      "hpBelow",
+      "Heal"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-010",
+    "way": "sustain",
+    "also": [],
+    "question": "price",
+    "play": "A heal slotted after the unit's other abilities fires only when none of them is ready, mending in the gaps at no cost to the unit's damage, but never first when it's needed most.",
+    "rests_on": [
+      "slot order",
+      "Heal"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-011",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "Crit chance on a mender lets its heals crit, and a healing status can be given crits on its pulses, so mending comes in uneven lumps that Crit damage makes larger.",
+    "rests_on": [
+      "Crit chance",
+      "Crit damage",
+      "crit (status field: crits on its pulses)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-012",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "When an ally drops under a line, a reaction makes the mender's heal ready now, or gives the mender a status that makes it wind up in a moment, so the drop is answered at once instead of after a cooldown or a wind-up.",
+    "rests_on": [
+      "hp_low",
+      "cooldown (set: ready)",
+      "mods: cast",
+      "Heal"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-013",
+    "way": "sustain",
+    "also": [],
+    "question": "price",
+    "play": "When an ally drops under a line, the mender gains a status that removes its heal's cooldown for a while, turning MP straight into mending until the danger passes or the pool runs dry.",
+    "rests_on": [
+      "hp_low",
+      "mods: cooldown",
+      "MP costs"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-014",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "Each hit the unit takes brings its protective ability some ticks closer, so the harder it's pressed, the more often it shields or mends.",
+    "rests_on": [
+      "hit_taken",
+      "cooldown (set: less)",
+      "cooldown (which: an ability by id)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-015",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "At the fight's start a piece makes the unit's protective ability at least half charged, so it comes early in every fight whatever cooldown it carried in.",
+    "rests_on": [
+      "fight_start",
+      "cooldown (set: atMost)",
+      "Cooldowns carry between fights"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-016",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "Haste, Cooldown or Cast speed on the mender shortens its cooldowns and wind-ups, so heals come more often and land closer to the damage they answer.",
+    "rests_on": [
+      "Haste",
+      "Cooldown",
+      "Cast speed"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-017",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "A reaction to the mender's heal resolving recasts it free, choosing its target afresh by its own rule, so a second ally, or the same one if it's still lowest, is mended for one cast's MP.",
+    "rests_on": [
+      "recast",
+      "action_resolve",
+      "Heal"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-018",
+    "way": "sustain",
+    "also": [],
+    "question": "price",
+    "play": "The mender's heal and its shield are cast as one: each waits until both are ready, and when one is cast the other comes with it free, a single lump of mending and buffer on one MP cost.",
+    "rests_on": [
+      "mods: together",
+      "Heal",
+      "Shield"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-019",
+    "way": "sustain",
+    "also": [],
+    "question": "price",
+    "play": "While the mender holds over half its MP, a status raises its heals' cost and the heals scale from what they paid, so a full pool buys big mends and a low one small, cheap ones.",
+    "rests_on": [
+      "mods: mp",
+      "mods: if",
+      "mpAtLeast",
+      "cost (what this action paid)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-020",
+    "way": "sustain",
+    "also": [],
+    "question": "price",
+    "play": "A heal with an HP price, scaling from what it paid, moves health from a sturdy unit to a hurt one and spares MP; the price never takes the payer below 1 HP.",
+    "rests_on": [
+      "pay",
+      "mods: hp",
+      "cost (as an HP price)",
+      "Heal"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-021",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "Each foe knocked out heals the party, so mending arrives in bursts as foes fall and is richest in crowded fights.",
+    "rests_on": [
+      "ko",
+      "whose: foe",
+      "heal"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-022",
+    "way": "sustain",
+    "also": [
+      "build",
+      "debuff"
+    ],
+    "question": "price",
+    "play": "A heal that scales from the total stacks of an affliction across every foe reads them and leaves them, so the party's upkeep on the foes doubles as its mending.",
+    "rests_on": [
+      "count ({ side, where }, with stacks)",
+      "affliction",
+      "a payoff reads the stacks and leaves them",
+      "Heal"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-023",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "A marker whose expiry heals its holder sets a lump of mending to land a set time after it's laid, so it arrives after the stretch of damage that follows the cast.",
+    "rests_on": [
+      "marker",
+      "duration",
+      "status_ended (cause: expired)",
+      "heal"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-024",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "A heal aimed at the ally holding Doom brings it to full before the countdown ends, since Doom's burst kills only a hurt unit.",
+    "rests_on": [
+      "Doom",
+      "Heal",
+      "has (unit condition)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-025",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "A mender's heals grow for each knocked-out ally, so a party down a unit is mended harder by those still standing, a late answer to a fight going wrong.",
+    "rests_on": [
+      "mods: heal",
+      "mods: times",
+      "count ({ side, where })",
+      "ko (unit condition)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-026",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "Each basic attack the unit lands heals or shields the ally with the lowest share of max HP, so a damage dealer mends the others with no MP and no ability slot.",
+    "rests_on": [
+      "hit_lands",
+      "basic (tag)",
+      "heal",
+      "Shield",
+      "The ally with the lowest share of max HP"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-027",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "Regen kept on the unit drawing fire, laid again by another unit before it lapses, returns a share of max HP on every pulse: a steady trickle that matches steady incoming damage without big casts.",
+    "rests_on": [
+      "Regen",
+      "Refresh",
+      "A buff a unit puts on itself has a cooldown longer than the buff lasts"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-028",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "Regen on every ally spreads a slow mend over the whole party, an answer to foes whose damage is spread or random.",
+    "rests_on": [
+      "Regen",
+      "Every ally"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-029",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "Regen and the Shield cap both read the holder's max HP, so raising max HP on the unit being hit grows its trickle and its pool together.",
+    "rests_on": [
+      "Regen",
+      "Shield",
+      "max HP"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-030",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "A formation's party effect or a seat gives Regen at the fight's start, so the party mends through the opening with no slot or MP spent, until it lapses.",
+    "rests_on": [
+      "party effect",
+      "seat",
+      "fight_start",
+      "Regen"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-031",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "Each hit taken refreshes Regen or Guard on the unit, so the protection lasts exactly as long as the foes keep hitting it and lapses when they stop.",
+    "rests_on": [
+      "hit_taken",
+      "Regen",
+      "Guard",
+      "Refresh"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-032",
+    "way": "sustain",
+    "also": [
+      "build"
+    ],
+    "question": "timing",
+    "play": "A stacking mend, added by quick applications and losing stacks on its pulse, heals per stack, so it starts small and climbs only while someone keeps feeding it.",
+    "rests_on": [
+      "Stacks",
+      "pulse",
+      "drop",
+      "stacks (scale)",
+      "heal"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-033",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "A healing pulse whose condition asks for its holder under a line mends only while the holder is hurt: idle while it's healthy, awake when it isn't.",
+    "rests_on": [
+      "pulse",
+      "if",
+      "hpBelow"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-034",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "Healing past full, Regen pulses included, fires overhealed, and a reaction adds that much Shield, so a party mended ahead of the damage banks the surplus as a buffer.",
+    "rests_on": [
+      "overhealed",
+      "amount",
+      "Shield"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-035",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "The part of a heal past full goes to the other ally with the lowest share of max HP, so mending that lands on a full unit is passed to one that needs it.",
+    "rests_on": [
+      "overhealed",
+      "amount",
+      "heal",
+      "The other ally with the lowest share of max HP"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-036",
+    "way": "sustain",
+    "also": [],
+    "question": "price",
+    "play": "A piece's reaction to overhealed gives the mender MP for the healing past full, so over-mending refunds the casts that caused it.",
+    "rests_on": [
+      "overhealed",
+      "other (the healer)",
+      "mp"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-037",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "A side rule shares every heal any ally receives evenly across the living party, so single-target heals and Lifesteal become party-wide mending, thinner on each.",
+    "rests_on": [
+      "sharesHeals",
+      "Heal",
+      "Lifesteal"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-038",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "Raising healing received on the unit drawing fire makes every heal, Regen pulse and Lifesteal on it larger, and blunts Rot, which works by lowering that stat.",
+    "rests_on": [
+      "healing_received",
+      "Rot"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-039",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "Lifesteal on a slow, heavy-swinging unit heals in lumps on each blow, and holds up against Defense, which takes little from big hits.",
+    "rests_on": [
+      "Lifesteal",
+      "Swing: heavy",
+      "Speed: slow",
+      "Defense"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-040",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "Lifesteal on a fast or double-striking unit heals a little on many hits, a steady trickle rather than lumps, but weak against high Defense, which takes most from small hits.",
+    "rests_on": [
+      "Lifesteal",
+      "Speed: fast",
+      "Double strike",
+      "Defense"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-041",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "Lifesteal on a hit aimed at every foe heals for each foe struck, so the more foes stand, the more each cast restores.",
+    "rests_on": [
+      "Lifesteal",
+      "Area",
+      "area (tag)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-042",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "A piece that heals the unit a set amount on each hit it lands favours many hits over big ones: fast weapons, Double strike and multi-hit abilities, whatever Defense takes off each.",
+    "rests_on": [
+      "hit_lands",
+      "heal",
+      "Double strike",
+      "Speed: fast"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-043",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "A unit that draws fire with Taunt or high Aggro and mends itself through Lifesteal or a heal on itself is its own mender, leaving the rest of the party free of keeping it up.",
+    "rests_on": [
+      "Taunt",
+      "Aggro",
+      "Lifesteal",
+      "Heal"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-044",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "Mending read from damage dealt, such as Lifesteal, grows as the enrage raises every unit's damage, while share-of-max-HP mending stays flat, so it keeps pace late in a long fight.",
+    "rests_on": [
+      "Enrage",
+      "Lifesteal",
+      "Regen"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-045",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "Late in a long fight, share cuts such as Weaken and damage-taken modifiers keep their share as the enrage grows every hit, while Defense takes a smaller share of bigger hits and a Shield soaks a fixed amount.",
+    "rests_on": [
+      "Enrage",
+      "Weaken halves a hit at any knob",
+      "taken",
+      "Defense",
+      "Shield"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-046",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "Divert on a damage dealer sends what its Lifesteal would heal it to another unit, so the party's hardest hitter mends the one drawing fire.",
+    "rests_on": [
+      "divert",
+      "Lifesteal"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-047",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "A reaction to hit_lands adds Shield worth a share of the hit's amount, so the unit builds a buffer ahead of the damage, banking past full HP and working under Rot, which cuts Lifesteal.",
+    "rests_on": [
+      "hit_lands",
+      "amount",
+      "Shield",
+      "Rot"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-048",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "When an ally drops under a line, rewind sets its HP back to what it was some ticks ago, erasing the burst that put it there; it isn't healing, so Rot doesn't cut it.",
+    "rests_on": [
+      "rewind",
+      "hp_low",
+      "Rot"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-049",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "A rewind on a cooldown, aimed at the ally with the lowest share of max HP, undoes whatever that ally took in the last stretch: much after a burst, nothing in a lull.",
+    "rests_on": [
+      "rewind",
+      "The ally with the lowest share of max HP"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-050",
+    "way": "sustain",
+    "also": [],
+    "question": "price",
+    "play": "Trade with a near-dead ally leaves it at the actor's share of max HP and the actor at the ally's, so a sturdy, shielded or Regen-holding unit takes the danger in its place.",
+    "rests_on": [
+      "trade",
+      "Shield",
+      "Regen"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-051",
+    "way": "sustain",
+    "also": [
+      "burst"
+    ],
+    "question": "width",
+    "play": "A hurt unit's trade with a healthy foe leaves each at the other's share of max HP, restoring the unit near a knockout and bringing the foe low, as neither damage nor healing.",
+    "rests_on": [
+      "trade"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-052",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "A seat or piece gives Shield or Aegis at the fight's start, so the opening blows, which the foes' partly charged first actions bring early, meet a buffer before HP.",
+    "rests_on": [
+      "Shield",
+      "Aegis",
+      "fight_start",
+      "seat",
+      "RULES.opening"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-053",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "A quick, cheap Shield refills the pool between blows, so the holder rarely loses HP while the incoming damage stays under the refill rate.",
+    "rests_on": [
+      "Shield",
+      "quick cooldown (COOLDOWN)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-054",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "A large Shield fills the pool to its cap in one cast on a long cooldown, a second health bar the foes must empty before they reach HP.",
+    "rests_on": [
+      "Shield",
+      "long cooldown (COOLDOWN)",
+      "Shield's cap (a share of the holder's max HP)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-055",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "An ability that adds Shield skips a capped ally for the next one its phrase allows, so one caster brings the whole party up to cap in turn and waits when all are full.",
+    "rests_on": [
+      "Shield",
+      "A Shield at its cap counts as already there"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-056",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "Shield soaks status damage too, so it holds back Burn, Bleed and Shock, the untyped damage that Defense and Evasion never meet.",
+    "rests_on": [
+      "Shield",
+      "untyped",
+      "Burn",
+      "Bleed",
+      "Shock"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-057",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "Under Rot only Shield still works, so a party facing healing cuts turns to building pools ahead of the damage instead of mending after it.",
+    "rests_on": [
+      "Rot",
+      "Shield"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-058",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "A Shield scaling from the number of foes standing is large while many are hitting and shrinks as they fall.",
+    "rests_on": [
+      "Shield",
+      "count ({ side, where })"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-059",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "When a Shield is emptied by damage, a reaction gives Aegis or Guard, so breaking one layer exposes another instead of HP.",
+    "rests_on": [
+      "status_ended (cause: stacks)",
+      "Shield",
+      "Aegis",
+      "Guard"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-060",
+    "way": "sustain",
+    "also": [],
+    "question": "price",
+    "play": "An ability with an HP price adds a Shield scaling from what it paid, turning health into a pool that soaks status damage and that Rot can't cut.",
+    "rests_on": [
+      "pay",
+      "cost (as an HP price)",
+      "Shield",
+      "Rot"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-061",
+    "way": "sustain",
+    "also": [],
+    "question": "price",
+    "play": "A piece turns harm stopped into fuel: a reaction to hit_taken gives MP by what the unit's Shield soaked and its Aegis blocked, or a giver regains MP when a Shield or Aegis it gave is spent.",
+    "rests_on": [
+      "hit_taken",
+      "event (stopped)",
+      "status_ended",
+      "source (event filter)",
+      "mp"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-062",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "A stacking absorb, one stack per point and losing stacks on a pulse, is strong right after it's laid and soon gone, unlike the Shield pool, which waits for damage however long it takes.",
+    "rests_on": [
+      "absorb",
+      "Stacks",
+      "drop",
+      "pulse",
+      "Shield"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-063",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "Aegis kept on the unit drawing fire stops the next hit above its share of max HP, so a foe's slow heavy blow or big spell lands for nothing while small hits pass.",
+    "rests_on": [
+      "Aegis",
+      "Fizzle"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-064",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "An ability that applies Aegis skips allies already holding it, so one caster arms the whole party in turn against Area spells and big blows on anyone.",
+    "rests_on": [
+      "Aegis",
+      "Fizzle statuses: skips targets that already have it"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-065",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "Aegis and Shield soak Doom's untyped burst, so an armed ally survives the countdown even when hurt.",
+    "rests_on": [
+      "Doom",
+      "Aegis",
+      "Shield"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-066",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "Owed gathers every hit on its holder into one lump of untyped damage that lands later, and Aegis, which lets small hits pass, blocks that whole lump if it clears its share of max HP.",
+    "rests_on": [
+      "Owed",
+      "debt",
+      "Aegis",
+      "block"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-067",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "Owed holds each hit's damage on its icon and lands it all at once a set time after the first, so a foe's burst can't knock its holder out on the spot, and it keeps acting meanwhile.",
+    "rests_on": [
+      "Owed",
+      "debt",
+      "OWED"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-068",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "While Owed's lump waits, the party lays Shield or a floor on its holder, which meets the lump as it lands, so a burst is paid for by protection laid after it.",
+    "rests_on": [
+      "Owed",
+      "debt",
+      "Shield",
+      "floor"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-069",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "Cover moves only hits above a share of an ally's max HP onto the holder, exactly the blows Aegis exists to stop, so Aegis or a floor on the holder turns the moved spikes to nothing.",
+    "rests_on": [
+      "cover",
+      "Aegis",
+      "floor"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-070",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "Guard on the unit drawing fire takes a large share off each small blow, since Defense cuts small hits most, so swarms and fast foes barely scratch it while big hits still land.",
+    "rests_on": [
+      "Guard",
+      "Defense",
+      "RULES.armorK"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-071",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "Guard on every ally, or a party effect raising Defense, blunts foes whose many small hits are spread across the party, with prevention in place of mending.",
+    "rests_on": [
+      "Guard",
+      "Every ally",
+      "party effect",
+      "Defense"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-072",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "A damage-taken cut that names hits lowers every blow but leaves status damage untouched, an answer to hitters that does nothing against Burn or Bleed.",
+    "rests_on": [
+      "taken",
+      "physical (tag)",
+      "damage-taken modifiers reach it, except one that names hits alone"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-073",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "A damage-taken cut that names area hits lowers the foes' every-foe attacks, which Taunt and Hidden can't steer, and leaves single-target hits to whoever draws them.",
+    "rests_on": [
+      "taken",
+      "area (tag)",
+      "Area",
+      "Taunt",
+      "Hidden"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-074",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "A damage-taken cut that names one status's tag lowers that status's pulses alone, a narrow answer to foes that lean on one damage over time.",
+    "rests_on": [
+      "taken",
+      "<status> (tag)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-075",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "A damage-taken cut that names ability hits, or basic attacks, answers foes whose harm comes from spells alone or from swings alone.",
+    "rests_on": [
+      "taken",
+      "ability (tag)",
+      "basic (tag)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-076",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "critsTaken set to never means no hit on the unit crits, so its damage taken stays even, a foe's crit spikes are gone, and Brittle laid on it does nothing.",
+    "rests_on": [
+      "critsTaken",
+      "Brittle",
+      "Crits"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-077",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "Blur laid again on a quick cooldown cancels the next hit whatever its size, best against slow foes whose few big blows each land into a fresh Blur.",
+    "rests_on": [
+      "Blur",
+      "quick cooldown (COOLDOWN)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-078",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "Blur on every ally lets each dodge one hit outright, an answer to Area spells and spread blows that Accuracy can't touch.",
+    "rests_on": [
+      "Blur",
+      "Every ally",
+      "Accuracy"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-079",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "A piece's reaction to hit_evaded heals the unit or gives it MP, so Evasion and Blur turn each miss into mending or fuel as well as a blow avoided.",
+    "rests_on": [
+      "hit_evaded",
+      "Evasion",
+      "Blur",
+      "heal",
+      "mp"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-080",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "A dodged hit applies nothing and isn't taken, so Evasion and Blur keep off the Stun, Bleed or Rot that foes' hits carry, and the Bleed a taken hit would set off, as well as the blow itself.",
+    "rests_on": [
+      "Evasion",
+      "Blur",
+      "A dodged hit applies nothing"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-081",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "Taunt or high Aggro on a unit with high Evasion sends foes' picks where many miss: a swingy defence, strong until a run of hits lands, and no help against status damage.",
+    "rests_on": [
+      "Taunt",
+      "Aggro",
+      "Evasion"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-082",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "Taunt forces foes' single-target picks onto the unit built to take them, so the rest of the party is reached only by Area and by Seek.",
+    "rests_on": [
+      "Taunt",
+      "The Taunt rule",
+      "Seek",
+      "Area"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-083",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "High Aggro from gear and a seat makes one unit draw most foes' picks without Taunt; some leak to the others, but unlike Taunt it still pulls Seek's picks, which weigh by draw.",
+    "rests_on": [
+      "Aggro",
+      "draw",
+      "seat",
+      "A random foe that isn't Taunting"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-084",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "One unit Taunts and another carries high Aggro, so the Taunter takes the ordinary picks and the second takes the Seek picks that pass the Taunt, leaving the third rarely picked by either.",
+    "rests_on": [
+      "Taunt",
+      "Aggro",
+      "Seek",
+      "A random foe that isn't Taunting"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-085",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "Taunt calls the foes' actions early, so slotted right after the Taunter's own Shield, Aegis, Blur, floor or immunity to damage, it makes the swings it draws land on a fresh buffer.",
+    "rests_on": [
+      "Taunt",
+      "A foe's action can be called early",
+      "slot order",
+      "Shield",
+      "Aegis",
+      "Blur",
+      "floor",
+      "immune:damage"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-086",
+    "way": "sustain",
+    "also": [],
+    "question": "price",
+    "play": "Two units that Taunt on staggered cooldowns split foes' picks by draw while both taunt and take turns holding them otherwise, so the cost of drawing fire is shared and neither breaks.",
+    "rests_on": [
+      "Taunt",
+      "When several units Taunt, foes pick among them weighted by draw",
+      "Refresh"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-087",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "With even Aggro and no Taunt, foes' picks spread over the party, and party-wide mending answers damage that no single unit has to survive alone.",
+    "rests_on": [
+      "Aggro",
+      "draw",
+      "Every ally",
+      "Regen",
+      "Heal"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-088",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "A side rule weighs foes' picks by max HP in place of Aggro, so most blows go to the unit with the most health and few to the smallest.",
+    "rests_on": [
+      "drawBy",
+      "max HP"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-089",
+    "way": "sustain",
+    "also": [
+      "debuff"
+    ],
+    "question": "width",
+    "play": "Fixated laid on the foe with the highest Attack makes its basic attacks and random-target abilities pick the unit that fixated it, pulling the one dangerous foe off the rest without drawing the others.",
+    "rests_on": [
+      "Fixated",
+      "The foe with the highest Attack"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-090",
+    "way": "sustain",
+    "also": [
+      "debuff"
+    ],
+    "question": "timing",
+    "play": "When a foe's hit lands on the mender, a reaction fixates that foe on the unit built to take it, so whatever turns on the mender is pulled away.",
+    "rests_on": [
+      "Fixated",
+      "hit_taken",
+      "other (reaction target)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-091",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "Against foes that pick the highest current HP that isn't Taunting, a second unit with a big, topped-up pool takes those picks beside the Taunter, so they go to it and not to the fragile.",
+    "rests_on": [
+      "The foe with the highest current HP that isn't Taunting (Skips the tank)",
+      "Taunt",
+      "max HP"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-092",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "Units summoned on the party's side give foes more to pick from, so every pick that lands on one is a blow kept off the party.",
+    "rests_on": [
+      "summon",
+      "draw"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-093",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "Hidden on the mender keeps its heals coming while foes' picks, Seek included, go elsewhere; only Area reaches it.",
+    "rests_on": [
+      "Hidden",
+      "The Hidden rule",
+      "Seek",
+      "Area"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-094",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "Hidden on two allies leaves foes only the third to pick, which Taunt can't do against Seek or picks that ignore Aggro; given to all three, the last in seat order stays in the light.",
+    "rests_on": [
+      "Hidden",
+      "Someone stays in the light",
+      "Seek",
+      "A random foe, ignoring Aggro (Fickle)",
+      "party effect"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-095",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "When an ally drops under a line, Hidden takes it out of foes' picks for a set time while mending brings it back.",
+    "rests_on": [
+      "hp_low",
+      "Hidden"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-096",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "Hidden from a seat or piece at the fight's start keeps the fragile out of the foes' first picks, while the opening's partly charged actions land on whoever stays seen.",
+    "rests_on": [
+      "Hidden",
+      "fight_start",
+      "seat",
+      "RULES.opening"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-097",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "Cover moves any hit that would take more than a share of another ally's max HP onto the holder, so the fragile are safe from spikes while small hits still reach them.",
+    "rests_on": [
+      "cover"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-098",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "When a unit drops under a line it gains a floor for a set time, so no blow can knock it out while heals and shields catch up.",
+    "rests_on": [
+      "floor",
+      "hp_low"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-099",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "A floor that ends as soon as it saves its holder, removed by a reaction when HP goes under a low line, turns one killing blow into a stand at 1 HP: a single reprieve rather than a window.",
+    "rests_on": [
+      "floor",
+      "hp_low",
+      "remove"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-100",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "An HP price can take its payer under its own line, firing hp_low, so a unit sets off its emergency protections, a floor, Hidden or a restart, on its own schedule.",
+    "rests_on": [
+      "pay",
+      "hp_low (whatever took it there: a price)",
+      "floor",
+      "Hidden",
+      "restart"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-101",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "Emergency protection laid at a line, a floor, soak or a damage-taken cut, is lifted by a reaction when the unit is mended back over that line, so it lasts exactly as long as the danger, not a set time.",
+    "rests_on": [
+      "hp_low",
+      "hp_high",
+      "remove",
+      "floor",
+      "soak",
+      "taken"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-102",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "A status raising immune:damage means its holder takes no damage at all while it lasts, the strongest cut, on a long cooldown or at a line.",
+    "rests_on": [
+      "immune:damage"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-103",
+    "way": "sustain",
+    "also": [],
+    "question": "price",
+    "play": "Soak takes damage that would reach HP out of MP point for point while there's any, so a deep MP pool, kept topped by MP regen, Clarity or Siphon, becomes a second health bar paid for in casts.",
+    "rests_on": [
+      "soak",
+      "max MP",
+      "MP regeneration",
+      "Clarity",
+      "Siphon"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-104",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "Immunity to lockouts by kind keeps a unit from Stun and Silence, so the mender's casts and the Taunter's Taunt come round whatever foes lay.",
+    "rests_on": [
+      "immune:kind:<kind>",
+      "lockout (effect kind)",
+      "Stun",
+      "Silence"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-105",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "A Cleanse that also lays immunity to debuffs for a set time, or that immunity at the fight's start, keeps the next debuffs off instead of lifting them after.",
+    "rests_on": [
+      "immune:debuffs",
+      "Cleanse",
+      "fight_start"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-106",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "Immunity to Dispel keeps the party's Shields, Taunt and Regen on against foes that strip buffs, where one Dispel would empty a whole Shield pool.",
+    "rests_on": [
+      "immune:dispel",
+      "Dispel",
+      "Shield"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-107",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "Immunity to Rot keeps every heal on the unit at full strength against foes that lean on cutting healing.",
+    "rests_on": [
+      "immune:status:<status>",
+      "Rot"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-108",
+    "way": "sustain",
+    "also": [],
+    "question": "price",
+    "play": "Immunity to every status that pulses keeps Burn off a unit, but also the party's own Regen and Clarity, so its sustain must come from heals, Shield and Lifesteal instead.",
+    "rests_on": [
+      "immune:kind:<kind>",
+      "pulse (effect kind)",
+      "Burn",
+      "Regen",
+      "Clarity"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-109",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "A Cleanse aimed at the ally holding the most debuffs lifts harm where it has gathered, on whichever unit the foes' debuffs have found.",
+    "rests_on": [
+      "Cleanse",
+      "debuffs (by)",
+      "mostDebuffs"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-110",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "A reaction to an ally gaining a debuff cleanses it at once, so Stun, Doom or Rot are lifted before they've done their work.",
+    "rests_on": [
+      "status_gained",
+      "Cleanse",
+      "remove",
+      "Doom"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-111",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "A Cleanse on every ally lifts debuffs across the party at once, against foes that lay them widely, on a longer cooldown than a single lift.",
+    "rests_on": [
+      "Cleanse",
+      "Every ally"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-112",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "A removal narrowed to lockouts lifts only Stun and Silence, aimed at an ally holding either, so a stopped mender or Taunter acts again at once.",
+    "rests_on": [
+      "remove (kind)",
+      "lockout (effect kind)",
+      "hasAny",
+      "Stun",
+      "Silence"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-113",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "A Cleanse aimed at the ally with the most Chill, waiting until it nears the cap, lifts it before the shatter's damage and Stun.",
+    "rests_on": [
+      "Chill",
+      "Cleanse",
+      "stacks (unit condition)",
+      "{ stacks } (by)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-114",
+    "way": "sustain",
+    "also": [
+      "debuff"
+    ],
+    "question": "width",
+    "play": "A unit passes its own debuffs to a foe, or a removal that moves them sends an ally's there, so lifting harm from the party lays it on the enemy.",
+    "rests_on": [
+      "pass",
+      "remove (move)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-115",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "A pulse that lifts one debuff at a time cleanses on a timer, keeping light debuffs from piling up without a slot or a cast.",
+    "rests_on": [
+      "pulse",
+      "remove (count)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-116",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "A Cleanse that also heals for each debuff its target held makes the heaviest debuffing feed the largest mends.",
+    "rests_on": [
+      "Cleanse",
+      "count (debuffs)",
+      "Heal"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-117",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "Revive on a very long cooldown raises a knocked-out ally with some HP and every action on full cooldown, a body back in the fight that draws picks and soon acts.",
+    "rests_on": [
+      "Revive",
+      "very long cooldown (COOLDOWN)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-118",
+    "way": "sustain",
+    "also": [],
+    "question": "price",
+    "play": "An ability whose rule picks a fallen ally, else the lowest, revives when someone is down and heals otherwise, so its slot is never idle waiting for a knockout.",
+    "rests_on": [
+      "ifNone",
+      "ko (unit condition)",
+      "revive",
+      "heal"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-119",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "An ally's knockout makes the reviver's Revive ready now, so a fall is answered at once instead of after a very long cooldown.",
+    "rests_on": [
+      "ko",
+      "cooldown (set: ready)",
+      "Revive"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-120",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "A status that survives the knockout reacts to its holder's own knockout by raising it, once a fight through a marker, so the unit needs no reviver.",
+    "rests_on": [
+      "survivesKO",
+      "ko",
+      "revive",
+      "marker"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-121",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "A revive that lands a set time after it's cast brings the unit back later in the fight, after the burst that dropped it may have passed.",
+    "rests_on": [
+      "revive (after)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-122",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "A revive that sets the raised ally's actions ready brings it back to act at once, instead of on full cooldowns.",
+    "rests_on": [
+      "revive (ready)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-123",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "A reaction to an ally being revived gives it Shield, Aegis or Hidden, or its rise under a line fires its own hp_low protections, so it isn't knocked straight back down.",
+    "rests_on": [
+      "revived",
+      "hp_low (stands up under it)",
+      "Shield",
+      "Aegis",
+      "Hidden"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-124",
+    "way": "sustain",
+    "also": [],
+    "question": "price",
+    "play": "A revive with an HP price, paid by a sturdy reviver, raises the fallen without MP, never taking the payer below 1 HP.",
+    "rests_on": [
+      "pay",
+      "mods: hp",
+      "revive"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-125",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "When a unit drops under a line or is revived, restart makes its gear's and seat's start-of-fight effects happen again, so its opening Shield, Aegis or Hidden return mid-fight.",
+    "rests_on": [
+      "restart",
+      "fight_start",
+      "hp_low",
+      "revived"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-126",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "MP regen from gear and a seat keeps a caster's spells coming near their cooldowns on a steady drip, where a dry pool would leave it swinging.",
+    "rests_on": [
+      "MP regeneration",
+      "seat",
+      "MP_REGEN"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-127",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "Clarity restores a share of max MP on each pulse, so on the caster with the deepest pool and the costliest spells it gives the most.",
+    "rests_on": [
+      "Clarity",
+      "max MP"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-128",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "A Clarity that waits on its target falling under an MP share lands on the caster that's nearly dry, never on a full pool.",
+    "rests_on": [
+      "Clarity",
+      "mpBelow"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-129",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "Clarity on every ally keeps several casters fuelled at once.",
+    "rests_on": [
+      "Clarity",
+      "Every ally"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-130",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "Siphon on a fast-swinging unit takes MP from each foe it hits, so its abilities run on what its weapon draws, and Attack speed or Double strike makes the draw quicker.",
+    "rests_on": [
+      "Siphon",
+      "Attack speed",
+      "Double strike"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-131",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "Siphon on a hit aimed at every foe draws MP from each one struck, richest against many foes.",
+    "rests_on": [
+      "Siphon",
+      "Area"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-132",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "An ability that restores MP to the ally with the lowest MP share lets a unit with fuel to spare, or one that mostly swings, keep the party's main caster going.",
+    "rests_on": [
+      "mp",
+      "mp_share (by)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-133",
+    "way": "sustain",
+    "also": [],
+    "question": "price",
+    "play": "MP gained past the full pool fires mp_over, and a reaction gives that part to the ally lowest on MP, so one unit's surplus from Siphon or Clarity feeds the others for free.",
+    "rests_on": [
+      "mp_over",
+      "mp",
+      "mp_share (by)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-134",
+    "way": "sustain",
+    "also": [],
+    "question": "price",
+    "play": "A piece's reaction to hp_paid gives MP, so a sturdy unit turns health, which mending can replace, into fuel.",
+    "rests_on": [
+      "hp_paid",
+      "pay",
+      "mp"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-135",
+    "way": "sustain",
+    "also": [],
+    "question": "price",
+    "play": "A status changes the unit's abilities to an HP price in place of MP, always or only while its MP is low, so it keeps casting on health that the party's mending replaces.",
+    "rests_on": [
+      "mods: hp",
+      "mods: if",
+      "mpBelow"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-136",
+    "way": "sustain",
+    "also": [],
+    "question": "price",
+    "play": "A status cuts an ability's MP cost, or makes it free, while its holder is under a line, so the casts that matter in a crisis stay affordable.",
+    "rests_on": [
+      "mods: mp",
+      "mods: if",
+      "hpBelow"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-137",
+    "way": "sustain",
+    "also": [],
+    "question": "price",
+    "play": "A piece's reaction to a paid action resolving restores a share of the MP it paid, so every spell stretches the pool a little further.",
+    "rests_on": [
+      "action_resolve (amount)",
+      "paid (event filter)",
+      "mp"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-138",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "A piece gives MP for damage taken, by its amount, so the unit drawing fire funds its own Taunts and shields from the harm that comes to it.",
+    "rests_on": [
+      "damage_taken",
+      "amount",
+      "mp"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-139",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "Each foe knocked out restores MP, so a party that drops foes quickly casts more in the fight's later stretch.",
+    "rests_on": [
+      "ko",
+      "whose: foe",
+      "mp"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-140",
+    "way": "sustain",
+    "also": [],
+    "question": "price",
+    "play": "A heal given restores MP to the mender by the amount it healed, so mending pays for more mending while there's real damage to mend.",
+    "rests_on": [
+      "healed (other: holder)",
+      "amount",
+      "mp"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-141",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "Tireless lets a caster's basic attacks keep their own clock through its wind-ups and recoveries, so its Siphon or Lifesteal keeps drawing while it casts.",
+    "rests_on": [
+      "tireless",
+      "Siphon",
+      "Lifesteal"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-142",
+    "way": "sustain",
+    "also": [
+      "debuff"
+    ],
+    "question": "timing",
+    "play": "Draining foes' MP, by Siphon or a negative MP effect, leaves their abilities unpaid as the fight goes on, so they fizzle or wait and only basic attacks come.",
+    "rests_on": [
+      "Siphon",
+      "mp (drain)",
+      "MP is paid when the action resolves",
+      "Enemies use the same rules and stats as the party"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-143",
+    "way": "sustain",
+    "also": [
+      "debuff"
+    ],
+    "question": "width",
+    "play": "Weaken laid on the foe with the highest Attack cuts the hits that would hurt most, and its cut adds to Shock's.",
+    "rests_on": [
+      "Weaken",
+      "The foe with the highest Attack",
+      "Shock"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-144",
+    "way": "sustain",
+    "also": [
+      "debuff"
+    ],
+    "question": "width",
+    "play": "Weaken laid on every foe softens all incoming hits at once, at the cost of a wide cast's cooldown.",
+    "rests_on": [
+      "Weaken",
+      "Every foe"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-145",
+    "way": "sustain",
+    "also": [
+      "debuff"
+    ],
+    "question": "timing",
+    "play": "When an ally drops under a line, a reaction lays Weaken on its assailant, the foe that last hit it, answering the blow that hurt.",
+    "rests_on": [
+      "hp_low",
+      "assailant",
+      "Weaken"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-146",
+    "way": "sustain",
+    "also": [
+      "debuff"
+    ],
+    "question": "size",
+    "play": "Slow or Chill on the foe with the fastest swing stretches its attacks and wind-ups, so less harm arrives each tick.",
+    "rests_on": [
+      "Slow",
+      "Chill",
+      "swing (by)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-147",
+    "way": "sustain",
+    "also": [
+      "debuff"
+    ],
+    "question": "timing",
+    "play": "Silence aimed at a foe in its wind-up loses the cast, where Stun only makes it wait, so a big spell never lands.",
+    "rests_on": [
+      "Silence",
+      "casting",
+      "Stun"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-148",
+    "way": "sustain",
+    "also": [
+      "debuff"
+    ],
+    "question": "timing",
+    "play": "A cooldown change on a foe sets its abilities, or the next one coming, back to a full cooldown, so its heaviest blow arrives later, or not before the fight ends.",
+    "rests_on": [
+      "cooldown (which: abilities, soonest)",
+      "cooldown (set: full)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-149",
+    "way": "sustain",
+    "also": [
+      "debuff"
+    ],
+    "question": "size",
+    "play": "Shock kept on a slow, heavy-hitting foe cuts each of its blows by the stacks it holds as it strikes, and drains little because it rarely acts.",
+    "rests_on": [
+      "Shock",
+      "STATUS.shock.hits"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-150",
+    "way": "sustain",
+    "also": [
+      "debuff"
+    ],
+    "question": "size",
+    "play": "Bewildered sends a foe's next basic attack into its own side, one blow kept off the party per application, and nothing against a lone foe.",
+    "rests_on": [
+      "Bewildered"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-151",
+    "way": "sustain",
+    "also": [
+      "burst"
+    ],
+    "question": "timing",
+    "play": "When the mender is hit, a reaction Marks the attacker, so the party's basic attacks and random-target abilities turn on whatever is hitting it.",
+    "rests_on": [
+      "Marked",
+      "hit_taken",
+      "other (reaction target)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-152",
+    "way": "sustain",
+    "also": [
+      "debuff"
+    ],
+    "question": "size",
+    "play": "Stun on the foe with the highest Attack keeps its blows off for the Stun's length; against bosses, control resistance shortens each one and then turns them away.",
+    "rests_on": [
+      "Stun",
+      "The foe with the highest Attack",
+      "control resistance (RULES.control)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-153",
+    "way": "sustain",
+    "also": [
+      "debuff"
+    ],
+    "question": "size",
+    "play": "Dispel on a foe with a buff strips its Might and Haste, cutting how hard and how often it hits.",
+    "rests_on": [
+      "Dispel",
+      "A random foe with a buff",
+      "Might",
+      "Haste"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-154",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "Haste on an ally offsets foes' Slow and Chill, which act through the same speed stats, so its heals and Taunts stay on time.",
+    "rests_on": [
+      "Haste",
+      "Slow",
+      "Chill",
+      "Attack speed",
+      "Cooldown",
+      "Cast speed"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-155",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "When one of the unit's casts is interrupted, a reaction makes that ability ready again, so a Silence costs the mender a moment instead of a full cooldown.",
+    "rests_on": [
+      "action_interrupted",
+      "cooldown (which: event)",
+      "cooldown (set: ready)",
+      "Silence"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-156",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "When a foe starts an ability's wind-up, a reaction gives the unit drawing fire, or every ally, Aegis or Blur, so the blow that resolves at its end meets a block.",
+    "rests_on": [
+      "action_start (whose: foe)",
+      "Aegis",
+      "Blur",
+      "Wind-ups"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-157",
+    "way": "sustain",
+    "also": [
+      "build"
+    ],
+    "question": "timing",
+    "play": "Each hit taken adds a stack of a capped status that cuts damage taken, so the unit grows harder to hurt the longer it's focused.",
+    "rests_on": [
+      "Stacks",
+      "cap",
+      "hit_taken",
+      "taken"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-158",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "A stacking status that cuts damage taken, laid full at the fight's start and losing a stack each time its holder is hit, is strongest in the opening and thins with every blow.",
+    "rests_on": [
+      "Stacks",
+      "trigger",
+      "drop",
+      "taken",
+      "fight_start"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-159",
+    "way": "sustain",
+    "also": [],
+    "question": "price",
+    "play": "A per-source Guard or Regen that one unit lays on every ally ends when its giver is knocked out, so the party's protection rests on keeping that one unit up.",
+    "rests_on": [
+      "Per source",
+      "Guard",
+      "Regen"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-160",
+    "way": "sustain",
+    "also": [],
+    "question": "price",
+    "play": "Two units hold the same protective rule, but only the first standing answers, so it never fires twice and, when the first falls, the second takes the job over.",
+    "rests_on": [
+      "party (status field)"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-161",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "An effect that applies one of several protective statuses at random, Shield, Guard, Blur or Regen, gives the unit some protection every cast but not the one it needs for sure.",
+    "rests_on": [
+      "one",
+      "Shield",
+      "Guard",
+      "Blur",
+      "Regen"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-162",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "A reaction to being hit with a chance to lay Blur or Aegis arms the unit at random moments, more often the more it's hit.",
+    "rests_on": [
+      "apply (chance)",
+      "hit_taken",
+      "Blur",
+      "Aegis"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-163",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "When the unit drawing fire gains Regen, Guard or Aegis, share gives an ally a copy, so each protection laid on the front reaches a second unit.",
+    "rests_on": [
+      "share",
+      "status_gained",
+      "Regen",
+      "Guard",
+      "Aegis"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-164",
+    "way": "sustain",
+    "also": [],
+    "question": "price",
+    "play": "A seat that lowers the unit's Attack and raises its Defense, max HP or Evasion, or a swap of two of its stats, turns offense the unit drawing fire doesn't need into protection.",
+    "rests_on": [
+      "seat",
+      "swap"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-165",
+    "way": "sustain",
+    "also": [],
+    "question": "price",
+    "play": "A piece grants strong self-mending under the heals rule, by which only the holder's own heals land, so the unit stands on its own and the party's mender has one less to keep.",
+    "rests_on": [
+      "heals (status field)",
+      "Lifesteal",
+      "Regen"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-166",
+    "way": "sustain",
+    "also": [],
+    "question": "price",
+    "play": "A healing cap keeps a unit under a share of max HP, and since at the cap it reads as just under that line, its below-a-line protections stay on all fight.",
+    "rests_on": [
+      "healCap",
+      "hpBelow"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "S-167",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "A hit that would knock an ally out moves to the holder instead, so the save comes only at the moment it's needed.",
+    "rests_on": [
+      "cover",
+      "ko"
+    ],
+    "needs_block": "A cover setting that moves a hit only when it would knock the ally out; cover today moves any hit above a set share of max HP.",
+    "needs_ruling": null
+  },
+  {
+    "id": "S-168",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "A share of every hit on each ally moves to the holder, so the fragile take less of everything while the holder takes a steady stream.",
+    "rests_on": [
+      "cover"
+    ],
+    "needs_block": "A status field that moves a set share of each hit on another ally to the holder; cover moves only whole hits.",
+    "needs_ruling": null
+  },
+  {
+    "id": "S-169",
+    "way": "sustain",
+    "also": [],
+    "question": "width",
+    "play": "A side rule shares the damage any ally takes evenly across the living party, as sharesHeals does for healing, so focused damage can't drop one unit before all three.",
+    "rests_on": [
+      "sharesHeals"
+    ],
+    "needs_block": "A side-rule status field, like sharesHeals for healing, that splits damage any unit on the side takes evenly across its living units.",
+    "needs_ruling": null
+  },
+  {
+    "id": "S-170",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "Every hit on the holder is cut down to a ceiling, a share of its max HP, a lasting answer to big hitters where Aegis stops one blow and ends.",
+    "rests_on": [
+      "Aegis",
+      "block"
+    ],
+    "needs_block": "A status field that cuts each hit on the holder to a set share of its max HP; block stops one hit whole, then ends.",
+    "needs_ruling": null
+  },
+  {
+    "id": "S-171",
+    "way": "sustain",
+    "also": [],
+    "question": "price",
+    "play": "Damage to the holder comes out of an ally's MP instead of its HP, so a caster with a deep pool spends fuel keeping the unit drawing fire whole.",
+    "rests_on": [
+      "soak"
+    ],
+    "needs_block": "A soak setting that draws on another unit's MP, such as the source's; soak draws only on the holder's own.",
+    "needs_ruling": null
+  },
+  {
+    "id": "S-172",
+    "way": "sustain",
+    "also": [],
+    "question": "timing",
+    "play": "When a foe starts a wind-up, a reaction shields or arms whichever ally that action is aimed at, so protection lands where the blow will fall.",
+    "rests_on": [
+      "action_start (whose: foe)",
+      "casting",
+      "Shield",
+      "Aegis"
+    ],
+    "needs_block": "A target rule that picks the ally a foe's action under way is aimed at; no rule reads a foe's chosen target, and that target may be fixed only as it resolves.",
+    "needs_ruling": null
+  },
+  {
+    "id": "S-173",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "Each hit's damage on the holder is held back and paid out over the following ticks instead of at once, so spikes become a trickle that Regen and heals can match.",
+    "rests_on": [
+      "Owed",
+      "debt",
+      "Regen"
+    ],
+    "needs_block": "An Owed-like debt that pays out its stacks on a pulse over its length; debt lands only when it runs out.",
+    "needs_ruling": null
+  },
+  {
+    "id": "S-174",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "Lockouts on party units land shorter and then not at all, as control resistance does for bosses, a gradual answer where immunity is all or nothing.",
+    "rests_on": [
+      "control resistance (RULES.control)",
+      "Stun",
+      "Silence",
+      "Slow"
+    ],
+    "needs_block": null,
+    "needs_ruling": "vocabulary.md, 'Statuses are universal': control resistance is bosses' alone."
+  },
+  {
+    "id": "S-175",
+    "way": "sustain",
+    "also": [
+      "build"
+    ],
+    "question": "size",
+    "play": "The party mends for a share of the damage its foes take from Burn, Bleed and Shock, a steady heal that needs no hits.",
+    "rests_on": [
+      "damage_dealt (status)",
+      "Burn",
+      "Bleed",
+      "Shock",
+      "Lifesteal"
+    ],
+    "needs_block": null,
+    "needs_ruling": "vocabulary.md, 'A status scales by its stacks, never by its applier': a status's damage belongs to its holder, with no lifesteal from it."
+  },
+  {
+    "id": "S-176",
+    "way": "sustain",
+    "also": [],
+    "question": "size",
+    "play": "An effect sets off all of a Regen's remaining pulses at once, turning a slow mend into a sudden one when an ally drops low.",
+    "rests_on": [
+      "Regen",
+      "hp_low"
+    ],
+    "needs_block": null,
+    "needs_ruling": "vocabulary.md, 'A status runs its own course': no ability spends, shortens or sets off a status early."
+  }
+]

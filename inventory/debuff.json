@@ -1,0 +1,2136 @@
+[
+  {
+    "id": "D-001",
+    "way": "debuff",
+    "also": [
+      "sustain"
+    ],
+    "question": "size",
+    "play": "Weaken kept on the foe that hits hardest, laid again on a cooldown shorter than its length, so that foe's every hit lands much smaller all fight. It wins where one foe carries most of the foe side's damage.",
+    "rests_on": [
+      "Weaken",
+      "Refresh",
+      "The foe with the highest Attack",
+      "Cooldown"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-002",
+    "way": "debuff",
+    "also": [
+      "sustain"
+    ],
+    "question": "width",
+    "play": "Weaken laid on every foe at once, so the whole foe side hits much softer for its length. It wins against many foes, or a side whose damage comes from numbers and Area rather than one hitter.",
+    "rests_on": [
+      "Weaken",
+      "Area",
+      "Every foe"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-003",
+    "way": "debuff",
+    "also": [
+      "sustain"
+    ],
+    "question": "timing",
+    "play": "Weaken laid on a foe during its wind-up, so the ability it is casting comes out much smaller. The attacker's boosts are read as the hit resolves, so a cut that lands mid-cast still counts.",
+    "rests_on": [
+      "Weaken",
+      "casting",
+      "action_start",
+      "Damage resolves in this order"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-004",
+    "way": "debuff",
+    "also": [
+      "sustain"
+    ],
+    "question": "timing",
+    "play": "Weaken held for the late fight, once the enrage has raised every hit: the dials scale a hit first and Weaken halves what they leave, so the damage it takes off grows as the enrage climbs. It wins long fights.",
+    "rests_on": [
+      "Weaken",
+      "Enrage",
+      "The difficulty dials"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-005",
+    "way": "debuff",
+    "also": [
+      "sustain"
+    ],
+    "question": "size",
+    "play": "Weaken and Shock held together on one foe, whose cuts to its hits add, so its blows fall further than either cut alone. It wins against a single foe whose hits must be brought near to harmless.",
+    "rests_on": [
+      "Weaken",
+      "Shock",
+      "STATUS.shock.hits"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-006",
+    "way": "debuff",
+    "also": [
+      "sustain"
+    ],
+    "question": "size",
+    "play": "Shock kept at its cap on a slow foe, or one made slow by Slow, Chill or Stun: it drains only when its holder acts, so the stacks stay and each rare blow is cut by all of them. It wins against one slow, heavy hitter.",
+    "rests_on": [
+      "Shock",
+      "STATUS.shock.hits",
+      "swing",
+      "Slow",
+      "Chill",
+      "Stun"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-007",
+    "way": "debuff",
+    "also": [
+      "build"
+    ],
+    "question": "width",
+    "play": "Shock spread a few stacks deep over every foe, so each foe's hits are trimmed a little and the fast ones pay each time they act. It wins against a crowd where no one foe is the threat.",
+    "rests_on": [
+      "Shock",
+      "Area",
+      "Every foe"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-008",
+    "way": "debuff",
+    "also": [],
+    "question": "timing",
+    "play": "Shock stacked fast onto a foe while it winds up, so its ability resolves cut by every stack it holds. It wins against a foe whose one cast is the danger, through quick party hits during the wind-up.",
+    "rests_on": [
+      "Shock",
+      "casting",
+      "Attack speed",
+      "action_resolve"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-009",
+    "way": "debuff",
+    "also": [],
+    "question": "size",
+    "play": "Stun laid again on one foe as soon as the last ends: an ability that only applies Stun waits while every candidate holds it, so quick abilities across the party lock the foe in a chain. It wins against threats that aren't bosses, which resist a chain.",
+    "rests_on": [
+      "Stun",
+      "Fizzle",
+      "Fizzle statuses",
+      "RULES.control"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-010",
+    "way": "debuff",
+    "also": [],
+    "question": "width",
+    "play": "Stun rolled across the foe side: an ability that applies Stun skips foes already Stunned and takes the next its phrase allows, so each cast locks a fresh foe. It wins against several foes of middling threat.",
+    "rests_on": [
+      "Stun",
+      "Fizzle statuses",
+      "A random foe"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-011",
+    "way": "debuff",
+    "also": [
+      "burst"
+    ],
+    "question": "width",
+    "play": "Stun on every foe at once, a pause in which the whole foe side does nothing, used rarely. It wins by a moment the party fills with its biggest actions.",
+    "rests_on": [
+      "Stun",
+      "Area",
+      "Every foe",
+      "spread"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-012",
+    "way": "debuff",
+    "also": [],
+    "question": "timing",
+    "play": "Stun laid on a foe as it starts a wind-up: the cast waits the Stun out and then carries on, so it lands later, not never. It wins by moving a foe's big ability past the moment the party's defences or burst come ready.",
+    "rests_on": [
+      "Stun",
+      "action_start",
+      "casting"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-013",
+    "way": "debuff",
+    "also": [],
+    "question": "size",
+    "play": "Stun spent on the fastest foe, whose actions fall due many times over its length, rather than on a slow one it may barely delay. A Stun is worth the actions it covers.",
+    "rests_on": [
+      "Stun",
+      "swing",
+      "lowest",
+      "KIND_SPEED"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-014",
+    "way": "debuff",
+    "also": [],
+    "question": "timing",
+    "play": "Disables laid on every foe at fight_start by gear or a seat, or aimed at foes that haven't acted yet, land before any foe's partly charged first action. It wins the opening, before the foes have done anything.",
+    "rests_on": [
+      "fight_start",
+      "acted",
+      "RULES.opening",
+      "Stun",
+      "Silence",
+      "Weaken"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-015",
+    "way": "debuff",
+    "also": [],
+    "question": "timing",
+    "play": "Silence aimed at a foe in its wind-up loses the cast and sends that ability on cooldown, so its big move doesn't land this time round. It wins against a foe whose danger comes in one long cast.",
+    "rests_on": [
+      "Silence",
+      "casting",
+      "Lost casts",
+      "action_interrupted"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-016",
+    "way": "debuff",
+    "also": [],
+    "question": "timing",
+    "play": "A reaction to a foe starting an action lays Silence on it, by a strike out of turn or an apply, so every cast is answered as it begins rather than when the party's own ability happens to be ready. Bosses soon resist it.",
+    "rests_on": [
+      "action_start",
+      "strike",
+      "apply",
+      "owner",
+      "Silence",
+      "RULES.control"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-017",
+    "way": "debuff",
+    "also": [],
+    "question": "size",
+    "play": "Silence kept on a foe whose threat is its abilities, one that heals, summons, revives or casts, so it can only swing. It wins where that foe's basic attacks are weak.",
+    "rests_on": [
+      "Silence",
+      "Fizzle"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-018",
+    "way": "debuff",
+    "also": [],
+    "question": "width",
+    "play": "Silence on every foe at once, a stretch in which the whole foe side can only swing. It wins against a side whose danger is many abilities at once.",
+    "rests_on": [
+      "Silence",
+      "Area",
+      "Every foe"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-019",
+    "way": "debuff",
+    "also": [],
+    "question": "size",
+    "play": "A reaction to interrupting a foe's cast brings the interrupting ability back sooner, so a foe that keeps trying to cast keeps losing the cast. It wins against a foe that leans on one ability.",
+    "rests_on": [
+      "action_interrupted",
+      "cooldown",
+      "ready",
+      "{ less }"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-020",
+    "way": "debuff",
+    "also": [],
+    "question": "timing",
+    "play": "The party's interrupt made to beat a foe's wind-up by shortening its own, through Cast speed or an ability change that sets its wind-up, so the Silence resolves before the foe's cast does. It wins against foes with short wind-ups.",
+    "rests_on": [
+      "Cast speed",
+      "cast",
+      "Silence",
+      "casting"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-021",
+    "way": "debuff",
+    "also": [],
+    "question": "width",
+    "play": "Slow on every foe, lengthening the whole side's cooldowns, wind-ups and time between attacks, so everything the foes do comes less often. It wins against many foes.",
+    "rests_on": [
+      "Slow",
+      "Area",
+      "Every foe"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-022",
+    "way": "debuff",
+    "also": [],
+    "question": "width",
+    "play": "Slow kept on the fastest foe, the one whose actions come most often, so the side's busiest attacker loses the most. It wins where one fast foe does the damage.",
+    "rests_on": [
+      "Slow",
+      "Refresh",
+      "swing",
+      "lowest"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-023",
+    "way": "debuff",
+    "also": [],
+    "question": "timing",
+    "play": "Slow laid on a foe during its wind-up stretches what is left of it, giving the party's interrupt or burst time to land first. It wins by buying time inside a cast.",
+    "rests_on": [
+      "Slow",
+      "casting",
+      "Time under the hood"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-024",
+    "way": "debuff",
+    "also": [],
+    "question": "size",
+    "play": "Chill near its cap and Slow on the same foe: near the cap Chill slows as much as Slow, and the two add, the deepest slow the rules allow. It wins against one foe whose tempo is the threat.",
+    "rests_on": [
+      "Chill",
+      "Slow"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-025",
+    "way": "debuff",
+    "also": [
+      "build"
+    ],
+    "question": "size",
+    "play": "Chill built on one foe to its cap, slowing it more with each stack until it shatters for damage per stack and a Stun, then built again. It wins by a few big beats of control a fight, aimed at the foe with the most Chill.",
+    "rests_on": [
+      "Chill",
+      "status_capped",
+      "The foe with the most Chill",
+      "Stun"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-026",
+    "way": "debuff",
+    "also": [],
+    "question": "width",
+    "play": "Chill spread thin across every foe and never brought to the cap, a slow on the whole side that thaws only slowly. It wins by giving up shatters for a lasting slow on many foes.",
+    "rests_on": [
+      "Chill",
+      "belowCap",
+      "lowest",
+      "{ stacks }",
+      "Area"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-027",
+    "way": "debuff",
+    "also": [
+      "burst"
+    ],
+    "question": "width",
+    "play": "Chill passed on from a shattering foe to another foe, by a piece or formation answering the cap, so shatters roll across the side; a foe that has shattered lately takes less of it each time. It wins against packs.",
+    "rests_on": [
+      "Chill",
+      "status_capped",
+      "passed",
+      "damp"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-028",
+    "way": "debuff",
+    "also": [],
+    "question": "size",
+    "play": "Chill held below its cap on a boss: its slow isn't a control status, so it feeds no control resistance, and only a shatter's Stun would. It wins by keeping a boss slowed all fight.",
+    "rests_on": [
+      "Chill",
+      "RULES.control",
+      "belowCap"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-029",
+    "way": "debuff",
+    "also": [],
+    "question": "timing",
+    "play": "Control spaced on a boss so its hidden stacks drain between each Stun, Silence or Slow, which then lands for its full length instead of RESISTED and then IMMUNE, each kept for the boss's big moments. It wins boss fights.",
+    "rests_on": [
+      "RULES.control",
+      "resist",
+      "cap",
+      "drain",
+      "casting"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-030",
+    "way": "debuff",
+    "also": [],
+    "question": "size",
+    "play": "Each party hit sends the struck foe's basic attack back to a full cooldown, so a slow foe hit more often than it swings never swings, though it still casts. It isn't a status: control resistance, Cleanse and immunity don't meet it.",
+    "rests_on": [
+      "hit_lands",
+      "cooldown",
+      "basic",
+      "full",
+      "other",
+      "KIND_SPEED"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-031",
+    "way": "debuff",
+    "also": [],
+    "question": "timing",
+    "play": "A foe's next ability pushed back to its full cooldown as it nears ready, so the threat the party can see coming keeps not arriving. It wins against a foe with one dangerous ability on a timer.",
+    "rests_on": [
+      "cooldown",
+      "soonest",
+      "full"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-032",
+    "way": "debuff",
+    "also": [],
+    "question": "size",
+    "play": "A foe's slowest ability, the one with the longest whole cooldown and so its biggest move, set back to full whatever its others do, so the big move comes late while lesser ones run. It wins against a foe built around one move.",
+    "rests_on": [
+      "cooldown",
+      "slowest",
+      "full"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-033",
+    "way": "debuff",
+    "also": [],
+    "question": "timing",
+    "play": "Every foe's abilities set to their full cooldown at fight_start, undoing the partial charge they start with, so the foe side's first casts come late while its swings run as usual. It wins the opening against foes that cast.",
+    "rests_on": [
+      "fight_start",
+      "cooldown",
+      "abilities",
+      "full",
+      "RULES.opening"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-034",
+    "way": "debuff",
+    "also": [
+      "sustain"
+    ],
+    "question": "timing",
+    "play": "A foe's dangerous ability, or its swing, called ready at a moment the party has prepared for, with an Aegis up, a Shield laid or a Taunt on the right unit, so it lands into that and then sits on its full cooldown. It wins by choosing when the foe acts.",
+    "rests_on": [
+      "cooldown",
+      "ready",
+      "A foe's action can be called early",
+      "Taunt",
+      "Aegis",
+      "Shield"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-035",
+    "way": "debuff",
+    "also": [],
+    "question": "size",
+    "play": "A wide disable whose cooldown comes a share closer for each foe it lands on, so against a crowd it comes round often and against one foe seldom. It wins against packs.",
+    "rests_on": [
+      "cooldown",
+      "{ lessPct }",
+      "count",
+      "hit",
+      "Area"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-036",
+    "way": "debuff",
+    "also": [],
+    "question": "size",
+    "play": "A foe's MP taken hit by hit, by Siphon or a draining effect, until it can't pay for its abilities and falls back on basic attacks. It wins against foes that cast, if foes hold MP pools.",
+    "rests_on": [
+      "Siphon",
+      "mp",
+      "When an ability is ready",
+      "mpBelow"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-037",
+    "way": "debuff",
+    "also": [],
+    "question": "timing",
+    "play": "MP drained from a foe during its wind-up, so when the cast resolves it can't pay: the ability fizzles, does nothing and still goes on cooldown. It wins against one big cast, if foes hold MP pools.",
+    "rests_on": [
+      "MP is paid when the action resolves",
+      "mp",
+      "Siphon",
+      "casting"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-038",
+    "way": "debuff",
+    "also": [
+      "sustain"
+    ],
+    "question": "width",
+    "play": "Fixated on the hardest-hitting foe, so its basic attacks and random-aimed abilities go to the unit that fixated it while the other foes pick as usual. It moves one foe's damage onto the unit meant to take it without drawing every foe.",
+    "rests_on": [
+      "Fixated",
+      "fixate"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-039",
+    "way": "debuff",
+    "also": [
+      "sustain"
+    ],
+    "question": "width",
+    "play": "Fixated from each party unit onto a different foe, so each foe's attacks go to the unit best fitted to meet them: the big hitter onto an Aegis, the many small hits onto Defense and Guard. It wins against mixed foe sides.",
+    "rests_on": [
+      "Fixated",
+      "fixate",
+      "Aegis",
+      "Guard",
+      "Defense"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-040",
+    "way": "debuff",
+    "also": [
+      "burst"
+    ],
+    "question": "price",
+    "play": "Fixated pinning a foe on a unit that punishes or wastes its hits, with Thorns, Evasion or Blur, so that foe's attacks hurt it or miss. It wins against a fast, many-hitting foe, which pays Thorns on every blow.",
+    "rests_on": [
+      "Fixated",
+      "Thorns",
+      "Evasion",
+      "Blur"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-041",
+    "way": "debuff",
+    "also": [],
+    "question": "size",
+    "play": "Bewildered on the hardest-hitting foe among several: its next basic attack strikes one of its own side, riders and all, so its biggest blow and whatever it carries land on an ally. It does nothing against a lone foe.",
+    "rests_on": [
+      "Bewildered",
+      "confuse",
+      "riders"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-042",
+    "way": "debuff",
+    "also": [],
+    "question": "size",
+    "play": "Bewildered laid again after each swing of a slow foe, so every basic attack it makes goes to its own side. It wins against a slow foe whose swings are its damage, with allies beside it to hit.",
+    "rests_on": [
+      "Bewildered",
+      "lacks",
+      "Cooldown",
+      "swing"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-043",
+    "way": "debuff",
+    "also": [
+      "burst"
+    ],
+    "question": "width",
+    "play": "Bewildered on every foe at once, so each foe's next swing strikes one of its own side. It wins against a pack of heavy hitters, as a round of damage the foes deal themselves.",
+    "rests_on": [
+      "Bewildered",
+      "Area",
+      "Every foe"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-044",
+    "way": "debuff",
+    "also": [
+      "sustain"
+    ],
+    "question": "timing",
+    "play": "A party unit made Hidden as a foe winds up an ability aimed at it, so the cast finds its target gone and the foe loses its recovery. It wins against single-target casts, if the target is fixed when the wind-up starts.",
+    "rests_on": [
+      "Hidden",
+      "action_start",
+      "Lost casts",
+      "The Hidden rule"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-045",
+    "way": "debuff",
+    "also": [
+      "sustain"
+    ],
+    "question": "width",
+    "play": "A debuff with an aim rule, so its holder's basic attacks pick the party unit the rule names, the highest Defense or the one holding a Shield, rather than at random. It steers a foe's swings where they do least, without Taunt.",
+    "rests_on": [
+      "aim",
+      "Basic attacks pick in this order"
+    ],
+    "needs_block": "a status: a debuff carrying the existing aim field, laid on a foe.",
+    "needs_ruling": null
+  },
+  {
+    "id": "D-046",
+    "way": "debuff",
+    "also": [],
+    "question": "size",
+    "play": "A debuff that turns a foe's abilities' target rule to the side opposite the one they aim at, so its damage lands on its allies and its heals on the party. It wins against a foe whose abilities are the danger.",
+    "rests_on": [
+      "mods",
+      "target",
+      "Targeting rules"
+    ],
+    "needs_block": "a status: a debuff whose mods replace the holder's target rules with ones on the other side; whether a damage effect may be aimed at the actor's own side needs settling with it.",
+    "needs_ruling": null
+  },
+  {
+    "id": "D-047",
+    "way": "debuff",
+    "also": [
+      "build"
+    ],
+    "question": "size",
+    "play": "Sunder stacked on the boss to its cap and kept there by reapplying faster than its pulse takes stacks, so every unit's damage on it, of every kind, is raised all fight. It wins long single-target fights.",
+    "rests_on": [
+      "Sunder",
+      "cap",
+      "pulse",
+      "Cooldown"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-048",
+    "way": "debuff",
+    "also": [
+      "build"
+    ],
+    "question": "width",
+    "play": "Sunder raising the party's status damage: a damage-taken modifier reaches Burn, Bleed, Shock, a shatter and Thorns, which the appliers' own boosts can't raise once a status is applied. It wins for a party whose damage is untyped.",
+    "rests_on": [
+      "Sunder",
+      "damage-taken modifiers reach it",
+      "A status is fixed when it's applied",
+      "Thorns"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-049",
+    "way": "debuff",
+    "also": [],
+    "question": "width",
+    "play": "Sunder laid on every foe, so a party whose damage is Area as well gets the raise on every target. It wins against packs.",
+    "rests_on": [
+      "Sunder",
+      "Area",
+      "Every foe"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-050",
+    "way": "debuff",
+    "also": [
+      "burst"
+    ],
+    "question": "timing",
+    "play": "Sunder built in the moments before a long-cooldown burst, slotted ahead of it, so the big hit lands on a foe at the cap before the pulse takes stacks away. It wins by a softened window.",
+    "rests_on": [
+      "Sunder",
+      "slot order",
+      "pulse"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-051",
+    "way": "debuff",
+    "also": [
+      "burst"
+    ],
+    "question": "size",
+    "play": "Brittle laid just before the party's heaviest single hit, slotted ahead of it, so that hit crits; crits land before Defense, so the big blow passes it, and Crit damage raises it further. Any lighter hit that lands first wastes it.",
+    "rests_on": [
+      "Brittle",
+      "critsTaken",
+      "Crits",
+      "Crit damage",
+      "slot order"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-052",
+    "way": "debuff",
+    "also": [],
+    "question": "timing",
+    "play": "Brittle making a crit certain, so a reaction that answers a crit, a Stun or a Silence or a cooldown brought back, goes off on the hit the party chose. It turns a chance into a cue.",
+    "rests_on": [
+      "Brittle",
+      "hit_lands",
+      "crit",
+      "tags"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-053",
+    "way": "debuff",
+    "also": [
+      "burst"
+    ],
+    "question": "width",
+    "play": "Brittle on every foe right before an Area hit, so every hit of it crits. It wins against packs.",
+    "rests_on": [
+      "Brittle",
+      "Area",
+      "Every foe"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-054",
+    "way": "debuff",
+    "also": [],
+    "question": "width",
+    "play": "Marked on the most dangerous foe pulls the party's basic attacks and random-aimed abilities onto it, so it falls first instead of the party's damage scattering. It wins against a side with one priority.",
+    "rests_on": [
+      "Marked",
+      "focus"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-055",
+    "way": "debuff",
+    "also": [],
+    "question": "width",
+    "play": "Marked on a foe standing behind a Taunting foe, with Seek on the party's actions, so the party's hits follow the Mark past the Taunt. It wins against a foe side that guards its threat.",
+    "rests_on": [
+      "Marked",
+      "Seek",
+      "The Taunt rule"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-056",
+    "way": "debuff",
+    "also": [
+      "build"
+    ],
+    "question": "size",
+    "play": "Marked used to keep the party's on-hit afflictions on one foe, so Chill reaches its shatter and Sunder its cap instead of spreading thin across the side. It wins where the payoff waits at the cap.",
+    "rests_on": [
+      "Marked",
+      "Chill",
+      "Sunder",
+      "status_capped"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-057",
+    "way": "debuff",
+    "also": [],
+    "question": "timing",
+    "play": "Marked laid by a rule that follows the fight, on the foe in a wind-up, the foe with a buff or the lowest HP, and moved each time it's laid again, since each applier keeps one Mark. It gives a focus that shifts as the threat does.",
+    "rests_on": [
+      "Marked",
+      "single",
+      "casting",
+      "Targeting rules"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-058",
+    "way": "debuff",
+    "also": [],
+    "question": "width",
+    "play": "Several units each keeping a Mark on a different foe, so the party's picks split by draw among the chosen few and leave the rest alone. It wins against a side where a few foes matter and the rest don't.",
+    "rests_on": [
+      "Marked",
+      "single",
+      "With several Marks, the pick is by draw"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-059",
+    "way": "debuff",
+    "also": [
+      "build"
+    ],
+    "question": "size",
+    "play": "Bleed on a high-Defense foe: each hit it takes deals untyped damage per stack that Defense never meets, so the party's many small hits, which Defense blunts most, still hurt. It wins against armoured foes.",
+    "rests_on": [
+      "Bleed",
+      "Defense",
+      "Untyped",
+      "Double strike"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-060",
+    "way": "debuff",
+    "also": [],
+    "question": "width",
+    "play": "Rot on the one foe being healed, the boss or the foe with the lowest share of its HP, so a foe healer's work, its Regen and its Lifesteal fall short. Shields still work on it. It wins against a healed boss.",
+    "rests_on": [
+      "Rot",
+      "healing_received",
+      "lowest",
+      "hp_share",
+      "Lifesteal"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-061",
+    "way": "debuff",
+    "also": [],
+    "question": "width",
+    "play": "Rot on every foe, against a side that heals widely or where each foe heals itself. It wins against packs that outlast the party's damage.",
+    "rests_on": [
+      "Rot",
+      "Area",
+      "Every foe"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-062",
+    "way": "debuff",
+    "also": [],
+    "question": "timing",
+    "play": "Rot laid in answer to a foe being healed, so it's fresh the moment healing comes and not before. It wins against foes healed in bursts.",
+    "rests_on": [
+      "Rot",
+      "healed",
+      "foe"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-063",
+    "way": "debuff",
+    "also": [],
+    "question": "timing",
+    "play": "A reaction to a foe being healed that Silences the foe that healed it, so each heal a foe gives costs it its abilities for a while. It wins against a foe that heals its side.",
+    "rests_on": [
+      "healed",
+      "other",
+      "Silence"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-064",
+    "way": "debuff",
+    "also": [],
+    "question": "width",
+    "play": "A debuff on the boss that lets only its own heals land, so a foe healer's heals and Regen on it restore nothing while its self-heals still work. It wins against a boss kept up by another foe.",
+    "rests_on": [
+      "heals",
+      "Regen"
+    ],
+    "needs_block": "a status: a debuff carrying the existing heals field, laid on a foe.",
+    "needs_ruling": null
+  },
+  {
+    "id": "D-065",
+    "way": "debuff",
+    "also": [
+      "burst"
+    ],
+    "question": "size",
+    "play": "A cap on a foe's healing that strips the HP above it as it lands, not as damage, so no Shield, Aegis or Defense stops it, and keeps every heal from lifting it back. It wins against foes that heal, or hide behind protection.",
+    "rests_on": [
+      "healCap",
+      "canHeal"
+    ],
+    "needs_block": "a status: a debuff carrying the existing healCap field, laid on a foe.",
+    "needs_ruling": null
+  },
+  {
+    "id": "D-066",
+    "way": "debuff",
+    "also": [],
+    "question": "width",
+    "play": "A side rule laid on the foe side, so the healing any foe receives is shared evenly among its living units and heals aimed at the boss mostly go to the foes beside it. It wins against a healed boss with company.",
+    "rests_on": [
+      "sharesHeals"
+    ],
+    "needs_block": "a status: a debuff carrying the existing sharesHeals side rule, laid on a foe.",
+    "needs_ruling": null
+  },
+  {
+    "id": "D-067",
+    "way": "debuff",
+    "also": [],
+    "question": "size",
+    "play": "A debuff whose reaction to its holder being healed deals it damage scaled from the amount healed, so heals hurt it. It wins against a foe side built on healing.",
+    "rests_on": [
+      "healed",
+      "reactions",
+      "amount"
+    ],
+    "needs_block": "a status: a debuff with a reaction to healed that deals its holder damage from the event's amount.",
+    "needs_ruling": null
+  },
+  {
+    "id": "D-068",
+    "way": "debuff",
+    "also": [
+      "sustain"
+    ],
+    "question": "size",
+    "play": "A debuff that sends what a foe would gain, a heal or a buff, to a party unit instead, once each time. It wins against a foe fed by its allies.",
+    "rests_on": [
+      "divert"
+    ],
+    "needs_block": "a status: a debuff carrying the existing divert field, laid on a foe.",
+    "needs_ruling": null
+  },
+  {
+    "id": "D-069",
+    "way": "debuff",
+    "also": [],
+    "question": "size",
+    "play": "Dispel on a shielded foe removes the whole Shield pool at once, so the party's damage, status damage included, reaches HP. It's worth most once the foe has built its pool.",
+    "rests_on": [
+      "Dispel",
+      "Shield",
+      "remove",
+      "absorb"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-070",
+    "way": "debuff",
+    "also": [],
+    "question": "size",
+    "play": "Dispel taking a foe's Guard and its other stat buffs, so the party's many small hits stop being blunted. It wins against a foe that hardens itself.",
+    "rests_on": [
+      "Dispel",
+      "Guard",
+      "remove",
+      "stat"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-071",
+    "way": "debuff",
+    "also": [],
+    "question": "size",
+    "play": "Dispel taking a foe's Might or Haste, cutting its damage or tempo back to what it was before it built them. It wins against a foe that grows over a fight.",
+    "rests_on": [
+      "Dispel",
+      "Might",
+      "Haste",
+      "remove"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-072",
+    "way": "debuff",
+    "also": [],
+    "question": "width",
+    "play": "Dispel taking a foe's Taunt, so the party's picks go where it wants again. It wins against a foe side that guards its threat behind a taunter.",
+    "rests_on": [
+      "Dispel",
+      "Taunt",
+      "The Taunt rule"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-073",
+    "way": "debuff",
+    "also": [
+      "sustain"
+    ],
+    "question": "width",
+    "play": "Dispel taking a foe's buff that gives its actions Seek or an aim, so the party's Taunt holds it again and its attacks stop skipping the unit meant to take them. It wins against foes that hunt the party's weak units.",
+    "rests_on": [
+      "Dispel",
+      "action_change",
+      "seek",
+      "aim",
+      "Taunt"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-074",
+    "way": "debuff",
+    "also": [],
+    "question": "timing",
+    "play": "Dispel by kind block on a foe, taking its Aegis, its HP floor or its cover just before the party's big hit, so the blow lands, the foe can fall, or its allies stand unguarded. It wins against foes that guard once.",
+    "rests_on": [
+      "Dispel",
+      "block",
+      "Aegis",
+      "floor",
+      "cover"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-075",
+    "way": "debuff",
+    "also": [],
+    "question": "size",
+    "play": "Dispel taking a foe's Regen and Clarity, its effects on a pulse, so its healing and mana over time stop. It wins against a foe that outlasts damage.",
+    "rests_on": [
+      "Dispel",
+      "pulse",
+      "Regen",
+      "Clarity"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-076",
+    "way": "debuff",
+    "also": [],
+    "question": "price",
+    "play": "Dispel taking a foe's reactive buffs, the ones that answer the party's hits, so attacking it stops costing the party. Whether a status a stat brings, such as Thorns, can be removed is open.",
+    "rests_on": [
+      "Dispel",
+      "reaction",
+      "Thorns"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-077",
+    "way": "debuff",
+    "also": [],
+    "question": "size",
+    "play": "Dispel of one buff at a time on a quick cooldown, so a foe that keeps buffing itself is stripped as fast as it buffs. It wins against a steady self-buffer.",
+    "rests_on": [
+      "Dispel",
+      "remove",
+      "count",
+      "order"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-078",
+    "way": "debuff",
+    "also": [],
+    "question": "size",
+    "play": "Dispel of every buff at once, on a long cooldown, aimed at the foe holding the most, so a foe that has stacked its buffs loses them all in one beat. It wins against a foe that builds up and then strikes.",
+    "rests_on": [
+      "Dispel",
+      "remove",
+      "highest",
+      "buffs"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-079",
+    "way": "debuff",
+    "also": [],
+    "question": "timing",
+    "play": "A reaction to a foe gaining a buff removes it at once, so foe buffs never get to act. It wins against foes that lean on their buffs, though a foe immune to dispel keeps them.",
+    "rests_on": [
+      "status_gained",
+      "remove",
+      "label",
+      "immune:dispel"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-080",
+    "way": "debuff",
+    "also": [
+      "sustain"
+    ],
+    "question": "price",
+    "play": "A Dispel that moves what it removes onto the caster or an ally, so a foe's Shield, Might or Haste ends up working for the party. The foe pays twice for each buff it lays.",
+    "rests_on": [
+      "Dispel",
+      "remove",
+      "move"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-081",
+    "way": "debuff",
+    "also": [],
+    "question": "width",
+    "play": "Dispel of one kind of buff from every foe at once, every Shield or every Guard, so a side that buffs itself together loses it together. It wins against packs with a buffer.",
+    "rests_on": [
+      "Dispel",
+      "Area",
+      "remove",
+      "kind"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-082",
+    "way": "debuff",
+    "also": [],
+    "question": "timing",
+    "play": "A cheap, quick hit sent ahead of the big one to spend a foe's Blur, or a mid-sized hit above its Aegis's line to spend that, so the hit that matters lands. It wins against foes that guard once, by ability order.",
+    "rests_on": [
+      "Blur",
+      "Aegis",
+      "dodge",
+      "block",
+      "slot order"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-083",
+    "way": "debuff",
+    "also": [
+      "sustain"
+    ],
+    "question": "timing",
+    "play": "A unit that gains a foe's debuff passes every debuff it holds onto that foe: it's rid of them, and they land on the foe fresh, at their own length. It turns the foes' own disables back on them.",
+    "rests_on": [
+      "pass",
+      "status_gained",
+      "other",
+      "debuff"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-084",
+    "way": "debuff",
+    "also": [],
+    "question": "width",
+    "play": "A foe gaining a party debuff copies it to every other foe, so applications on one foe, a Marked one, build the rest as well. It focuses the party's hits while spreading its debuffs.",
+    "rests_on": [
+      "share",
+      "status_gained",
+      "copy"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-085",
+    "way": "debuff",
+    "also": [],
+    "question": "width",
+    "play": "A reaction gives every foe what a unit's basic attacks carry, one swing's worth each, without hits that could be dodged. It spreads a unit's riders across the side at a moment the preparation chose.",
+    "rests_on": [
+      "riders",
+      "Reactions"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-086",
+    "way": "debuff",
+    "also": [],
+    "question": "width",
+    "play": "A Stun or Silence ability that resolves again at once, choosing its targets afresh: the Fizzle skip sends the repeat to a foe not yet locked, so one cast locks two. It wins against a pair of threats.",
+    "rests_on": [
+      "recast",
+      "Fizzle statuses",
+      "Stun",
+      "Silence"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-087",
+    "way": "debuff",
+    "also": [],
+    "question": "price",
+    "play": "A piece that lays one of several disables at random on each trigger, so the foe side carries a shifting mix that no single immunity answers. Its price is the dice: the one that's needed may not come.",
+    "rests_on": [
+      "one",
+      "immune:status:<status>"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-088",
+    "way": "debuff",
+    "also": [],
+    "question": "price",
+    "play": "A disable carried by hits with a chance to land, or set off by crits, on a fast weapon, so control comes often but never on cue. Its price is reliability.",
+    "rests_on": [
+      "apply",
+      "chance",
+      "hit_lands",
+      "crit",
+      "KIND_SPEED"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-089",
+    "way": "debuff",
+    "also": [
+      "sustain"
+    ],
+    "question": "price",
+    "play": "A unit whose reaction lays a debuff on whoever hits it, Weaken, Slow or Shock, so the foes that attack it soften themselves. Its price is being hit first.",
+    "rests_on": [
+      "hit_taken",
+      "other",
+      "Weaken",
+      "Slow",
+      "Shock"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-090",
+    "way": "debuff",
+    "also": [
+      "sustain"
+    ],
+    "question": "price",
+    "play": "A unit that lays a debuff on each attacker it dodges, so Evasion and Blur turn misses into disables. It wins against foes that swing often at an evasive unit; its price is the hits that land.",
+    "rests_on": [
+      "hit_evaded",
+      "other",
+      "Evasion",
+      "Blur"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-091",
+    "way": "debuff",
+    "also": [
+      "sustain"
+    ],
+    "question": "width",
+    "play": "A reaction to hits on the ally in a named seat lays a debuff on the attacker, so whoever goes after the party's weak point is weakened for it. It guards one unit without drawing the foes' fire.",
+    "rests_on": [
+      "hit_taken",
+      "ally",
+      "seat",
+      "other"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-092",
+    "way": "debuff",
+    "also": [],
+    "question": "timing",
+    "play": "A reaction to a foe's knockout lays a disable on another foe, so control carries across a wave of foes as they fall. It wins against packs and summons.",
+    "rests_on": [
+      "ko",
+      "foe"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-093",
+    "way": "debuff",
+    "also": [],
+    "question": "timing",
+    "play": "A reaction to a foe's Stun or Silence running out lays the next disable on it, a Slow or a Weaken, so the control tails off instead of snapping off. It leaves the foe no clean gap.",
+    "rests_on": [
+      "status_ended",
+      "expired",
+      "Slow",
+      "Weaken"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-094",
+    "way": "debuff",
+    "also": [],
+    "question": "timing",
+    "play": "A disable held for a line on a foe's HP, by a reaction to its going under it or a condition, so a foe that turns dangerous past that line is locked out or Weakened as it does. It wins against foes with phases.",
+    "rests_on": [
+      "hp_low",
+      "line",
+      "hpBelow",
+      "Stun",
+      "Silence"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-095",
+    "way": "debuff",
+    "also": [
+      "sustain"
+    ],
+    "question": "timing",
+    "play": "A party unit's reaction to its own HP falling under a line lays Weaken on every foe, or Stuns the foe that hit it, so the disable comes when the party is losing. It wins close fights.",
+    "rests_on": [
+      "hp_low",
+      "line",
+      "Weaken",
+      "Stun",
+      "assailant"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-096",
+    "way": "debuff",
+    "also": [],
+    "question": "timing",
+    "play": "A restart makes the party's gear and seat reactions to fight_start happen again mid-fight, so an opening disable on every foe comes a second time. It gives the fight a second opening.",
+    "rests_on": [
+      "restart",
+      "fight_start",
+      "repeat"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-097",
+    "way": "debuff",
+    "also": [
+      "burst"
+    ],
+    "question": "size",
+    "play": "Damage that scales from the target's own Attack, so the hardest-hitting foes take the most. It turns a foe's strength against it.",
+    "rests_on": [
+      "Scaling",
+      "target",
+      "stat",
+      "attack"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-098",
+    "way": "debuff",
+    "also": [
+      "burst"
+    ],
+    "question": "size",
+    "play": "Damage, or extra damage on hits, that scales from the target's Defense, so armoured foes take more, not less. It turns a foe's armour against it.",
+    "rests_on": [
+      "Scaling",
+      "target",
+      "adds",
+      "defense"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-099",
+    "way": "debuff",
+    "also": [
+      "burst"
+    ],
+    "question": "size",
+    "play": "Damage that grows with the buffs the target holds, so a foe that buffs itself pays for each one. It wins against self-buffers, beside Dispel or in its place.",
+    "rests_on": [
+      "count",
+      "buffs",
+      "target"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-100",
+    "way": "debuff",
+    "also": [
+      "burst",
+      "build"
+    ],
+    "question": "size",
+    "play": "Damage that grows with the debuffs the target holds, so cheap ones, Marked, Bewildered, Brittle, Rot, each raise the party's hits. It makes a wide spread of debuffs into damage.",
+    "rests_on": [
+      "count",
+      "debuffs",
+      "target"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-101",
+    "way": "debuff",
+    "also": [
+      "burst"
+    ],
+    "question": "timing",
+    "play": "Damage or crits that read whether the target is Stunned or Silenced, so the party's control windows are also its damage windows. It lines burst up with lockouts.",
+    "rests_on": [
+      "when",
+      "hasAny",
+      "crits",
+      "Stun",
+      "Silence"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-102",
+    "way": "debuff",
+    "also": [
+      "burst",
+      "sustain"
+    ],
+    "question": "price",
+    "play": "A hurt party unit trades HP shares with a healthy foe, each left at the other's percent: not damage, so Shield, Aegis, Defense and immunity to damage don't stand in the way. Its price is being hurt first.",
+    "rests_on": [
+      "trade"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-103",
+    "way": "debuff",
+    "also": [
+      "burst"
+    ],
+    "question": "size",
+    "play": "A foe that damage can't finish, behind an HP floor or immunity to damage, knocked out at once by an effect that isn't damage, so nothing stands in the way. It wins against a foe that won't fall.",
+    "rests_on": [
+      "fell",
+      "floor",
+      "immune:damage"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-104",
+    "way": "debuff",
+    "also": [],
+    "question": "timing",
+    "play": "A foe taken out of the fight by being replaced rather than knocked out, so nothing reacts to its fall: no blast, no split, no revive. It wins against foes whose death is the danger.",
+    "rests_on": [
+      "replace",
+      "ko"
+    ],
+    "needs_block": null,
+    "needs_ruling": "combat.md, Encounters and enemies: no unit leaves a fight alive; nothing flees, fades or escapes."
+  },
+  {
+    "id": "D-105",
+    "way": "debuff",
+    "also": [],
+    "question": "timing",
+    "play": "Owed laid on a foe banks the party's hits, after Defense, and lands them as one lump later, so its HP lines and its reactions to losing HP wait and then pass at once. Its price: the lump meets its Aegis and Shield.",
+    "rests_on": [
+      "Owed",
+      "owe",
+      "debt",
+      "hp_low"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-106",
+    "way": "debuff",
+    "also": [],
+    "question": "width",
+    "play": "Hidden laid on a foe the party doesn't want to hit, one that punishes hits or sets something off when it falls, so the party's picks go elsewhere and only Area reaches it. It keeps a dangerous foe out of the party's way.",
+    "rests_on": [
+      "Hidden",
+      "The Hidden rule",
+      "Area"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-107",
+    "way": "debuff",
+    "also": [
+      "burst"
+    ],
+    "question": "size",
+    "play": "Many small hits on a foe holding Bulwark, from fast weapons, Double strike and multi-hit abilities, take its stacks off fast, so it's Stunned and takes double damage sooner and more often. It wins against Bulwark foes.",
+    "rests_on": [
+      "Bulwark",
+      "Double strike",
+      "KIND_SPEED",
+      "hit_taken"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-108",
+    "way": "debuff",
+    "also": [
+      "sustain"
+    ],
+    "question": "timing",
+    "play": "A unit's Owed, which banks the foes' hits on it, passed with its other markers onto a foe, which then takes the debt when it comes due. It turns the foes' damage back on them; whether Owed can move is open.",
+    "rests_on": [
+      "Owed",
+      "pass",
+      "marker",
+      "debt"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-109",
+    "way": "debuff",
+    "also": [
+      "burst"
+    ],
+    "question": "timing",
+    "play": "Doom laid on a foe already hurt: at zero it takes untyped damage of a large share of its max HP, so a wounded foe falls and a fresh one shrugs it off. It wins against foes worn down but not finished.",
+    "rests_on": [
+      "Doom",
+      "Fizzle",
+      "hpBelow"
+    ],
+    "needs_block": null,
+    "needs_ruling": "vocabulary.md, tiers: Doom is enemy-only; the party can't use it until the director says so."
+  },
+  {
+    "id": "D-110",
+    "way": "debuff",
+    "also": [],
+    "question": "size",
+    "play": "Bulwark laid on a foe, so after a set number of the party's hits it's Stunned and takes double damage, then refills. It wins for a party of many small hits.",
+    "rests_on": [
+      "Bulwark",
+      "Double strike"
+    ],
+    "needs_block": null,
+    "needs_ruling": "vocabulary.md, tiers: Bulwark is enemy-only; the party can't use it until the director says so."
+  },
+  {
+    "id": "D-111",
+    "way": "debuff",
+    "also": [],
+    "question": "size",
+    "play": "A foe's Might stacks spent off it, cutting its built-up damage at once. It wins against a foe that stacks Might before it strikes.",
+    "rests_on": [
+      "spend",
+      "Might"
+    ],
+    "needs_block": null,
+    "needs_ruling": "vocabulary.md: a status runs its own course; no ability spends, shortens or sets off a status early."
+  },
+  {
+    "id": "D-112",
+    "way": "debuff",
+    "also": [],
+    "question": "size",
+    "play": "A debuff lowering a foe's Defense, or setting it, so the party's many small hits, which Defense blunts most, land fuller. Where Sunder raises every kind of damage alike, this favours small hits.",
+    "rests_on": [
+      "stats",
+      "set",
+      "Defense"
+    ],
+    "needs_block": "a status: a debuff with a stat change down on Defense, or a stat set to a value.",
+    "needs_ruling": null
+  },
+  {
+    "id": "D-113",
+    "way": "debuff",
+    "also": [
+      "sustain"
+    ],
+    "question": "size",
+    "play": "A debuff giving a foe negative Accuracy, which adds to the party's Evasion, so its hits miss more. It wins against foes whose hits fall on evasive units.",
+    "rests_on": [
+      "accuracy",
+      "evasion",
+      "stats"
+    ],
+    "needs_block": "a status: a debuff with a stat change down on Accuracy.",
+    "needs_ruling": null
+  },
+  {
+    "id": "D-114",
+    "way": "debuff",
+    "also": [
+      "sustain"
+    ],
+    "question": "size",
+    "play": "A debuff that sets a foe's crit chance so it can't crit, taking the spikes out of its damage. It wins against foes whose danger is the crit.",
+    "rests_on": [
+      "crits",
+      "set",
+      "Crits"
+    ],
+    "needs_block": "a status: a debuff carrying crits by condition with set, laid on a foe.",
+    "needs_ruling": null
+  },
+  {
+    "id": "D-115",
+    "way": "debuff",
+    "also": [],
+    "question": "size",
+    "play": "A lockout of basic attacks only, the reverse of Silence, so a foe whose threat is its swings can only cast. It wins against heavy swingers.",
+    "rests_on": [
+      "lockout",
+      "basic"
+    ],
+    "needs_block": "a status: a debuff whose lockout covers basic attacks only.",
+    "needs_ruling": null
+  },
+  {
+    "id": "D-116",
+    "way": "debuff",
+    "also": [],
+    "question": "timing",
+    "play": "A debuff that lengthens a boss's wind-ups or cooldowns through changes to its abilities rather than Slow, so it never feeds control resistance. It keeps a boss's tempo down all fight.",
+    "rests_on": [
+      "mods",
+      "wind",
+      "cooldown",
+      "RULES.control"
+    ],
+    "needs_block": "a status: a debuff whose mods raise wind and cooldown on the holder's abilities.",
+    "needs_ruling": null
+  },
+  {
+    "id": "D-117",
+    "way": "debuff",
+    "also": [
+      "sustain"
+    ],
+    "question": "size",
+    "play": "A debuff that spreads a foe's single-target abilities over every party unit in even shares, so a blow meant to drop one unit becomes small hits that Defense takes more of. It wins against one-shots.",
+    "rests_on": [
+      "mods",
+      "spread",
+      "Defense"
+    ],
+    "needs_block": "a status: a debuff whose mods apply spread to the holder's abilities.",
+    "needs_ruling": null
+  },
+  {
+    "id": "D-118",
+    "way": "debuff",
+    "also": [],
+    "question": "timing",
+    "play": "A debuff that ties a foe's abilities together, each waiting until all are ready and then cast as one, so it casts far less often but all at once, and the party knows when. Its price is the spike when they land.",
+    "rests_on": [
+      "mods",
+      "together"
+    ],
+    "needs_block": "a status: a debuff whose mods apply together to the holder's abilities.",
+    "needs_ruling": null
+  },
+  {
+    "id": "D-119",
+    "way": "debuff",
+    "also": [],
+    "question": "timing",
+    "play": "A debuff that makes a foe pick its abilities at random each time it's free, breaking a rotation that opens with its strongest move. It wins against foes whose pattern is the danger.",
+    "rests_on": [
+      "order"
+    ],
+    "needs_block": "a status: a debuff carrying the existing order field.",
+    "needs_ruling": null
+  },
+  {
+    "id": "D-120",
+    "way": "debuff",
+    "also": [],
+    "question": "size",
+    "play": "A debuff that makes a foe's abilities scale from a stat it holds little of, in place of the one they read, so its big ability shrinks. It wins against a foe with one big scaled move.",
+    "rests_on": [
+      "rescale"
+    ],
+    "needs_block": "a status: a debuff carrying the existing rescale field.",
+    "needs_ruling": null
+  },
+  {
+    "id": "D-121",
+    "way": "debuff",
+    "also": [],
+    "question": "size",
+    "play": "A debuff that swaps two of a foe's stats as they stand, so its high Attack trades places with a low one. It wins against foes built lopsided.",
+    "rests_on": [
+      "swap"
+    ],
+    "needs_block": "a status: a debuff carrying the existing swap field.",
+    "needs_ruling": null
+  },
+  {
+    "id": "D-122",
+    "way": "debuff",
+    "also": [
+      "burst"
+    ],
+    "question": "price",
+    "play": "A debuff that puts an HP price on a foe's abilities, so each cast costs it HP, though never below 1. It makes a foe that casts often pay for it.",
+    "rests_on": [
+      "mods",
+      "hp",
+      "pay",
+      "hp_paid"
+    ],
+    "needs_block": "a status: a debuff whose mods add an HP price to the holder's abilities.",
+    "needs_ruling": null
+  },
+  {
+    "id": "D-123",
+    "way": "debuff",
+    "also": [
+      "sustain"
+    ],
+    "question": "size",
+    "play": "A debuff that makes a foe's status applications add fewer stacks, so a foe stacking afflictions on the party builds them slowly. It wins against foes that win by build-up.",
+    "rests_on": [
+      "mods",
+      "stacks",
+      "affliction"
+    ],
+    "needs_block": "a status: a debuff whose mods lower stacks on the holder's applications.",
+    "needs_ruling": null
+  },
+  {
+    "id": "D-124",
+    "way": "debuff",
+    "also": [],
+    "question": "timing",
+    "play": "A debuff that makes a foe's abilities wait until it holds no Chill, or another state the party keeps up, so it can't cast while that state stays on it, and no control resistance counts it. It wins against bosses.",
+    "rests_on": [
+      "mods",
+      "wait",
+      "lacks",
+      "RULES.control"
+    ],
+    "needs_block": "a status: a debuff whose mods add wait to the holder's abilities.",
+    "needs_ruling": null
+  },
+  {
+    "id": "D-125",
+    "way": "debuff",
+    "also": [],
+    "question": "width",
+    "play": "A debuff with cover on one foe, so the party's big hits on its allies move onto it, statuses and riders included and with no second dodge, even when a foe's Taunt chose the first target. It sends the party's heaviest blows to the foe it wants dead.",
+    "rests_on": [
+      "cover",
+      "The Taunt rule"
+    ],
+    "needs_block": "a status: a debuff carrying the existing cover field, laid on a foe.",
+    "needs_ruling": null
+  },
+  {
+    "id": "D-126",
+    "way": "debuff",
+    "also": [],
+    "question": "price",
+    "play": "A debuff with soak on a foe that casts, so the party's damage drains its MP before its HP and its spells starve. Its price is the HP spared meanwhile; it needs foes to hold MP pools.",
+    "rests_on": [
+      "soak",
+      "When an ability is ready"
+    ],
+    "needs_block": "a status: a debuff carrying the existing soak field, laid on a foe.",
+    "needs_ruling": null
+  },
+  {
+    "id": "D-127",
+    "way": "debuff",
+    "also": [],
+    "question": "size",
+    "play": "A lockout built unremovable, or labelled a marker, so a foe's Cleanse can't lift it and, as a marker, immunity to debuffs can't stop it. It wins against foes that clear or refuse debuffs.",
+    "rests_on": [
+      "unremovable",
+      "marker",
+      "lockout",
+      "immune:debuffs",
+      "Cleanse"
+    ],
+    "needs_block": "a status: an unremovable or marker-labelled lockout; the marker form bends the vocabulary's line that every status but Owed is a buff or a debuff.",
+    "needs_ruling": null
+  },
+  {
+    "id": "D-128",
+    "way": "debuff",
+    "also": [],
+    "question": "width",
+    "play": "Cheap debuffs laid after the one that matters, so a foe's Cleanse that lifts a few at a time takes the cheap ones first. It wins against foes that cleanse; the order removal follows is open.",
+    "rests_on": [
+      "remove",
+      "count",
+      "order",
+      "Cleanse"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-129",
+    "way": "debuff",
+    "also": [],
+    "question": "size",
+    "play": "A refresh disable carried on a fast weapon's basic attacks, laid again by every swing well before it lapses, so the foe holds it without gaps; it lands in full whatever Defense takes off the hit. It wins by uptime.",
+    "rests_on": [
+      "riders",
+      "Refresh",
+      "KIND_SPEED",
+      "Statuses on hits",
+      "Attack speed"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-130",
+    "way": "debuff",
+    "also": [],
+    "question": "size",
+    "play": "Echo makes a unit's extra strikes heard as basic attacks by its statuses' reactions, so a debuff laid on each basic attack also rides Double strike's second strike and lands more often. It wins by rate.",
+    "rests_on": [
+      "echo",
+      "Double strike",
+      "extra"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-131",
+    "way": "debuff",
+    "also": [
+      "build"
+    ],
+    "question": "width",
+    "play": "Every ally's hits laying the same debuff, by a formation's party effect or by one unit borrowing another's riders, so three appliers build an affliction or hold a refresh debuff together. It spreads the work.",
+    "rests_on": [
+      "party effect",
+      "borrow",
+      "riders"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-132",
+    "way": "debuff",
+    "also": [
+      "burst"
+    ],
+    "question": "timing",
+    "play": "A unit's disables cast as one, each waiting until all are ready, so Stun, Weaken and Sunder land in the same beat and then rest. It gives hard windows the party times its burst into, not a rolling stream.",
+    "rests_on": [
+      "mods",
+      "together"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-133",
+    "way": "debuff",
+    "also": [],
+    "question": "price",
+    "play": "A disable whose price is the caster's HP rather than MP, so the unit holding a foe down spends its own life to do it, which the foes' hits make dangerous. It wins where the lock matters more than that unit's HP.",
+    "rests_on": [
+      "pay",
+      "hp",
+      "hp_paid"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-134",
+    "way": "debuff",
+    "also": [],
+    "question": "width",
+    "play": "A single-target disable with Seek, so a foe's Taunt can't pull the party's Weaken or Silence onto the taunter instead of the foe that matters. It wins against guarded threats.",
+    "rests_on": [
+      "Seek",
+      "The Taunt rule",
+      "Weaken",
+      "Silence"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-135",
+    "way": "debuff",
+    "also": [],
+    "question": "size",
+    "play": "Accuracy on the units whose hits carry disables, cancelling an evasive foe's Evasion, since a dodged hit applies nothing. It wins against evasive foes.",
+    "rests_on": [
+      "Accuracy",
+      "Evasion",
+      "Statuses on hits"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-136",
+    "way": "debuff",
+    "also": [],
+    "question": "price",
+    "play": "A debuff each applier keeps its own copy of, lasting the fight on every foe and ending when its applier is knocked out, so the disable holds while one unit stands. Its price is that unit: when it falls, the foes go free.",
+    "rests_on": [
+      "Per source",
+      "perSource",
+      "duration",
+      "ko"
+    ],
+    "needs_block": "a status: a per-source debuff with no duration that ends when its source is knocked out.",
+    "needs_ruling": null
+  },
+  {
+    "id": "D-137",
+    "way": "debuff",
+    "also": [],
+    "question": "width",
+    "play": "Taunt laid on a Hidden foe ends its Hidden, and its Taunt then draws the party's single-target picks to it, so the foe that couldn't be picked becomes the one that must be. It wins against foes that hide.",
+    "rests_on": [
+      "Taunt",
+      "Hidden",
+      "Taunt ends Hidden",
+      "The Taunt rule"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  },
+  {
+    "id": "D-138",
+    "way": "debuff",
+    "also": [],
+    "question": "size",
+    "play": "A debuff that switches off a foe's passive and its other unremovable statuses while held, so a boss's built-in rule stops for a while. It wins against foes whose passive is the threat.",
+    "rests_on": [
+      "unremovable",
+      "kind"
+    ],
+    "needs_block": "a status field: the holder's statuses of a named kind or label do nothing while it holds this.",
+    "needs_ruling": null
+  },
+  {
+    "id": "D-139",
+    "way": "debuff",
+    "also": [],
+    "question": "price",
+    "play": "A lockout that ends at the first hit on its holder, laid on one foe while the party's picks go elsewhere, by a Mark on another foe or Hidden on it. Its price is leaving that foe alone; status damage doesn't wake it.",
+    "rests_on": [
+      "lockout",
+      "hit_taken",
+      "remove",
+      "Marked",
+      "Hidden"
+    ],
+    "needs_block": "a status: a lockout with a reaction to hit_taken that removes itself.",
+    "needs_ruling": null
+  },
+  {
+    "id": "D-140",
+    "way": "debuff",
+    "also": [
+      "burst"
+    ],
+    "question": "size",
+    "play": "A dodge answered by a strike out of turn sized from the dodged hit, so a foe's blow comes back at it as a hit. It wins against heavy hitters aimed at an evasive unit.",
+    "rests_on": [
+      "hit_evaded",
+      "strike",
+      "of",
+      "Blur",
+      "Evasion"
+    ],
+    "needs_block": null,
+    "needs_ruling": null
+  }
+]
