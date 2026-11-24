@@ -37,7 +37,7 @@ Your words, from `triads.md`. Grouping phrases under one heading is the session'
 
 ### Clearer wording, at your request
 
-- **111 of the agents' cards reworded** so that each says plainly whose hits, abilities or HP it means: "this unit", "the unit in this seat", "this ability", as the pilot's cards do. Many new cards had left it out ("Its hits", "When it", "Starts each fight"). Nothing else changed. 38 of them are in batch 1, and the page shows the new wording; no batch-1 answer had been saved yet. Each card's original wording is listed at the end of `cards.md`.
+- **111 of the agents' cards reworded** so that each says plainly whose hits, abilities or HP it means: "this unit", "the unit in this seat", "this ability", as the pilot's cards do. Many new cards had left it out ("Its hits", "When it", "Starts each fight"). Nothing else changed. 38 of them are in batch 1, and the page shows the new wording; no batch-1 answer had been saved yet.
 - **Your request about the cards, for the writers:** "minimize places where it's just like overtly unclear", "Don't change the content though." Later writers' briefs carry it as a rule: say who does it, as "this unit", "the unit in this seat" or "this ability"; never a bare "it" or "its" the card doesn't name.
 
 ### For you, when you have a moment
