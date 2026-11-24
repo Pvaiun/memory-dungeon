@@ -2,7 +2,7 @@
 
 Every card, kept as written, except 111 of the agents' cards reworded at the director's request so that each says plainly whose hits, abilities or HP it means (this unit, the unit in this seat, this ability), the content unchanged. The deck was written by agents that read only `sources/ways-to-win.md`, `vocabulary.md`, `combat.md`, `primitives.md` and `gear-rules.md`, and were told nothing of what the cards are for: the pilot's forty by one agent (P), then five working alone at once, one for each way to win (R Burst, S Build up, T Debuff or disable, V Sustain) and one for where the ways meet (W), and after the gap check a sixth for the corners the five left thin (X). The director's own cards are marked D, each in their words as they gave it in *Add a fourth*, with the triad it came from.
 
-Each card's kind, way to win, the other ways it serves, mechanics and the building block it needs are the writer's tags, for the session's use. The page shows only the text. Cards taken out as doubles are at the end, with the card each one doubles.
+Each card's kind, way to win, the other ways it serves, mechanics and the building block it needs are the writer's tags, for the session's use. The page shows only the text. Cards taken out as doubles at the merge aren't kept; the table below counts them.
 
 ## Counts
 
@@ -858,94 +858,3 @@ Ten in another way than their triad's, three in the same, one unclear.
 *Session: Sustain. Given in passing, as "a sort of version of" D13's kind. Needs: none.*
 
 *Proposed line, the session's, for the director to check before it goes in a triad (piece):* Whenever a foe is healed, this unit gains Regen.
-
-
-## Taken out
-
-Cards taken out at the merge, each kept here with the card in play that it doubles. A **double** is the same choice in other words; **close to** is a near-double, taken out in a second, stricter pass so that the deck keeps one card per distinct choice.
-
-- **R05** (ability, Burst): Makes every ally's basic attack ready at once. *close to R44.*
-- **R08** (ability, Burst): Lays a lot of Shock on the foe with the fastest basic attack. *a double of P13.*
-- **R11** (ability, Burst): Strikes a foe, dealing much more if that foe hasn't acted yet this fight. *a double of P02.*
-- **R15** (ability, Burst): Marks the foe with the lowest current HP, so the party's basic attacks go to it. *a double of P09.*
-- **R18** (version, Burst): This ability also costs some HP, and deals extra damage for the HP it paid. *a double of P05.*
-- **R20** (version, Burst): This ability goes to the foe with the lowest current HP, getting past Taunt. *close to P09.*
-- **R24** (version, Burst): This ability also brings its user's next ability a good way closer to ready. *close to R19.*
-- **R30** (piece, Burst): When its hit knocks a foe out, what the blow had left over strikes another random foe. *a double of P04.*
-- **R33** (piece, Burst): Its damaging abilities go off as one: each waits until all are ready, then they're cast together, the others free. *a double of P06.*
-- **R34** (piece, Burst): Its basic attacks never wait on its abilities; it keeps swinging through their wind-ups. *a double of P10.*
-- **R40** (piece, Burst): Its hits knock out a foe they leave with only a sliver of HP. *a double of P07.*
-- **R42** (piece, Burst): Healing past its full HP turns into Might. *a double of S26.*
-- **R45** (seat, Burst): Its first ability in order is ready when each fight starts. *a double of P03.*
-- **S01** (ability, Build up): Adds Burn to the foe with the most Burn, adding more the more Burn it already holds. *a double of P12.*
-- **S04** (ability, Build up): Deals damage to a foe, more for each debuff it holds. *a double of R13.*
-- **S06** (ability, Build up): Adds Shock to the foe with the fastest basic attack. *a double of P13.*
-- **S09** (ability, Build up): Marks the foe with the most debuffs, drawing the party's basic attacks to it. *a double of T10.*
-- **S28** (piece, Build up): Its extra strikes, Double strike's included, also apply whatever its basic attacks apply. *a double of P16.*
-- **S34** (piece, Build up): Each time a foe falls, the start-of-fight effects of its gear and seat happen again. *a double of R31.*
-- **S36** (piece, Build up): Whenever it adds an affliction to a foe, another random foe gains half as much. *a double of T37.*
-- **S38** (piece, Build up): When a foe's Chill shatters, a random other foe gains half of that Chill. *a double of P11.*
-- **S39** (piece, Build up): Each ability it casts while every foe holds an affliction comes round a good deal sooner. *close to S13.*
-- **S41** (piece, Build up): Its abilities that add afflictions wait until all of them are ready and are cast together, the rest free. *close to P06.*
-- **S42** (piece, Build up): Whenever a foe's affliction deals its damage, its next ability comes a little closer. *a double of P19.*
-- **T01** (ability, Debuff or disable): Silences a foe that is winding up, cutting its cast off. It waits until a foe is winding up. *a double of P21.*
-- **T04** (ability, Debuff or disable): Takes one buff from a foe that has one and gives it to the caster. Bulwark is never taken. *a double of P24.*
-- **T07** (ability, Debuff or disable): Puts a foe's next ability back on its full cooldown. *a double of P28.*
-- **T09** (ability, Debuff or disable): Bewilders every foe, so each one's next basic attack strikes a unit of its own side. *close to P22.*
-- **T14** (ability, Debuff or disable): Gives Brittle to the foe with the highest Defense, so the next hit on it crits. *a double of P29.*
-- **T17** (version, Debuff or disable): Also Weakens each foe it hits. *close to T02.*
-- **T19** (version, Debuff or disable): Comes round a little sooner for each foe that holds a debuff. *close to S13.*
-- **T20** (version, Debuff or disable): Also drains MP from its target, more for each debuff the target holds. *close to T34.*
-- **T24** (version, Debuff or disable): Also Silences every foe that is winding up as it lands. *close to P21.*
-- **T27** (piece, Debuff or disable): When a foe is healed, it gains Rot. *a double of P27.*
-- **T28** (piece, Debuff or disable): Once a fight, the first foe to start winding up an ability is Silenced, losing the cast. *a double of P21.*
-- **T31** (piece, Debuff or disable): When a foe hits this unit, that foe gains whatever this unit's basic attacks apply. *a double of P18.*
-- **T38** (piece, Debuff or disable): When a foe's Chill shatters, every other foe gains some Chill. *a double of P11.*
-- **T43** (piece, Debuff or disable): When a foe falls, the debuffs it held pass to a random other foe. *a double of S37.*
-- **T45** (seat, Debuff or disable): Abilities of the unit here that aim at one foe land on every foe instead, their damage split evenly among them. *a double of S14.*
-- **T47** (seat, Debuff or disable): Abilities of the unit here add half again as many stacks of each affliction, but its hits deal a little less. *a double of S46.*
-- **T50** (seat, Debuff or disable): Basic attacks of the unit here add a little Sunder. *a double of S27.*
-- **T51** (seat, Debuff or disable): Every so often, the unit here removes one buff from a random foe that has one. *close to T03.*
-- **T54** (seat, Debuff or disable): Abilities of the unit here that Stun, Silence or Slow wait until all of them are ready, then go off together, the others free. *close to P06.*
-- **T55** (seat, Debuff or disable): When a foe hits an ally that is below half HP, that foe is Fixated on the unit here. *a double of P23.*
-- **V02** (version, Sustain): The Shield goes on every ally instead of one, each a smaller amount. *a double of D02.*
-- **V14** (piece, Sustain): Hits on it don't land at once: their damage adds up and lands all together a while after the first. *a double of P35.*
-- **V15** (piece, Sustain): Damage that would reach its HP comes out of its MP instead, while it has any. *a double of P32.*
-- **V16** (piece, Sustain): When a hit on another ally would take more than a big share of that ally's max HP, it takes the whole hit instead. *a double of P31.*
-- **V18** (seat, Sustain): While it stands, foes choose among the party by each unit's max HP instead of by draw. *a double of P36.*
-- **V23** (version, Sustain): Hides every ally but the one with the most current HP, instead of just one. *a double of P40.*
-- **V29** (version, Sustain): The cleanse also heals the ally a little for each debuff it lifts. *a double of P38.*
-- **V30** (ability, Sustain): Moves its own debuffs, all but Doom, onto a random foe. *a double of T15.*
-- **V32** (version, Sustain): The heal waits until an ally is under half its HP, then heals that ally much more. *a double of D03.*
-- **V36** (piece, Sustain): Every so often, it heals the ally with the lowest share of HP a little. *close to V31.*
-- **V38** (ability, Sustain): Puts the ally with the lowest share of HP back to the HP it had a short while ago, if that was more. *a double of P33.*
-- **V40** (piece, Sustain): Once a fight, when its HP falls under a quarter, it swaps shares of HP with the foe whose share is highest. *a double of R14.*
-- **V45** (ability, Sustain): Gives Clarity to the ally with the lowest share of MP. *a double of D04.*
-- **W01** (piece, Build up): Its extra strikes count as basic attacks for everything that answers its basic attacks. *a double of P16.*
-- **W02** (ability, Burst): Hits the foe with the most Bleed many times, a little each. Short cooldown. *a double of R07.*
-- **W07** (piece, Build up): Its basic attacks keep their own pace through its wind-ups and recoveries, but its wind-ups take half again as long. *a double of P10.*
-- **W08** (version, Burst): This ability deals a little more for each buff its user holds. *a double of S18.*
-- **W09** (piece, Burst): Its abilities wait until all of them are ready, then go off together, all but the first for free. *a double of P06.*
-- **W10** (ability, Sustain): Swaps shares of HP with the foe at the highest share of its max HP, each left at the other's share. Waits until its own HP is below a quarter; very long cooldown. *a double of R14.*
-- **W12** (seat, Sustain): Healing any ally receives is shared evenly across the party, and the unit here heals for a share of the damage its hits deal. *a double of V37.*
-- **W14** (version, Burst): This ability costs a share of its user's current HP instead of MP, and hits harder for the HP it paid. *a double of P05.*
-- **W15** (version, Sustain): Allies this ability revives come back with every ability ready. *a double of P37.*
-- **W19** (seat, Burst): At the start of each fight, every foe gains Brittle. *a double of R04.*
-- **W22** (ability, Burst): Hits a random foe with a buff, a lot harder for each buff it holds, then strips its buffs. Medium cooldown. *a double of R12.*
-- **W23** (ability, Burst): Marks the foe with the lowest current HP, so the party's basic attacks go to it. Quick cooldown. *a double of P09.*
-- **W24** (ability, Debuff or disable): Bewilders every foe, so each one's next basic attack strikes its own side. Long cooldown. *a double of T09.*
-- **W27** (piece, Build up): When a foe gains an affliction from it, another random foe gains half as many stacks of it. *a double of T37.*
-- **W28** (version, Debuff or disable): This ability also Silences its target if that target's Shock is at its cap. *a double of T23.*
-- **W31** (piece, Build up): Its basic attacks add a random affliction to their target. *close to S07.*
-- **W33** (version, Debuff or disable): This ability lands on every foe instead of one, its damage split evenly among them and its statuses landing in full on each. *a double of S14.*
-- **W34** (seat, Build up): The basic attacks of the unit here go to the foe holding the most debuffs. *a double of T10.*
-- **W42** (ability, Build up): Goes Hidden for a while, and its abilities add a lot more stacks for as long. Long cooldown. *close to R47.*
-- **W43** (version, Debuff or disable): This ability also moves every debuff its user holds but Doom onto its target. *a double of T15.*
-- **W44** (ability, Debuff or disable): Takes a buff other than Bulwark from a random foe with a buff and keeps it. Short cooldown. *a double of P24.*
-- **W45** (piece, Sustain): When a hit on an ally would take a large share of that ally's max HP, this unit takes the hit instead and the attacker gains Weaken. *a double of P31.*
-- **W47** (piece, Debuff or disable): When it heals an ally, the foe that last hit that ally gains Slow. *a double of T26.*
-- **W50** (seat, Debuff or disable): Each time an Aegis on anyone in the party blocks damage, the foe that dealt it is Stunned. *a double of P26.*
-- **X04** (ability, Build up): For a while, every other ally's basic attacks also lay whatever this unit's basic attacks lay. *close to W04.*
-- **X11** (piece, Build up): Healing from its Lifesteal that would go past full HP gives it Might instead, more Might for more healing. *a double of S26.*
-- **X12** (seat, Build up): The unit in this seat gains a little Thorns each time a hit lands on it, for the rest of the fight. *a double of S47.*
-- **X13** (ability, Debuff or disable): Lays a lot of Shock on the foe with the fastest basic attack. *a double of P13.*

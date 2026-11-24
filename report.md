@@ -25,7 +25,7 @@ Your words, from `triads.md`. Grouping phrases under one heading is the session'
 ### The deck
 
 - **Five writers, working alone at once,** one for each way to win and one for where the ways meet, each a blind agent that read only the five sources and knew nothing of what the cards are for. You asked for no changes after the pilot, so they had the pilot writer's brief as it stood. They wrote 263 cards.
-- **The merge:** with the pilot's 40 and your 14, one card per distinct choice. 85 were taken out: 69 doubles and 16 near-doubles, the latter in a second, stricter pass. Each is kept at the end of `cards.md` with the card it doubles. Where an agent's card doubled one of yours, yours stays.
+- **The merge:** with the pilot's 40 and your 14, one card per distinct choice. 85 were taken out: 69 doubles and 16 near-doubles, the latter in a second, stricter pass. They aren't kept. Where an agent's card doubled one of yours, yours stays.
 - **The gap check** against `sources/threads.md` found nothing reading what a unit wears or its passive, and only one card each on a fight won and Lifesteal. Extra strikes, Thorns, Shock, the Mark and Burn had two or three each. A sixth blind writer wrote fifteen cards for those corners, and eleven went in. Still thin, as the space has it: Thorns, Lifesteal and Shock (two each, three with your D09), and a passive (one).
 - **247 cards in play:** 56 Burst, 61 Build up, 53 Debuff or disable and 63 Sustain from the agents, and your 14. 12 of the agents' cards need a new building block, and each is marked.
 
