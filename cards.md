@@ -2,7 +2,7 @@
 
 Every card, kept as written, except 111 of the agents' cards reworded at the director's request so that each says plainly whose hits, abilities or HP it means (this unit, the unit in this seat, this ability), the content unchanged. The deck was written by agents that read only `sources/ways-to-win.md`, `vocabulary.md`, `combat.md`, `primitives.md` and `gear-rules.md`, and were told nothing of what the cards are for: the pilot's forty by one agent (P), then five working alone at once, one for each way to win (R Burst, S Build up, T Debuff or disable, V Sustain) and one for where the ways meet (W), and after the gap check a sixth for the corners the five left thin (X). The director's own cards are marked D, each in their words as they gave it in *Add a fourth*, with the triad it came from.
 
-Each card's kind, way to win, the other ways it serves, mechanics and the building block it needs are the writer's tags, for the session's use. The page shows only the text. Cards taken out as doubles at the merge aren't kept; the table below counts them.
+Each card's kind, mechanics and the building block it needs are the writer's tags, for the session's use. Its way to win is the one it serves most; a **second way** is the session's reading, given only where the card plainly does two things for two ways, and sparing on purpose so that later batches can be aimed. The page shows only the text. Cards taken out as doubles at the merge aren't kept; the table below counts them.
 
 ## Counts
 
@@ -67,7 +67,7 @@ By writer: what each wrote, what's in play, and what was taken out as a double.
 <br>*ability · Might; cooldown: soonest, ready · writer: Burst · not yet in a triad*
 
 **R02.** Gives every ally Haste. It has a long cooldown.
-<br>*ability · Haste; every ally; cooldown: long · writer: Burst · also Build up · in triad b1-13*
+<br>*ability · Haste; every ally; cooldown: long · writer: Burst · in triad b1-13*
 
 **R03.** Readies the ability with the most cooldown left on the other ally with the highest Attack.
 <br>*ability · cooldown: longest, ready; targeting rule: others, highest by attack · writer: Burst · not yet in a triad*
@@ -76,10 +76,10 @@ By writer: what each wrote, what's in play, and what was taken out as a double.
 <br>*ability · Brittle; every foe · writer: Burst · not yet in a triad*
 
 **R06.** Strikes a foe several times, each strike adding Sunder, so each lands harder than the last.
-<br>*ability · Sunder; each hit of a multi-hit ability is a separate hit; a hit's own statuses land after the hit · writer: Burst · also Debuff or disable · in triad b1-03*
+<br>*ability · Sunder; each hit of a multi-hit ability is a separate hit; a hit's own statuses land after the hit · writer: Burst · in triad b1-03*
 
 **R07.** Strikes the foe with the most Bleed many times in a row, for a little each.
-<br>*ability · Bleed; the foe with the most (by stacks); hits · writer: Burst · also Build up · in triad b1-01*
+<br>*ability · Bleed; the foe with the most (by stacks); hits · writer: Burst · in triad b1-01*
 
 **R09.** Strikes the foe with the highest current HP for a share of its current HP.
 <br>*ability · pick: highest, by hp; scale: hp (current) of target · writer: Burst · in triad b1-14*
@@ -88,13 +88,13 @@ By writer: what each wrote, what's in play, and what was taken out as a double.
 <br>*ability · Area; count: targets · writer: Burst · in triad b1-19*
 
 **R12.** Strikes a random foe with a buff, harder for each buff it holds, then removes its buffs.
-<br>*ability · a random foe with a buff; count: buffs; Dispel · writer: Burst · also Debuff or disable · not yet in a triad*
+<br>*ability · a random foe with a buff; count: buffs; Dispel · writer: Burst · second way: Debuff or disable · not yet in a triad*
 
 **R13.** Strikes the foe with the most debuffs, harder for each debuff it holds.
-<br>*ability · mostDebuffs; count: debuffs · writer: Burst · also Debuff or disable · not yet in a triad*
+<br>*ability · mostDebuffs; count: debuffs · writer: Burst · not yet in a triad*
 
 **R14.** Waits until this unit is below half HP, then swaps HP shares with the foe with the highest current HP. It has a very long cooldown.
-<br>*ability · trade; hpBelow; pick: highest, by hp · writer: Burst · also Sustain · not yet in a triad*
+<br>*ability · trade; hpBelow; pick: highest, by hp · writer: Burst · second way: Sustain · not yet in a triad*
 
 **R16.** This ability winds up in a moment, but deals a little less.
 <br>*version · mods: cast ("winds up in a moment"); mods: damage · writer: Burst · in triad b1-19*
@@ -145,10 +145,10 @@ By writer: what each wrote, what's in play, and what was taken out as a double.
 <br>*piece · hit_lands: stopped ("what the target's Shield soaked"); strike · writer: Burst · **needs a new block:** a reaction filter on a hit's stopped part (some was soaked), so no empty strike follows a hit that nothing soaked · not yet in a triad*
 
 **R38.** Each time this unit dodges a hit, its next ability comes a good way closer.
-<br>*piece · hit_evaded; cooldown: soonest, lessPct · writer: Burst · also Sustain · in triad b1-13*
+<br>*piece · hit_evaded; cooldown: soonest, lessPct · writer: Burst · in triad b1-13*
 
 **R39.** When this unit's Shield breaks, this unit deals damage to every foe for a share of the most the Shield held.
-<br>*piece · status_ended, cause stacks ("the most an absorb held when damage emptied it"); Shield · writer: Burst · also Sustain · in triad b1-03*
+<br>*piece · status_ended, cause stacks ("the most an absorb held when damage emptied it"); Shield · writer: Burst · in triad b1-03*
 
 **R41.** This unit's first ability each fight goes off a second time at once, free.
 <br>*piece · action_resolve, repeat: false; recast; marker ("once a fight") · writer: Burst · not yet in a triad*
@@ -163,10 +163,10 @@ By writer: what each wrote, what's in play, and what was taken out as a double.
 <br>*seat · Cast speed; Cooldown; max HP · writer: Burst · not yet in a triad*
 
 **R47.** The unit in this seat starts each fight Hidden, and its hits deal much more while it's Hidden.
-<br>*seat · Hidden; boosts; when (has Hidden) · writer: Burst · also Sustain · in triad b1-04*
+<br>*seat · Hidden; boosts; when (has Hidden) · writer: Burst · in triad b1-04*
 
 **R48.** When any foe's Chill shatters, the next ability of the unit in this seat is ready.
-<br>*seat · status_capped ("Chill's shatter"); cooldown: soonest, ready · writer: Burst · also Build up · in triad b1-03*
+<br>*seat · status_capped ("Chill's shatter"); cooldown: soonest, ready · writer: Burst · in triad b1-03*
 
 **R49.** When an ally gains Might, the unit in this seat gains the same Might.
 <br>*seat · status_gained, whose ally; share · writer: Burst · in triad b1-13*
@@ -175,22 +175,22 @@ By writer: what each wrote, what's in play, and what was taken out as a double.
 <br>*seat · hp_low (line); cooldown: abilities, ready · writer: Burst · not yet in a triad*
 
 **W05.** This ability resolves again at once, for free, when its user holds a lot of Might.
-<br>*version · recast, Might, stacks · writer: where the ways meet · also Build up · not yet in a triad*
+<br>*version · recast, Might, stacks · writer: where the ways meet · not yet in a triad*
 
 **W11.** This unit's hits deal extra damage equal to a share of the Shield it holds.
-<br>*piece · adds, Shield, stacks · writer: where the ways meet · also Sustain · not yet in a triad*
+<br>*piece · adds, Shield, stacks · writer: where the ways meet · not yet in a triad*
 
 **W17.** Damage from hits on this unit is held and lands all at once a while after the first; until it lands, this unit's hits deal more the more damage is held.
-<br>*piece · Owed, debt, boosts · writer: where the ways meet · also Sustain · not yet in a triad*
+<br>*piece · Owed, debt, boosts · writer: where the ways meet · second way: Sustain · not yet in a triad*
 
 **W20.** This unit's hits are a little more likely to crit for each debuff their target holds.
-<br>*piece · crits by condition, count (debuffs) · writer: where the ways meet · also Debuff or disable, Build up · in triad b1-19*
+<br>*piece · crits by condition, count (debuffs) · writer: where the ways meet · in triad b1-19*
 
 **W25.** Knocks out at once a Stunned foe below a small share of its max HP, past any Taunt. Waits until there is one; long cooldown.
-<br>*ability · fell, Stun, Seek · writer: where the ways meet · also Debuff or disable · not yet in a triad*
+<br>*ability · fell, Stun, Seek · writer: where the ways meet · not yet in a triad*
 
 **X01.** Gives Haste for a while to every other ally that wields the same kind of weapon as this unit.
-<br>*ability · kin: "Wields a weapon of the reading unit's kind"; Haste: "Shorter cooldowns, wind-ups and time between attacks"; a targeting rule's `where` · writer: thin corners · also Build up · not yet in a triad*
+<br>*ability · kin: "Wields a weapon of the reading unit's kind"; Haste: "Shorter cooldowns, wind-ups and time between attacks"; a targeting rule's `where` · writer: thin corners · not yet in a triad*
 
 **X06.** If this ability lands the blow that wins a fight, it starts the next fight ready.
 <br>*version · fight_won: "the moment the last foe falls, before statuses end"; cooldown set ready: "Ready now: no cooldown left"; "Cooldowns carry between fights" · writer: thin corners · **needs a new block:** a fight_won filter that names the ability whose hit felled the last foe, as ko's `ability` filter does · not yet in a triad*
@@ -199,7 +199,7 @@ By writer: what each wrote, what's in play, and what was taken out as a double.
 <br>*piece · Double strike: "Chance a basic attack hits twice"; crits by condition: `tag` extra, `chance` 100: "it always crits"; "Crits land before Defense, so big crits get through it" · writer: thin corners · not yet in a triad*
 
 **X14.** When an ally drops below half HP, the foe that last hit it becomes Marked.
-<br>*piece · Marked: "the party's basic attacks ... pick a Marked foe while it lasts"; hp_low: "Its HP goes under a line"; assailant: "the unit that last hit the unit the event is about" · writer: thin corners · also Sustain · not yet in a triad*
+<br>*piece · Marked: "the party's basic attacks ... pick a Marked foe while it lasts"; hp_low: "Its HP goes under a line"; assailant: "the unit that last hit the unit the event is about" · writer: thin corners · not yet in a triad*
 
 ## Build up
 
@@ -210,7 +210,7 @@ By writer: what each wrote, what's in play, and what was taken out as a double.
 <br>*version · Burn; a scale reading the target's stacks · in triad pilot-07*
 
 **P13.** Lays a lot of Shock on the foe with the fastest basic attack and on the foe with the slowest.
-<br>*ability · Shock; by swing (the basic attack's interval now) · in triad pilot-02*
+<br>*ability · Shock; by swing (the basic attack's interval now) · second way: Debuff or disable · in triad pilot-02*
 
 **P14.** This ability adds a stack of Sunder for each debuff its target already holds.
 <br>*version · Sunder; a scale's count: debuffs · not yet in a triad*
@@ -240,31 +240,31 @@ By writer: what each wrote, what's in play, and what was taken out as a double.
 <br>*ability · Area; count { side, where } with stacks (the total of that status's stacks across them); Chill · writer: Build up · not yet in a triad*
 
 **S05.** Strikes a foe several times in quick succession, each hit adding Bleed. Each hit after the first sets off the Bleed the hit before it left.
-<br>*ability · Each hit of a multi-hit ability is a separate hit; Bleed; A hit's own statuses land after the hit · writer: Build up · also Burst · in triad b1-15*
+<br>*ability · Each hit of a multi-hit ability is a separate hit; Bleed; A hit's own statuses land after the hit · writer: Build up · in triad b1-15*
 
 **S07.** Adds an affliction, picked at random, to every foe.
 <br>*ability · one (picked at random on the actor's dice); affliction; Every foe · writer: Build up · not yet in a triad*
 
 **S08.** Knocks out a foe below half its HP that holds every affliction. It waits until there is one.
-<br>*ability · fell; has (every one of these); hpBelow · writer: Build up · also Burst · in triad b1-23*
+<br>*ability · fell; has (every one of these); hpBelow · writer: Build up · in triad b1-23*
 
 **S10.** Adds a lot of Sunder to the foe with the highest current HP.
 <br>*ability · Sunder (stacks up to a cap); highest, by: hp · writer: Build up · in triad b1-05*
 
 **S11.** Strikes the foe this unit has struck most this fight, dealing more for each time it has struck that foe.
-<br>*ability · marker (bookkeeping such as "already hit by it"); stacks; highest by { stacks } · writer: Build up · also Burst · in triad b1-16*
+<br>*ability · marker (bookkeeping such as "already hit by it"); stacks; highest by { stacks } · writer: Build up · in triad b1-16*
 
 **S12.** Gives the ally with the highest Attack a stack of Might for each foe holding an affliction.
 <br>*ability · Might; count { side, where }; The ally with the highest Attack · writer: Build up · not yet in a triad*
 
 **S13.** Brings each ally's next ability a little closer for each foe holding an affliction.
-<br>*ability · cooldown (soonest; lessPct: a number, so it can count); count { side, where }; Every ally · writer: Build up · also Burst · not yet in a triad*
+<br>*ability · cooldown (soonest; lessPct: a number, so it can count); count { side, where }; Every ally · writer: Build up · not yet in a triad*
 
 **S14.** This ability now lands on every foe instead of one: each takes a share of its damage, but every status it carries lands in full.
 <br>*version · spread; a status carried by a hit lands in full, whatever Defense takes off the hit · writer: Build up · not yet in a triad*
 
 **S15.** A foe that shatters from this ability's Chill is left holding some Chill afterwards.
-<br>*version · status_capped; Chill (at the cap it shatters); marker · writer: Build up · also Debuff or disable · not yet in a triad*
+<br>*version · status_capped; Chill (at the cap it shatters); marker · writer: Build up · not yet in a triad*
 
 **S16.** This ability deals a little more each time it's cast in a fight, up to a limit.
 <br>*version · action_resolve; Intensity cap; stacks · writer: Build up · in triad b1-05*
@@ -279,13 +279,13 @@ By writer: what each wrote, what's in play, and what was taken out as a double.
 <br>*version · abilities that apply stacks again and again are quick; Burn (each application is small against the ceiling that upkeep reaches) · writer: Build up · in triad b1-15*
 
 **S20.** This ability now strikes once more for every few Bleed stacks its target holds.
-<br>*version · hits; stacks; Bleed (each hit its holder takes deals untyped damage per stack) · writer: Build up · also Burst · **needs a new block:** a hit count that scales from the target's stacks · not yet in a triad*
+<br>*version · hits; stacks; Bleed (each hit its holder takes deals untyped damage per stack) · writer: Build up · **needs a new block:** a hit count that scales from the target's stacks · not yet in a triad*
 
 **S21.** This ability now aims at the foe with the fewest stacks of what it adds, spreading them across the foes.
 <br>*version · lowest by { stacks }; targeting rule · writer: Build up · in triad b1-08*
 
 **S22.** This heal now also gives the ally it heals a stack of Might.
-<br>*version · heal; Might; apply · writer: Build up · also Sustain · in triad b1-23*
+<br>*version · heal; Might; apply · writer: Build up · second way: Sustain · in triad b1-23*
 
 **S23.** Each hit this unit lands raises the damage of its hits a little for the rest of the fight, up to a limit.
 <br>*piece · hit_lands; Intensity cap; boosts · writer: Build up · not yet in a triad*
@@ -312,7 +312,7 @@ By writer: what each wrote, what's in play, and what was taken out as a double.
 <br>*piece · adds (target is the unit hit; an Intensity status adds it for each stack); Chill · writer: Build up · not yet in a triad*
 
 **S32.** This unit's hits on a foe at its Sunder cap always crit.
-<br>*piece · crits (when; chance 100: it always crits); atCap; Sunder · writer: Build up · also Burst · in triad b1-23*
+<br>*piece · crits (when; chance 100: it always crits); atCap; Sunder · writer: Build up · in triad b1-23*
 
 **S33.** Once this unit has landed a great many hits in a fight, its basic attacks strike an extra time for the rest of it.
 <br>*piece · strike (one more hit with the weapon's damage, of kind extra); status_capped; cap · writer: Build up · not yet in a triad*
@@ -324,7 +324,7 @@ By writer: what each wrote, what's in play, and what was taken out as a double.
 <br>*piece · status_ended (cause ko; amount: the stacks it held as it ended); apply; Burn · writer: Build up · in triad b1-16*
 
 **S40.** When this unit brings a foe's affliction to its cap, this unit's first ability resolves again at once, free.
-<br>*piece · status_capped (other: holder); recast; first · writer: Build up · also Burst · in triad b1-22*
+<br>*piece · status_capped (other: holder); recast; first · writer: Build up · in triad b1-22*
 
 **S43.** While this unit stands, every ally adds a little more of every affliction it applies.
 <br>*piece · perSource (an aura); mods stacks · writer: Build up · not yet in a triad*
@@ -339,7 +339,7 @@ By writer: what each wrote, what's in play, and what was taken out as a double.
 <br>*seat · mods stacks; boosts · writer: Build up · in triad b1-25*
 
 **S47.** The unit in this seat draws more of the foes' picks, and gains a little Thorns for each hit it takes, for the rest of the fight.
-<br>*seat · Aggro; hit_taken; Thorns · writer: Build up · also Sustain · not yet in a triad*
+<br>*seat · Aggro; hit_taken; Thorns · writer: Build up · second way: Sustain · not yet in a triad*
 
 **S48.** The unit in this seat gains a little Accuracy each time one of its hits is dodged, for the rest of the fight.
 <br>*seat · hit_missed; accuracy; Intensity · writer: Build up · in triad b1-22*
@@ -360,31 +360,31 @@ By writer: what each wrote, what's in play, and what was taken out as a double.
 <br>*seat · action_resolve; cooldown_reduction; Intensity · writer: Build up · not yet in a triad*
 
 **W03.** Each time anyone in the party lands a crit, the unit in this seat gains a little Crit damage for the rest of the fight.
-<br>*seat · hit_lands (crit), Crit damage, whose team · writer: where the ways meet · also Burst · not yet in a triad*
+<br>*seat · hit_lands (crit), Crit damage, whose team · writer: where the ways meet · not yet in a triad*
 
 **W04.** For a long while, the basic attacks of the other ally with the highest Attack also carry whatever this unit's basic attacks carry. Long cooldown.
-<br>*ability · borrow, riders, the ally with the highest Attack · writer: where the ways meet · also Burst, Debuff or disable · not yet in a triad*
+<br>*ability · borrow, riders, the ally with the highest Attack · writer: where the ways meet · not yet in a triad*
 
 **W06.** This unit's crits add Bleed to their target, more the harder the crit.
-<br>*piece · crit (tag), Bleed, amount · writer: where the ways meet · also Burst · in triad b1-08*
+<br>*piece · crit (tag), Bleed, amount · writer: where the ways meet · in triad b1-08*
 
 **W29.** This ability adds a lot more stacks to a target that holds Slow.
-<br>*version · Slow, stacks, when · writer: where the ways meet · also Debuff or disable · in triad b1-22*
+<br>*version · Slow, stacks, when · writer: where the ways meet · in triad b1-22*
 
 **W30.** While this unit Taunts, each hit it takes adds Sunder to the attacker.
-<br>*piece · Taunt, hit_taken, Sunder · writer: where the ways meet · also Debuff or disable, Sustain · not yet in a triad*
+<br>*piece · Taunt, hit_taken, Sunder · writer: where the ways meet · not yet in a triad*
 
 **W36.** Each time this unit gains Guard, it gains a little Thorns for the rest of the fight.
-<br>*piece · Guard, status_gained, Thorns · writer: where the ways meet · also Sustain · in triad b1-25*
+<br>*piece · Guard, status_gained, Thorns · writer: where the ways meet · in triad b1-25*
 
 **W37.** Each time the unit in this seat is hit, every ally with less Defense than it gains Might.
-<br>*seat · hit_taken, lower, Might · writer: where the ways meet · also Sustain · in triad b1-15*
+<br>*seat · hit_taken, lower, Might · writer: where the ways meet · in triad b1-15*
 
 **W38.** When this unit dodges a hit, the attacker gains whatever this unit's basic attacks carry.
-<br>*piece · hit_evaded, riders, Evasion · writer: where the ways meet · also Sustain · not yet in a triad*
+<br>*piece · hit_evaded, riders, Evasion · writer: where the ways meet · not yet in a triad*
 
 **X05.** Each hit of this ability also sets off whatever its user's basic attacks set off, its passive included. It never brings an extra strike.
-<br>*version · echo: "extra strikes are heard as basic attacks by its statuses' reactions and triggers that name kind basic"; "Passives that work on basic attacks keep working"; mods: "Changes to the holder's own abilities" · writer: thin corners · also Burst · **needs a new block:** a `mods` change that makes an ability's hits heard as basic attacks, as `echo` does for extra strikes · in triad b1-25*
+<br>*version · echo: "extra strikes are heard as basic attacks by its statuses' reactions and triggers that name kind basic"; "Passives that work on basic attacks keep working"; mods: "Changes to the holder's own abilities" · writer: thin corners · **needs a new block:** a `mods` change that makes an ability's hits heard as basic attacks, as `echo` does for extra strikes · in triad b1-25*
 
 ## Debuff or disable
 
@@ -395,7 +395,7 @@ By writer: what each wrote, what's in play, and what was taken out as a double.
 <br>*ability · Bewildered; the foe with the highest Attack · in triad pilot-06*
 
 **P23.** Each time a foe hits another ally, that foe becomes Fixated on this unit.
-<br>*piece · Fixated; hit_taken (whose: ally); to: other · in triad b1-20*
+<br>*piece · Fixated; hit_taken (whose: ally); to: other · second way: Sustain · in triad b1-20*
 
 **P24.** This ability also strips a buff from its target and gives it to this unit.
 <br>*version · Dispel (remove); move · in triad pilot-03*
@@ -419,7 +419,7 @@ By writer: what each wrote, what's in play, and what was taken out as a double.
 <br>*piece · hp_low (line); assailant; Stun · in triad pilot-06*
 
 **T02.** Weakens the foe with the highest Attack.
-<br>*ability · Weaken (its hits deal much less damage); the foe with the highest Attack · writer: Debuff or disable · also Sustain · not yet in a triad*
+<br>*ability · Weaken (its hits deal much less damage); the foe with the highest Attack · writer: Debuff or disable · not yet in a triad*
 
 **T03.** Removes every buff from the foe holding the most buffs.
 <br>*ability · Dispel (removes buffs from a foe); by: buffs, highest · writer: Debuff or disable · not yet in a triad*
@@ -431,22 +431,22 @@ By writer: what each wrote, what's in play, and what was taken out as a double.
 <br>*ability · mp (drains it); casting; fizzles: it does nothing and spends no MP, but still goes on cooldown · writer: Debuff or disable · not yet in a triad*
 
 **T08.** Adds Shock on a quick cooldown to the foe with the slowest basic attack, so its heavy blows land weaker.
-<br>*ability · Shock (a slow foe kept charged swings at the cap); by: swing (highest is the slowest) · writer: Debuff or disable · also Sustain · in triad b1-20*
+<br>*ability · Shock (a slow foe kept charged swings at the cap); by: swing (highest is the slowest) · writer: Debuff or disable · in triad b1-20*
 
 **T10.** Marks the foe holding the most debuffs, so the party's basic attacks go to it.
-<br>*ability · Marked (the party's basic attacks pick a Marked foe); mostDebuffs · writer: Debuff or disable · also Burst · in triad b1-24*
+<br>*ability · Marked (the party's basic attacks pick a Marked foe); mostDebuffs · writer: Debuff or disable · in triad b1-24*
 
 **T11.** Gives each foe one of Weaken, Slow or Silence, picked at random for each.
 <br>*ability · one (picked at random on the actor's dice); every foe · writer: Debuff or disable · in triad b1-10*
 
 **T12.** Adds Chill to the foe that already holds the most, pushing it toward a shatter, which Stuns it.
-<br>*ability · Chill (at the cap it shatters: damage for each stack and a Stun); the foe with the most Chill · writer: Debuff or disable · also Build up · not yet in a triad*
+<br>*ability · Chill (at the cap it shatters: damage for each stack and a Stun); the foe with the most Chill · writer: Debuff or disable · not yet in a triad*
 
 **T13.** Rots the foe with the lowest share of its HP, so heals on it do much less.
 <br>*ability · Rot (receives less healing); by: hp_share, lowest · writer: Debuff or disable · in triad b1-07*
 
 **T15.** Moves every debuff on the caster except Doom onto a random foe. It waits until the caster has a debuff.
-<br>*ability · pass (lands as a fresh application at its own length); label: debuff; except · writer: Debuff or disable · also Sustain · in triad b1-02*
+<br>*ability · pass (lands as a fresh application at its own length); label: debuff; except · writer: Debuff or disable · second way: Sustain · in triad b1-02*
 
 **T16.** Stuns every foe. It has a long cooldown.
 <br>*ability · Stun (can't act); every foe; control resistance (RESISTED, IMMUNE) · writer: Debuff or disable · not yet in a triad*
@@ -455,25 +455,25 @@ By writer: what each wrote, what's in play, and what was taken out as a double.
 <br>*version · cooldown; basic (the basic attack's timer); full · writer: Debuff or disable · in triad b1-02*
 
 **T21.** This ability's hits Fixate their target on the caster.
-<br>*version · Fixated (picks the unit that fixated it while that unit can be picked); apply · writer: Debuff or disable · also Sustain · not yet in a triad*
+<br>*version · Fixated (picks the unit that fixated it while that unit can be picked); apply · writer: Debuff or disable · second way: Sustain · not yet in a triad*
 
 **T22.** This ability comes back much sooner when its target was winding up as it landed.
 <br>*version · casting; when (1 if the condition holds); cooldown, lessPct · writer: Debuff or disable · not yet in a triad*
 
 **T23.** This ability also Stuns every foe holding Sunder at its cap.
-<br>*version · Sunder (stacks up to a cap); atCap; Stun · writer: Debuff or disable · also Build up · in triad b1-07*
+<br>*version · Sunder (stacks up to a cap); atCap; Stun · writer: Debuff or disable · in triad b1-07*
 
 **T25.** This ability also Weakens every foe that is Stunned or Silenced.
-<br>*version · hasAny (Stunned or Silenced); Weaken · writer: Debuff or disable · also Sustain · not yet in a triad*
+<br>*version · hasAny (Stunned or Silenced); Weaken · writer: Debuff or disable · not yet in a triad*
 
 **T26.** When this unit heals an ally, the foe that last hit that ally is Weakened.
-<br>*piece · healed ("a heal given"); assailant ("the foe that last hit the healed ally"); Weaken · writer: Debuff or disable · also Sustain · not yet in a triad*
+<br>*piece · healed ("a heal given"); assailant ("the foe that last hit the healed ally"); Weaken · writer: Debuff or disable · not yet in a triad*
 
 **T29.** At the start of each fight, each foe's ability with the longest cooldown starts on its full cooldown.
 <br>*piece · fight_start; cooldown, slowest; full · writer: Debuff or disable · in triad b1-21*
 
 **T30.** When a foe dodges one of this unit's hits, that foe gains Brittle.
-<br>*piece · hit_missed; Brittle; to: other · writer: Debuff or disable · also Burst · not yet in a triad*
+<br>*piece · hit_missed; Brittle; to: other · writer: Debuff or disable · not yet in a triad*
 
 **T32.** After each of this unit's hits on a foe holding a Shield, the Shield is removed.
 <br>*piece · hit_lands; kind: absorb; remove · writer: Debuff or disable · in triad b1-02*
@@ -491,10 +491,10 @@ By writer: what each wrote, what's in play, and what was taken out as a double.
 <br>*piece · aim (the holder's basic attacks pick by this rule); by: debuffs, lowest · writer: Debuff or disable · not yet in a triad*
 
 **T37.** When this unit gives a foe a debuff, a second, random foe gains it too.
-<br>*piece · status_gained, source; share (as a copy); exclude: owner · writer: Debuff or disable · also Build up · not yet in a triad*
+<br>*piece · status_gained, source; share (as a copy); exclude: owner · writer: Debuff or disable · not yet in a triad*
 
 **T39.** When a foe's ability hits two or more allies at once, that foe is Weakened.
-<br>*piece · action_resolve, whose: foe; countAtLeast; Weaken · writer: Debuff or disable · also Sustain · not yet in a triad*
+<br>*piece · action_resolve, whose: foe; countAtLeast; Weaken · writer: Debuff or disable · not yet in a triad*
 
 **T40.** When a foe drops below a third of its HP, it is Silenced.
 <br>*piece · hp_low (line); Silence; owner · writer: Debuff or disable · not yet in a triad*
@@ -506,7 +506,7 @@ By writer: what each wrote, what's in play, and what was taken out as a double.
 <br>*piece · cooldown (ready now, a full cooldown, some ticks closer, a share of what's left); hit_lands · writer: Debuff or disable · **needs a new block:** a cooldown change that moves a cooldown further from ready by some ticks, never past its full cooldown · in triad b1-24*
 
 **T44.** The unit in this seat has a lot more Accuracy.
-<br>*seat · Accuracy (cancels that much of the target's Evasion); a seat changes the stats of the unit in it · writer: Debuff or disable · also Burst · in triad b1-20*
+<br>*seat · Accuracy (cancels that much of the target's Evasion); a seat changes the stats of the unit in it · writer: Debuff or disable · in triad b1-20*
 
 **T46.** Abilities of the unit in this seat that Stun, Silence or Slow come round much sooner.
 <br>*seat · mods: cooldown; of: does (stun, silence, slow) · writer: Debuff or disable · in triad b1-21*
@@ -521,28 +521,28 @@ By writer: what each wrote, what's in play, and what was taken out as a double.
 <br>*seat · status_ended (cause: expired); Slow; owner · writer: Debuff or disable · not yet in a triad*
 
 **T53.** When the unit in this seat dodges a hit, the attacker is Weakened.
-<br>*seat · hit_evaded; Weaken; to: other · writer: Debuff or disable · also Sustain · in triad b1-24*
+<br>*seat · hit_evaded; Weaken; to: other · writer: Debuff or disable · in triad b1-24*
 
 **W21.** This ability is ready again at once whenever a foe's wind-up is cut off.
-<br>*version · action_interrupted, cooldown (ready) · writer: where the ways meet · also Burst · not yet in a triad*
+<br>*version · action_interrupted, cooldown (ready) · writer: where the ways meet · not yet in a triad*
 
 **W26.** Each time a foe resists a Stun, Silence or Slow, every ally gains Haste.
-<br>*piece · control resistance (RESISTED, IMMUNE), Haste · writer: where the ways meet · also Burst · **needs a new block:** an event that fires when control resistance shortens or refuses a control status · not yet in a triad*
+<br>*piece · control resistance (RESISTED, IMMUNE), Haste · writer: where the ways meet · **needs a new block:** an event that fires when control resistance shortens or refuses a control status · not yet in a triad*
 
 **W32.** Slows the foe with the fastest basic attack and gives Haste to the ally with the fastest basic attack. Short cooldown.
-<br>*ability · Slow, Haste, swing · writer: where the ways meet · also Build up · not yet in a triad*
+<br>*ability · Slow, Haste, swing · writer: where the ways meet · second way: Burst · not yet in a triad*
 
 **W46.** Fixates the foe with the highest Attack on this unit, and gives this unit Blur. Medium cooldown.
-<br>*ability · Fixated, Blur, the foe with the highest Attack · writer: where the ways meet · also Sustain · not yet in a triad*
+<br>*ability · Fixated, Blur, the foe with the highest Attack · writer: where the ways meet · second way: Sustain · not yet in a triad*
 
 **W48.** This unit's basic attacks go to a foe that is winding up when there is one, and its hits on such a foe take MP from it and give it to this unit.
-<br>*piece · aim, casting, mp · writer: where the ways meet · also Sustain · in triad b1-10*
+<br>*piece · aim, casting, mp · writer: where the ways meet · in triad b1-10*
 
 **W49.** This unit's hits add Rot, and whenever Rot cuts a foe's healing, this unit heals by the amount cut.
-<br>*piece · Rot, healing_received, healed · writer: where the ways meet · also Sustain · **needs a new block:** an event for healing that a cut to healing received held back, carrying the amount held back · not yet in a triad*
+<br>*piece · Rot, healing_received, healed · writer: where the ways meet · second way: Sustain · **needs a new block:** an event for healing that a cut to healing received held back, carrying the amount held back · not yet in a triad*
 
 **X02.** While its user's other hand is empty, this ability also adds Sunder to each foe it hits.
-<br>*version · offhand false: "an offhand under a two-handed weapon is none"; Sunder: "each stack makes its holder take a little more damage of every kind"; a scale's `when`: "1 if the condition holds" · writer: thin corners · also Build up · in triad b1-10*
+<br>*version · offhand false: "an offhand under a two-handed weapon is none"; Sunder: "each stack makes its holder take a little more damage of every kind"; a scale's `when`: "1 if the condition holds" · writer: thin corners · in triad b1-10*
 
 **X07.** When a fight is won, this unit's abilities that Stun or Silence start the next fight ready.
 <br>*piece · fight_won; cooldown set ready; does: "apply this status (stun, silence, shield, guard...)" · writer: thin corners · **needs a new block:** a `cooldown` `which` that picks abilities by what they do, as an ability filter's `does` · not yet in a triad*
@@ -685,7 +685,7 @@ By writer: what each wrote, what's in play, and what was taken out as a double.
 <br>*piece · hit_taken; mp · writer: Sustain · not yet in a triad*
 
 **V49.** This unit's hits drain MP from their target into its own.
-<br>*piece · Siphon; hit · writer: Sustain · also Debuff or disable · in triad b1-18*
+<br>*piece · Siphon; hit · writer: Sustain · in triad b1-18*
 
 **V50.** Each time another ally heals this unit, that ally regains a little MP.
 <br>*piece · healed; mp; other · writer: Sustain · not yet in a triad*
@@ -706,25 +706,25 @@ By writer: what each wrote, what's in play, and what was taken out as a double.
 <br>*seat · mods (cooldown, if); hpBelow; does · writer: Sustain · not yet in a triad*
 
 **W13.** When this ability knocks out a foe, the ally with the lowest share of HP is healed by what was left of the blow.
-<br>*version · ko (amount), Heal, the ally with the lowest share of max HP · writer: where the ways meet · also Burst · not yet in a triad*
+<br>*version · ko (amount), Heal, the ally with the lowest share of max HP · writer: where the ways meet · not yet in a triad*
 
 **W16.** Gives Clarity to the ally with the lowest share of MP and brings that ally's next ability to ready. Long cooldown.
-<br>*ability · Clarity, cooldown (soonest, ready), mp_share · writer: where the ways meet · also Burst · not yet in a triad*
+<br>*ability · Clarity, cooldown (soonest, ready), mp_share · writer: where the ways meet · second way: Burst · not yet in a triad*
 
 **W18.** The unit in this seat has its Attack and Defense swapped.
-<br>*seat · swap, Attack, Defense · writer: where the ways meet · also Burst · in triad b1-06*
+<br>*seat · swap, Attack, Defense · writer: where the ways meet · in triad b1-06*
 
 **W35.** The first time in a fight this unit's HP falls below half, the start-of-fight effects of its gear and seat happen again.
-<br>*piece · restart, hp_low, fight_start · writer: where the ways meet · also Build up, Burst · not yet in a triad*
+<br>*piece · restart, hp_low, fight_start · writer: where the ways meet · not yet in a triad*
 
 **W39.** Each time a foe's Chill shatters, every ally gains Regen.
-<br>*seat · status_capped, Chill, Regen · writer: where the ways meet · also Build up, Debuff or disable · not yet in a triad*
+<br>*seat · status_capped, Chill, Regen · writer: where the ways meet · not yet in a triad*
 
 **W40.** Heals every ally a little, and a little more for every affliction stack across all foes. Medium cooldown.
-<br>*ability · Heal, count (side, stacks), affliction · writer: where the ways meet · also Build up · not yet in a triad*
+<br>*ability · Heal, count (side, stacks), affliction · writer: where the ways meet · not yet in a triad*
 
 **W41.** This ability also gives the ally it cleanses Might for each debuff it removes.
-<br>*version · Cleanse, Might, count (debuffs) · writer: where the ways meet · also Build up · in triad b1-11*
+<br>*version · Cleanse, Might, count (debuffs) · writer: where the ways meet · second way: Build up · in triad b1-11*
 
 **X03.** Every ally that wears the same type of armor as the unit in this seat takes a little less damage.
 <br>*seat · party effect: "stats or statuses for every ally"; armor: "Wears armor of one of these types"; damage-taken modifiers · writer: thin corners · **needs a new block:** an armor condition that matches the reading unit's own type, as `kin` does for weapons · in triad b1-09*
