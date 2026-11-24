@@ -240,11 +240,11 @@ Ten triads, each inside one way to win, the three cards on different mechanics a
 
 ## Batch 1
 
-Twenty-five triads, drawn at random by the session's script (seed 1, fixed before the draw) under these rules: each inside one way to win; its three cards share no mechanic, by the session's tags, and are of three different kinds; no card already seen in a triad; none of the director's own, whose lines aren't checked yet. 6 Burst, 7 Build up, 6 Debuff or disable, 6 Sustain. Nothing in this batch is aimed: aiming starts with batch 2. One triad was repaired after the draw: in b1-11, V43 and V51 both paid in HP, a shared mechanic the tags missed, so V43 was swapped for a random unused Sustain version that shares no mechanic with the other two (W41). The page shows the triads in this order, the cards in the order given.
+Twenty-five triads, drawn at random by the session's script (seed 1, fixed before the draw) under these rules: each inside one way to win; its three cards share no mechanic, by the session's tags, and are of three different kinds; no card already seen in a triad; none of the director's own, whose lines aren't checked yet. 6 Burst, 7 Build up, 6 Debuff or disable, 6 Sustain. Nothing in this batch is aimed: aiming starts with batch 2. One triad was repaired after the draw: in b1-11, V43 and V51 both paid in HP, a shared mechanic the tags missed, so V43 was swapped for a random unused Sustain version that shares no mechanic with the other two (W41). The page shows the triads in this order, the cards in the order given. Before any answer, 38 of the batch's cards were reworded at the director's request to name whose it is (see `cards.md`, Reworded for clarity); the text here is what the page shows.
 
 ### b1-01 · Burst
 
-- **A (R36, piece):** When an ally crits a foe, it strikes that foe out of turn.
+- **A (R36, piece):** When an ally crits a foe, this unit strikes that foe out of turn.
 - **B (R19, version):** This ability comes round a little sooner for each foe its hits land on.
 - **C (R07, ability):** Strikes the foe with the most Bleed many times in a row, for a little each.
 
@@ -253,23 +253,23 @@ Twenty-five triads, drawn at random by the session's script (seed 1, fixed befor
 ### b1-02 · Debuff or disable
 
 - **A (T15, ability):** Moves every debuff on the caster except Doom onto a random foe. It waits until the caster has a debuff.
-- **B (T18, version):** Each of its hits sets the target's basic attack back to the start of its swing.
-- **C (T32, piece):** After each of its hits on a foe holding a Shield, the Shield is removed.
+- **B (T18, version):** Each hit of this ability sets the target's basic attack back to the start of its swing.
+- **C (T32, piece):** After each of this unit's hits on a foe holding a Shield, the Shield is removed.
 
 *Not answered yet.*
 
 ### b1-03 · Burst
 
-- **A (R48, seat):** When any foe's Chill shatters, its next ability is ready.
-- **B (R39, piece):** When its Shield breaks, it deals damage to every foe for a share of the most the Shield held.
+- **A (R48, seat):** When any foe's Chill shatters, the next ability of the unit in this seat is ready.
+- **B (R39, piece):** When this unit's Shield breaks, this unit deals damage to every foe for a share of the most the Shield held.
 - **C (R06, ability):** Strikes a foe several times, each strike adding Sunder, so each lands harder than the last.
 
 *Not answered yet.*
 
 ### b1-04 · Burst
 
-- **A (R47, seat):** Starts each fight Hidden, and its hits deal much more while it's Hidden.
-- **B (R28, piece):** Its ability hits always crit, and its basic attacks never do.
+- **A (R47, seat):** The unit in this seat starts each fight Hidden, and its hits deal much more while it's Hidden.
+- **B (R28, piece):** This unit's ability hits always crit, and its basic attacks never do.
 - **C (R25, version):** This ability hits every foe instead of one, for a little less on each.
 
 *Not answered yet.*
@@ -277,23 +277,23 @@ Twenty-five triads, drawn at random by the session's script (seed 1, fixed befor
 ### b1-05 · Build up
 
 - **A (S10, ability):** Adds a lot of Sunder to the foe with the highest current HP.
-- **B (S16, version):** It deals a little more each time it's cast in a fight, up to a limit.
+- **B (S16, version):** This ability deals a little more each time it's cast in a fight, up to a limit.
 - **C (P19, seat):** Each time Bleed on any foe deals its damage, the next ability of the unit in this seat comes a little closer.
 
 *Not answered yet.*
 
 ### b1-06 · Sustain
 
-- **A (V03, version):** The Shield grows for each foe still standing.
-- **B (W18, seat):** The unit here has its Attack and Defense swapped.
-- **C (V34, piece):** When one of its heals leaves the ally still under half its HP, the heal goes off again at once, free.
+- **A (V03, version):** This ability's Shield grows for each foe still standing.
+- **B (W18, seat):** The unit in this seat has its Attack and Defense swapped.
+- **C (V34, piece):** When one of this unit's heals leaves the ally still under half its HP, the heal goes off again at once, free.
 
 *Not answered yet.*
 
 ### b1-07 · Debuff or disable
 
-- **A (T33, piece):** Its abilities get past Taunt.
-- **B (T23, version):** Also Stuns every foe holding Sunder at its cap.
+- **A (T33, piece):** This unit's abilities get past Taunt.
+- **B (T23, version):** This ability also Stuns every foe holding Sunder at its cap.
 - **C (T13, ability):** Rots the foe with the lowest share of its HP, so heals on it do much less.
 
 *Not answered yet.*
@@ -301,15 +301,15 @@ Twenty-five triads, drawn at random by the session's script (seed 1, fixed befor
 ### b1-08 · Build up
 
 - **A (S52, seat):** The unit in this seat's basic attacks quicken a little each time it adds an affliction, for the rest of the fight, up to a limit.
-- **B (W06, piece):** Its crits add Bleed to their target, more the harder the crit.
-- **C (S21, version):** It now aims at the foe with the fewest stacks of what it adds, spreading them across the foes.
+- **B (W06, piece):** This unit's crits add Bleed to their target, more the harder the crit.
+- **C (S21, version):** This ability now aims at the foe with the fewest stacks of what it adds, spreading them across the foes.
 
 *Not answered yet.*
 
 ### b1-09 · Sustain
 
 - **A (V24, ability):** Brings a decoy into the fight that draws the foes' picks until it falls; long cooldown.
-- **B (V10, piece):** Hits on it never crit.
+- **B (V10, piece):** Hits on this unit never crit.
 - **C (X03, seat):** Every ally that wears the same type of armor as the unit in this seat takes a little less damage.
 
 *Not answered yet.*
@@ -318,14 +318,14 @@ Twenty-five triads, drawn at random by the session's script (seed 1, fixed befor
 
 - **A (T11, ability):** Gives each foe one of Weaken, Slow or Silence, picked at random for each.
 - **B (X02, version):** While its user's other hand is empty, this ability also adds Sunder to each foe it hits.
-- **C (W48, piece):** Its basic attacks go to a foe that is winding up when there is one, and its hits on such a foe take MP from it and give it to this unit.
+- **C (W48, piece):** This unit's basic attacks go to a foe that is winding up when there is one, and its hits on such a foe take MP from it and give it to this unit.
 
 *Not answered yet.*
 
 ### b1-11 · Sustain
 
 - **A (V09, ability):** Gives Guard to every ally with less Defense than the caster.
-- **B (V51, piece):** While under a quarter of its MP, its abilities cost HP instead of MP.
+- **B (V51, piece):** While this unit is under a quarter of its MP, its abilities cost HP instead of MP.
 - **C (W41, version):** This ability also gives the ally it cleanses Might for each debuff it removes.
 
 *Not answered yet.*
@@ -334,15 +334,15 @@ Twenty-five triads, drawn at random by the session's script (seed 1, fixed befor
 
 - **A (P31, piece):** When a hit on another ally would take a large share of its max HP, this unit takes the whole hit instead.
 - **B (V35, ability):** Gives Regen to every ally; long cooldown.
-- **C (V27, seat):** Can't be given debuffs for a while at the start of each fight.
+- **C (V27, seat):** The unit in this seat can't be given debuffs for a while at the start of each fight.
 
 *Not answered yet.*
 
 ### b1-13 · Burst
 
 - **A (R02, ability):** Gives every ally Haste. It has a long cooldown.
-- **B (R38, piece):** Each time it dodges a hit, its next ability comes a good way closer.
-- **C (R49, seat):** When an ally gains Might, it gains the same Might.
+- **B (R38, piece):** Each time this unit dodges a hit, its next ability comes a good way closer.
+- **C (R49, seat):** When an ally gains Might, the unit in this seat gains the same Might.
 
 *Not answered yet.*
 
@@ -350,22 +350,22 @@ Twenty-five triads, drawn at random by the session's script (seed 1, fixed befor
 
 - **A (R22, version):** This ability deals much more, but its cooldown is much longer.
 - **B (R09, ability):** Strikes the foe with the highest current HP for a share of its current HP.
-- **C (R43, seat):** Starts each fight with a lot of Might.
+- **C (R43, seat):** The unit in this seat starts each fight with a lot of Might.
 
 *Not answered yet.*
 
 ### b1-15 · Build up
 
-- **A (S19, version):** It now comes round on a quick cooldown, adding fewer stacks each time.
+- **A (S19, version):** This ability now comes round on a quick cooldown, adding fewer stacks each time.
 - **B (S05, ability):** Strikes a foe several times in quick succession, each hit adding Bleed. Each hit after the first sets off the Bleed the hit before it left.
-- **C (W37, seat):** Each time the unit here is hit, every ally with less Defense than it gains Might.
+- **C (W37, seat):** Each time the unit in this seat is hit, every ally with less Defense than it gains Might.
 
 *Not answered yet.*
 
 ### b1-16 · Build up
 
-- **A (S11, ability):** Strikes the foe it has struck most this fight, dealing more for each time it has struck that foe.
-- **B (S17, version):** It now also gives its user a stack of Might for each foe its hits land on.
+- **A (S11, ability):** Strikes the foe this unit has struck most this fight, dealing more for each time it has struck that foe.
+- **B (S17, version):** This ability now also gives its user a stack of Might for each foe its hits land on.
 - **C (S37, piece):** When a foe holding Burn falls, its Burn lands on another random foe.
 
 *Not answered yet.*
@@ -373,22 +373,22 @@ Twenty-five triads, drawn at random by the session's script (seed 1, fixed befor
 ### b1-17 · Sustain
 
 - **A (V28, ability):** Lifts every debuff from the ally that holds the most.
-- **B (V06, piece):** Each time it gains a Shield, the other ally with the lowest share of HP gains half as much.
+- **B (V06, piece):** Each time this unit gains a Shield, the other ally with the lowest share of HP gains half as much.
 - **C (P33, version):** This heal instead sets its ally's HP back to what it was a short while ago; that isn't healing, so Rot can't cut it.
 
 *Not answered yet.*
 
 ### b1-18 · Sustain
 
-- **A (V49, piece):** Its hits drain MP from their target into its own.
-- **B (V17, seat):** Draws far more of the foes' picks, and gains Defense.
+- **A (V49, piece):** This unit's hits drain MP from their target into its own.
+- **B (V17, seat):** The unit in this seat draws far more of the foes' picks, and gains Defense.
 - **C (V26, ability):** Makes the ally with the lowest share of HP take no damage for a brief time; very long cooldown.
 
 *Not answered yet.*
 
 ### b1-19 · Burst
 
-- **A (W20, piece):** Its hits are a little more likely to crit for each debuff their target holds.
+- **A (W20, piece):** This unit's hits are a little more likely to crit for each debuff their target holds.
 - **B (R10, ability):** Hits every foe, harder on each the more foes it hits.
 - **C (R16, version):** This ability winds up in a moment, but deals a little less.
 
@@ -398,7 +398,7 @@ Twenty-five triads, drawn at random by the session's script (seed 1, fixed befor
 
 - **A (P23, piece):** Each time a foe hits another ally, that foe becomes Fixated on this unit.
 - **B (T08, ability):** Adds Shock on a quick cooldown to the foe with the slowest basic attack, so its heavy blows land weaker.
-- **C (T44, seat):** The unit here has a lot more Accuracy.
+- **C (T44, seat):** The unit in this seat has a lot more Accuracy.
 
 *Not answered yet.*
 
@@ -406,7 +406,7 @@ Twenty-five triads, drawn at random by the session's script (seed 1, fixed befor
 
 - **A (T05, ability):** Removes Taunt from every foe. It waits until a foe is Taunting.
 - **B (T29, piece):** At the start of each fight, each foe's ability with the longest cooldown starts on its full cooldown.
-- **C (T46, seat):** Abilities of the unit here that Stun, Silence or Slow come round much sooner.
+- **C (T46, seat):** Abilities of the unit in this seat that Stun, Silence or Slow come round much sooner.
 
 *Not answered yet.*
 
@@ -414,22 +414,22 @@ Twenty-five triads, drawn at random by the session's script (seed 1, fixed befor
 
 - **A (W29, version):** This ability adds a lot more stacks to a target that holds Slow.
 - **B (S48, seat):** The unit in this seat gains a little Accuracy each time one of its hits is dodged, for the rest of the fight.
-- **C (S40, piece):** When it brings a foe's affliction to its cap, its first ability resolves again at once, free.
+- **C (S40, piece):** When this unit brings a foe's affliction to its cap, this unit's first ability resolves again at once, free.
 
 *Not answered yet.*
 
 ### b1-23 · Build up
 
-- **A (S32, piece):** Its hits on a foe at its Sunder cap always crit.
+- **A (S32, piece):** This unit's hits on a foe at its Sunder cap always crit.
 - **B (S08, ability):** Knocks out a foe below half its HP that holds every affliction. It waits until there is one.
-- **C (S22, version):** Its heal now also gives the ally it heals a stack of Might.
+- **C (S22, version):** This heal now also gives the ally it heals a stack of Might.
 
 *Not answered yet.*
 
 ### b1-24 · Debuff or disable
 
-- **A (T53, seat):** When the unit here dodges a hit, the attacker is Weakened.
-- **B (T42, piece):** Its hits push the target's abilities a little further from ready.
+- **A (T53, seat):** When the unit in this seat dodges a hit, the attacker is Weakened.
+- **B (T42, piece):** This unit's hits push the target's abilities a little further from ready.
 - **C (T10, ability):** Marks the foe holding the most debuffs, so the party's basic attacks go to it.
 
 *Not answered yet.*
@@ -438,6 +438,6 @@ Twenty-five triads, drawn at random by the session's script (seed 1, fixed befor
 
 - **A (X05, version):** Each hit of this ability also sets off whatever its user's basic attacks set off, its passive included. It never brings an extra strike.
 - **B (S46, seat):** The unit in this seat adds more stacks with every affliction it applies, and its hits deal less.
-- **C (W36, piece):** Each time it gains Guard, it gains a little Thorns for the rest of the fight.
+- **C (W36, piece):** Each time this unit gains Guard, it gains a little Thorns for the rest of the fight.
 
 *Not answered yet.*
