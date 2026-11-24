@@ -1,0 +1,882 @@
+<title>Pilot Triads</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@500;600&display=swap">
+<style>
+/* Layout: one triad at a time; three cards in a row on wide screens, a column on a phone; the answer form under them. */
+:root {
+  --bg: #eceef2;
+  --surface: #ffffff;
+  --surface-2: #f5f6f9;
+  --ink: #1b1f2a;
+  --muted: #586073;
+  --line: #d3d8e1;
+  --accent: #9a4a12;
+  --accent-ink: #ffffff;
+  --accent-soft: #f5e6d8;
+  --warn: #8a2c1d;
+  --warn-soft: #f7e1dc;
+  --ok: #2f6b45;
+  --font-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-head: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --radius: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12151c;
+    --surface: #1b1f29;
+    --surface-2: #161a23;
+    --ink: #e6e8ee;
+    --muted: #9aa1b2;
+    --line: #2d3342;
+    --accent: #e59a55;
+    --accent-ink: #1b1309;
+    --accent-soft: #352719;
+    --warn: #f0a08f;
+    --warn-soft: #3a211c;
+    --ok: #86c79d;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12151c;
+  --surface: #1b1f29;
+  --surface-2: #161a23;
+  --ink: #e6e8ee;
+  --muted: #9aa1b2;
+  --line: #2d3342;
+  --accent: #e59a55;
+  --accent-ink: #1b1309;
+  --accent-soft: #352719;
+  --warn: #f0a08f;
+  --warn-soft: #3a211c;
+  --ok: #86c79d;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+}
+.wrap {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 48px;
+  display: grid;
+  gap: 20px;
+}
+button, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.top { display: grid; gap: 12px; }
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0;
+}
+.dots { display: flex; flex-wrap: wrap; gap: 6px; }
+.dot {
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+@media (max-width: 420px) { .dots { gap: 5px; } .dot { width: 29px; height: 32px; font-size: 12px; } }
+.dot.saved { background: var(--accent-soft); border-color: var(--accent); color: var(--ink); }
+.dot.current { border-width: 2px; border-color: var(--ink); color: var(--ink); }
+
+.banner {
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  font-size: 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  color: var(--muted);
+}
+.banner.warn { background: var(--warn-soft); border-color: var(--warn); color: var(--ink); }
+
+.triad { display: grid; gap: 16px; }
+.meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
+h1 {
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: clamp(1.5rem, 1.2rem + 1.4vw, 2.1rem);
+  line-height: 1.15;
+  margin: 0;
+  text-wrap: balance;
+}
+.hint { margin: 0; color: var(--muted); font-size: 15px; }
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+@media (max-width: 700px) { .cards { grid-template-columns: 1fr; } }
+.card {
+  position: relative;
+  text-align: left;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px 16px 18px;
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  min-width: 0;
+  transition: border-color 120ms ease, background-color 120ms ease, opacity 120ms ease;
+}
+.card:hover { border-color: var(--muted); }
+.card .letter {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  display: flex; justify-content: space-between; gap: 8px;
+}
+.card .tag { visibility: hidden; color: var(--accent); }
+.card .text { font-size: 17px; line-height: 1.5; overflow-wrap: anywhere; }
+.card.odd { border: 2px solid var(--accent); padding: 13px 15px 17px; }
+.card.odd .tag { visibility: visible; }
+.card.pair { background: var(--surface-2); }
+.cards.locked .card { cursor: default; }
+.cards.locked .card:hover { border-color: var(--line); }
+
+.choices { display: flex; flex-wrap: wrap; gap: 8px; }
+.choice {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 15px;
+}
+.choice[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+.form { display: grid; gap: 16px; }
+.block {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px;
+  display: grid;
+  gap: 14px;
+}
+.block h2 {
+  font-family: var(--font-head);
+  font-weight: 500;
+  font-size: 17px;
+  margin: 0;
+}
+.field { display: grid; gap: 6px; }
+.field label { font-weight: 700; font-size: 15px; }
+.field .sub { font-weight: 400; color: var(--muted); }
+textarea {
+  width: 100%;
+  min-height: 64px;
+  resize: vertical;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-2);
+  padding: 10px 12px;
+  line-height: 1.45;
+}
+textarea.tall { min-height: 84px; }
+.pick { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.pick span { font-size: 14px; color: var(--muted); margin-right: 4px; }
+.chip {
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  border-radius: 8px;
+  padding: 5px 11px;
+  font-size: 14px;
+}
+.chip.mono { font-family: var(--font-mono); }
+.chip[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+
+.actions {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+}
+.btn {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 15px;
+}
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 700; }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.status { font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.status.ok { color: var(--ok); }
+.status.err { color: var(--warn); }
+.spacer { flex: 1 1 auto; }
+
+.field-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; }
+.field-head label { min-width: 0; }
+.mic {
+  flex: none;
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 14px;
+}
+.mic.on { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.partial { font-size: 14px; color: var(--muted); font-style: italic; min-height: 1.2em; }
+.dictmsg { margin: 0; font-size: 14px; color: var(--warn); }
+
+.foot { font-size: 14px; color: var(--muted); display: grid; gap: 4px; max-width: 70ch; }
+.foot p { margin: 0; }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <p class="eyebrow">The pilot · ten triads</p>
+    <nav class="dots" id="dots" aria-label="Triads"></nav>
+    <div class="banner" id="store">Connecting to the page's store…</div>
+  </header>
+
+  <main class="triad" id="triad">
+    <div class="meta">
+      <span class="eyebrow" id="count">Triad 1 of 10</span>
+    </div>
+    <h1>Which two feel connected?</h1>
+    <p class="hint" id="hint">Tap the odd one out, or pick one of the options under the cards.</p>
+    <div class="cards" id="cards"></div>
+    <div class="choices" id="choices">
+      <button class="choice" type="button" id="c-none-belong" data-kind="none-belong" aria-pressed="false">No two belong</button>
+      <button class="choice" type="button" id="c-split" data-kind="split" aria-pressed="false">Splits two ways</button>
+      <button class="choice" type="button" id="c-none-grabs" data-kind="none-grabs" aria-pressed="false">None of these grabs me</button>
+    </div>
+
+    <div class="form" id="form"></div>
+
+    <p class="dictmsg" id="dictmsg" hidden></p>
+    <div class="actions">
+      <button class="btn" type="button" id="prev">Back</button>
+      <button class="btn primary" type="button" id="save">Save and next</button>
+      <span class="status" id="status"></span>
+      <span class="spacer"></span>
+      <button class="btn" type="button" id="next">Skip</button>
+    </div>
+  </main>
+
+  <footer class="foot">
+    <p id="tally"></p>
+    <p>After your first save, reload the page and check the answer is still there before going on.</p>
+  </footer>
+</div>
+
+<script type="application/json" id="triads-data">[
+ {
+  "id": "pilot-01",
+  "way": "Burst",
+  "cards": [
+   "P10",
+   "P05",
+   "P02"
+  ],
+  "text": [
+   "The unit in this seat keeps swinging its basic attack through its own wind-ups and recoveries.",
+   "Pays half this unit's current HP, then hits a foe for a great deal more than the HP it paid.",
+   "This ability hits a lot harder against a foe that hasn't acted yet this fight."
+  ]
+ },
+ {
+  "id": "pilot-02",
+  "way": "Build up",
+  "cards": [
+   "P17",
+   "P13",
+   "P16"
+  ],
+  "text": [
+   "Whenever the unit in this seat gains Might, every other ally gains as many stacks.",
+   "Lays a lot of Shock on the foe with the fastest basic attack and on the foe with the slowest.",
+   "This unit's extra strikes, such as Double strike's second hit, count as basic attacks for everything its basic attacks lay on foes."
+  ]
+ },
+ {
+  "id": "pilot-03",
+  "way": "Debuff or disable",
+  "cards": [
+   "P24",
+   "P27",
+   "P21"
+  ],
+  "text": [
+   "This ability also strips a buff from its target and gives it to this unit.",
+   "Whenever a foe is healed, the unit in this seat gives it Rot.",
+   "Silences a foe that is winding up an ability, so it loses the wind-up; it waits until some foe is winding up."
+  ]
+ },
+ {
+  "id": "pilot-04",
+  "way": "Sustain",
+  "cards": [
+   "P36",
+   "P34",
+   "P35"
+  ],
+  "text": [
+   "Foes pick among the party by each ally's max HP instead of by its Aggro.",
+   "Trades HP shares with the other ally with the lowest share of max HP, leaving each at the other's share.",
+   "Hits on this unit don't hurt at once: their damage adds up and lands all together a while after the first."
+  ]
+ },
+ {
+  "id": "pilot-05",
+  "way": "Burst",
+  "cards": [
+   "P01",
+   "P09",
+   "P06"
+  ],
+  "text": [
+   "The unit in this seat always crits a foe that is winding up an ability.",
+   "Marks the foe with the lowest current HP and hits it, harder the more HP it is missing.",
+   "This unit's damaging abilities wait for one another: once all are ready, they go off together and only one is paid for."
+  ]
+ },
+ {
+  "id": "pilot-06",
+  "way": "Debuff or disable",
+  "cards": [
+   "P30",
+   "P22",
+   "P28"
+  ],
+  "text": [
+   "Whenever an ally falls below half HP, the foe that last hit it is Stunned.",
+   "Bewilders the foe with the highest Attack, so its next basic attack strikes one of its own side.",
+   "This ability also sends its target's next ability back to a full cooldown."
+  ]
+ },
+ {
+  "id": "pilot-07",
+  "way": "Build up",
+  "cards": [
+   "P20",
+   "P12",
+   "P18"
+  ],
+  "text": [
+   "Once the fight has gone on long enough to enrage, this unit's abilities wind up in a moment.",
+   "This ability adds more Burn the more Burn its target already holds.",
+   "Each time a foe hits another ally, that foe gains whatever the basic attacks of the unit in this seat lay on a foe."
+  ]
+ },
+ {
+  "id": "pilot-08",
+  "way": "Sustain",
+  "cards": [
+   "P39",
+   "P40",
+   "P37"
+  ],
+  "text": [
+   "MP this unit gains past full goes to the ally with the lowest share of max MP.",
+   "Taunts, and makes every other ally Hidden for a while.",
+   "This revive brings its ally back with every ability ready, not on a full cooldown."
+  ]
+ },
+ {
+  "id": "pilot-09",
+  "way": "Burst",
+  "cards": [
+   "P03",
+   "P07",
+   "P08"
+  ],
+  "text": [
+   "When a fight is won, the ability this unit has first in its order comes off cooldown, ready to open the next fight.",
+   "After its hits, this ability knocks out every foe left with only a small share of its HP.",
+   "While this unit holds Haste, each of its abilities that deals damage goes off a second time at once, free."
+  ]
+ },
+ {
+  "id": "pilot-10",
+  "way": "Debuff or disable",
+  "cards": [
+   "P26",
+   "P29",
+   "P25"
+  ],
+  "text": [
+   "When an Aegis on the unit in this seat blocks a hit, the attacker is Weakened.",
+   "Makes a foe that holds Guard Brittle, or a random foe if none does.",
+   "Whenever this unit gains a debuff, all its debuffs move onto a random foe."
+  ]
+ }
+]</script>
+<script>
+(function () {
+  "use strict";
+  var TRIADS = JSON.parse(document.getElementById("triads-data").textContent);
+  var WAYS = {
+    "Burst": "damage that lands earlier than it otherwise would",
+    "Build up": "the party growing more dangerous as the fight goes on",
+    "Debuff or disable": "turning the fight's terms against the foes",
+    "Sustain": "not dying, and keeping the fight going"
+  };
+  var WAY_NAMES = Object.keys(WAYS);
+  var LETTERS = ["A", "B", "C"];
+  var DRAFT_KEY = "pilot-triads-drafts-v1";
+
+  var db = null;
+  var dbState = "connecting"; // connecting | ready | absent | error
+  var saved = {};   // triad id -> saved doc body
+  var drafts = {};  // triad id -> working state
+  var dirty = {};   // triad id -> true when changed since saved
+  var idx = 0;
+  var saving = false;
+  var dict = null;          // dictation namespace, when this view offers it
+  var dictTarget = null;    // id of the text box taking dictation
+  var dictState = "idle";
+  var dictPartial = "";
+  var renderedIdx = -1;
+
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function blankAnswer() { return { odd: null, wants: "", instead: "", add: "", addWays: [] }; }
+  function blankDraft() { return { kind: null, answers: [blankAnswer(), blankAnswer()], note: "" }; }
+
+  function fromSaved(t, body) {
+    var d = blankDraft();
+    d.kind = body.kind || null;
+    d.note = body.note || "";
+    var list = Array.isArray(body.answers) ? body.answers : [];
+    for (var i = 0; i < 2 && i < list.length; i++) {
+      var a = list[i] || {};
+      var letter = null;
+      if (a.odd) { var k = t.cards.indexOf(a.odd); if (k >= 0) letter = LETTERS[k]; }
+      d.answers[i] = { odd: letter, wants: a.wants || "", instead: a.instead || "", add: a.add || "", addWays: waysOf(a) };
+    }
+    return d;
+  }
+
+  function loadDrafts() {
+    try {
+      var raw = localStorage.getItem(DRAFT_KEY);
+      if (!raw) return;
+      var obj = JSON.parse(raw);
+      if (obj && typeof obj === "object") {
+        Object.keys(obj).forEach(function (k) {
+          if (!obj[k] || !obj[k].d) return;
+          var d = obj[k].d;
+          (d.answers || []).forEach(function (a) { if (a) a.addWays = waysOf(a); });
+          drafts[k] = d; dirty[k] = true;
+        });
+      }
+    } catch (e) {}
+  }
+  function storeDrafts() {
+    try {
+      var out = {};
+      Object.keys(dirty).forEach(function (k) { if (dirty[k] && drafts[k]) out[k] = { d: drafts[k] }; });
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(out));
+    } catch (e) {}
+  }
+
+  function current() { return TRIADS[idx]; }
+  function draftFor(t) {
+    if (!drafts[t.id]) drafts[t.id] = saved[t.id] ? fromSaved(t, saved[t.id]) : blankDraft();
+    return drafts[t.id];
+  }
+  function touch(t) { dirty[t.id] = true; storeDrafts(); renderStatus(); renderDots(); }
+
+  function renderDots() {
+    var nav = document.getElementById("dots");
+    nav.textContent = "";
+    TRIADS.forEach(function (t, i) {
+      var b = el("button", "dot", String(i + 1));
+      b.type = "button";
+      b.id = "dot-" + t.id;
+      if (saved[t.id]) b.classList.add("saved");
+      if (i === idx) { b.classList.add("current"); b.setAttribute("aria-current", "step"); }
+      var label = "Triad " + (i + 1) + (saved[t.id] ? ", saved" : ", not saved");
+      b.setAttribute("aria-label", label);
+      b.title = label;
+      b.addEventListener("click", function () { idx = i; render(); });
+      nav.appendChild(b);
+    });
+    var n = TRIADS.filter(function (t) { return saved[t.id]; }).length;
+    document.getElementById("tally").textContent = n + " of " + TRIADS.length + " triads saved.";
+  }
+
+  function renderStore() {
+    var b = document.getElementById("store");
+    b.classList.remove("warn");
+    if (dbState === "connecting") { b.textContent = "Connecting to the page's store…"; }
+    else if (dbState === "ready") {
+      var n = Object.keys(saved).length;
+      b.textContent = n ? ("Loaded " + n + " saved answer" + (n === 1 ? "" : "s") + " from the page's store.") : "The page's store is connected. Nothing saved yet.";
+    } else if (dbState === "slow") {
+      b.textContent = "The page's store hasn't answered yet. Saved answers may not be showing.";
+      b.classList.add("warn");
+    } else {
+      b.textContent = "This view can't reach the page's store, so answers won't save. Open the page on claude.ai, signed in.";
+      b.classList.add("warn");
+    }
+  }
+
+  function renderStatus() {
+    var t = current(); if (!t) return;
+    var s = document.getElementById("status");
+    s.className = "status";
+    if (saving) { s.textContent = "Saving…"; return; }
+    if (dirty[t.id] && saved[t.id]) s.textContent = "Changed since it was saved";
+    else if (dirty[t.id]) s.textContent = "Not saved yet";
+    else if (saved[t.id]) {
+      var at = saved[t.id].savedAt ? new Date(saved[t.id].savedAt) : null;
+      s.textContent = "Saved" + (at && !isNaN(at) ? " " + at.toLocaleString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "");
+      s.classList.add("ok");
+    } else s.textContent = "";
+    var d = draftFor(t);
+    var save = document.getElementById("save");
+    save.disabled = !d.kind || !db || dbState === "error" || dbState === "absent";
+    save.textContent = idx === TRIADS.length - 1 ? "Save" : "Save and next";
+    document.getElementById("prev").disabled = idx === 0;
+    document.getElementById("next").disabled = idx === TRIADS.length - 1;
+  }
+
+  function field(id, label, sub, value, onInput, tall) {
+    var f = el("div", "field");
+    var l = el("label", null, label);
+    l.htmlFor = id;
+    if (sub) { l.appendChild(document.createTextNode(" ")); l.appendChild(el("span", "sub", sub)); }
+    var ta = el("textarea", tall ? "tall" : null);
+    ta.id = id;
+    ta.value = value || "";
+    ta.addEventListener("input", function () { onInput(ta.value); });
+    var head = el("div", "field-head");
+    head.appendChild(l);
+    if (dict) head.appendChild(micButton(id));
+    f.appendChild(head); f.appendChild(ta);
+    return f;
+  }
+
+  function micButton(id) {
+    var b = el("button", "mic", "Speak");
+    b.type = "button";
+    b.id = "mic-" + id;
+    b.setAttribute("aria-label", "Dictate into this box");
+    b.addEventListener("click", function () {
+      if (!dict) return;
+      if (dict.active() && dictTarget === id) { dict.stop(); return; }
+      dictTarget = id;
+      dictPartial = "";
+      showDictMsg("");
+      if (!dict.active()) dict.start().catch(function (e) { dictError(e && e.code); });
+      refreshMics();
+    });
+    return b;
+  }
+
+  function refreshMics() {
+    Array.prototype.forEach.call(document.querySelectorAll(".mic"), function (b) {
+      var id = b.id.slice(4);
+      var on = dictTarget === id && dictState !== "idle";
+      b.classList.toggle("on", on);
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+      b.textContent = on ? (dictState === "starting" ? "Starting\u2026" : "Stop") : "Speak";
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".partial"), function (p) { p.remove(); });
+    if (dictTarget && dictState !== "idle") {
+      var ta = document.getElementById(dictTarget);
+      if (ta) { var p = el("div", "partial", dictPartial); p.id = "partial-" + dictTarget; ta.insertAdjacentElement("afterend", p); }
+    }
+  }
+
+  function showDictMsg(text) {
+    var m = document.getElementById("dictmsg");
+    m.textContent = text;
+    m.hidden = !text;
+  }
+
+  function dictError(code) {
+    if (!code || code === "stopped" || code === "viewer_stopped" || code === "dismissed") return;
+    if (code === "unavailable") { dict = null; dictTarget = null; showDictMsg(""); render(); return; }
+    showDictMsg(
+      code === "not_granted" ? "Dictation is switched off for this page. You can turn it on in the page's Permissions menu."
+      : code === "rate_limited" ? "Dictation is busy. Try again in a moment."
+      : code === "hidden" ? "Dictation stopped when the page went out of view. Press Speak to go on."
+      : code === "time_limit" ? "Dictation stopped after an hour. Press Speak to go on."
+      : "Dictation stopped: the microphone or speech service failed. Press Speak to try again.");
+  }
+
+  // Ways to win an added card serves, as a list; older saves held one as addWay.
+  function waysOf(a) {
+    if (a && Array.isArray(a.addWays)) return a.addWays.slice();
+    return a && a.addWay ? [a.addWay] : [];
+  }
+
+  function wayPicker(id, value, onToggle) {
+    var p = el("div", "pick");
+    p.appendChild(el("span", null, "Its ways to win, any that apply:"));
+    WAY_NAMES.forEach(function (w, i) {
+      var on = value.indexOf(w) >= 0;
+      var c = el("button", "chip", w);
+      c.type = "button";
+      c.id = id + "-" + i;
+      c.setAttribute("aria-pressed", on ? "true" : "false");
+      c.addEventListener("click", function () { onToggle(w); });
+      p.appendChild(c);
+    });
+    return p;
+  }
+
+  function answerBlock(t, d, i, title, withOddPick) {
+    var a = d.answers[i];
+    var b = el("section", "block");
+    if (title) b.appendChild(el("h2", null, title));
+    if (withOddPick) {
+      var p = el("div", "pick");
+      p.appendChild(el("span", null, "The odd one out:"));
+      LETTERS.forEach(function (L) {
+        var c = el("button", "chip mono", L);
+        c.type = "button";
+        c.id = "odd-" + i + "-" + L;
+        c.setAttribute("aria-pressed", a.odd === L ? "true" : "false");
+        c.addEventListener("click", function () { a.odd = a.odd === L ? null : L; touch(t); render(); });
+        p.appendChild(c);
+      });
+      b.appendChild(p);
+    }
+    b.appendChild(field("wants-" + i, "How do the two feel connected?", "How it feels, not the mechanics they share.", a.wants, function (v) { a.wants = v; touch(t); }, true));
+    b.appendChild(field("instead-" + i, "What's the third one about?", "If it comes.", a.instead, function (v) { a.instead = v; touch(t); }));
+    var addF = field("add-" + i, "Add a fourth", "Optional. A card like the two, going by what you said connects them; ideally from another way to win.", a.add, function (v) { a.add = v; touch(t); });
+    addF.appendChild(wayPicker("addway-" + i, a.addWays, function (w) {
+      var k = a.addWays.indexOf(w);
+      if (k >= 0) a.addWays.splice(k, 1); else a.addWays.push(w);
+      a.addWays.sort(function (x, y) { return WAY_NAMES.indexOf(x) - WAY_NAMES.indexOf(y); });
+      touch(t); render();
+    }));
+    b.appendChild(addF);
+    return b;
+  }
+
+  function renderForm(t, d) {
+    var form = document.getElementById("form");
+    var active = document.activeElement && document.activeElement.id;
+    form.textContent = "";
+    if (d.kind === "pair") {
+      form.appendChild(answerBlock(t, d, 0, null, false));
+    } else if (d.kind === "split") {
+      form.appendChild(answerBlock(t, d, 0, "One way it splits", true));
+      form.appendChild(answerBlock(t, d, 1, "The other way", true));
+    }
+    if (d.kind) {
+      var nb = el("section", "block");
+      nb.appendChild(field("note", "Anything else about these three?", "Optional.", d.note, function (v) { d.note = v; touch(t); }));
+      form.appendChild(nb);
+    }
+    if (active) { var again = document.getElementById(active); if (again && again.tagName === "TEXTAREA") again.focus(); }
+    refreshMics();
+  }
+
+  function render() {
+    var t = current();
+    if (!t) return;
+    var d = draftFor(t);
+    if (renderedIdx !== idx && dict && dict.active()) { dictTarget = null; dict.stop(); }
+    renderedIdx = idx;
+    document.getElementById("count").textContent = "Triad " + (idx + 1) + " of " + TRIADS.length;
+
+    var cards = document.getElementById("cards");
+    cards.textContent = "";
+    var split = d.kind === "split";
+    cards.classList.toggle("locked", split);
+    t.cards.forEach(function (cid, k) {
+      var L = LETTERS[k];
+      var c = el("button", "card");
+      c.type = "button";
+      c.id = "card-" + L;
+      var top = el("div", "letter");
+      top.appendChild(el("span", null, L));
+      top.appendChild(el("span", "tag", "odd one out"));
+      c.appendChild(top);
+      c.appendChild(el("div", "text", t.text[k]));
+      var isOdd = d.kind === "pair" && d.answers[0].odd === L;
+      if (isOdd) c.classList.add("odd");
+      if (d.kind === "pair" && d.answers[0].odd && !isOdd) c.classList.add("pair");
+      c.setAttribute("aria-pressed", isOdd ? "true" : "false");
+      c.setAttribute("aria-label", "Card " + L + ": " + t.text[k]);
+      c.addEventListener("click", function () {
+        if (split) return;
+        if (d.kind === "pair" && d.answers[0].odd === L) { d.kind = null; d.answers[0].odd = null; }
+        else { d.kind = "pair"; d.answers[0].odd = L; }
+        touch(t); render();
+      });
+      cards.appendChild(c);
+    });
+
+    Array.prototype.forEach.call(document.querySelectorAll(".choice"), function (b) {
+      b.setAttribute("aria-pressed", d.kind === b.getAttribute("data-kind") ? "true" : "false");
+    });
+    document.getElementById("hint").textContent = split
+      ? "Give both splits below: the odd one out each time, and how the two feel connected."
+      : "Tap the odd one out, or pick one of the options under the cards.";
+
+    renderForm(t, d);
+    renderDots();
+    renderStatus();
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll(".choice"), function (b) {
+    b.addEventListener("click", function () {
+      var t = current(); if (!t) return;
+      var d = draftFor(t);
+      var k = b.getAttribute("data-kind");
+      if (d.kind === k) d.kind = null;
+      else {
+        if (k === "split" && d.kind === "pair") { /* keep the first odd pick as the first split */ }
+        d.kind = k;
+      }
+      touch(t); render();
+    });
+  });
+
+  function bodyFor(t, d) {
+    var n = d.kind === "pair" ? 1 : d.kind === "split" ? 2 : 0;
+    var answers = [];
+    for (var i = 0; i < n; i++) {
+      var a = d.answers[i];
+      var k = a.odd ? LETTERS.indexOf(a.odd) : -1;
+      answers.push({
+        odd: k >= 0 ? t.cards[k] : null,
+        oddLetter: a.odd || null,
+        wants: a.wants.trim(),
+        instead: a.instead.trim(),
+        add: a.add.trim(),
+        addWays: a.addWays.slice()
+      });
+    }
+    return {
+      triad: t.id,
+      batch: "pilot",
+      way: t.way,
+      cards: t.cards.slice(),
+      kind: d.kind,
+      answers: answers,
+      note: d.note.trim(),
+      savedAt: new Date().toISOString()
+    };
+  }
+
+  document.getElementById("save").addEventListener("click", function () {
+    var t = current(); if (!t || !db || saving) return;
+    var d = draftFor(t);
+    if (!d.kind) return;
+    var body = bodyFor(t, d);
+    saving = true; renderStatus();
+    var attempt = function (retry) {
+      return db.doc("answers/" + t.id).set(body).catch(function (e) {
+        if (retry && e && e.code === "unavailable") {
+          return new Promise(function (r) { setTimeout(r, 600 + Math.random() * 800); }).then(function () { return attempt(false); });
+        }
+        throw e;
+      });
+    };
+    attempt(true).then(function () {
+      saving = false;
+      saved[t.id] = body;
+      dirty[t.id] = false;
+      storeDrafts();
+      if (idx < TRIADS.length - 1) idx++;
+      render();
+    }).catch(function (e) {
+      saving = false;
+      renderStatus();
+      var s = document.getElementById("status");
+      s.className = "status err";
+      var code = e && e.code;
+      s.textContent = code === "invalid_argument"
+        ? "Not saved: this view isn't allowed to write to the page's store."
+        : code === "quota_exceeded" ? "Not saved: the page's store is full."
+        : "Not saved: the store didn't answer. Try Save again.";
+    });
+  });
+  document.getElementById("prev").addEventListener("click", function () { if (idx > 0) { idx--; render(); } });
+  document.getElementById("next").addEventListener("click", function () { if (idx < TRIADS.length - 1) { idx++; render(); } });
+
+  loadDrafts();
+  render();
+
+  function connect() {
+    if (!window.claude || typeof window.claude.use !== "function") { dbState = "absent"; renderStore(); renderStatus(); return; }
+    window.claude.use("db").then(function (h) {
+      if (!h) { dbState = "absent"; renderStore(); renderStatus(); return; }
+      db = h;
+      var timer = setTimeout(function () { if (dbState === "connecting") { dbState = "slow"; renderStore(); } }, 10000);
+      db.collection("answers").onSnapshot(function (snap) {
+        var next = {};
+        snap.docs.forEach(function (doc) { if (doc.exists) next[doc.id] = doc.data(); });
+        TRIADS.forEach(function (t) {
+          var before = saved[t.id] ? JSON.stringify(saved[t.id]) : null;
+          var after = next[t.id] ? JSON.stringify(next[t.id]) : null;
+          if (before !== after && !dirty[t.id]) delete drafts[t.id];
+        });
+        saved = next;
+        if (!snap.metadata || !snap.metadata.fromCache) { clearTimeout(timer); dbState = "ready"; }
+        renderStore();
+        render();
+      }, function () {
+        clearTimeout(timer);
+        dbState = "error"; renderStore(); renderStatus();
+      });
+    }).catch(function () { dbState = "absent"; renderStore(); renderStatus(); });
+  }
+  connect();
+
+  if (window.claude && typeof window.claude.use === "function") {
+    window.claude.use("dictation").then(function (d) {
+      if (!d) return;
+      dict = d;
+      d.onPartial(function (e) {
+        dictPartial = (e && e.text) || "";
+        var p = dictTarget && document.getElementById("partial-" + dictTarget);
+        if (p) p.textContent = dictPartial;
+      });
+      d.onFinal(function (e) {
+        var ta = dictTarget && document.getElementById(dictTarget);
+        if (!ta) return;
+        var add = (e && e.text) || "";
+        if (!ta.value || /\s$/.test(ta.value)) add = add.replace(/^\s+/, "");
+        ta.value += add;
+        ta.dispatchEvent(new Event("input"));
+        dictPartial = "";
+        var p = document.getElementById("partial-" + dictTarget);
+        if (p) p.textContent = "";
+      });
+      d.onState(function (e) {
+        dictState = e.state;
+        if (e.state === "idle") { dictPartial = ""; dictError(e.reason); }
+        refreshMics();
+      });
+      render();
+    }).catch(function () {});
+  }
+})();
+</script>
