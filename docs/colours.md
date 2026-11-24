@@ -40,7 +40,7 @@ Each is a wide space of its own, done in many ways. None is paired with, mirrors
 - **What it never does,** traced to its opposites.
 - **The mechanics it prefers,** some its own, some shared and done its way.
 - **Its profile:** one to four stars on each way to win, never none, since every colour can do each its own way, however weakly. Every colour has a peak and a hole, however wide it is: a colour with no hole pairs with anything and never needs a partner, which is a colour good at everything by another road.
-- **Its temperament is the connective tissue between its mechanics,** and its identity: a pattern, not something born from any one mechanic. Most mechanics belong to more than one colour, read through each one's temperament and set among different company, so colours aren't sorted by mechanics. A temperament still has to be carried by gameplay, or it's a theme painted on.
+- **Its temperament is the connective tissue between its mechanics:** a pattern, not something born from any one mechanic. Most mechanics belong to more than one colour, read through each one's temperament and set among different company, so colours aren't sorted by mechanics. A temperament still has to be carried by gameplay, or it's a theme painted on.
 - **Its style,** inside each way it leans to. One way to write it: a few questions any way can be asked (how big and how often, how wide, when, at what price), answered differently by each colour that does it.
 
 **Symmetry is a pull to resist.** Five colours invite giving each the same shape, and four ways invite mirroring. Neither is wanted.
