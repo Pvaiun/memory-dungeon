@@ -50,7 +50,7 @@ Each is a wide space of its own, done in many ways. None is paired with, mirrors
 On paper, before anything is built:
 - **Coverage:** no colour has a hole so deep it can't sustain or kill, and each can field a party alone.
 - **Shape:** every colour has a peak and a hole; a shared peak is told apart by style; no two colours have the same profile.
-- **Pairs:** what two colours cover together, and what they lack. Every pair can make a party that wins; some come easily and some are exotic.
+- **Pairs:** what two colours cover together, and what they lack; some pairs come easily and some are exotic.
 - **Opposites:** each colour's exclusions can be traced to its opposites.
 - **Identity:** each colour reads as one thing, by the director, on its card.
 
@@ -62,6 +62,6 @@ One layer at a time, each checked against what exists without changing it. Nothi
 
 1. **The wheel:** the five colours, each on one card (what it never does, the mechanics it prefers, its profile and style, what it can't answer, named as the challenges it loses to), and the checks above.
 2. **The pie:** the threads against the colours (primary, secondary, never) and how each colour's style reads a shared thread. Then the existing effects and pieces tagged by colour: how much survives, which colours are thin, what has no colour.
-3. **The classes,** read through the pie: which colours each one's mechanics carry. A kit changes only where a class has no home, or a colour has too few commanders.
+3. **The classes,** read through the pie: which colours each one's mechanics carry.
 4. **Authored gaps resumes** (`steps/authored-gaps/`), making loot into the pie's holes.
-5. **The run and the numbers:** the mana question, whether colours are shown, recruit offers (outside the start's draft, recruits mostly come one at a time), and simulation that the pairs are viable and a one-colour party isn't the default.
+5. **The run and the numbers:** the mana question, whether colours are shown, recruit offers (outside the start's draft, recruits mostly come one at a time), and simulation that the pairs are viable.
