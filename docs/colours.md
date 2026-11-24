@@ -40,7 +40,7 @@ Each is a wide space of its own, done in many ways. None is paired with, mirrors
 - **What it never does,** traced to its opposites.
 - **The mechanics it prefers,** some its own, some shared and done its way.
 - **Its profile:** one to four stars on each way to win, never none, since every colour can do each its own way, however weakly. Every colour has a peak and a hole, however wide it is: a colour with no hole pairs with anything and never needs a partner, which is a colour good at everything by another road.
-- **A temperament shows in gameplay as much as in feel:** what a colour's pieces build toward, when their value comes, who supplies it, what they ask of the party. A feel with no gameplay behind it is a theme; gameplay with no feel is the abstraction the colours exist to avoid.
+- **A temperament is expressed through gameplay:** what a colour's pieces build toward, when their value comes, who supplies it, what they ask of the party. The temperament is the colour's identity; the gameplay is what makes it real. A temperament with no gameplay behind it is a theme painted on; gameplay with no temperament is the abstraction the colours exist to avoid.
 - **Its style,** inside each way it leans to. One way to write it: a few questions any way can be asked (how big and how often, how wide, when, at what price), answered differently by each colour that does it.
 
 **Symmetry is a pull to resist.** Five colours invite giving each the same shape, and four ways invite mirroring. Neither is wanted.
