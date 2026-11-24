@@ -1,6 +1,6 @@
 # Cards
 
-Every card, kept as written, except 111 of the agents' cards reworded at the director's request so that each says plainly whose hits, abilities or HP it means (this unit, the unit in this seat, this ability), the content unchanged. The deck was written by agents that read only `sources/ways-to-win.md`, `vocabulary.md`, `combat.md`, `primitives.md` and `gear-rules.md`, and were told nothing of what the cards are for: the pilot's forty by one agent (P), then five working alone at once, one for each way to win (R Burst, S Build up, T Debuff or disable, V Sustain) and one for where the ways meet (W), and after the gap check a sixth for the corners the five left thin (X). The director's own cards are marked D, each in their words as they gave it in *Add a fourth*, with the triad it came from.
+Every card, kept as written, except 111 of the agents' cards reworded at the director's request so that each says plainly whose hits, abilities or HP it means (this unit, the unit in this seat, this ability), the content unchanged. The deck was written by agents that read only `sources/ways-to-win.md`, `vocabulary.md`, `combat.md`, `primitives.md` and `gear-rules.md`, and were told nothing of what the cards are for: the pilot's forty by one agent (P), then five working alone at once, one for each way to win (R Burst, S Build up, T Debuff or disable, V Sustain) and one for where the ways meet (W), after the gap check a sixth for the corners the five left thin (X), and a seventh to bring the thinnest mechanics up to a floor and into more than one way (Y). The director's own cards are marked D, each in their words as they gave it in *Add a fourth*, with the triad it came from.
 
 Each card's kind, mechanics and the building block it needs are the writer's tags, for the session's use. Its way to win is the one it serves most; a **second way** is the session's reading, given only where the card plainly does two things for two ways, and sparing on purpose so that later batches can be aimed. The page shows only the text. Cards taken out as doubles at the merge aren't kept; the table below counts them.
 
@@ -10,11 +10,11 @@ The cards in play, by the way each serves most (the director's are counted apart
 
 | Way | Ability | Version | Piece | Seat | All |
 | --- | --- | --- | --- | --- | --- |
-| Burst | 15 | 11 | 21 | 9 | 56 |
-| Build up | 11 | 13 | 23 | 14 | 61 |
-| Debuff or disable | 16 | 9 | 20 | 8 | 53 |
-| Sustain | 17 | 11 | 19 | 16 | 63 |
-| All | 59 | 44 | 83 | 47 | 233 |
+| Burst | 17 | 14 | 21 | 9 | 61 |
+| Build up | 12 | 13 | 24 | 17 | 66 |
+| Debuff or disable | 16 | 10 | 22 | 8 | 56 |
+| Sustain | 17 | 12 | 20 | 18 | 67 |
+| All | 62 | 49 | 87 | 52 | 250 |
 
 By writer: what each wrote, what's in play, and what was taken out as a double.
 
@@ -27,9 +27,10 @@ By writer: what each wrote, what's in play, and what was taken out as a double.
 | Sustain | V | 55 | 42 | 13 |
 | where the ways meet | W | 50 | 26 | 24 |
 | thin corners | X | 15 | 11 | 4 |
+| thin mechanics | Y | 20 | 17 | 3 |
 | the director | D | 14 | 14 | 0 |
 
-**247 cards in play,** 233 written by the agents and 14 the director's.
+**264 cards in play,** 250 written by the agents and 14 the director's.
 
 ## Burst
 
@@ -200,6 +201,21 @@ By writer: what each wrote, what's in play, and what was taken out as a double.
 
 **X14.** When an ally drops below half HP, the foe that last hit it becomes Marked.
 <br>*piece · Marked: "the party's basic attacks ... pick a Marked foe while it lasts"; hp_low: "Its HP goes under a line"; assailant: "the unit that last hit the unit the event is about" · writer: thin corners · not yet in a triad*
+
+**Y03.** This ability deals extra damage while this unit is at full HP, scaling with this unit's Lifesteal.
+<br>*version · Lifesteal: Each hit heals the holder for a share of its damage; scaling from a condition instead of a stat; times: "X% per point of Y" (Lifesteal, Siphon) · writer: thin mechanics · not yet in a triad*
+
+**Y06.** This ability adds much more Shock to a foe that hasn't acted yet this fight.
+<br>*version · Shock: Each time its holder acts, it takes damage per stack and loses half its stacks; acted: true once one of its actions has resolved this fight; The applier sets only how many stacks it adds · writer: thin mechanics · not yet in a triad*
+
+**Y10.** Bewilders the foe with the highest Attack and makes every other foe Brittle.
+<br>*ability · Bewildered: its next basic attack strikes a random unit of its own side; Brittle: the next hit its holder takes is a crit; The foe with the highest Attack · writer: thin mechanics · second way: Debuff or disable · not yet in a triad*
+
+**Y11.** Hits a foe very hard. Whenever a fight is won, this ability goes back to its full cooldown.
+<br>*ability · fight_won: The fight is won, the moment the last foe falls; Cooldowns carry between fights; full: Its full cooldown left, as if it had just been used · writer: thin mechanics · **needs a new block:** a rule an ability carries itself that sets its own cooldown to full when a fight is won (today such reactions live only on statuses) · not yet in a triad*
+
+**Y18.** Each hit of this ability that this unit's Accuracy keeps from being dodged is a crit.
+<br>*version · Accuracy: Cancels that much of the target's Evasion; Evasion: Chance to dodge a hit; Crits by condition · writer: thin mechanics · **needs a new block:** a check in the dodge step marking a hit that the attacker's Accuracy kept from a dodge, which an ability's hits can crit on · not yet in a triad*
 
 ## Build up
 
@@ -386,6 +402,21 @@ By writer: what each wrote, what's in play, and what was taken out as a double.
 **X05.** Each hit of this ability also sets off whatever its user's basic attacks set off, its passive included. It never brings an extra strike.
 <br>*version · echo: "extra strikes are heard as basic attacks by its statuses' reactions and triggers that name kind basic"; "Passives that work on basic attacks keep working"; mods: "Changes to the holder's own abilities" · writer: thin corners · **needs a new block:** a `mods` change that makes an ability's hits heard as basic attacks, as `echo` does for extra strikes · in triad b1-25*
 
+**Y01.** Once the fight has run a while, the unit in this seat also takes on the passive of a random other ally for the rest of the fight.
+<br>*seat · a passive only it has; passive: each form is a status, in pack.statuses, that takes the passive status's place; expired: Its duration ran out · writer: thin mechanics · **needs a new block:** an effect that gives a unit a copy of another unit's passive status for the rest of the fight · not yet in a triad*
+
+**Y04.** Hits a foe for as much as this unit has regained through Lifesteal this fight.
+<br>*ability · Lifesteal: Each hit heals the holder for a share of its damage; healed: Healing is received, with status when a status's pulse or reaction healed; An ability's damage is a hit like any other · writer: thin mechanics · **needs a new block:** a fight-long tally of the HP a unit's Lifesteal has restored, for an ability's amount to read · not yet in a triad*
+
+**Y13.** When a foe this unit Marked falls, this unit Marks the foe with the lowest current HP, and this unit's abilities come round a little sooner for the rest of the fight.
+<br>*piece · Marked: the party's basic attacks pick a Marked foe; Each applier keeps one Mark, so a new one it applies moves its old one; Cooldown: Abilities come round sooner · writer: thin mechanics · not yet in a triad*
+
+**Y14.** Each time the unit in this seat lands a basic attack, every other ally wielding the same kind of weapon swings a little faster for the rest of the fight, up to a cap.
+<br>*seat · kin: Wields a weapon of the reading unit's kind; Attack speed: Basic attacks come sooner; A unit's weapon sets its basic attack · writer: thin mechanics · not yet in a triad*
+
+**Y19.** Each time Owed comes due on the unit in this seat, that unit gains Attack for the rest of the fight, more the larger the amount.
+<br>*seat · Owed: the damage of each hit, after Defense, waits on the icon, adding up, and lands all at once a set time after the first; status_ended: amount is the stacks it held as it ended · writer: thin mechanics · not yet in a triad*
+
 ## Debuff or disable
 
 **P21.** Silences a foe that is winding up an ability, so it loses the wind-up; it waits until some foe is winding up.
@@ -546,6 +577,15 @@ By writer: what each wrote, what's in play, and what was taken out as a double.
 
 **X07.** When a fight is won, this unit's abilities that Stun or Silence start the next fight ready.
 <br>*piece · fight_won; cooldown set ready; does: "apply this status (stun, silence, shield, guard...)" · writer: thin corners · **needs a new block:** a `cooldown` `which` that picks abilities by what they do, as an ability filter's `does` · not yet in a triad*
+
+**Y08.** Each foe that takes damage from this unit's Thorns is Fixated on this unit.
+<br>*piece · Thorns: the attacker takes this much untyped damage; Fixated: its basic attacks, and its abilities aimed at a random foe, pick the unit that fixated it · writer: thin mechanics · second way: Sustain · not yet in a triad*
+
+**Y12.** While this unit is Hidden, its basic attacks and abilities get past Taunt.
+<br>*piece · Hidden: Foes can't pick it as a target; Seek: its targeting gets past Taunt; Taunt: Foes' single-target picks must go to a Taunting unit · writer: thin mechanics · not yet in a triad*
+
+**Y20.** This ability also strips a buff from a random foe with a buff for each debuff this ability lifts.
+<br>*version · Cleanse: Removes debuffs from an ally; Dispel: Removes buffs from a foe; A random foe with a buff · writer: thin mechanics · second way: Sustain · **needs a new block:** a count of the statuses an action's remove took off, for a later effect in the same action to read · not yet in a triad*
 
 ## Sustain
 
@@ -737,6 +777,18 @@ By writer: what each wrote, what's in play, and what was taken out as a double.
 
 **X15.** The unit in this seat takes a little less damage for each foe holding Burn.
 <br>*seat · Burn; damage-taken modifiers; count { side, where }: "the units on that side of the unit read that pass where" · writer: thin corners · not yet in a triad*
+
+**Y02.** Each time an ally's passive goes off, this unit heals that ally a little.
+<br>*piece · a passive only it has; status_triggered: A status pulses, or an Intensity status's trigger fires; Heal: Restores HP to allies · writer: thin mechanics · **needs a new block:** an event for a unit's passive going off (status_triggered widened to fire when a passive's reaction resolves, with a filter naming passives) · not yet in a triad*
+
+**Y07.** The unit in this seat restores a little MP each time its Thorns damage a foe.
+<br>*seat · Thorns: Each time a hit lands on its holder, the attacker takes this much untyped damage; Free: the holder spends nothing; MP regen comes from gear and a formation seat · writer: thin mechanics · not yet in a triad*
+
+**Y09.** This ability also Bewilders the foe that last hit the ally this ability heals.
+<br>*version · Bewildered: its next basic attack strikes a random unit of its own side; assailant: the unit that last hit the unit the event is about ("the foe that last hit the healed ally"); Heal: Restores HP to allies · writer: thin mechanics · second way: Debuff or disable · **needs a new block:** the assailant target (the foe that last hit a unit) in an ability's own effects, not only in reactions · not yet in a triad*
+
+**Y15.** When the unit in this seat drops below half HP, or starts a fight below it, every foe is Weakened.
+<br>*seat · Weaken: Its hits deal much less damage; hp_low: Its HP goes under a line, or it starts a fight under it, and fires again only once the unit has been back at the line or over; Every foe · writer: thin mechanics · not yet in a triad*
 
 ## The director's cards
 
