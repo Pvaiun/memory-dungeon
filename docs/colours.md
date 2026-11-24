@@ -40,6 +40,7 @@ Each is a wide space of its own, done in many ways. None is paired with, mirrors
 - **What it never does,** traced to its opposites.
 - **The mechanics it prefers,** some its own, some shared and done its way.
 - **Its profile:** one to four stars on each way to win, never none, since every colour can do each its own way, however weakly. Every colour has a peak and a hole, however wide it is: a colour with no hole pairs with anything and never needs a partner, which is a colour good at everything by another road.
+- **Its temperament is the connective tissue between its mechanics:** a pattern, not something born from any one mechanic. Most mechanics belong to more than one colour, read through each one's temperament and set among different company, so colours aren't sorted by mechanics. A temperament still has to be carried by gameplay, or it's a theme painted on.
 - **Its style,** inside each way it leans to. One way to write it: a few questions any way can be asked (how big and how often, how wide, when, at what price), answered differently by each colour that does it.
 
 **Symmetry is a pull to resist.** Five colours invite giving each the same shape, and four ways invite mirroring. Neither is wanted.
@@ -49,7 +50,7 @@ Each is a wide space of its own, done in many ways. None is paired with, mirrors
 On paper, before anything is built:
 - **Coverage:** no colour has a hole so deep it can't sustain or kill, and each can field a party alone.
 - **Shape:** every colour has a peak and a hole; a shared peak is told apart by style; no two colours have the same profile.
-- **Pairs:** what two colours cover together, and what they lack. Every pair can make a party that wins; some come easily and some are exotic.
+- **Pairs:** what two colours cover together, and what they lack; some pairs come easily and some are exotic.
 - **Opposites:** each colour's exclusions can be traced to its opposites.
 - **Identity:** each colour reads as one thing, by the director, on its card.
 
@@ -61,6 +62,6 @@ One layer at a time, each checked against what exists without changing it. Nothi
 
 1. **The wheel:** the five colours, each on one card (what it never does, the mechanics it prefers, its profile and style, what it can't answer, named as the challenges it loses to), and the checks above.
 2. **The pie:** the threads against the colours (primary, secondary, never) and how each colour's style reads a shared thread. Then the existing effects and pieces tagged by colour: how much survives, which colours are thin, what has no colour.
-3. **The classes,** read through the pie: which colours each one's mechanics carry. A kit changes only where a class has no home, or a colour has too few commanders.
+3. **The classes,** read through the pie: which colours each one's mechanics carry.
 4. **Authored gaps resumes** (`steps/authored-gaps/`), making loot into the pie's holes.
-5. **The run and the numbers:** the mana question, whether colours are shown, recruit offers (outside the start's draft, recruits mostly come one at a time), and simulation that the pairs are viable and a one-colour party isn't the default.
+5. **The run and the numbers:** the mana question, whether colours are shown, recruit offers (outside the start's draft, recruits mostly come one at a time), and simulation that the pairs are viable.
