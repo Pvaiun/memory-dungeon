@@ -13,10 +13,10 @@ The cards in play, by the way each serves most (the director's are counted apart
 | Burst | 17 | 14 | 21 | 9 | 61 |
 | Build up | 12 | 13 | 24 | 17 | 66 |
 | Debuff or disable | 16 | 10 | 22 | 8 | 56 |
-| Sustain | 17 | 12 | 20 | 18 | 67 |
-| All | 62 | 49 | 87 | 52 | 250 |
+| Sustain | 16 | 12 | 20 | 18 | 66 |
+| All | 61 | 49 | 87 | 52 | 249 |
 
-By writer: what each wrote, what's in play, and what was taken out as a double.
+By writer: what each wrote, what's in play, and what was taken out (as a double, or, for V24, as needing more than a small new building block).
 
 | Writer | Ids | Wrote | In play | Taken out |
 | --- | --- | --- | --- | --- |
@@ -24,13 +24,13 @@ By writer: what each wrote, what's in play, and what was taken out as a double.
 | Burst | R | 50 | 37 | 13 |
 | Build up | S | 53 | 42 | 11 |
 | Debuff or disable | T | 55 | 35 | 20 |
-| Sustain | V | 55 | 42 | 13 |
+| Sustain | V | 55 | 41 | 14 |
 | where the ways meet | W | 50 | 26 | 24 |
 | thin corners | X | 15 | 11 | 4 |
 | thin mechanics | Y | 20 | 17 | 3 |
 | the director | D | 14 | 14 | 0 |
 
-**264 cards in play,** 250 written by the agents and 14 the director's.
+**263 cards in play,** 249 written by the agents and 14 the director's.
 
 ## Burst
 
@@ -670,9 +670,6 @@ By writer: what each wrote, what's in play, and what was taken out as a double.
 **V22.** Makes the ally with the lowest share of HP Hidden.
 <br>*ability · Hidden; the ally with the lowest share of max HP; Someone stays in the light · writer: Sustain · not yet in a triad*
 
-**V24.** Brings a decoy into the fight that draws the foes' picks until it falls; long cooldown.
-<br>*ability · summon; Aggro; draw · writer: Sustain · **needs a new block:** a summon for the party's side: a unit that isn't a party member, doesn't keep the party standing once every member is down, and is gone when the fight ends · in triad b1-09*
-
 **V25.** Each time this unit dodges a hit, the other ally with the lowest share of HP gains Blur.
 <br>*piece · hit_evaded; Blur; Evasion · writer: Sustain · not yet in a triad*
 
@@ -701,7 +698,7 @@ By writer: what each wrote, what's in play, and what was taken out as a double.
 <br>*seat · sharesHeals; Heal · writer: Sustain · not yet in a triad*
 
 **V39.** Gives Lifesteal for a while to the ally with the highest Attack.
-<br>*ability · Lifesteal; the ally with the highest Attack · writer: Sustain · not yet in a triad*
+<br>*ability · Lifesteal; the ally with the highest Attack · writer: Sustain · in triad b1-09*
 
 **V41.** Raises a knocked-out ally with some HP; very long cooldown.
 <br>*ability · Revive; a random knocked-out ally · writer: Sustain · not yet in a triad*

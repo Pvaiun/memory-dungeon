@@ -240,7 +240,7 @@ Ten triads, each inside one way to win, the three cards on different mechanics a
 
 ## Batch 1
 
-Twenty-five triads, drawn at random by the session's script (seed 1, fixed before the draw) under these rules: each inside one way to win; its three cards share no mechanic, by the session's tags, and are of three different kinds; no card already seen in a triad; none of the director's own, whose lines aren't checked yet. 6 Burst, 7 Build up, 6 Debuff or disable, 6 Sustain. Nothing in this batch is aimed: aiming starts with batch 2. One triad was repaired after the draw: in b1-11, V43 and V51 both paid in HP, a shared mechanic the tags missed, so V43 was swapped for a random unused Sustain version that shares no mechanic with the other two (W41). The page shows the triads in this order, the cards in the order given. Before any answer, 38 of the batch's cards were reworded at the director's request to name whose it is; the text here is what the page shows.
+Twenty-five triads, drawn at random by the session's script (seed 1, fixed before the draw) under these rules: each inside one way to win; its three cards share no mechanic, by the session's tags, and are of three different kinds; no card already seen in a triad; none of the director's own, whose lines aren't checked yet. 6 Burst, 7 Build up, 6 Debuff or disable, 6 Sustain. Nothing in this batch is aimed: aiming starts with batch 2. One triad was repaired after the draw: in b1-11, V43 and V51 both paid in HP, a shared mechanic the tags missed, so V43 was swapped for a random unused Sustain version that shares no mechanic with the other two (W41). Later, before any answer to it, b1-09's V24 was swapped out at the director's request: it called for a decoy, a summon on the party's side that the game doesn't have, which is a new kind of unit rather than a small building block. Its replacement, V39, was drawn by the same rule (a random unused Sustain ability that shares no mechanic with the other two and needs no new block). The page shows the triads in this order, the cards in the order given. Before any answer, 38 of the batch's cards were reworded at the director's request to name whose it is; the text here is what the page shows.
 
 ### b1-01 · Burst
 
@@ -308,7 +308,7 @@ Twenty-five triads, drawn at random by the session's script (seed 1, fixed befor
 
 ### b1-09 · Sustain
 
-- **A (V24, ability):** Brings a decoy into the fight that draws the foes' picks until it falls; long cooldown.
+- **A (V39, ability):** Gives Lifesteal for a while to the ally with the highest Attack.
 - **B (V10, piece):** Hits on this unit never crit.
 - **C (X03, seat):** Every ally that wears the same type of armor as the unit in this seat takes a little less damage.
 
